@@ -1,10 +1,11 @@
 'use client'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useCurrentAccount } from '@mysten/dapp-kit'
 import { LeaderboardSkeleton } from './ui/skeletons/LeaderboardSkeleton'
 import { AgentDetails } from '@/types'
-import { useRouter } from 'next/navigation'
 import { useFundAgentModal } from '@/hooks/useFundAgentModal'
-import { useCurrentAccount } from '@mysten/dapp-kit'
 import { MIST_PER_SUI } from '@/constants'
 
 export enum TabType {
@@ -86,7 +87,17 @@ export const AgentsList = ({
                       <div className="grid grid-cols-2 gap-2 text-sm">
                         <div>
                           <p className="text-gray-400 text-xs">Name</p>
-                          <p>{agent.agent_name}</p>
+                          <div className="flex items-center gap-1">
+                            <p>{agent.agent_name}</p>
+                            {agent.is_featured && (
+                              <Image
+                                src="/icons/check-mark.svg"
+                                width={20}
+                                height={20}
+                                alt="checkmark"
+                              />
+                            )}
+                          </div>
                         </div>
                         <div>
                           <p className="text-gray-400 text-xs">Reward</p>
@@ -132,7 +143,18 @@ export const AgentsList = ({
                         <div className="h-full w-[1px] bg-[#6F6F6F]" />
                         <div className="col-span-10 pl-4">{agent.agent_id}</div>
                       </div>
-                      <div className="col-span-2 ps-4">{agent.agent_name}</div>
+
+                      <div className="flex items-center gap-1 col-span-2 ps-4">
+                        <p>{agent.agent_name}</p>
+                        {agent.is_featured && (
+                          <Image
+                            src="/icons/check-mark.svg"
+                            width={20}
+                            height={20}
+                            alt="checkmark"
+                          />
+                        )}
+                      </div>
 
                       <div className="col-span-2 ps-4">{`${balance} SUI`}</div>
                       <div className="col-span-2 ps-4">{`${costPerMessage} SUI`}</div>
