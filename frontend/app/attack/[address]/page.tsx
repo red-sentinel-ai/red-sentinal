@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { useParams } from 'next/navigation'
 import { Loader2, ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
@@ -167,7 +168,18 @@ export default function AgentChallengePage() {
 
       <div className="bg-gray-900 rounded-lg p-6 mb-8">
         <h1 className="text-3xl font-bold mb-4">Agent: {agent.agent_id}</h1>
-        <h2 className="text-3xl font-bold mb-4">Name: {agent.agent_name}</h2>
+
+        <div className="flex items-center gap-1 mb-4">
+          <h2 className="text-3xl font-bold">Name: {agent.agent_name}</h2>
+          {agent.is_featured && (
+            <Image
+              src="/icons/check-mark.svg"
+              width={20}
+              height={20}
+              alt="checkmark"
+            />
+          )}
+        </div>
 
         <div className="grid grid-cols-1 mb-6 ">
           <AgentInfo
