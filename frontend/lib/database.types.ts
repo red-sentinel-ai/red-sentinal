@@ -897,7 +897,6 @@ export type Database = {
           agent_profile: string | null
           created_at: string | null
           digest: string | null
-          id: string
           is_featured: boolean
           object_id: string
           owner: string
@@ -908,7 +907,6 @@ export type Database = {
           agent_profile?: string | null
           created_at?: string | null
           digest?: string | null
-          id?: string
           is_featured?: boolean
           object_id: string
           owner: string
@@ -919,7 +917,6 @@ export type Database = {
           agent_profile?: string | null
           created_at?: string | null
           digest?: string | null
-          id?: string
           is_featured?: boolean
           object_id?: string
           owner?: string
