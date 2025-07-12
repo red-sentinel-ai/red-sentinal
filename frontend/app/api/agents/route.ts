@@ -25,7 +25,8 @@ export async function POST(req: NextRequest) {
     const buffer = Buffer.from(arrayBuffer)
 
     const fileExt = imageFile.name.split('.').pop()
-    const filePath = `${agent_name}.${fileExt}`
+    const safeAgentName = agent_name.replace(/\s+/g, '_')
+    const filePath = `${agent_id}_${safeAgentName}.${fileExt}`
 
     const { data: uploadData, error: uploadError } = await supabaseServiceClient.storage
       .from(AGENTS_BUCKET_NAME)
