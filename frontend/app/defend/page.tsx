@@ -3,11 +3,12 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { ChevronLeft, Loader2 } from 'lucide-react'
+import { toast } from 'react-toastify'
 import { Transaction } from '@mysten/sui/transactions'
+import { SuiTransactionBlockResponse } from '@mysten/sui/client'
 import { useCurrentAccount, useSignAndExecuteTransaction, useSuiClient } from '@mysten/dapp-kit'
 import { ConnectPrompt } from '@/components/ConnectPrompt'
 import { MIST_PER_SUI, SUI_CONFIG } from '@/constants'
-import { toast } from 'react-toastify'
 import { hexToVector } from '@/lib/utils'
 import { registerAgentUtil } from './utils'
 import { useAgentObjectNames } from '@/hooks/useAgentObjectNames'
@@ -162,6 +163,23 @@ export default function DefendPage() {
     return Object.keys(newErrors).length === 0
   }
 
+  const handleOffChainSuccess = async (result: SuiTransactionBlockResponse, agentName: string) => {
+    const agentObject = result?.objectChanges?.find(
+      (obj: any) =>
+        obj.objectType === `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Agent`
+    )
+
+    if (agentObject) {
+      console.log('agent object', agentObject)
+      const agentObjectId = (agentObject as any).objectId
+      await addAgentObjectIdWithName(`${agentObjectId} ${agentName}`)
+      setDeployedAgentObjectId(agentObjectId)
+      setTransactionDigest(result.digest.toString())
+      setShowSuccessModal(true)
+      console.log('Object id added to db successfully')
+    }
+  }
+
   const createAgentTransaction = async (agentDetails: any) => {
     const tx = new Transaction()
     const sigVector = hexToVector(agentDetails.signature)
@@ -187,29 +205,7 @@ export default function DefendPage() {
       {
         onSuccess: async (result) => {
           console.log('RESULT', result)
-          console.log('object changes', result.objectChanges)
-
-          const agentObject = result?.objectChanges?.find(
-            (obj: any) =>
-              obj.objectType ===
-              `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Agent`
-          )
-
-          if (agentObject) {
-            console.log('agent object', agentObject)
-            const agentObjectId = (agentObject as any).objectId
-            await addAgentObjectIdWithName(`${agentObjectId} ${formData.agentName}`)
-            setDeployedAgentObjectId(agentObjectId)
-            setTransactionDigest(result.digest.toString())
-            setShowSuccessModal(true)
-            console.log('Object id added to db successfully')
-          }
-
-          // Redirect to agent page
-          // const agentId = agentDetails?.response?.data?.agent_id
-          // if (agentId) {
-          //   router.push(`/attack/${agentId}`)
-          // }
+          await handleOffChainSuccess(result, formData.agentName)
         },
       }
     )
