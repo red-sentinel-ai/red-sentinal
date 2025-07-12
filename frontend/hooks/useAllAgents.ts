@@ -68,7 +68,13 @@ export const useAllAgents = (): UseAllAgentsReturn => {
             return agent
           })
 
-        setAgents(successfulAgents)
+        const sortedAgents = successfulAgents.sort((a, b) => {
+          const aFeatured = a.is_featured ? 1 : 0
+          const bFeatured = b.is_featured ? 1 : 0
+          return bFeatured - aFeatured
+        })
+
+        setAgents(sortedAgents)
 
         if (successfulAgents.length !== objectIds.length) {
           setDetailsError(`Failed to fetch ${objectIds.length - successfulAgents.length} agents`)
