@@ -5,6 +5,7 @@ import { useAllAgents } from '@/hooks/useAllAgents'
 import { motion, AnimatePresence } from 'framer-motion'
 import { AgentDetails } from '@/types'
 import { FeaturedAgentCard } from './FeaturedAgentCard'
+import { FeaturedAgentsSkeleton } from './ui/skeletons/FeaturedAgentsSkeleton'
 
 type AgentListViewProps = {
   heading: string
@@ -33,35 +34,41 @@ export const AgentListView = ({ heading, subheading }: AgentListViewProps) => {
         <p className="text-[#B4B4B4] text-center max-w-[594px] mx-auto">{subheading}</p>
       </div>
 
-      {featuredAgents.length > 0 && (
-        <div className="mb-16">
-          <div className="mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-center text-[#558EB4] mb-2">
-              Featured Targets
-            </h2>
-            <div className="flex max-w-[400px] mx-auto">
-              <div className="gradient-border blue"></div>
-              <div className="gradient-border blue rotate-180"></div>
-            </div>
-          </div>
+      {isFetchingAllAgents ? (
+        <FeaturedAgentsSkeleton />
+      ) : (
+        <>
+          {featuredAgents.length > 0 && (
+            <div className="mb-16">
+              <div className="mb-8">
+                <h2 className="text-2xl md:text-3xl font-bold text-center text-[#558EB4] mb-2">
+                  Featured Targets
+                </h2>
+                <div className="flex max-w-[400px] mx-auto">
+                  <div className="gradient-border blue"></div>
+                  <div className="gradient-border blue rotate-180"></div>
+                </div>
+              </div>
 
-          <AnimatePresence mode="wait">
-            <motion.div
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-[1200px] mx-auto"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
-            >
-              {featuredAgents.map((agent: AgentDetails, index: number) => (
-                <FeaturedAgentCard
-                  key={agent.agent_id}
-                  agent={agent}
-                  index={index}
-                />
-              ))}
-            </motion.div>
-          </AnimatePresence>
-        </div>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-[1200px] mx-auto"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {featuredAgents.map((agent: AgentDetails, index: number) => (
+                    <FeaturedAgentCard
+                      key={agent.agent_id}
+                      agent={agent}
+                      index={index}
+                    />
+                  ))}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          )}
+        </>
       )}
 
       <div>
