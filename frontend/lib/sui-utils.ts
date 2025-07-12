@@ -30,6 +30,7 @@ export const fetchAgentDetailsViaObject = async (
       system_prompt: fields.system_prompt,
       balance: Number(fields.balance),
       is_featured: false,
+      agent_profile: '',
     }
   } catch (error) {
     console.error('Error fetching agent via getObject:', error)

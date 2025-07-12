@@ -4,7 +4,7 @@ import { supabaseServiceClient } from '@/db/config/server'
 export async function GET() {
   const { data, error } = await supabaseServiceClient
     .from('ss_agents')
-    .select('agent_id')
+    .select('agent_id, agent_profile')
     .eq('is_featured', true)
 
   if (error) {
@@ -15,6 +15,7 @@ export async function GET() {
   const response = data.map((agent) => ({
     is_featured: true,
     agent_id: agent.agent_id,
+    agent_profile: agent.agent_profile,
   }))
 
   return NextResponse.json(response, { status: 200 })
