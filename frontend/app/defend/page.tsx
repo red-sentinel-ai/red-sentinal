@@ -8,7 +8,7 @@ import { Transaction } from '@mysten/sui/transactions'
 import { SuiTransactionBlockResponse } from '@mysten/sui/client'
 import { useCurrentAccount, useSignAndExecuteTransaction, useSuiClient } from '@mysten/dapp-kit'
 import { ConnectPrompt } from '@/components/ConnectPrompt'
-import { MIST_PER_SUI, SUI_CONFIG } from '@/constants'
+import { MIST_PER_SUI, MOCK_RESULT, SUI_CONFIG } from '@/constants'
 import { hexToVector } from '@/lib/utils'
 import { registerAgentUtil } from './utils'
 import { useAgentObjectNames } from '@/hooks/useAgentObjectNames'
@@ -71,6 +71,7 @@ export default function DefendPage() {
   const account = useCurrentAccount()
   const { addAgentObjectIdWithName } = useAgentObjectNames()
   const { mutate: createAgent } = useCreateAgent()
+  const [agentImage, setAgentImage] = useState<File | null>(null)
 
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction({
     execute: async ({ bytes, signature }) =>
@@ -173,24 +174,25 @@ export default function DefendPage() {
     )
 
     if (agentObject) {
-      console.log('agent object', agentObject)
       const agentObjectId = (agentObject as any).objectId
       await addAgentObjectIdWithName(`${agentObjectId} ${agentName}`)
       setDeployedAgentObjectId(agentObjectId)
       setTransactionDigest(result.digest.toString())
       setShowSuccessModal(true)
 
-      createAgent({
-        agent_id: agentObjectId,
-        agent_name: agentName,
-        agent_profile: 'https://example.com/cyberbot.png',
-        message_price: +formData.feePerMessage,
-        object_id: agentObjectId,
-        digest: result.digest.toString(),
-        owner: account.address,
-      })
+      const payload = new FormData()
+      payload.append('agent_id', agentObjectId)
+      payload.append('agent_name', agentName)
+      payload.append('object_id', agentObjectId)
+      payload.append('owner', account.address)
+      payload.append('digest', result.digest.toString())
+      payload.append('message_price', formData.feePerMessage)
 
-      console.log('Object id added to db successfully')
+      if (agentImage) {
+        payload.append('image', agentImage)
+      }
+
+      createAgent(payload)
     }
   }
 
@@ -314,6 +316,19 @@ export default function DefendPage() {
           placeholder="0.00"
           required
         />
+
+        <div>
+          <label className="block text-sm font-medium mb-2">Agent Image</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0] || null
+              setAgentImage(file)
+            }}
+            className="block w-full text-sm text-gray-300 file:bg-gray-700 file:border-0 file:rounded-md file:px-4 file:py-2 file:text-white"
+          />
+        </div>
 
         <button
           type="submit"

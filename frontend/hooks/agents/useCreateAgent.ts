@@ -1,16 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 
-interface CreateAgentPayload {
-  agent_id: number
-  agent_name: string
-  agent_profile?: string
-  message_price?: number
-  object_id: string
-  owner: string
-  digest: string
-}
-
 interface CreateAgentResponse {
   message: string
   data: {
@@ -30,13 +20,10 @@ export const useCreateAgent = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (payload: CreateAgentPayload): Promise<CreateAgentResponse> => {
+    mutationFn: async (formData: FormData): Promise<CreateAgentResponse> => {
       const response = await fetch('/api/agents', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
+        body: formData,
       })
 
       if (!response.ok) {
