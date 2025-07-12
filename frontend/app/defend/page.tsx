@@ -186,7 +186,6 @@ export default function DefendPage() {
       payload.append('object_id', agentObjectId)
       payload.append('owner', account.address)
       payload.append('digest', result.digest.toString())
-      payload.append('message_price', formData.feePerMessage)
 
       if (agentImage) {
         payload.append('image', agentImage)

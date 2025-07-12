@@ -10,7 +10,6 @@ export async function POST(req: NextRequest) {
   const agent_name = formData.get('agent_name') as string
   const object_id = formData.get('object_id') as string
   const owner = formData.get('owner') as string
-  const message_price = formData.get('message_price')
   const digest = formData.get('digest')
   const imageFile = formData.get('image') as File | null
 
@@ -50,7 +49,6 @@ export async function POST(req: NextRequest) {
   }
 
   const agent_id_number = Number(agent_id)
-  const message_price_number = message_price ? Number(message_price.toString()) : undefined
   const digest_str = digest?.toString()
 
   const { data, error } = await supabaseServiceClient
@@ -60,7 +58,6 @@ export async function POST(req: NextRequest) {
         agent_id: agent_id_number,
         agent_name,
         agent_profile: imageUrl,
-        message_price: message_price_number,
         object_id,
         owner,
         digest: digest_str,

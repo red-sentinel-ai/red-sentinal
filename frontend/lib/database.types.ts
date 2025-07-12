@@ -899,10 +899,8 @@ export type Database = {
           digest: string | null
           id: string
           is_featured: boolean
-          message_price: number | null
           object_id: string
           owner: string
-          system_prompt: string | null
         }
         Insert: {
           agent_id: number
@@ -912,10 +910,8 @@ export type Database = {
           digest?: string | null
           id?: string
           is_featured?: boolean
-          message_price?: number | null
           object_id: string
           owner: string
-          system_prompt?: string | null
         }
         Update: {
           agent_id?: number
@@ -925,10 +921,8 @@ export type Database = {
           digest?: string | null
           id?: string
           is_featured?: boolean
-          message_price?: number | null
           object_id?: string
           owner?: string
-          system_prompt?: string | null
         }
         Relationships: []
       }
