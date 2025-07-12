@@ -25,6 +25,18 @@ export const useAllAgents = (): UseAllAgentsReturn => {
   const [detailsLoading, setDetailsLoading] = useState<boolean>(false)
   const [detailsError, setDetailsError] = useState<string | null>(null)
 
+  const fetchFeaturedAgentIds = async (): Promise<Set<string>> => {
+    try {
+      const res = await fetch('/api/agents/featured')
+      if (!res.ok) throw new Error('Failed to fetch featured agents')
+      const data: { agent_id: number; is_featured: true }[] = await res.json()
+      return new Set(data.map((d) => String(d.agent_id)))
+    } catch (err) {
+      console.error('[Featured Agents Error]', err)
+      return new Set()
+    }
+  }
+
   const fetchAgentDetails = useCallback(
     async (objectIds: string[]) => {
       objectIds = objectIds.filter((objectId) => objectId.startsWith('0x'))
@@ -32,27 +44,27 @@ export const useAllAgents = (): UseAllAgentsReturn => {
       setDetailsError(null)
 
       try {
-        const detailsPromises = objectIds.map(async (objectId) => {
-          try {
-            return await fetchAgentDetailsViaObject(client, objectId)
-          } catch (error) {
-            console.error(`Error fetching agent ${objectId}:`, error)
-            return null
-          }
-        })
-
-        const settledResults = await Promise.all(detailsPromises)
+        const [featuredIds, settledResults] = await Promise.all([
+          fetchFeaturedAgentIds(),
+          Promise.all(
+            objectIds.map(async (objectId) => {
+              try {
+                return await fetchAgentDetailsViaObject(client, objectId)
+              } catch (error) {
+                console.error(`Error fetching agent ${objectId}:`, error)
+                return null
+              }
+            })
+          ),
+        ])
 
         const successfulAgents = settledResults
           .filter((agent) => agent !== null)
           .map((agent) => {
             const agentObjectId = agent.agent_object_id
             const entry = agentObjectNames.find((agent) => agent.agentId === agentObjectId)
-            if (entry) {
-              agent.agent_name = entry.agentName
-            } else {
-              agent.agent_name = ''
-            }
+            agent.agent_name = entry ? entry.agentName : ''
+            agent.is_featured = featuredIds.has(String(agent.agent_id))
             return agent
           })
 
@@ -93,20 +105,22 @@ export const useAllAgents = (): UseAllAgentsReturn => {
   const refetchAgent = useCallback(
     async (objectId: string) => {
       try {
-        console.log('agetnt object id', objectId)
-
         const updatedAgent = await fetchAgentDetailsViaObject(client, objectId)
+
+        const ourAgentName = agentObjectNames.find(
+          (agent) => agent.agentId === updatedAgent.agent_object_id
+        )
+
+        updatedAgent.agent_name = ourAgentName?.agentName || ''
+
+        const featuredIds = await fetchFeaturedAgentIds()
+        updatedAgent.is_featured = featuredIds.has(String(updatedAgent.agent_id))
+
         setAgents((prevAgents) =>
           prevAgents.map((agent) =>
             agent.agent_id === updatedAgent.agent_id ? updatedAgent : agent
           )
         )
-
-        const ourAgentName = agentObjectNames.find((agent) => {
-          return agent.agentId === updatedAgent.agent_object_id
-        })
-
-        updatedAgent.agent_name = ourAgentName?.agentName
 
         return updatedAgent
       } catch (error) {
