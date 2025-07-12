@@ -15,6 +15,10 @@ export const FeaturedAgentsSkeleton = () => {
             key={`featured-skeleton-${index}`}
             className="border border-[#558EB4] bg-[#12121266] rounded-lg lg:rounded-2xl p-2 lg:p-4 animate-pulse flex flex-col"
           >
+            <div className="relative mb-4">
+              <div className="w-full h-36 bg-[#2E40494D] backdrop-blur-xl rounded-lg flex items-center justify-center"></div>
+            </div>
+
             <div className="text-center mb-4">
               <div className="flex items-center justify-center gap-1 mb-2">
                 <div className="h-6 bg-gray-700 rounded w-32"></div>

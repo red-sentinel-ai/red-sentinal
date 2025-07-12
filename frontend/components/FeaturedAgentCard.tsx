@@ -20,15 +20,24 @@ export const FeaturedAgentCard = ({ agent, index }: { agent: AgentDetails; index
       onClick={handleAttack}
     >
       {/* Agent Avatar */}
-      {/* //TODO: add the profile image in the below comment */}
-      {/* <div className="relative mb-4">
-        <div className="w-full h-32 rounded-lg flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#558EB4]/20 to-[#1388D5]/10">
-          <div className="text-4xl font-bold text-[#558EB4] z-10 relative">
-            {agent.agent_name.charAt(0).toUpperCase()}
-          </div>
+      <div className="relative mb-4">
+        <div className="w-full h-36 rounded-lg flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#558EB4]/20 to-[#1388D5]/10">
+          {agent.agent_profile ? (
+            <Image
+              src={agent.agent_profile || '/placeholder.svg'}
+              alt={`${agent.agent_name} profile`}
+              fill
+              className="object-cover rounded-lg z-10"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          ) : (
+            <div className="text-4xl font-bold text-[#558EB4] z-10 relative">
+              {agent.agent_name.charAt(0).toUpperCase()}
+            </div>
+          )}
           <div className="absolute inset-0 pointer-events-auto robo-img-defender rounded-lg transition-all"></div>
         </div>
-      </div> */}
+      </div>
 
       <div className="text-center mb-4">
         <div className="flex items-center justify-center gap-1 mb-2">
@@ -42,7 +51,6 @@ export const FeaturedAgentCard = ({ agent, index }: { agent: AgentDetails; index
             />
           )}
         </div>
-
         <p className="text-xs text-[#B5B5B5] mb-3">Agent ID: {agent.agent_id}</p>
         <div className="flex max-w-[394px] mx-auto mb-3">
           <div className="gradient-border blue"></div>
