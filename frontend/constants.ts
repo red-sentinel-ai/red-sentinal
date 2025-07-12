@@ -6,6 +6,10 @@ export const AGENT_REGISTRY_ADDRESS =
 
 export const INDEXER_BASE_URL = process.env.NEXT_PUBLIC_INDEXER_BASE_URL || 'http://localhost:4000'
 
+export const supabaseUrl = process.env.SUPABASE_URL || ''
+export const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || ''
+export const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+
 export const SYSTEM_PROMPT_MAX_TOKENS = 800
 
 export const TEXT_COPIES = {

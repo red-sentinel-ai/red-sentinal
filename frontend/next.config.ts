@@ -1,14 +1,24 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'oqymtqolwjujkayjyxdt.supabase.co',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
   webpack(config, { isServer, dev }) {
     config.experiments = {
       asyncWebAssembly: true,
       layers: true,
-    };
+    }
 
-    return config;
+    return config
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig
