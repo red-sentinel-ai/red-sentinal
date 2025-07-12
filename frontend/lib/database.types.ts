@@ -896,27 +896,33 @@ export type Database = {
           agent_name: string
           agent_profile: string | null
           created_at: string | null
+          digest: string | null
           id: string
           message_price: number | null
-          objectid: string
+          object_id: string
+          owner: string
         }
         Insert: {
           agent_id: number
           agent_name: string
           agent_profile?: string | null
           created_at?: string | null
+          digest?: string | null
           id?: string
           message_price?: number | null
-          objectid: string
+          object_id: string
+          owner: string
         }
         Update: {
           agent_id?: number
           agent_name?: string
           agent_profile?: string | null
           created_at?: string | null
+          digest?: string | null
           id?: string
           message_price?: number | null
-          objectid?: string
+          object_id?: string
+          owner?: string
         }
         Relationships: []
       }
