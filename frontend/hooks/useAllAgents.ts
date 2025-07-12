@@ -3,6 +3,7 @@ import { AgentDetails } from '@/types'
 import { fetchAgentDetailsViaObject } from '@/lib/sui-utils'
 import { useSuiClient } from '@mysten/dapp-kit'
 import { useAgentObjectNames } from './useAgentObjectNames'
+import { DEFAULT_PROFILE_URL } from '@/constants'
 
 interface UseAllAgentsReturn {
   agents: AgentDetails[]
@@ -25,15 +26,22 @@ export const useAllAgents = (): UseAllAgentsReturn => {
   const [detailsLoading, setDetailsLoading] = useState<boolean>(false)
   const [detailsError, setDetailsError] = useState<string | null>(null)
 
-  const fetchFeaturedAgentIds = async (): Promise<Set<string>> => {
+  const fetchFeaturedAgentsMap = async (): Promise<Map<string, string>> => {
     try {
       const res = await fetch('/api/agents/featured')
       if (!res.ok) throw new Error('Failed to fetch featured agents')
-      const data: { agent_id: number; is_featured: true }[] = await res.json()
-      return new Set(data.map((d) => String(d.agent_id)))
+      const data: { agent_id: number; is_featured: true; agent_profile?: string }[] =
+        await res.json()
+
+      const map = new Map<string, string>()
+      for (const agent of data) {
+        map.set(String(agent.agent_id), agent.agent_profile ?? '')
+      }
+
+      return map
     } catch (err) {
       console.error('[Featured Agents Error]', err)
-      return new Set()
+      return new Map()
     }
   }
 
@@ -44,8 +52,8 @@ export const useAllAgents = (): UseAllAgentsReturn => {
       setDetailsError(null)
 
       try {
-        const [featuredIds, settledResults] = await Promise.all([
-          fetchFeaturedAgentIds(),
+        const [featuredAgentsMap, settledResults] = await Promise.all([
+          fetchFeaturedAgentsMap(),
           Promise.all(
             objectIds.map(async (objectId) => {
               try {
@@ -62,9 +70,13 @@ export const useAllAgents = (): UseAllAgentsReturn => {
           .filter((agent) => agent !== null)
           .map((agent) => {
             const agentObjectId = agent.agent_object_id
-            const entry = agentObjectNames.find((agent) => agent.agentId === agentObjectId)
+            const entry = agentObjectNames.find((a) => a.agentId === agentObjectId)
+            const agentIdStr = String(agent.agent_id)
+
             agent.agent_name = entry ? entry.agentName : ''
-            agent.is_featured = featuredIds.has(String(agent.agent_id))
+            agent.is_featured = featuredAgentsMap.has(agentIdStr)
+            agent.agent_profile = featuredAgentsMap.get(agentIdStr) || DEFAULT_PROFILE_URL
+
             return agent
           })
 
@@ -119,8 +131,11 @@ export const useAllAgents = (): UseAllAgentsReturn => {
 
         updatedAgent.agent_name = ourAgentName?.agentName || ''
 
-        const featuredIds = await fetchFeaturedAgentIds()
-        updatedAgent.is_featured = featuredIds.has(String(updatedAgent.agent_id))
+        const featuredAgentsMap = await fetchFeaturedAgentsMap()
+        const featuredAgentProfile = featuredAgentsMap.get(String(updatedAgent.agent_id))
+
+        updatedAgent.is_featured = featuredAgentsMap.has(String(updatedAgent.agent_id))
+        updatedAgent.agent_profile = featuredAgentProfile || DEFAULT_PROFILE_URL
 
         setAgents((prevAgents) =>
           prevAgents.map((agent) =>

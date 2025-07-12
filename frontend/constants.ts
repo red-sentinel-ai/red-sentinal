@@ -59,3 +59,6 @@ export const MOCK_RESULT = {
     },
   ],
 }
+
+export const DEFAULT_PROFILE_URL =
+  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/ss-agents//default_profile.jpg'
