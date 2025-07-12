@@ -41,3 +41,17 @@ export const PROJECT_GITHUB_URL = 'https://github.com/satyambnsal/sui-sentinal'
 export const NAUTILUS_URL = 'https://github.com/MystenLabs/nautilus'
 export const YOUTUBE_VIDEO_URL = 'https://www.youtube.com/watch?v=U3qMdgSGASI'
 export const X_URL = 'https://x.com/suisentinal'
+
+export const MOCK_RESULT = {
+  balanceChanges: [],
+  checkpoint: 'mock-check-point',
+  confirmedLocalExecution: null,
+  digest: 'mockDigest',
+  objectChanges: [
+    {
+      objectType: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Agent`,
+      objectId: Math.floor(Math.random() * 1000) + 1,
+      agentId: '0xb4149a8fff09a1d1283a42961b5f459238256eccc906ada92931d4960c07a4c7',
+    },
+  ],
+}

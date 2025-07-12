@@ -8,7 +8,7 @@ import { Transaction } from '@mysten/sui/transactions'
 import { SuiTransactionBlockResponse } from '@mysten/sui/client'
 import { useCurrentAccount, useSignAndExecuteTransaction, useSuiClient } from '@mysten/dapp-kit'
 import { ConnectPrompt } from '@/components/ConnectPrompt'
-import { MIST_PER_SUI, SUI_CONFIG } from '@/constants'
+import { MIST_PER_SUI, MOCK_RESULT, SUI_CONFIG } from '@/constants'
 import { hexToVector } from '@/lib/utils'
 import { registerAgentUtil } from './utils'
 import { useAgentObjectNames } from '@/hooks/useAgentObjectNames'
@@ -222,6 +222,13 @@ export default function DefendPage() {
       toast.info('Processing payment...')
 
       toast.info('Registering agent...')
+
+      // await handleOffChainSuccess(
+      //   MOCK_RESULT as unknown as SuiTransactionBlockResponse,
+      //   formData.agentName
+      // )
+      // return
+
       const feePerMessage = parseFloat(formData.feePerMessage) * MIST_PER_SUI
       const agentDetails = await registerAgentUtil(formData.systemPrompt, feePerMessage)
 
