@@ -14,6 +14,7 @@ import { registerAgentUtil } from './utils'
 import { useAgentObjectNames } from '@/hooks/useAgentObjectNames'
 import { FundAgentModal } from '@/components/FundAgentModal'
 import { SuccessModal } from '@/components/DefenderSuccessModal'
+import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
 
 interface FormData {
   agentName: string
@@ -69,6 +70,8 @@ export default function DefendPage() {
   const client = useSuiClient()
   const account = useCurrentAccount()
   const { addAgentObjectIdWithName } = useAgentObjectNames()
+  const { mutate: createAgent } = useCreateAgent()
+
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction({
     execute: async ({ bytes, signature }) =>
       await client.executeTransactionBlock({
@@ -176,6 +179,17 @@ export default function DefendPage() {
       setDeployedAgentObjectId(agentObjectId)
       setTransactionDigest(result.digest.toString())
       setShowSuccessModal(true)
+
+      createAgent({
+        agent_id: agentObjectId,
+        agent_name: agentName,
+        agent_profile: 'https://example.com/cyberbot.png',
+        message_price: +formData.feePerMessage,
+        object_id: agentObjectId,
+        digest: result.digest.toString(),
+        owner: account.address,
+      })
+
       console.log('Object id added to db successfully')
     }
   }
