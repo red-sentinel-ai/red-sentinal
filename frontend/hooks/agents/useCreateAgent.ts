@@ -4,7 +4,6 @@ import { toast } from 'react-toastify'
 interface CreateAgentResponse {
   message: string
   data: {
-    id: string
     agent_id: number
     agent_name: string
     agent_profile?: string
