@@ -54,4 +54,5 @@ export interface AgentDetails {
   system_prompt: string
   balance: number
   agent_name: string
+  is_featured: boolean
 }
