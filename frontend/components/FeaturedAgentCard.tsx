@@ -72,7 +72,7 @@ export const FeaturedAgentCard = ({ agent, index }: { agent: AgentDetails; index
           }}
           className="block border border-[#558EB4] rounded-[8px] w-full min-h-11 p-2 transition-all text-[#558EB4] group-hover:bg-[#1388D5] group-hover:text-black group-hover:border-[#1388D5] text-center font-medium"
         >
-          Attack This Agent
+          Attack Agent
         </button>
       </div>
     </motion.div>
