@@ -1,78 +1,59 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState, useMemo } from 'react'
+import Link from 'next/link'
 import Image from 'next/image'
 import { useParams } from 'next/navigation'
 import { Loader2, ChevronLeft } from 'lucide-react'
-import Link from 'next/link'
-import { useCurrentAccount } from '@mysten/dapp-kit'
+import { ConnectButton, useCurrentAccount } from '@mysten/dapp-kit'
 import { motion } from 'framer-motion'
-import { useAllAgents } from '@/hooks/useAllAgents'
 import { useConsumePrompt } from '@/hooks/useConsumePrompt'
-import type { AgentDetails, ConsumePromptApiResponse } from '@/types'
+import { useAgentByObjectId } from '@/hooks/agents/useAgentByObjectId'
+import type { ConsumePromptApiResponse } from '@/types'
 import { AgentInfo } from '@/components/AgentInfo'
 import { AgentStatus } from '@/types'
 import { getAgentStatus } from '@/lib/utils'
 import { type AgentEvents, useAgentEvents } from '@/hooks/useAgentEvents'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
 import AgentHistory from '@/components/AgentHistory'
-import { ConnectPrompt } from '@/components/ConnectPrompt'
+import { DEFAULT_PROFILE_URL } from '@/constants'
 
 export default function AgentChallengePage() {
   const params = useParams()
   const agentObjectId = params.address as string
   const account = useCurrentAccount()
   const { events: allEvents } = useAgentEvents()
-  const { refetchAgent } = useAllAgents()
+
   const { consumePrompt } = useConsumePrompt({
     showToasts: true,
     onApiSuccess: (response) => {
       setApiResponse(response)
       setShowResultModal(true)
+      refetch()
     },
   })
 
-  const [agent, setAgent] = useState<AgentDetails | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const { data: agent, isLoading, error, refetch } = useAgentByObjectId(agentObjectId)
+
   const [prompt, setPrompt] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
-  const [agentStatus, setAgentStatus] = useState<AgentStatus>(AgentStatus.ACTIVE)
-  const [agentEvents, setAgentEvents] = useState<AgentEvents>({
-    agentDefeated: [],
-    promptConsumed: [],
-  })
   const [apiResponse, setApiResponse] = useState<ConsumePromptApiResponse | null>(null)
   const [showResultModal, setShowResultModal] = useState(false)
 
-  // Fetch agent details when component mounts or objectId changes
-  useEffect(() => {
-    const fetchAgent = async () => {
-      try {
-        setLoading(true)
-        const agentDetails = await refetchAgent(agentObjectId)
-        setAgent(agentDetails)
-        setAgentStatus(getAgentStatus({ isDrained: false, isFinalized: false }))
-        const agentDefeated = allEvents.agentDefeated.filter(
-          (event) => event.parsedJson.agent_id === agentDetails.agent_id
-        )
-        const promptConsumed = allEvents.promptConsumed.filter(
-          (event) => event.parsedJson.agent_id === agentDetails.agent_id
-        )
-        setAgentEvents({ agentDefeated, promptConsumed })
-      } catch (err) {
-        setError('Failed to load agent details')
-        console.error(err)
-      } finally {
-        setLoading(false)
-      }
+  const agentEvents: AgentEvents = useMemo(() => {
+    if (!agent) return { agentDefeated: [], promptConsumed: [] }
+    return {
+      agentDefeated: allEvents.agentDefeated.filter(
+        (e) => e.parsedJson.agent_id === agent.agent_id
+      ),
+      promptConsumed: allEvents.promptConsumed.filter(
+        (e) => e.parsedJson.agent_id === agent.agent_id
+      ),
     }
+  }, [agent, allEvents])
 
-    if (agentObjectId) {
-      fetchAgent()
-    }
-  }, [agentObjectId, refetchAgent, allEvents])
+  const agentStatus = getAgentStatus({ isDrained: false, isFinalized: false })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -100,17 +81,7 @@ export default function AgentChallengePage() {
     try {
       setIsSubmitting(true)
       setSubmitError(null)
-      setApiResponse(null)
-
-      await consumePrompt({
-        agentDetails: agent,
-        message: prompt,
-      })
-
-      // Refresh agent data after successful submission
-      const updatedAgent = await refetchAgent(agentObjectId)
-      setAgent(updatedAgent)
-      setAgentStatus(getAgentStatus({ isDrained: false, isFinalized: false }))
+      await consumePrompt({ agentDetails: agent, message: prompt })
       setPrompt('')
     } catch (err) {
       setSubmitError('Failed to submit prompt')
@@ -120,16 +91,7 @@ export default function AgentChallengePage() {
     }
   }
 
-  if (!account?.address) {
-    return (
-      <ConnectPrompt
-        title="Welcome Challenger"
-        subtitle="One step away from breaking the unbreakable"
-        theme="attacker"
-      />
-    )
-  }
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-body flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin" />
@@ -147,12 +109,11 @@ export default function AgentChallengePage() {
           ← Back to Agents
         </Link>
         <div className="flex items-center justify-center min-h-[400px]">
-          <p className="text-lg text-gray-400">{error || 'Agent not found'}</p>
+          <p className="text-lg text-gray-400">{error?.message || 'Agent not found'}</p>
         </div>
       </div>
     )
   }
-  // console.log('Agent events', agentEvents)
 
   return (
     <div className="container mx-auto px-4 py-8 pt-32 min-h-body max-w-4xl">
@@ -166,10 +127,10 @@ export default function AgentChallengePage() {
       <div className="bg-gray-900 rounded-lg p-6 mb-8">
         <div className="relative w-full h-64 rounded-lg overflow-hidden mb-6">
           <Image
-            src={agent.agent_profile || '/placeholder.svg'}
+            src={agent.agent_profile || DEFAULT_PROFILE_URL}
             alt={`${agent.agent_name} profile`}
             fill
-            className={`object-cover transition-opacity duration-300`}
+            className="object-cover transition-opacity duration-300"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
         </div>
@@ -214,14 +175,13 @@ export default function AgentChallengePage() {
         setShowResultModal={setShowResultModal}
       />
 
-      {agentStatus === AgentStatus.ACTIVE && (
+      {agentStatus === AgentStatus.ACTIVE ? (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="bg-gray-900 rounded-lg p-6"
         >
           <h2 className="text-2xl font-bold mb-4">Attack This Agent</h2>
-
           <form
             onSubmit={handleSubmit}
             className="space-y-4"
@@ -249,25 +209,27 @@ export default function AgentChallengePage() {
 
             {submitError && <div className="text-red-500 text-sm">{submitError}</div>}
 
-            <button
-              type="submit"
-              disabled={isSubmitting || prompt.length === 0}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                  Submitting...
-                </>
-              ) : (
-                'Submit Attack'
-              )}
-            </button>
+            {account?.address ? (
+              <button
+                type="submit"
+                disabled={isSubmitting || prompt.length === 0}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                    Submitting...
+                  </>
+                ) : (
+                  'Submit Attack'
+                )}
+              </button>
+            ) : (
+              <ConnectButton className="w-full" />
+            )}
           </form>
         </motion.div>
-      )}
-
-      {agentStatus !== AgentStatus.ACTIVE && (
+      ) : (
         <div className="bg-gray-900 rounded-lg p-6 text-center">
           <h3 className="text-xl font-semibold mb-2">
             {agentStatus === AgentStatus.DEFEATED ? 'Agent Defeated' : 'Agent Undefeated'}

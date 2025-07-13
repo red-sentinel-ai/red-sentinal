@@ -6,8 +6,12 @@ import { ChevronLeft, Loader2 } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { Transaction } from '@mysten/sui/transactions'
 import { SuiTransactionBlockResponse } from '@mysten/sui/client'
-import { useCurrentAccount, useSignAndExecuteTransaction, useSuiClient } from '@mysten/dapp-kit'
-import { ConnectPrompt } from '@/components/ConnectPrompt'
+import {
+  ConnectButton,
+  useCurrentAccount,
+  useSignAndExecuteTransaction,
+  useSuiClient,
+} from '@mysten/dapp-kit'
 import { MIST_PER_SUI, SUI_CONFIG } from '@/constants'
 import { hexToVector } from '@/lib/utils'
 import { registerAgentUtil } from './utils'
@@ -266,16 +270,6 @@ export default function DefendPage() {
     }
   }
 
-  if (!account?.address) {
-    return (
-      <ConnectPrompt
-        title="Welcome Defender"
-        subtitle="Connect your wallet to deploy an agent"
-        theme="defender"
-      />
-    )
-  }
-
   return (
     <div className="container mx-auto px-4 py-4 pt-24 min-h-body">
       <form
@@ -337,20 +331,24 @@ export default function DefendPage() {
           />
         </div>
 
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="w-full bg-white text-black rounded-full py-3 font-medium hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin mr-2" />
-              Deploying...
-            </>
-          ) : (
-            'Deploy Agent'
-          )}
-        </button>
+        {account?.address ? (
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full bg-white text-black rounded-full py-3 font-medium hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                Deploying...
+              </>
+            ) : (
+              'Deploy Agent'
+            )}
+          </button>
+        ) : (
+          <ConnectButton className="w-full" />
+        )}
       </form>
 
       {/* Success Modal */}
