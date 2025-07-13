@@ -9,7 +9,7 @@ content-type: application/json
 
 
 ### SEND PROMPT
-POST http://54.81.11.64:3000/consume-prompt HTTP/1.1
+POST http://52.23.169.62:3000/consume-prompt HTTP/1.1
 content-type: application/json
 
 {
