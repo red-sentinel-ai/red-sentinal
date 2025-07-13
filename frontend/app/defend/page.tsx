@@ -167,7 +167,11 @@ export default function DefendPage() {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleOffChainSuccess = async (result: SuiTransactionBlockResponse, agentName: string) => {
+  const handleOffChainSuccess = async (
+    result: SuiTransactionBlockResponse,
+    agentName: string,
+    agent_id: string
+  ) => {
     const agentObject = result?.objectChanges?.find(
       (obj: any) =>
         obj.objectType === `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Agent`
@@ -181,7 +185,7 @@ export default function DefendPage() {
       setShowSuccessModal(true)
 
       const payload = new FormData()
-      payload.append('agent_id', agentObjectId)
+      payload.append('agent_id', agent_id)
       payload.append('agent_name', agentName)
       payload.append('object_id', agentObjectId)
       payload.append('owner', account.address)
@@ -220,7 +224,11 @@ export default function DefendPage() {
       {
         onSuccess: async (result) => {
           console.log('RESULT', result)
-          await handleOffChainSuccess(result, formData.agentName)
+          await handleOffChainSuccess(
+            result,
+            formData.agentName,
+            agentDetails.response.data.agent_id
+          )
         },
       }
     )
