@@ -27,7 +27,7 @@ export const ConnectPrompt = ({ title, subtitle, theme }: ConnectPromptProps) =>
   const colors = themeColors[theme]
 
   return (
-    <div className="min-h-[calc(100vh-60px)] flex items-center justify-center relative">
+    <div className="min-h-body flex items-center justify-center relative">
       {/* Background gradient */}
       <div className={`absolute inset-0 ${colors.gradient}`} />
 

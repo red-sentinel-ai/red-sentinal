@@ -38,6 +38,9 @@
   .animate-marquee2 {
     animation: marquee2 25s linear infinite;
   }
+  .min-h-body{
+    min-height: calc(100vh - 112px);
+  }
 }
 
 html {

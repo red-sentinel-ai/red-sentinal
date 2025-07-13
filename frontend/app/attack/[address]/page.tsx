@@ -121,7 +121,7 @@ export default function AgentChallengePage() {
 
   if (!account?.address) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-body flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold mb-4">Connect Your Wallet</h2>
           <p className="text-gray-400">Please connect your wallet to attack this agent</p>
@@ -132,7 +132,7 @@ export default function AgentChallengePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-body flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin" />
       </div>
     )

@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export default function ProjectInfo() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-body bg-background text-foreground">
       <div className="max-w-4xl mx-auto px-8 py-20">
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-[64px] font-bold uppercase mb-4">SUI SENTINEL</h1>
