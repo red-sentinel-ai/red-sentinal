@@ -56,7 +56,7 @@ export const useAllAgents = () => {
     queryKey: ['allAgents'],
     queryFn: async () => {
       console.log('refetching agent')
-      const res = await fetch('/api/agents')
+      const res = await fetch('/api/agents/all')
       if (!res.ok) {
         const err = await res.json()
         throw new Error(err.error || 'Failed to fetch agents')
