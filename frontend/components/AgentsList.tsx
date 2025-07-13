@@ -36,7 +36,7 @@ export const AgentsList = ({
   }
 
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence>
       <motion.div
         key={isFetchingAgents ? 'loading' : 'content'}
         initial={{ opacity: 0, y: 20 }}
@@ -75,6 +75,7 @@ export const AgentsList = ({
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.2, delay: idx * 0.05 }}
                     className="bg-[#2E40494D] backdrop-blur-xl p-3 rounded-lg hover:bg-[#2E40497D] cursor-pointer"
+                    onClick={() => router.push(`/attack/${agent.agent_object_id}`)}
                   >
                     {/* Mobile */}
                     <div className="md:hidden space-y-2">
