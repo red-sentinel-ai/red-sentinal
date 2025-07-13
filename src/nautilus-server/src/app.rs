@@ -19,8 +19,6 @@ use crate::{
     }
 };
 
-
-
 pub async fn register_agent(
     State(state): State<Arc<AppState>>,
     Json(payload): Json<RegisterAgentRequest>,
