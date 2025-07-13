@@ -35,18 +35,7 @@ export const ConnectPrompt = ({ title, subtitle, theme }: ConnectPromptProps) =>
       <div className="text-center max-w-lg mx-auto px-4 relative">
         <h1 className="text-4xl md:text-5xl font-bold mb-8 text-white">{title}</h1>
         <div className="relative group">
-          <ConnectButton
-            showAddress={false}
-            className={`bg-black border-2 border-white text-white text-lg min-h-[56px] min-w-[240px] rounded-lg mx-auto
-              transition-all duration-500 flex items-center justify-center relative overflow-hidden
-              before:absolute before:inset-0 before:w-[150%] before:h-full before:bg-gradient-to-r 
-              before:from-transparent ${colors.sweep} before:to-transparent
-              before:-translate-x-full before:transition-transform before:duration-500 before:ease-out
-              hover:before:translate-x-full hover:bg-opacity-90
-              after:absolute after:inset-0 after:w-full after:h-full after:opacity-0 
-              after:transition-opacity after:duration-500 hover:after:opacity-20
-              ${colors.hover}`}
-          />
+          <ConnectButton />
         </div>
         <p className="text-gray-300 text-lg mt-8">{subtitle}</p>
       </div>

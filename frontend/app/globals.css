@@ -57,6 +57,10 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+html body[data-scroll-locked] {
+    margin-right: 0 !important;
+}
+
 .white-gradient-border-vertical-top {
   background: rgb(255, 255, 255, 0.5);
   background: linear-gradient(

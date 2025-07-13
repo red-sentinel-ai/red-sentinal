@@ -1,11 +1,11 @@
 'use client'
 
 import { AgentsList } from './AgentsList'
-import { useAllAgents } from '@/hooks/useAllAgents'
 import { motion, AnimatePresence } from 'framer-motion'
-import { AgentDetails } from '@/types'
+
 import { FeaturedAgentCard } from './FeaturedAgentCard'
 import { FeaturedAgentsSkeleton } from './ui/skeletons/FeaturedAgentsSkeleton'
+import { AgentDetails, useAllAgents } from '@/hooks/agents/useAllAgents'
 
 type AgentListViewProps = {
   heading: string
@@ -14,7 +14,7 @@ type AgentListViewProps = {
 
 export const AgentListView = ({ heading, subheading }: AgentListViewProps) => {
   //TODO: show toast for failed to load agents
-  const { agents: allAgents, loading: isFetchingAllAgents, refetchAgent } = useAllAgents()
+  const { data: allAgents, isPending: isFetchingAllAgents, refetch: refetchAgent } = useAllAgents()
 
   const featuredAgents = allAgents?.filter((agent: AgentDetails) => agent.is_featured) || []
 
@@ -42,7 +42,7 @@ export const AgentListView = ({ heading, subheading }: AgentListViewProps) => {
             <div className="mb-16">
               <div className="mb-8">
                 <h2 className="text-2xl md:text-3xl font-bold text-center text-[#558EB4] mb-2">
-                  Featured Targets
+                  Featured Agents
                 </h2>
                 <div className="flex max-w-[400px] mx-auto">
                   <div className="gradient-border blue"></div>
@@ -62,6 +62,7 @@ export const AgentListView = ({ heading, subheading }: AgentListViewProps) => {
                       key={agent.agent_id}
                       agent={agent}
                       index={index}
+                      ctaHeading="Attack Agent"
                     />
                   ))}
                 </motion.div>

@@ -5,10 +5,9 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 
 import { MenuItems } from './MenuItems'
-import { MenuIcon, Plus, YoutubeIcon } from 'lucide-react'
+import { MenuIcon, Plus } from 'lucide-react'
 import Link from 'next/link'
 import { ConnectButton } from './ConnectButton'
-import { X_URL, YOUTUBE_VIDEO_URL } from '@/constants'
 
 export const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -75,7 +74,7 @@ export const Header = () => {
           {menuOpen ? <Plus className="rotate-45 block" /> : <MenuIcon />}
         </button>
 
-        <Link
+        {/* <Link
           className="block ml-1 xl:ml-4 flex-shrink-0"
           href={YOUTUBE_VIDEO_URL}
           target="_blank"
@@ -95,7 +94,7 @@ export const Header = () => {
             height={22}
             alt="x"
           />
-        </Link>
+        </Link> */}
       </div>
       {menuOpen && (
         <div className="xl:hidden px-[11px] pb-4">
