@@ -12,6 +12,7 @@ export type AgentInfoProps = {
   drainAmount: string
   className?: string
 }
+
 export const AgentInfo = ({
   balance,
   decimal,
@@ -24,40 +25,33 @@ export const AgentInfo = ({
 }: AgentInfoProps) => {
   const prizePool = (Number(balance) / MIST_PER_SUI).toFixed(4)
   const messagePrice = (Number(promptPrice) / MIST_PER_SUI).toFixed(4)
-
   const drainAmountFormatted = formatBalance(BigInt(drainAmount), decimal)
 
   return (
     <div
       className={clsx(
         className,
-        'bg-gradient-to-l from-[#35546266] via-[#2E404966] to-[#6e9aaf66] p-[1px] rounded-lg max-w-[624px] mx-auto'
+        'bg-[#12121266] backdrop-blur-xl rounded-lg lg:rounded-2xl p-4 border border-[#2E40494D] text-[#B5B5B5]' // Updated background, border, and text color
       )}
     >
-      <div className="bg-black w-full h-full rounded-lg">
-        <div className="bg-[#12121266] w-full h-full rounded-lg p-3 md:p-[18px] flex justify-between">
-          <div>
-            <p className="text-[10px] md:text-xs text-[#E1EDF2]">Prize pool</p>
-            <h4 className="text-xl md:text-2xl font-bold">
-              {isDrained ? drainAmountFormatted : prizePool} {symbol}
-            </h4>
-          </div>
-
-          <div className="h-full w-[1px] bg-[#35546266] min-h-12"></div>
-
-          <div>
-            <p className="text-[10px] md:text-xs text-[#E1EDF2]">Message price</p>
-            <h4 className="text-xl md:text-2xl font-bold">
-              {messagePrice} {symbol}
-            </h4>
-          </div>
-
-          <div className="h-full w-[1px] bg-[#35546266] min-h-12"></div>
-
-          <div>
-            <p className="text-[10px] md:text-xs text-[#E1EDF2]">Break attempts</p>
-            <h4 className="text-xl md:text-2xl font-bold">{breakAttempts}</h4>
-          </div>
+      <div className="flex justify-between items-center">
+        <div className="flex-1 text-center">
+          <p className="text-[10px] md:text-xs text-gray-400">Prize pool</p>
+          <h4 className="text-xl md:text-2xl font-bold text-[#B8B8B8]">
+            {isDrained ? drainAmountFormatted : prizePool} {symbol}
+          </h4>
+        </div>
+        <div className="h-12 w-[1px] bg-[#6F6F6F] mx-4"></div>{' '}
+        <div className="flex-1 text-center">
+          <p className="text-[10px] md:text-xs text-gray-400">Message price</p>
+          <h4 className="text-xl md:text-2xl font-bold text-[#B8B8B8]">
+            {messagePrice} {symbol}
+          </h4>
+        </div>
+        <div className="h-12 w-[1px] bg-[#6F6F6F] mx-4"></div>{' '}
+        <div className="flex-1 text-center">
+          <p className="text-[10px] md:text-xs text-gray-400">Break attempts</p>
+          <h4 className="text-xl md:text-2xl font-bold text-[#B8B8B8]">{breakAttempts}</h4>
         </div>
       </div>
     </div>
