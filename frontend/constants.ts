@@ -1,9 +1,5 @@
-export const DEFAULT_RPC_URL = 'https://api.cartridge.gg/x/starknet/sepolia'
-// export const RPC_NODE_URL = process.env.NEXT_PUBLIC_RPC_NODE_URL || DEFAULT_RPC_URL
-export const RPC_NODE_URL = DEFAULT_RPC_URL
 export const AGENT_REGISTRY_ADDRESS =
   '0x6eea1a6fd3fbf870a043f311ad260c0dc6f384f3c869dd4ccfa550c2202bc485'
-
 export const INDEXER_BASE_URL = process.env.NEXT_PUBLIC_INDEXER_BASE_URL || 'http://localhost:4000'
 
 export const supabaseUrl = process.env.SUPABASE_URL || ''
@@ -26,15 +22,14 @@ export const TEXT_COPIES = {
 
 export const SUI_FAUCET_URL = 'https://faucet.sui.io/'
 
-export const TREASURY_ADDRESS = '0xe4e8af19c2943fc2e3cbefa2fca9149985fc3b3c3d9dd312902b2c26dc600d95'
-export const LOCAL_API_PATH = 'http://3.92.163.15:3000'
+export const LOCAL_API_PATH = 'http://52.23.169.62:3000'
 
 export const SUI_CONFIG = {
-  EXAMPLES_PACKAGE_ID: '0xe66533e7317be1f38ba0bdde5b58d000f6330cc06d31c4bbf3f22709eac13001',
+  EXAMPLES_PACKAGE_ID: '0x1dab98ff24286c8c919cb74c59fb8f4ade7b217bc6dd0e90cf62c34b135cf0e1',
   MODULE_NAME: 'sentinel',
   OTW_NAME: 'SENTINEL',
-  AGENT_REGISTRY: '0x6eea1a6fd3fbf870a043f311ad260c0dc6f384f3c869dd4ccfa550c2202bc485',
-  ENCLAVE_OBJECT_ID: '0xb1eda22ce9f778835f1c14f513a3b849aad3a1f76074839de5cf4b2121f2804e',
+  AGENT_REGISTRY: '0x88223076715dd9372db77670628beba42be2866d80070cd1cc2368b5253e5483',
+  ENCLAVE_OBJECT_ID: '0x69a2b2da075054115872168cc1ca2c8c96d88028bba5e57065ee6af4115274a3',
   AGENT_OBJECT_IDS: [''],
 }
 
