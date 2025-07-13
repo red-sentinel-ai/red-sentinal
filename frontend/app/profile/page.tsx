@@ -5,6 +5,7 @@ import { CheckCircle, XCircle, Trophy, Clock, User, AlertCircle } from 'lucide-r
 import { useAgentEvents } from '@/hooks/useAgentEvents'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { SUI_TESTNET_BASE_URL } from '@/constants'
+import { ConnectPrompt } from '@/components/ConnectPrompt'
 
 export default function UserProfileEvents() {
   const { events } = useAgentEvents()
@@ -18,7 +19,7 @@ export default function UserProfileEvents() {
   const accountAddress = account?.address
 
   useEffect(() => {
-    if (!account?.address || !events.promptConsumed || !events.agentDefeated) return
+    if (!accountAddress || !events.promptConsumed || !events.agentDefeated) return
 
     setLoading(true)
 
@@ -36,7 +37,7 @@ export default function UserProfileEvents() {
     })
 
     setLoading(false)
-  }, [accountAddress, events])
+  }, [account?.address, accountAddress, events])
 
   const formatAddress = (addr: string) => `${addr.slice(0, 6)}...${addr.slice(-4)}`
   const formatTimestamp = (ms: string) =>
@@ -47,8 +48,18 @@ export default function UserProfileEvents() {
 
   const { promptConsumed, agentDefeated } = userEvents
 
+  if (!account?.address) {
+    return (
+      <ConnectPrompt
+        title="Welcome User"
+        subtitle="Connect your wallet to see your activities"
+        theme="defender"
+      />
+    )
+  }
+
   return (
-    <div className="container max-w-4xl mx-auto px-4 py-20 space-y-10">
+    <div className="container max-w-4xl mx-auto px-4 py-20 space-y-10 min-h-body">
       <h1 className="text-3xl font-bold mb-6">📜 Your Activity</h1>
 
       {loading ? (
