@@ -118,7 +118,7 @@ export default function AgentChallengePage() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="container mx-auto px-4 py-8 pt-32 min-h-body max-w-4xl text-[#B5B5B5]"
+      className="container mx-auto px-4 py-8 pt-32 min-h-body max-w-6xl text-[#B5B5B5]"
     >
       <Link
         href="/attack"
@@ -131,9 +131,9 @@ export default function AgentChallengePage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.1 }}
-        className="bg-[#12121266] backdrop-blur-xl rounded-lg lg:rounded-2xl p-6 mb-8 border border-[#2E40494D]"
+        className="bg-[#12121266] backdrop-blur-xl rounded-lg lg:rounded-2xl p-6 mb-8 border border-[#2E40494D] grid grid-cols-2 gap-8"
       >
-        <div className="relative w-full h-64 rounded-lg overflow-hidden mb-6">
+        <div className="relative w-full h-full rounded-lg overflow-hidden mb-6">
           <Image
             src={agent.agent_profile || DEFAULT_PROFILE_URL}
             alt={`${agent.agent_name} profile`}
@@ -143,20 +143,22 @@ export default function AgentChallengePage() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
         </div>
 
-        <div className="flex items-center gap-2 mb-2">
-          <h1 className="text-3xl font-bold text-[#B8B8B8]">Name: {agent.agent_name}</h1>
-          {agent.is_featured && (
-            <Image
-              src="/icons/check-mark.svg"
-              width={20}
-              height={20}
-              alt="checkmark"
-            />
-          )}
-        </div>
-        <p className="text-lg text-[#B5B5B5] mb-4">Agent ID: {agent.agent_id}</p>
+        <div className="flex flex-col gap-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="text-3xl font-bold text-[#B8B8B8]">Name: {agent.agent_name}</h1>
+              {agent.is_featured && (
+                <Image
+                  src="/icons/check-mark.svg"
+                  width={20}
+                  height={20}
+                  alt="checkmark"
+                />
+              )}
+            </div>
+            <p className="text-lg text-[#B5B5B5">Agent ID: {agent.agent_id}</p>
+          </div>
 
-        <div className="bg-[#2E40494D] rounded-lg p-4 mb-6 border border-[#2E40494D]">
           <AgentInfo
             balance={agent.balance.toString()}
             decimal={9}
@@ -167,14 +169,14 @@ export default function AgentChallengePage() {
             isDrained={false}
             drainAmount="0"
           />
-        </div>
 
-        <div className="bg-[#2E40494D] rounded-lg p-4 mb-6 border border-[#2E40494D]">
-          <h2 className="text-xl font-semibold mb-2 text-[#B8B8B8] flex items-center gap-2">
-            <Info className="w-5 h-5 text-[#558EB4]" /> System Prompt
-          </h2>
-          <div className="bg-black/30 p-4 rounded-lg">
-            <p className="whitespace-pre-wrap text-[#B5B5B5]">{agent.system_prompt}</p>
+          <div className="bg-[#2E40494D] rounded-lg p-2 border border-[#2E40494D]">
+            <h2 className="text-xl font-semibold mb-2 text-[#B8B8B8] flex items-center gap-2">
+              <Info className="w-5 h-5 text-[#558EB4]" /> System Prompt
+            </h2>
+            <div className="bg-black/30 p-4 rounded-lg">
+              <p className="whitespace-pre-wrap text-[#B5B5B5]">{agent.system_prompt}</p>
+            </div>
           </div>
         </div>
       </motion.div>
