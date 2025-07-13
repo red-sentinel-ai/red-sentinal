@@ -59,6 +59,19 @@ export const MOCK_RESULT = {
     },
   ],
 }
+export const PROJECT_DISCORD_URL = 'https://discord.gg'
 
 export const DEFAULT_PROFILE_URL =
   'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/ss-agents//default_profile.jpg'
+
+export const SOCIAL_MEDIA_URLS = {
+  TWITTER_FOLLOW: 'https://twitter.com/intent/follow?screen_name=ravenhousenft',
+  TWITTER_PROFILE: X_URL,
+  TWITTER_TWEET:
+    'https://twitter.com/intent/tweet?text=Just%20explored%20@ravenhousenft%20on%20https%3A%2F%2Fapp.ravenhouse.xyz%2F%20%23RavenHouse%20%23NFT%20%23Aztec',
+  DISCORD_JOIN: PROJECT_DISCORD_URL,
+  DISCORD_GENERAL_CHAT_URL: 'https://discord.com/channels/1344562923569152021/1344638823992393748',
+} as const
+
+//TODO: Add the correct docs url
+export const REWARDS_DOCS_URL = 'https://sui-sentinal-plum.vercel.app/'
