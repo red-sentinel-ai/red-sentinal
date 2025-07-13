@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Copy, X, Check } from 'lucide-react'
+import Link from 'next/link'
+import { Copy, X, Check, UserIcon } from 'lucide-react'
 import clsx from 'clsx'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './Tooltip'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -115,7 +116,25 @@ export const ConnectButton = ({ className = '', showAddress = true }: ConnectBut
                       <span className="text-sm font-medium text-[#FAFAFA]">
                         {formatAddress(account.address)}
                       </span>
-                      {copied ? <Check size={14} className="text-[#58F083]" /> : <Copy size={14} />}
+
+                      <Link
+                        href="/profile"
+                        onClick={(e) => e.stopPropagation()}
+                        className="hover:text-[#58F083] transition-colors"
+                        aria-label="Go to profile"
+                      >
+                        <UserIcon size={14} />
+                      </Link>
+
+                      {copied ? (
+                        <Check
+                          size={14}
+                          className="text-[#58F083]"
+                        />
+                      ) : (
+                        <Copy size={14} />
+                      )}
+
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>

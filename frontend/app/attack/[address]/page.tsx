@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { useParams } from 'next/navigation'
 import { Loader2, ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
@@ -8,20 +9,20 @@ import { useCurrentAccount } from '@mysten/dapp-kit'
 import { motion } from 'framer-motion'
 import { useAllAgents } from '@/hooks/useAllAgents'
 import { useConsumePrompt } from '@/hooks/useConsumePrompt'
-import { AgentDetails, ConsumePromptApiResponse } from '@/types'
+import type { AgentDetails, ConsumePromptApiResponse } from '@/types'
 import { AgentInfo } from '@/components/AgentInfo'
 import { AgentStatus } from '@/types'
 import { getAgentStatus } from '@/lib/utils'
-import { AgentEvents, useAgentEvents } from '@/hooks/useAgentEvents'
+import { type AgentEvents, useAgentEvents } from '@/hooks/useAgentEvents'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
 import AgentHistory from '@/components/AgentHistory'
+import { ConnectPrompt } from '@/components/ConnectPrompt'
 
 export default function AgentChallengePage() {
   const params = useParams()
   const agentObjectId = params.address as string
   const account = useCurrentAccount()
   const { events: allEvents } = useAgentEvents()
-
   const { refetchAgent } = useAllAgents()
   const { consumePrompt } = useConsumePrompt({
     showToasts: true,
@@ -121,18 +122,16 @@ export default function AgentChallengePage() {
 
   if (!account?.address) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold mb-4">Connect Your Wallet</h2>
-          <p className="text-gray-400">Please connect your wallet to attack this agent</p>
-        </div>
-      </div>
+      <ConnectPrompt
+        title="Welcome Challenger"
+        subtitle="One step away from breaking the unbreakable"
+        theme="attacker"
+      />
     )
   }
-
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-body flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin" />
       </div>
     )
@@ -140,7 +139,7 @@ export default function AgentChallengePage() {
 
   if (error || !agent) {
     return (
-      <div className="container mx-auto px-4 py-8 pt-24">
+      <div className="container mx-auto px-4 py-8 pt-24 min-h-body">
         <Link
           href="/attack"
           className="text-blue-400 hover:underline mb-8 block"
@@ -156,18 +155,37 @@ export default function AgentChallengePage() {
   // console.log('Agent events', agentEvents)
 
   return (
-    <div className="container mx-auto px-4 py-8 pt-24 max-w-4xl">
+    <div className="container mx-auto px-4 py-8 pt-24 min-h-body max-w-4xl">
       <Link
         href="/attack"
         className="flex items-center gap-1 text-blue-400 hover:underline mb-8"
       >
-        <ChevronLeft className="w-5 h-5" />
-        Back to Agents
+        <ChevronLeft className="w-5 h-5" /> Back to Agents
       </Link>
 
       <div className="bg-gray-900 rounded-lg p-6 mb-8">
-        <h1 className="text-3xl font-bold mb-4">Agent: {agent.agent_id}</h1>
-        <h2 className="text-3xl font-bold mb-4">Name: {agent.agent_name}</h2>
+        <div className="relative w-full h-64 rounded-lg overflow-hidden mb-6">
+          <Image
+            src={agent.agent_profile || '/placeholder.svg'}
+            alt={`${agent.agent_name} profile`}
+            fill
+            className={`object-cover transition-opacity duration-300`}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
+        </div>
+
+        <div className="flex items-center gap-1 mb-2">
+          <h1 className="text-3xl font-bold">Name: {agent.agent_name}</h1>
+          {agent.is_featured && (
+            <Image
+              src="/icons/check-mark.svg"
+              width={20}
+              height={20}
+              alt="checkmark"
+            />
+          )}
+        </div>
+        <p className="text-lg text-[#B5B5B5] mb-4">Agent ID: {agent.agent_id}</p>
 
         <div className="grid grid-cols-1 mb-6 ">
           <AgentInfo
