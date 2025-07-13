@@ -4,7 +4,17 @@ import { MIST_PER_SUI } from '@/constants'
 import { AgentDetails } from '@/hooks/agents/useAllAgents'
 import Image from 'next/image'
 
-export const FeaturedAgentCard = ({ agent, index }: { agent: AgentDetails; index: number }) => {
+type FeaturedAgentCardProps = {
+  agent: AgentDetails
+  index: number
+  ctaHeading?: string
+}
+
+export const FeaturedAgentCard = ({
+  agent,
+  index,
+  ctaHeading = 'View Agent',
+}: FeaturedAgentCardProps) => {
   const router = useRouter()
 
   const handleAttack = () => {
@@ -80,7 +90,7 @@ export const FeaturedAgentCard = ({ agent, index }: { agent: AgentDetails; index
           }}
           className="block border border-[#558EB4] rounded-[8px] w-full min-h-11 p-2 transition-all text-[#558EB4] group-hover:bg-[#1388D5] group-hover:text-black group-hover:border-[#1388D5] text-center font-medium"
         >
-          Attack Agent
+          {ctaHeading}
         </button>
       </div>
     </motion.div>
