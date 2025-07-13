@@ -1,8 +1,3 @@
-// Copyright (c), Mysten Labs, Inc.
-// SPDX-License-Identifier: Apache-2.0
-
-// Permissionless registration of an enclave.
-
 module enclave::enclave;
 
 use std::bcs;
