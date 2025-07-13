@@ -16,6 +16,7 @@ import { getAgentStatus } from '@/lib/utils'
 import { type AgentEvents, useAgentEvents } from '@/hooks/useAgentEvents'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
 import AgentHistory from '@/components/AgentHistory'
+import { ConnectPrompt } from '@/components/ConnectPrompt'
 
 export default function AgentChallengePage() {
   const params = useParams()
@@ -121,15 +122,13 @@ export default function AgentChallengePage() {
 
   if (!account?.address) {
     return (
-      <div className="min-h-body flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold mb-4">Connect Your Wallet</h2>
-          <p className="text-gray-400">Please connect your wallet to attack this agent</p>
-        </div>
-      </div>
+      <ConnectPrompt
+        title="Welcome Challenger"
+        subtitle="One step away from breaking the unbreakable"
+        theme="attacker"
+      />
     )
   }
-
   if (loading) {
     return (
       <div className="min-h-body flex items-center justify-center">
@@ -140,7 +139,7 @@ export default function AgentChallengePage() {
 
   if (error || !agent) {
     return (
-      <div className="container mx-auto px-4 py-8 pt-24">
+      <div className="container mx-auto px-4 py-8 pt-24 min-h-body">
         <Link
           href="/attack"
           className="text-blue-400 hover:underline mb-8 block"
@@ -156,7 +155,7 @@ export default function AgentChallengePage() {
   // console.log('Agent events', agentEvents)
 
   return (
-    <div className="container mx-auto px-4 py-8 pt-24 max-w-4xl">
+    <div className="container mx-auto px-4 py-8 pt-24 min-h-body max-w-4xl">
       <Link
         href="/attack"
         className="flex items-center gap-1 text-blue-400 hover:underline mb-8"
