@@ -45,10 +45,10 @@ export default function AgentChallengePage() {
     if (!agent) return { agentDefeated: [], promptConsumed: [] }
     return {
       agentDefeated: allEvents.agentDefeated.filter(
-        (e) => e.parsedJson.agent_id === agent.agent_id
+        (e) => e.parsedJson.agent_id === `${agent.agent_id}`
       ),
       promptConsumed: allEvents.promptConsumed.filter(
-        (e) => e.parsedJson.agent_id === agent.agent_id
+        (e) => e.parsedJson.agent_id === `${agent.agent_id}`
       ),
     }
   }, [agent, allEvents])
