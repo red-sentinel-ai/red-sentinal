@@ -1,14 +1,14 @@
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { MIST_PER_SUI } from '@/constants'
-import { AgentDetails } from '@/types'
+import { AgentDetails } from '@/hooks/agents/useAllAgents'
 import Image from 'next/image'
 
 export const FeaturedAgentCard = ({ agent, index }: { agent: AgentDetails; index: number }) => {
   const router = useRouter()
 
   const handleAttack = () => {
-    router.push(`/attack/${agent.agent_object_id}`)
+    router.push(`/attack/${agent.object_id}`)
   }
 
   return (

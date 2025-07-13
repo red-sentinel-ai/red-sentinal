@@ -1,11 +1,11 @@
 'use client'
 
 import { AgentsList } from './AgentsList'
-import { useAllAgents } from '@/hooks/useAllAgents'
 import { motion, AnimatePresence } from 'framer-motion'
-import { AgentDetails } from '@/types'
+
 import { FeaturedAgentCard } from './FeaturedAgentCard'
 import { FeaturedAgentsSkeleton } from './ui/skeletons/FeaturedAgentsSkeleton'
+import { AgentDetails, useAllAgents } from '@/hooks/agents/useAllAgents'
 
 type AgentListViewProps = {
   heading: string
@@ -14,7 +14,7 @@ type AgentListViewProps = {
 
 export const AgentListView = ({ heading, subheading }: AgentListViewProps) => {
   //TODO: show toast for failed to load agents
-  const { agents: allAgents, loading: isFetchingAllAgents, refetchAgent } = useAllAgents()
+  const { data: allAgents, isPending: isFetchingAllAgents, refetch: refetchAgent } = useAllAgents()
 
   const featuredAgents = allAgents?.filter((agent: AgentDetails) => agent.is_featured) || []
 
