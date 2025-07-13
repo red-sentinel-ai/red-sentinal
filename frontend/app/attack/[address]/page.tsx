@@ -1,12 +1,15 @@
 'use client'
 
+import type React from 'react'
+
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useParams } from 'next/navigation'
-import { Loader2, ChevronLeft } from 'lucide-react'
+import { Loader2, ChevronLeft, Info } from 'lucide-react'
 import { ConnectButton, useCurrentAccount } from '@mysten/dapp-kit'
 import { motion } from 'framer-motion'
+
 import { useConsumePrompt } from '@/hooks/useConsumePrompt'
 import { useAgentByObjectId } from '@/hooks/agents/useAgentByObjectId'
 import type { ConsumePromptApiResponse } from '@/types'
@@ -57,27 +60,22 @@ export default function AgentChallengePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
     if (!account?.address) {
       setSubmitError('Please connect your wallet')
       return
     }
-
     if (!agent) {
       setSubmitError('Agent not loaded')
       return
     }
-
     if (prompt.length === 0) {
       setSubmitError('Please enter a prompt')
       return
     }
-
     if (prompt.length > 600) {
       setSubmitError('Prompt must be 600 characters or less')
       return
     }
-
     try {
       setIsSubmitting(true)
       setSubmitError(null)
@@ -94,19 +92,19 @@ export default function AgentChallengePage() {
   if (isLoading) {
     return (
       <div className="min-h-body flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#B8B8B8]" />
       </div>
     )
   }
 
   if (error || !agent) {
     return (
-      <div className="container mx-auto px-4 py-8 pt-24 min-h-body">
+      <div className="container mx-auto px-4 py-8 pt-24 min-h-body text-[#B5B5B5]">
         <Link
           href="/attack"
-          className="text-blue-400 hover:underline mb-8 block"
+          className="flex items-center gap-1 text-[#558EB4] hover:underline mb-8"
         >
-          ← Back to Agents
+          <ChevronLeft className="w-5 h-5" /> Back to Agents
         </Link>
         <div className="flex items-center justify-center min-h-[400px]">
           <p className="text-lg text-gray-400">{error?.message || 'Agent not found'}</p>
@@ -116,15 +114,25 @@ export default function AgentChallengePage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 pt-32 min-h-body max-w-4xl">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="container mx-auto px-4 py-8 pt-32 min-h-body max-w-4xl text-[#B5B5B5]"
+    >
       <Link
         href="/attack"
-        className="flex items-center gap-1 text-blue-400 hover:underline mb-8"
+        className="flex items-center gap-1 text-[#558EB4] hover:underline mb-8"
       >
         <ChevronLeft className="w-5 h-5" /> Back to Agents
       </Link>
 
-      <div className="bg-gray-900 rounded-lg p-6 mb-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.1 }}
+        className="bg-[#12121266] backdrop-blur-xl rounded-lg lg:rounded-2xl p-6 mb-8 border border-[#2E40494D]"
+      >
         <div className="relative w-full h-64 rounded-lg overflow-hidden mb-6">
           <Image
             src={agent.agent_profile || DEFAULT_PROFILE_URL}
@@ -132,11 +140,11 @@ export default function AgentChallengePage() {
             fill
             className="object-cover transition-opacity duration-300"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
         </div>
 
-        <div className="flex items-center gap-1 mb-2">
-          <h1 className="text-3xl font-bold">Name: {agent.agent_name}</h1>
+        <div className="flex items-center gap-2 mb-2">
+          <h1 className="text-3xl font-bold text-[#B8B8B8]">Name: {agent.agent_name}</h1>
           {agent.is_featured && (
             <Image
               src="/icons/check-mark.svg"
@@ -148,7 +156,7 @@ export default function AgentChallengePage() {
         </div>
         <p className="text-lg text-[#B5B5B5] mb-4">Agent ID: {agent.agent_id}</p>
 
-        <div className="grid grid-cols-1 mb-6 ">
+        <div className="bg-[#2E40494D] rounded-lg p-4 mb-6 border border-[#2E40494D]">
           <AgentInfo
             balance={agent.balance.toString()}
             decimal={9}
@@ -161,13 +169,15 @@ export default function AgentChallengePage() {
           />
         </div>
 
-        <div className="bg-gray-800 rounded-lg p-4 mb-6">
-          <h2 className="text-xl font-semibold mb-2">System Prompt</h2>
-          <div className="bg-black/30 p-4 rounded">
-            <p className="whitespace-pre-wrap">{agent.system_prompt}</p>
+        <div className="bg-[#2E40494D] rounded-lg p-4 mb-6 border border-[#2E40494D]">
+          <h2 className="text-xl font-semibold mb-2 text-[#B8B8B8] flex items-center gap-2">
+            <Info className="w-5 h-5 text-[#558EB4]" /> System Prompt
+          </h2>
+          <div className="bg-black/30 p-4 rounded-lg">
+            <p className="whitespace-pre-wrap text-[#B5B5B5]">{agent.system_prompt}</p>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       <AttackStatusModal
         apiResponse={apiResponse}
@@ -179,9 +189,10 @@ export default function AgentChallengePage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gray-900 rounded-lg p-6"
+          transition={{ duration: 0.3, delay: 0.2 }}
+          className="bg-[#12121266] backdrop-blur-xl rounded-lg lg:rounded-2xl p-6 border border-[#2E40494D] mb-8"
         >
-          <h2 className="text-2xl font-bold mb-4">Attack This Agent</h2>
+          <h2 className="text-2xl font-bold mb-4 text-[#B8B8B8]">Attack This Agent</h2>
           <form
             onSubmit={handleSubmit}
             className="space-y-4"
@@ -189,7 +200,7 @@ export default function AgentChallengePage() {
             <div>
               <label
                 htmlFor="prompt"
-                className="block text-sm font-medium mb-2"
+                className="block text-sm font-medium mb-2 text-[#B5B5B5]"
               >
                 Enter your prompt (max 600 characters)
               </label>
@@ -197,7 +208,7 @@ export default function AgentChallengePage() {
                 id="prompt"
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg p-4 min-h-[150px] text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full bg-gray-800 border border-gray-700 rounded-lg p-4 min-h-[150px] text-white focus:ring-2 focus:ring-[#558EB4] focus:border-[#558EB4] outline-none placeholder:text-gray-500"
                 maxLength={600}
                 disabled={isSubmitting}
                 placeholder="Try to trick the agent into revealing sensitive information..."
@@ -206,14 +217,12 @@ export default function AgentChallengePage() {
                 {prompt.length}/600 characters
               </div>
             </div>
-
             {submitError && <div className="text-red-500 text-sm">{submitError}</div>}
-
             {account?.address ? (
               <button
                 type="submit"
                 disabled={isSubmitting || prompt.length === 0}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                className="w-full block border border-[#8F564E] rounded-[8px] min-h-11 p-2 text-center transition-all text-[#8F564E] group-hover:bg-[#E53922] group-hover:text-black group-hover:border-[#E53922] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
               >
                 {isSubmitting ? (
                   <>
@@ -230,8 +239,13 @@ export default function AgentChallengePage() {
           </form>
         </motion.div>
       ) : (
-        <div className="bg-gray-900 rounded-lg p-6 text-center">
-          <h3 className="text-xl font-semibold mb-2">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
+          className="bg-[#12121266] backdrop-blur-xl rounded-lg lg:rounded-2xl p-6 text-center border border-[#2E40494D] mb-8"
+        >
+          <h3 className="text-xl font-semibold mb-2 text-[#B8B8B8]">
             {agentStatus === AgentStatus.DEFEATED ? 'Agent Defeated' : 'Agent Undefeated'}
           </h3>
           <p className="text-gray-400">
@@ -239,13 +253,19 @@ export default function AgentChallengePage() {
               ? 'This agent has already been defeated and can no longer be attacked.'
               : 'This agent is currently undefeated but not accepting new attacks.'}
           </p>
-        </div>
+        </motion.div>
       )}
 
-      <AgentHistory
-        agentEvents={agentEvents}
-        currentAgentId={agent.agent_id}
-      />
-    </div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.3 }}
+      >
+        <AgentHistory
+          agentEvents={agentEvents}
+          currentAgentId={agent.agent_id}
+        />
+      </motion.div>
+    </motion.div>
   )
 }
