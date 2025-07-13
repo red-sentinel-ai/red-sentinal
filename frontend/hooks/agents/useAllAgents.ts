@@ -14,7 +14,7 @@ export interface AgentDetails {
   balance: number
 }
 
-const fetchAgentDetailsViaObject = async (
+export const fetchAgentDetailsViaObject = async (
   client: SuiClient,
   agentObjectId: string
 ): Promise<Pick<AgentDetails, 'cost_per_message' | 'system_prompt' | 'balance'>> => {
