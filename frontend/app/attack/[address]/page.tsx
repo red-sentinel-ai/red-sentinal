@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useParams } from 'next/navigation'
 import { Loader2, ChevronLeft } from 'lucide-react'
-import { useCurrentAccount } from '@mysten/dapp-kit'
+import { ConnectButton, useCurrentAccount } from '@mysten/dapp-kit'
 import { motion } from 'framer-motion'
 import { useConsumePrompt } from '@/hooks/useConsumePrompt'
 import { useAgentByObjectId } from '@/hooks/agents/useAgentByObjectId'
@@ -16,7 +16,6 @@ import { getAgentStatus } from '@/lib/utils'
 import { type AgentEvents, useAgentEvents } from '@/hooks/useAgentEvents'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
 import AgentHistory from '@/components/AgentHistory'
-import { ConnectPrompt } from '@/components/ConnectPrompt'
 import { DEFAULT_PROFILE_URL } from '@/constants'
 
 export default function AgentChallengePage() {
@@ -90,16 +89,6 @@ export default function AgentChallengePage() {
     } finally {
       setIsSubmitting(false)
     }
-  }
-
-  if (!account?.address) {
-    return (
-      <ConnectPrompt
-        title="Welcome Challenger"
-        subtitle="One step away from breaking the unbreakable"
-        theme="attacker"
-      />
-    )
   }
 
   if (isLoading) {
@@ -220,20 +209,24 @@ export default function AgentChallengePage() {
 
             {submitError && <div className="text-red-500 text-sm">{submitError}</div>}
 
-            <button
-              type="submit"
-              disabled={isSubmitting || prompt.length === 0}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                  Submitting...
-                </>
-              ) : (
-                'Submit Attack'
-              )}
-            </button>
+            {account?.address ? (
+              <button
+                type="submit"
+                disabled={isSubmitting || prompt.length === 0}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                    Submitting...
+                  </>
+                ) : (
+                  'Submit Attack'
+                )}
+              </button>
+            ) : (
+              <ConnectButton className="w-full" />
+            )}
           </form>
         </motion.div>
       ) : (
