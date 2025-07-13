@@ -6,7 +6,7 @@ export const LandingPage = () => {
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        className="max-w-[933px] mx-auto mt-20 px-4"
+        className="max-w-[933px] mx-auto mt-32 px-4"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
