@@ -42,7 +42,7 @@ export const AgentListView = ({ heading, subheading }: AgentListViewProps) => {
             <div className="mb-16">
               <div className="mb-8">
                 <h2 className="text-2xl md:text-3xl font-bold text-center text-[#558EB4] mb-2">
-                  Featured Targets
+                  Featured Agents
                 </h2>
                 <div className="flex max-w-[400px] mx-auto">
                   <div className="gradient-border blue"></div>
