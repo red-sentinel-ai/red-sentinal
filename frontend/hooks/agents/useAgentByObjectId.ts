@@ -1,18 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useSuiClient } from '@mysten/dapp-kit'
-import { fetchAgentDetailsViaObject } from './useAllAgents'
-
-export interface AgentDetails {
-  agent_id: string
-  agent_name: string
-  agent_profile: string
-  object_id: string
-  owner: string
-  is_featured: boolean
-  cost_per_message: number
-  system_prompt: string
-  balance: number
-}
+import { AgentDetails, fetchAgentDetailsViaObject } from './useAllAgents'
 
 export const useAgentByObjectId = (objectId?: string) => {
   const client = useSuiClient()
