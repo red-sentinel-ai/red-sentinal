@@ -155,7 +155,7 @@ export default function AgentChallengePage() {
   // console.log('Agent events', agentEvents)
 
   return (
-    <div className="container mx-auto px-4 py-8 pt-24 min-h-body max-w-4xl">
+    <div className="container mx-auto px-4 py-8 pt-32 min-h-body max-w-4xl">
       <Link
         href="/attack"
         className="flex items-center gap-1 text-blue-400 hover:underline mb-8"
