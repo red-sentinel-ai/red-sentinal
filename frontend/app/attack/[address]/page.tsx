@@ -131,9 +131,9 @@ export default function AgentChallengePage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.1 }}
-        className="bg-[#12121266] backdrop-blur-xl rounded-lg lg:rounded-2xl p-6 mb-8 border border-[#2E40494D] grid grid-cols-2 gap-8"
+        className="bg-[#12121266] backdrop-blur-xl rounded-lg lg:rounded-2xl p-6 mb-8 border border-[#2E40494D] grid grid-cols-1 md:grid-cols-2 gap-8"
       >
-        <div className="relative w-full h-full rounded-lg overflow-hidden mb-6">
+        <div className="relative w-full h-64 md:h-auto rounded-lg overflow-hidden">
           <Image
             src={agent.agent_profile || DEFAULT_PROFILE_URL}
             alt={`${agent.agent_name} profile`}
@@ -143,9 +143,9 @@ export default function AgentChallengePage() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
         </div>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-6 justify-between">
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 mb-1">
               <h1 className="text-3xl font-bold text-[#B8B8B8]">Name: {agent.agent_name}</h1>
               {agent.is_featured && (
                 <Image
@@ -156,7 +156,7 @@ export default function AgentChallengePage() {
                 />
               )}
             </div>
-            <p className="text-lg text-[#B5B5B5">Agent ID: {agent.agent_id}</p>
+            <p className="text-lg text-[#B5B5B5]">Agent ID: {agent.agent_id}</p>
           </div>
 
           <AgentInfo
@@ -170,7 +170,7 @@ export default function AgentChallengePage() {
             drainAmount="0"
           />
 
-          <div className="bg-[#2E40494D] rounded-lg p-2 border border-[#2E40494D]">
+          <div className="bg-[#2E40494D] rounded-lg p-4 border border-[#2E40494D]">
             <h2 className="text-xl font-semibold mb-2 text-[#B8B8B8] flex items-center gap-2">
               <Info className="w-5 h-5 text-[#558EB4]" /> System Prompt
             </h2>
@@ -224,7 +224,7 @@ export default function AgentChallengePage() {
               <button
                 type="submit"
                 disabled={isSubmitting || prompt.length === 0}
-                className="w-full block border border-[#8F564E] rounded-[8px] min-h-11 p-2 text-center transition-all text-[#8F564E] group-hover:bg-[#E53922] group-hover:text-black group-hover:border-[#E53922] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                className="w-full border border-[#8F564E] rounded-[8px] min-h-11 p-2 text-center transition-all text-[#8F564E] hover:bg-[#E53922] hover:text-black hover:border-[#E53922] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
               >
                 {isSubmitting ? (
                   <>
