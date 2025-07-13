@@ -40,10 +40,23 @@ export const Header = () => {
         })}
       >
         <div className="flex items-center">
-          <Link className="block mr-1 xl:mr-4 flex-shrink-0" href="/">
-            <Image src={'/icons/shield.svg'} width={32} height={44} alt="shield" />
+          <Link
+            className="block mr-1 xl:mr-4 flex-shrink-0"
+            href="/"
+          >
+            <div className="relative w-8 h-11">
+              <Image
+                src="/icons/shield.svg"
+                alt="shield"
+                fill
+                style={{ objectFit: 'contain' }}
+              />
+            </div>
           </Link>
-          <Link className="block ml-1 xl:ml-4 flex-shrink-0" href="/about">
+          <Link
+            className="block ml-1 xl:ml-4 flex-shrink-0"
+            href="/about"
+          >
             Learn More
           </Link>
           <div className="hidden xl:block">
@@ -62,12 +75,26 @@ export const Header = () => {
           {menuOpen ? <Plus className="rotate-45 block" /> : <MenuIcon />}
         </button>
 
-        <Link className="block ml-1 xl:ml-4 flex-shrink-0" href={YOUTUBE_VIDEO_URL} target="_blank">
+        <Link
+          className="block ml-1 xl:ml-4 flex-shrink-0"
+          href={YOUTUBE_VIDEO_URL}
+          target="_blank"
+        >
           <YoutubeIcon size={32} />
         </Link>
 
-        <Link href={X_URL} aria-label="Twitter/X" target="_blank" className="ms-3">
-          <Image src="/icons/x.svg" width={22} height={22} alt="x" />
+        <Link
+          href={X_URL}
+          aria-label="Twitter/X"
+          target="_blank"
+          className="ms-3"
+        >
+          <Image
+            src="/icons/x.svg"
+            width={22}
+            height={22}
+            alt="x"
+          />
         </Link>
       </div>
       {menuOpen && (
