@@ -3,16 +3,18 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { ChevronLeft, Loader2 } from 'lucide-react'
+import { toast } from 'react-toastify'
 import { Transaction } from '@mysten/sui/transactions'
+import { SuiTransactionBlockResponse } from '@mysten/sui/client'
 import { useCurrentAccount, useSignAndExecuteTransaction, useSuiClient } from '@mysten/dapp-kit'
 import { ConnectPrompt } from '@/components/ConnectPrompt'
 import { MIST_PER_SUI, SUI_CONFIG } from '@/constants'
-import { toast } from 'react-toastify'
 import { hexToVector } from '@/lib/utils'
 import { registerAgentUtil } from './utils'
 import { useAgentObjectNames } from '@/hooks/useAgentObjectNames'
 import { FundAgentModal } from '@/components/FundAgentModal'
 import { SuccessModal } from '@/components/DefenderSuccessModal'
+import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
 
 interface FormData {
   agentName: string
@@ -68,6 +70,9 @@ export default function DefendPage() {
   const client = useSuiClient()
   const account = useCurrentAccount()
   const { addAgentObjectIdWithName } = useAgentObjectNames()
+  const { mutate: createAgent } = useCreateAgent()
+  const [agentImage, setAgentImage] = useState<File | null>(null)
+
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction({
     execute: async ({ bytes, signature }) =>
       await client.executeTransactionBlock({
@@ -162,6 +167,34 @@ export default function DefendPage() {
     return Object.keys(newErrors).length === 0
   }
 
+  const handleOffChainSuccess = async (result: SuiTransactionBlockResponse, agentName: string) => {
+    const agentObject = result?.objectChanges?.find(
+      (obj: any) =>
+        obj.objectType === `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Agent`
+    )
+
+    if (agentObject) {
+      const agentObjectId = (agentObject as any).objectId
+      await addAgentObjectIdWithName(`${agentObjectId} ${agentName}`)
+      setDeployedAgentObjectId(agentObjectId)
+      setTransactionDigest(result.digest.toString())
+      setShowSuccessModal(true)
+
+      const payload = new FormData()
+      payload.append('agent_id', agentObjectId)
+      payload.append('agent_name', agentName)
+      payload.append('object_id', agentObjectId)
+      payload.append('owner', account.address)
+      payload.append('digest', result.digest.toString())
+
+      if (agentImage) {
+        payload.append('image', agentImage)
+      }
+
+      createAgent(payload)
+    }
+  }
+
   const createAgentTransaction = async (agentDetails: any) => {
     const tx = new Transaction()
     const sigVector = hexToVector(agentDetails.signature)
@@ -187,29 +220,7 @@ export default function DefendPage() {
       {
         onSuccess: async (result) => {
           console.log('RESULT', result)
-          console.log('object changes', result.objectChanges)
-
-          const agentObject = result?.objectChanges?.find(
-            (obj: any) =>
-              obj.objectType ===
-              `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Agent`
-          )
-
-          if (agentObject) {
-            console.log('agent object', agentObject)
-            const agentObjectId = (agentObject as any).objectId
-            await addAgentObjectIdWithName(`${agentObjectId} ${formData.agentName}`)
-            setDeployedAgentObjectId(agentObjectId)
-            setTransactionDigest(result.digest.toString())
-            setShowSuccessModal(true)
-            console.log('Object id added to db successfully')
-          }
-
-          // Redirect to agent page
-          // const agentId = agentDetails?.response?.data?.agent_id
-          // if (agentId) {
-          //   router.push(`/attack/${agentId}`)
-          // }
+          await handleOffChainSuccess(result, formData.agentName)
         },
       }
     )
@@ -226,6 +237,13 @@ export default function DefendPage() {
       toast.info('Processing payment...')
 
       toast.info('Registering agent...')
+
+      // await handleOffChainSuccess(
+      //   MOCK_RESULT as unknown as SuiTransactionBlockResponse,
+      //   formData.agentName
+      // )
+      // return
+
       const feePerMessage = parseFloat(formData.feePerMessage) * MIST_PER_SUI
       const agentDetails = await registerAgentUtil(formData.systemPrompt, feePerMessage)
 
@@ -251,7 +269,7 @@ export default function DefendPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-4 pt-24 min-h-[calc(100vh-60px)]">
+    <div className="container mx-auto px-4 py-4 pt-24 min-h-body">
       <form
         onSubmit={handleSubmit}
         className="max-w-2xl mx-auto space-y-6 relative"
@@ -297,6 +315,19 @@ export default function DefendPage() {
           placeholder="0.00"
           required
         />
+
+        <div>
+          <label className="block text-sm font-medium mb-2">Agent Image</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0] || null
+              setAgentImage(file)
+            }}
+            className="block w-full text-sm text-gray-300 file:bg-gray-700 file:border-0 file:rounded-md file:px-4 file:py-2 file:text-white"
+          />
+        </div>
 
         <button
           type="submit"

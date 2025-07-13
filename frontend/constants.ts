@@ -6,6 +6,10 @@ export const AGENT_REGISTRY_ADDRESS =
 
 export const INDEXER_BASE_URL = process.env.NEXT_PUBLIC_INDEXER_BASE_URL || 'http://localhost:4000'
 
+export const supabaseUrl = process.env.SUPABASE_URL || ''
+export const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || ''
+export const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+
 export const SYSTEM_PROMPT_MAX_TOKENS = 800
 
 export const TEXT_COPIES = {
@@ -41,3 +45,20 @@ export const PROJECT_GITHUB_URL = 'https://github.com/satyambnsal/sui-sentinal'
 export const NAUTILUS_URL = 'https://github.com/MystenLabs/nautilus'
 export const YOUTUBE_VIDEO_URL = 'https://www.youtube.com/watch?v=U3qMdgSGASI'
 export const X_URL = 'https://x.com/suisentinal'
+
+export const MOCK_RESULT = {
+  balanceChanges: [],
+  checkpoint: 'mock-check-point',
+  confirmedLocalExecution: null,
+  digest: 'mockDigest',
+  objectChanges: [
+    {
+      objectType: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Agent`,
+      objectId: Math.floor(Math.random() * 1000) + 1,
+      agentId: '0xb4149a8fff09a1d1283a42961b5f459238256eccc906ada92931d4960c07a4c7',
+    },
+  ],
+}
+
+export const DEFAULT_PROFILE_URL =
+  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/ss-agents//default_profile.jpg'

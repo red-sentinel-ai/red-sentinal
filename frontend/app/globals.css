@@ -22,6 +22,10 @@
     font-family: var(--font-dm-sans);
   }
 
+   html {
+    scrollbar-gutter: stable;
+  }
+
   pre,
   code,
   h1,
@@ -37,6 +41,9 @@
   }
   .animate-marquee2 {
     animation: marquee2 25s linear infinite;
+  }
+  .min-h-body{
+    min-height: calc(100vh - 112px);
   }
 }
 

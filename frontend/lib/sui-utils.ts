@@ -29,6 +29,8 @@ export const fetchAgentDetailsViaObject = async (
       cost_per_message: Number(fields.cost_per_message),
       system_prompt: fields.system_prompt,
       balance: Number(fields.balance),
+      is_featured: false,
+      agent_profile: '',
     }
   } catch (error) {
     console.error('Error fetching agent via getObject:', error)
