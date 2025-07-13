@@ -62,6 +62,7 @@ export const AgentListView = ({ heading, subheading }: AgentListViewProps) => {
                       key={agent.agent_id}
                       agent={agent}
                       index={index}
+                      ctaHeading="Attack Agent"
                     />
                   ))}
                 </motion.div>
