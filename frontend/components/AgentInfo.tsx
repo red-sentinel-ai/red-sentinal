@@ -18,7 +18,6 @@ export const AgentInfo = ({
   decimal,
   promptPrice,
   symbol,
-  breakAttempts,
   isDrained,
   drainAmount,
   className,
@@ -31,27 +30,22 @@ export const AgentInfo = ({
     <div
       className={clsx(
         className,
-        'bg-[#12121266] backdrop-blur-xl rounded-lg lg:rounded-2xl p-4 border border-[#2E40494D] text-[#B5B5B5]' // Updated background, border, and text color
+        'bg-[#2E40494D] rounded-md p-2 border border-[#2E40494D] text-[#B5B5B5]'
       )}
     >
-      <div className="flex justify-between items-center">
-        <div className="flex-1 text-center">
-          <p className="text-[10px] md:text-xs text-gray-400">Prize pool</p>
-          <h4 className="text-xl md:text-2xl font-bold text-[#B8B8B8]">
+      <div className="flex justify-between items-center text-xs gap-4">
+        <div className="text-center">
+          <p className="text-[10px] text-gray-400">Pool</p>
+          <p className="font-semibold text-white">
             {isDrained ? drainAmountFormatted : prizePool} {symbol}
-          </h4>
+          </p>
         </div>
-        <div className="h-12 w-[1px] bg-[#6F6F6F] mx-4"></div>{' '}
-        <div className="flex-1 text-center">
-          <p className="text-[10px] md:text-xs text-gray-400">Message price</p>
-          <h4 className="text-xl md:text-2xl font-bold text-[#B8B8B8]">
+        <div className="h-6 w-[1px] bg-[#6F6F6F]"></div>
+        <div className="text-center">
+          <p className="text-[10px] text-gray-400">Price</p>
+          <p className="font-semibold text-white">
             {messagePrice} {symbol}
-          </h4>
-        </div>
-        <div className="h-12 w-[1px] bg-[#6F6F6F] mx-4"></div>{' '}
-        <div className="flex-1 text-center">
-          <p className="text-[10px] md:text-xs text-gray-400">Break attempts</p>
-          <h4 className="text-xl md:text-2xl font-bold text-[#B8B8B8]">{breakAttempts}</h4>
+          </p>
         </div>
       </div>
     </div>
