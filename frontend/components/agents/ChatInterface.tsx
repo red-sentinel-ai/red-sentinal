@@ -12,9 +12,10 @@ import {
   XCircle,
   Trophy,
   Zap,
+  Send,
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ConnectButton, useCurrentAccount } from '@mysten/dapp-kit'
+import { useCurrentAccount } from '@mysten/dapp-kit'
 import clsx from 'clsx'
 
 import { AgentInfo } from '@/components/AgentInfo'
@@ -386,16 +387,16 @@ export default function ChatInterface({
       <div className="bg-gradient-to-r from-[#12121266] to-[#1a1a1a66] backdrop-blur-xl border-t border-[#2E40494D] p-6 shadow-2xl">
         <form
           onSubmit={handleSubmit}
-          className="grid grid-cols-12 gap-4 items-end"
+          className="relative"
         >
-          <div className="relative col-span-9">
+          <div className="relative">
             <textarea
               value={promptInput}
               onChange={(e) => setPromptInput(e.target.value)}
-              className="w-full bg-gradient-to-r from-gray-800 to-gray-700 border-2 border-gray-600 rounded-xl p-4 pr-16 min-h-[70px] max-h-[150px] text-white focus:ring-2 focus:ring-[#558EB4] focus:border-[#558EB4] outline-none placeholder:text-gray-400 resize-y shadow-inner transition-all duration-200"
+              className="w-full bg-gradient-to-r from-gray-800 to-gray-700 border-2 border-gray-600 rounded-2xl p-4 pr-20 pb-12 min-h-[60px] max-h-[150px] text-white focus:ring-2 focus:ring-[#558EB4] focus:border-[#558EB4] outline-none placeholder:text-gray-400 resize-none shadow-inner transition-all duration-200"
               maxLength={600}
-              disabled={isSubmitting || !account?.address}
-              placeholder="Craft your attack prompt... Try to outsmart the agent's defenses!"
+              disabled={isSubmitting}
+              placeholder="Type your attack prompt..."
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault()
@@ -403,34 +404,29 @@ export default function ChatInterface({
                 }
               }}
             />
-            <div className="absolute bottom-3 right-3 text-sm text-gray-400 bg-black/50 px-2 py-1 rounded">
+
+            <div className="absolute bottom-3 left-4 text-xs text-gray-400 bg-black/50 px-2 py-1 rounded">
               {promptInput.length}/600
             </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting || promptInput.length === 0}
+              className="absolute bottom-3 right-3 w-10 h-10 bg-gradient-to-r from-[#558EB4] to-[#1388D5] hover:from-[#1388D5] hover:to-[#558EB4] text-white rounded-full flex items-center justify-center transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none"
+            >
+              {isSubmitting ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <Send className="w-5 h-5" />
+              )}
+            </button>
           </div>
-          {submitError && <div className="col-span-12 text-red-400 text-sm">{submitError}</div>}
-          <div className="col-span-3">
-            {account?.address ? (
-              <button
-                type="submit"
-                disabled={isSubmitting || promptInput.length === 0}
-                className="w-full bg-gradient-to-r from-[#8F564E] to-[#E53922] hover:from-[#E53922] hover:to-[#8F564E] text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                    Attacking...
-                  </>
-                ) : (
-                  <>
-                    <Zap className="w-5 h-5 mr-2" />
-                    Launch Attack
-                  </>
-                )}
-              </button>
-            ) : (
-              <ConnectButton className="w-full" />
-            )}
-          </div>
+
+          {submitError && (
+            <div className="mt-2 text-red-400 text-sm bg-red-900/20 border border-red-500/30 rounded-lg p-2">
+              {submitError}
+            </div>
+          )}
         </form>
       </div>
     </div>
