@@ -3,7 +3,16 @@
 import type React from 'react'
 import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
-import { Loader2, Info, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react'
+import {
+  Loader2,
+  Info,
+  AlertCircle,
+  ChevronDown,
+  ChevronUp,
+  XCircle,
+  Trophy,
+  Zap,
+} from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ConnectButton, useCurrentAccount } from '@mysten/dapp-kit'
 import clsx from 'clsx'
@@ -62,7 +71,6 @@ export default function ChatInterface({
 
   useEffect(() => {
     const initialMessages: ChatMessage[] = []
-
     agentEvents.promptConsumed
       .sort((a, b) => Number.parseInt(a.timestampMs) - Number.parseInt(b.timestampMs))
       .forEach((event, index) => {
@@ -80,14 +88,13 @@ export default function ChatInterface({
           id: `agent-hist-${event.id.txDigest}-${index}`,
           type: 'agent',
           content:
-            'lorem epson lorem epson lorem epson lorem lorem epson lorem epson lorem epson lorem  epson',
+            "I've analyzed your attempt and determined the appropriate response based on my security protocols. Your approach was interesting but ultimately unsuccessful.",
           timestamp: event.timestampMs,
           isSuccess: event.parsedJson.success,
           score: event.parsedJson.score,
           txDigest: event.id.txDigest,
         })
       })
-
     setChatMessages(initialMessages)
   }, [agentEvents])
 
@@ -125,36 +132,37 @@ export default function ChatInterface({
       sender: account?.address,
     }
     setChatMessages((prevMessages) => [...prevMessages, newUserMessage])
-
     await onSendMessage(promptInput)
     setPromptInput('')
   }
 
   return (
-    <div className="flex flex-col bg-black text-[#B5B5B5]">
-      <div className="bg-[#12121266] backdrop-blur-xl border-b border-[#2E40494D] p-3">
+    <div className="flex flex-col bg-gradient-to-br from-gray-900 via-black to-gray-900 text-[#E5E7EB]">
+      <div className="bg-gradient-to-r from-[#12121266] to-[#1a1a1a66] backdrop-blur-xl border-b border-[#2E40494D] p-4 shadow-lg">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+          <div className="flex items-center gap-4">
+            <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-[#558EB4] ring-opacity-50">
               <Image
                 src={agent.agent_profile || DEFAULT_PROFILE_URL}
                 alt={`${agent.agent_name} profile`}
                 fill
                 className="object-cover"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-lg font-bold text-[#B8B8B8]">Name: {agent.agent_name}</h1>
+                <h1 className="text-xl font-bold text-white">Name: {agent.agent_name}</h1>
                 {agent.is_featured && (
                   <Image
                     src="/icons/check-mark.svg"
-                    width={16}
-                    height={16}
+                    width={24}
+                    height={24}
                     alt="checkmark"
                   />
                 )}
               </div>
+              <p className="text-sm text-gray-300">Agent ID: {agent.agent_id}</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -170,12 +178,12 @@ export default function ChatInterface({
             />
             <button
               onClick={() => setShowAgentDetails(!showAgentDetails)}
-              className="p-1 hover:bg-[#2E40494D] rounded"
+              className="p-2 hover:bg-[#2E40494D] rounded-lg transition-colors"
             >
               {showAgentDetails ? (
-                <ChevronUp className="w-4 h-4" />
+                <ChevronUp className="w-5 h-5" />
               ) : (
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="w-5 h-5" />
               )}
             </button>
           </div>
@@ -190,12 +198,12 @@ export default function ChatInterface({
               transition={{ duration: 0.2 }}
               className="overflow-hidden"
             >
-              <div className="bg-[#2E40494D] rounded-lg p-3 mt-3 border border-[#2E40494D]">
-                <h2 className="text-sm font-semibold mb-2 text-[#B8B8B8] flex items-center gap-2">
+              <div className="bg-gradient-to-r from-[#2E40494D] to-[#1a1a1a4D] rounded-lg p-4 mt-4 border border-[#2E40494D]">
+                <h2 className="text-sm font-semibold mb-3 text-white flex items-center gap-2">
                   <Info className="w-4 h-4 text-[#558EB4]" /> System Prompt
                 </h2>
-                <div className="bg-black/30 p-3 rounded-lg">
-                  <p className="whitespace-pre-wrap text-sm text-[#B5B5B5]">
+                <div className="bg-black/40 p-4 rounded-lg border border-gray-700">
+                  <p className="whitespace-pre-wrap text-sm text-gray-300 leading-relaxed">
                     {agent.system_prompt}
                   </p>
                 </div>
@@ -207,12 +215,17 @@ export default function ChatInterface({
 
       <div
         ref={chatContainerRef}
-        className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar max-h-[calc(100vh-470px)]"
+        className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar max-h-[calc(100vh-470px)] bg-gradient-to-b from-transparent to-black/20"
       >
         {chatMessages.length === 0 && (
-          <div className="text-center py-8 text-gray-400">
-            <AlertCircle className="w-12 h-12 mx-auto mb-4 opacity-50" />
-            <p>No messages yet. Start attacking the agent!</p>
+          <div className="text-center py-12 text-gray-400">
+            <div className="bg-gradient-to-r from-gray-800 to-gray-700 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+              <AlertCircle className="w-10 h-10 opacity-50" />
+            </div>
+            <p className="text-lg">No messages yet. Start attacking the agent!</p>
+            <p className="text-sm mt-2 opacity-75">
+              Try to break through their defenses with clever prompts.
+            </p>
           </div>
         )}
         <AnimatePresence>
@@ -222,73 +235,120 @@ export default function ChatInterface({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.3 }}
               className={clsx('flex', {
                 'justify-end': message.type === 'user',
+                'justify-start': message.type === 'agent',
               })}
             >
               <div
-                className={clsx('max-w-[70%] flex items-start gap-2 relative ', {
-                  'ps-10': message.type === 'agent',
-                  'pr-10': message.type === 'user',
+                className={clsx('max-w-[75%] flex items-start gap-3 relative', {
+                  'flex-row-reverse': message.type === 'user',
                 })}
               >
-                <div
-                  className={clsx('absolute ', {
-                    'left-0': message.type === 'agent',
-                    'right-0': message.type === 'user',
-                  })}
-                >
-                  <div className="w-8 h-8 bg-red-600 rounded-full mt-2 relative">
+                <div className="flex-shrink-0">
+                  <div
+                    className={clsx('w-10 h-10 rounded-full relative ring-2 ring-opacity-60', {
+                      'ring-[#558EB4]': message.type === 'user',
+                      'ring-green-400': message.type === 'agent' && message.isSuccess,
+                      'ring-red-400': message.type === 'agent' && message.isSuccess === false,
+                      'ring-gray-400': message.type === 'agent' && message.isSuccess === undefined,
+                    })}
+                  >
                     <Image
-                      src={`${
+                      src={
                         message.type === 'agent'
-                          ? agent.agent_profile
-                            ? agent.agent_profile
-                            : DEFAULT_PROFILE_URL
+                          ? agent.agent_profile || DEFAULT_PROFILE_URL
                           : DEFAULT_PROFILE_URL
-                      }`}
+                      }
                       fill
                       alt="profile"
-                      className="rounded-full"
+                      className="rounded-full object-cover"
                     />
+                    {message.type === 'agent' && message.isSuccess !== undefined && (
+                      <div
+                        className={clsx(
+                          'absolute -bottom-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-white text-xs',
+                          {
+                            'bg-green-500': message.isSuccess,
+                            'bg-red-500': !message.isSuccess,
+                          }
+                        )}
+                      >
+                        {message.isSuccess ? (
+                          <Trophy className="w-2.5 h-2.5" />
+                        ) : (
+                          <XCircle className="w-2.5 h-2.5" />
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
+
                 <div
-                  className={clsx('p-3 rounded-lg shadow-md', {
-                    'bg-[#558EB4] text-white': message.type === 'user',
-                    'bg-[#2E40494D] text-[#B5B5B5] border border-[#2E40494D]':
-                      message.type === 'agent',
+                  className={clsx('rounded-2xl shadow-lg relative', {
+                    'bg-gradient-to-r from-[#558EB4] to-[#1388D5] text-white border border-[#558EB4]/30':
+                      message.type === 'user',
+                    'bg-gradient-to-r from-green-900/40 to-green-800/40 text-green-100 border-2 border-green-400/50':
+                      message.type === 'agent' && message.isSuccess,
+                    'bg-gradient-to-r from-red-900/40 to-red-800/40 text-red-100 border-2 border-red-400/50':
+                      message.type === 'agent' && message.isSuccess === false,
+                    'bg-gradient-to-r from-gray-800/60 to-gray-700/60 text-gray-200 border border-gray-600/50':
+                      message.type === 'agent' && message.isSuccess === undefined,
                   })}
                 >
-                  <div>
-                    <p className="text-sm">{message.content}</p>
-                    <div className="mt-2 pt-2 border-t border-gray-700 text-xs text-gray-300 flex justify-between">
-                      {message.type === 'agent' && (
-                        <div className="">
-                          {message.txDigest && (
-                            <p>
-                              Tx:{' '}
-                              <a
-                                href={`${SUI_TESTNET_BASE_URL}/tx/${message.txDigest}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-[#558EB4] hover:underline"
-                              >
-                                {formatAddress(message.txDigest)}
-                              </a>
-                            </p>
-                          )}
-                        </div>
-                      )}
-                      {message.type === 'user' && message.sender && (
-                        <div>
-                          <p>Sender: {formatAddress(message.sender)}</p>
-                          {message.amountSent && <p>Amount: {message.amountSent} SUI</p>}
-                        </div>
-                      )}
+                  {message.type === 'agent' && message.isSuccess !== undefined && (
+                    <div
+                      className={clsx('absolute inset-0 rounded-2xl opacity-20 blur-sm', {
+                        'bg-green-400': message.isSuccess,
+                        'bg-red-400': !message.isSuccess,
+                      })}
+                    />
+                  )}
 
-                      <span className="block text-right text-[10px] text-gray-400 mt-1">
+                  <div className="relative p-4">
+                    <div className="mb-3">
+                      <p className="text-sm leading-relaxed">{message.content}</p>
+                    </div>
+
+                    <div
+                      className={clsx('pt-3 border-t text-xs flex justify-between items-center', {
+                        'border-white/20': message.type === 'user',
+                        'border-green-400/30': message.type === 'agent' && message.isSuccess,
+                        'border-red-400/30':
+                          message.type === 'agent' && message.isSuccess === false,
+                        'border-gray-500/30':
+                          message.type === 'agent' && message.isSuccess === undefined,
+                      })}
+                    >
+                      <div className="flex flex-col gap-1">
+                        {message.type === 'agent' && message.score !== undefined && (
+                          <div className="flex items-center gap-2">
+                            <Zap className="w-3 h-3" />
+                            <span className="font-medium">Score: {message.score}/100</span>
+                          </div>
+                        )}
+                        {message.type === 'agent' && message.txDigest && (
+                          <div className="flex items-center gap-1">
+                            <span>Tx:</span>
+                            <a
+                              href={`${SUI_TESTNET_BASE_URL}/tx/${message.txDigest}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-300 hover:text-blue-200 underline font-mono"
+                            >
+                              {formatAddress(message.txDigest)}
+                            </a>
+                          </div>
+                        )}
+                        {message.type === 'user' && message.sender && (
+                          <div className="flex flex-col gap-1">
+                            <span>Sender: {formatAddress(message.sender)}</span>
+                            {message.amountSent && <span>Amount: {message.amountSent} SUI</span>}
+                          </div>
+                        )}
+                      </div>
+                      <span className="text-right opacity-75 text-xs">
                         {formatTimestamp(message.timestamp)}
                       </span>
                     </div>
@@ -303,28 +363,39 @@ export default function ChatInterface({
               animate={{ opacity: 1, y: 0 }}
               className="flex justify-start"
             >
-              <div className="max-w-[70%] p-3 rounded-lg bg-[#2E40494D] text-[#B5B5B5] border border-[#2E40494D] flex items-center gap-2">
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Agent thinking...</span>
+              <div className="max-w-[75%] flex items-start gap-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-gray-600 to-gray-500 flex items-center justify-center ring-2 ring-gray-400 ring-opacity-60">
+                  <Image
+                    src={agent.agent_profile || DEFAULT_PROFILE_URL}
+                    width={40}
+                    height={40}
+                    alt="agent"
+                    className="rounded-full object-cover"
+                  />
+                </div>
+                <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/60 text-gray-200 border border-gray-600/50 rounded-2xl p-4 flex items-center gap-3">
+                  <Loader2 className="w-5 h-5 animate-spin text-[#558EB4]" />
+                  <span>Agent is analyzing your attack...</span>
+                </div>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
-      <div className="bg-[#12121266] backdrop-blur-xl border-t border-[#2E40494D] p-4">
+      <div className="bg-gradient-to-r from-[#12121266] to-[#1a1a1a66] backdrop-blur-xl border-t border-[#2E40494D] p-6 shadow-2xl">
         <form
           onSubmit={handleSubmit}
-          className="space-y-3 grid grid-cols-12 gap-4"
+          className="grid grid-cols-12 gap-4 items-end"
         >
           <div className="relative col-span-9">
             <textarea
               value={promptInput}
               onChange={(e) => setPromptInput(e.target.value)}
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg p-4 pr-16 min-h-[60px] max-h-[150px] text-white focus:ring-2 focus:ring-[#558EB4] focus:border-[#558EB4] outline-none placeholder:text-gray-500 resize-y"
+              className="w-full bg-gradient-to-r from-gray-800 to-gray-700 border-2 border-gray-600 rounded-xl p-4 pr-16 min-h-[70px] max-h-[150px] text-white focus:ring-2 focus:ring-[#558EB4] focus:border-[#558EB4] outline-none placeholder:text-gray-400 resize-y shadow-inner transition-all duration-200"
               maxLength={600}
               disabled={isSubmitting || !account?.address}
-              placeholder="Try to trick the agent into revealing sensitive information..."
+              placeholder="Craft your attack prompt... Try to outsmart the agent's defenses!"
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault()
@@ -332,25 +403,28 @@ export default function ChatInterface({
                 }
               }}
             />
-            <div className="absolute bottom-2 right-2 text-sm text-gray-400">
+            <div className="absolute bottom-3 right-3 text-sm text-gray-400 bg-black/50 px-2 py-1 rounded">
               {promptInput.length}/600
             </div>
           </div>
-          {submitError && <div className="text-red-500 text-sm">{submitError}</div>}
+          {submitError && <div className="col-span-12 text-red-400 text-sm">{submitError}</div>}
           <div className="col-span-3">
             {account?.address ? (
               <button
                 type="submit"
                 disabled={isSubmitting || promptInput.length === 0}
-                className="w-full block border border-[#8F564E] rounded-[8px] min-h-11 p-2 text-center transition-all text-[#8F564E] hover:bg-[#E53922] hover:text-black hover:border-[#E53922] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                className="w-full bg-gradient-to-r from-[#8F564E] to-[#E53922] hover:from-[#E53922] hover:to-[#8F564E] text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none"
               >
                 {isSubmitting ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                    Submitting...
+                    Attacking...
                   </>
                 ) : (
-                  'Submit Attack'
+                  <>
+                    <Zap className="w-5 h-5 mr-2" />
+                    Launch Attack
+                  </>
                 )}
               </button>
             ) : (
