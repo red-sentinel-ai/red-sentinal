@@ -108,7 +108,6 @@ export default function ChatInterface({
         timestamp: Date.now().toString(),
         isSuccess: apiResponse.response.data.success,
         score: apiResponse.response.data.score,
-        txDigest: apiResponse.response.digest,
       }
       setChatMessages((prevMessages) => [...prevMessages, newAgentMessage])
       refetchAgent()
@@ -333,7 +332,7 @@ export default function ChatInterface({
                           <div className="flex items-center gap-1">
                             <span>Tx:</span>
                             <a
-                              href={`${SUI_TESTNET_BASE_URL}/tx/${message.txDigest}`}
+                              href={`${SUI_TESTNET_BASE_URL}/${message.txDigest}`}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="text-blue-300 hover:text-blue-200 underline font-mono"
