@@ -15,7 +15,7 @@ import {
   Send,
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useCurrentAccount } from '@mysten/dapp-kit'
+import { ConnectModal, useCurrentAccount } from '@mysten/dapp-kit'
 import clsx from 'clsx'
 
 import { AgentInfo } from '@/components/AgentInfo'
@@ -409,17 +409,27 @@ export default function ChatInterface({
               {promptInput.length}/600
             </div>
 
-            <button
-              type="submit"
-              disabled={isSubmitting || promptInput.length === 0}
-              className="absolute bottom-3 right-3 w-10 h-10 bg-gradient-to-r from-[#558EB4] to-[#1388D5] hover:from-[#1388D5] hover:to-[#558EB4] text-white rounded-full flex items-center justify-center transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none"
-            >
-              {isSubmitting ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                <Send className="w-5 h-5" />
-              )}
-            </button>
+            {account?.address ? (
+              <button
+                type="submit"
+                disabled={isSubmitting || promptInput.length === 0}
+                className="absolute bottom-3 right-3 w-10 h-10 bg-gradient-to-r from-[#558EB4] to-[#1388D5] hover:from-[#1388D5] hover:to-[#558EB4] text-white rounded-full flex items-center justify-center transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none"
+              >
+                {isSubmitting ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <Send className="w-5 h-5" />
+                )}
+              </button>
+            ) : (
+              <ConnectModal
+                trigger={
+                  <button className="absolute bottom-3 right-3 w-10 h-10 bg-gradient-to-r from-[#558EB4] to-[#1388D5] hover:from-[#1388D5] hover:to-[#558EB4] text-white rounded-full flex items-center justify-center transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none">
+                    <Send className="w-5 h-5" />
+                  </button>
+                }
+              />
+            )}
           </div>
 
           {submitError && (
