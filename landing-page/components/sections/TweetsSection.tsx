@@ -37,7 +37,7 @@ const TWEETS = [
   },
 ]
 
-const EXTENDED_TWEETS = [...TWEETS, ...TWEETS, ...TWEETS]
+const EXTENDED_TWEETS = [...TWEETS, ...TWEETS, ...TWEETS, ...TWEETS, ...TWEETS, ...TWEETS]
 
 export function TweetsSection() {
   return (
@@ -87,7 +87,7 @@ export function TweetsSection() {
                 key={`${tweet.id}-${index}`}
                 className="flex-shrink-0 w-80 sm:w-96"
               >
-                <div className="border border-[#558eb466] bg-[#12121266] backdrop-blur-sm rounded-2xl p-6 h-full">
+                <div className="border border-[#558eb466] bg-[#12121266] backdrop-blur-sm rounded-2xl p-6 h-full flex flex-col">
                   <div className="flex items-start gap-3 mb-4">
                     <div className="size-12 bg-gradient-to-r from-[#558EB4] to-[#1388D5] rounded-full flex items-center justify-center flex-shrink-0 shadow-glow-blue">
                       <Image
@@ -98,18 +98,21 @@ export function TweetsSection() {
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h4 className="font-semibold text-white truncate">{tweet.author}</h4>
-                        <span className="text-[#558EB4] text-sm">{tweet.handle}</span>
-                        <span className="text-gray-500 text-sm">·</span>
-                        <span className="text-gray-500 text-sm">{tweet.time}</span>
+                      <div className="flex items-start justify-between gap-2 mb-1">
+                        <div>
+                          <h4 className="font-semibold text-white truncate">{tweet.author}</h4>
+                          <span className="text-[#558EB4] text-sm">{tweet.handle}</span>
+                        </div>
+                        <span className="text-gray-500 text-sm whitespace-nowrap">
+                          {tweet.time}
+                        </span>
                       </div>
                     </div>
                   </div>
 
                   <p className="text-gray-300 leading-relaxed mb-6 text-sm">{tweet.content}</p>
 
-                  <div className="flex items-center justify-between text-gray-400 pt-4 border-t border-[#558EB4]/20">
+                  <div className="flex items-center justify-between text-gray-400 pt-4 border-t border-[#558EB4]/20 mt-auto">
                     <div className="flex items-center gap-2 hover:text-[#558EB4] transition-colors cursor-pointer">
                       <MessageCircle className="size-4" />
                       <span className="text-sm">{tweet.replies}</span>
