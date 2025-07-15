@@ -6,8 +6,12 @@ import { ChevronLeft, Loader2 } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { Transaction } from '@mysten/sui/transactions'
 import { SuiTransactionBlockResponse } from '@mysten/sui/client'
-import { useCurrentAccount, useSignAndExecuteTransaction, useSuiClient } from '@mysten/dapp-kit'
-import { ConnectPrompt } from '@/components/ConnectPrompt'
+import {
+  ConnectButton,
+  useCurrentAccount,
+  useSignAndExecuteTransaction,
+  useSuiClient,
+} from '@mysten/dapp-kit'
 import { MIST_PER_SUI, SUI_CONFIG } from '@/constants'
 import { hexToVector } from '@/lib/utils'
 import { registerAgentUtil } from './utils'
@@ -167,7 +171,11 @@ export default function DefendPage() {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleOffChainSuccess = async (result: SuiTransactionBlockResponse, agentName: string) => {
+  const handleOffChainSuccess = async (
+    result: SuiTransactionBlockResponse,
+    agentName: string,
+    agent_id: string
+  ) => {
     const agentObject = result?.objectChanges?.find(
       (obj: any) =>
         obj.objectType === `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Agent`
@@ -181,7 +189,7 @@ export default function DefendPage() {
       setShowSuccessModal(true)
 
       const payload = new FormData()
-      payload.append('agent_id', agentObjectId)
+      payload.append('agent_id', agent_id)
       payload.append('agent_name', agentName)
       payload.append('object_id', agentObjectId)
       payload.append('owner', account.address)
@@ -220,7 +228,11 @@ export default function DefendPage() {
       {
         onSuccess: async (result) => {
           console.log('RESULT', result)
-          await handleOffChainSuccess(result, formData.agentName)
+          await handleOffChainSuccess(
+            result,
+            formData.agentName,
+            agentDetails.response.data.agent_id
+          )
         },
       }
     )
@@ -256,16 +268,6 @@ export default function DefendPage() {
     } finally {
       setIsLoading(false)
     }
-  }
-
-  if (!account?.address) {
-    return (
-      <ConnectPrompt
-        title="Welcome Defender"
-        subtitle="Connect your wallet to deploy an agent"
-        theme="defender"
-      />
-    )
   }
 
   return (
@@ -329,20 +331,24 @@ export default function DefendPage() {
           />
         </div>
 
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="w-full bg-white text-black rounded-full py-3 font-medium hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin mr-2" />
-              Deploying...
-            </>
-          ) : (
-            'Deploy Agent'
-          )}
-        </button>
+        {account?.address ? (
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full bg-white text-black rounded-full py-3 font-medium hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                Deploying...
+              </>
+            ) : (
+              'Deploy Agent'
+            )}
+          </button>
+        ) : (
+          <ConnectButton className="w-full" />
+        )}
       </form>
 
       {/* Success Modal */}

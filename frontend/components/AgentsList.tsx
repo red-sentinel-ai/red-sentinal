@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { LeaderboardSkeleton } from './ui/skeletons/LeaderboardSkeleton'
-import { AgentDetails } from '@/types'
+import { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { useFundAgentModal } from '@/hooks/useFundAgentModal'
 import { MIST_PER_SUI } from '@/constants'
 
@@ -21,7 +21,7 @@ export const AgentsList = ({
 }: {
   agents: AgentDetails[]
   isFetchingAgents: boolean
-  onRefreshAgent: (objectId: string) => Promise<AgentDetails>
+  onRefreshAgent: () => void
 }) => {
   const router = useRouter()
   const account = useCurrentAccount()
@@ -29,10 +29,10 @@ export const AgentsList = ({
 
   const isAgentOwner = (creator: string) => creator === account?.address
 
-  const handleRefresh = async (e: React.MouseEvent, objectId: string) => {
+  const handleRefresh = async (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    await onRefreshAgent(objectId)
+    onRefreshAgent()
   }
 
   return (
@@ -75,7 +75,7 @@ export const AgentsList = ({
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.2, delay: idx * 0.05 }}
                     className="bg-[#2E40494D] backdrop-blur-xl p-3 rounded-lg hover:bg-[#2E40497D] cursor-pointer"
-                    onClick={() => router.push(`/attack/${agent.agent_object_id}`)}
+                    onClick={() => router.push(`/attack/${agent.object_id}`)}
                   >
                     {/* Mobile */}
                     <div className="md:hidden space-y-2">
@@ -110,25 +110,25 @@ export const AgentsList = ({
                         </div>
                         <div>
                           <p className="text-gray-400 text-xs">Creator</p>
-                          <p className="truncate">{agent.creator}</p>
+                          <p className="truncate">{agent.owner}</p>
                         </div>
                       </div>
                       <div className="flex gap-3 text-xs">
                         <button
-                          onClick={(e) => handleRefresh(e, agent.agent_id)}
+                          onClick={(e) => handleRefresh(e)}
                           className="text-blue-400 hover:text-blue-300"
                         >
                           Refresh
                         </button>
                         <button
-                          onClick={() => router.push(`/attack/${agent.agent_object_id}`)}
+                          onClick={() => router.push(`/attack/${agent.object_id}`)}
                           className="text-red-500 hover:text-red-400"
                         >
                           Attack
                         </button>
-                        {isAgentOwner(agent.creator) && (
+                        {isAgentOwner(agent.owner) && (
                           <button
-                            onClick={() => openModal(agent.agent_object_id)}
+                            onClick={() => openModal(agent.object_id)}
                             className="text-green-500 hover:text-green-400"
                           >
                             Fund
@@ -161,20 +161,20 @@ export const AgentsList = ({
                       <div className="col-span-2 ps-4">{`${costPerMessage} SUI`}</div>
                       <div className="col-span-3 ps-4 flex gap-4">
                         <button
-                          onClick={() => router.push(`/attack/${agent.agent_object_id}`)}
+                          onClick={() => router.push(`/attack/${agent.object_id}`)}
                           className="text-sm text-red-700 font-bold hover:text-red-500"
                         >
                           Attack
                         </button>
                         <button
-                          onClick={(e) => handleRefresh(e, agent.agent_object_id)}
+                          onClick={(e) => handleRefresh(e)}
                           className="text-sm text-blue-400 hover:text-blue-300"
                         >
                           Refresh
                         </button>
-                        {isAgentOwner(agent.creator) && (
+                        {isAgentOwner(agent.owner) && (
                           <button
-                            onClick={() => openModal(agent.agent_object_id)}
+                            onClick={() => openModal(agent.object_id)}
                             className="text-sm text-green-500 hover:text-green-400"
                           >
                             Fund
