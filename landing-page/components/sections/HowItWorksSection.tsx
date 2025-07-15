@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion'
 import { Shield, Target, Coins, Zap, Users, Trophy } from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/card'
 import Image from 'next/image'
 
 export function HowItWorksSection() {

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { Button } from '@/components/ui/button'
 import { ArrowRight, BookOpen, Zap } from 'lucide-react'
 
 export function HeroSection() {
@@ -79,14 +78,11 @@ export function HeroSection() {
             transition={{ duration: 0.8, delay: 1.3 }}
             className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8"
           >
-            <Button
-              size="lg"
-              className="border border-[#383838] hover:border-[#424242] transition-colors font-medium bg-white text-black px-6 py-2 rounded-full hover:bg-white/90"
-            >
+            <button className="border border-[#383838] hover:border-[#424242] transition-colors font-medium bg-white text-black px-6 py-2 rounded-full hover:bg-white/90 flex items-center">
               <Zap className="size-5 mr-2" />
               Launch App
               <ArrowRight className="size-5 ml-2" />
-            </Button>
+            </button>
 
             <button className="flex items-center gap-2 px-6 py-1.5 bg-[#1A1B1F] rounded-full border border-[#383838] hover:border-[#4c4c4c] transition-colors cursor-pointer">
               <BookOpen className="size-5 mr-2" />
