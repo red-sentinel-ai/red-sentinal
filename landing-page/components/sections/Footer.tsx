@@ -94,27 +94,27 @@ export function Footer() {
             <div className="flex gap-3 mb-6">
               <a
                 href="#"
-                className="size-12 border border-[#558eb466] bg-[#12121266] hover:border-[#558EB4] rounded-xl flex items-center justify-center transition-all duration-300 hover:shadow-glow-blue"
+                className="size-12 border-[3px] border-white/20 bg-black hover:border-white/80 rounded-xl flex items-center justify-center transition-all duration-300 hover:shadow-glow-blue "
               >
-                <Twitter className="size-5 text-[#558EB4]" />
+                <Image
+                  src="/icons/x.png"
+                  alt="shield"
+                  width={20}
+                  height={20}
+                />
               </a>
               <a
                 href="#"
-                className="size-12 border border-[#558eb466] bg-[#12121266] hover:border-[#558EB4] rounded-xl flex items-center justify-center transition-all duration-300 hover:shadow-glow-blue"
+                className="size-12 border-[3px] border-white/20 bg-black hover:border-white/80 rounded-xl flex items-center justify-center transition-all duration-300 hover:shadow-glow-blue"
               >
-                <Github className="size-5 text-[#558EB4]" />
+                <Github className="size-5 text-white" />
               </a>
+
               <a
                 href="#"
-                className="size-12 border border-[#558eb466] bg-[#12121266] hover:border-[#558EB4] rounded-xl flex items-center justify-center transition-all duration-300 hover:shadow-glow-blue"
+                className="size-12 border-[3px] border-white/20 bg-black hover:border-white/80 rounded-xl flex items-center justify-center transition-all duration-300 hover:shadow-glow-blue"
               >
-                <MessageCircle className="size-5 text-[#558EB4]" />
-              </a>
-              <a
-                href="#"
-                className="size-12 border border-[#558eb466] bg-[#12121266] hover:border-[#558EB4] rounded-xl flex items-center justify-center transition-all duration-300 hover:shadow-glow-blue"
-              >
-                <BookOpen className="size-5 text-[#558EB4]" />
+                <BookOpen className="size-5 text-white" />
               </a>
             </div>
           </motion.div>
@@ -127,7 +127,7 @@ export function Footer() {
           viewport={{ once: true }}
           className="border-t border-[#383838] mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4"
         >
-          <p className="text-gray-400 text-sm">© 2024 SUI Sentinel. All rights reserved.</p>
+          <p className="text-gray-400 text-sm">© 2025 SUI Sentinel. All rights reserved.</p>
           <div className="flex gap-6 text-sm text-gray-400">
             <a
               href="#"
