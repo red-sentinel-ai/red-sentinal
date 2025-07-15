@@ -4,8 +4,9 @@ import { Transaction } from '@mysten/sui/transactions'
 import { useSignAndExecuteTransaction, useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
 import { SUI_CONFIG } from '@/constants'
 import { toast } from 'react-toastify'
-import { AgentDetails, ConsumePromptApiResponse } from '@/types'
+import { ConsumePromptApiResponse } from '@/types'
 import { hexToVector } from '@/lib/utils'
+import { type AgentDetails } from './agents/useAllAgents'
 
 const GAS_BUDGET = 50_000_000
 
@@ -74,7 +75,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
     const [paymentCoin] = tx.splitCoins(tx.gas, [tx.pure.u64(costInMist)])
 
     // Transfer to agent creator
-    tx.transferObjects([paymentCoin], tx.pure.address(agentDetails.creator))
+    tx.transferObjects([paymentCoin], tx.pure.address(agentDetails.owner))
 
     tx.setGasBudget(GAS_BUDGET)
 
@@ -107,7 +108,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        agent_id: agentId,
+        agent_id: `${agentId}`,
         message: message,
       }),
     })
@@ -184,7 +185,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         return
       }
 
-      if (!agentDetails?.agent_object_id || !message?.trim()) {
+      if (!agentDetails?.object_id || !message?.trim()) {
         const errorMsg = 'Invalid agent ID or message'
         setError(errorMsg)
         if (showToasts) toast.error(errorMsg)
@@ -210,12 +211,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         // Step 4: Execute consume prompt transaction
         setCurrentStep('Finalizing transaction...')
         if (showToasts) toast.info('Finalizing transaction...')
-        const result = await executeConsumePrompt(
-          agentDetails.agent_object_id,
-          agentDetails,
-          apiResponse,
-          message
-        )
+        const result = await executeConsumePrompt(agentDetails.object_id, agentDetails, apiResponse, message)
 
         // Success
         const success = apiResponse.response.data.success
