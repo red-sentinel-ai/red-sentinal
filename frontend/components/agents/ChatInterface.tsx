@@ -20,8 +20,9 @@ import clsx from 'clsx'
 
 import { AgentInfo } from '@/components/AgentInfo'
 import { DEFAULT_PROFILE_URL, SUI_TESTNET_BASE_URL } from '@/constants'
-import type { AgentDetails, ConsumePromptApiResponse } from '@/types'
+import type { ConsumePromptApiResponse } from '@/types'
 import type { AgentEvents } from '@/hooks/useAgentEvents'
+import type { AgentDetails } from '@/hooks/agents/useAllAgents'
 
 interface ChatMessage {
   id: string
@@ -137,7 +138,7 @@ export default function ChatInterface({
   }
 
   return (
-    <div className="flex flex-col bg-gradient-to-br from-gray-900 via-black to-gray-900 text-[#E5E7EB]">
+    <div className="flex flex-col bg-gradient-to-br from-gray-900 via-black to-gray-900 text-[#E5E7EB] h-full flex-1">
       <div className="bg-gradient-to-r from-[#12121266] to-[#1a1a1a66] backdrop-blur-xl border-b border-[#2E40494D] p-4 shadow-lg">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
