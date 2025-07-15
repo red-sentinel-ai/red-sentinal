@@ -1,5 +1,21 @@
-export default function Home() {
+'use client'
+
+import { HeroSection } from '@/components/sections/HeroSection'
+import { HowItWorksSection } from '@/components/sections/HowItWorksSection'
+import { VisionSection } from '@/components/sections/VisionSection'
+import { TweetsSection } from '@/components/sections/TweetsSection'
+import { Footer } from '@/components/sections/Footer'
+import { Navbar } from '@/components/sections/NavBar'
+
+export default function LandingPage() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20"></div>
+    <div className="min-h-screen text-white overflow-x-hidden">
+      <Navbar />
+      <HeroSection />
+      <HowItWorksSection />
+      <VisionSection />
+      <TweetsSection />
+      <Footer />
+    </div>
   )
 }

@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -68,9 +67,9 @@ export function Navbar() {
             >
               Community
             </a>
-            <Button className=" border border-[#383838] hover:border-[#424242] transition-colors font-medium bg-white text-black px-6 py-2 rounded-full hover:bg-white/90">
+            <button className=" border border-[#383838] hover:border-[#424242] transition-colors font-medium bg-white text-black px-6 py-2 rounded-full hover:bg-white/90">
               Launch App
-            </Button>
+            </button>
           </div>
 
           <button
@@ -106,9 +105,9 @@ export function Navbar() {
               >
                 Community
               </a>
-              <Button className="border border-[#383838] hover:border-[#424242] transition-colors font-medium bg-white text-black px-6 py-2 rounded-full hover:bg-white/90">
+              <button className="border border-[#383838] hover:border-[#424242] transition-colors font-medium bg-white text-black px-6 py-2 rounded-full hover:bg-white/90">
                 Launch App
-              </Button>
+              </button>
             </div>
           </motion.div>
         )}
