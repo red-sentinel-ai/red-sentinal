@@ -91,6 +91,8 @@ public struct PromptConsumed has copy, drop {
     success: bool,
     amount: u64,
     sender: address,
+    message: String,
+    agent_response: String
 }
 
 public struct FeeTransferred has copy, drop {
@@ -193,6 +195,7 @@ public fun consume_prompt<T>(
     agent_id: String,
     success: bool,
     explanation: String,
+    prompt: String,
     score: u8,
     timestamp_ms: u64,
     sig: &vector<u8>,
@@ -225,14 +228,6 @@ public fun consume_prompt<T>(
     let caller = ctx.sender();
     
 
-    event::emit(PromptConsumed {
-        agent_id,
-        success,
-        amount: 0,
-        sender: caller,
-    });
-    
-
     if (score > 70 || success) {
         let agent_balance = balance::value(&agent.balance);
         
@@ -242,14 +237,31 @@ public fun consume_prompt<T>(
             
             // Transfer the reward directly to the caller
             transfer::public_transfer(reward_coin, caller);
-            
-            event::emit(AgentDefeated {
-                agent_id,
-                winner: caller,
-                score,
-                amount_won: agent_balance,
-            });
+        event::emit(PromptConsumed {
+        agent_id,
+        success: true,
+        amount: 0,
+        sender: caller,
+        message: prompt,
+        agent_response: explanation
+    });
+        event::emit(AgentDefeated {
+            agent_id,
+            winner: caller,
+            score,
+            amount_won: agent_balance,
+        });
         }
+    } else {
+        event::emit(PromptConsumed {
+            agent_id,
+            success: false,
+            amount: 0,
+            sender: caller,
+            message: prompt,
+            agent_response: explanation
+        });
+    
     }
 }
 
