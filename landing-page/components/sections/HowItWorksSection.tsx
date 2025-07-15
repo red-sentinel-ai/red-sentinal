@@ -87,7 +87,7 @@ export function HowItWorksSection() {
             viewport={{ once: true }}
           >
             <div className="text-center mb-8">
-              <div className="inline-flex items-center gap-3 border-[#558EB4] bg-[#12121266] backdrop-blur-sm border rounded-full px-6 py-3 mb-4">
+              <div className="inline-flex items-center gap-3 border-[#558eb480] bg-[#12121266] backdrop-blur-sm border rounded-full px-6 py-3 mb-4">
                 <div>
                   <Image
                     src="/icons/local_police.png"
@@ -136,7 +136,7 @@ export function HowItWorksSection() {
             viewport={{ once: true }}
           >
             <div className="text-center mb-8">
-              <div className="inline-flex items-center gap-3 border-[#8F564E] bg-[#12121266] backdrop-blur-sm border rounded-full px-6 py-3 mb-4">
+              <div className="inline-flex items-center gap-3 border-[#8f564e80] bg-[#12121266] backdrop-blur-sm border rounded-full px-6 py-3 mb-4">
                 <div>
                   <Image
                     src="/icons/swords.png"
