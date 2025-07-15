@@ -1,74 +1,39 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Twitter, Heart, MessageCircle, Repeat2 } from 'lucide-react'
+import { Heart, MessageCircle, Repeat2 } from 'lucide-react'
+import Image from 'next/image'
 
 const TWEETS = [
   {
     id: 1,
-    author: 'AI_Researcher',
-    handle: '@ai_researcher',
-    content:
-      'Just discovered SUI Sentinel - this is exactly what the AI security space needed! The concept of prompt-first security is revolutionary. 🔥',
-    likes: 234,
-    retweets: 89,
-    replies: 45,
-    time: '2h',
+    author: 'Andrej Karpathy',
+    handle: '@karpathy',
+    content: 'The hottest new programming language is English',
+    likes: '44k',
+    retweets: '7k',
+    replies: '1.1k',
+    time: 'Jan 24, 2023',
   },
   {
     id: 2,
-    author: 'CryptoBuilder',
-    handle: '@cryptobuilder',
-    content:
-      'Deployed my first AI agent on SUI Sentinel yesterday. Already earned 50 SUI from attack fees! The economics are brilliant 💰',
-    likes: 156,
-    retweets: 67,
-    replies: 23,
-    time: '4h',
+    author: 'Balaji',
+    handle: '@balajis',
+    content: 'Tech is limited by founders. AI is limited by prompters.',
+    likes: '2.8k',
+    retweets: 294,
+    replies: 256,
+    time: 'Jun 24, 2025',
   },
   {
     id: 3,
-    author: 'PromptHacker',
-    handle: '@prompthacker',
-    content:
-      'Finally broke through a Level 5 Sentinel after 20 attempts! The prize pool was worth it. This platform is addictive 🎯',
-    likes: 189,
-    retweets: 45,
-    replies: 78,
-    time: '6h',
-  },
-  {
-    id: 4,
-    author: 'Web3Security',
-    handle: '@web3security',
-    content:
-      'SUI Sentinel is pioneering the future of AI auditing. Every prompt engineer should be testing their skills here.',
-    likes: 312,
-    retweets: 123,
-    replies: 56,
-    time: '8h',
-  },
-  {
-    id: 5,
-    author: 'BlockchainDev',
-    handle: '@blockchaindev',
-    content:
-      'The gamification of AI security is genius! SUI Sentinel makes learning prompt engineering fun and profitable.',
-    likes: 278,
-    retweets: 94,
-    replies: 67,
-    time: '10h',
-  },
-  {
-    id: 6,
-    author: 'AIEthicist',
-    handle: '@aiethicist',
-    content:
-      'Love how SUI Sentinel is making AI systems more robust through adversarial testing. This is the future of AI safety.',
-    likes: 445,
-    retweets: 156,
-    replies: 89,
-    time: '12h',
+    author: 'Guillermo Rauch',
+    handle: '@rauchg',
+    content: 'Prompting is the new literacy',
+    likes: 913,
+    retweets: 142,
+    replies: 107,
+    time: 'jun 18, 2025',
   },
 ]
 
@@ -99,9 +64,7 @@ export function TweetsSection() {
           <p className="text-lg text-gray-500 mt-2">Real voices from the battlefield</p>
         </motion.div>
 
-        {/* Sliding tweets container */}
         <div className="relative">
-          {/* Gradient overlays for smooth fade effect */}
           <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
           <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
 
@@ -127,7 +90,12 @@ export function TweetsSection() {
                 <div className="border border-[#558eb466] bg-[#12121266] backdrop-blur-sm rounded-2xl p-6 h-full">
                   <div className="flex items-start gap-3 mb-4">
                     <div className="size-12 bg-gradient-to-r from-[#558EB4] to-[#1388D5] rounded-full flex items-center justify-center flex-shrink-0 shadow-glow-blue">
-                      <Twitter className="size-6 text-white" />
+                      <Image
+                        src="/icons/x.png"
+                        alt="shield"
+                        width={20}
+                        height={20}
+                      />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
