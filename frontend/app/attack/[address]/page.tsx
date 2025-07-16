@@ -20,7 +20,10 @@ export default function AgentChallengePage() {
 
   const { consumePrompt } = useConsumePrompt({
     showToasts: true,
-    onApiSuccess: (response) => {
+    onError: (err) => {
+      setSubmitError(err.message || 'Something went wrong')
+    },
+    onComplete: (response) => {
       setApiResponse(response)
       setShowResultModal(true)
       refetch()
