@@ -12,13 +12,14 @@ import {
   useSignAndExecuteTransaction,
   useSuiClient,
 } from '@mysten/dapp-kit'
-import { MIST_PER_SUI, SUI_CONFIG } from '@/constants'
+import { MIST_PER_SUI, SUI_CONFIG, SYSTEM_PROMPT_MAX_TOKENS } from '@/constants'
 import { hexToVector } from '@/lib/utils'
 import { registerAgentUtil } from './utils'
 import { useAgentObjectNames } from '@/hooks/useAgentObjectNames'
 import { FundAgentModal } from '@/components/FundAgentModal'
 import { SuccessModal } from '@/components/DefenderSuccessModal'
 import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
+import { useTokenCount } from '@/hooks/useTokenCount'
 
 interface FormData {
   agentName: string
@@ -76,6 +77,7 @@ export default function DefendPage() {
   const { addAgentObjectIdWithName } = useAgentObjectNames()
   const { mutate: createAgent } = useCreateAgent()
   const [agentImage, setAgentImage] = useState<File | null>(null)
+  const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
 
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction({
     execute: async ({ bytes, signature }) =>
@@ -108,6 +110,10 @@ export default function DefendPage() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
+
+    if (name === 'systemPrompt') {
+      countTokens(value)
+    }
 
     // Clear error when user starts typing
     if (errors[name as keyof FormData]) {
@@ -160,7 +166,7 @@ export default function DefendPage() {
 
     if (!formData.systemPrompt.trim()) {
       newErrors.systemPrompt = 'System prompt is required'
-    }
+    } else if (tokenCount > SYSTEM_PROMPT_MAX_TOKENS) return
 
     const fee = parseFloat(formData.feePerMessage)
     if (isNaN(fee) || fee < 0) {
@@ -296,16 +302,30 @@ export default function DefendPage() {
           required
         />
 
-        <FormInput
-          label="System Prompt"
-          name="systemPrompt"
-          value={formData.systemPrompt}
-          onChange={handleChange}
-          error={errors.systemPrompt}
-          placeholder="Enter system prompt..."
-          required
-          isTextarea
-        />
+        <div>
+          <label className="block text-sm font-medium mb-2">System Prompt</label>
+          <textarea
+            name="systemPrompt"
+            value={formData.systemPrompt}
+            onChange={handleChange}
+            className="w-full bg-[#12121266] backdrop-blur-lg border border-gray-600 rounded-lg p-3 min-h-[200px]"
+            placeholder="Enter system prompt..."
+            required
+          />
+          <p
+            className={`mt-1 text-sm text-gray-400 ${
+              isTokenCountDebouncing ? 'animate-pulse' : ''
+            }`}
+          >
+            Tokens: {tokenCount} / {SYSTEM_PROMPT_MAX_TOKENS}
+          </p>
+          {tokenCount > SYSTEM_PROMPT_MAX_TOKENS && (
+            <p className="mt-1 text-sm text-red-500">System prompt exceeds token limit</p>
+          )}
+          {errors.systemPrompt && (
+            <p className="mt-1 text-sm text-red-500">{errors.systemPrompt}</p>
+          )}
+        </div>
 
         <FormInput
           label="Fee per Message (SUI)"
