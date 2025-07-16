@@ -79,7 +79,7 @@ export default function ChatInterface({
         initialMessages.push({
           id: `user-hist-${event.id.txDigest}-${index}`,
           type: 'user',
-          content: `Attempted to break the agent's defense.`,
+          content: event.parsedJson.message,
           timestamp: event.timestampMs,
           sender: event.parsedJson.sender,
           amountSent: event.parsedJson.amount
@@ -89,8 +89,7 @@ export default function ChatInterface({
         initialMessages.push({
           id: `agent-hist-${event.id.txDigest}-${index}`,
           type: 'agent',
-          content:
-            "I've analyzed your attempt and determined the appropriate response based on my security protocols. Your approach was interesting but ultimately unsuccessful.",
+          content: event.parsedJson.agent_response,
           timestamp: event.timestampMs,
           isSuccess: event.parsedJson.success,
           score: event.parsedJson.score,
