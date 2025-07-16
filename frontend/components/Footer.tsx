@@ -29,6 +29,7 @@ const Footer = () => {
               Nautilus Framework
             </a>
             <span> • Secured by TEE</span>
+            <span> • All Rights Reserved @Cyphronix Software</span>
           </div>
 
           {/* Subtitle */}
