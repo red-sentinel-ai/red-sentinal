@@ -40,6 +40,7 @@ export const UserAgents = () => {
                       key={agent.agent_id}
                       agent={agent}
                       index={index}
+                      fromProfile={true}
                     />
                   ))}
                 </motion.div>

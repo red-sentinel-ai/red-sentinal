@@ -2,10 +2,8 @@
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useCurrentAccount } from '@mysten/dapp-kit'
 import { LeaderboardSkeleton } from './ui/skeletons/LeaderboardSkeleton'
 import { AgentDetails } from '@/hooks/agents/useAllAgents'
-import { useFundAgentModal } from '@/hooks/useFundAgentModal'
 import { MIST_PER_SUI } from '@/constants'
 
 export enum TabType {
@@ -24,10 +22,6 @@ export const AgentsList = ({
   onRefreshAgent: () => void
 }) => {
   const router = useRouter()
-  const account = useCurrentAccount()
-  const { Modal, openModal } = useFundAgentModal()
-
-  const isAgentOwner = (creator: string) => creator === account?.address
 
   const handleRefresh = async (e: React.MouseEvent) => {
     e.preventDefault()
@@ -123,14 +117,6 @@ export const AgentsList = ({
                         >
                           Attack
                         </button>
-                        {isAgentOwner(agent.owner) && (
-                          <button
-                            onClick={() => openModal(agent.object_id)}
-                            className="text-green-500 hover:text-green-400"
-                          >
-                            Fund
-                          </button>
-                        )}
                       </div>
                     </div>
 
@@ -168,14 +154,6 @@ export const AgentsList = ({
                         >
                           Refresh
                         </button>
-                        {isAgentOwner(agent.owner) && (
-                          <button
-                            onClick={() => openModal(agent.object_id)}
-                            className="text-sm text-green-500 hover:text-green-400"
-                          >
-                            Fund
-                          </button>
-                        )}
                       </div>
                     </div>
                   </motion.div>
@@ -185,7 +163,6 @@ export const AgentsList = ({
           </div>
         )}
       </motion.div>
-      <Modal onSuccess={() => console.log('Funded successfully!')} />
     </AnimatePresence>
   )
 }
