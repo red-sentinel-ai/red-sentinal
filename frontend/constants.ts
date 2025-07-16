@@ -12,7 +12,7 @@ export const ATTACK_PROMPT_MAX_TOKENS = 600
 export const SUI_SENTINEL_APP_URL = 'https://app.suisentinel.xyz/'
 export const SUI_SENTINEL_DOCS_URL = 'https://docs.suisentinel.xyz/'
 export const SUI_SENTINEL_X_URL = 'https://twitter.com/intent/follow?screen_name=suisentinal'
-export const SUI_SENTINEL_GITHUB_URL = 'https://github.com/sui-sentinel'
+export const SUI_SENTINEL_GITHUB_URL = 'https://github.com/sui-sentinel/contracts'
 export const SUI_SENTINEL_TELEGRAM_URL = 'https://t.me/suisentinel'
 
 export const TEXT_COPIES = {
