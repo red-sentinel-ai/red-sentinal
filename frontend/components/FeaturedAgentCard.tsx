@@ -15,7 +15,7 @@ type FeaturedAgentCardProps = {
 export const FeaturedAgentCard = ({
   agent,
   index,
-  ctaHeading = 'View Agent',
+  ctaHeading = 'View Sentinel',
   fromProfile = false,
 }: FeaturedAgentCardProps) => {
   const { Modal, openModal } = useFundAgentModal()
@@ -101,7 +101,7 @@ export const FeaturedAgentCard = ({
             onClick={() => openModal(agent.object_id)}
             className="block border border-[#558EB4] rounded-[8px] w-full min-h-11 p-2 transition-all  bg-[#1388D5] hover:bg-[#1388d5e6] text-black group-hover:border-[#1388D5] text-center font-medium"
           >
-            Fund Agent
+            Fund Sentinel
           </button>
         )}
       </div>
