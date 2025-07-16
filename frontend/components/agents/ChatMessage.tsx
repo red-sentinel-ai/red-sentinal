@@ -2,7 +2,7 @@
 import type React from 'react'
 import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
-import { XCircle, Trophy, Zap } from 'lucide-react'
+import { Zap } from 'lucide-react'
 import { motion } from 'framer-motion'
 import clsx from 'clsx'
 import { DEFAULT_PROFILE_URL, SUI_TESTNET_BASE_URL } from '@/constants'
@@ -44,17 +44,7 @@ export const ChatMessage = ({ message, agent }: ChatMessageProps) => {
         })}
       >
         <div className="flex-shrink-0">
-          <div
-            className={clsx(
-              'w-8 h-8 sm:w-10 sm:h-10 rounded-full relative ring-2 ring-opacity-60',
-              {
-                'ring-[#558EB4]': message.type === 'user',
-                'ring-green-400': message.type === 'agent' && message.isSuccess,
-                'ring-red-400': message.type === 'agent' && message.isSuccess === false,
-                'ring-gray-400': message.type === 'agent' && message.isSuccess === undefined,
-              }
-            )}
-          >
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full relative ring-2 ring-opacity-60">
             <Image
               src={
                 message.type === 'agent'
@@ -65,23 +55,6 @@ export const ChatMessage = ({ message, agent }: ChatMessageProps) => {
               alt="profile"
               className="rounded-full object-cover"
             />
-            {message.type === 'agent' && message.isSuccess !== undefined && (
-              <div
-                className={clsx(
-                  'absolute -bottom-0.5 -right-0.5 w-3 h-3 sm:w-4 sm:h-4 rounded-full flex items-center justify-center text-white text-xs',
-                  {
-                    'bg-green-500': message.isSuccess,
-                    'bg-red-500': !message.isSuccess,
-                  }
-                )}
-              >
-                {message.isSuccess ? (
-                  <Trophy className="w-1.5 h-1.5 sm:w-2.5 sm:h-2.5" />
-                ) : (
-                  <XCircle className="w-1.5 h-1.5 sm:w-2.5 sm:h-2.5" />
-                )}
-              </div>
-            )}
           </div>
         </div>
 
