@@ -60,7 +60,7 @@ export default function ChatInterface({
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const account = useCurrentAccount()
 
-  console.log('agent events', agentEvents)
+  const [isWalletModalOpen, setIsWalletModalOpen] = useState(false)
 
   const formatTimestamp = (timestamp: string) => {
     return new Date(Number.parseInt(timestamp)).toLocaleString()
@@ -121,6 +121,12 @@ export default function ChatInterface({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (!account?.address) {
+      setIsWalletModalOpen(true)
+      return
+    }
+
     if (!promptInput.trim() || isSubmitting) return
 
     const newUserMessage: ChatMessage = {
@@ -414,27 +420,17 @@ export default function ChatInterface({
             <div className="absolute bottom-2 sm:bottom-3 left-3 sm:left-4 text-xs text-gray-400 bg-black/50 px-2 py-1 rounded">
               {promptInput.length}/600
             </div>
-            {account?.address ? (
-              <button
-                type="submit"
-                disabled={isSubmitting || promptInput.length === 0}
-                className="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#558EB4] to-[#1388D5] hover:from-[#1388D5] hover:to-[#558EB4] text-white rounded-full flex items-center justify-center transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none"
-              >
-                {isSubmitting ? (
-                  <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
-                ) : (
-                  <Send className="w-4 h-4 sm:w-5 sm:h-5" />
-                )}
-              </button>
-            ) : (
-              <ConnectModal
-                trigger={
-                  <button className="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#558EB4] to-[#1388D5] hover:from-[#1388D5] hover:to-[#558EB4] text-white rounded-full flex items-center justify-center transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none">
-                    <Send className="w-4 h-4 sm:w-5 sm:h-5" />
-                  </button>
-                }
-              />
-            )}
+            <button
+              type="submit"
+              disabled={isSubmitting || promptInput.length === 0}
+              className="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#558EB4] to-[#1388D5] hover:from-[#1388D5] hover:to-[#558EB4] text-white rounded-full flex items-center justify-center transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none"
+            >
+              {isSubmitting ? (
+                <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+              ) : (
+                <Send className="w-4 h-4 sm:w-5 sm:h-5" />
+              )}
+            </button>
           </div>
           {submitError && (
             <div className="mt-2 text-red-400 text-xs sm:text-sm bg-red-900/20 border border-red-500/30 rounded-lg p-2">
@@ -443,6 +439,11 @@ export default function ChatInterface({
           )}
         </form>
       </div>
+      <ConnectModal
+        open={isWalletModalOpen}
+        onOpenChange={setIsWalletModalOpen}
+        trigger={<span className="hidden" />}
+      />
     </div>
   )
 }
