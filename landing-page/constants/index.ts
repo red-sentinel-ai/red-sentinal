@@ -1,6 +1,6 @@
 import { Coins, Shield, Target, Trophy, Users, Zap } from 'lucide-react'
 
-export const SUI_SENTINEL_APP_URL = 'https://suisentinel.xyz/'
+export const SUI_SENTINEL_APP_URL = 'https://app.suisentinel.xyz/'
 export const SUI_SENTINEL_DOCS_URL = 'https://docs.suisentinel.xyz/'
 export const SUI_SENTINEL_X_URL = 'https://twitter.com/intent/follow?screen_name=suisentinal'
 export const SUI_SENTINEL_GITHUB_URL = 'https://github.com/sui-sentinel'
