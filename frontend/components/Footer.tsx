@@ -1,7 +1,18 @@
+'use client'
+
 import { NAUTILUS_URL } from '@/constants'
+import { usePathname } from 'next/navigation'
 import React from 'react'
 
 const Footer = () => {
+  const pathname = usePathname()
+
+  const shouldHideFooter = pathname.startsWith('/attack/')
+
+  if (shouldHideFooter) {
+    return null
+  }
+
   return (
     <footer className="bg-[#121212] border-t border-[#558EB4]/30 mt-auto">
       <div className="max-w-6xl mx-auto px-4 py-6">

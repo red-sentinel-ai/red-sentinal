@@ -215,7 +215,7 @@ export default function ChatInterface({
 
       <div
         ref={chatContainerRef}
-        className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar max-h-[calc(100vh-470px)] bg-gradient-to-b from-transparent to-black/20"
+        className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar max-h-[calc(100vh-350px)] bg-gradient-to-b from-transparent to-black/20"
       >
         {chatMessages.length === 0 && (
           <div className="text-center py-12 text-gray-400">
