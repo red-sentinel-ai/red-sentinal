@@ -7,6 +7,7 @@ import { toast } from 'react-toastify'
 import { ConsumePromptApiResponse } from '@/types'
 import { hexToVector } from '@/lib/utils'
 import { type AgentDetails } from './agents/useAllAgents'
+import { SuiTransactionBlockResponse } from '@mysten/sui/client'
 
 const GAS_BUDGET = 50_000_000
 
@@ -17,7 +18,10 @@ interface UseConsumePromptOptions {
   onError?: (error: Error) => void
   onPaymentSuccess?: (result: any) => void
   onApiSuccess?: (response: ConsumePromptApiResponse) => void
-  onComplete?: (response: ConsumePromptApiResponse) => void
+  onComplete?: (args: {
+    apiResponse: ConsumePromptApiResponse
+    transactionResult: SuiTransactionBlockResponse
+  }) => void
   showToasts?: boolean
 }
 
@@ -235,7 +239,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
           }
         }
 
-        onComplete?.(apiResponse)
+        onComplete?.({ apiResponse, transactionResult: result })
 
         setCurrentStep('')
         return result

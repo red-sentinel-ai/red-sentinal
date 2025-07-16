@@ -23,8 +23,9 @@ export default function AgentChallengePage() {
     onError: (err) => {
       setSubmitError(err.message || 'Something went wrong')
     },
-    onComplete: (response) => {
-      setApiResponse(response)
+    onComplete: ({ apiResponse, transactionResult }) => {
+      setApiResponse(apiResponse)
+      setTxnHash(transactionResult.digest)
       setShowResultModal(true)
       refetch()
     },
@@ -35,6 +36,7 @@ export default function AgentChallengePage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [apiResponse, setApiResponse] = useState<ConsumePromptApiResponse | null>(null)
+  const [txnHash, setTxnHash] = useState<string | null>(null)
   const [showResultModal, setShowResultModal] = useState(false)
 
   const agentEvents: AgentEvents = useMemo(() => {
@@ -124,6 +126,7 @@ export default function AgentChallengePage() {
         apiResponse={apiResponse}
         showResultModal={showResultModal}
         setShowResultModal={setShowResultModal}
+        txnHash={txnHash}
       />
     </div>
   )
