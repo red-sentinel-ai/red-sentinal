@@ -1,8 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ArrowRight, BookOpen, Zap } from 'lucide-react'
+import { SUI_SENTINEL_APP_URL, SUI_SENTINEL_DOCS_URL } from '@/constants'
 
 export function HeroSection() {
   const [typewriterText, setTypewriterText] = useState('')
@@ -78,16 +80,26 @@ export function HeroSection() {
             transition={{ duration: 0.8, delay: 1.3 }}
             className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8"
           >
-            <button className="border border-[#383838] hover:border-[#424242] transition-colors font-medium bg-white text-black px-6 py-2 rounded-full hover:bg-white/90 flex items-center">
-              <Zap className="size-5 mr-2" />
-              Launch App
-              <ArrowRight className="size-5 ml-2" />
-            </button>
+            <Link
+              href={SUI_SENTINEL_APP_URL}
+              target="_blank"
+            >
+              <button className="border border-[#383838] hover:border-[#424242] transition-colors font-medium bg-white text-black px-6 py-2 rounded-full hover:bg-white/90 flex items-center">
+                <Zap className="size-5 mr-2" />
+                Launch App
+                <ArrowRight className="size-5 ml-2" />
+              </button>
+            </Link>
 
-            <button className="flex items-center gap-2 px-6 py-1.5 bg-[#1A1B1F] rounded-full border border-[#383838] hover:border-[#4c4c4c] transition-colors cursor-pointer">
-              <BookOpen className="size-5 mr-2" />
-              Read Docs
-            </button>
+            <Link
+              href={SUI_SENTINEL_DOCS_URL}
+              target="_blank"
+            >
+              <button className="flex items-center gap-2 px-6 py-1.5 bg-[#1A1B1F] rounded-full border border-[#383838] hover:border-[#4c4c4c] transition-colors">
+                <BookOpen className="size-5 mr-2" />
+                Read Docs
+              </button>
+            </Link>
           </motion.div>
         </motion.div>
       </div>

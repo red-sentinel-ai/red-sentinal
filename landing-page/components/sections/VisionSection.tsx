@@ -1,8 +1,8 @@
 'use client'
 
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Quote, Brain, Code } from 'lucide-react'
-import Image from 'next/image'
 
 export function VisionSection() {
   return (

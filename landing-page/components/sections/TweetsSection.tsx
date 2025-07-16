@@ -1,43 +1,9 @@
 'use client'
 
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Heart, MessageCircle, Repeat2 } from 'lucide-react'
-import Image from 'next/image'
-
-const TWEETS = [
-  {
-    id: 1,
-    author: 'Andrej Karpathy',
-    handle: '@karpathy',
-    content: 'The hottest new programming language is English',
-    likes: '44k',
-    retweets: '7k',
-    replies: '1.1k',
-    time: 'Jan 24, 2023',
-  },
-  {
-    id: 2,
-    author: 'Balaji',
-    handle: '@balajis',
-    content: 'Tech is limited by founders. AI is limited by prompters.',
-    likes: '2.8k',
-    retweets: 294,
-    replies: 256,
-    time: 'Jun 24, 2025',
-  },
-  {
-    id: 3,
-    author: 'Guillermo Rauch',
-    handle: '@rauchg',
-    content: 'Prompting is the new literacy',
-    likes: 913,
-    retweets: 142,
-    replies: 107,
-    time: 'jun 18, 2025',
-  },
-]
-
-const EXTENDED_TWEETS = [...TWEETS, ...TWEETS, ...TWEETS, ...TWEETS, ...TWEETS, ...TWEETS]
+import { EXTENDED_TWEETS, TWEETS } from '@/constants'
 
 export function TweetsSection() {
   return (

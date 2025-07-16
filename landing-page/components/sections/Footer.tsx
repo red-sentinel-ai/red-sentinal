@@ -1,8 +1,10 @@
 'use client'
 
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Github, BookOpen } from 'lucide-react'
 import Image from 'next/image'
+import { SUI_SENTINEL_DOCS_URL, SUI_SENTINEL_GITHUB_URL, SUI_SENTINEL_X_URL } from '@/constants'
 
 export function Footer() {
   return (
@@ -74,12 +76,13 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a
-                  href="/docs"
+                <Link
+                  href={SUI_SENTINEL_DOCS_URL}
+                  target="_blank"
                   className="text-gray-400 hover:text-[#558EB4] transition-colors flex items-center gap-2"
                 >
                   Documentation
-                </a>
+                </Link>
               </li>
             </ul>
           </motion.div>
@@ -92,8 +95,9 @@ export function Footer() {
           >
             <h3 className="text-white font-bold mb-6">Connect</h3>
             <div className="flex gap-3 mb-6">
-              <a
-                href="#"
+              <Link
+                href={SUI_SENTINEL_X_URL}
+                target="_blank"
                 className="size-12 border-[3px] border-white/20 bg-black hover:border-white/80 rounded-xl flex items-center justify-center transition-all duration-300 hover:shadow-glow-blue "
               >
                 <Image
@@ -102,20 +106,22 @@ export function Footer() {
                   width={20}
                   height={20}
                 />
-              </a>
-              <a
-                href="#"
+              </Link>
+              <Link
+                href={SUI_SENTINEL_GITHUB_URL}
+                target="_blank"
                 className="size-12 border-[3px] border-white/20 bg-black hover:border-white/80 rounded-xl flex items-center justify-center transition-all duration-300 hover:shadow-glow-blue"
               >
                 <Github className="size-5 text-white" />
-              </a>
+              </Link>
 
-              <a
-                href="#"
+              <Link
+                href={SUI_SENTINEL_DOCS_URL}
+                target="_blank"
                 className="size-12 border-[3px] border-white/20 bg-black hover:border-white/80 rounded-xl flex items-center justify-center transition-all duration-300 hover:shadow-glow-blue"
               >
                 <BookOpen className="size-5 text-white" />
-              </a>
+              </Link>
             </div>
           </motion.div>
         </div>
