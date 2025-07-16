@@ -289,21 +289,12 @@ export default function ChatInterface({
                   className={clsx('rounded-2xl shadow-lg relative', {
                     'bg-gradient-to-r from-[#558EB4] to-[#1388D5] text-white border border-[#558EB4]/30':
                       message.type === 'user',
-                    'bg-gradient-to-r from-green-900/40 to-green-800/40 text-green-100 border-2 border-green-400/50':
-                      message.type === 'agent' && message.isSuccess,
-                    'bg-gradient-to-r from-red-900/40 to-red-800/40 text-red-100 border-2 border-red-400/50':
-                      message.type === 'agent' && message.isSuccess === false,
                     'bg-gradient-to-r from-gray-800/60 to-gray-700/60 text-gray-200 border border-gray-600/50':
-                      message.type === 'agent' && message.isSuccess === undefined,
+                      message.type === 'agent',
                   })}
                 >
                   {message.type === 'agent' && message.isSuccess !== undefined && (
-                    <div
-                      className={clsx('absolute inset-0 rounded-2xl opacity-20 blur-sm', {
-                        'bg-green-400': message.isSuccess,
-                        'bg-red-400': !message.isSuccess,
-                      })}
-                    />
+                    <div className="absolute inset-0 rounded-2xl opacity-20 blur-sm" />
                   )}
 
                   <div className="relative p-4">
@@ -314,11 +305,7 @@ export default function ChatInterface({
                     <div
                       className={clsx('pt-3 border-t text-xs flex justify-between items-center', {
                         'border-white/20': message.type === 'user',
-                        'border-green-400/30': message.type === 'agent' && message.isSuccess,
-                        'border-red-400/30':
-                          message.type === 'agent' && message.isSuccess === false,
-                        'border-gray-500/30':
-                          message.type === 'agent' && message.isSuccess === undefined,
+                        'border-gray-500/30': message.type === 'agent',
                       })}
                     >
                       <div className="flex flex-col gap-1">
