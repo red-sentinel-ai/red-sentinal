@@ -1,6 +1,6 @@
 'use client'
 import type React from 'react'
-
+import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { XCircle, Trophy, Zap } from 'lucide-react'
 import { motion } from 'framer-motion'
@@ -15,6 +15,18 @@ type ChatMessageProps = {
 }
 
 export const ChatMessage = ({ message, agent }: ChatMessageProps) => {
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [shouldTruncate, setShouldTruncate] = useState(false)
+  const contentRef = useRef<HTMLParagraphElement>(null)
+
+  useEffect(() => {
+    if (contentRef.current) {
+      const lineHeight = parseFloat(getComputedStyle(contentRef.current).lineHeight || '20')
+      const totalLines = contentRef.current.scrollHeight / lineHeight
+      setShouldTruncate(totalLines > 4)
+    }
+  }, [message.content])
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -95,9 +107,25 @@ export const ChatMessage = ({ message, agent }: ChatMessageProps) => {
               </div>
             )}
             <div className="mb-2 sm:mb-3">
-              <p className="text-xs sm:text-sm leading-relaxed break-words">{message.content}</p>
-            </div>
+              <p
+                ref={contentRef}
+                className={clsx(
+                  'text-xs sm:text-sm leading-relaxed break-words transition-all duration-200 ease-in-out',
+                  !isExpanded && 'line-clamp-4'
+                )}
+              >
+                {message.content}
+              </p>
 
+              {shouldTruncate && (
+                <button
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="mt-1 text-blue-300 text-xs hover:underline"
+                >
+                  {isExpanded ? 'Show less' : 'Show more'}
+                </button>
+              )}
+            </div>
             <div
               className={clsx(
                 'text-xs flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2',
