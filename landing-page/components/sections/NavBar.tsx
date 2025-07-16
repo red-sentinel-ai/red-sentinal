@@ -29,12 +29,9 @@ export function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="flex items-center gap-2"
-          >
+          <motion.div whileHover={{ scale: 1.05 }}>
             <Link
-              className="block mr-1 xl:mr-4 flex-shrink-0"
+              className="mr-1 xl:mr-4 flex-shrink-0 flex items-center gap-2"
               href="/"
             >
               <div className="relative w-8 h-11">
@@ -45,8 +42,8 @@ export function Navbar() {
                   style={{ objectFit: 'contain' }}
                 />
               </div>
+              <span className="text-xl font-bold text-white">SUI Sentinel</span>
             </Link>
-            <span className="text-xl font-bold text-white">SUI Sentinel</span>
           </motion.div>
 
           <div className="hidden md:flex items-center gap-8">
