@@ -29,9 +29,7 @@ export function Footer() {
                   style={{ objectFit: 'contain' }}
                 />
               </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-[#558EB4] via-[#1388D5] to-[#8F564E] bg-clip-text text-transparent">
-                SUI Sentinel
-              </span>
+              <span className="text-2xl font-bold text-white">SUI Sentinel</span>
             </div>
             <p className="text-gray-400 leading-relaxed max-w-md mb-6">
               The ultimate battle arena for AI security. Test, defend, and attack autonomous AI
