@@ -4,7 +4,12 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Github, BookOpen } from 'lucide-react'
 import Image from 'next/image'
-import { SUI_SENTINEL_DOCS_URL, SUI_SENTINEL_GITHUB_URL, SUI_SENTINEL_X_URL } from '@/constants'
+import {
+  SUI_SENTINEL_DOCS_URL,
+  SUI_SENTINEL_GITHUB_URL,
+  SUI_SENTINEL_TELEGRAM_URL,
+  SUI_SENTINEL_X_URL,
+} from '@/constants'
 
 export function Footer() {
   return (
@@ -120,7 +125,36 @@ export function Footer() {
               >
                 <BookOpen className="size-5 text-white" />
               </Link>
+
+              <Link
+                href={SUI_SENTINEL_TELEGRAM_URL}
+                className="size-12 border-[3px] border-white/20 bg-black hover:border-white/80 rounded-xl flex items-center justify-center transition-all duration-300 hover:shadow-glow-blue "
+                target="_blank"
+              >
+                <Image
+                  src="/icons/telegram.png"
+                  alt="X (Twitter)"
+                  width={20}
+                  height={20}
+                  className="group-hover:scale-110 transition-transform duration-300"
+                />
+              </Link>
             </div>
+
+            <Link
+              href={SUI_SENTINEL_TELEGRAM_URL}
+              target="_blank"
+              className="flex items-center w-fit gap-3 px-6 py-3 bg-gradient-to-r from-[#0088cc] to-[#0077b5] rounded-full text-white font-medium hover:from-[#0077b5] hover:to-[#006699] transition-all duration-300 shadow-lg hover:shadow-xl transform group"
+            >
+              <Image
+                src="/icons/telegram.png"
+                alt="Telegram"
+                width={20}
+                height={20}
+                className="group-hover:scale-110 transition-transform duration-300 filter brightness-0 invert"
+              />
+              <span className="text-sm font-semibold">Join Telegram</span>
+            </Link>
           </motion.div>
         </div>
 
