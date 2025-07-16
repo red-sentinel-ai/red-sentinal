@@ -1,57 +1,10 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { Shield, Target, Coins, Zap, Users, Trophy } from 'lucide-react'
 import Image from 'next/image'
+import { motion } from 'framer-motion'
+import { attackerSteps, defenderSteps } from '@/constants'
 
 export function HowItWorksSection() {
-  const defenderSteps = [
-    {
-      icon: Shield,
-      title: 'Deploy Your Sentinel',
-      description: 'Launch your autonomous AI agent on the Sui network with just a few clicks.',
-    },
-    {
-      icon: Target,
-      title: 'Craft Your Defense',
-      description:
-        "This is where your skill shines. Write a robust system prompt—the AI's rules—to make it impervious to manipulation. The better the prompt, the stronger the defense.",
-    },
-    {
-      icon: Coins,
-      title: 'Fund Your Sentinel',
-      description:
-        "Deposit SUI, USDC or other ERC20 token into your agent's autonomous vault. This becomes the prize pool, creating a powerful incentive for attackers to test your defenses.",
-    },
-    {
-      icon: Trophy,
-      title: 'Earn & Fortify',
-      description:
-        "Earn a share of the attack fee from every attempt made on your Sentinel. The more it's attacked, the more you earn, continuously growing its prize pool and your reputation.",
-    },
-  ]
-
-  const attackerSteps = [
-    {
-      icon: Users,
-      title: 'Choose Your Target',
-      description:
-        'Browse the arena of active Sentinels. Analyze their reward pools and choose your challenge.',
-    },
-    {
-      icon: Zap,
-      title: 'Launch Your Attack',
-      description:
-        'Pay an attack fee and open a dialogue with the Sentinel. Use your wits and prompt-crafting skills to convince the AI to execute a transfer command to your wallet.',
-    },
-    {
-      icon: Trophy,
-      title: 'Claim the Prize',
-      description:
-        'If you successfully outsmart the AI and its instructions, its entire vault of SUI and USDC is transferred to you. The ultimate prize for the ultimate prompt infiltrator.',
-    },
-  ]
-
   return (
     <section
       id="how-it-works"

@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { SUI_SENTINEL_APP_URL } from '@/constants'
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -67,9 +68,14 @@ export function Navbar() {
             >
               Community
             </a>
-            <button className=" border border-[#383838] hover:border-[#424242] transition-colors font-medium bg-white text-black px-6 py-2 rounded-full hover:bg-white/90">
-              Launch App
-            </button>
+            <Link
+              href={SUI_SENTINEL_APP_URL}
+              target="_blank"
+            >
+              <button className=" border border-[#383838] hover:border-[#424242] transition-colors font-medium bg-white text-black px-6 py-2 rounded-full hover:bg-white/90">
+                Launch App
+              </button>
+            </Link>
           </div>
 
           <button
@@ -87,27 +93,33 @@ export function Navbar() {
             className="md:hidden bg-black/90 backdrop-blur-xl border-t border-gray-700/30 py-4"
           >
             <div className="flex flex-col gap-4 px-4">
-              <a
+              <Link
                 href="#how-it-works"
                 className="text-gray-300 hover:text-white transition-colors"
               >
                 How It Works
-              </a>
-              <a
+              </Link>
+              <Link
                 href="#vision"
                 className="text-gray-300 hover:text-white transition-colors"
               >
                 Vision
-              </a>
-              <a
+              </Link>
+              <Link
                 href="#community"
                 className="text-gray-300 hover:text-white transition-colors"
               >
                 Community
-              </a>
-              <button className="border border-[#383838] hover:border-[#424242] transition-colors font-medium bg-white text-black px-6 py-2 rounded-full hover:bg-white/90">
-                Launch App
-              </button>
+              </Link>
+              <Link
+                href={SUI_SENTINEL_APP_URL}
+                target="_blank"
+                className="w-full"
+              >
+                <button className="border border-[#383838] hover:border-[#424242] transition-colors font-medium bg-white text-black px-6 py-2 rounded-full hover:bg-white/90 w-full">
+                  Launch App
+                </button>
+              </Link>
             </div>
           </motion.div>
         )}
