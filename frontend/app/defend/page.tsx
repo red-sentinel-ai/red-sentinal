@@ -354,7 +354,7 @@ export default function DefendPage() {
         {account?.address ? (
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading || tokenCount > SYSTEM_PROMPT_MAX_TOKENS}
             className="w-full bg-white text-black rounded-full py-3 font-medium hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
           >
             {isLoading ? (
