@@ -77,7 +77,7 @@ export default function AgentChallengePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-body flex items-center justify-center bg-black">
+      <div className="min-h-screen flex items-center justify-center bg-black">
         <Loader2 className="w-8 h-8 animate-spin text-[#B8B8B8]" />
       </div>
     )
@@ -85,7 +85,7 @@ export default function AgentChallengePage() {
 
   if (error || !agent) {
     return (
-      <div className="min-h-body bg-black text-[#B5B5B5] p-4">
+      <div className="min-h-screen bg-black text-[#B5B5B5] p-4">
         <Link
           href="/attack"
           className="flex items-center gap-1 text-[#558EB4] hover:underline mb-8"
@@ -100,7 +100,7 @@ export default function AgentChallengePage() {
   }
 
   return (
-    <div className="min-h-body max-h-body pt-24 bg-black max-w-4xl mx-auto relative flex flex-col">
+    <div className="min-h-screen pt-24 bg-black max-w-4xl mx-auto relative flex flex-col">
       <div className="absolute top-[124px] -left-[156px] z-10">
         <Link
           href="/attack"
