@@ -4,7 +4,6 @@ import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import {
   Loader2,
-  Info,
   AlertCircle,
   ChevronDown,
   ChevronUp,
@@ -60,6 +59,8 @@ export default function ChatInterface({
   const [showAgentDetails, setShowAgentDetails] = useState(false)
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const account = useCurrentAccount()
+
+  console.log('agent events', agentEvents)
 
   const formatTimestamp = (timestamp: string) => {
     return new Date(Number.parseInt(timestamp)).toLocaleString()
@@ -137,7 +138,7 @@ export default function ChatInterface({
 
   return (
     <div className="flex flex-col bg-gradient-to-br from-gray-900 via-black to-gray-900 text-[#E5E7EB] h-full flex-1">
-      <div className="bg-gradient-to-r from-[#12121266] to-[#1a1a1a66] backdrop-blur-xl border-b border-[#2E40494D] p-3 sm:p-4 shadow-lg">
+      <div className="bg-gradient-to-r from-[#12121266] to-[#1a1a1a66] backdrop-blur-xl border-b border-[#2E40494D] px-3 pt-3 shadow-lg">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
           <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
             <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-[#558EB4] ring-opacity-50">
@@ -152,7 +153,7 @@ export default function ChatInterface({
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2">
                 <h1 className="text-lg sm:text-xl font-bold text-white truncate">
-                  Name: {agent.agent_name}
+                  Target: {agent.agent_name}
                 </h1>
                 {agent.is_featured && (
                   <Image
@@ -165,7 +166,7 @@ export default function ChatInterface({
                 )}
               </div>
               <p className="text-xs sm:text-sm text-gray-300 truncate">
-                Agent ID: {agent.agent_id}
+                Sentinel ID: {agent.agent_id}
               </p>
             </div>
           </div>
@@ -183,18 +184,20 @@ export default function ChatInterface({
                 drainAmount="0"
               />
             </div>
-            <button
-              onClick={() => setShowAgentDetails(!showAgentDetails)}
-              className="p-2 hover:bg-[#2E40494D] rounded-lg transition-colors flex-shrink-0"
-            >
-              {showAgentDetails ? (
-                <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5" />
-              ) : (
-                <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5" />
-              )}
-            </button>
           </div>
         </div>
+
+        <button
+          onClick={() => setShowAgentDetails(!showAgentDetails)}
+          className="p-2 hover:bg-[#2E40494D] rounded-md transition-colors flex-shrink-0 flex items-center gap-1 w-full my-2"
+        >
+          <p className="text-xs sm:text-sm font-semibold underline"> View System Prompt</p>
+          {showAgentDetails ? (
+            <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5" />
+          ) : (
+            <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5" />
+          )}
+        </button>
 
         <AnimatePresence>
           {showAgentDetails && (
@@ -205,15 +208,10 @@ export default function ChatInterface({
               transition={{ duration: 0.2 }}
               className="overflow-hidden"
             >
-              <div className="bg-gradient-to-r from-[#2E40494D] to-[#1a1a1a4D] rounded-lg p-3 sm:p-4 mt-3 sm:mt-4 border border-[#2E40494D]">
-                <h2 className="text-xs sm:text-sm font-semibold mb-2 sm:mb-3 text-white flex items-center gap-2">
-                  <Info className="w-3 h-3 sm:w-4 sm:h-4 text-[#558EB4]" /> System Prompt
-                </h2>
-                <div className="bg-black/40 p-3 sm:p-4 rounded-lg border border-gray-700">
-                  <p className="whitespace-pre-wrap text-xs sm:text-sm text-gray-300 leading-relaxed">
-                    {agent.system_prompt}
-                  </p>
-                </div>
+              <div className="bg-black/40 p-3 sm:p-4 rounded-lg border border-gray-700">
+                <p className="whitespace-pre-wrap text-xs sm:text-sm text-gray-300 leading-relaxed">
+                  {agent.system_prompt}
+                </p>
               </div>
             </motion.div>
           )}
@@ -222,7 +220,7 @@ export default function ChatInterface({
 
       <div
         ref={chatContainerRef}
-        className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-4 sm:space-y-6 custom-scrollbar max-h-[calc(100vh-280px)] sm:max-h-[calc(100vh-350px)] bg-gradient-to-b from-transparent to-black/20"
+        className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-4 sm:space-y-6 custom-scrollbar max-h-[calc(100vh-280px)] sm:max-h-[calc(100vh-382px)] bg-gradient-to-b from-transparent to-black/20"
       >
         {chatMessages.length === 0 && (
           <div className="text-center py-8 sm:py-12 text-gray-400">
@@ -312,6 +310,10 @@ export default function ChatInterface({
                     <div className="absolute inset-0 rounded-2xl opacity-20 blur-sm" />
                   )}
                   <div className="relative p-3 sm:p-4">
+                    {message.type === 'agent' && (
+                      <div className="text-sm font-semibold text-white">System analysis: </div>
+                    )}
+
                     <div className="mb-2 sm:mb-3">
                       <p className="text-xs sm:text-sm leading-relaxed break-words">
                         {message.content}
@@ -402,7 +404,7 @@ export default function ChatInterface({
               className="w-full bg-gradient-to-r from-gray-800 to-gray-700 border-2 border-gray-600 rounded-2xl p-3 sm:p-4 pr-16 sm:pr-20 pb-10 sm:pb-12 min-h-[50px] sm:min-h-[60px] max-h-[120px] sm:max-h-[150px] text-sm sm:text-base text-white focus:ring-2 focus:ring-[#558EB4] focus:border-[#558EB4] outline-none placeholder:text-gray-400 resize-none shadow-inner transition-all duration-200"
               maxLength={600}
               disabled={isSubmitting}
-              placeholder="Type your attack prompt..."
+              placeholder="Craft your attack prompt..."
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault()
