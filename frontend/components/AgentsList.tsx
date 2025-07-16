@@ -47,8 +47,7 @@ export const AgentsList = ({
         {isFetchingAgents ? (
           <LeaderboardSkeleton />
         ) : (
-          <div className="text-xs flex flex-col gap-1">
-            {/* Table Header - Hidden on mobile */}
+          <div className="text-sm flex flex-col gap-1">
             <div className="hidden md:grid md:grid-cols-12 bg-[#2E40494D] backdrop-blur-xl p-3 rounded-lg mb-2 font-semibold">
               <div className="col-span-3 grid grid-cols-12 items-center">
                 <p className="pr-1 col-span-1">#</p>
@@ -61,7 +60,6 @@ export const AgentsList = ({
               <div className="col-span-3 border-l border-l-[#6F6F6F] ps-4">Actions</div>
             </div>
 
-            {/* Agent Rows */}
             <AnimatePresence>
               {agents.map((agent, idx) => {
                 const balance = (Number(agent.balance) / MIST_PER_SUI).toFixed(4)
@@ -77,7 +75,6 @@ export const AgentsList = ({
                     className="bg-[#2E40494D] backdrop-blur-xl p-3 rounded-lg hover:bg-[#2E40497D] cursor-pointer"
                     onClick={() => router.push(`/attack/${agent.object_id}`)}
                   >
-                    {/* Mobile */}
                     <div className="md:hidden space-y-2">
                       <div className="flex justify-between items-center">
                         <div className="flex items-center gap-2">
@@ -137,7 +134,6 @@ export const AgentsList = ({
                       </div>
                     </div>
 
-                    {/* Desktop */}
                     <div className="hidden md:grid md:grid-cols-12 items-center">
                       <div className="col-span-3 grid grid-cols-12 items-center">
                         <p className="pr-1 col-span-1">{idx + 1}</p>
