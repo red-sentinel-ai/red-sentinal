@@ -17,6 +17,7 @@ interface UseConsumePromptOptions {
   onError?: (error: Error) => void
   onPaymentSuccess?: (result: any) => void
   onApiSuccess?: (response: ConsumePromptApiResponse) => void
+  onComplete?: (response: ConsumePromptApiResponse) => void
   showToasts?: boolean
 }
 
@@ -27,7 +28,14 @@ interface ConsumePromptParams {
 
 export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
   const client = useSuiClient()
-  const { onSuccess, onError, onPaymentSuccess, onApiSuccess, showToasts = true } = options
+  const {
+    onSuccess,
+    onError,
+    onPaymentSuccess,
+    onApiSuccess,
+    onComplete,
+    showToasts = true,
+  } = options
 
   const [isLoading, setIsLoading] = useState(false)
   const [currentStep, setCurrentStep] = useState<string>('')
@@ -207,21 +215,27 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         if (showToasts) toast.info('Processing prompt...')
         const apiResponse = await callConsumePromptApi(agentDetails.agent_id, message)
         console.log('API response:', apiResponse)
+        onApiSuccess?.(apiResponse)
 
         // Step 4: Execute consume prompt transaction
         setCurrentStep('Finalizing transaction...')
         if (showToasts) toast.info('Finalizing transaction...')
-        const result = await executeConsumePrompt(agentDetails.object_id, agentDetails, apiResponse, message)
+        const result = await executeConsumePrompt(
+          agentDetails.object_id,
+          agentDetails,
+          apiResponse,
+          message
+        )
 
-        // Success
-        const success = apiResponse.response.data.success
         if (showToasts) {
-          if (success) {
+          if (apiResponse.response.data.success) {
             toast.success('🎉 Agent defeated! You won the challenge!')
           } else {
             toast.success('Prompt processed successfully')
           }
         }
+
+        onComplete?.(apiResponse)
 
         setCurrentStep('')
         return result
