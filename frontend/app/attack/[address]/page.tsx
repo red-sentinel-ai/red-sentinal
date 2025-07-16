@@ -92,7 +92,7 @@ export default function AgentChallengePage() {
           href="/attack"
           className="flex items-center gap-1 text-[#558EB4] hover:underline mb-8"
         >
-          <ChevronLeft className="w-5 h-5" /> Back to Agents
+          <ChevronLeft className="w-5 h-5" /> Back to Sentinels
         </Link>
         <div className="flex items-center justify-center min-h-[400px]">
           <p className="text-lg text-gray-400">{error?.message || 'Agent not found'}</p>
@@ -108,7 +108,7 @@ export default function AgentChallengePage() {
           href="/attack"
           className="hidden lg:flex items-center gap-1 text-gray-400 hover:text-white transition-colors"
         >
-          <ChevronLeft className="w-5 h-5" /> Back to Agents
+          <ChevronLeft className="w-5 h-5" /> Back to Sentinels
         </Link>
       </div>
 
