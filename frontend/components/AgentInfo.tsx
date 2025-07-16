@@ -33,16 +33,16 @@ export const AgentInfo = ({
         'bg-[#2E40494D] rounded-md p-2 border border-[#2E40494D] text-[#B5B5B5]'
       )}
     >
-      <div className="flex justify-between items-center text-xs gap-4">
+      <div className="flex justify-between items-center text-md gap-4">
         <div className="text-center">
-          <p className="text-[10px] text-gray-400">Pool</p>
+          <p className="text-[12px] text-gray-400">Total Bounty</p>
           <p className="font-semibold text-white">
             {isDrained ? drainAmountFormatted : prizePool} {symbol}
           </p>
         </div>
         <div className="h-6 w-[1px] bg-[#6F6F6F]"></div>
         <div className="text-center">
-          <p className="text-[10px] text-gray-400">Price</p>
+          <p className="text-[12px] text-gray-400">Attack Fee</p>
           <p className="font-semibold text-white">
             {messagePrice} {symbol}
           </p>
