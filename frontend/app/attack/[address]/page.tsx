@@ -59,10 +59,7 @@ export default function AgentChallengePage() {
       setSubmitError('Please enter a prompt')
       return
     }
-    if (prompt.length > 600) {
-      setSubmitError('Prompt must be 600 characters or less')
-      return
-    }
+
     try {
       setIsSubmitting(true)
       setSubmitError(null)

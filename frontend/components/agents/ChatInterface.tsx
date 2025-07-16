@@ -3,15 +3,17 @@
 import type React from 'react'
 import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
+import clsx from 'clsx'
 import { Loader2, AlertCircle, ChevronDown, ChevronUp, Send } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ConnectModal, useCurrentAccount } from '@mysten/dapp-kit'
 import { AgentInfo } from '@/components/AgentInfo'
-import { DEFAULT_PROFILE_URL } from '@/constants'
+import { ATTACK_PROMPT_MAX_TOKENS, DEFAULT_PROFILE_URL } from '@/constants'
 import type { ConsumePromptApiResponse } from '@/types'
 import type { AgentEvents } from '@/hooks/useAgentEvents'
 import type { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { ChatMessage } from './ChatMessage'
+import { useTokenCount } from '@/hooks/useTokenCount'
 
 export interface ChatMessage {
   id: string
@@ -51,6 +53,7 @@ export default function ChatInterface({
   const [showAgentDetails, setShowAgentDetails] = useState(false)
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const account = useCurrentAccount()
+  const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
 
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false)
 
@@ -113,6 +116,10 @@ export default function ChatInterface({
 
     if (!account?.address) {
       setIsWalletModalOpen(true)
+      return
+    }
+
+    if (tokenCount > ATTACK_PROMPT_MAX_TOKENS) {
       return
     }
 
@@ -284,9 +291,11 @@ export default function ChatInterface({
             <div className="relative">
               <textarea
                 value={promptInput}
-                onChange={(e) => setPromptInput(e.target.value)}
+                onChange={(e) => {
+                  setPromptInput(e.target.value)
+                  countTokens(e.target.value)
+                }}
                 className="w-full bg-gradient-to-r from-gray-800 to-gray-700 border-2 border-gray-600 rounded-2xl p-3 sm:p-4 pr-16 sm:pr-20 pb-10 sm:pb-12 min-h-[50px] sm:min-h-[60px] max-h-[120px] sm:max-h-[150px] text-sm sm:text-base text-white focus:ring-2 focus:ring-[#558EB4] focus:border-[#558EB4] outline-none placeholder:text-gray-400 resize-none shadow-inner transition-all duration-200"
-                maxLength={600}
                 disabled={isSubmitting}
                 placeholder="Craft your attack prompt..."
                 onKeyDown={(e) => {
@@ -296,12 +305,32 @@ export default function ChatInterface({
                   }
                 }}
               />
-              <div className="absolute bottom-2 sm:bottom-3 left-3 sm:left-4 text-xs text-gray-400 bg-black/50 px-2 py-1 rounded">
-                {promptInput.length}/600
+
+              <div
+                className={clsx(
+                  'absolute bottom-2 sm:bottom-3 backdrop-blur-lg left-3 sm:left-4 text-xs text-gray-400 bg-black/50 px-2 py-1 rounded'
+                )}
+              >
+                <span
+                  className={clsx({
+                    'animate-pulse': isTokenCountDebouncing,
+                  })}
+                >
+                  Tokens: {tokenCount} / {ATTACK_PROMPT_MAX_TOKENS}
+                </span>
               </div>
+
+              {tokenCount > ATTACK_PROMPT_MAX_TOKENS && (
+                <div className="mt-2 text-sm text-red-400 absolute">
+                  Your prompt exceeds the token limit.
+                </div>
+              )}
+
               <button
                 type="submit"
-                disabled={isSubmitting || promptInput.length === 0}
+                disabled={
+                  isSubmitting || promptInput.length === 0 || tokenCount > ATTACK_PROMPT_MAX_TOKENS
+                }
                 className="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#558EB4] to-[#1388D5] hover:from-[#1388D5] hover:to-[#558EB4] text-white rounded-full flex items-center justify-center transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none"
               >
                 {isSubmitting ? (
