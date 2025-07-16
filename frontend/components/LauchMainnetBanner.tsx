@@ -4,7 +4,7 @@ export const LaunchMainnetBanner = () => {
       <div className="bg-[#12121266] backdrop-blur-sm relative w-full">
         <div className="max-w-7xl mx-auto px-4 py-2 relative items-center text-center">
           <div className="flex items-center space-x-4 text-center justify-center text-sm">
-            Launching on Mainnet Next Week
+            Launching on Mainnet Soon
           </div>
         </div>
 

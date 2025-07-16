@@ -299,11 +299,11 @@ export default function ChatInterface({
                 </div>
 
                 <div
-                  className={clsx('rounded-2xl shadow-lg relative', {
+                  className={clsx('rounded-2xl shadow-lg relative min-w-[160px]', {
                     'bg-gradient-to-r from-[#558EB4] to-[#1388D5] text-white border border-[#558EB4]/30':
-                      message.type === 'user',
-                    'bg-gradient-to-r from-gray-800/60 to-gray-700/60 text-gray-200 border border-gray-600/50':
                       message.type === 'agent',
+                    'bg-gradient-to-r from-gray-800/60 to-gray-700/60 text-gray-200 border border-gray-600/50':
+                      message.type === 'user',
                   })}
                 >
                   {message.type === 'agent' && message.isSuccess !== undefined && (
@@ -314,6 +314,11 @@ export default function ChatInterface({
                       <div className="text-sm font-semibold text-white">System analysis: </div>
                     )}
 
+                    {message.type === 'user' && message.sender && (
+                      <div className="flex flex-col gap-1 text-sm font-semibold text-white mb-2 -mt-1">
+                        <span> {formatAddress(message.sender)}</span>
+                      </div>
+                    )}
                     <div className="mb-2 sm:mb-3">
                       <p className="text-xs sm:text-sm leading-relaxed break-words">
                         {message.content}
@@ -322,7 +327,7 @@ export default function ChatInterface({
 
                     <div
                       className={clsx(
-                        'pt-2 sm:pt-3 border-t text-xs flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2',
+                        'text-xs flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2',
                         {
                           'border-white/20': message.type === 'user',
                           'border-gray-500/30': message.type === 'agent',
@@ -338,7 +343,7 @@ export default function ChatInterface({
                         )}
                         {message.type === 'agent' && message.txDigest && (
                           <div className="flex items-center gap-1">
-                            <span>Tx:</span>
+                            <span>Verified Tx:</span>
                             <a
                               href={`${SUI_TESTNET_BASE_URL}/${message.txDigest}`}
                               target="_blank"
@@ -349,14 +354,8 @@ export default function ChatInterface({
                             </a>
                           </div>
                         )}
-                        {message.type === 'user' && message.sender && (
-                          <div className="flex flex-col gap-1">
-                            <span>Sender: {formatAddress(message.sender)}</span>
-                            {message.amountSent && <span>Amount: {message.amountSent} SUI</span>}
-                          </div>
-                        )}
                       </div>
-                      <span className="text-right opacity-75 text-xs whitespace-nowrap">
+                      <span className="text-right opacity-75 text-xs whitespace-nowrap absolute right-3 bottom-1">
                         {formatTimestamp(message.timestamp)}
                       </span>
                     </div>
