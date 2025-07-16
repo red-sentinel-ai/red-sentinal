@@ -126,7 +126,8 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
   const executeConsumePrompt = async (
     agentObjectId: string,
     agentDetails: AgentDetails,
-    apiResponse: ConsumePromptApiResponse
+    apiResponse: ConsumePromptApiResponse,
+    prompt: string
   ): Promise<any> => {
     const tx = new Transaction()
     const sigVector = hexToVector(apiResponse.signature)
@@ -144,7 +145,8 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         tx.object(agentObjectId), // agent: &mut Agent
         tx.pure.string(apiData.data.agent_id), // agent_id: String
         tx.pure.bool(apiData.data.success), // success: bool
-        tx.pure.string(apiData.data.explanation), // explanation: String
+        tx.pure.string(apiData.data.explanation), // explanation: String,
+        tx.pure.string(prompt),
         tx.pure.u8(apiData.data.score), // score: u8
         tx.pure.u64(apiData.timestamp_ms), // timestamp_ms: u64
         tx.pure.vector('u8', sigVector), // sig: &vector<u8>
@@ -209,7 +211,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         // Step 4: Execute consume prompt transaction
         setCurrentStep('Finalizing transaction...')
         if (showToasts) toast.info('Finalizing transaction...')
-        const result = await executeConsumePrompt(agentDetails.object_id, agentDetails, apiResponse)
+        const result = await executeConsumePrompt(agentDetails.object_id, agentDetails, apiResponse, message)
 
         // Success
         const success = apiResponse.response.data.success
