@@ -100,7 +100,7 @@ export default function AgentChallengePage() {
   }
 
   return (
-    <div className="min-h-screen pt-24 bg-black max-w-4xl mx-auto relative flex flex-col">
+    <div className="min-h-screen pt-24 max-w-4xl mx-auto relative flex flex-col">
       <div className="absolute top-[124px] -left-[156px] z-10">
         <Link
           href="/attack"
