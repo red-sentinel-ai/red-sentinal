@@ -1,5 +1,6 @@
 import type React from 'react'
 import type { Metadata } from 'next'
+import { Analytics } from '@vercel/analytics/react'
 import { Inter } from 'next/font/google'
 import './globals.css'
 
@@ -21,6 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="bg-[url('/img/abstract_bg.png')] bg-left bg-no-repeat bg-cover">
           {children}
         </div>
+        <Analytics />
       </body>
     </html>
   )
