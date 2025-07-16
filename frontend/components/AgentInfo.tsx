@@ -12,52 +12,40 @@ export type AgentInfoProps = {
   drainAmount: string
   className?: string
 }
+
 export const AgentInfo = ({
   balance,
   decimal,
   promptPrice,
   symbol,
-  breakAttempts,
   isDrained,
   drainAmount,
   className,
 }: AgentInfoProps) => {
   const prizePool = (Number(balance) / MIST_PER_SUI).toFixed(4)
   const messagePrice = (Number(promptPrice) / MIST_PER_SUI).toFixed(4)
-
   const drainAmountFormatted = formatBalance(BigInt(drainAmount), decimal)
 
   return (
     <div
       className={clsx(
         className,
-        'bg-gradient-to-l from-[#35546266] via-[#2E404966] to-[#6e9aaf66] p-[1px] rounded-lg max-w-[624px] mx-auto'
+        'bg-[#2E40494D] rounded-md p-2 border border-[#2E40494D] text-[#B5B5B5]'
       )}
     >
-      <div className="bg-black w-full h-full rounded-lg">
-        <div className="bg-[#12121266] w-full h-full rounded-lg p-3 md:p-[18px] flex justify-between">
-          <div>
-            <p className="text-[10px] md:text-xs text-[#E1EDF2]">Prize pool</p>
-            <h4 className="text-xl md:text-2xl font-bold">
-              {isDrained ? drainAmountFormatted : prizePool} {symbol}
-            </h4>
-          </div>
-
-          <div className="h-full w-[1px] bg-[#35546266] min-h-12"></div>
-
-          <div>
-            <p className="text-[10px] md:text-xs text-[#E1EDF2]">Message price</p>
-            <h4 className="text-xl md:text-2xl font-bold">
-              {messagePrice} {symbol}
-            </h4>
-          </div>
-
-          <div className="h-full w-[1px] bg-[#35546266] min-h-12"></div>
-
-          <div>
-            <p className="text-[10px] md:text-xs text-[#E1EDF2]">Break attempts</p>
-            <h4 className="text-xl md:text-2xl font-bold">{breakAttempts}</h4>
-          </div>
+      <div className="flex justify-between items-center text-xs gap-4">
+        <div className="text-center">
+          <p className="text-[10px] text-gray-400">Pool</p>
+          <p className="font-semibold text-white">
+            {isDrained ? drainAmountFormatted : prizePool} {symbol}
+          </p>
+        </div>
+        <div className="h-6 w-[1px] bg-[#6F6F6F]"></div>
+        <div className="text-center">
+          <p className="text-[10px] text-gray-400">Price</p>
+          <p className="font-semibold text-white">
+            {messagePrice} {symbol}
+          </p>
         </div>
       </div>
     </div>
