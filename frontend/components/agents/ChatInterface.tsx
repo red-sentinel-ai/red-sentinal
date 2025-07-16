@@ -132,89 +132,90 @@ export default function ChatInterface({
   }
 
   return (
-    <div className="flex flex-col bg-gradient-to-br from-gray-900 via-black to-gray-900 text-[#E5E7EB] h-full flex-1">
-      <div className="bg-gradient-to-r from-[#12121266] to-[#1a1a1a66] backdrop-blur-xl border-b border-[#2E40494D] px-3 pt-3 shadow-lg">
+    <div className="flex flex-col text-[#E5E7EB] h-full flex-1">
+      <div className="backdrop-blur-xl border-b border-[#2E40494D] p-3 shadow-lg">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
-          <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
-            <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-[#558EB4] ring-opacity-50">
-              <Image
-                src={agent.agent_profile || DEFAULT_PROFILE_URL}
-                alt={`${agent.agent_name} profile`}
-                fill
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2">
-                <h1 className="text-lg sm:text-xl font-bold text-white truncate">
-                  Target: {agent.agent_name}
-                </h1>
-                {agent.is_featured && (
-                  <Image
-                    src="/icons/check-mark.svg"
-                    width={20}
-                    height={20}
-                    alt="checkmark"
-                    className="flex-shrink-0"
-                  />
-                )}
+          <div>
+            <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+              <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-[#558EB4] ring-opacity-50">
+                <Image
+                  src={agent.agent_profile || DEFAULT_PROFILE_URL}
+                  alt={`${agent.agent_name} profile`}
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
               </div>
-              <p className="text-xs sm:text-sm text-gray-300 truncate">
-                Sentinel ID: {agent.agent_id}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-3">
-            <div className="flex-1 sm:flex-none">
-              <AgentInfo
-                balance={agent.balance.toString()}
-                decimal={9}
-                promptPrice={agent.cost_per_message.toString()}
-                symbol="SUI"
-                className="w-full sm:w-auto text-xs sm:text-sm"
-                breakAttempts={0}
-                isDrained={isAgentDrained}
-                drainAmount="0"
-              />
-            </div>
-          </div>
-        </div>
-
-        <button
-          onClick={() => setShowAgentDetails(!showAgentDetails)}
-          className="p-2 hover:bg-[#2E40494D] rounded-md transition-colors flex-shrink-0 flex items-center gap-1 w-full my-2"
-        >
-          <p className="text-xs sm:text-sm font-semibold underline"> View System Prompt</p>
-          {showAgentDetails ? (
-            <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5" />
-          ) : (
-            <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5" />
-          )}
-        </button>
-
-        <AnimatePresence>
-          {showAgentDetails && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="overflow-hidden"
-            >
-              <div className="bg-black/40 p-3 sm:p-4 rounded-lg border border-gray-700">
-                <p className="whitespace-pre-wrap text-xs sm:text-sm text-gray-300 leading-relaxed">
-                  {agent.system_prompt}
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <h1 className="text-lg sm:text-xl font-bold text-white truncate">
+                    Target: {agent.agent_name}
+                  </h1>
+                  {agent.is_featured && (
+                    <Image
+                      src="/icons/check-mark.svg"
+                      width={20}
+                      height={20}
+                      alt="checkmark"
+                      className="flex-shrink-0"
+                    />
+                  )}
+                </div>
+                <p className="text-xs sm:text-sm text-gray-300 truncate">
+                  Sentinel ID: {agent.agent_id}
                 </p>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            </div>
+
+            <button
+              onClick={() => setShowAgentDetails(!showAgentDetails)}
+              className="p-2 hover:bg-[#2E40494D] rounded-md transition-colors flex items-center gap-1 mt1"
+            >
+              <p className="text-xs sm:text-sm font-semibold underline"> View System Prompt</p>
+              {showAgentDetails ? (
+                <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5" />
+              ) : (
+                <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5" />
+              )}
+            </button>
+
+            <AnimatePresence>
+              {showAgentDetails && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="overflow-hidden"
+                >
+                  <div className="bg-black/40 p-3 sm:p-4 rounded-lg border border-gray-700">
+                    <p className="whitespace-pre-wrap text-xs sm:text-sm text-gray-300 leading-relaxed">
+                      {agent.system_prompt}
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <div className="flex-1 sm:flex-none">
+            <AgentInfo
+              balance={agent.balance.toString()}
+              decimal={9}
+              promptPrice={agent.cost_per_message.toString()}
+              symbol="SUI"
+              className="w-full sm:w-auto text-xs sm:text-sm"
+              breakAttempts={0}
+              isDrained={isAgentDrained}
+              drainAmount="0"
+            />
+          </div>
+        </div>
       </div>
 
       <div
         ref={chatContainerRef}
-        className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-4 sm:space-y-6 custom-scrollbar max-h-[calc(100vh-280px)] sm:max-h-[calc(100vh-390px)] bg-gradient-to-b from-transparent to-black/20"
+        className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-4 sm:space-y-6 custom-scrollbar max-h-[calc(100vh-280px)] sm:max-h-[calc(100vh-390px)] backdrop-blur-md"
       >
         {chatMessages.length === 0 && (
           <div className="text-center py-8 sm:py-12 text-gray-400">
