@@ -131,7 +131,7 @@ export function Footer() {
           viewport={{ once: true }}
           className="border-t border-[#383838] mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4"
         >
-          <p className="text-gray-400 text-sm">© 2025 SUI Sentinel. All rights reserved.</p>
+          <p className="text-gray-400 text-sm">All Rights Reserved @Cyphronix Software</p>
           <div className="flex gap-6 text-sm text-gray-400">
             <a
               href="#"
