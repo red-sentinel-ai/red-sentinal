@@ -1,4 +1,5 @@
 'use client'
+
 import type React from 'react'
 import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
@@ -53,6 +54,10 @@ export default function ChatInterface({
 
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false)
 
+  const isAgentDrained = chatMessages.some(
+    (message) => message.type === 'agent' && message.isSuccess === true
+  )
+
   useEffect(() => {
     const initialMessages: ChatMessage[] = []
     agentEvents.promptConsumed
@@ -78,6 +83,7 @@ export default function ChatInterface({
           txDigest: event.id.txDigest,
         })
       })
+
     setChatMessages(initialMessages)
   }, [agentEvents])
 
@@ -159,7 +165,6 @@ export default function ChatInterface({
               </p>
             </div>
           </div>
-
           <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-3">
             <div className="flex-1 sm:flex-none">
               <AgentInfo
@@ -169,7 +174,7 @@ export default function ChatInterface({
                 symbol="SUI"
                 className="w-full sm:w-auto text-xs sm:text-sm"
                 breakAttempts={0}
-                isDrained={false}
+                isDrained={isAgentDrained}
                 drainAmount="0"
               />
             </div>
@@ -258,48 +263,62 @@ export default function ChatInterface({
         </AnimatePresence>
       </div>
 
-      <div className="bg-gradient-to-r from-[#12121266] to-[#1a1a1a66] backdrop-blur-xl border-t border-[#2E40494D] p-3 sm:p-6 shadow-2xl">
-        <form
-          onSubmit={handleSubmit}
-          className="relative"
-        >
-          <div className="relative">
-            <textarea
-              value={promptInput}
-              onChange={(e) => setPromptInput(e.target.value)}
-              className="w-full bg-gradient-to-r from-gray-800 to-gray-700 border-2 border-gray-600 rounded-2xl p-3 sm:p-4 pr-16 sm:pr-20 pb-10 sm:pb-12 min-h-[50px] sm:min-h-[60px] max-h-[120px] sm:max-h-[150px] text-sm sm:text-base text-white focus:ring-2 focus:ring-[#558EB4] focus:border-[#558EB4] outline-none placeholder:text-gray-400 resize-none shadow-inner transition-all duration-200"
-              maxLength={600}
-              disabled={isSubmitting}
-              placeholder="Craft your attack prompt..."
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault()
-                  handleSubmit(e)
-                }
-              }}
-            />
-            <div className="absolute bottom-2 sm:bottom-3 left-3 sm:left-4 text-xs text-gray-400 bg-black/50 px-2 py-1 rounded">
-              {promptInput.length}/600
-            </div>
-            <button
-              type="submit"
-              disabled={isSubmitting || promptInput.length === 0}
-              className="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#558EB4] to-[#1388D5] hover:from-[#1388D5] hover:to-[#558EB4] text-white rounded-full flex items-center justify-center transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none"
-            >
-              {isSubmitting ? (
-                <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
-              ) : (
-                <Send className="w-4 h-4 sm:w-5 sm:h-5" />
-              )}
-            </button>
+      {isAgentDrained ? (
+        <div className="bg-gradient-to-r from-[#12121266] flex items-center justify-center min-h-[170px] to-[#1a1a1a66] backdrop-blur-xl border-t border-[#2E40494D] p-3 sm:p-6 shadow-2xl">
+          <div className="text-center">
+            <h3 className="text-xl sm:text-2xl font-bold text-red-400 mb-2">
+              This Agent is Drained
+            </h3>
+            <p className="text-sm sm:text-base text-gray-400">
+              The agent has been successfully compromised and is no longer accepting prompts.
+            </p>
           </div>
-          {submitError && (
-            <div className="mt-2 text-red-400 text-xs sm:text-sm bg-red-900/20 border border-red-500/30 rounded-lg p-2">
-              {submitError}
+        </div>
+      ) : (
+        <div className="bg-gradient-to-r from-[#12121266] min-h-[170px] to-[#1a1a1a66] backdrop-blur-xl border-t border-[#2E40494D] p-3 sm:p-6 shadow-2xl">
+          <form
+            onSubmit={handleSubmit}
+            className="relative"
+          >
+            <div className="relative">
+              <textarea
+                value={promptInput}
+                onChange={(e) => setPromptInput(e.target.value)}
+                className="w-full bg-gradient-to-r from-gray-800 to-gray-700 border-2 border-gray-600 rounded-2xl p-3 sm:p-4 pr-16 sm:pr-20 pb-10 sm:pb-12 min-h-[50px] sm:min-h-[60px] max-h-[120px] sm:max-h-[150px] text-sm sm:text-base text-white focus:ring-2 focus:ring-[#558EB4] focus:border-[#558EB4] outline-none placeholder:text-gray-400 resize-none shadow-inner transition-all duration-200"
+                maxLength={600}
+                disabled={isSubmitting}
+                placeholder="Craft your attack prompt..."
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault()
+                    handleSubmit(e)
+                  }
+                }}
+              />
+              <div className="absolute bottom-2 sm:bottom-3 left-3 sm:left-4 text-xs text-gray-400 bg-black/50 px-2 py-1 rounded">
+                {promptInput.length}/600
+              </div>
+              <button
+                type="submit"
+                disabled={isSubmitting || promptInput.length === 0}
+                className="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#558EB4] to-[#1388D5] hover:from-[#1388D5] hover:to-[#558EB4] text-white rounded-full flex items-center justify-center transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none"
+              >
+                {isSubmitting ? (
+                  <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                ) : (
+                  <Send className="w-4 h-4 sm:w-5 sm:h-5" />
+                )}
+              </button>
             </div>
-          )}
-        </form>
-      </div>
+            {submitError && (
+              <div className="mt-2 text-red-400 text-xs sm:text-sm bg-red-900/20 border border-red-500/30 rounded-lg p-2">
+                {submitError}
+              </div>
+            )}
+          </form>
+        </div>
+      )}
+
       <ConnectModal
         open={isWalletModalOpen}
         onOpenChange={setIsWalletModalOpen}
