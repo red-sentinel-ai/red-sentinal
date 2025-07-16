@@ -134,7 +134,7 @@ export default function ChatInterface({
   return (
     <div className="flex flex-col text-[#E5E7EB] h-full flex-1">
       <div className="backdrop-blur-xl border-b border-[#2E40494D] p-3 shadow-lg">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4">
           <div>
             <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
               <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-[#558EB4] ring-opacity-50">
