@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { MissionMetadata, RHUser } from '@/types/ravenRewards'
+import { MissionMetadata, RHUser } from '@/types/Rewards'
 import { toast } from 'react-toastify'
 
 export interface CompleteMissionParams {
@@ -40,7 +40,7 @@ export function useCompleteMission() {
     },
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['user-rewards', variables.wallet_address] })
-      toast.success(`Mission completed! +${data.points_earned} RP`)
+      toast.success(`Mission completed! +${data.points_earned} ST`)
     },
     onError: (error: Error) => {
       toast.error(error.message)

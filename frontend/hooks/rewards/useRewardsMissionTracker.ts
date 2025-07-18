@@ -1,5 +1,5 @@
-import { MissionMetadata } from '@/types/ravenRewards'
-import { RAVEN_REWARDS_CONSTANTS } from '@/constants/ravenRewards'
+import { MissionMetadata } from '@/types/Rewards'
+import { REWARDS_CONSTANTS } from '@/constants/rewards'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { useCompleteMission } from './useCompleteMission'
 import { useSocialStatus } from '../profile/useSocialStatus'
@@ -20,7 +20,7 @@ export function useRewardsMissionTracker() {
 
     completeMission({
       wallet_address: address,
-      mission_type: RAVEN_REWARDS_CONSTANTS.MISSION_TYPES.MINT_NFT,
+      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.MINT_NFT,
       transaction_hash: txHash,
       metadata,
     })
@@ -31,7 +31,7 @@ export function useRewardsMissionTracker() {
 
     completeMission({
       wallet_address: address,
-      mission_type: RAVEN_REWARDS_CONSTANTS.MISSION_TYPES.MINT_NFT_PUBLIC,
+      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.MINT_NFT_PUBLIC,
       transaction_hash: txHash,
       metadata,
     })
@@ -42,7 +42,7 @@ export function useRewardsMissionTracker() {
 
     completeMission({
       wallet_address: address,
-      mission_type: RAVEN_REWARDS_CONSTANTS.MISSION_TYPES.MINT_NFT_PRIVATE,
+      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.MINT_NFT_PRIVATE,
       transaction_hash: txHash,
       metadata,
     })
@@ -53,7 +53,7 @@ export function useRewardsMissionTracker() {
 
     completeMission({
       wallet_address: address,
-      mission_type: RAVEN_REWARDS_CONSTANTS.MISSION_TYPES.LIST_NFT,
+      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.LIST_NFT,
       transaction_hash: txHash,
       metadata,
     })
@@ -64,7 +64,7 @@ export function useRewardsMissionTracker() {
 
     completeMission({
       wallet_address: address,
-      mission_type: RAVEN_REWARDS_CONSTANTS.MISSION_TYPES.PURCHASE_NFT,
+      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.PURCHASE_NFT,
       transaction_hash: txHash,
       metadata,
     })
@@ -75,7 +75,7 @@ export function useRewardsMissionTracker() {
 
     completeMission({
       wallet_address: address,
-      mission_type: RAVEN_REWARDS_CONSTANTS.MISSION_TYPES.CREATE_OFFER,
+      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.CREATE_OFFER,
       transaction_hash: txHash,
       metadata,
     })
@@ -86,7 +86,7 @@ export function useRewardsMissionTracker() {
 
     completeMission({
       wallet_address: address,
-      mission_type: RAVEN_REWARDS_CONSTANTS.MISSION_TYPES.ACCEPT_OFFER,
+      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.ACCEPT_OFFER,
       transaction_hash: txHash,
       metadata,
     })
@@ -97,7 +97,7 @@ export function useRewardsMissionTracker() {
 
     completeMission({
       wallet_address: address,
-      mission_type: RAVEN_REWARDS_CONSTANTS.MISSION_TYPES.TRANSFER_NFT_PRIVATE,
+      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.TRANSFER_NFT_PRIVATE,
       transaction_hash: txHash,
       metadata,
     })
@@ -108,7 +108,7 @@ export function useRewardsMissionTracker() {
 
     completeMission({
       wallet_address: address,
-      mission_type: RAVEN_REWARDS_CONSTANTS.MISSION_TYPES.TRANSFER_NFT_PUBLIC,
+      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.TRANSFER_NFT_PUBLIC,
       transaction_hash: txHash,
       metadata,
     })
@@ -119,7 +119,7 @@ export function useRewardsMissionTracker() {
 
     completeMission({
       wallet_address: address,
-      mission_type: RAVEN_REWARDS_CONSTANTS.MISSION_TYPES.COMPLETE_TRADE,
+      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.COMPLETE_TRADE,
       transaction_hash: txHash,
       metadata,
     })
@@ -130,7 +130,7 @@ export function useRewardsMissionTracker() {
 
     completeMission({
       wallet_address: address,
-      mission_type: RAVEN_REWARDS_CONSTANTS.MISSION_TYPES.LAUNCH_COLLECTION,
+      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.LAUNCH_COLLECTION,
       transaction_hash: txHash,
       metadata,
     })
@@ -141,7 +141,7 @@ export function useRewardsMissionTracker() {
 
     completeMission({
       wallet_address: address,
-      mission_type: RAVEN_REWARDS_CONSTANTS.MISSION_TYPES.FOLLOW_X,
+      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.FOLLOW_X,
       transaction_hash: txHash,
       metadata,
     })
@@ -152,7 +152,7 @@ export function useRewardsMissionTracker() {
 
     completeMission({
       wallet_address: address,
-      mission_type: RAVEN_REWARDS_CONSTANTS.MISSION_TYPES.RETWEET,
+      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.RETWEET,
       transaction_hash: txHash,
       metadata,
     })
@@ -163,7 +163,7 @@ export function useRewardsMissionTracker() {
 
     completeMission({
       wallet_address: address,
-      mission_type: RAVEN_REWARDS_CONSTANTS.MISSION_TYPES.SHARE_WITH_HASHTAG,
+      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.SHARE_WITH_HASHTAG,
       transaction_hash: txHash,
       metadata,
     })
@@ -174,7 +174,7 @@ export function useRewardsMissionTracker() {
 
     completeMission({
       wallet_address: address,
-      mission_type: RAVEN_REWARDS_CONSTANTS.MISSION_TYPES.JOIN_DISCORD,
+      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.JOIN_DISCORD,
       transaction_hash: txHash,
       metadata,
     })
@@ -185,7 +185,7 @@ export function useRewardsMissionTracker() {
 
     completeMission({
       wallet_address: address,
-      mission_type: RAVEN_REWARDS_CONSTANTS.MISSION_TYPES.DISCORD_ENGAGE,
+      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.DISCORD_ENGAGE,
       transaction_hash: txHash,
       metadata,
     })

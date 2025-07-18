@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { LeaderboardEntry } from '@/types/ravenRewards'
+import { LeaderboardEntry } from '@/types/Rewards'
 
 interface LeaderboardResponse {
   leaderboard: LeaderboardEntry[]

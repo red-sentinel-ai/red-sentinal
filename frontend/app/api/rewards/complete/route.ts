@@ -5,9 +5,9 @@ import {
   CompleteMissionRequest,
   CompleteMissionResponse,
   RHUser,
-  RavenRewardsMission,
-} from '@/types/ravenRewards'
-import { RAVEN_REWARDS_CONSTANTS } from '@/constants/ravenRewards'
+  RewardsMission,
+} from '@/types/Rewards'
+import { REWARDS_CONSTANTS } from '@/constants/rewards'
 
 export async function POST(
   request: Request
@@ -43,8 +43,8 @@ export async function POST(
     }
 
     const config = configData.config_values as unknown as GlobalConfigValues
-    const missions = config.raven_rewards?.missions || RAVEN_REWARDS_CONSTANTS.DEFAULT_MISSIONS
-    const mission = missions.find((m: RavenRewardsMission) => m.type === mission_type)
+    const missions = config.rewards?.missions || REWARDS_CONSTANTS.DEFAULT_MISSIONS
+    const mission = missions.find((m: RewardsMission) => m.type === mission_type)
     console.log('mission', mission)
 
     if (!mission || !mission.enabled) {
@@ -132,11 +132,11 @@ export async function POST(
 
       // Determine tier
       let newTier: RHUser['rewards_tier'] = 'bronze'
-      if (newTotalPoints >= RAVEN_REWARDS_CONSTANTS.TIERS.PLATINUM.minPoints) {
+      if (newTotalPoints >= REWARDS_CONSTANTS.TIERS.PLATINUM.minPoints) {
         newTier = 'platinum'
-      } else if (newTotalPoints >= RAVEN_REWARDS_CONSTANTS.TIERS.GOLD.minPoints) {
+      } else if (newTotalPoints >= REWARDS_CONSTANTS.TIERS.GOLD.minPoints) {
         newTier = 'gold'
-      } else if (newTotalPoints >= RAVEN_REWARDS_CONSTANTS.TIERS.SILVER.minPoints) {
+      } else if (newTotalPoints >= REWARDS_CONSTANTS.TIERS.SILVER.minPoints) {
         newTier = 'silver'
       }
 

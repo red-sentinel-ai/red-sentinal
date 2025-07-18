@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { UserRewardsData } from '@/types/ravenRewards'
+import { UserRewardsData } from '@/types/Rewards'
 import { useSocialStatus } from '../profile/useSocialStatus'
 
 export function useUserRewards(walletAddress: string | null) {

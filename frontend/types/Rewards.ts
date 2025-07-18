@@ -1,4 +1,4 @@
-export interface RavenRewardsMission {
+export interface RewardsMission {
   id: string
   type: string
   category: 'on_chain' | 'social_media'
@@ -12,9 +12,9 @@ export interface RavenRewardsMission {
   requirements?: Record<string, string | number | boolean>
 }
 
-export interface RavenRewardsConfig {
+export interface RewardsConfig {
   enabled: boolean
-  missions: RavenRewardsMission[]
+  missions: RewardsMission[]
   points_name: string
   points_symbol: string
   leaderboard_enabled: boolean

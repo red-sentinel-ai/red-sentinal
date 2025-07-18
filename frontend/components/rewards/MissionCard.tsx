@@ -7,12 +7,12 @@ import { motion } from 'framer-motion'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { Badge } from '../ui/badge'
 import { SOCIAL_MEDIA_URLS } from '@/constants'
-import type { MissionCompletionCounts, RavenRewardsMission } from '@/types/ravenRewards'
+import type { MissionCompletionCounts, RewardsMission } from '@/types/Rewards'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { useRewardsMissionTracker } from '@/hooks/rewards/useRewardsMissionTracker'
 
 interface MissionCardProps {
-  mission: RavenRewardsMission
+  mission: RewardsMission
   completionCounts: MissionCompletionCounts
   isCompleted: boolean
   pointsSymbol: string
