@@ -65,7 +65,7 @@ export function RewardsLeaderboard({ pointsSymbol }: RewardsLeaderboardProps) {
   }, [isFetchingNextPage, hasNextPage, fetchNextPage])
 
   return (
-    <div className="min-h-body bg-gradient-to-br from-black via-[#0a0a0a] to-[#1a1a1a] py-12">
+    <div className="min-h-body pb-12 pt-20">
       <div className="container mx-auto px-4">
         <AnimatePresence mode="wait">
           <motion.div
@@ -87,7 +87,7 @@ export function RewardsLeaderboard({ pointsSymbol }: RewardsLeaderboardProps) {
                     <CardTitle className="text-2xl text-[#B8B8B8] uppercase">
                       RP Points Leaderboard
                     </CardTitle>
-                    <p className="text-[#B5B5B5]">Top performers in the Sui Sentinel ecosystem</p>
+                    <p className="text-[#B5B5B5]">Top performers in the Sui Sentinel</p>
                   </div>
                 </div>
                 <div className="mt-4 w-full max-w-md">
@@ -155,10 +155,6 @@ export function RewardsLeaderboard({ pointsSymbol }: RewardsLeaderboardProps) {
                             className={`relative group transition-all duration-300 ${
                               isCurrentUser ? 'ring-2 ring-[#558EB4]/50' : ''
                             }`}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.3, delay: index * 0.05 }}
-                            whileHover={{ scale: 1.01 }}
                           >
                             <div
                               className={`relative flex items-center gap-4 p-5 rounded-xl transition-all duration-300 border ${

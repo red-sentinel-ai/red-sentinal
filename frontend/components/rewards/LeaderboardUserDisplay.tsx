@@ -3,7 +3,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { ExternalLink, Star } from 'lucide-react'
-import { motion } from 'framer-motion'
 import type { LeaderboardEntry } from '@/types/ravenRewards'
 
 const buildTwitterLink = (username: string): string => {
@@ -58,13 +57,14 @@ export const UserDisplay = ({ entry }: UserDisplayProps) => {
                 className="opacity-80"
               />
             </div>
-            <motion.button
-              className="w-full bg-white text-black rounded-full py-3 font-medium hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center transition-all duration-300"
-              onClick={() => window.open(buildDiscordLink(entry.discord_user_id!), '_blank')}
+            <Link
+              target="_blank"
+              className="flex gap-1 items-center underline hover:no-underline"
+              href={buildDiscordLink(entry.discord_user_id!)}
             >
               <span className="truncate">{entry.discord_username}</span>
               <ExternalLink className="h-3 w-3 ml-1 flex-shrink-0 opacity-60" />
-            </motion.button>
+            </Link>
           </div>
         )}
         {!hasTwitter && !hasDiscord && entry.username && (
