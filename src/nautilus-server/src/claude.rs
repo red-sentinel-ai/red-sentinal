@@ -23,14 +23,42 @@ struct ClaudeContent {
 }
 
 fn sanitize_explanation(text: &str) -> String {
-    text.chars()
-        .filter(|c| c.is_ascii_alphabetic() || *c == ' ') // Only A-Z, a-z, and space
-        .take(220)
-        .collect::<String>()
-        .trim()
-        .to_string()
-}
+    // List of boring words to remove (case-insensitive)
+    let boring_words = vec![
+        "parsing", "error", "raw", "response", "json", // User-specified words
+        "the", "is", "and", "or", "but", "this", "that", // Common filler words
+        "in", "on", "at", "to", "for", "of", "with",    // Additional fillers
+    ];
 
+    // Split text into words, filter out boring words, and preserve punctuation/numbers
+    let sanitized: String = text
+        .split_whitespace()
+        .filter(|word| {
+            // Remove punctuation for comparison, but keep original word
+            let clean_word = word.trim_matches(|c: char| !c.is_alphanumeric()).to_lowercase();
+            !boring_words.iter().any(|boring| clean_word == *boring)
+        })
+        .collect::<Vec<&str>>()
+        .join(" ")
+        .trim()
+        .to_string();
+
+    // Truncate to 220 characters if necessary, ensuring we don't cut mid-word
+    let max_len = 600;
+    if sanitized.len() <= max_len {
+        sanitized
+    } else {
+        let truncated: String = sanitized
+            .chars()
+            .take(max_len)
+            .collect::<String>();
+        // Find the last space within max_len to avoid cutting words
+        match truncated.rfind(' ') {
+            Some(last_space) => truncated[..last_space].trim().to_string(),
+            None => truncated.trim().to_string(),
+        }
+    }
+}
 pub async fn evaluate_prompt(
     agent_id: &str,
     agent_prompt: &str,
