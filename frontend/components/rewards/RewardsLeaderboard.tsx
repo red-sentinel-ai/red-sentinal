@@ -65,7 +65,7 @@ export function RewardsLeaderboard({ pointsSymbol }: RewardsLeaderboardProps) {
   }, [isFetchingNextPage, hasNextPage, fetchNextPage])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-[#0a0a0a] to-[#1a1a1a] py-12">
+    <div className="min-h-body bg-gradient-to-br from-black via-[#0a0a0a] to-[#1a1a1a] py-12">
       <div className="container mx-auto px-4">
         <AnimatePresence mode="wait">
           <motion.div
