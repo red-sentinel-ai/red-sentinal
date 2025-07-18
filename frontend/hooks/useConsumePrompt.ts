@@ -4,8 +4,10 @@ import { Transaction } from '@mysten/sui/transactions'
 import { useSignAndExecuteTransaction, useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
 import { SUI_CONFIG } from '@/constants'
 import { toast } from 'react-toastify'
-import { AgentDetails, ConsumePromptApiResponse } from '@/types'
+import { ConsumePromptApiResponse } from '@/types'
 import { hexToVector } from '@/lib/utils'
+import { type AgentDetails } from './agents/useAllAgents'
+import { SuiTransactionBlockResponse } from '@mysten/sui/client'
 
 const GAS_BUDGET = 50_000_000
 
@@ -16,6 +18,10 @@ interface UseConsumePromptOptions {
   onError?: (error: Error) => void
   onPaymentSuccess?: (result: any) => void
   onApiSuccess?: (response: ConsumePromptApiResponse) => void
+  onComplete?: (args: {
+    apiResponse: ConsumePromptApiResponse
+    transactionResult: SuiTransactionBlockResponse
+  }) => void
   showToasts?: boolean
 }
 
@@ -26,7 +32,14 @@ interface ConsumePromptParams {
 
 export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
   const client = useSuiClient()
-  const { onSuccess, onError, onPaymentSuccess, onApiSuccess, showToasts = true } = options
+  const {
+    onSuccess,
+    onError,
+    onPaymentSuccess,
+    onApiSuccess,
+    onComplete,
+    showToasts = true,
+  } = options
 
   const [isLoading, setIsLoading] = useState(false)
   const [currentStep, setCurrentStep] = useState<string>('')
@@ -74,7 +87,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
     const [paymentCoin] = tx.splitCoins(tx.gas, [tx.pure.u64(costInMist)])
 
     // Transfer to agent creator
-    tx.transferObjects([paymentCoin], tx.pure.address(agentDetails.creator))
+    tx.transferObjects([paymentCoin], tx.pure.address(agentDetails.owner))
 
     tx.setGasBudget(GAS_BUDGET)
 
@@ -107,7 +120,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        agent_id: agentId,
+        agent_id: `${agentId}`,
         message: message,
       }),
     })
@@ -125,7 +138,8 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
   const executeConsumePrompt = async (
     agentObjectId: string,
     agentDetails: AgentDetails,
-    apiResponse: ConsumePromptApiResponse
+    apiResponse: ConsumePromptApiResponse,
+    prompt: string
   ): Promise<any> => {
     const tx = new Transaction()
     const sigVector = hexToVector(apiResponse.signature)
@@ -143,7 +157,8 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         tx.object(agentObjectId), // agent: &mut Agent
         tx.pure.string(apiData.data.agent_id), // agent_id: String
         tx.pure.bool(apiData.data.success), // success: bool
-        tx.pure.string(apiData.data.explanation), // explanation: String
+        tx.pure.string(apiData.data.explanation), // explanation: String,
+        tx.pure.string(prompt),
         tx.pure.u8(apiData.data.score), // score: u8
         tx.pure.u64(apiData.timestamp_ms), // timestamp_ms: u64
         tx.pure.vector('u8', sigVector), // sig: &vector<u8>
@@ -182,7 +197,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         return
       }
 
-      if (!agentDetails?.agent_object_id || !message?.trim()) {
+      if (!agentDetails?.object_id || !message?.trim()) {
         const errorMsg = 'Invalid agent ID or message'
         setError(errorMsg)
         if (showToasts) toast.error(errorMsg)
@@ -204,25 +219,27 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         if (showToasts) toast.info('Processing prompt...')
         const apiResponse = await callConsumePromptApi(agentDetails.agent_id, message)
         console.log('API response:', apiResponse)
+        onApiSuccess?.(apiResponse)
 
         // Step 4: Execute consume prompt transaction
         setCurrentStep('Finalizing transaction...')
         if (showToasts) toast.info('Finalizing transaction...')
         const result = await executeConsumePrompt(
-          agentDetails.agent_object_id,
+          agentDetails.object_id,
           agentDetails,
-          apiResponse
+          apiResponse,
+          message
         )
 
-        // Success
-        const success = apiResponse.response.data.success
         if (showToasts) {
-          if (success) {
+          if (apiResponse.response.data.success) {
             toast.success('🎉 Agent defeated! You won the challenge!')
           } else {
             toast.success('Prompt processed successfully')
           }
         }
+
+        onComplete?.({ apiResponse, transactionResult: result })
 
         setCurrentStep('')
         return result

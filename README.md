@@ -240,25 +240,29 @@ sui-sentinel/
 
 ---
 
-
 # Development flow
 
 ## To start a Development server
 
 1. First Do aws configure with `aws configure`
+
 ```
 AWS_ACCESS_KEY_ID=*AWS_ACCESS_KEY_REMOVED*
 AWS_SECRET_ACCESS_KEY=*AWS_SECRET_REMOVED*
 ```
+
 2. Generate temporary `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_SESSION_TOKEN` using
+
 ```
 aws sts get-session-token \
   --serial-number arn:aws:iam::402054803113:mfa/admin_user \
   --token-code <google-auth code>
 ```
+
 **Note:** If above command gives error, run `unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_PROFILE` and then again run `aws configure` with admin_user credentials
 
 3. Once you get value for above keys, set
+
 ```
 export KEY_PAIR=MyEC2KeyPair
 export AWS_ACCESS_KEY_ID=<new-value>
@@ -267,8 +271,9 @@ export AWS_SESSION_TOKEN=<new-value>
 ```
 
 4. Now run `sh configure_enclave.sh`. here for secrets, select existing ARN
-value ```arn:aws:secretsmanager:us-east-1:402054803113:secret:API_KEY-tSacqO```
+   value `arn:aws:secretsmanager:us-east-1:402054803113:secret:API_KEY-tSacqO`
 5. SSH in your newly created VM using
+
 ```
 ssh -i "MyEC2KeyPair.pem" ec2-user@ec2-52-23-169-62.compute-1.amazonaws.com
 ```
@@ -277,18 +282,19 @@ ssh -i "MyEC2KeyPair.pem" ec2-user@ec2-52-23-169-62.compute-1.amazonaws.com
 7. Clone the Github repository
 8. Do AWS configure and use admin keys
 9. replace api_key in `src/nautilus-server/src/main.rs` to use exact api key
+
 ```
     let api_key = "replace with real value".to_string();
 ```
-10. ```make && make run```
-11. ```sh expose_enclave.sh```
+
+10. `make && make run`
+11. `sh expose_enclave.sh`
 12. Run `cat out/nitro.pcrs` to get `PCR0`, `PCR1`,and `PCR2` values
-
-
 
 **Debug: **
 
 1. Kill previous processes
+
 ```
 lsof -t -i:3000
 lsof -t -i:9184

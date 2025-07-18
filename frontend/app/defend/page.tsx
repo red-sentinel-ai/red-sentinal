@@ -6,15 +6,20 @@ import { ChevronLeft, Loader2 } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { Transaction } from '@mysten/sui/transactions'
 import { SuiTransactionBlockResponse } from '@mysten/sui/client'
-import { useCurrentAccount, useSignAndExecuteTransaction, useSuiClient } from '@mysten/dapp-kit'
-import { ConnectPrompt } from '@/components/ConnectPrompt'
-import { MIST_PER_SUI, SUI_CONFIG } from '@/constants'
+import {
+  ConnectButton,
+  useCurrentAccount,
+  useSignAndExecuteTransaction,
+  useSuiClient,
+} from '@mysten/dapp-kit'
+import { MIST_PER_SUI, SUI_CONFIG, SYSTEM_PROMPT_MAX_TOKENS } from '@/constants'
 import { hexToVector } from '@/lib/utils'
 import { registerAgentUtil } from './utils'
 import { useAgentObjectNames } from '@/hooks/useAgentObjectNames'
 import { FundAgentModal } from '@/components/FundAgentModal'
 import { SuccessModal } from '@/components/DefenderSuccessModal'
 import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
+import { useTokenCount } from '@/hooks/useTokenCount'
 
 interface FormData {
   agentName: string
@@ -72,6 +77,7 @@ export default function DefendPage() {
   const { addAgentObjectIdWithName } = useAgentObjectNames()
   const { mutate: createAgent } = useCreateAgent()
   const [agentImage, setAgentImage] = useState<File | null>(null)
+  const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
 
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction({
     execute: async ({ bytes, signature }) =>
@@ -104,6 +110,10 @@ export default function DefendPage() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
+
+    if (name === 'systemPrompt') {
+      countTokens(value)
+    }
 
     // Clear error when user starts typing
     if (errors[name as keyof FormData]) {
@@ -156,7 +166,7 @@ export default function DefendPage() {
 
     if (!formData.systemPrompt.trim()) {
       newErrors.systemPrompt = 'System prompt is required'
-    }
+    } else if (tokenCount > SYSTEM_PROMPT_MAX_TOKENS) return
 
     const fee = parseFloat(formData.feePerMessage)
     if (isNaN(fee) || fee < 0) {
@@ -167,7 +177,11 @@ export default function DefendPage() {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleOffChainSuccess = async (result: SuiTransactionBlockResponse, agentName: string) => {
+  const handleOffChainSuccess = async (
+    result: SuiTransactionBlockResponse,
+    agentName: string,
+    agent_id: string
+  ) => {
     const agentObject = result?.objectChanges?.find(
       (obj: any) =>
         obj.objectType === `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Agent`
@@ -181,7 +195,7 @@ export default function DefendPage() {
       setShowSuccessModal(true)
 
       const payload = new FormData()
-      payload.append('agent_id', agentObjectId)
+      payload.append('agent_id', agent_id)
       payload.append('agent_name', agentName)
       payload.append('object_id', agentObjectId)
       payload.append('owner', account.address)
@@ -220,7 +234,11 @@ export default function DefendPage() {
       {
         onSuccess: async (result) => {
           console.log('RESULT', result)
-          await handleOffChainSuccess(result, formData.agentName)
+          await handleOffChainSuccess(
+            result,
+            formData.agentName,
+            agentDetails.response.data.agent_id
+          )
         },
       }
     )
@@ -258,16 +276,6 @@ export default function DefendPage() {
     }
   }
 
-  if (!account?.address) {
-    return (
-      <ConnectPrompt
-        title="Welcome Defender"
-        subtitle="Connect your wallet to deploy an agent"
-        theme="defender"
-      />
-    )
-  }
-
   return (
     <div className="container mx-auto px-4 py-4 pt-24 min-h-body">
       <form
@@ -294,16 +302,30 @@ export default function DefendPage() {
           required
         />
 
-        <FormInput
-          label="System Prompt"
-          name="systemPrompt"
-          value={formData.systemPrompt}
-          onChange={handleChange}
-          error={errors.systemPrompt}
-          placeholder="Enter system prompt..."
-          required
-          isTextarea
-        />
+        <div>
+          <label className="block text-sm font-medium mb-2">System Prompt</label>
+          <textarea
+            name="systemPrompt"
+            value={formData.systemPrompt}
+            onChange={handleChange}
+            className="w-full bg-[#12121266] backdrop-blur-lg border border-gray-600 rounded-lg p-3 min-h-[200px]"
+            placeholder="Enter system prompt..."
+            required
+          />
+          <p
+            className={`mt-1 text-sm text-gray-400 ${
+              isTokenCountDebouncing ? 'animate-pulse' : ''
+            }`}
+          >
+            Tokens: {tokenCount} / {SYSTEM_PROMPT_MAX_TOKENS}
+          </p>
+          {tokenCount > SYSTEM_PROMPT_MAX_TOKENS && (
+            <p className="mt-1 text-sm text-red-500">System prompt exceeds token limit</p>
+          )}
+          {errors.systemPrompt && (
+            <p className="mt-1 text-sm text-red-500">{errors.systemPrompt}</p>
+          )}
+        </div>
 
         <FormInput
           label="Fee per Message (SUI)"
@@ -329,20 +351,24 @@ export default function DefendPage() {
           />
         </div>
 
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="w-full bg-white text-black rounded-full py-3 font-medium hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin mr-2" />
-              Deploying...
-            </>
-          ) : (
-            'Deploy Agent'
-          )}
-        </button>
+        {account?.address ? (
+          <button
+            type="submit"
+            disabled={isLoading || tokenCount > SYSTEM_PROMPT_MAX_TOKENS}
+            className="w-full bg-white text-black rounded-full py-3 font-medium hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                Deploying...
+              </>
+            ) : (
+              'Deploy Agent'
+            )}
+          </button>
+        ) : (
+          <ConnectButton className="w-full" />
+        )}
       </form>
 
       {/* Success Modal */}

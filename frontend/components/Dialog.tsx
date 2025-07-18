@@ -1,4 +1,4 @@
-import React from 'react'
+import type React from 'react'
 import { cn } from '@/lib/utils'
 
 interface DialogProps {
@@ -8,6 +8,7 @@ interface DialogProps {
   onClose: () => void
   /** Dialog content */
   children: React.ReactNode
+  className?: string
 }
 
 /**
@@ -18,7 +19,7 @@ interface DialogProps {
  * - Smooth animations
  * - Event isolation from parent elements
  */
-export const Dialog = ({ open, onClose, children }: DialogProps) => {
+export const Dialog = ({ open, onClose, children, className }: DialogProps) => {
   if (!open) return null
 
   const handleBackdropClick = (e: React.MouseEvent) => {
@@ -30,7 +31,6 @@ export const Dialog = ({ open, onClose, children }: DialogProps) => {
   }
 
   const handleContentClick = (e: React.MouseEvent) => {
-    e.preventDefault()
     e.stopPropagation()
   }
 
@@ -53,7 +53,8 @@ export const Dialog = ({ open, onClose, children }: DialogProps) => {
           'rounded-lg border shadow-lg',
           'w-[90vw] max-w-[440px]',
           'p-6',
-          'animate-in zoom-in-95 duration-200'
+          'animate-in zoom-in-95 duration-200',
+          className
         )}
         onClick={handleContentClick}
         onMouseDown={(e) => e.stopPropagation()}

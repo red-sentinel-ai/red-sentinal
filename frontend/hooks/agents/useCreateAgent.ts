@@ -20,7 +20,7 @@ export const useCreateAgent = () => {
 
   return useMutation({
     mutationFn: async (formData: FormData): Promise<CreateAgentResponse> => {
-      const response = await fetch('/api/agents', {
+      const response = await fetch('/api/agents/create', {
         method: 'POST',
         body: formData,
       })

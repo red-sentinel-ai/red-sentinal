@@ -1,23 +1,36 @@
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { MIST_PER_SUI } from '@/constants'
-import { AgentDetails } from '@/types'
+import { AgentDetails } from '@/hooks/agents/useAllAgents'
 import Image from 'next/image'
+import { useFundAgentModal } from '@/hooks/useFundAgentModal'
 
-export const FeaturedAgentCard = ({ agent, index }: { agent: AgentDetails; index: number }) => {
+type FeaturedAgentCardProps = {
+  agent: AgentDetails
+  index: number
+  ctaHeading?: string
+  fromProfile?: boolean
+}
+
+export const FeaturedAgentCard = ({
+  agent,
+  index,
+  ctaHeading = 'View Sentinel',
+  fromProfile = false,
+}: FeaturedAgentCardProps) => {
+  const { Modal, openModal } = useFundAgentModal()
   const router = useRouter()
 
   const handleAttack = () => {
-    router.push(`/attack/${agent.agent_object_id}`)
+    router.push(`/attack/${agent.object_id}`)
   }
 
   return (
     <motion.div
-      className="border border-[#558EB4] bg-[#12121266] rounded-lg lg:rounded-2xl p-2 lg:p-4 robo-card group cursor-pointer flex flex-col"
+      className="border border-[#558EB4] bg-[#12121266] rounded-lg lg:rounded-2xl p-2 lg:p-4 robo-card group flex flex-col"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
-      onClick={handleAttack}
     >
       {/* Agent Avatar */}
       <div className="relative mb-4">
@@ -72,17 +85,28 @@ export const FeaturedAgentCard = ({ agent, index }: { agent: AgentDetails; index
         </div>
       </div>
 
-      <div className="mt-auto">
+      <div className="mt-auto flex gap-2">
         <button
           onClick={(e) => {
             e.stopPropagation()
             handleAttack()
           }}
-          className="block border border-[#558EB4] rounded-[8px] w-full min-h-11 p-2 transition-all text-[#558EB4] group-hover:bg-[#1388D5] group-hover:text-black group-hover:border-[#1388D5] text-center font-medium"
+          className="block border border-[#558EB4] hover:bg-[#558EB422] rounded-[8px] w-full min-h-11 p-2 transition-all text-[#558EB4] text-center font-medium"
         >
-          Attack Agent
+          {ctaHeading}
         </button>
+
+        {fromProfile && (
+          <button
+            onClick={() => openModal(agent.object_id)}
+            className="block border border-[#558EB4] rounded-[8px] w-full min-h-11 p-2 transition-all  bg-[#1388D5] hover:bg-[#1388d5e6] text-black group-hover:border-[#1388D5] text-center font-medium"
+          >
+            Fund Sentinel
+          </button>
+        )}
       </div>
+
+      <Modal onSuccess={() => console.log('Funded successfully!')} />
     </motion.div>
   )
 }

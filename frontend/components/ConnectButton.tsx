@@ -2,36 +2,36 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Copy, X, Check, UserIcon } from 'lucide-react'
-import clsx from 'clsx'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './Tooltip'
-import { AnimatePresence, motion } from 'framer-motion'
+import { Wallet, Copy, CheckCircle, LogOut, ChevronDown, User, Loader2 } from 'lucide-react'
 import {
-  ConnectButton as SuiConnectButton,
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu'
+import {
   useCurrentAccount,
   useDisconnectWallet,
+  ConnectButton as SuiConnectButton,
 } from '@mysten/dapp-kit'
 import { formatAddress } from '@mysten/sui/utils'
 import { SuiClient, getFullnodeUrl } from '@mysten/sui/client'
 import { SUI_FAUCET_URL } from '@/constants'
 
-//TODO: need to check the current network
 export const client = new SuiClient({ url: getFullnodeUrl('testnet') })
 
-interface ConnectButtonProps {
-  className?: string
-  showAddress?: boolean
-}
-
-export const ConnectButton = ({ className = '', showAddress = true }: ConnectButtonProps) => {
+export const ConnectButton = () => {
   const account = useCurrentAccount()
-  const [copied, setCopied] = useState(false)
   const { mutate: disconnect } = useDisconnectWallet()
-  const [suiBalance, setSuiBalance] = useState<number | undefined>(0)
+  const [copied, setCopied] = useState(false)
+  const [suiBalance, setSuiBalance] = useState<number | undefined>()
+  const [isLoadingBalance, setIsLoadingBalance] = useState(false)
 
-  const handleCopyAddress = async () => {
+  const handleCopy = () => {
     if (account?.address) {
-      await navigator.clipboard.writeText(account.address)
+      navigator.clipboard.writeText(account.address)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     }
@@ -40,145 +40,101 @@ export const ConnectButton = ({ className = '', showAddress = true }: ConnectBut
   useEffect(() => {
     const fetchBalance = async () => {
       if (!account?.address) return
-
+      setIsLoadingBalance(true)
       try {
         const coins = await client.getCoins({
           owner: account.address,
           coinType: '0x2::sui::SUI',
         })
-
         const totalBalance = coins.data.reduce((sum, coin) => sum + Number(coin.balance), 0)
-
         setSuiBalance(totalBalance / 10 ** 9)
-      } catch (err) {
-        console.error('Error fetching SUI balance', err)
+      } catch (error) {
+        console.error('Error fetching SUI balance:', error)
+      } finally {
+        setIsLoadingBalance(false)
       }
     }
-
     fetchBalance()
   }, [account?.address])
 
+  if (!account) {
+    return <SuiConnectButton />
+  }
+
   return (
-    <AnimatePresence mode="wait">
-      {account ? (
-        showAddress ? (
-          <motion.div
-            key="connected"
-            className="flex items-center gap-2"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            transition={{ duration: 0.2 }}
-          >
-            {/* Network Pill */}
-            <motion.div
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -10 }}
-              transition={{ duration: 0.2 }}
-              className="flex items-center px-3 py-1.5 bg-[#1A1B1F] rounded-full border border-[#383838] hover:border-[#4c4c4c] transition-colors"
-            >
-              <div className="w-2 h-2 bg-[#58F083] rounded-full mr-2" />
-              <span className="text-sm text-[#FAFAFA] font-medium uppercase">Sui Testnet</span>
-              <div className="mx-2 h-3 w-px bg-[#383838]" />
-              <a
-                href={SUI_FAUCET_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm font-medium text-[#FFFFFF] hover:text-[#CCCCCC] transition-colors"
-              >
-                Get SUI
-              </a>
-            </motion.div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="flex items-center gap-2 px-4 py-2 bg-[#1A1B1F] rounded-full border border-[#383838] hover:border-[#4c4c4c] transition-colors group">
+          <Wallet className="h-4 w-4 text-[#558EB4] group-hover:text-[#1388D5] transition-colors" />
+          <span className="text-white text-sm font-medium">
+            <span className="hidden sm:inline">{formatAddress(account.address)}</span>
+            <span className="sm:hidden">{formatAddress(account.address)}</span>
+          </span>
+          <ChevronDown className="h-4 w-4 text-gray-400 group-hover:text-white transition-colors" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        className="w-64 sm:w-72 bg-[#12121266] backdrop-blur-xl border border-[#383838] rounded-2xl p-2 text-white"
+        align="end"
+      >
+        <DropdownMenuLabel className="text-lg font-bold text-white px-2 pt-2">
+          My Wallet
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator className="bg-[#383838]" />
 
-            {/* Balance + Address Pill */}
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <motion.div
-                    onClick={handleCopyAddress}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.2, delay: 0.1 }}
-                    className="flex items-center gap-2 px-3 py-1.5 bg-[#1A1B1F] rounded-full border border-[#383838] hover:border-[#4c4c4c] transition-colors cursor-pointer"
-                  >
-                    {/* Balance */}
-                    <div className="flex items-center border-r border-[#383838] pr-3">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-[#FAFAFA]">
-                          {`${suiBalance} SUI`}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Address */}
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-[#FAFAFA]">
-                        {formatAddress(account.address)}
-                      </span>
-
-                      <Link
-                        href="/profile"
-                        onClick={(e) => e.stopPropagation()}
-                        className="hover:text-[#58F083] transition-colors"
-                        aria-label="Go to profile"
-                      >
-                        <UserIcon size={14} />
-                      </Link>
-
-                      {copied ? (
-                        <Check
-                          size={14}
-                          className="text-[#58F083]"
-                        />
-                      ) : (
-                        <Copy size={14} />
-                      )}
-
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                disconnect()
-                              }}
-                              className="hover:text-red-500 transition-colors"
-                            >
-                              <X size={14} />
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Disconnect</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
-                  </motion.div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{copied ? 'Address copied!' : 'Copy address'}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </motion.div>
-        ) : null
-      ) : (
-        <motion.div
-          key="connect"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.2 }}
-        >
-          <SuiConnectButton
-            className={clsx(
-              'px-4 py-2 bg-[#1A1B1F] rounded-full border border-[#383838] hover:border-[#424242] transition-colors text-[#FAFAFA] font-medium',
-              className
+        <div className="px-4 py-3 flex justify-between items-center">
+          <div className="text-sm font-medium text-gray-400">Balance</div>
+          <span className="text-base font-bold text-white flex items-center gap-2">
+            {isLoadingBalance ? (
+              <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
+            ) : (
+              <>{suiBalance?.toFixed(4)} SUI</>
             )}
-          />
-        </motion.div>
-      )}
-    </AnimatePresence>
+          </span>
+        </div>
+
+        <DropdownMenuSeparator className="bg-[#383838]" />
+
+        <Link href="/profile">
+          <DropdownMenuItem className="cursor-pointer flex items-center gap-2 text-gray-300 hover:text-[#558EB4] focus:text-[#558EB4] hover:bg-[#1a1b1f] focus:bg-[#1a1b1f] rounded-lg px-4 py-2 transition-colors">
+            <User className="h-4 w-4" />
+            <span>Profile</span>
+          </DropdownMenuItem>
+        </Link>
+
+        <DropdownMenuItem
+          onClick={handleCopy}
+          className="cursor-pointer flex items-center gap-2 text-gray-300 hover:text-[#558EB4] focus:text-[#558EB4] hover:bg-[#1a1b1f] focus:bg-[#1a1b1f] rounded-lg px-4 py-2 transition-colors"
+        >
+          {copied ? (
+            <CheckCircle className="h-4 w-4 text-green-500" />
+          ) : (
+            <Copy className="h-4 w-4" />
+          )}
+          <span>Copy Address</span>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem
+          onClick={() => disconnect()}
+          className="cursor-pointer flex items-center gap-2 text-red-500 hover:text-red-400 focus:text-red-400 hover:bg-[#1a1b1f] focus:bg-[#1a1b1f] rounded-lg px-4 py-2 transition-colors"
+        >
+          <LogOut className="h-4 w-4" />
+          <span>Disconnect</span>
+        </DropdownMenuItem>
+
+        <DropdownMenuSeparator className="bg-[#383838]" />
+
+        <DropdownMenuItem asChild>
+          <a
+            href={SUI_FAUCET_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-4 py-2 bg-[#1A1B1F] rounded-full border border-[#383838] hover:border-[#4c4c4c] transition-colors group"
+          >
+            Get SUI from Faucet
+          </a>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }
