@@ -31,14 +31,14 @@ const getSocialMissionIcon = (missionType: string) => {
           alt="twitter"
         />
       )
-    case 'join_discord':
-    case 'discord_engage':
+    case 'join_telegram':
+    case 'telegram_engage':
       return (
         <Image
-          src="/icons/discord.svg"
+          src="/icons/telegram.png"
           width={20}
           height={20}
-          alt="discord"
+          alt="telegram"
         />
       )
     default:
@@ -54,10 +54,10 @@ const getSocialMissionUrl = (missionType: string): string | null => {
       return SOCIAL_MEDIA_URLS.TWITTER_PROFILE
     case 'share_with_hashtag':
       return SOCIAL_MEDIA_URLS.TWITTER_TWEET
-    case 'join_discord':
-      return SOCIAL_MEDIA_URLS.DISCORD_JOIN
-    case 'discord_engage':
-      return SOCIAL_MEDIA_URLS.DISCORD_GENERAL_CHAT_URL
+    case 'join_telegram':
+      return SOCIAL_MEDIA_URLS.TELEGRAM_JOIN
+    case 'telegram_engage':
+      return SOCIAL_MEDIA_URLS.TELEGRAM_GENERAL_CHAT_URL
     default:
       return null
   }
@@ -75,8 +75,8 @@ export function MissionCard({
     trackFollowedOnX,
     trackRetweet,
     trackShareWithHashtag,
-    trackJoinedDiscord,
-    trackDiscordEngage,
+    trackJoinedTelegram,
+    trackTelegramEngage,
   } = useRewardsMissionTracker()
 
   const isOneTime = mission.frequency === 'one_time'
@@ -112,11 +112,11 @@ export function MissionCard({
         case 'share_with_hashtag':
           trackShareWithHashtag('social_mission_txn_hash', metadata)
           break
-        case 'join_discord':
-          trackJoinedDiscord('social_mission_txn_hash', metadata)
+        case 'join_telegram':
+          trackJoinedTelegram('social_mission_txn_hash', metadata)
           break
-        case 'discord_engage':
-          trackDiscordEngage('social_mission_txn_hash', metadata)
+        case 'telegram_engage':
+          trackTelegramEngage('social_mission_txn_hash', metadata)
           break
       }
     } catch (error) {
@@ -134,7 +134,7 @@ export function MissionCard({
       transition={{ duration: 0.3 }}
     >
       <Card
-        className={`relative transition-all duration-300 bg-[#12121266] backdrop-blur-lg border border-[#383838] hover:border-[#558EB4]/50 h-full rounded-2xl ${
+        className={`relative transition-all duration-300 bg-[#12121266] backdrop-blur-lg border border-[#383838] hover:border-[#558EB4]/50 h-full rounded-2xl flex flex-col ${
           isCompleted && isOneTime ? 'opacity-75' : ''
         }`}
       >
@@ -163,8 +163,8 @@ export function MissionCard({
             </Badge>
           </div>
         </CardHeader>
-        <CardContent className="pt-0">
-          <div className="space-y-3">
+        <CardContent className="pt-0 flex-grow flex flex-col">
+          <div className="flex flex-col gap-y-3 flex-grow">
             <div className="flex items-center gap-2 flex-wrap">
               {isCompleted && isOneTime ? (
                 <Badge className="bg-[#8F564E]/20 text-[#8F564E] border border-[#8F564E]/30 rounded-full">
@@ -195,7 +195,7 @@ export function MissionCard({
               <motion.button
                 onClick={handleSocialMissionClick}
                 disabled={!address || isProcessing}
-                className="w-full border border-[#558EB4] bg-[#12121266] backdrop-blur-lg rounded-lg py-3 text-[#558EB4] hover:bg-[#1388D5] hover:text-black hover:border-[#1388D5] transition-all duration-300 group flex items-center justify-center gap-2"
+                className="w-full border mt-auto border-[#558EB4] bg-[#12121266] backdrop-blur-lg rounded-lg py-3 text-[#558EB4] hover:bg-[#1388D5] hover:text-black hover:border-[#1388D5] transition-all duration-300 group flex items-center justify-center gap-2"
                 whileTap={{ scale: 0.98 }}
               >
                 {isProcessing ? (

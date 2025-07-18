@@ -15,111 +15,12 @@ export function useRewardsMissionTracker() {
 
   const isAllowed = hasTwitter || hasDiscord
 
-  const trackMintNFT = (txHash: string, metadata?: MissionMetadata) => {
+  const trackAttackSentinel = (txHash: string, metadata?: MissionMetadata) => {
     if (!address || !isAllowed) return
 
     completeMission({
       wallet_address: address,
-      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.MINT_NFT,
-      transaction_hash: txHash,
-      metadata,
-    })
-  }
-
-  const trackMintNFTPublic = (txHash: string, metadata?: MissionMetadata) => {
-    if (!address || !isAllowed) return
-
-    completeMission({
-      wallet_address: address,
-      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.MINT_NFT_PUBLIC,
-      transaction_hash: txHash,
-      metadata,
-    })
-  }
-
-  const trackMintNFTPrivate = (txHash: string, metadata?: MissionMetadata) => {
-    if (!address || !isAllowed) return
-
-    completeMission({
-      wallet_address: address,
-      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.MINT_NFT_PRIVATE,
-      transaction_hash: txHash,
-      metadata,
-    })
-  }
-
-  const trackListNFT = (txHash: string, metadata?: MissionMetadata) => {
-    if (!address || !isAllowed) return
-
-    completeMission({
-      wallet_address: address,
-      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.LIST_NFT,
-      transaction_hash: txHash,
-      metadata,
-    })
-  }
-
-  const trackPurchaseNFT = (txHash: string, metadata?: MissionMetadata) => {
-    if (!address || !isAllowed) return
-
-    completeMission({
-      wallet_address: address,
-      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.PURCHASE_NFT,
-      transaction_hash: txHash,
-      metadata,
-    })
-  }
-
-  const trackCreateOffer = (txHash: string, metadata?: MissionMetadata) => {
-    if (!address || !isAllowed) return
-
-    completeMission({
-      wallet_address: address,
-      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.CREATE_OFFER,
-      transaction_hash: txHash,
-      metadata,
-    })
-  }
-
-  const trackAcceptOffer = (txHash: string, metadata?: MissionMetadata) => {
-    if (!address || !isAllowed) return
-
-    completeMission({
-      wallet_address: address,
-      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.ACCEPT_OFFER,
-      transaction_hash: txHash,
-      metadata,
-    })
-  }
-
-  const trackTransferNFTPrivate = (txHash: string, metadata?: MissionMetadata) => {
-    if (!address || !isAllowed) return
-
-    completeMission({
-      wallet_address: address,
-      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.TRANSFER_NFT_PRIVATE,
-      transaction_hash: txHash,
-      metadata,
-    })
-  }
-
-  const trackTransferNFTPublic = (txHash: string, metadata?: MissionMetadata) => {
-    if (!address || !isAllowed) return
-
-    completeMission({
-      wallet_address: address,
-      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.TRANSFER_NFT_PUBLIC,
-      transaction_hash: txHash,
-      metadata,
-    })
-  }
-
-  const trackCompleteTrade = (txHash: string, metadata?: MissionMetadata) => {
-    if (!address || !isAllowed) return
-
-    completeMission({
-      wallet_address: address,
-      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.COMPLETE_TRADE,
+      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.ATTACK_SENTINEL,
       transaction_hash: txHash,
       metadata,
     })
@@ -130,7 +31,7 @@ export function useRewardsMissionTracker() {
 
     completeMission({
       wallet_address: address,
-      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.LAUNCH_COLLECTION,
+      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.LAUNCH_SENTINEL,
       transaction_hash: txHash,
       metadata,
     })
@@ -169,44 +70,35 @@ export function useRewardsMissionTracker() {
     })
   }
 
-  const trackJoinedDiscord = (txHash: string, metadata?: MissionMetadata) => {
+  const trackJoinedTelegram = (txHash: string, metadata?: MissionMetadata) => {
     if (!address || !isAllowed) return
 
     completeMission({
       wallet_address: address,
-      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.JOIN_DISCORD,
+      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.JOIN_TELEGRAM,
       transaction_hash: txHash,
       metadata,
     })
   }
 
-  const trackDiscordEngage = (txHash: string, metadata?: MissionMetadata) => {
+  const trackTelegramEngage = (txHash: string, metadata?: MissionMetadata) => {
     if (!address || !isAllowed) return
 
     completeMission({
       wallet_address: address,
-      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.DISCORD_ENGAGE,
+      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.TELEGRAM_ENGAGE,
       transaction_hash: txHash,
       metadata,
     })
   }
 
   return {
-    trackMintNFT,
-    trackListNFT,
-    trackMintNFTPublic,
-    trackMintNFTPrivate,
-    trackPurchaseNFT,
-    trackCreateOffer,
-    trackAcceptOffer,
-    trackTransferNFTPublic,
-    trackTransferNFTPrivate,
-    trackCompleteTrade,
+    trackAttackSentinel,
     trackLaunchCollection,
     trackFollowedOnX,
     trackRetweet,
     trackShareWithHashtag,
-    trackJoinedDiscord,
-    trackDiscordEngage,
+    trackJoinedTelegram,
+    trackTelegramEngage,
   }
 }
