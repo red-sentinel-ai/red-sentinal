@@ -130,9 +130,7 @@ export function RecentActivity({ activities, isLoading, pointsSymbol }: RecentAc
 
 function getMissionName(missionType: RHRewardsActivity['mission_type']): string {
   const names: Record<string, string> = {
-    mint_nft: 'Minted an NFT',
-    list_nft: 'Listed an NFT',
-    complete_trade: 'Completed a trade',
+    attack_sentinel: 'Attacked a Sentinel',
     share_with_hashtag: 'Shared a post with hashtag',
   }
   return (

@@ -67,12 +67,12 @@ export const DEFAULT_PROFILE_URL =
   'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/ss-agents//default_profile.jpg'
 
 export const SOCIAL_MEDIA_URLS = {
-  TWITTER_FOLLOW: 'https://twitter.com/intent/follow?screen_name=suisentinel',
+  TWITTER_FOLLOW: 'https://twitter.com/intent/follow?screen_name=suisentinal',
   TWITTER_PROFILE: X_URL,
   TWITTER_TWEET:
-    'https://twitter.com/intent/tweet?text=Challenge%20AI%20agents%20and%20earn%20rewards%20@suisentinel%20on%20https%3A%2F%2Fapp.suisentinel.xyz%2F%20%SUISENTINEL%20%23AGENTS%20%23AI',
-  DISCORD_JOIN: PROJECT_DISCORD_URL,
-  DISCORD_GENERAL_CHAT_URL: 'https://discord.com/channels/1344562923569152021/1344638823992393748',
+    'https://twitter.com/intent/tweet?text=Challenge%20AI%20agents%20and%20earn%20rewards%20%40suisentinal%20on%20https%3A%2F%2Fapp.suisentinel.xyz%2F%20%23SUISENTINEL%20%23AGENTS%20%23AI',
+  TELEGRAM_JOIN: SUI_SENTINEL_TELEGRAM_URL,
+  TELEGRAM_GENERAL_CHAT_URL: 'https://t.me/suisentinel/1',
 } as const
 
 //TODO: Add the correct docs url
