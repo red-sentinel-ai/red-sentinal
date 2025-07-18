@@ -151,17 +151,17 @@ export function RewardsDashboard() {
                 <CardContent className="p-6">
                   <Tabs defaultValue="missions">
                     <div className="flex items-center justify-between mb-6">
-                      <TabsList className="grid grid-cols-2 lg:flex bg-[#12121266] backdrop-blur-lg border border-[#383838] p-1 rounded-lg">
+                      <TabsList>
                         <TabsTrigger
                           value="missions"
-                          className="flex items-center gap-2 data-[state=active]:bg-[#558EB4]/20 data-[state=active]:text-[#558EB4] text-[#B5B5B5] hover:text-white transition-colors"
+                          className="flex items-center gap-2"
                         >
                           <Target className="h-4 w-4" />
                           <span className="hidden sm:inline">Missions</span>
                         </TabsTrigger>
                         <TabsTrigger
                           value="activity"
-                          className="flex items-center gap-2 data-[state=active]:bg-[#558EB4]/20 data-[state=active]:text-[#558EB4] text-[#B5B5B5] hover:text-white transition-colors"
+                          className="flex items-center gap-2"
                         >
                           <TrendingUp className="h-4 w-4" />
                           <span className="hidden sm:inline">Activity</span>
