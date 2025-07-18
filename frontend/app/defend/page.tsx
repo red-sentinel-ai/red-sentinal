@@ -151,7 +151,7 @@ export default function DefendPage() {
   }
 
   const handleFundSuccess = () => {
-    toast.success('Agent funded successfully!')
+    toast.success('Sentinel funded successfully!')
     handleCloseFundModal()
   }
 
@@ -159,9 +159,9 @@ export default function DefendPage() {
     const newErrors: Partial<FormData> = {}
 
     if (!formData.agentName.trim()) {
-      newErrors.agentName = 'Agent name is required'
+      newErrors.agentName = 'Sentinel name is required'
     } else if (formData.agentName.length > 31) {
-      newErrors.agentName = 'Agent name must be 31 characters or less'
+      newErrors.agentName = 'Sentinel name must be 31 characters or less'
     }
 
     if (!formData.systemPrompt.trim()) {
@@ -290,26 +290,26 @@ export default function DefendPage() {
           <span>Home</span>
         </Link>
 
-        <h1 className="text-4xl font-bold">Deploy Agent</h1>
+        <h1 className="text-4xl font-bold">Deploy Sentinel</h1>
 
         <FormInput
-          label="Agent Name"
+          label="Sentinel Name"
           name="agentName"
           value={formData.agentName}
           onChange={handleChange}
           error={errors.agentName}
-          placeholder="Enter agent name"
+          placeholder="Enter sentinel name"
           required
         />
 
         <div>
-          <label className="block text-sm font-medium mb-2">System Prompt</label>
+          <label className="block text-sm font-medium mb-2">System Instructions</label>
           <textarea
             name="systemPrompt"
             value={formData.systemPrompt}
             onChange={handleChange}
             className="w-full bg-[#12121266] backdrop-blur-lg border border-gray-600 rounded-lg p-3 min-h-[200px]"
-            placeholder="Enter system prompt..."
+            placeholder="Enter system instructions..."
             required
           />
           <p
@@ -339,7 +339,7 @@ export default function DefendPage() {
         />
 
         <div>
-          <label className="block text-sm font-medium mb-2">Agent Image</label>
+          <label className="block text-sm font-medium mb-2">Sentinel Image</label>
           <input
             type="file"
             accept="image/*"
@@ -363,7 +363,7 @@ export default function DefendPage() {
                 Deploying...
               </>
             ) : (
-              'Deploy Agent'
+              'Deploy Sentinel'
             )}
           </button>
         ) : (
