@@ -42,7 +42,7 @@ export const AgentListView = ({ heading, subheading }: AgentListViewProps) => {
             <div className="mb-16">
               <div className="mb-8">
                 <h2 className="text-2xl md:text-3xl font-bold text-center text-[#558EB4] mb-2">
-                  Featured Agents
+                  Featured Sentinels
                 </h2>
                 <div className="flex max-w-[400px] mx-auto">
                   <div className="gradient-border blue"></div>
@@ -62,7 +62,7 @@ export const AgentListView = ({ heading, subheading }: AgentListViewProps) => {
                       key={agent.agent_id}
                       agent={agent}
                       index={index}
-                      ctaHeading="Attack Agent"
+                      ctaHeading="Attack Sentinel"
                     />
                   ))}
                 </motion.div>
@@ -74,7 +74,7 @@ export const AgentListView = ({ heading, subheading }: AgentListViewProps) => {
 
       <div>
         <div className="flex flex-col md:flex-row items-center justify-between mb-6">
-          <h2>All Agents</h2>
+          <h2>All Sentinels</h2>
         </div>
       </div>
 

@@ -43,7 +43,11 @@
     animation: marquee2 25s linear infinite;
   }
   .min-h-body{
-    min-height: calc(100vh - 112px);
+    min-height: calc(100vh - 225px);
+  }
+
+   .max-h-body{
+    max-height: calc(100vh - 225px);
   }
 }
 
@@ -59,6 +63,34 @@ body {
 
 html body[data-scroll-locked] {
     margin-right: 0 !important;
+}
+
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #558eb4 #12121266;
+}
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #558eb4 #12121266;
+}
+
+body::-webkit-scrollbar {
+  width: 8px;
+}
+
+body::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #558eb4, #2e4049);
+  border-radius: 4px;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #1388d5, #558eb4);
 }
 
 .white-gradient-border-vertical-top {

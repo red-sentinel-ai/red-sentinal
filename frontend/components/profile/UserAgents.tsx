@@ -20,7 +20,7 @@ export const UserAgents = () => {
             <div className="mb-16">
               <div className="mb-8">
                 <h2 className="text-2xl md:text-3xl font-bold text-center text-[#558EB4] mb-2">
-                  Your Agents
+                  Your Sentinels
                 </h2>
                 <div className="flex max-w-[400px] mx-auto">
                   <div className="gradient-border blue"></div>
@@ -40,6 +40,7 @@ export const UserAgents = () => {
                       key={agent.agent_id}
                       agent={agent}
                       index={index}
+                      fromProfile={true}
                     />
                   ))}
                 </motion.div>
