@@ -1,117 +1,74 @@
 'use client'
-
-import { useEffect, useState } from 'react'
-import Image from 'next/image'
+import { useState, useMemo } from 'react'
+import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { Loader2, ChevronLeft } from 'lucide-react'
-import Link from 'next/link'
 import { useCurrentAccount } from '@mysten/dapp-kit'
-import { motion } from 'framer-motion'
-import { useAllAgents } from '@/hooks/useAllAgents'
+
 import { useConsumePrompt } from '@/hooks/useConsumePrompt'
-import type { AgentDetails, ConsumePromptApiResponse } from '@/types'
-import { AgentInfo } from '@/components/AgentInfo'
-import { AgentStatus } from '@/types'
-import { getAgentStatus } from '@/lib/utils'
-import { type AgentEvents, useAgentEvents } from '@/hooks/useAgentEvents'
+import { useAgentByObjectId } from '@/hooks/agents/useAgentByObjectId'
+import type { ConsumePromptApiResponse } from '@/types'
+import { AgentEvents, useAgentEvents } from '@/hooks/useAgentEvents'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
-import AgentHistory from '@/components/AgentHistory'
-import { ConnectPrompt } from '@/components/ConnectPrompt'
+import ChatInterface from '@/components/agents/ChatInterface'
 
 export default function AgentChallengePage() {
   const params = useParams()
   const agentObjectId = params.address as string
   const account = useCurrentAccount()
   const { events: allEvents } = useAgentEvents()
-  const { refetchAgent } = useAllAgents()
+
   const { consumePrompt } = useConsumePrompt({
     showToasts: true,
-    onApiSuccess: (response) => {
-      setApiResponse(response)
+    onError: (err) => {
+      setSubmitError(err.message || 'Something went wrong')
+    },
+    onComplete: ({ apiResponse, transactionResult }) => {
+      setApiResponse(apiResponse)
+      setTxnHash(transactionResult.digest)
       setShowResultModal(true)
+      refetch()
     },
   })
 
-  const [agent, setAgent] = useState<AgentDetails | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [prompt, setPrompt] = useState('')
+  const { data: agent, isLoading, error, refetch } = useAgentByObjectId(agentObjectId)
+
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
-  const [agentStatus, setAgentStatus] = useState<AgentStatus>(AgentStatus.ACTIVE)
-  const [agentEvents, setAgentEvents] = useState<AgentEvents>({
-    agentDefeated: [],
-    promptConsumed: [],
-  })
   const [apiResponse, setApiResponse] = useState<ConsumePromptApiResponse | null>(null)
+  const [txnHash, setTxnHash] = useState<string | null>(null)
   const [showResultModal, setShowResultModal] = useState(false)
 
-  // Fetch agent details when component mounts or objectId changes
-  useEffect(() => {
-    const fetchAgent = async () => {
-      try {
-        setLoading(true)
-        const agentDetails = await refetchAgent(agentObjectId)
-        setAgent(agentDetails)
-        setAgentStatus(getAgentStatus({ isDrained: false, isFinalized: false }))
-        const agentDefeated = allEvents.agentDefeated.filter(
-          (event) => event.parsedJson.agent_id === agentDetails.agent_id
-        )
-        const promptConsumed = allEvents.promptConsumed.filter(
-          (event) => event.parsedJson.agent_id === agentDetails.agent_id
-        )
-        setAgentEvents({ agentDefeated, promptConsumed })
-      } catch (err) {
-        setError('Failed to load agent details')
-        console.error(err)
-      } finally {
-        setLoading(false)
-      }
+  const agentEvents: AgentEvents = useMemo(() => {
+    if (!agent) return { agentDefeated: [], promptConsumed: [] }
+    return {
+      agentDefeated: allEvents.agentDefeated.filter(
+        (e) => e.parsedJson.agent_id === `${agent.agent_id}`
+      ),
+      promptConsumed: allEvents.promptConsumed.filter(
+        (e) => e.parsedJson.agent_id === `${agent.agent_id}`
+      ),
     }
+  }, [agent, allEvents])
 
-    if (agentObjectId) {
-      fetchAgent()
-    }
-  }, [agentObjectId, refetchAgent, allEvents])
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
+  const handleSendMessage = async (prompt: string) => {
     if (!account?.address) {
       setSubmitError('Please connect your wallet')
       return
     }
-
     if (!agent) {
       setSubmitError('Agent not loaded')
       return
     }
-
     if (prompt.length === 0) {
       setSubmitError('Please enter a prompt')
-      return
-    }
-
-    if (prompt.length > 600) {
-      setSubmitError('Prompt must be 600 characters or less')
       return
     }
 
     try {
       setIsSubmitting(true)
       setSubmitError(null)
-      setApiResponse(null)
-
-      await consumePrompt({
-        agentDetails: agent,
-        message: prompt,
-      })
-
-      // Refresh agent data after successful submission
-      const updatedAgent = await refetchAgent(agentObjectId)
-      setAgent(updatedAgent)
-      setAgentStatus(getAgentStatus({ isDrained: false, isFinalized: false }))
-      setPrompt('')
+      await consumePrompt({ agentDetails: agent, message: prompt })
     } catch (err) {
       setSubmitError('Failed to submit prompt')
       console.error(err)
@@ -120,169 +77,56 @@ export default function AgentChallengePage() {
     }
   }
 
-  if (!account?.address) {
+  if (isLoading) {
     return (
-      <ConnectPrompt
-        title="Welcome Challenger"
-        subtitle="One step away from breaking the unbreakable"
-        theme="attacker"
-      />
-    )
-  }
-  if (loading) {
-    return (
-      <div className="min-h-body flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin" />
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <Loader2 className="w-8 h-8 animate-spin text-[#B8B8B8]" />
       </div>
     )
   }
 
   if (error || !agent) {
     return (
-      <div className="container mx-auto px-4 py-8 pt-24 min-h-body">
+      <div className="min-h-screen bg-black text-[#B5B5B5] p-4">
         <Link
           href="/attack"
-          className="text-blue-400 hover:underline mb-8 block"
+          className="flex items-center gap-1 text-[#558EB4] hover:underline mb-8"
         >
-          ← Back to Agents
+          <ChevronLeft className="w-5 h-5" /> Back to Sentinels
         </Link>
         <div className="flex items-center justify-center min-h-[400px]">
-          <p className="text-lg text-gray-400">{error || 'Agent not found'}</p>
+          <p className="text-lg text-gray-400">{error?.message || 'Agent not found'}</p>
         </div>
       </div>
     )
   }
-  // console.log('Agent events', agentEvents)
 
   return (
-    <div className="container mx-auto px-4 py-8 pt-24 min-h-body max-w-4xl">
-      <Link
-        href="/attack"
-        className="flex items-center gap-1 text-blue-400 hover:underline mb-8"
-      >
-        <ChevronLeft className="w-5 h-5" /> Back to Agents
-      </Link>
-
-      <div className="bg-gray-900 rounded-lg p-6 mb-8">
-        <div className="relative w-full h-64 rounded-lg overflow-hidden mb-6">
-          <Image
-            src={agent.agent_profile || '/placeholder.svg'}
-            alt={`${agent.agent_name} profile`}
-            fill
-            className={`object-cover transition-opacity duration-300`}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
-        </div>
-
-        <div className="flex items-center gap-1 mb-2">
-          <h1 className="text-3xl font-bold">Name: {agent.agent_name}</h1>
-          {agent.is_featured && (
-            <Image
-              src="/icons/check-mark.svg"
-              width={20}
-              height={20}
-              alt="checkmark"
-            />
-          )}
-        </div>
-        <p className="text-lg text-[#B5B5B5] mb-4">Agent ID: {agent.agent_id}</p>
-
-        <div className="grid grid-cols-1 mb-6 ">
-          <AgentInfo
-            balance={agent.balance.toString()}
-            decimal={9}
-            promptPrice={agent.cost_per_message.toString()}
-            symbol="SUI"
-            className="w-full"
-            breakAttempts={0}
-            isDrained={false}
-            drainAmount="0"
-          />
-        </div>
-
-        <div className="bg-gray-800 rounded-lg p-4 mb-6">
-          <h2 className="text-xl font-semibold mb-2">System Prompt</h2>
-          <div className="bg-black/30 p-4 rounded">
-            <p className="whitespace-pre-wrap">{agent.system_prompt}</p>
-          </div>
-        </div>
+    <div className="min-h-screen pt-24 max-w-4xl mx-auto relative flex flex-col">
+      <div className="absolute top-[124px] -left-[156px] z-10">
+        <Link
+          href="/attack"
+          className="hidden lg:flex items-center gap-1 text-gray-400 hover:text-white transition-colors"
+        >
+          <ChevronLeft className="w-5 h-5" /> Back to Sentinels
+        </Link>
       </div>
+
+      <ChatInterface
+        agent={agent}
+        agentEvents={agentEvents}
+        apiResponse={apiResponse}
+        onSendMessage={handleSendMessage}
+        isSubmitting={isSubmitting}
+        submitError={submitError}
+        refetchAgent={refetch}
+      />
 
       <AttackStatusModal
         apiResponse={apiResponse}
         showResultModal={showResultModal}
         setShowResultModal={setShowResultModal}
-      />
-
-      {agentStatus === AgentStatus.ACTIVE && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-gray-900 rounded-lg p-6"
-        >
-          <h2 className="text-2xl font-bold mb-4">Attack This Agent</h2>
-
-          <form
-            onSubmit={handleSubmit}
-            className="space-y-4"
-          >
-            <div>
-              <label
-                htmlFor="prompt"
-                className="block text-sm font-medium mb-2"
-              >
-                Enter your prompt (max 600 characters)
-              </label>
-              <textarea
-                id="prompt"
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg p-4 min-h-[150px] text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                maxLength={600}
-                disabled={isSubmitting}
-                placeholder="Try to trick the agent into revealing sensitive information..."
-              />
-              <div className="text-right text-sm text-gray-400 mt-1">
-                {prompt.length}/600 characters
-              </div>
-            </div>
-
-            {submitError && <div className="text-red-500 text-sm">{submitError}</div>}
-
-            <button
-              type="submit"
-              disabled={isSubmitting || prompt.length === 0}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                  Submitting...
-                </>
-              ) : (
-                'Submit Attack'
-              )}
-            </button>
-          </form>
-        </motion.div>
-      )}
-
-      {agentStatus !== AgentStatus.ACTIVE && (
-        <div className="bg-gray-900 rounded-lg p-6 text-center">
-          <h3 className="text-xl font-semibold mb-2">
-            {agentStatus === AgentStatus.DEFEATED ? 'Agent Defeated' : 'Agent Undefeated'}
-          </h3>
-          <p className="text-gray-400">
-            {agentStatus === AgentStatus.DEFEATED
-              ? 'This agent has already been defeated and can no longer be attacked.'
-              : 'This agent is currently undefeated but not accepting new attacks.'}
-          </p>
-        </div>
-      )}
-
-      <AgentHistory
-        agentEvents={agentEvents}
-        currentAgentId={agent.agent_id}
+        txnHash={txnHash}
       />
     </div>
   )
