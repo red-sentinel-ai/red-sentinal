@@ -39,6 +39,8 @@ interface FormInputProps {
   isTextarea?: boolean
 }
 
+const DEFAULT_FEE_OPTIONS = ['0.1', '0.5', '1', '2']
+
 const FormInput: React.FC<FormInputProps> = ({
   label,
   name,
@@ -262,7 +264,7 @@ export default function DefendPage() {
       // )
       // return
 
-      const feePerMessage = parseFloat(formData.feePerMessage) * MIST_PER_SUI
+      const feePerMessage = (parseFloat(formData.feePerMessage) / 100) * MIST_PER_SUI
       const agentDetails = await registerAgentUtil(formData.systemPrompt, feePerMessage)
 
       toast.info('Creating blockchain transaction...')
@@ -327,16 +329,54 @@ export default function DefendPage() {
           )}
         </div>
 
-        <FormInput
-          label="Fee per Message (SUI)"
-          name="feePerMessage"
-          value={formData.feePerMessage}
-          onChange={handleChange}
-          error={errors.feePerMessage}
-          type="number"
-          placeholder="0.00"
-          required
-        />
+        <div>
+          <label className="block text-sm font-medium mb-2">Fee per Message (%)</label>
+
+          <div className="flex flex-wrap gap-2 mb-2">
+            {DEFAULT_FEE_OPTIONS.map((percent) => (
+              <button
+                key={percent}
+                type="button"
+                onClick={() => setFormData((prev) => ({ ...prev, feePerMessage: percent }))}
+                className={`px-4 py-2 rounded-lg border ${
+                  formData.feePerMessage === percent
+                    ? 'bg-white text-black font-semibold'
+                    : 'bg-transparent text-white border-gray-500'
+                }`}
+              >
+                {percent}%
+              </button>
+            ))}
+            <button
+              type="button"
+              onClick={() => setFormData((prev) => ({ ...prev, feePerMessage: 'custom' }))}
+              className={`px-4 py-2 rounded-lg border ${
+                !DEFAULT_FEE_OPTIONS.includes(formData.feePerMessage)
+                  ? 'bg-white text-black font-semibold'
+                  : 'bg-transparent text-white border-gray-500'
+              }`}
+            >
+              Custom
+            </button>
+          </div>
+
+          {!DEFAULT_FEE_OPTIONS.includes(formData.feePerMessage) && (
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              name="feePerMessage"
+              value={formData.feePerMessage === 'custom' ? '' : formData.feePerMessage}
+              onChange={handleChange}
+              placeholder="Enter custom fee (%)"
+              className="w-full bg-[#12121266] backdrop-blur-lg border border-gray-600 rounded-lg p-3"
+              required
+            />
+          )}
+          {errors.feePerMessage && (
+            <p className="mt-1 text-sm text-red-500">{errors.feePerMessage}</p>
+          )}
+        </div>
 
         <div>
           <label className="block text-sm font-medium mb-2">Agent Image</label>
