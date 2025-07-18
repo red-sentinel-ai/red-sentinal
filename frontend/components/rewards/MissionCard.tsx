@@ -26,8 +26,8 @@ const getSocialMissionIcon = (missionType: string) => {
       return (
         <Image
           src="/icons/x.png"
-          width={20}
-          height={20}
+          width={24}
+          height={24}
           alt="twitter"
         />
       )
@@ -36,13 +36,13 @@ const getSocialMissionIcon = (missionType: string) => {
       return (
         <Image
           src="/icons/discord.svg"
-          width={20}
-          height={20}
+          width={24}
+          height={24}
           alt="discord"
         />
       )
     default:
-      return <Target className="h-6 w-6 text-[#558EB4]" />
+      return <Target className="h-7 w-7 text-blue-400" />
   }
 }
 
@@ -134,73 +134,74 @@ export function MissionCard({
       transition={{ duration: 0.3 }}
     >
       <Card
-        className={`relative transition-all duration-300 bg-[#12121266] backdrop-blur-lg border border-[#383838] hover:border-[#558EB4]/50 h-full rounded-2xl ${
+        className={`relative transition-all duration-300 bg-[#12121266] backdrop-blur-lg border border-[#444] hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/10 h-full rounded-2xl ${
           isCompleted && isOneTime ? 'opacity-75' : ''
         }`}
       >
         <CardHeader className="pb-4">
           <div className="flex items-start justify-between">
-            <div className="flex items-start gap-3">
+            <div className="flex items-start gap-4">
               <div
-                className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg ${
                   mission.category === 'on_chain'
-                    ? 'bg-gradient-to-br from-[#558EB4]/20 to-[#1388D5]/20'
-                    : 'bg-gradient-to-br from-[#8F564E]/20 to-[#E53922]/20'
+                    ? 'bg-gradient-to-br from-blue-500/30 to-cyan-500/30 shadow-blue-500/20'
+                    : 'bg-gradient-to-br from-purple-500/30 to-pink-500/30 shadow-purple-500/20'
                 }`}
               >
                 {mission.category === 'on_chain' ? (
-                  <Zap className="h-6 w-6 text-[#558EB4]" />
+                  <Zap className="h-8 w-8 text-blue-400" />
                 ) : (
                   getSocialMissionIcon(mission.type)
                 )}
               </div>
               <div className="flex-1">
-                <CardTitle className="text-lg text-white leading-tight">{mission.name}</CardTitle>
+                <CardTitle className="text-xl text-white leading-tight font-bold">
+                  {mission.name}
+                </CardTitle>
               </div>
             </div>
-            <Badge className="flex items-center gap-2 px-4 py-1 bg-[#12121266] backdrop-blur-lg rounded-full border border-[#383838] hover:border-[#558EB4]/30 transition-colors whitespace-nowrap text-[#558EB4]">
+            <Badge className="flex items-center gap-2 px-4 py-1 bg-gradient-to-r from-yellow-600/30 to-amber-600/30 backdrop-blur-lg rounded-full border border-yellow-500/50 hover:border-yellow-400/70 transition-colors whitespace-nowrap text-yellow-300 font-bold shadow-lg shadow-yellow-500/20">
               +{mission.points} {pointsSymbol}
             </Badge>
           </div>
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 flex-wrap">
+          <div className="space-y-4">
+            <div className="flex items-center gap-3 flex-wrap">
               {isCompleted && isOneTime ? (
-                <Badge className="bg-[#8F564E]/20 text-[#8F564E] border border-[#8F564E]/30 rounded-full">
-                  <Check className="h-3 w-3 mr-1" />
+                <Badge className="bg-gradient-to-r from-green-600/30 to-emerald-600/30 text-green-300 border border-green-500/50 rounded-full font-semibold shadow-lg shadow-green-500/20">
+                  <Check className="h-4 w-4 mr-2" />
                   Completed
                 </Badge>
               ) : totalCompletions > 0 ? (
-                <Badge className="bg-[#558EB4]/20 text-[#558EB4] border border-[#558EB4]/30 rounded-full">
-                  <Trophy className="h-3 w-3 mr-1" />
+                <Badge className="bg-gradient-to-r from-blue-600/30 to-cyan-600/30 text-blue-300 border border-blue-500/50 rounded-full font-semibold shadow-lg shadow-blue-500/20">
+                  <Trophy className="h-4 w-4 mr-2" />
                   {totalCompletions} completed
                 </Badge>
               ) : null}
               {isRepeatable && (
-                <Badge className="bg-[#8F564E]/20 text-[#8F564E] border border-[#8F564E]/30 rounded-full">
-                  <Repeat className="h-3 w-3 mr-1" />
+                <Badge className="bg-gradient-to-r from-purple-600/30 to-indigo-600/30 text-purple-300 border border-purple-500/50 rounded-full font-semibold shadow-lg shadow-purple-500/20">
+                  <Repeat className="h-4 w-4 mr-2" />
                   Repeatable
                 </Badge>
               )}
               {hasLimit && (
-                <Badge className="bg-[#B5B5B5]/20 text-[#B5B5B5] border border-[#B5B5B5]/30 rounded-full">
-                  <Clock className="h-3 w-3 mr-1" />
+                <Badge className="bg-gradient-to-r from-orange-600/30 to-red-600/30 text-orange-300 border border-orange-500/50 rounded-full font-semibold shadow-lg shadow-orange-500/20">
+                  <Clock className="h-4 w-4 mr-2" />
                   {mission.max_per_week && `${mission.max_per_week}/week`}
                   {mission.max_per_day && `${mission.max_per_day}/day`}
                 </Badge>
               )}
             </div>
             {isSocialMission && !isCompleted && (
-              <motion.button
+              <button
                 onClick={handleSocialMissionClick}
                 disabled={!address || isProcessing}
-                className="w-full border border-[#558EB4] bg-[#12121266] backdrop-blur-lg rounded-lg py-3 text-[#558EB4] hover:bg-[#1388D5] hover:text-black hover:border-[#1388D5] transition-all duration-300 group flex items-center justify-center gap-2"
-                whileTap={{ scale: 0.98 }}
+                className="w-full border border-blue-500 bg-gradient-to-r from-blue-600/20 to-cyan-600/20 backdrop-blur-lg rounded-lg py-2 text-blue-300 hover:bg-gradient-to-r hover:from-blue-600/30 hover:to-cyan-600/30 hover:border-blue-400 hover:text-blue-200 transition-all duration-300 group flex items-center justify-center gap-3 font-semibold text-md shadow-lg shadow-blue-500/20"
               >
                 {isProcessing ? (
                   <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#558EB4]"></div>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-400"></div>
                     Processing...
                   </>
                 ) : (
@@ -209,17 +210,17 @@ export function MissionCard({
                     Do Now
                   </>
                 )}
-              </motion.button>
+              </button>
             )}
           </div>
           {isRepeatable &&
             currentPeriodCompletions > 0 &&
             (mission.max_per_week || mission.max_per_day) && (
-              <div className="mt-4 pt-4 border-t border-[#383838]">
-                <div className="flex items-center gap-2">
-                  <div className="flex-1 h-1 bg-[#383838] rounded-full overflow-hidden">
+              <div className="mt-6 pt-4 border-t border-[#444]">
+                <div className="flex items-center gap-3">
+                  <div className="flex-1 h-2 bg-[#333] rounded-full overflow-hidden shadow-inner">
                     <motion.div
-                      className="h-full bg-gradient-to-r from-[#558EB4] to-[#1388D5] transition-all duration-500"
+                      className="h-full bg-gradient-to-r from-blue-500 to-cyan-500 transition-all duration-500 shadow-lg"
                       initial={{ width: 0 }}
                       animate={{
                         width: `${Math.min(
@@ -231,7 +232,7 @@ export function MissionCard({
                       }}
                     />
                   </div>
-                  <span className="text-xs text-[#B5B5B5]">
+                  <span className="text-sm text-gray-300 font-medium">
                     {currentPeriodCompletions}/{mission.max_per_week || mission.max_per_day}
                     {mission.max_per_week ? ' this week' : ' today'}
                   </span>

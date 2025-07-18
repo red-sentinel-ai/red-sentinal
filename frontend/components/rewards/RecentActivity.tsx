@@ -1,3 +1,5 @@
+'use client'
+
 import { Clock, Zap, TrendingUp, Calendar } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -14,16 +16,16 @@ interface RecentActivityProps {
 export function RecentActivity({ activities, isLoading, pointsSymbol }: RecentActivityProps) {
   if (isLoading) {
     return (
-      <Card className="bg-[#12121266] backdrop-blur-lg border border-[#383838] rounded-2xl">
+      <Card className="bg-[#12121266] backdrop-blur-lg border border-[#444] rounded-2xl">
         <CardHeader>
-          <CardTitle className="text-[#B8B8B8] uppercase">Recent Activity</CardTitle>
+          <CardTitle className="text-white uppercase text-2xl">Recent Activity</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {[1, 2, 3, 4].map((i) => (
               <Skeleton
                 key={i}
-                className="h-20 rounded-lg bg-[#383838]/30"
+                className="h-24 rounded-xl bg-[#333]/50"
               />
             ))}
           </div>
@@ -34,33 +36,30 @@ export function RecentActivity({ activities, isLoading, pointsSymbol }: RecentAc
 
   if (activities.length === 0) {
     return (
-      <Card className="bg-[#12121266] backdrop-blur-lg border border-[#383838] rounded-2xl">
+      <Card className="bg-[#12121266] backdrop-blur-lg border border-[#444] rounded-2xl">
         <CardHeader>
-          <div className="flex items-center gap-3">
-            <motion.div
-              className="w-10 h-10 rounded-full bg-gradient-to-br from-[#558EB4]/20 to-[#1388D5]/20 flex items-center justify-center"
-              whileHover={{ scale: 1.1, rotate: 5 }}
-            >
-              <TrendingUp className="h-5 w-5 text-[#558EB4]" />
-            </motion.div>
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-500/30 to-green-500/30 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+              <TrendingUp className="h-7 w-7 text-emerald-400" />
+            </div>
             <div>
-              <CardTitle className="text-xl text-[#B8B8B8] uppercase">Recent Activity</CardTitle>
-              <p className="text-sm text-[#B5B5B5]">Your latest mission completions</p>
+              <CardTitle className="text-2xl text-white uppercase">Recent Activity</CardTitle>
+              <p className="text-gray-300">Your latest mission completions</p>
             </div>
           </div>
         </CardHeader>
         <CardContent>
           <motion.div
-            className="text-center py-12"
+            className="text-center py-16"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
           >
-            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#383838]/20 to-[#383838]/30 flex items-center justify-center mx-auto mb-6">
-              <Clock className="h-10 w-10 text-[#B5B5B5]" />
+            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-gray-600/20 to-gray-700/20 flex items-center justify-center mx-auto mb-8">
+              <Clock className="h-12 w-12 text-gray-400" />
             </div>
-            <h3 className="text-lg font-semibold text-[#B8B8B8] mb-2 uppercase">No Activity Yet</h3>
-            <p className="text-[#B5B5B5] max-w-sm mx-auto">
+            <h3 className="text-xl font-semibold text-white mb-3 uppercase">No Activity Yet</h3>
+            <p className="text-gray-300 max-w-sm mx-auto text-lg">
               Start completing missions to see your activity history here!
             </p>
           </motion.div>
@@ -70,18 +69,15 @@ export function RecentActivity({ activities, isLoading, pointsSymbol }: RecentAc
   }
 
   return (
-    <Card className="bg-[#12121266] backdrop-blur-lg border border-[#383838] rounded-2xl">
+    <Card className="bg-[#12121266] backdrop-blur-lg border border-[#444] rounded-2xl">
       <CardHeader>
-        <div className="flex items-center gap-3">
-          <motion.div
-            className="w-10 h-10 rounded-full bg-gradient-to-br from-[#558EB4]/20 to-[#1388D5]/20 flex items-center justify-center"
-            whileHover={{ scale: 1.1, rotate: 5 }}
-          >
-            <TrendingUp className="h-5 w-5 text-[#558EB4]" />
-          </motion.div>
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-500/30 to-green-500/30 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+            <TrendingUp className="h-7 w-7 text-emerald-400" />
+          </div>
           <div>
-            <CardTitle className="text-xl text-[#B8B8B8] uppercase">Recent Activity</CardTitle>
-            <p className="text-sm text-[#B5B5B5]">Your latest mission completions</p>
+            <CardTitle className="text-2xl text-white uppercase">Recent Activity</CardTitle>
+            <p className="text-gray-300">Your latest mission completions</p>
           </div>
         </div>
       </CardHeader>
@@ -95,17 +91,17 @@ export function RecentActivity({ activities, isLoading, pointsSymbol }: RecentAc
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: index * 0.1 }}
             >
-              <div className="relative flex items-center justify-between p-4 bg-[#12121266] backdrop-blur-lg hover:bg-[#12121280] rounded-lg transition-all duration-300 border border-[#383838] hover:border-[#558EB4]/30">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#8F564E]/20 to-[#E53922]/20 flex items-center justify-center">
-                    <Zap className="h-6 w-6 text-[#8F564E]" />
+              <div className="relative flex items-center justify-between p-6 bg-[#12121266] backdrop-blur-lg hover:bg-[#1a1a1a] rounded-xl transition-all duration-300 border border-[#444] hover:border-emerald-500/50 hover:shadow-lg hover:shadow-emerald-500/10">
+                <div className="flex items-center gap-5">
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500/30 to-green-500/30 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                    <Zap className="h-8 w-8 text-emerald-400" />
                   </div>
                   <div>
-                    <p className="font-semibold text-white mb-1">
+                    <p className="font-bold text-white mb-2 text-lg">
                       {getMissionName(activity.mission_type)}
                     </p>
                     <div className="flex items-center gap-2">
-                      <span className="bg-[#383838]/50 text-[#B5B5B5] border border-[#383838] px-2 py-1 rounded-full text-xs flex items-center gap-1">
+                      <span className="bg-[#333]/70 text-gray-300 border border-[#444] px-3 py-1 rounded-full text-sm flex items-center gap-2 font-medium">
                         <Calendar className="h-3 w-3" />
                         {formatDistanceToNow(new Date(activity.completed_at), {
                           addSuffix: true,
@@ -115,7 +111,7 @@ export function RecentActivity({ activities, isLoading, pointsSymbol }: RecentAc
                   </div>
                 </div>
                 <div className="text-right">
-                  <span className="bg-gradient-to-r from-[#8F564E] to-[#E53922] text-white font-semibold px-3 py-1 rounded-full text-sm">
+                  <span className="bg-gradient-to-r from-emerald-600 to-green-600 text-white font-bold px-4 py-2 rounded-full text-base shadow-lg shadow-emerald-500/20">
                     +{activity.points_earned} {pointsSymbol}
                   </span>
                 </div>

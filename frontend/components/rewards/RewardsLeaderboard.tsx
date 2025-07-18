@@ -69,25 +69,22 @@ export function RewardsLeaderboard({ pointsSymbol }: RewardsLeaderboardProps) {
       <div className="container mx-auto px-4">
         <AnimatePresence mode="wait">
           <motion.div
-            className="max-w-4xl mx-auto"
+            className="max-w-5xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <Card className="bg-[#12121266] backdrop-blur-lg border border-[#383838] rounded-2xl">
-              <CardHeader className="flex-row justify-between items-start">
-                <div className="flex items-center gap-3">
-                  <motion.div
-                    className="w-12 h-12 rounded-full bg-gradient-to-br from-[#8F564E]/20 to-[#E53922]/20 flex items-center justify-center"
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                  >
-                    <Trophy className="h-6 w-6 text-[#8F564E]" />
-                  </motion.div>
+            <Card className="bg-[#12121266] backdrop-blur-lg border border-[#444] rounded-2xl shadow-2xl">
+              <CardHeader className="flex-row justify-between items-start p-8">
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-500/30 to-amber-500/30 flex items-center justify-center shadow-lg shadow-yellow-500/20">
+                    <Trophy className="h-8 w-8 text-yellow-400" />
+                  </div>
                   <div>
-                    <CardTitle className="text-2xl text-[#B8B8B8] uppercase">
+                    <CardTitle className="text-3xl text-white uppercase font-bold">
                       RP Points Leaderboard
                     </CardTitle>
-                    <p className="text-[#B5B5B5]">Top performers in the Sui Sentinel</p>
+                    <p className="text-gray-300 text-lg">Top performers in the Sui Sentinel</p>
                   </div>
                 </div>
                 <div className="mt-4 w-full max-w-md">
@@ -96,47 +93,47 @@ export function RewardsLeaderboard({ pointsSymbol }: RewardsLeaderboardProps) {
                     placeholder="Search by Discord or X username..."
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
-                    className="bg-[#12121266] backdrop-blur-lg border border-[#383838] rounded-lg text-white placeholder:text-[#B5B5B5] focus:border-[#558EB4] transition-colors"
+                    className="bg-[#1a1a1a] backdrop-blur-lg border border-[#444] rounded-xl text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300 h-12 px-4 text-base"
                   />
                 </div>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
+              <CardContent className="p-8 pt-0">
+                <div className="space-y-4">
                   {isLoading ? (
                     <div className="space-y-4">
                       {[1, 2, 3, 4, 5].map((i) => (
                         <Skeleton
                           key={i}
-                          className="h-24 rounded-lg bg-[#383838]/30"
+                          className="h-28 rounded-xl bg-[#333]/50"
                         />
                       ))}
                     </div>
                   ) : entries.length === 0 ? (
                     <motion.div
-                      className="text-center py-16"
+                      className="text-center py-20"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#383838]/20 to-[#383838]/30 flex items-center justify-center mx-auto mb-6">
+                      <div className="w-32 h-32 rounded-full bg-gradient-to-br from-gray-600/20 to-gray-700/20 flex items-center justify-center mx-auto mb-8">
                         {debouncedSearch ? (
-                          <Search className="h-12 w-12 text-[#B5B5B5]" />
+                          <Search className="h-16 w-16 text-gray-400" />
                         ) : (
-                          <TrendingUp className="h-12 w-12 text-[#B5B5B5]" />
+                          <TrendingUp className="h-16 w-16 text-gray-400" />
                         )}
                       </div>
-                      <h3 className="text-2xl font-bold text-[#B8B8B8] mb-3 uppercase">
+                      <h3 className="text-3xl font-bold text-white mb-4 uppercase">
                         {debouncedSearch ? 'No Search Results' : 'No Rankings Yet'}
                       </h3>
-                      <p className="text-[#B5B5B5] max-w-md mx-auto leading-relaxed">
+                      <p className="text-gray-300 max-w-md mx-auto leading-relaxed text-lg">
                         {debouncedSearch
                           ? 'No users found matching your search criteria. Try a different username.'
                           : 'Be the first to complete missions and claim your spot at the top of the leaderboard!'}
                       </p>
                       {!debouncedSearch && (
-                        <div className="mt-6">
-                          <span className="bg-[#558EB4]/20 text-[#558EB4] border border-[#558EB4]/30 px-3 py-1 rounded-full text-sm flex items-center gap-1 w-fit mx-auto">
-                            <Zap className="h-3 w-3" />
+                        <div className="mt-8">
+                          <span className="bg-gradient-to-r from-blue-600/30 to-cyan-600/30 text-cyan-300 border border-blue-500/50 px-6 py-3 rounded-full text-base flex items-center gap-2 w-fit mx-auto font-semibold shadow-lg shadow-blue-500/20">
+                            <Zap className="h-4 w-4" />
                             Start earning points today
                           </span>
                         </div>
@@ -153,53 +150,56 @@ export function RewardsLeaderboard({ pointsSymbol }: RewardsLeaderboardProps) {
                           <motion.div
                             key={entry.user_id}
                             className={`relative group transition-all duration-300 ${
-                              isCurrentUser ? 'ring-2 ring-[#558EB4]/50' : ''
+                              isCurrentUser ? 'ring-2 ring-blue-500/50' : ''
                             }`}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3, delay: index * 0.05 }}
                           >
                             <div
-                              className={`relative flex items-center gap-4 p-5 rounded-xl transition-all duration-300 border ${
+                              className={`relative flex items-center gap-6 p-6 rounded-xl transition-all duration-300 border ${
                                 isCurrentUser
-                                  ? 'bg-[#558EB4]/10 border-[#558EB4]/40'
+                                  ? 'bg-gradient-to-r from-blue-600/20 to-cyan-600/20 border-blue-500/50 shadow-lg shadow-blue-500/20'
                                   : isTopThree
-                                  ? 'bg-[#12121266] backdrop-blur-lg border-[#383838] hover:border-[#558EB4]/30'
-                                  : 'bg-[#12121266] backdrop-blur-lg border-[#383838] hover:bg-[#12121266] hover:border-[#383838]'
+                                  ? 'bg-[#12121266] backdrop-blur-lg border-[#444] hover:border-yellow-500/50 hover:shadow-lg hover:shadow-yellow-500/10'
+                                  : 'bg-[#12121266] backdrop-blur-lg border-[#444] hover:border-gray-500/50'
                               }`}
                             >
-                              <div className="flex-shrink-0 w-12 flex justify-center">
+                              <div className="flex-shrink-0 w-16 flex justify-center">
                                 {getRankIcon(index)}
                               </div>
                               <div className="flex-1 min-w-0">
                                 <UserDisplay entry={entry} />
                                 {isCurrentUser && (
-                                  <span className="mt-2 bg-[#558EB4]/20 text-[#558EB4] border border-[#558EB4]/30 px-2 py-1 rounded-full text-xs flex items-center gap-1 w-fit">
+                                  <span className="mt-3 bg-gradient-to-r from-blue-600/30 to-cyan-600/30 text-cyan-300 border border-blue-500/50 px-3 py-1 rounded-full text-sm flex items-center gap-2 w-fit font-semibold">
                                     <Crown className="h-3 w-3" />
                                     You
                                   </span>
                                 )}
                               </div>
-                              <div className="flex items-center gap-4 flex-shrink-0">
+                              <div className="flex items-center gap-6 flex-shrink-0">
                                 <div className="text-right">
-                                  <div className="flex items-center gap-1 justify-end mb-1">
-                                    <Zap className="h-4 w-4 text-[#558EB4]" />
-                                    <span className="text-xl font-bold text-white">
+                                  <div className="flex items-center gap-2 justify-end mb-2">
+                                    <Zap className="h-5 w-5 text-yellow-400" />
+                                    <span className="text-2xl font-bold text-white">
                                       {entry.total_points?.toLocaleString()}
                                     </span>
-                                    <span className="text-sm text-[#B5B5B5] font-medium">
+                                    <span className="text-base text-gray-300 font-semibold">
                                       {pointsSymbol}
                                     </span>
                                   </div>
                                 </div>
                                 <div className="relative">
                                   <div
-                                    className={`px-4 py-2 rounded-full text-sm font-bold text-white ${tierConfig.gradient} min-w-20 text-center border border-[#383838]`}
+                                    className={`px-6 py-3 rounded-full text-base font-bold text-white ${tierConfig.gradient} min-w-24 text-center border ${tierConfig.borderColor} shadow-lg ${tierConfig.shadowColor}`}
                                   >
                                     {(entry.tier || 'Bronze').charAt(0).toUpperCase() +
                                       (entry.tier || 'bronze').slice(1)}
                                   </div>
                                   {isTopThree && (
-                                    <div className="absolute -top-1 -right-1">
-                                      <div className="w-6 h-6 rounded-full bg-gradient-to-r from-[#8F564E] to-[#E53922] flex items-center justify-center">
-                                        <Star className="h-3 w-3 text-white" />
+                                    <div className="absolute -top-2 -right-2">
+                                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-yellow-500 to-amber-500 flex items-center justify-center shadow-lg shadow-yellow-500/30">
+                                        <Star className="h-4 w-4 text-white" />
                                       </div>
                                     </div>
                                   )}
@@ -214,7 +214,7 @@ export function RewardsLeaderboard({ pointsSymbol }: RewardsLeaderboardProps) {
                           {[1, 2, 3, 4, 5].map((i) => (
                             <Skeleton
                               key={i}
-                              className="h-24 rounded-lg bg-[#383838]/30"
+                              className="h-28 rounded-xl bg-[#333]/50"
                             />
                           ))}
                         </div>
@@ -242,8 +242,8 @@ const getRankIcon = (index: number) => {
     case 0:
       return (
         <div className="relative">
-          <Crown className="h-8 w-8 text-[#8F564E] drop-shadow-lg" />
-          <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-gradient-to-r from-[#8F564E] to-[#E53922] flex items-center justify-center">
+          <Crown className="h-12 w-12 text-yellow-400 drop-shadow-lg" />
+          <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-gradient-to-r from-yellow-500 to-amber-500 flex items-center justify-center shadow-lg shadow-yellow-500/30">
             <span className="text-xs font-bold text-white">1</span>
           </div>
         </div>
@@ -251,8 +251,8 @@ const getRankIcon = (index: number) => {
     case 1:
       return (
         <div className="relative">
-          <Trophy className="h-7 w-7 text-[#B5B5B5] drop-shadow-lg" />
-          <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-gradient-to-r from-[#B5B5B5] to-[#383838] flex items-center justify-center">
+          <Trophy className="h-10 w-10 text-gray-300 drop-shadow-lg" />
+          <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-gradient-to-r from-gray-400 to-gray-600 flex items-center justify-center shadow-lg shadow-gray-500/30">
             <span className="text-xs font-bold text-white">2</span>
           </div>
         </div>
@@ -260,16 +260,16 @@ const getRankIcon = (index: number) => {
     case 2:
       return (
         <div className="relative">
-          <Medal className="h-7 w-7 text-[#8F564E] drop-shadow-lg" />
-          <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-gradient-to-r from-[#8F564E] to-[#E53922] flex items-center justify-center">
+          <Medal className="h-10 w-10 text-orange-400 drop-shadow-lg" />
+          <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center shadow-lg shadow-orange-500/30">
             <span className="text-xs font-bold text-white">3</span>
           </div>
         </div>
       )
     default:
       return (
-        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#383838]/30 to-[#383838]/50 border border-[#383838] flex items-center justify-center">
-          <span className="text-sm font-bold text-[#B5B5B5]">#{index + 1}</span>
+        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gray-600/30 to-gray-700/30 border border-gray-500/50 flex items-center justify-center shadow-lg">
+          <span className="text-base font-bold text-gray-300">#{index + 1}</span>
         </div>
       )
   }
@@ -279,31 +279,35 @@ const getTierConfig = (tier: string) => {
   switch (tier?.toLowerCase()) {
     case 'platinum':
       return {
-        gradient: 'bg-gradient-to-r from-[#8F564E] to-[#E53922]',
-        textColor: 'text-[#8F564E]',
-        bgColor: 'bg-[#8F564E]/10',
-        borderColor: 'border-[#8F564E]/30',
+        gradient: 'bg-gradient-to-r from-purple-600 to-indigo-600',
+        textColor: 'text-purple-300',
+        bgColor: 'bg-purple-600/20',
+        borderColor: 'border-purple-500/50',
+        shadowColor: 'shadow-purple-500/20',
       }
     case 'gold':
       return {
-        gradient: 'bg-gradient-to-r from-[#8F564E] to-[#E53922]',
-        textColor: 'text-[#8F564E]',
-        bgColor: 'bg-[#8F564E]/10',
-        borderColor: 'border-[#8F564E]/30',
+        gradient: 'bg-gradient-to-r from-yellow-600 to-amber-600',
+        textColor: 'text-yellow-300',
+        bgColor: 'bg-yellow-600/20',
+        borderColor: 'border-yellow-500/50',
+        shadowColor: 'shadow-yellow-500/20',
       }
     case 'silver':
       return {
-        gradient: 'bg-gradient-to-r from-[#B5B5B5] to-[#383838]',
-        textColor: 'text-[#B5B5B5]',
-        bgColor: 'bg-[#B5B5B5]/10',
-        borderColor: 'border-[#B5B5B5]/30',
+        gradient: 'bg-gradient-to-r from-gray-500 to-slate-600',
+        textColor: 'text-gray-300',
+        bgColor: 'bg-gray-500/20',
+        borderColor: 'border-gray-500/50',
+        shadowColor: 'shadow-gray-500/20',
       }
     default:
       return {
-        gradient: 'bg-gradient-to-r from-[#8F564E] to-[#E53922]',
-        textColor: 'text-[#8F564E]',
-        bgColor: 'bg-[#8F564E]/10',
-        borderColor: 'border-[#8F564E]/30',
+        gradient: 'bg-gradient-to-r from-orange-600 to-red-600',
+        textColor: 'text-orange-300',
+        bgColor: 'bg-orange-600/20',
+        borderColor: 'border-orange-500/50',
+        shadowColor: 'shadow-orange-500/20',
       }
   }
 }
