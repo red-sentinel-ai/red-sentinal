@@ -120,13 +120,13 @@ const DEFAULT_MISSIONS = [
   },
   {
     id: 'share_with_hashtag',
-    name: 'Share a Raven House post with #RavenHouse',
+    name: 'Share a Raven House post with #SuiSentinel',
     type: 'share_with_hashtag',
     points: 3,
     enabled: false,
     category: 'social_media',
     frequency: 'weekly',
-    description: 'Share our posts with the #RavenHouse hashtag',
+    description: 'Share our posts with the #SuiSentinel hashtag',
     max_per_week: 3,
   },
   {

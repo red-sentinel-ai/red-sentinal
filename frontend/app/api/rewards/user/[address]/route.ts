@@ -65,7 +65,7 @@ export async function GET(
     }
 
     const userData = await supabaseServiceClient
-      .from('rh_users')
+      .from('ss_users')
       .select('*')
       .contains('wallet_addresses', [address])
       .single()
@@ -83,7 +83,7 @@ export async function GET(
     const user = userData.data as RHUser
 
     const { data: activities, error: activitiesError } = await supabaseServiceClient
-      .from('rh_rewards_activity')
+      .from('ss_rewards_activity')
       .select('*')
       .eq('user_id', user.id)
       .order('completed_at', { ascending: false })
@@ -95,7 +95,7 @@ export async function GET(
     const { data: configData } = await supabaseServiceClient
       .from('global_config')
       .select('*')
-      .eq('name', 'raven_house_settings')
+      .eq('name', 'sui_sentinel_settings')
       .single()
 
     let missions: RavenRewardsMission[] = []

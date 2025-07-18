@@ -17,7 +17,7 @@ export async function GET(
     const offset = parseInt(url.searchParams.get('offset') || '0')
     const search = url.searchParams.get('search') || ''
 
-    let query = supabaseServiceClient.from('rh_rewards_leaderboard').select('*')
+    let query = supabaseServiceClient.from('ss_rewards_leaderboard').select('*')
 
     if (search) {
       query = query.or(`discord_username.ilike.%${search}%,twitter_username.ilike.%${search}%`)

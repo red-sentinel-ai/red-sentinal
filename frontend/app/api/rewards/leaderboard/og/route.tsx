@@ -319,7 +319,7 @@ export async function GET(request: Request) {
               border: '1px solid rgba(139, 92, 246, 0.2)',
             }}
           >
-            ravenhouse.xyz • Updated every minute
+            suisentinel.xyz • Updated every minute
           </div>
         </div>
       ),

@@ -923,6 +923,132 @@ export type Database = {
         }
         Relationships: []
       }
+      ss_rewards_activity: {
+        Row: {
+          completed_at: string | null
+          id: string
+          metadata: Json | null
+          mission_type: string
+          points_earned: number
+          transaction_hash: string | null
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          id?: string
+          metadata?: Json | null
+          mission_type: string
+          points_earned: number
+          transaction_hash?: string | null
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          id?: string
+          metadata?: Json | null
+          mission_type?: string
+          points_earned?: number
+          transaction_hash?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'ss_rewards_activity_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'ss_rewards_leaderboard'
+            referencedColumns: ['user_id']
+          },
+          {
+            foreignKeyName: 'ss_rewards_activity_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'ss_users'
+            referencedColumns: ['id']
+          }
+        ]
+      }
+      ss_social_connections: {
+        Row: {
+          connected_at: string | null
+          id: string
+          platform: string
+          platform_avatar_url: string | null
+          platform_user_id: string
+          platform_username: string
+          user_id: string | null
+        }
+        Insert: {
+          connected_at?: string | null
+          id?: string
+          platform: string
+          platform_avatar_url?: string | null
+          platform_user_id: string
+          platform_username: string
+          user_id?: string | null
+        }
+        Update: {
+          connected_at?: string | null
+          id?: string
+          platform?: string
+          platform_avatar_url?: string | null
+          platform_user_id?: string
+          platform_username?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'ss_social_connections_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'ss_rewards_leaderboard'
+            referencedColumns: ['user_id']
+          },
+          {
+            foreignKeyName: 'ss_social_connections_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'ss_users'
+            referencedColumns: ['id']
+          }
+        ]
+      }
+      ss_users: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          id: string
+          lifetime_points: number | null
+          rewards_tier: string | null
+          rewards_updated_at: string | null
+          total_points: number | null
+          username: string | null
+          wallet_addresses: string[] | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          id?: string
+          lifetime_points?: number | null
+          rewards_tier?: string | null
+          rewards_updated_at?: string | null
+          total_points?: number | null
+          username?: string | null
+          wallet_addresses?: string[] | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          id?: string
+          lifetime_points?: number | null
+          rewards_tier?: string | null
+          rewards_updated_at?: string | null
+          total_points?: number | null
+          username?: string | null
+          wallet_addresses?: string[] | null
+        }
+        Relationships: []
+      }
       telegram_auth: {
         Row: {
           authenticated: boolean | null
@@ -1184,6 +1310,24 @@ export type Database = {
     }
     Views: {
       rh_rewards_leaderboard: {
+        Row: {
+          avatar_url: string | null
+          discord_avatar: string | null
+          discord_user_id: string | null
+          discord_username: string | null
+          lifetime_points: number | null
+          rank: number | null
+          tier: string | null
+          total_points: number | null
+          twitter_avatar: string | null
+          twitter_user_id: string | null
+          twitter_username: string | null
+          user_id: string | null
+          username: string | null
+        }
+        Relationships: []
+      }
+      ss_rewards_leaderboard: {
         Row: {
           avatar_url: string | null
           discord_avatar: string | null
