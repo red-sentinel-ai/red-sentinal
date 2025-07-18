@@ -24,7 +24,7 @@ export function RewardsAccessGuard({ children, fallback }: RewardsAccessGuardPro
 
   if (isLoading) {
     return (
-      <div className="min-h-[calc(100vh-350px)] bg-gradient-to-br from-background via-background to-primary/5 flex items-center justify-center">
+      <div className="min-h-body bg-gradient-to-br from-background via-background to-primary/5 flex items-center justify-center">
         <Card className="w-full max-w-md bg-black/30 border-gray-800">
           <CardContent className="flex items-center justify-center p-12">
             <div className="flex items-center gap-3 text-gray-400">
@@ -46,7 +46,7 @@ export function RewardsAccessGuard({ children, fallback }: RewardsAccessGuardPro
   }
 
   return (
-    <div className="min-h-[calc(100vh-350px)] bg-gradient-to-br from-background via-background to-primary/5 flex items-center justify-center p-4">
+    <div className="min-h-body bg-gradient-to-br from-background via-background to-primary/5 flex items-center justify-center px-4 pb-4 pt-20">
       <div className="relative w-full max-w-2xl">
         <div className="absolute -inset-1 bg-gradient-to-r from-orange-500/20 to-red-500/20 blur-xl -z-10 rounded-xl"></div>
         <Card className="bg-black/30 border-gray-800">
