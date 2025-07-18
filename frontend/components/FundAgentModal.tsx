@@ -31,6 +31,7 @@ export const FundAgentModal = ({
 }: FundAgentModalProps) => {
   const [amount, setAmount] = useState('')
   const [error, setError] = useState('')
+  const [selectedToken, setSelectedToken] = useState<'USDC' | 'USDT' | 'AUSD'>('USDC')
 
   const { fundAgent, isLoading } = useFundAgent()
 
@@ -111,7 +112,28 @@ export const FundAgentModal = ({
           </button>
         </div>
 
+        <div>
+          <label className="block text-sm font-medium mb-2">Select Token</label>
+          <div className="flex gap-2">
+            {['USDC', 'USDT', 'AUSD'].map((token) => (
+              <button
+                key={token}
+                type="button"
+                onClick={() => setSelectedToken(token as 'USDC' | 'USDT' | 'AUSD')}
+                className={`flex-1 py-2 rounded-lg border text-sm transition-all ${
+                  selectedToken === token
+                    ? 'bg-[#1388D5] text-black border-[#1388D5]'
+                    : 'bg-transparent text-[#558EB4] border-[#558EB4]'
+                }`}
+              >
+                {token}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Amount Input */}
+
         <div>
           <label className="block text-sm font-medium mb-2">Amount (SUI)</label>
           <input
