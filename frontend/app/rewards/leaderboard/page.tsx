@@ -1,11 +1,11 @@
 import { RewardsLeaderboard } from '@/components/rewards/RewardsLeaderboard'
 
 export const metadata = {
-  title: 'Raven House Leaderboard',
-  description: 'Top performers in the Raven House',
+  title: 'Sui Sentinel Leaderboard',
+  description: 'Top performers in the Sui Sentinel',
   openGraph: {
-    title: 'Raven House Leaderboard',
-    description: 'Top performers in the Raven House',
+    title: 'Sui Sentinel Leaderboard',
+    description: 'Top performers in the Sui Sentinel',
     images: [
       {
         url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/rewards/leaderboard/og`,
@@ -17,8 +17,8 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Raven House Leaderboard',
-    description: 'Top performers in the Raven House',
+    title: 'Sui Sentinel Leaderboard',
+    description: 'Top performers in the Sui Sentinel',
     images: `${process.env.NEXT_PUBLIC_BASE_URL}/api/rewards/leaderboard/og`,
   },
 }
