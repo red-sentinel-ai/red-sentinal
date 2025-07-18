@@ -11,8 +11,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Card, CardContent } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Card, CardContent, TabsTrigger, TabsContent, TabsList, Tabs } from '@/components/ui'
 import { PointsDisplay } from './PointsDisplay'
 import { MissionsGrid } from './MissionsGrid'
 import { RecentActivity } from './RecentActivity'
@@ -22,6 +21,7 @@ import { RewardsAccessGuard } from './RewardsAccessGuard'
 import { RAVEN_REWARDS_CONSTANTS } from '@/constants/ravenRewards'
 import { REWARDS_DOCS_URL } from '@/constants'
 import { useCurrentAccount } from '@mysten/dapp-kit'
+import { ConnectPrompt } from '../ConnectPrompt'
 
 export function RewardsDashboard() {
   const account = useCurrentAccount()
@@ -32,6 +32,16 @@ export function RewardsDashboard() {
   const effectiveMissionsData = isLoadingMissions
     ? RAVEN_REWARDS_CONSTANTS.LOCAL_FALLBACK_CONFIG
     : missionsData
+
+  if (!account?.address) {
+    return (
+      <ConnectPrompt
+        title="Welcome User"
+        subtitle="Connect your wallet to see your activities"
+        theme="defender"
+      />
+    )
+  }
 
   if (!isLoadingMissions && !missionsData?.enabled) {
     return (
@@ -86,13 +96,13 @@ export function RewardsDashboard() {
               >
                 <motion.div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#558EB4]/20 to-[#1388D5]/20 px-4 py-2 rounded-full mb-4 border border-[#558EB4]/30">
                   <Sparkles className="h-4 w-4 text-[#558EB4]" />
-                  <span className="text-sm font-medium text-[#558EB4]">Raven House Rewards</span>
+                  <span className="text-sm font-medium text-[#558EB4]">Sui Sentinel Rewards</span>
                 </motion.div>
                 <h1 className="text-5xl font-bold mb-4 text-[#B8B8B8] uppercase">
                   Earn. Compete. Conquer.
                 </h1>
                 <p className="text-xl text-[#B5B5B5] max-w-2xl mx-auto mb-6">
-                  Complete missions, earn points, and unlock exclusive rewards in the Raven House
+                  Complete missions, earn points, and unlock exclusive rewards in the Sui Sentinel
                   ecosystem
                 </p>
                 <div className="flex items-center justify-center gap-4 mb-4">

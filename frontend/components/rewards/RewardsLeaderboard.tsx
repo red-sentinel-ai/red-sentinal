@@ -87,7 +87,7 @@ export function RewardsLeaderboard({ pointsSymbol }: RewardsLeaderboardProps) {
                     <CardTitle className="text-2xl text-[#B8B8B8] uppercase">
                       RP Points Leaderboard
                     </CardTitle>
-                    <p className="text-[#B5B5B5]">Top performers in the Raven House ecosystem</p>
+                    <p className="text-[#B5B5B5]">Top performers in the Sui Sentinel ecosystem</p>
                   </div>
                 </div>
                 <div className="mt-4 w-full max-w-md">

@@ -1,12 +1,12 @@
 'use client'
 
 import type React from 'react'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui'
 import { AlertCircle, ExternalLink, Shield, Sparkles } from 'lucide-react'
 import { useSocialStatus } from '@/hooks/profile/useSocialStatus'
 import { handleConnectDiscord, handleConnectTwitter } from '@/utils/socialConnection'
-import Image from 'next/image'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 
 interface RewardsAccessGuardProps {
@@ -68,7 +68,7 @@ export function RewardsAccessGuard({ children, fallback }: RewardsAccessGuardPro
               Social Authentication Required
             </CardTitle>
             <p className="text-[#B5B5B5] mt-2">
-              Connect your social accounts to unlock the full Raven House rewards experience
+              Connect your social accounts to unlock the full Sui Sentinel rewards experience
             </p>
           </CardHeader>
           <CardContent className="space-y-8">

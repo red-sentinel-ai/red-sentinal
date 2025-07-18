@@ -7,6 +7,7 @@ import { UserActivity } from '@/components/profile/UserActivity'
 import { UserAgents } from '@/components/profile/UserAgents'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { ConnectPrompt } from '@/components/ConnectPrompt'
+import { SocialConnectionsSectionWrapper } from '@/components/profile/SocialConnectionsSectionWrapper'
 
 const PROFILE_TABS = {
   AGENTS: 'agents',
@@ -44,6 +45,8 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
+
+        <SocialConnectionsSectionWrapper />
 
         <Tabs
           value={activeTab}

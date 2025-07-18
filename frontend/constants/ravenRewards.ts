@@ -9,7 +9,7 @@ const DEFAULT_MISSIONS = [
     enabled: true,
     category: 'on_chain',
     frequency: 'per_occurrence',
-    description: 'Earn points by minting NFTs on Raven House',
+    description: 'Earn points by minting NFTs on Sui Sentinel',
     max_per_week: 8,
   },
   {
@@ -20,7 +20,7 @@ const DEFAULT_MISSIONS = [
     enabled: true,
     category: 'on_chain',
     frequency: 'per_occurrence',
-    description: 'Earn points by minting NFTs on Raven House',
+    description: 'Earn points by minting NFTs on Sui Sentinel',
     max_per_week: 8,
   },
   {
@@ -99,7 +99,7 @@ const DEFAULT_MISSIONS = [
   },
   {
     id: 'follow_x',
-    name: 'Follow Raven House on X',
+    name: 'Follow Sui Sentinel on X',
     type: 'follow_x',
     points: 15,
     enabled: true,
@@ -109,7 +109,7 @@ const DEFAULT_MISSIONS = [
   },
   {
     id: 'retweet',
-    name: 'Retweet a Raven House post',
+    name: 'Retweet a Sui Sentinel post',
     type: 'retweet',
     points: 2,
     enabled: false,
@@ -120,7 +120,7 @@ const DEFAULT_MISSIONS = [
   },
   {
     id: 'share_with_hashtag',
-    name: 'Share a Raven House post with #SuiSentinel',
+    name: 'Share a Sui Sentinel post with #SuiSentinel',
     type: 'share_with_hashtag',
     points: 3,
     enabled: false,
@@ -131,7 +131,7 @@ const DEFAULT_MISSIONS = [
   },
   {
     id: 'join_discord',
-    name: 'Join Raven House Discord',
+    name: 'Join Sui Sentinel Discord',
     type: 'join_discord',
     points: 15,
     enabled: false,
