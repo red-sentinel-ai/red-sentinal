@@ -53,10 +53,17 @@ export const Header = () => {
             </div>
           </Link>
           <Link
-            className="block ml-1 xl:ml-4 flex-shrink-0"
+            className="block ml-3 xl:ml-4 flex-shrink-0"
             href="/about"
           >
             Learn More
+          </Link>
+
+          <Link
+            className="block ml-3 xl:ml-4 flex-shrink-0"
+            href="/rewards"
+          >
+            Rewards
           </Link>
           <div className="hidden xl:block">
             <MenuItems menuOpen={menuOpen} />
@@ -75,7 +82,7 @@ export const Header = () => {
         </button>
 
         {/* <Link
-          className="block ml-1 xl:ml-4 flex-shrink-0"
+          className="block ml-3 xl:ml-4 flex-shrink-0"
           href={YOUTUBE_VIDEO_URL}
           target="_blank"
         >
