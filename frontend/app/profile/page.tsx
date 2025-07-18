@@ -46,7 +46,9 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <SocialConnectionsSectionWrapper />
+        <div className="mb-4">
+          <SocialConnectionsSectionWrapper />
+        </div>
 
         <Tabs
           value={activeTab}
