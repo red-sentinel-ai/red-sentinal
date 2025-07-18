@@ -1,5 +1,5 @@
 import { ImageResponse } from 'next/og'
-import type { LeaderboardEntry } from '@/types/ravenRewards'
+import type { LeaderboardEntry } from '@/types/Rewards'
 
 export const runtime = 'edge'
 
@@ -155,7 +155,7 @@ export async function GET(request: Request) {
                 position: 'relative',
               }}
             >
-              🏆 RP Points Leaderboard
+              🏆 ST Points Leaderboard
             </h1>
           </div>
 
@@ -280,7 +280,7 @@ export async function GET(request: Request) {
                         alignItems: 'center',
                       }}
                     >
-                      {entry.total_points?.toLocaleString()} RP
+                      {entry.total_points?.toLocaleString()} ST
                     </div>
                   </div>
                 )
@@ -362,7 +362,7 @@ export async function GET(request: Request) {
               WebkitTextFillColor: 'transparent',
             }}
           >
-            🏆 RP Points Leaderboard
+            🏆 ST Points Leaderboard
           </h1>
           <p
             style={{

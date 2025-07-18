@@ -1,8 +1,8 @@
-import { RavenRewardsConfig } from './ravenRewards'
+import { RewardsConfig } from './Rewards'
 
 export interface GlobalConfigValues {
   admin_wallets: string[]
-  raven_rewards?: RavenRewardsConfig
+  rewards?: RewardsConfig
 }
 
 export interface GlobalConfigResponse {

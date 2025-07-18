@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { ExternalLink, Star } from 'lucide-react'
-import type { LeaderboardEntry } from '@/types/ravenRewards'
+import type { LeaderboardEntry } from '@/types/Rewards'
 
 const buildTwitterLink = (username: string): string => {
   const cleanUsername = username.startsWith('@') ? username.slice(1) : username

@@ -1,4 +1,4 @@
-import { RavenRewardsMission } from '@/types/ravenRewards'
+import { RewardsMission } from '@/types/Rewards'
 
 const DEFAULT_MISSIONS = [
   {
@@ -150,9 +150,9 @@ const DEFAULT_MISSIONS = [
     description: 'Post in #general channel',
     max_per_week: 10,
   },
-] as RavenRewardsMission[]
+] as RewardsMission[]
 
-export const RAVEN_REWARDS_CONSTANTS = {
+export const REWARDS_CONSTANTS = {
   MISSION_TYPES: {
     MINT_NFT: 'mint_nft',
     MINT_NFT_PUBLIC: 'mint_nft_public',
@@ -184,7 +184,7 @@ export const RAVEN_REWARDS_CONSTANTS = {
   LOCAL_FALLBACK_CONFIG: {
     enabled: true,
     missions: DEFAULT_MISSIONS,
-    points_name: 'Raven Points',
-    points_symbol: 'RP',
+    points_name: 'Sentinel Tokens',
+    points_symbol: 'ST',
   },
 } as const

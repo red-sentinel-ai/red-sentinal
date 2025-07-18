@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server'
 import { supabaseServiceClient } from '@/db/config/server'
-import { RAVEN_REWARDS_CONSTANTS } from '@/constants/ravenRewards'
+import { REWARDS_CONSTANTS } from '@/constants/rewards'
 import { GlobalConfigResponse } from '@/types/globalConfig'
-import { RavenRewardsMission } from '@/types/ravenRewards'
+import { RewardsMission } from '@/types/Rewards'
 
 interface MissionsResponse {
   enabled: boolean
-  missions: RavenRewardsMission[]
+  missions: RewardsMission[]
   points_name: string
   points_symbol: string
   message?: string
@@ -25,33 +25,33 @@ export async function GET(): Promise<NextResponse<MissionsResponse>> {
       return NextResponse.json({
         enabled: false,
         missions: [],
-        points_name: 'Raven Points',
-        points_symbol: 'RP',
+        points_name: 'Sentinel Tokens',
+        points_symbol: 'ST',
         message: 'Failed to fetch configuration',
       })
     }
 
     const configResponse = configData as unknown as GlobalConfigResponse
     const config = configResponse.config_values
-    const ravenRewards = config.raven_rewards
+    const rewards = config.rewards
 
-    if (!ravenRewards?.enabled) {
+    if (!rewards?.enabled) {
       return NextResponse.json({
         enabled: false,
         missions: [],
-        points_name: 'Raven Points',
-        points_symbol: 'RP',
-        message: 'Raven Rewards program is currently disabled',
+        points_name: 'Sentinel Tokens',
+        points_symbol: 'ST',
+        message: 'Rewards program is currently disabled',
       })
     }
 
-    const missions = ravenRewards.missions || RAVEN_REWARDS_CONSTANTS.DEFAULT_MISSIONS
+    const missions = rewards.missions || REWARDS_CONSTANTS.DEFAULT_MISSIONS
 
     return NextResponse.json({
       enabled: true,
-      missions: missions.filter((m: RavenRewardsMission) => m.enabled),
-      points_name: ravenRewards.points_name || 'Raven Points',
-      points_symbol: ravenRewards.points_symbol || 'RP',
+      missions: missions.filter((m: RewardsMission) => m.enabled),
+      points_name: rewards.points_name || 'Sentinel Tokens',
+      points_symbol: rewards.points_symbol || 'ST',
     })
   } catch (error) {
     console.error('Error fetching missions:', error)
@@ -59,8 +59,8 @@ export async function GET(): Promise<NextResponse<MissionsResponse>> {
       {
         enabled: false,
         missions: [],
-        points_name: 'Raven Points',
-        points_symbol: 'RP',
+        points_name: 'Sentinel Tokens',
+        points_symbol: 'ST',
         message: 'Failed to fetch missions',
       },
       { status: 500 }

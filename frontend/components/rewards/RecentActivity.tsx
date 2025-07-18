@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { formatDistanceToNow } from 'date-fns'
-import type { RHRewardsActivity } from '@/types/ravenRewards'
+import type { RHRewardsActivity } from '@/types/Rewards'
 
 interface RecentActivityProps {
   activities: RHRewardsActivity[]

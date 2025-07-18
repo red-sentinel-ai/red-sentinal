@@ -4,15 +4,15 @@ import {
   UserRewardsData,
   RHUser,
   RHRewardsActivity,
-  RavenRewardsMission,
+  RewardsMission,
   MissionCompletionCounts,
-} from '@/types/ravenRewards'
+} from '@/types/Rewards'
 import { GlobalConfigValues } from '@/types/globalConfig'
 import { checkSocialConnections } from '@/utils/socialConnectionCheck'
 
 const getMissionCompletionCounts = (
   activities: RHRewardsActivity[],
-  missions: RavenRewardsMission[]
+  missions: RewardsMission[]
 ): Record<string, MissionCompletionCounts> => {
   const weekStart = new Date()
   weekStart.setDate(weekStart.getDate() - weekStart.getDay())
@@ -98,10 +98,10 @@ export async function GET(
       .eq('name', 'sui_sentinel_settings')
       .single()
 
-    let missions: RavenRewardsMission[] = []
+    let missions: RewardsMission[] = []
     if (configData) {
       const config = configData.config_values as unknown as GlobalConfigValues
-      missions = config.raven_rewards?.missions || []
+      missions = config.rewards?.missions || []
     }
 
     const completedMissions = getMissionCompletionCounts(typedActivities, missions)

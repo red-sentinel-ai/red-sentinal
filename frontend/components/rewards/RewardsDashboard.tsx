@@ -18,7 +18,7 @@ import { RecentActivity } from './RecentActivity'
 import { useUserRewards } from '@/hooks/rewards/useUserRewards'
 import { useRewardsMissions } from '@/hooks/rewards/useRewardsMissions'
 import { RewardsAccessGuard } from './RewardsAccessGuard'
-import { RAVEN_REWARDS_CONSTANTS } from '@/constants/ravenRewards'
+import { REWARDS_CONSTANTS } from '@/constants/rewards'
 import { REWARDS_DOCS_URL } from '@/constants'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { ConnectPrompt } from '../ConnectPrompt'
@@ -30,7 +30,7 @@ export function RewardsDashboard() {
   const { data: missionsData, isLoading: isLoadingMissions } = useRewardsMissions()
 
   const effectiveMissionsData = isLoadingMissions
-    ? RAVEN_REWARDS_CONSTANTS.LOCAL_FALLBACK_CONFIG
+    ? REWARDS_CONSTANTS.LOCAL_FALLBACK_CONFIG
     : missionsData
 
   if (!account?.address) {
@@ -63,7 +63,7 @@ export function RewardsDashboard() {
                     <Trophy className="h-12 w-12 text-[#558EB4]" />
                   </motion.div>
                   <h2 className="text-3xl font-bold mb-4 text-[#B8B8B8] uppercase">
-                    Raven Rewards Coming Soon
+                    Rewards Coming Soon
                   </h2>
                   <p className="text-[#B5B5B5] text-lg">
                     Our rewards program is currently being prepared. Check back soon!
@@ -137,7 +137,7 @@ export function RewardsDashboard() {
                 totalPoints={userRewards?.user?.total_points || 0}
                 tier={userRewards?.user.rewards_tier || 'bronze'}
                 isLoading={isLoadingUser}
-                pointsSymbol={effectiveMissionsData?.points_symbol || 'RP'}
+                pointsSymbol={effectiveMissionsData?.points_symbol || 'ST'}
               />
             </motion.div>
 
@@ -197,7 +197,7 @@ export function RewardsDashboard() {
                           missions={effectiveMissionsData?.missions || []}
                           completedMissions={userRewards?.completed_missions || {}}
                           isLoading={isLoadingMissions}
-                          pointsSymbol={effectiveMissionsData?.points_symbol || 'RP'}
+                          pointsSymbol={effectiveMissionsData?.points_symbol || 'ST'}
                         />
                       </TabsContent>
                       <TabsContent
@@ -207,7 +207,7 @@ export function RewardsDashboard() {
                         <RecentActivity
                           activities={userRewards?.recent_activity || []}
                           isLoading={isLoadingUser}
-                          pointsSymbol={effectiveMissionsData?.points_symbol || 'RP'}
+                          pointsSymbol={effectiveMissionsData?.points_symbol || 'ST'}
                         />
                       </TabsContent>
                     </div>

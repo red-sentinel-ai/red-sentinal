@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import { RavenRewardsMission } from '@/types/ravenRewards'
+import { RewardsMission } from '@/types/Rewards'
 
 interface MissionsResponse {
   enabled: boolean
-  missions: RavenRewardsMission[]
+  missions: RewardsMission[]
   points_name: string
   points_symbol: string
   message?: string

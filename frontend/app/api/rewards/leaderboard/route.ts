@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { supabaseServiceClient } from '@/db/config/server'
-import { LeaderboardEntry } from '@/types/ravenRewards'
+import { LeaderboardEntry } from '@/types/Rewards'
 
 interface LeaderboardResponse {
   leaderboard: LeaderboardEntry[]

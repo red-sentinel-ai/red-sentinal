@@ -2,12 +2,12 @@
 
 import { Zap, Users } from 'lucide-react'
 import { motion } from 'framer-motion'
-import type { RavenRewardsMission, MissionCompletionCounts } from '@/types/ravenRewards'
+import type { RewardsMission, MissionCompletionCounts } from '@/types/Rewards'
 import { Skeleton } from '@/components/ui/skeleton'
 import { MissionCard } from './MissionCard'
 
 interface MissionsGridProps {
-  missions: RavenRewardsMission[]
+  missions: RewardsMission[]
   completedMissions: Record<string, MissionCompletionCounts>
   isLoading: boolean
   pointsSymbol: string

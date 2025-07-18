@@ -1,7 +1,7 @@
 import { Trophy, Crown, Medal, Award, TrendingUp, Zap } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Card, CardContent } from '@/components/ui/card'
-import { RAVEN_REWARDS_CONSTANTS } from '@/constants/ravenRewards'
+import { REWARDS_CONSTANTS } from '@/constants/rewards'
 import { Skeleton } from '../ui/skeleton'
 
 interface PointsDisplayProps {
@@ -12,13 +12,11 @@ interface PointsDisplayProps {
 }
 
 export function PointsDisplay({ totalPoints, tier, isLoading, pointsSymbol }: PointsDisplayProps) {
-  const tierConfig = Object.values(RAVEN_REWARDS_CONSTANTS.TIERS).find(
+  const tierConfig = Object.values(REWARDS_CONSTANTS.TIERS).find(
     (t) => t.name.toLowerCase() === tier.toLowerCase()
   )
 
-  const nextTier = Object.values(RAVEN_REWARDS_CONSTANTS.TIERS).find(
-    (t) => t.minPoints > totalPoints
-  )
+  const nextTier = Object.values(REWARDS_CONSTANTS.TIERS).find((t) => t.minPoints > totalPoints)
 
   const progressToNext = nextTier
     ? ((totalPoints - (tierConfig?.minPoints || 0)) /
