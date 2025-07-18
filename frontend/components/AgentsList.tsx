@@ -2,10 +2,8 @@
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useCurrentAccount } from '@mysten/dapp-kit'
 import { LeaderboardSkeleton } from './ui/skeletons/LeaderboardSkeleton'
 import { AgentDetails } from '@/hooks/agents/useAllAgents'
-import { useFundAgentModal } from '@/hooks/useFundAgentModal'
 import { MIST_PER_SUI } from '@/constants'
 
 export enum TabType {
@@ -24,10 +22,6 @@ export const AgentsList = ({
   onRefreshAgent: () => void
 }) => {
   const router = useRouter()
-  const account = useCurrentAccount()
-  const { Modal, openModal } = useFundAgentModal()
-
-  const isAgentOwner = (creator: string) => creator === account?.address
 
   const handleRefresh = async (e: React.MouseEvent) => {
     e.preventDefault()
@@ -47,8 +41,7 @@ export const AgentsList = ({
         {isFetchingAgents ? (
           <LeaderboardSkeleton />
         ) : (
-          <div className="text-xs flex flex-col gap-1">
-            {/* Table Header - Hidden on mobile */}
+          <div className="text-sm flex flex-col gap-1">
             <div className="hidden md:grid md:grid-cols-12 bg-[#2E40494D] backdrop-blur-xl p-3 rounded-lg mb-2 font-semibold">
               <div className="col-span-3 grid grid-cols-12 items-center">
                 <p className="pr-1 col-span-1">#</p>
@@ -61,7 +54,6 @@ export const AgentsList = ({
               <div className="col-span-3 border-l border-l-[#6F6F6F] ps-4">Actions</div>
             </div>
 
-            {/* Agent Rows */}
             <AnimatePresence>
               {agents.map((agent, idx) => {
                 const balance = (Number(agent.balance) / MIST_PER_SUI).toFixed(4)
@@ -77,7 +69,6 @@ export const AgentsList = ({
                     className="bg-[#2E40494D] backdrop-blur-xl p-3 rounded-lg hover:bg-[#2E40497D] cursor-pointer"
                     onClick={() => router.push(`/attack/${agent.object_id}`)}
                   >
-                    {/* Mobile */}
                     <div className="md:hidden space-y-2">
                       <div className="flex justify-between items-center">
                         <div className="flex items-center gap-2">
@@ -126,18 +117,9 @@ export const AgentsList = ({
                         >
                           Attack
                         </button>
-                        {isAgentOwner(agent.owner) && (
-                          <button
-                            onClick={() => openModal(agent.object_id)}
-                            className="text-green-500 hover:text-green-400"
-                          >
-                            Fund
-                          </button>
-                        )}
                       </div>
                     </div>
 
-                    {/* Desktop */}
                     <div className="hidden md:grid md:grid-cols-12 items-center">
                       <div className="col-span-3 grid grid-cols-12 items-center">
                         <p className="pr-1 col-span-1">{idx + 1}</p>
@@ -172,14 +154,6 @@ export const AgentsList = ({
                         >
                           Refresh
                         </button>
-                        {isAgentOwner(agent.owner) && (
-                          <button
-                            onClick={() => openModal(agent.object_id)}
-                            className="text-sm text-green-500 hover:text-green-400"
-                          >
-                            Fund
-                          </button>
-                        )}
                       </div>
                     </div>
                   </motion.div>
@@ -189,7 +163,6 @@ export const AgentsList = ({
           </div>
         )}
       </motion.div>
-      <Modal onSuccess={() => console.log('Funded successfully!')} />
     </AnimatePresence>
   )
 }

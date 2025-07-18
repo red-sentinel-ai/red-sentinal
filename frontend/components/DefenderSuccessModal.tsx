@@ -1,4 +1,5 @@
 import { SUI_TESTNET_BASE_URL } from '@/constants'
+import { motion } from 'framer-motion'
 import { CheckCircle, X } from 'lucide-react'
 import Link from 'next/link'
 
@@ -8,7 +9,7 @@ interface SuccessModalProps {
   onAddFunds: () => void
   agentName: string
   transactionDigest: string
-  agentObjectId: string // ✅
+  agentObjectId: string
 }
 
 export const SuccessModal: React.FC<SuccessModalProps> = ({
@@ -22,58 +23,65 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-[#1a1a1a] border border-gray-600 rounded-lg p-6 max-w-md w-full relative">
+    <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.9 }}
+        transition={{ duration: 0.3 }}
+        className="bg-[#12121266] backdrop-blur-xl border border-[#383838] rounded-2xl p-8 max-w-md w-full relative shadow-2xl"
+      >
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+          aria-label="Close modal"
         >
-          <X className="w-5 h-5" />
+          <X className="w-6 h-6" />
         </button>
 
         <div className="text-center">
-          <div className="flex justify-center mb-4">
-            <CheckCircle className="w-16 h-16 text-green-500" />
+          <div className="flex justify-center mb-6">
+            <div className="w-20 h-20 bg-gradient-to-r from-[#558EB4] to-[#1388D5] rounded-full flex items-center justify-center shadow-glow-blue">
+              <CheckCircle className="w-12 h-12 text-white" />
+            </div>
           </div>
 
-          <h2 className="text-2xl font-bold mb-2">Agent Deployed Successfully!</h2>
-
-          <p className="text-gray-300 mb-4">
+          <h2 className="text-3xl font-bold text-white mb-3">Agent Deployed!</h2>
+          <p className="text-gray-300 mb-6">
             Your agent &quot;<span className="font-semibold text-white">{agentName}</span>&quot; has
-            been deployed to the blockchain.
+            been successfully deployed to the blockchain.
           </p>
 
-          <div className="bg-[#12121266] border border-gray-600 rounded p-3 mb-6">
-            <p className="text-sm text-gray-400 mb-1">Transaction Block:</p>
+          <div className="bg-[#1a1b1f] border border-[#558eb466] rounded-xl p-4 mb-8 text-left">
+            <p className="text-sm text-gray-400 mb-2">Transaction Block:</p>
             <Link
               href={`${SUI_TESTNET_BASE_URL}/${transactionDigest}`}
-              className="text-xs font-mono break-all text-green-400"
+              className="text-xs font-mono break-all text-[#558EB4] hover:underline transition-colors"
               target="_blank"
+              rel="noopener noreferrer"
             >
               {transactionDigest}
             </Link>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-4">
             <button
               onClick={onAddFunds}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-3 font-medium transition-colors"
+              className="w-full bg-gradient-to-r from-[#558EB4] to-[#1388D5] hover:from-[#1388D5] hover:to-[#558EB4] text-white rounded-full py-3 font-bold transition-all duration-300 shadow-lg hover:shadow-glow-blue"
             >
               Add Funds Now
             </button>
-            <div className="w-full">
-              <Link
-                href={`/attack/${agentObjectId}`}
-                className="w-full"
-              >
-                <button className="w-full bg-gray-600 hover:bg-gray-700 text-white rounded-lg py-3 font-medium transition-colors">
-                  Skip for Now
-                </button>
-              </Link>
-            </div>
+            <Link
+              href={`/attack/${agentObjectId}`}
+              className="w-full block"
+            >
+              <button className="w-full border border-[#383838] hover:border-[#424242] transition-colors font-medium bg-transparent text-gray-300 px-6 py-3 rounded-full hover:bg-[#1a1b1f]">
+                Skip for Now
+              </button>
+            </Link>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   )
 }

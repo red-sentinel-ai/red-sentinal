@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Wallet, Copy, CheckCircle, LogOut, ChevronDown, User } from 'lucide-react'
+import { Wallet, Copy, CheckCircle, LogOut, ChevronDown, User, Loader2 } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -27,7 +27,7 @@ export const ConnectButton = () => {
   const { mutate: disconnect } = useDisconnectWallet()
   const [copied, setCopied] = useState(false)
   const [suiBalance, setSuiBalance] = useState<number | undefined>()
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoadingBalance, setIsLoadingBalance] = useState(false)
 
   const handleCopy = () => {
     if (account?.address) {
@@ -40,24 +40,20 @@ export const ConnectButton = () => {
   useEffect(() => {
     const fetchBalance = async () => {
       if (!account?.address) return
-      setIsLoading(true)
-
+      setIsLoadingBalance(true)
       try {
         const coins = await client.getCoins({
           owner: account.address,
           coinType: '0x2::sui::SUI',
         })
-
         const totalBalance = coins.data.reduce((sum, coin) => sum + Number(coin.balance), 0)
-
         setSuiBalance(totalBalance / 10 ** 9)
       } catch (error) {
         console.error('Error fetching SUI balance:', error)
       } finally {
-        setIsLoading(false)
+        setIsLoadingBalance(false)
       }
     }
-
     fetchBalance()
   }, [account?.address])
 
@@ -68,65 +64,74 @@ export const ConnectButton = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-2 px-3 py-1.5 bg-[#1A1B1F] rounded-full border border-[#383838] hover:border-[#4c4c4c] transition-colors">
-          <Wallet className="h-4 w-4" />
-          <span>
+        <button className="flex items-center gap-2 px-4 py-2 bg-[#1A1B1F] rounded-full border border-[#383838] hover:border-[#4c4c4c] transition-colors group">
+          <Wallet className="h-4 w-4 text-[#558EB4] group-hover:text-[#1388D5] transition-colors" />
+          <span className="text-white text-sm font-medium">
             <span className="hidden sm:inline">{formatAddress(account.address)}</span>
             <span className="sm:hidden">{formatAddress(account.address)}</span>
           </span>
-          <ChevronDown className="h-4 w-4" />
+          <ChevronDown className="h-4 w-4 text-gray-400 group-hover:text-white transition-colors" />
         </button>
       </DropdownMenuTrigger>
+      <DropdownMenuContent
+        className="w-64 sm:w-72 bg-[#12121266] backdrop-blur-xl border border-[#383838] rounded-2xl p-2 text-white"
+        align="end"
+      >
+        <DropdownMenuLabel className="text-lg font-bold text-white px-2 pt-2">
+          My Wallet
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator className="bg-[#383838]" />
 
-      <DropdownMenuContent className="w-64 sm:w-72">
-        <DropdownMenuLabel>My Wallet</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <div className="px-2 py-3 flex justify-between">
-          <div className="text-xs font-medium text-muted">Balance</div>
-          <span className="text-xs font-bold">
-            {isLoading ? 'loading...' : <>{suiBalance?.toFixed(4)} SUI</>}
+        <div className="px-4 py-3 flex justify-between items-center">
+          <div className="text-sm font-medium text-gray-400">Balance</div>
+          <span className="text-base font-bold text-white flex items-center gap-2">
+            {isLoadingBalance ? (
+              <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
+            ) : (
+              <>{suiBalance?.toFixed(4)} SUI</>
+            )}
           </span>
         </div>
 
-        <DropdownMenuSeparator />
+        <DropdownMenuSeparator className="bg-[#383838]" />
 
         <Link href="/profile">
-          <DropdownMenuItem className="cursor-pointer">
-            <User className="mr-2 h-4 w-4" />
+          <DropdownMenuItem className="cursor-pointer flex items-center gap-2 text-gray-300 hover:text-[#558EB4] focus:text-[#558EB4] hover:bg-[#1a1b1f] focus:bg-[#1a1b1f] rounded-lg px-4 py-2 transition-colors">
+            <User className="h-4 w-4" />
             <span>Profile</span>
           </DropdownMenuItem>
         </Link>
 
         <DropdownMenuItem
           onClick={handleCopy}
-          className="cursor-pointer"
+          className="cursor-pointer flex items-center gap-2 text-gray-300 hover:text-[#558EB4] focus:text-[#558EB4] hover:bg-[#1a1b1f] focus:bg-[#1a1b1f] rounded-lg px-4 py-2 transition-colors"
         >
           {copied ? (
-            <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
+            <CheckCircle className="h-4 w-4 text-green-500" />
           ) : (
-            <Copy className="mr-2 h-4 w-4" />
+            <Copy className="h-4 w-4" />
           )}
           <span>Copy Address</span>
         </DropdownMenuItem>
 
         <DropdownMenuItem
           onClick={() => disconnect()}
-          className="cursor-pointer text-red-500 focus:text-red-500"
+          className="cursor-pointer flex items-center gap-2 text-red-500 hover:text-red-400 focus:text-red-400 hover:bg-[#1a1b1f] focus:bg-[#1a1b1f] rounded-lg px-4 py-2 transition-colors"
         >
-          <LogOut className="mr-2 h-4 w-4" />
+          <LogOut className="h-4 w-4" />
           <span>Disconnect</span>
         </DropdownMenuItem>
 
-        <DropdownMenuSeparator />
+        <DropdownMenuSeparator className="bg-[#383838]" />
 
         <DropdownMenuItem asChild>
           <a
             href={SUI_FAUCET_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2 bg-[#1A1B1F] rounded-full border border-[#383838] hover:border-[#4c4c4c] transition-colors group"
           >
-            <span className="text-xs">Get SUI from Faucet</span>
+            Get SUI from Faucet
           </a>
         </DropdownMenuItem>
       </DropdownMenuContent>
