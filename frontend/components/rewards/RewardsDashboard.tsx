@@ -45,7 +45,7 @@ export function RewardsDashboard() {
 
   if (!isLoadingMissions && !missionsData?.enabled) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-black via-[#0a0a0a] to-[#1a1a1a]">
+      <div className="min-h-body bg-gradient-to-br from-black via-[#0a0a0a] to-[#1a1a1a]">
         <div className="container mx-auto px-4 py-12">
           <AnimatePresence mode="wait">
             <motion.div
@@ -84,7 +84,7 @@ export function RewardsDashboard() {
 
   return (
     <RewardsAccessGuard>
-      <div className="min-h-screen bg-gradient-to-br from-black via-[#0a0a0a] to-[#1a1a1a] pt-20">
+      <div className="min-h-body bg-gradient-to-br from-black via-[#0a0a0a] to-[#1a1a1a] pt-20">
         <div className="container mx-auto px-4 py-12">
           <div className="max-w-7xl mx-auto">
             <AnimatePresence mode="wait">
