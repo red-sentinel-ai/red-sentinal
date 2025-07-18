@@ -21,7 +21,7 @@ export async function POST(
     }
 
     const { data: userData, error: userError } = await supabaseServiceClient
-      .from('rh_users')
+      .from('ss_users')
       .select('id')
       .contains('wallet_addresses', [wallet_address])
       .single()
@@ -35,7 +35,7 @@ export async function POST(
     const { data: configData } = await supabaseServiceClient
       .from('global_config')
       .select('*')
-      .eq('name', 'raven_house_settings')
+      .eq('name', 'sui_sentinel_settings')
       .single()
 
     if (!configData) {
@@ -53,7 +53,7 @@ export async function POST(
 
     if (mission.frequency === 'one_time') {
       const { count } = await supabaseServiceClient
-        .from('rh_rewards_activity')
+        .from('ss_rewards_activity')
         .select('*', { count: 'exact', head: true })
         .eq('user_id', userId)
         .eq('mission_type', mission_type)
@@ -70,7 +70,7 @@ export async function POST(
       weekStart.setHours(0, 0, 0, 0)
 
       const { count } = await supabaseServiceClient
-        .from('rh_rewards_activity')
+        .from('ss_rewards_activity')
         .select('*', { count: 'exact', head: true })
         .eq('user_id', userId)
         .eq('mission_type', mission_type)
@@ -86,7 +86,7 @@ export async function POST(
       dayStart.setHours(0, 0, 0, 0)
 
       const { count } = await supabaseServiceClient
-        .from('rh_rewards_activity')
+        .from('ss_rewards_activity')
         .select('*', { count: 'exact', head: true })
         .eq('user_id', userId)
         .eq('mission_type', mission_type)
@@ -99,7 +99,7 @@ export async function POST(
 
     // Record the activity
     const { error: activityError } = await supabaseServiceClient
-      .from('rh_rewards_activity')
+      .from('ss_rewards_activity')
       .insert({
         user_id: userId,
         mission_type,
@@ -113,9 +113,9 @@ export async function POST(
       throw activityError
     }
 
-    // Get user from rh_users table
+    // Get user from ss_users table
     const { data: existingUser } = await supabaseServiceClient
-      .from('rh_users')
+      .from('ss_users')
       .select('*')
       .contains('wallet_addresses', [wallet_address])
       .single()
@@ -141,7 +141,7 @@ export async function POST(
       }
 
       const { data: updatedUser, error: updateError } = await supabaseServiceClient
-        .from('rh_users')
+        .from('ss_users')
         .update({
           total_points: newTotalPoints,
           lifetime_points: newLifetimePoints,
@@ -157,7 +157,7 @@ export async function POST(
     } else {
       // TODO: no need to create new user, we will handle this differently
       const { data: newUser, error: createError } = await supabaseServiceClient
-        .from('rh_users')
+        .from('ss_users')
         .insert({
           wallet_addresses: [wallet_address],
           total_points: mission.points,

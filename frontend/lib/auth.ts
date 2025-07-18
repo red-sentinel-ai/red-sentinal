@@ -156,25 +156,25 @@ async function saveSocialConnection(walletAddress: string, provider: string, pro
 
     // Check if this social account already exists for ANY user
     const { data: existingSocialConnection } = await supabaseServiceClient
-      .from('rh_social_connections')
+      .from('ss_social_connections')
       .select(
         `
         *,
-        rh_users (*)
+        ss_users (*)
       `
       )
       .eq('platform', provider)
       .eq('platform_user_id', platformUserId)
       .single()
 
-    if (existingSocialConnection?.rh_users) {
+    if (existingSocialConnection?.ss_users) {
       console.log('Social account already exists, merging wallets')
-      const existingUser = existingSocialConnection.rh_users as any
+      const existingUser = existingSocialConnection.ss_users as any
       const currentWallets: string[] = existingUser.wallet_addresses || []
 
       if (!currentWallets.includes(walletAddress)) {
         const { error: updateError } = await supabaseServiceClient
-          .from('rh_users')
+          .from('ss_users')
           .update({
             wallet_addresses: [...currentWallets, walletAddress],
           } as any)
@@ -193,7 +193,7 @@ async function saveSocialConnection(walletAddress: string, provider: string, pro
 
     // Check if user exists by wallet
     const { data: existingUser } = await supabaseServiceClient
-      .from('rh_users')
+      .from('ss_users')
       .select('*')
       .contains('wallet_addresses', [walletAddress])
       .single()
@@ -203,7 +203,7 @@ async function saveSocialConnection(walletAddress: string, provider: string, pro
     // Create user if doesn't exist
     if (!finalUser) {
       const { data: newUser, error: userError } = await supabaseServiceClient
-        .from('rh_users')
+        .from('ss_users')
         .insert({
           wallet_addresses: [walletAddress],
           username: platformUsername || `user_${Date.now()}`,
@@ -226,7 +226,7 @@ async function saveSocialConnection(walletAddress: string, provider: string, pro
 
     // Create new social connection
     const { data: connection, error: connectionError } = await supabaseServiceClient
-      .from('rh_social_connections')
+      .from('ss_social_connections')
       .insert({
         user_id: finalUser.id,
         platform: provider,

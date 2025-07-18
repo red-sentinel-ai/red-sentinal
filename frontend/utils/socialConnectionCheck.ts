@@ -14,7 +14,7 @@ export async function checkSocialConnections(
   walletAddress: string
 ): Promise<SocialConnectionStatus> {
   const { data: user } = await supabaseServiceClient
-    .from('rh_users')
+    .from('ss_users')
     .select('id')
     .contains('wallet_addresses', [walletAddress])
     .single()
@@ -30,7 +30,7 @@ export async function checkSocialConnections(
 
   // Get social connections for this user
   const { data: connections } = await supabaseServiceClient
-    .from('rh_social_connections')
+    .from('ss_social_connections')
     .select('platform')
     .eq('user_id', user.id)
 

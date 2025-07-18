@@ -17,7 +17,7 @@ export async function GET(): Promise<NextResponse<MissionsResponse>> {
     const { data: configData, error } = await supabaseServiceClient
       .from('global_config')
       .select('*')
-      .eq('name', 'raven_house_settings')
+      .eq('name', 'sui_sentinel_settings')
       .single()
 
     if (error || !configData) {

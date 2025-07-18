@@ -10,7 +10,7 @@ export async function POST(request: Request) {
     }
 
     const { data: user, error: userError } = await supabaseServiceClient
-      .from('rh_users')
+      .from('ss_users')
       .select('id')
       .contains('wallet_addresses', [walletAddress])
       .single()
@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     }
 
     const { error: deleteError } = await supabaseServiceClient
-      .from('rh_social_connections')
+      .from('ss_social_connections')
       .delete()
       .eq('user_id', user.id)
       .eq('platform', provider)

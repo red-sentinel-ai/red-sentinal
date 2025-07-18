@@ -1,6 +1,10 @@
+'use client'
+
 import Image from 'next/image'
+import Link from 'next/link'
 import { ExternalLink, Star } from 'lucide-react'
-import { LeaderboardEntry } from '@/types/ravenRewards'
+import { motion } from 'framer-motion'
+import type { LeaderboardEntry } from '@/types/ravenRewards'
 
 const buildTwitterLink = (username: string): string => {
   const cleanUsername = username.startsWith('@') ? username.slice(1) : username
@@ -24,7 +28,7 @@ export const UserDisplay = ({ entry }: UserDisplayProps) => {
       <div className="flex flex-col gap-1 min-w-0">
         {hasTwitter && (
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-blue-500/20 to-blue-600/20 flex items-center justify-center flex-shrink-0">
+            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#558EB4]/20 to-[#1388D5]/20 flex items-center justify-center flex-shrink-0">
               <Image
                 src="/icons/x.png"
                 width={12}
@@ -33,20 +37,19 @@ export const UserDisplay = ({ entry }: UserDisplayProps) => {
                 className="opacity-80"
               />
             </div>
-
-            <button
-              className="w-full bg-white text-black rounded-full py-3 font-medium hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-              onClick={() => window.open(buildTwitterLink(entry.twitter_username!), '_blank')}
+            <Link
+              target="_blank"
+              className="flex gap-1 items-center underline hover:no-underline"
+              href={buildTwitterLink(entry.twitter_username!)}
             >
               <span className="truncate">@{entry.twitter_username}</span>
               <ExternalLink className="h-3 w-3 ml-1 flex-shrink-0 opacity-60" />
-            </button>
+            </Link>
           </div>
         )}
-
         {hasDiscord && (
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-indigo-500/20 to-indigo-600/20 flex items-center justify-center flex-shrink-0">
+            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#8F564E]/20 to-[#E53922]/20 flex items-center justify-center flex-shrink-0">
               <Image
                 src="/icons/discord.svg"
                 width={12}
@@ -55,31 +58,29 @@ export const UserDisplay = ({ entry }: UserDisplayProps) => {
                 className="opacity-80"
               />
             </div>
-            <button
-              className="w-full bg-white text-black rounded-full py-3 font-medium hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+            <motion.button
+              className="w-full bg-white text-black rounded-full py-3 font-medium hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center transition-all duration-300"
               onClick={() => window.open(buildDiscordLink(entry.discord_user_id!), '_blank')}
             >
               <span className="truncate">{entry.discord_username}</span>
               <ExternalLink className="h-3 w-3 ml-1 flex-shrink-0 opacity-60" />
-            </button>
+            </motion.button>
           </div>
         )}
-
         {!hasTwitter && !hasDiscord && entry.username && (
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-gray-500/20 to-gray-600/20 flex items-center justify-center flex-shrink-0">
-              <Star className="h-3 w-3 text-gray-400" />
+            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#383838]/20 to-[#383838]/30 flex items-center justify-center flex-shrink-0">
+              <Star className="h-3 w-3 text-[#B5B5B5]" />
             </div>
             <span className="font-semibold text-white truncate">{entry.username}</span>
           </div>
         )}
-
         {!hasTwitter && !hasDiscord && !entry.username && (
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-gray-600/20 to-gray-700/20 flex items-center justify-center flex-shrink-0">
-              <span className="text-xs font-bold text-gray-500">#</span>
+            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#383838]/20 to-[#383838]/30 flex items-center justify-center flex-shrink-0">
+              <span className="text-xs font-bold text-[#B5B5B5]">#</span>
             </div>
-            <span className="font-medium text-gray-400 truncate">
+            <span className="font-medium text-[#B5B5B5] truncate">
               User #{entry.user_id.slice(-6)}
             </span>
           </div>
