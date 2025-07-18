@@ -128,8 +128,7 @@ export function MissionCard({
 
   return (
     <motion.div
-      className="relative group"
-      whileHover={{ scale: 1.02 }}
+      className="relative group h-full"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -197,7 +196,6 @@ export function MissionCard({
                 onClick={handleSocialMissionClick}
                 disabled={!address || isProcessing}
                 className="w-full border border-[#558EB4] bg-[#12121266] backdrop-blur-lg rounded-lg py-3 text-[#558EB4] hover:bg-[#1388D5] hover:text-black hover:border-[#1388D5] transition-all duration-300 group flex items-center justify-center gap-2"
-                whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
                 {isProcessing ? (
