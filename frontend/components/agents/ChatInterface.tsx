@@ -10,7 +10,7 @@ import { ConnectModal, useCurrentAccount } from '@mysten/dapp-kit'
 import { AgentInfo } from '@/components/AgentInfo'
 import { ATTACK_PROMPT_MAX_TOKENS, DEFAULT_PROFILE_URL } from '@/constants'
 import type { ConsumePromptApiResponse } from '@/types'
-import type { AgentEvents } from '@/hooks/useAgentEvents'
+import { PromptConsumedEvent } from '@/hooks/events/usePromptConsumedEvents'
 import type { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { ChatMessage } from './ChatMessage'
 import { useTokenCount } from '@/hooks/useTokenCount'
@@ -31,7 +31,7 @@ export interface ChatMessage {
 
 interface ChatInterfaceProps {
   agent: AgentDetails
-  agentEvents: AgentEvents
+  promptConsumedEvents: PromptConsumedEvent[]
   apiResponse: ConsumePromptApiResponse | null
   onSendMessage: (prompt: string) => Promise<void>
   isSubmitting: boolean
@@ -41,7 +41,7 @@ interface ChatInterfaceProps {
 
 export default function ChatInterface({
   agent,
-  agentEvents,
+  promptConsumedEvents,
   apiResponse,
   onSendMessage,
   isSubmitting,
@@ -63,32 +63,31 @@ export default function ChatInterface({
 
   useEffect(() => {
     const initialMessages: ChatMessage[] = []
-    agentEvents.promptConsumed
-      .sort((a, b) => Number.parseInt(a.timestampMs) - Number.parseInt(b.timestampMs))
+    promptConsumedEvents
+      .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
       .forEach((event, index) => {
         initialMessages.push({
-          id: `user-hist-${event.id.txDigest}-${index}`,
+          id: `user-hist-${event.txDigest}-${index}`,
           type: 'user',
-          content: event.parsedJson.message,
-          timestamp: event.timestampMs,
-          sender: event.parsedJson.sender,
-          amountSent: event.parsedJson.amount
-            ? (Number.parseInt(event.parsedJson.amount) / 1000000000).toFixed(2)
+          content: event.message,
+          timestamp: event.timestamp,
+          sender: event.sender,
+          amountSent: event.amount
+            ? (Number.parseInt(event.amount) / 1000000000).toFixed(2)
             : undefined,
         })
         initialMessages.push({
-          id: `agent-hist-${event.id.txDigest}-${index}`,
+          id: `agent-hist-${event.txDigest}-${index}`,
           type: 'agent',
-          content: event.parsedJson.agent_response,
-          timestamp: event.timestampMs,
-          isSuccess: event.parsedJson.success,
-          score: event.parsedJson.score,
-          txDigest: event.id.txDigest,
+          content: event.agent_response,
+          timestamp: event.timestamp,
+          isSuccess: event.success,
+          txDigest: event.txDigest,
         })
       })
 
     setChatMessages(initialMessages)
-  }, [agentEvents])
+  }, [promptConsumedEvents])
 
   useEffect(() => {
     if (apiResponse) {
