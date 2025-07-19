@@ -141,7 +141,7 @@ export const ChatMessage = ({ message, agent }: ChatMessageProps) => {
 }
 
 const formatTimestamp = (timestamp: string) => {
-  return new Date(Number.parseInt(timestamp)).toLocaleString()
+  return new Date(timestamp).toLocaleString()
 }
 
 const formatAddress = (address: string) => {

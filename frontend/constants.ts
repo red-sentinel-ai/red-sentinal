@@ -1,6 +1,6 @@
 export const AGENT_REGISTRY_ADDRESS =
   '0x6eea1a6fd3fbf870a043f311ad260c0dc6f384f3c869dd4ccfa550c2202bc485'
-export const INDEXER_BASE_URL = process.env.NEXT_PUBLIC_INDEXER_BASE_URL || 'http://localhost:4000'
+export const INDEXER_BASE_URL = process.env.NEXT_PUBLIC_INDEXER_BASE_URL || 'http://localhost:3000'
 
 export const supabaseUrl = process.env.SUPABASE_URL || ''
 export const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || ''
@@ -61,6 +61,19 @@ export const MOCK_RESULT = {
     },
   ],
 }
+export const PROJECT_DISCORD_URL = 'https://discord.gg'
 
 export const DEFAULT_PROFILE_URL =
   'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/ss-agents//default_profile.jpg'
+
+export const SOCIAL_MEDIA_URLS = {
+  TWITTER_FOLLOW: 'https://twitter.com/intent/follow?screen_name=suisentinal',
+  TWITTER_PROFILE: X_URL,
+  TWITTER_TWEET:
+    'https://twitter.com/intent/tweet?text=Challenge%20AI%20agents%20and%20earn%20rewards%20%40suisentinal%20on%20https%3A%2F%2Fapp.suisentinel.xyz%2F%20%23SUISENTINEL%20%23AGENTS%20%23AI',
+  TELEGRAM_JOIN: SUI_SENTINEL_TELEGRAM_URL,
+  TELEGRAM_GENERAL_CHAT_URL: 'https://t.me/suisentinel/1',
+} as const
+
+//TODO: Add the correct docs url
+export const REWARDS_DOCS_URL = 'https://sui-sentinal-plum.vercel.app/'

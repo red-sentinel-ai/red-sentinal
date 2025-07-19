@@ -1,5 +1,5 @@
 'use client'
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { Loader2, ChevronLeft } from 'lucide-react'
@@ -8,15 +8,14 @@ import { useCurrentAccount } from '@mysten/dapp-kit'
 import { useConsumePrompt } from '@/hooks/useConsumePrompt'
 import { useAgentByObjectId } from '@/hooks/agents/useAgentByObjectId'
 import type { ConsumePromptApiResponse } from '@/types'
-import { AgentEvents, useAgentEvents } from '@/hooks/useAgentEvents'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
 import ChatInterface from '@/components/agents/ChatInterface'
+import { usePromptConsumedEvents } from '@/hooks/events/usePromptConsumedEvents'
 
 export default function AgentChallengePage() {
   const params = useParams()
   const agentObjectId = params.address as string
   const account = useCurrentAccount()
-  const { events: allEvents } = useAgentEvents()
 
   const { consumePrompt } = useConsumePrompt({
     showToasts: true,
@@ -39,17 +38,11 @@ export default function AgentChallengePage() {
   const [txnHash, setTxnHash] = useState<string | null>(null)
   const [showResultModal, setShowResultModal] = useState(false)
 
-  const agentEvents: AgentEvents = useMemo(() => {
-    if (!agent) return { agentDefeated: [], promptConsumed: [] }
-    return {
-      agentDefeated: allEvents.agentDefeated.filter(
-        (e) => e.parsedJson.agent_id === `${agent.agent_id}`
-      ),
-      promptConsumed: allEvents.promptConsumed.filter(
-        (e) => e.parsedJson.agent_id === `${agent.agent_id}`
-      ),
-    }
-  }, [agent, allEvents])
+  const {
+    data: promptConsumedEvents,
+    isLoading: isPromptConsumedEventsLoading,
+    error: agentEventError,
+  } = usePromptConsumedEvents(agent?.agent_id || '')
 
   const handleSendMessage = async (prompt: string) => {
     if (!account?.address) {
@@ -77,7 +70,7 @@ export default function AgentChallengePage() {
     }
   }
 
-  if (isLoading) {
+  if (isLoading || isPromptConsumedEventsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black">
         <Loader2 className="w-8 h-8 animate-spin text-[#B8B8B8]" />
@@ -85,7 +78,7 @@ export default function AgentChallengePage() {
     )
   }
 
-  if (error || !agent) {
+  if (error || !agent || agentEventError) {
     return (
       <div className="min-h-screen bg-black text-[#B5B5B5] p-4">
         <Link
@@ -114,7 +107,7 @@ export default function AgentChallengePage() {
 
       <ChatInterface
         agent={agent}
-        agentEvents={agentEvents}
+        promptConsumedEvents={promptConsumedEvents}
         apiResponse={apiResponse}
         onSendMessage={handleSendMessage}
         isSubmitting={isSubmitting}
