@@ -2,4 +2,4 @@
 endpoints:
   - api.anthropic.com # replace with your own endpoints
   - oauth2.googleapis.com
-  - projects/761056697900/locations/us-central1/endpoints/1636703322293403648-aiplatform.googleapis.com
+  - us-central1-aiplatform.googleapis.com
