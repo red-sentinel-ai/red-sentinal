@@ -1,3 +1,4 @@
 # External endpoints that the enclave is allowed to access. 
 endpoints:
   - api.anthropic.com # replace with your own endpoints
+  - oauth2.googleapis.com
