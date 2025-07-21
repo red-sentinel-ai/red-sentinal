@@ -9,6 +9,7 @@ use chrono::{Duration, Utc};
 use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
 use std::fs;
 use crate::constants::{SERVICE_ACCOUNT_JSON};
+use regex::{Regex};
 
 #[derive(Debug, Deserialize)]
 struct ServiceAccountKey {
@@ -182,36 +183,51 @@ pub async fn evaluate_prompt(
             }
         }
     }
-
-    let mut explanation = model_text.clone();
-    let mut success = false;
+let mut success = false;
     let mut score: u8 = 0;
+    let mut explanation = model_text.to_string();
+let success_regex = Regex::new(
+        r"(?i)success\s*(?::|is|=)?\s*(true|false)\b"
+    ).unwrap();
+    
+    let score_regex = Regex::new(
+        r"(?i)score\s*(?::|is|=)?\s*(\d+)\b"
+    ).unwrap();
 
-        if let Some(success_pos) = model_text.to_lowercase().find("success") {
-        let remaining = &model_text[success_pos..];
-        if let Some(captures) = regex::Regex::new(r"success\s+(true|false)")
-            .unwrap()
-            .captures(&remaining.to_lowercase())
-        {
-            success = captures.get(1).unwrap().as_str() == "true";
-            explanation = model_text[..success_pos].trim_end().to_string();
-        }
+    // Extract success
+    if let Some(captures) = success_regex.captures(&model_text) {
+        success = captures.get(1).unwrap().as_str().eq_ignore_ascii_case("true");
+        
+        // Remove success portion from explanation
+        let success_match = captures.get(0).unwrap();
+        explanation = model_text
+            .replace(success_match.as_str(), "")
+            .trim()
+            .to_string();
     }
 
-    if let Some(score_pos) = model_text.to_lowercase().find("score") {
-        let remaining = &model_text[score_pos..];
-        if let Some(captures) = regex::Regex::new(r"score\s+(\d+)")
-            .unwrap()
-            .captures(&remaining)
-        {
-            if let Ok(parsed_score) = captures.get(1).unwrap().as_str().parse::<u8>() {
-                score = parsed_score;
-            }
-            if !model_text.to_lowercase().contains("success") {
-                explanation = model_text[..score_pos].trim_end().to_string();
-            }
+    // Extract score
+    if let Some(captures) = score_regex.captures(&model_text) {
+        if let Ok(parsed_score) = captures.get(1).unwrap().as_str().parse::<u8>() {
+            score = parsed_score;
         }
+        
+        // Remove score portion from explanation
+        let score_match = captures.get(0).unwrap();
+        explanation = explanation
+            .replace(score_match.as_str(), "")
+            .trim()
+            .replace(['{', '}', ','], "")
+            .trim()
+            .to_string();
     }
+
+    // Clean up explanation (remove extra commas, braces, etc.)
+    explanation = explanation
+        .replace(['{', '}', ','], "")
+        .split_whitespace()
+        .collect::<Vec<&str>>()
+        .join(" ");
 
     explanation = explanation
         .replace('"', "")
