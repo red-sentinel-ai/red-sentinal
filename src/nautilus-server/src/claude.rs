@@ -90,8 +90,7 @@ fn sanitize_explanation(text: &str) -> String {
 pub async fn evaluate_prompt(
     agent_id: &str,
     agent_prompt: &str,
-    user_message: &str,
-    api_key: &str
+    user_message: &str
 ) -> Result<ConsumePromptResponse, Box<dyn std::error::Error + Send + Sync>> {
     let client = Client::new();
     println!("agent prompt {}", agent_prompt);
