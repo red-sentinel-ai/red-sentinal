@@ -43,11 +43,11 @@
     animation: marquee2 25s linear infinite;
   }
   .min-h-body{
-    min-height: calc(100vh - 225px);
+    min-height: 100vh;
   }
 
    .max-h-body{
-    max-height: calc(100vh - 225px);
+    max-height: 100vh;
   }
 }
 
