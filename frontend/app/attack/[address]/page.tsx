@@ -102,8 +102,8 @@ export default function AgentChallengePage() {
   }
 
   return (
-    <div className="min-h-screen pt-24 max-w-4xl mx-auto relative flex flex-col">
-      <div className="absolute top-[124px] -left-[156px] z-10">
+    <div className="min-h-screen pt-12 max-w-4xl mx-auto relative flex flex-col">
+      <div className="absolute top-[75px] -left-[156px] z-10">
         <Link
           href="/attack"
           className="hidden lg:flex items-center gap-1 text-gray-400 hover:text-white transition-colors"
