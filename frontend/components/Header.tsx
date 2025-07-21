@@ -8,6 +8,7 @@ import { MenuItems } from './MenuItems'
 import { MenuIcon, Plus } from 'lucide-react'
 import Link from 'next/link'
 import { ConnectButton } from './ConnectButton'
+import { SUI_SENTINEL_DOCS_URL } from '@/constants'
 
 export const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -54,9 +55,10 @@ export const Header = () => {
           </Link>
           <Link
             className="block ml-1 xl:ml-4 flex-shrink-0"
-            href="/about"
+            target="_blank"
+            href={SUI_SENTINEL_DOCS_URL}
           >
-            Learn More
+            Read Docs
           </Link>
           <div className="hidden xl:block">
             <MenuItems menuOpen={menuOpen} />
