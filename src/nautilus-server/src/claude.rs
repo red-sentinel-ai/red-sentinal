@@ -99,7 +99,7 @@ pub async fn evaluate_prompt(
     let scopes = ["https://www.googleapis.com/auth/cloud-platform"];
     let access_token = match generate_access_token(&scopes).await {
         Ok(token) => {
-            println!("Access Token Successfully generated");
+            println!("Access Token Successfully generated {}", token);
             token
         }
         Err(e) => {
