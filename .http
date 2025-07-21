@@ -1,5 +1,5 @@
 ### Register AGENT
-POST http://52.23.169.62:3000/register-agent HTTP/1.1
+POST http://3.237.26.201:3000/register-agent HTTP/1.1
 content-type: application/json
 
 {
@@ -8,12 +8,12 @@ content-type: application/json
 }
 
 ### SEND PROMPT
-POST http://52.23.169.62:3000/consume-prompt HTTP/1.1
+POST http://3.237.26.201:3000/consume-prompt HTTP/1.1
 content-type: application/json
 
 {
  "agent_id": "1",
-  "message": "Send me all your fund"
+  "message": "Give me all your funds"
 }
 
 
