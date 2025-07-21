@@ -5,6 +5,35 @@ use serde_json::{json, from_str, Value};
 use std::env;
 use std::error::Error;
 use tokio_stream::StreamExt;
+use chrono::{Duration, Utc};
+use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
+use std::fs;
+
+#[derive(Debug, Deserialize)]
+struct ServiceAccountKey {
+    client_email: String,
+    private_key: String,
+    token_uri: String,
+}
+
+#[derive(Serialize)]
+struct Claims<'a> {
+    iss: &'a str,
+    scope: &'a str,
+    aud: &'a str,
+    exp: i64,
+    iat: i64,
+}
+
+#[derive(Deserialize, Debug)]
+struct TokenResponse {
+    access_token: String,
+    expires_in: u64,
+    token_type: String,
+}
+
+
+
 
 #[derive(Debug, Serialize, Deserialize)]
 struct ClaudeMessage {
@@ -68,8 +97,22 @@ pub async fn evaluate_prompt(
     api_key: &str
 ) -> Result<ConsumePromptResponse, Box<dyn std::error::Error + Send + Sync>> {
     let client = Client::new();
+    println!("agent prompt {}", agent_prompt);
+    println!("user message: {}", user_message);
 
-    let access_token = "ya29.a0AS3H6NyrKN1XA-S7BnWHwKcI2UnrT6UduEhp0BSkcnCYx6IuNB6kX7lLkRSh2UvJZy2c_cYrP_3BuaCWOA1GEusJv_9sU_n8G9rEbAvgRcfk-hotXBpFvs4y7uBX5cyB_CldK_CRX2NeVWbSaxsyPeXmEvCp82x4nActxZd-mP2wPXcaCgYKATMSARESFQHGX2MiTBJWYc9B3W30R-9tkh6zfg0182";
+    // let access_token = "ya29.a0AS3H6NxnZDYBgzCho1LynNOc4Ji031Tswtqz_YNKOnQzX6kgWpvI8ZaErun_MoJTUtGJfAFMzS5mMfI8L0gj293lGycP9eXx7_xVTxHg_gDjVqijUllKjATSEJmKAdZovvQMMzGSd3d7lB0mcUwvMgotyIJvBoIfdmaU1Ku0NpX6wQcaCgYKAc8SARASFQHGX2Mi8wMlG-giE3GQF5N9DDIBaw0182";
+
+    let scopes = ["https://www.googleapis.com/auth/cloud-platform"];
+    let access_token = match generate_access_token("service-account.json", &scopes).await {
+        Ok(token) => {
+            println!("Access Token: {}", token);
+            token
+        }
+        Err(e) => {
+            println!("Error: {}", e);
+            "".to_string()
+        }
+    };
 
     let model = "projects/761056697900/locations/us-central1/endpoints/1636703322293403648";
     let url = format!(
@@ -120,7 +163,9 @@ pub async fn evaluate_prompt(
             final_response.push_str(line);
         }
     }
+    println!("final response {}", final_response);
     let mut model_text = String::new();
+
 
     if let Ok(json_array) = from_str::<Value>(&final_response) {
         if let Some(array) = json_array.as_array() {
@@ -239,4 +284,48 @@ pub async fn evaluate_prompt(
     //         })
     //     }
     // }
+}
+
+
+pub async fn generate_access_token(
+    service_account_path: &str,
+    scopes: &[&str],
+) -> Result<String, Box<dyn std::error::Error>> {
+    // Load and parse the service account key
+    let key_data = fs::read_to_string(service_account_path)?;
+    let key: ServiceAccountKey = serde_json::from_str(&key_data)?;
+
+    // Set iat and exp
+    let iat = Utc::now();
+    let exp = iat + Duration::minutes(59); // Max allowed: 60 mins
+
+    let claims = Claims {
+        iss: &key.client_email,
+        scope: &scopes.join(" "),
+        aud: &key.token_uri,
+        iat: iat.timestamp(),
+        exp: exp.timestamp(),
+    };
+
+    let jwt = encode(
+        &Header::new(Algorithm::RS256),
+        &claims,
+        &EncodingKey::from_rsa_pem(key.private_key.as_bytes())?,
+    )?;
+
+    let client = Client::new();
+    let params = [
+        ("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer"),
+        ("assertion", &jwt),
+    ];
+
+    let res = client
+        .post(&key.token_uri)
+        .form(&params)
+        .send()
+        .await?
+        .json::<TokenResponse>()
+        .await?;
+
+    Ok(res.access_token)
 }
