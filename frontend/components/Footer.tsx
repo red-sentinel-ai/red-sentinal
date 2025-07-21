@@ -52,13 +52,6 @@ const Footer = () => {
                 All Rights Reserved @Cyphronix Software
               </div>
             </div>
-
-            <div className="relative">
-              <div className="text-[#888888] text-xs md:text-sm italic">
-                Sui Sentinel: The first verifiable off-chain AI platform on Sui blockchain
-              </div>
-              <div className="absolute -left-3 top-0 w-1 h-full bg-gradient-to-b from-[#558EB4] to-transparent rounded-full opacity-60" />
-            </div>
           </motion.div>
 
           <motion.div
