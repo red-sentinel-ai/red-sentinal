@@ -15,6 +15,7 @@ use tokio::sync::RwLock;
 pub mod app;
 pub mod claude;
 pub mod common;
+pub mod constants;
 pub mod models;
 
 #[derive(Debug)]

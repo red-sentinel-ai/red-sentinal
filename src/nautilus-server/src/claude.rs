@@ -8,6 +8,7 @@ use tokio_stream::StreamExt;
 use chrono::{Duration, Utc};
 use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
 use std::fs;
+use crate::constants::{SERVICE_ACCOUNT_JSON};
 
 #[derive(Debug, Deserialize)]
 struct ServiceAccountKey {
@@ -32,9 +33,6 @@ struct TokenResponse {
     token_type: String,
 }
 
-
-
-
 #[derive(Debug, Serialize, Deserialize)]
 struct ClaudeMessage {
     role: String,
@@ -54,14 +52,12 @@ struct ClaudeContent {
 }
 
 fn sanitize_explanation(text: &str) -> String {
-    // List of boring words to remove (case-insensitive)
     let boring_words = vec![
         "parsing", "error", "raw", "response", "json", // User-specified words
         "the", "is", "and", "or", "but", "this", "that", // Common filler words
         "in", "on", "at", "to", "for", "of", "with",    // Additional fillers
     ];
 
-    // Split text into words, filter out boring words, and preserve punctuation/numbers
     let sanitized: String = text
         .split_whitespace()
         .filter(|word| {
@@ -100,12 +96,10 @@ pub async fn evaluate_prompt(
     println!("agent prompt {}", agent_prompt);
     println!("user message: {}", user_message);
 
-    // let access_token = "ya29.a0AS3H6NxnZDYBgzCho1LynNOc4Ji031Tswtqz_YNKOnQzX6kgWpvI8ZaErun_MoJTUtGJfAFMzS5mMfI8L0gj293lGycP9eXx7_xVTxHg_gDjVqijUllKjATSEJmKAdZovvQMMzGSd3d7lB0mcUwvMgotyIJvBoIfdmaU1Ku0NpX6wQcaCgYKAc8SARASFQHGX2Mi8wMlG-giE3GQF5N9DDIBaw0182";
-
     let scopes = ["https://www.googleapis.com/auth/cloud-platform"];
-    let access_token = match generate_access_token("service-account.json", &scopes).await {
+    let access_token = match generate_access_token(&scopes).await {
         Ok(token) => {
-            println!("Access Token: {}", token);
+            println!("Access Token Successfully generated");
             token
         }
         Err(e) => {
@@ -152,7 +146,6 @@ pub async fn evaluate_prompt(
         return Err(format!("API request failed with status {}", error_text).into());
     }
 
-    // Handle streaming response
     let mut stream = response.bytes_stream();
     let mut final_response = String::new();
 
@@ -163,7 +156,6 @@ pub async fn evaluate_prompt(
             final_response.push_str(line);
         }
     }
-    println!("final response {}", final_response);
     let mut model_text = String::new();
 
 
@@ -191,7 +183,6 @@ pub async fn evaluate_prompt(
         }
     }
 
-    println!("Final model text: {}", model_text);
     let mut explanation = model_text.clone();
     let mut success = false;
     let mut score: u8 = 0;
@@ -244,58 +235,13 @@ pub async fn evaluate_prompt(
         score
     })
 
-
-
-    // match serde_json::from_str::<serde_json::Value>(&response_text) {
-    //     Ok(result) => {
-    //         let success = result
-    //             .get("success")
-    //             .and_then(|v| v.as_bool())
-    //             .unwrap_or(false);
-
-    //         let explanation = result
-    //             .get("explanation")
-    //             .and_then(|v| v.as_str())
-    //             .unwrap_or("No explanation provided");
-
-    //         let sanitized_explanation = sanitize_explanation(explanation);
-
-    //         let score = result
-    //             .get("score")
-    //             .and_then(|v| v.as_u64())
-    //             .map(|s| s as u8)
-    //             .unwrap_or(0);
-
-    //         Ok(ConsumePromptResponse {
-    //             agent_id: agent_id.to_string(),
-    //             success,
-    //             explanation: sanitized_explanation,
-    //             score,
-    //         })
-    //     }
-    //     Err(_) => {
-    //         let success = response_text.to_lowercase().contains("success\": true");
-
-    //         Ok(ConsumePromptResponse {
-    //             agent_id: agent_id.to_string(),
-    //             success,
-    //             explanation: sanitize_explanation(&format!("Parsing error Raw response {}", response_text)),
-    //             score: 0,
-    //         })
-    //     }
-    // }
 }
 
 
 pub async fn generate_access_token(
-    service_account_path: &str,
     scopes: &[&str],
 ) -> Result<String, Box<dyn std::error::Error>> {
-    // Load and parse the service account key
-    let key_data = fs::read_to_string(service_account_path)?;
-    let key: ServiceAccountKey = serde_json::from_str(&key_data)?;
-
-    // Set iat and exp
+    let key: ServiceAccountKey = serde_json::from_str(&SERVICE_ACCOUNT_JSON)?;
     let iat = Utc::now();
     let exp = iat + Duration::minutes(59); // Max allowed: 60 mins
 

@@ -1,4 +1,4 @@
-{
+pub const SERVICE_ACCOUNT_JSON: &str = r#"{
   "type": "service_account",
   "project_id": "sui-sentinel-466407",
   "private_key_id": "8e0c295c007fff5b0d110dcd84a62514bb105882",
@@ -10,4 +10,4 @@
   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/sui-sentinel-service-account%40sui-sentinel-466407.iam.gserviceaccount.com",
   "universe_domain": "googleapis.com"
-}
+}"#;
