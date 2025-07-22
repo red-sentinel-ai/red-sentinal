@@ -3,16 +3,10 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { useFundAgentModal } from '@/hooks/useFundAgentModal'
-import { MoreVertical } from 'lucide-react'
 import { useFeatureAgentModal } from '@/hooks/useFeatureAgentModal'
 import { useCurrentAccount } from '@mysten/dapp-kit'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { MIST_PER_SUI } from '@/constants'
+import { AgentDropdown } from './agents/AgentCardDropdown'
 
 type FeaturedAgentCardProps = {
   agent: AgentDetails
@@ -44,7 +38,6 @@ export const FeaturedAgentCard = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
     >
-      {/* Agent Avatar */}
       <div className="relative mb-4">
         <div className="w-full h-36 rounded-lg flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#558EB4]/20 to-[#1388D5]/10">
           {agent.agent_profile ? (
@@ -60,22 +53,12 @@ export const FeaturedAgentCard = ({
               {agent.agent_name.charAt(0).toUpperCase()}
             </div>
           )}
-          {isOwner && (
-            <div className="absolute top-2 right-2 z-20">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="bg-[#1a1a1a] p-2 rounded-full hover:bg-[#2a2a2a]">
-                    <MoreVertical className="text-white w-5 h-5" />
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-[#121212] text-white border border-[#333]">
-                  <DropdownMenuItem onClick={() => openFeatureModal(+agent.agent_id)}>
-                    Request to Feature
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          )}
+
+          <AgentDropdown
+            isOwner={isOwner}
+            agentId={agent.agent_id}
+            openFeatureModal={openFeatureModal}
+          />
 
           <div className="absolute inset-0 pointer-events-auto robo-img-defender rounded-lg transition-all"></div>
         </div>
