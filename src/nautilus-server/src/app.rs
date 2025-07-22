@@ -76,8 +76,7 @@ pub async fn consume_prompt(
     let evaluation = claude::evaluate_prompt(
         &payload.agent_id,
         &agent.system_prompt,
-        &payload.message,
-        &state.api_key
+        &payload.message
     )
     .await
     .unwrap_or_else(|_| ConsumePromptResponse {
