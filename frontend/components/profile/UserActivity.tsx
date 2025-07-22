@@ -3,6 +3,7 @@ import { CheckCircle, XCircle, Trophy, Clock, User, AlertCircle } from 'lucide-r
 import { useAgentEvents } from '@/hooks/useAgentEvents'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { SUI_TESTNET_BASE_URL } from '@/constants'
+import { fromTokenUnits } from '@/lib/utils'
 
 export const UserActivity = () => {
   const { events } = useAgentEvents()
@@ -171,7 +172,7 @@ export const UserActivity = () => {
                           <div>
                             <span className="text-gray-400">Amount:</span>
                             <span className="text-green-400 ml-2">
-                              {(parseInt(event.parsedJson.amount) / 1e9).toFixed(2)} SUI
+                              {fromTokenUnits(event.parsedJson.amount)} SUI
                             </span>
                           </div>
                         )}

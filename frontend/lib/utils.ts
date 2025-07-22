@@ -165,3 +165,7 @@ export const hexToVector = (hex: string): number[] => {
   }
   return bytes
 }
+
+export const fromTokenUnits = (amount: string) => {
+  return (parseInt(amount) / 1e9).toFixed(2)
+}
