@@ -11,6 +11,7 @@ export type PromptConsumedEvent = {
   agent_response: string
   timestamp: string
   txDigest: string
+  score: number
 }
 
 export const fetchPromptConsumedEvents = async (

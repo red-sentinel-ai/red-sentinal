@@ -95,7 +95,7 @@ export default function ChatInterface({
         id: `agent-new-${Date.now()}`,
         type: 'agent',
         content: apiResponse.response.data.explanation,
-        timestamp: Date.now().toString(),
+        timestamp: new Date().toISOString(),
         isSuccess: apiResponse.response.data.success,
         score: apiResponse.response.data.score,
       }
@@ -128,7 +128,7 @@ export default function ChatInterface({
       id: `user-${Date.now()}`,
       type: 'user',
       content: promptInput,
-      timestamp: Date.now().toString(),
+      timestamp: new Date().toISOString(),
       sender: account?.address,
     }
 
