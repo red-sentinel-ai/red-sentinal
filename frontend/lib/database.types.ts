@@ -37,7 +37,7 @@ export type Database = {
             isOneToOne: false
             referencedRelation: 'aztec_nft_collections'
             referencedColumns: ['collection_id']
-          }
+          },
         ]
       }
       aztec_discord_verifications: {
@@ -222,7 +222,7 @@ export type Database = {
             isOneToOne: false
             referencedRelation: 'aztec_nft_collections'
             referencedColumns: ['collection_id']
-          }
+          },
         ]
       }
       aztec_transactions: {
@@ -308,7 +308,7 @@ export type Database = {
             isOneToOne: true
             referencedRelation: 'transaction_logs'
             referencedColumns: ['id']
-          }
+          },
         ]
       }
       global_config: {
@@ -571,7 +571,7 @@ export type Database = {
             isOneToOne: false
             referencedRelation: 'pvp_challenges'
             referencedColumns: ['id']
-          }
+          },
         ]
       }
       pvp_challenges: {
@@ -666,7 +666,7 @@ export type Database = {
             isOneToOne: false
             referencedRelation: 'places'
             referencedColumns: ['place_id']
-          }
+          },
         ]
       }
       rh_rewards_activity: {
@@ -711,7 +711,7 @@ export type Database = {
             isOneToOne: false
             referencedRelation: 'rh_users'
             referencedColumns: ['id']
-          }
+          },
         ]
       }
       rh_social_connections: {
@@ -756,7 +756,7 @@ export type Database = {
             isOneToOne: false
             referencedRelation: 'rh_users'
             referencedColumns: ['id']
-          }
+          },
         ]
       }
       rh_users: {
@@ -833,7 +833,7 @@ export type Database = {
             isOneToOne: false
             referencedRelation: 'aztec_nft_collections'
             referencedColumns: ['collection_id']
-          }
+          },
         ]
       }
       signup_emails: {
@@ -920,6 +920,176 @@ export type Database = {
           is_featured?: boolean
           object_id?: string
           owner?: string
+        }
+        Relationships: []
+      }
+      ss_feature_requests: {
+        Row: {
+          agent_id: number
+          created_at: string | null
+          description: string
+          email_id: string
+          id: string
+          name: string
+          telegram_username: string | null
+          twitter_username: string | null
+          wallet_address: string
+        }
+        Insert: {
+          agent_id: number
+          created_at?: string | null
+          description: string
+          email_id: string
+          id?: string
+          name: string
+          telegram_username?: string | null
+          twitter_username?: string | null
+          wallet_address: string
+        }
+        Update: {
+          agent_id?: number
+          created_at?: string | null
+          description?: string
+          email_id?: string
+          id?: string
+          name?: string
+          telegram_username?: string | null
+          twitter_username?: string | null
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'ss_feature_requests_agent_id_fkey'
+            columns: ['agent_id']
+            isOneToOne: false
+            referencedRelation: 'ss_agents'
+            referencedColumns: ['agent_id']
+          },
+        ]
+      }
+      ss_rewards_activity: {
+        Row: {
+          completed_at: string | null
+          id: string
+          metadata: Json | null
+          mission_type: string
+          points_earned: number
+          transaction_hash: string | null
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          id?: string
+          metadata?: Json | null
+          mission_type: string
+          points_earned: number
+          transaction_hash?: string | null
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          id?: string
+          metadata?: Json | null
+          mission_type?: string
+          points_earned?: number
+          transaction_hash?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'ss_rewards_activity_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'ss_rewards_leaderboard'
+            referencedColumns: ['user_id']
+          },
+          {
+            foreignKeyName: 'ss_rewards_activity_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'ss_users'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      ss_social_connections: {
+        Row: {
+          connected_at: string | null
+          id: string
+          platform: string
+          platform_avatar_url: string | null
+          platform_user_id: string
+          platform_username: string
+          user_id: string | null
+        }
+        Insert: {
+          connected_at?: string | null
+          id?: string
+          platform: string
+          platform_avatar_url?: string | null
+          platform_user_id: string
+          platform_username: string
+          user_id?: string | null
+        }
+        Update: {
+          connected_at?: string | null
+          id?: string
+          platform?: string
+          platform_avatar_url?: string | null
+          platform_user_id?: string
+          platform_username?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'ss_social_connections_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'ss_rewards_leaderboard'
+            referencedColumns: ['user_id']
+          },
+          {
+            foreignKeyName: 'ss_social_connections_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'ss_users'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      ss_users: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          id: string
+          lifetime_points: number | null
+          rewards_tier: string | null
+          rewards_updated_at: string | null
+          total_points: number | null
+          username: string | null
+          wallet_addresses: string[] | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          id?: string
+          lifetime_points?: number | null
+          rewards_tier?: string | null
+          rewards_updated_at?: string | null
+          total_points?: number | null
+          username?: string | null
+          wallet_addresses?: string[] | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          id?: string
+          lifetime_points?: number | null
+          rewards_tier?: string | null
+          rewards_updated_at?: string | null
+          total_points?: number | null
+          username?: string | null
+          wallet_addresses?: string[] | null
         }
         Relationships: []
       }
@@ -1201,6 +1371,24 @@ export type Database = {
         }
         Relationships: []
       }
+      ss_rewards_leaderboard: {
+        Row: {
+          avatar_url: string | null
+          discord_avatar: string | null
+          discord_user_id: string | null
+          discord_username: string | null
+          lifetime_points: number | null
+          rank: number | null
+          tier: string | null
+          total_points: number | null
+          twitter_avatar: string | null
+          twitter_user_id: string | null
+          twitter_username: string | null
+          user_id: string | null
+          username: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       increment_nonce_counter: {
@@ -1241,7 +1429,7 @@ export type Tables<
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])
-    : never = never
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -1252,12 +1440,12 @@ export type Tables<
     ? R
     : never
   : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
-  ? (DefaultSchema['Tables'] & DefaultSchema['Views'])[DefaultSchemaTableNameOrOptions] extends {
-      Row: infer R
-    }
-    ? R
+    ? (DefaultSchema['Tables'] & DefaultSchema['Views'])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
     : never
-  : never
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
@@ -1267,7 +1455,7 @@ export type TablesInsert<
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
-    : never = never
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -1277,12 +1465,12 @@ export type TablesInsert<
     ? I
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
-  ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
-      Insert: infer I
-    }
-    ? I
+    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
     : never
-  : never
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
@@ -1292,7 +1480,7 @@ export type TablesUpdate<
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
-    : never = never
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -1302,12 +1490,12 @@ export type TablesUpdate<
     ? U
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
-  ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
-      Update: infer U
-    }
-    ? U
+    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
     : never
-  : never
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
@@ -1317,14 +1505,14 @@ export type Enums<
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
-    : never = never
+    : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums'][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema['Enums']
-  ? DefaultSchema['Enums'][DefaultSchemaEnumNameOrOptions]
-  : never
+    ? DefaultSchema['Enums'][DefaultSchemaEnumNameOrOptions]
+    : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
@@ -1334,14 +1522,14 @@ export type CompositeTypes<
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
-    : never = never
+    : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema['CompositeTypes']
-  ? DefaultSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
-  : never
+    ? DefaultSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
+    : never
 
 export const Constants = {
   public: {
