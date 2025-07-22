@@ -125,7 +125,7 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
                 {message.type === 'agent' && message.score !== undefined && (
                   <span className="font-medium">Score: {message.score}/100</span>
                 )}
-                {formatDistanceToNow(new Date(Number.parseInt(message.timestamp)))} ago
+                {formatDistanceToNow(message.timestamp)} ago
               </div>
             </div>
           </div>
