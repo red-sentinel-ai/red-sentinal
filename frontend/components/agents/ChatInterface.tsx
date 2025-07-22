@@ -2,18 +2,20 @@
 
 import type React from 'react'
 import { useState, useRef, useEffect } from 'react'
+import Link from 'next/link'
 import Image from 'next/image'
 import clsx from 'clsx'
 import { Loader2, AlertCircle, ChevronDown, ChevronUp, Send } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ConnectModal, useCurrentAccount } from '@mysten/dapp-kit'
 import { AgentInfo } from '@/components/AgentInfo'
-import { ATTACK_PROMPT_MAX_TOKENS, DEFAULT_PROFILE_URL } from '@/constants'
+import { ATTACK_PROMPT_MAX_TOKENS, DEFAULT_PROFILE_URL, EXPLORER_BASE_URL } from '@/constants'
 import type { ConsumePromptApiResponse } from '@/types'
 import { PromptConsumedEvent } from '@/hooks/events/usePromptConsumedEvents'
 import type { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { ChatMessage } from './ChatMessage'
 import { useTokenCount } from '@/hooks/useTokenCount'
+import { fromTokenUnits, truncateAddress } from '@/lib/utils'
 
 export interface ChatMessage {
   id: string
@@ -270,16 +272,40 @@ export default function ChatInterface({
       </div>
 
       {isAgentDrained ? (
-        <div className="bg-gradient-to-r from-[#12121266] flex items-center justify-center min-h-[170px] to-[#1a1a1a66] backdrop-blur-xl border-t border-[#2E40494D] p-3 sm:p-6 shadow-2xl">
-          <div className="text-center">
-            <h3 className="text-xl sm:text-2xl font-bold text-red-400 mb-2">
-              This Sentinel is Drained
-            </h3>
-            <p className="text-sm sm:text-base text-gray-400">
-              The sentinel is defeated successfully and is no longer active.
-            </p>
-          </div>
-        </div>
+        (() => {
+          const winningEvent = [...promptConsumedEvents].reverse().find((event) => event.success)
+
+          return (
+            <div className="bg-gradient-to-r from-[#12121266] flex items-center justify-center to-[#1a1a1a66] backdrop-blur-xl border-t border-[#2E40494D] p-3 sm:p-6 shadow-2xl">
+              <div className="text-center">
+                <h3 className="text-xl sm:text-2xl font-bold text-red-400 mb-2">
+                  Sentinel Defeated
+                </h3>
+                {winningEvent ? (
+                  <>
+                    <p className="text-sm sm:text-base text-gray-300">
+                      <span className="font-semibold">Winner:</span>{' '}
+                      <Link
+                        href={`${EXPLORER_BASE_URL}/account/${winningEvent?.sender}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline text-blue-400 break-all"
+                      >
+                        {truncateAddress(winningEvent?.sender)}
+                      </Link>
+                    </p>
+                    <p className="text-sm sm:text-base text-gray-300 mt-1">
+                      <span className="font-semibold">Amount Won:</span>{' '}
+                      {fromTokenUnits(winningEvent.amount)}
+                    </p>
+                  </>
+                ) : (
+                  <p className="text-sm text-gray-400">Winner details not available.</p>
+                )}
+              </div>
+            </div>
+          )
+        })()
       ) : (
         <div className="bg-gradient-to-r from-[#12121266] min-h-[138px] to-[#1a1a1a66] backdrop-blur-xl p-2 shadow-2xl">
           <form
