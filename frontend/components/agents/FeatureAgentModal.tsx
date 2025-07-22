@@ -2,11 +2,13 @@
 
 import type React from 'react'
 import { useState } from 'react'
+import Link from 'next/link'
 import { Dialog } from '@/components/Dialog'
-import { X, Loader2, User, Mail, MessageSquare } from 'lucide-react'
+import { X, Loader2, User, Mail, MessageSquare, BookOpen } from 'lucide-react'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { useRequestFeatureAgent } from '@/hooks/agents/useRequestFeatureAgent'
 import Image from 'next/image'
+import { SUI_SENTINEL_DOCS_URL } from '@/constants'
 
 export interface FeatureAgentModalProps {
   open: boolean
@@ -77,6 +79,17 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
               <p className="text-xs text-gray-400">
                 Please share a few details so we can consider your agent for featuring.
               </p>
+              <div className="mt-2">
+                <Link
+                  href={`${SUI_SENTINEL_DOCS_URL}/agents/how-to-feature-your-agent#best-practices-before-requesting`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-[#558EB4] hover:text-[#1388D5] transition-colors flex items-center gap-1 underline"
+                >
+                  <BookOpen className="size-3" />
+                  View best practices
+                </Link>
+              </div>
             </div>
           </div>
           <button
