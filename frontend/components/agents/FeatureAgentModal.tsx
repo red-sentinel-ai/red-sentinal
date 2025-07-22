@@ -54,7 +54,12 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
 
   const handleSubmit = async () => {
     if (!form.name || !form.email || !form.description || !address) {
-      setError('Name, email, description are required.')
+      setError('Name, email, and description are required.')
+      return
+    }
+
+    if (!isValidEmail(form.email)) {
+      setError('Please enter a valid email address.')
       return
     }
 
@@ -271,4 +276,8 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
       )}
     </Dialog>
   )
+}
+
+const isValidEmail = (email: string) => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
