@@ -15,7 +15,13 @@ export interface FeatureAgentModalProps {
 }
 
 export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalProps) => {
-  const [form, setForm] = useState({ name: '', email: '', description: '' })
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    description: '',
+    telegram_username: '',
+    twitter_username: '',
+  })
   const [error, setError] = useState('')
   const account = useCurrentAccount()
   const address = account?.address
@@ -29,7 +35,7 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
 
   const handleSubmit = async () => {
     if (!form.name || !form.email || !form.description || !address) {
-      setError('All fields are required and wallet must be connected.')
+      setError('Name, email, description are required.')
       return
     }
 
@@ -40,10 +46,11 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
         wallet_address: address,
         description: form.description,
         agent_id: agentId,
+        telegram_username: form.telegram_username || undefined,
+        twitter_username: form.twitter_username || undefined,
       })
-
       onClose()
-      setForm({ name: '', email: '', description: '' })
+      setForm({ name: '', email: '', description: '', twitter_username: '', telegram_username: '' })
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message)
@@ -58,7 +65,7 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
     >
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <Image
               src="/icons/check-mark.svg"
               width={32}
@@ -86,7 +93,7 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
               <User className="size-4" />
-              Your Name
+              Your Name <span className="text-red-400">*</span>
             </label>
             <input
               name="name"
@@ -100,7 +107,7 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
               <Mail className="size-4" />
-              Email Address
+              Email Address <span className="text-red-400">*</span>
             </label>
             <input
               name="email"
@@ -112,16 +119,70 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
             />
           </div>
 
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+                <Image
+                  src="/icons/x.png"
+                  alt="X (Twitter)"
+                  width={16}
+                  height={16}
+                  className="transition-transform duration-300"
+                />
+                Twitter Username
+              </label>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500">
+                  @
+                </span>
+                <input
+                  name="twitter_username"
+                  type="text"
+                  value={form.twitter_username}
+                  onChange={handleChange}
+                  placeholder="username"
+                  className="w-full pl-8 pr-4 py-4 bg-[#1a1b1f] border border-[#558eb466] rounded-xl text-white placeholder-gray-500 focus:border-[#558EB4] focus:outline-none transition-colors"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+                <Image
+                  src="/icons/telegram.png"
+                  alt="Telegram"
+                  width={16}
+                  height={16}
+                  className="transition-transform duration-300"
+                />
+                Telegram Username
+              </label>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500">
+                  @
+                </span>
+                <input
+                  name="telegram_username"
+                  type="text"
+                  value={form.telegram_username}
+                  onChange={handleChange}
+                  placeholder="username"
+                  className="w-full pl-8 pr-4 py-4 bg-[#1a1b1f] border border-[#558eb466] rounded-xl text-white placeholder-gray-500 focus:border-[#558EB4] focus:outline-none transition-colors"
+                />
+              </div>
+            </div>
+          </div>
+
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
               <MessageSquare className="size-4" />
-              Any notes you wish to provide
+              Any notes you wish to provide <span className="text-red-400">*</span>
             </label>
             <textarea
               name="description"
               value={form.description}
               onChange={handleChange}
-              placeholder="Write here..."
+              placeholder="Tell us why this agent should be featured, what makes it special, or any other relevant information..."
               rows={4}
               className="w-full p-4 bg-[#1a1b1f] border border-[#558eb466] rounded-xl text-white placeholder-gray-500 focus:border-[#558EB4] focus:outline-none transition-colors resize-none"
             />
@@ -129,14 +190,18 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
         </div>
 
         {error && (
-          <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-3">
-            <p className="text-sm text-red-400">{error}</p>
+          <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4">
+            <p className="text-sm text-red-400 flex items-center gap-2">
+              <X className="size-4" />
+              {error}
+            </p>
           </div>
         )}
 
         {!address && (
-          <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-3">
-            <p className="text-sm text-yellow-400">
+          <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4">
+            <p className="text-sm text-yellow-400 flex items-center gap-2">
+              <MessageSquare className="size-4" />
               Please connect your wallet to submit a feature request.
             </p>
           </div>

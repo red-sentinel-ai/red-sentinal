@@ -6,6 +6,8 @@ type RequestPayload = {
   wallet_address: string
   description: string
   agent_id: number
+  telegram_username?: string
+  twitter_username?: string
 }
 
 export function useRequestFeatureAgent() {
