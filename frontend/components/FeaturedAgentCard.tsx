@@ -1,9 +1,18 @@
 import { useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
-import { MIST_PER_SUI } from '@/constants'
-import { AgentDetails } from '@/hooks/agents/useAllAgents'
 import Image from 'next/image'
+import { motion } from 'framer-motion'
+import { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { useFundAgentModal } from '@/hooks/useFundAgentModal'
+import { MoreVertical } from 'lucide-react'
+import { useFeatureAgentModal } from '@/hooks/useFeatureAgentModal'
+import { useCurrentAccount } from '@mysten/dapp-kit'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { MIST_PER_SUI } from '@/constants'
 
 type FeaturedAgentCardProps = {
   agent: AgentDetails
@@ -20,6 +29,9 @@ export const FeaturedAgentCard = ({
 }: FeaturedAgentCardProps) => {
   const { Modal, openModal } = useFundAgentModal()
   const router = useRouter()
+  const account = useCurrentAccount()
+  const { Modal: FeatureModal, openModal: openFeatureModal } = useFeatureAgentModal()
+  const isOwner = account?.address === agent.owner
 
   const handleAttack = () => {
     router.push(`/attack/${agent.object_id}`)
@@ -48,6 +60,23 @@ export const FeaturedAgentCard = ({
               {agent.agent_name.charAt(0).toUpperCase()}
             </div>
           )}
+          {isOwner && (
+            <div className="absolute top-2 right-2 z-20">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="bg-[#1a1a1a] p-2 rounded-full hover:bg-[#2a2a2a]">
+                    <MoreVertical className="text-white w-5 h-5" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="bg-[#121212] text-white border border-[#333]">
+                  <DropdownMenuItem onClick={() => openFeatureModal(+agent.agent_id)}>
+                    Request to Feature
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          )}
+
           <div className="absolute inset-0 pointer-events-auto robo-img-defender rounded-lg transition-all"></div>
         </div>
       </div>
@@ -107,6 +136,7 @@ export const FeaturedAgentCard = ({
       </div>
 
       <Modal onSuccess={() => console.log('Funded successfully!')} />
+      <FeatureModal />
     </motion.div>
   )
 }
