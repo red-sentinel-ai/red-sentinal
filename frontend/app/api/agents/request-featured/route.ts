@@ -4,7 +4,15 @@ import { supabaseServiceClient } from '@/db/config/server'
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { name, email_id, wallet_address, description, agent_id } = body
+    const {
+      name,
+      email_id,
+      wallet_address,
+      description,
+      agent_id,
+      telegram_username,
+      twitter_username,
+    } = body
 
     if (!name || !email_id || !wallet_address || !description || !agent_id) {
       return NextResponse.json({ error: 'Missing fields' }, { status: 400 })
@@ -17,6 +25,8 @@ export async function POST(req: NextRequest) {
         wallet_address,
         description,
         agent_id,
+        telegram_username,
+        twitter_username,
       },
     ])
 

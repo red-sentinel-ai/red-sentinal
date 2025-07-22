@@ -931,6 +931,8 @@ export type Database = {
           email_id: string
           id: string
           name: string
+          telegram_username: string | null
+          twitter_username: string | null
           wallet_address: string
         }
         Insert: {
@@ -940,6 +942,8 @@ export type Database = {
           email_id: string
           id?: string
           name: string
+          telegram_username?: string | null
+          twitter_username?: string | null
           wallet_address: string
         }
         Update: {
@@ -949,6 +953,8 @@ export type Database = {
           email_id?: string
           id?: string
           name?: string
+          telegram_username?: string | null
+          twitter_username?: string | null
           wallet_address?: string
         }
         Relationships: [
