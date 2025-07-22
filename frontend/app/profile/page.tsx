@@ -81,13 +81,6 @@ export default function ProfilePage() {
             value={PROFILE_TABS.ACTIVITY}
             className="mt-6"
           >
-            <div className="mb-6">
-              <h2 className="text-xl font-semibold mb-2">Trading Activity</h2>
-              <p className="text-gray-400">
-                Track your NFT transactions and marketplace activities
-              </p>
-            </div>
-
             <UserActivity />
           </TabsContent>
         </Tabs>
