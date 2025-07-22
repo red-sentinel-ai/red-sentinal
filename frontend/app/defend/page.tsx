@@ -12,7 +12,12 @@ import {
   useSignAndExecuteTransaction,
   useSuiClient,
 } from '@mysten/dapp-kit'
-import { MIST_PER_SUI, SUI_CONFIG, SYSTEM_PROMPT_MAX_TOKENS } from '@/constants'
+import {
+  MIST_PER_SUI,
+  SUI_CONFIG,
+  SUI_SENTINEL_DOCS_URL,
+  SYSTEM_PROMPT_MAX_TOKENS,
+} from '@/constants'
 import { hexToVector } from '@/lib/utils'
 import { registerAgentUtil } from './utils'
 import { useAgentObjectNames } from '@/hooks/useAgentObjectNames'
@@ -303,13 +308,22 @@ export default function DefendPage() {
         />
 
         <div>
-          <label className="block text-sm font-medium mb-2">System Instructions</label>
+          <div className="flex justify-between mb-2">
+            <label className="block text-sm font-medium ">Sentinel Instructions</label>
+            <Link
+              href={`${SUI_SENTINEL_DOCS_URL}/guides/defender-guide`}
+              target="_blank"
+              className="underline text-xs"
+            >
+              How to create good instructions?
+            </Link>
+          </div>
           <textarea
             name="systemPrompt"
             value={formData.systemPrompt}
             onChange={handleChange}
             className="w-full bg-[#12121266] backdrop-blur-lg border border-gray-600 rounded-lg p-3 min-h-[200px]"
-            placeholder="Enter system instructions..."
+            placeholder="Enter sentinel instructions..."
             required
           />
           <p
