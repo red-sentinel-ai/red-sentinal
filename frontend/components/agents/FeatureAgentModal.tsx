@@ -182,7 +182,7 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
               name="description"
               value={form.description}
               onChange={handleChange}
-              placeholder="Tell us why this agent should be featured, what makes it special, or any other relevant information..."
+              placeholder="Write here..."
               rows={3}
               className="w-full px-3 py-2 text-sm bg-[#1a1b1f] border border-[#558eb466] rounded-lg text-white placeholder-gray-500 focus:border-[#558EB4] focus:outline-none transition-colors resize-none"
             />
