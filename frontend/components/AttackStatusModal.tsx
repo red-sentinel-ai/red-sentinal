@@ -46,10 +46,6 @@ export const AttackStatusModal = ({
         </button>
 
         <div className="text-center">
-          <div className="flex justify-center mb-6">
-            {success ? <span className="text-6xl">🙌</span> : <span className="text-6xl">💔</span>}
-          </div>
-
           <h2 className="text-3xl font-bold mb-3">
             {success ? (
               <span className="bg-gradient-to-r from-[#558EB4] to-[#1388D5] bg-clip-text text-transparent">
