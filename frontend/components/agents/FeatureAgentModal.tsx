@@ -1,7 +1,7 @@
 'use client'
 
 import type React from 'react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Dialog } from '@/components/Dialog'
 import { X, Loader2, User, Mail, MessageSquare, BookOpen } from 'lucide-react'
@@ -12,6 +12,7 @@ import { SUI_SENTINEL_DOCS_URL } from '@/constants'
 import { useHasRequestedFeature } from '@/hooks/agents/useHasRequestedFeature'
 import { LoadingSkeleton } from './FeatureRequestFormSkeleton'
 import { AlreadyRequestedState } from './AlreadyRequestedState'
+import { FeatureRequestSuccessState } from './FeatureRequestSuccessState'
 
 export interface FeatureAgentModalProps {
   open: boolean
@@ -28,13 +29,21 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
     twitter_username: '',
   })
   const [error, setError] = useState('')
+  const [showSuccessState, setShowSuccessState] = useState(false)
   const account = useCurrentAccount()
   const address = account?.address
 
-  const { data: hasRequested, isLoading: isCheckingRequest } = useHasRequestedFeature(
-    agentId,
-    address || null
-  )
+  const {
+    data: hasRequested,
+    isLoading: isCheckingRequest,
+    refetch,
+  } = useHasRequestedFeature(agentId, address || null)
+
+  useEffect(() => {
+    if (open && !isCheckingRequest) {
+      refetch()
+    }
+  }, [isCheckingRequest, open, refetch])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -59,24 +68,33 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
         telegram_username: form.telegram_username || undefined,
         twitter_username: form.twitter_username || undefined,
       })
-      onClose()
+
+      setShowSuccessState(true)
       setForm({ name: '', email: '', description: '', twitter_username: '', telegram_username: '' })
+      setError('')
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message)
     }
   }
 
+  const handleClose = () => {
+    setShowSuccessState(false)
+    onClose()
+  }
+
   return (
     <Dialog
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
       className="bg-[#12121266] backdrop-blur-xl border border-[#383838] rounded-2xl p-6 max-w-lg w-full shadow-2xl"
     >
       {isCheckingRequest ? (
         <LoadingSkeleton />
       ) : hasRequested ? (
-        <AlreadyRequestedState />
+        <AlreadyRequestedState onClose={handleClose} />
+      ) : showSuccessState ? (
+        <FeatureRequestSuccessState onClose={handleClose} />
       ) : (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
@@ -106,7 +124,7 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
               </div>
             </div>
             <button
-              onClick={onClose}
+              onClick={handleClose}
               disabled={isPending}
               className="text-gray-400 hover:text-white transition-colors p-1"
               aria-label="Close modal"
