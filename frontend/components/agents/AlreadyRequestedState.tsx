@@ -1,23 +1,18 @@
-export const AlreadyRequestedState = () => (
-  <div className="min-h-[300px] flex flex-col items-center justify-center text-center space-y-6">
-    <div className="space-y-2">
-      <h3 className="text-xl font-bold text-white">Request Already Submitted!</h3>
-      <p className="text-sm text-gray-400 max-w-sm">
-        You have already requested to feature this agent. Our team will review your submission and
-        get back to you soon.
-      </p>
-    </div>
+export const AlreadyRequestedState = ({ onClose }: { onClose: () => void }) => (
+  <div className="min-h-[300px] flex flex-col items-center justify-between text-center space-y-12 py-8">
+    <h3 className="text-2xl font-bold bg-gradient-to-r from-[#558EB4] to-[#1388D5] bg-clip-text text-transparent">
+      Request Already Submitted!
+    </h3>
+    <p className="text-sm text-gray-400 max-w-sm leading-relaxed">
+      You have already requested to feature this agent. Our team will review your submission and get
+      back to you soon.
+    </p>
 
-    {/* <div className="pt-4">
-      <Link
-        href={`${SUI_SENTINEL_DOCS_URL}/agents/feature-request-status`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-xs text-[#558EB4] hover:text-[#1388D5] transition-colors flex items-center gap-1 underline"
-      >
-        <BookOpen className="size-3" />
-        Learn more about the review process
-      </Link>
-    </div> */}
+    <button
+      onClick={onClose}
+      className="w-full bg-gradient-to-r mt-auto from-[#558EB4] to-[#1388D5] hover:from-[#1388D5] hover:to-[#558EB4] text-white rounded-full py-3 text-sm font-bold transition-all duration-300 shadow-lg hover:shadow-glow-blue"
+    >
+      Close
+    </button>
   </div>
 )
