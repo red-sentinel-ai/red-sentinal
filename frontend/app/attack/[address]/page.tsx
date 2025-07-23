@@ -2,7 +2,7 @@
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import { Loader2, ChevronLeft } from 'lucide-react'
+import { ChevronLeft } from 'lucide-react'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 
 import { useConsumePrompt } from '@/hooks/useConsumePrompt'
@@ -11,6 +11,7 @@ import type { ConsumePromptApiResponse } from '@/types'
 import { AgentEvents, useAgentEvents } from '@/hooks/useAgentEvents'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
 import ChatInterface from '@/components/agents/ChatInterface'
+import RiveLoader from '@/components/rive/Loader'
 
 export default function AgentChallengePage() {
   const params = useParams()
@@ -79,8 +80,8 @@ export default function AgentChallengePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
-        <Loader2 className="w-8 h-8 animate-spin text-[#B8B8B8]" />
+      <div className="min-h-screen flex items-center justify-center">
+        <RiveLoader />
       </div>
     )
   }
