@@ -25,7 +25,7 @@
   p,
   button,
   .header-menu-items {
-    font-family: var(--font-inter);
+    font-family: var(--font-dm-sans);
   }
 
    html {
@@ -37,7 +37,7 @@
   h1,
   h2,
   h3 {
-    font-family: var(--font-inter);
+    font-family: var(--font-ibm-plex-mono);
   }
 }
 
