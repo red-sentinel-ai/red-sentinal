@@ -19,7 +19,7 @@
   p,
   button,
   .header-menu-items {
-    font-family: var(--font-dm-sans);
+    font-family: var(--font-inter);
   }
 
    html {
@@ -31,7 +31,7 @@
   h1,
   h2,
   h3 {
-    font-family: var(--font-ibm-plex-mono);
+    font-family: var(--font-inter);
   }
 }
 
@@ -58,7 +58,7 @@ html {
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter);
 }
 
 html body[data-scroll-locked] {

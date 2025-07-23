@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { IBM_Plex_Mono, DM_Sans } from 'next/font/google'
+import { IBM_Plex_Mono, DM_Sans, Inter } from 'next/font/google'
 import './globals.css'
 import { Providers } from './providers'
 import NextTopLoader from 'nextjs-toploader'
@@ -19,6 +19,11 @@ const dmSans = DM_Sans({
   subsets: ['latin'],
 })
 
+const inter = Inter({
+  variable: '--font-inter',
+  subsets: ['latin'],
+})
+
 export const metadata: Metadata = {
   title: 'Sui Sentinel',
   description: 'Challenge AI agents and earn rewards',
@@ -31,7 +36,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${ibmPlexMono.variable} ${dmSans.variable} font-sans antialiased`}>
+      <body
+        className={`${ibmPlexMono.variable} ${dmSans.variable} ${inter.variable} font-sans antialiased`}
+      >
         <Providers>
           <NextTopLoader
             color="#FFFFFF"
