@@ -18,7 +18,7 @@ export const LandingPage = () => {
             alt="smoke"
             width={800}
             height={600}
-            className="absolute left-[140px] top-8"
+            className="absolute -z-10 left-[140px] top-8"
           />
         </div>
 
@@ -28,7 +28,7 @@ export const LandingPage = () => {
             alt="smoke"
             width={800}
             height={600}
-            className="absolute right-[140px] rotate-y-180"
+            className="absolute -z-10 right-[140px] rotate-y-180"
           />
         </div>
 
