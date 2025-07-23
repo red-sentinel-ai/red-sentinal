@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 
 import { MenuItems } from './MenuItems'
-import { MenuIcon, Plus } from 'lucide-react'
+import { BookOpen, MenuIcon, Plus } from 'lucide-react'
 import Link from 'next/link'
 import { ConnectButton } from './ConnectButton'
 import { SUI_SENTINEL_DOCS_URL } from '@/constants'
@@ -54,11 +54,12 @@ export const Header = () => {
             </div>
           </Link>
           <Link
-            className="block ml-1 xl:ml-4 flex-shrink-0"
+            className="flex items-center gap-[6px] ml-1 xl:ml-4 flex-shrink-0 "
             target="_blank"
             href={SUI_SENTINEL_DOCS_URL}
           >
-            Read Docs
+            <BookOpen width={16} />
+            <span>Documentation</span>
           </Link>
           <div className="hidden xl:block">
             <MenuItems menuOpen={menuOpen} />
