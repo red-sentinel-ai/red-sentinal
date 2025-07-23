@@ -12,6 +12,7 @@ export async function POST(req: NextRequest) {
   const owner = formData.get('owner') as string
   const digest = formData.get('digest')
   const imageFile = formData.get('image') as File | null
+  const imageUrlString = formData.get('image_url') as string | null
 
   if (!agent_id || !agent_name || !object_id || !owner) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -19,7 +20,7 @@ export async function POST(req: NextRequest) {
 
   let imageUrl: string | null = null
 
-  if (imageFile) {
+  if (imageFile && imageFile.name) {
     const arrayBuffer = await imageFile.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
 
@@ -46,6 +47,8 @@ export async function POST(req: NextRequest) {
       .getPublicUrl(filePath)
 
     imageUrl = urlData.publicUrl
+  } else if (imageUrlString) {
+    imageUrl = imageUrlString
   }
 
   const agent_id_number = Number(agent_id)
