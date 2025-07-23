@@ -2,7 +2,8 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
-import { ChevronLeft, Loader2 } from 'lucide-react'
+import Image from 'next/image'
+import { CameraIcon, ChevronLeft, Loader2 } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { Transaction } from '@mysten/sui/transactions'
 import { SuiTransactionBlockResponse } from '@mysten/sui/client'
@@ -25,6 +26,7 @@ import { FundAgentModal } from '@/components/FundAgentModal'
 import { SuccessModal } from '@/components/DefenderSuccessModal'
 import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
 import { useTokenCount } from '@/hooks/useTokenCount'
+import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 
 interface FormData {
   agentName: string
@@ -83,6 +85,12 @@ export default function DefendPage() {
   const { mutate: createAgent } = useCreateAgent()
   const [agentImage, setAgentImage] = useState<File | null>(null)
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
+  const [imagePickerOpen, setImagePickerOpen] = useState(false)
+  const [selectedImage, setSelectedImage] = useState<{
+    url: string
+    isCustom: boolean
+    file?: File | null
+  } | null>(null)
 
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction({
     execute: async ({ bytes, signature }) =>
@@ -208,6 +216,8 @@ export default function DefendPage() {
 
       if (agentImage) {
         payload.append('image', agentImage)
+      } else if (selectedImage?.url && !selectedImage.isCustom) {
+        payload.append('image_url', selectedImage.url)
       }
 
       createAgent(payload)
@@ -295,7 +305,49 @@ export default function DefendPage() {
           <span>Home</span>
         </Link>
 
-        <h1 className="text-4xl font-bold">Deploy Sentinel</h1>
+        <div className="flex items-center gap-4 justify-between">
+          <h1 className="text-4xl font-bold">Deploy Sentinel</h1>
+          <div className="flex flex-col items-center justify-center gap-1">
+            <div
+              className="relative w-20 h-20 rounded-full border border-gray-600 overflow-hidden cursor-pointer transition-colors text-gray-400 hover:text-gray-300 group flex items-center justify-center"
+              onClick={() => setImagePickerOpen(true)}
+            >
+              {selectedImage?.url ? (
+                <>
+                  <Image
+                    src={selectedImage.url}
+                    alt="Selected"
+                    width={56}
+                    height={56}
+                    className="w-full h-full object-cover z-10 relative"
+                  />
+                </>
+              ) : (
+                ''
+              )}
+              <div className="w-full h-full absolute inset-0 bg-black/50 z-10 opacity-0 group-hover:opacity-100"></div>
+
+              <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 group-hover:z-10 z-0">
+                <CameraIcon />
+              </span>
+            </div>
+            <p className="text-xs text-gray-500 text-center">Choose Sentinel Image</p>
+          </div>
+        </div>
+
+        <ImagePickerSheet
+          open={imagePickerOpen}
+          onClose={() => setImagePickerOpen(false)}
+          onSelectImage={(img) => {
+            setSelectedImage(img)
+            setImagePickerOpen(false)
+            if (img.isCustom) {
+              setAgentImage(img.file ?? null)
+            } else {
+              setAgentImage(null)
+            }
+          }}
+        />
 
         <FormInput
           label="Sentinel Name"
@@ -351,19 +403,6 @@ export default function DefendPage() {
           placeholder="0.00"
           required
         />
-
-        <div>
-          <label className="block text-sm font-medium mb-2">Sentinel Image</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => {
-              const file = e.target.files?.[0] || null
-              setAgentImage(file)
-            }}
-            className="block w-full text-sm text-gray-300 file:bg-gray-700 file:border-0 file:rounded-md file:px-4 file:py-2 file:text-white"
-          />
-        </div>
 
         {account?.address ? (
           <button
