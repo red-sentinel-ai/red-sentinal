@@ -39,7 +39,7 @@ export const FeaturedAgentCard = ({
       transition={{ duration: 0.4, delay: index * 0.1 }}
     >
       <div className="relative mb-4">
-        <div className="w-full h-36 rounded-lg flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#558EB4]/20 to-[#1388D5]/10">
+        <div className="w-full h-52 rounded-lg flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#558EB4]/20 to-[#1388D5]/10">
           {agent.agent_profile ? (
             <Image
               src={agent.agent_profile || '/placeholder.svg'}
@@ -76,7 +76,6 @@ export const FeaturedAgentCard = ({
             />
           )}
         </div>
-        <p className="text-xs text-[#B5B5B5] mb-3">Agent ID: {agent.agent_id}</p>
         <div className="flex max-w-[394px] mx-auto mb-3">
           <div className="gradient-border blue"></div>
           <div className="gradient-border blue rotate-180"></div>
@@ -91,9 +90,6 @@ export const FeaturedAgentCard = ({
         <div className="flex justify-between items-center text-sm">
           <span className="text-[#B5B5B5]">Attack Cost:</span>
           <span className="text-[#558EB4] font-medium">{formatCost(agent.cost_per_message)}</span>
-        </div>
-        <div className="text-xs text-[#B5B5B5] bg-[#1a1a1a] rounded p-2 max-h-16 overflow-hidden">
-          <p className="line-clamp-3">{agent.system_prompt}</p>
         </div>
       </div>
 

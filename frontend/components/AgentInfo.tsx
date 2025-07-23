@@ -43,7 +43,7 @@ export const AgentInfo = ({
             <p className="text-xs font-medium text-gray-300 mb-1">Total Bounty</p>
             <p className="text-lg font-bold text-white">
               {isDrained ? drainAmountFormatted : prizePool}{' '}
-              <span className="text-sm font-medium text-[#558EB4]">{symbol}</span>
+              <span className="text-sm font-medium">{symbol}</span>
             </p>
           </div>
         </div>
@@ -51,14 +51,14 @@ export const AgentInfo = ({
         <div className="w-px h-12 bg-gradient-to-b from-transparent via-gray-500 to-transparent"></div>
 
         <div className="flex items-center gap-3 flex-1">
-          <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-md">
+          <div className="w-10 h-10 bg-gradient-to-r from-text to-primary_pink rounded-full flex items-center justify-center shadow-md">
             <Zap className="w-5 h-5 text-white" />
           </div>
           <div className="flex-1">
             <p className="text-xs font-medium text-gray-300 mb-1">Attack Fee</p>
             <p className="text-lg font-bold text-white flex items-center gap-1">
               <span>{messagePrice}</span>
-              <span className="text-sm font-medium text-orange-400">{symbol}</span>
+              <span className="text-sm font-medium">{symbol}</span>
             </p>
           </div>
         </div>
