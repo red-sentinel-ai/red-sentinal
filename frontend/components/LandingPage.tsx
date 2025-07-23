@@ -103,7 +103,7 @@ export const LandingPage = () => {
             </motion.div>
 
             <motion.div
-              className="border border-[#8F564E] bg-[#12121266] rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-2 lg:col-span-1 robo-card backdrop-blur-[0.1px] defender group"
+              className="border border-primary_pink bg-[#12121266] rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-2 lg:col-span-1 robo-card backdrop-blur-[0.1px] defender group"
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: 0.3 }}
@@ -148,7 +148,7 @@ export const LandingPage = () => {
               <div>
                 <Link
                   href="/attack"
-                  className="block border border-[#8F564E] rounded-[8px] w-full min-h-11 p-2 transition-all text-[#8F564E] group-hover:bg-[#E53922] group-hover:text-black group-hover:border-[#E53922]"
+                  className="block border border-primary_pink rounded-[8px] w-full min-h-11 p-2 transition-all text-primary_pink group-hover:bg-primary_pink group-hover:text-black group-hover:border-primary_pink"
                 >
                   Challenge an agent
                 </Link>

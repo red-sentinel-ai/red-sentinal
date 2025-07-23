@@ -12,6 +12,8 @@ export default {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
         text: 'var(--text)',
+        primary_pink: 'var(--primary_pink)',
+        primary_pink_light: 'var(--primary_pink_light)',
       },
       animation: {
         marquee: 'marquee 25s linear infinite',
