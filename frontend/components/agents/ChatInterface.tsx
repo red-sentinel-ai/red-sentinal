@@ -273,7 +273,7 @@ export default function ChatInterface({
       {isAgentDrained ? (
         <div className="bg-gradient-to-r from-[#12121266] flex items-center justify-center min-h-[170px] to-[#1a1a1a66] backdrop-blur-xl border-t border-[#2E40494D] p-3 sm:p-6 shadow-2xl">
           <div className="text-center">
-            <h3 className="text-xl sm:text-2xl font-bold text-red-400 mb-2">
+            <h3 className="text-xl sm:text-2xl font-bold text-primary_pink mb-2">
               This Sentinel is Drained
             </h3>
             <p className="text-sm sm:text-base text-gray-400">

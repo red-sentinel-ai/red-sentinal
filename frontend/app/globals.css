@@ -5,21 +5,31 @@
 :root {
   --background: #000000;
   --foreground: #ffffff;
+  --text: #F4EEFF;
+  --primary_pink: rgb(252, 81, 133);
+  --primary_pink_light: rgba(252, 81, 132, 0.9);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #000000;
     --foreground: #ffffff;
+    --text: #F4EEFF;
+    --primary_pink: #FC5185;
+  --primary_pink_light: rgba(252, 81, 132, 0.9);
   }
 }
 
 @layer base {
+
+  body{
+    color: var(--text);
+  }
   body,
   p,
   button,
   .header-menu-items {
-    font-family: var(--font-dm-sans);
+    font-family: var(--font-inter);
   }
 
    html {
@@ -57,6 +67,7 @@ html {
 
 body {
   color: var(--foreground);
+
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -139,7 +150,7 @@ body::-webkit-scrollbar-thumb:hover {
 
 .robo-card {
   animation: 8s rotate linear infinite;
-  background-color: black;
+  /* background-color: black; */
   animation-timing-function: ease-out;
   animation-duration: 1.5s;
 }
@@ -165,8 +176,8 @@ body::-webkit-scrollbar-thumb:hover {
 .robo-img-attacker {
   background: linear-gradient(
     to left,
-    rgba(229, 57, 34, 0.2),
-    rgba(229, 57, 34, 0.196),
+    rgba(229, 57, 34, 0),
+    rgba(229, 57, 34, 0),
     transparent
   );
 }
@@ -174,16 +185,17 @@ body::-webkit-scrollbar-thumb:hover {
 .robo-card:hover .robo-img-attacker {
   background: linear-gradient(
     to left,
-    rgba(229, 57, 34, 0.27),
-    rgba(229, 57, 34, 0.3),
+    rgb(252, 81, 133 , 0.4),
+    rgb(252, 81, 133 , 0.4),
     transparent
   );
+  backdrop-filter: blur(10px);
 }
 
 .robo-card.defender:hover {
   border: 1px solid #00000000;
   background: linear-gradient(#000000, #000000) padding-box,
-    linear-gradient(var(--angle), #1388d500, #e53922) border-box;
+    linear-gradient(var(--angle), #1388d500, var(--primary_pink)) border-box;
 }
 
 .robo-card.attacker:hover {
