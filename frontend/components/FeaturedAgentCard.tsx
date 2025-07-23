@@ -33,13 +33,21 @@ export const FeaturedAgentCard = ({
 
   return (
     <motion.div
-      className="border border-[#558EB4] bg-[#12121266] rounded-lg lg:rounded-2xl p-2 lg:p-4 robo-card group flex flex-col"
+      className="group flex flex-col p-6"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
     >
       <div className="relative mb-4">
-        <div className="w-full h-36 rounded-lg flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#558EB4]/20 to-[#1388D5]/10">
+        <div className="absolute left-2 right-2 top-2 bottom-2 z-10">
+          <Image
+            src="/animations/card1.gif"
+            width={420}
+            height={400}
+            alt="card"
+          />
+        </div>
+        <div className="w-full h-36 rounded-lg flex items-center justify-center overflow-hidden z-10 relative">
           {agent.agent_profile ? (
             <Image
               src={agent.agent_profile || '/placeholder.svg'}
@@ -59,63 +67,74 @@ export const FeaturedAgentCard = ({
             agentId={agent.agent_id}
             openFeatureModal={openFeatureModal}
           />
+        </div>
 
-          <div className="absolute inset-0 pointer-events-auto robo-img-defender rounded-lg transition-all"></div>
+        <div className="w-[600px] h-[700px] absolute -left-32 -top-20">
+          <Image
+            src="/img/bg1.png"
+            fill
+            alt="bg"
+            className="absolute z-0 -top-32 -bottom-32"
+          />
         </div>
       </div>
 
-      <div className="text-center mb-4">
-        <div className="flex items-center justify-center gap-1 mb-2">
-          <h3 className="text-lg lg:text-xl font-bold text-white truncate">{agent.agent_name}</h3>
-          {agent.is_featured && (
-            <Image
-              src="/icons/check-mark.svg"
-              width={20}
-              height={20}
-              alt="checkmark"
-            />
+      <div className="p-5">
+        <div className="text-center mb-4 relative z-10">
+          <div className="flex items-center justify-center gap-1 mb-2">
+            <h1 className="text-3xl font-bold">Secure Shield</h1>
+            {/* <h3 className="text-lg lg:text-xl font-bold text-white truncate">{agent.agent_name}</h3>
+            {agent.is_featured && (
+              <Image
+                src="/icons/check-mark.svg"
+                width={20}
+                height={20}
+                alt="checkmark"
+              />
+            )} */}
+          </div>
+          <p className="text-xs text-[#B5B5B5] mb-3">Agent ID: {agent.agent_id}</p>
+          <div className="flex max-w-[394px] mx-auto mb-3">
+            <div className="gradient-border blue"></div>
+            <div className="gradient-border blue rotate-180"></div>
+          </div>
+        </div>
+
+        <div className="space-y-3 mb-4 relative">
+          <div className="flex items-center gap-3 text-xs">
+            <div className="flex justify-between items-center gap-1">
+              <span className="text-[#B5B5B5]">Reward Pool:</span>
+              <span className="text-[#558EB4] font-medium">{formatBalance(agent.balance)}</span>
+            </div>
+            <div className="flex justify-between items-center gap-1">
+              <span className="text-[#B5B5B5]">Attack Cost:</span>
+              <span className="text-[#558EB4] font-medium">
+                {formatCost(agent.cost_per_message)}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-auto flex gap-2 relative">
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              handleAttack()
+            }}
+            className="block border border-[#558EB4] hover:bg-[#558EB422] rounded-[8px] w-full min-h-11 p-2 transition-all text-[#558EB4] text-center font-medium"
+          >
+            {ctaHeading}
+          </button>
+
+          {fromProfile && (
+            <button
+              onClick={() => openModal(agent.object_id)}
+              className="block border border-[#558EB4] rounded-[8px] w-full min-h-11 p-2 transition-all  bg-[#1388D5] hover:bg-[#1388d5e6] text-black group-hover:border-[#1388D5] text-center font-medium"
+            >
+              Fund Sentinel
+            </button>
           )}
         </div>
-        <p className="text-xs text-[#B5B5B5] mb-3">Agent ID: {agent.agent_id}</p>
-        <div className="flex max-w-[394px] mx-auto mb-3">
-          <div className="gradient-border blue"></div>
-          <div className="gradient-border blue rotate-180"></div>
-        </div>
-      </div>
-
-      <div className="space-y-3 mb-4">
-        <div className="flex justify-between items-center text-sm">
-          <span className="text-[#B5B5B5]">Reward Pool:</span>
-          <span className="text-[#558EB4] font-medium">{formatBalance(agent.balance)}</span>
-        </div>
-        <div className="flex justify-between items-center text-sm">
-          <span className="text-[#B5B5B5]">Attack Cost:</span>
-          <span className="text-[#558EB4] font-medium">{formatCost(agent.cost_per_message)}</span>
-        </div>
-        <div className="text-xs text-[#B5B5B5] bg-[#1a1a1a] rounded p-2 max-h-16 overflow-hidden">
-          <p className="line-clamp-3">{agent.system_prompt}</p>
-        </div>
-      </div>
-
-      <div className="mt-auto flex gap-2">
-        <button
-          onClick={(e) => {
-            e.stopPropagation()
-            handleAttack()
-          }}
-          className="block border border-[#558EB4] hover:bg-[#558EB422] rounded-[8px] w-full min-h-11 p-2 transition-all text-[#558EB4] text-center font-medium"
-        >
-          {ctaHeading}
-        </button>
-
-        {fromProfile && (
-          <button
-            onClick={() => openModal(agent.object_id)}
-            className="block border border-[#558EB4] rounded-[8px] w-full min-h-11 p-2 transition-all  bg-[#1388D5] hover:bg-[#1388d5e6] text-black group-hover:border-[#1388D5] text-center font-medium"
-          >
-            Fund Sentinel
-          </button>
-        )}
       </div>
 
       <Modal onSuccess={() => console.log('Funded successfully!')} />
