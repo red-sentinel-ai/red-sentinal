@@ -12,6 +12,7 @@ export interface AgentDetails {
   cost_per_message: number
   system_prompt: string
   balance: number
+  created_at?: string
 }
 
 export const fetchAgentDetailsViaObject = async (
