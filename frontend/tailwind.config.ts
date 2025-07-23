@@ -11,6 +11,7 @@ export default {
       colors: {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
+        text: 'var(--text)',
       },
       animation: {
         marquee: 'marquee 25s linear infinite',
