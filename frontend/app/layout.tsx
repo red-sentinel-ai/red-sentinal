@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { IBM_Plex_Mono, DM_Sans } from 'next/font/google'
+import { IBM_Plex_Mono, Inter } from 'next/font/google'
 import './globals.css'
 import { Providers } from './providers'
 import NextTopLoader from 'nextjs-toploader'
@@ -14,8 +14,8 @@ const ibmPlexMono = IBM_Plex_Mono({
   weight: ['400', '500', '600', '700'],
 })
 
-const dmSans = DM_Sans({
-  variable: '--font-dm-sans',
+const inter = Inter({
+  variable: '--font-inter',
   subsets: ['latin'],
 })
 
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${ibmPlexMono.variable} ${dmSans.variable} font-sans antialiased`}>
+      <body className={`${ibmPlexMono.variable} ${inter.variable} font-sans antialiased`}>
         <Providers>
           <NextTopLoader
             color="#FFFFFF"
