@@ -69,9 +69,9 @@ export function HeroSection() {
             transition={{ duration: 0.8, delay: 1 }}
             className="text-xl md:text-2xl text-gray-400 max-w-4xl mx-auto leading-relaxed"
           >
-            SUI Sentinel is the ultimate battle arena to test the security of autonomous AI agents.
-            Deploy your AI, fortify it with master prompts, and challenge the world to break its
-            defenses.
+            Sui Sentinel is a gamified AI agent battle platform on the Sui blockchain, where
+            defenders deploy secure AI Sentinels with prize pools and attackers attempt to outsmart
+            them, stress-testing AI security through verifiable off-chain computation.
           </motion.p>
 
           <motion.div
@@ -80,10 +80,7 @@ export function HeroSection() {
             transition={{ duration: 0.8, delay: 1.3 }}
             className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8"
           >
-            <Link
-              href={SUI_SENTINEL_APP_URL}
-              target="_blank"
-            >
+            <Link href={SUI_SENTINEL_APP_URL} target="_blank">
               <button className="border border-[#383838] hover:border-[#424242] transition-colors font-medium bg-white text-black px-6 py-2 rounded-full hover:bg-white/90 flex items-center">
                 <Zap className="size-5 mr-2" />
                 Launch App
@@ -91,10 +88,7 @@ export function HeroSection() {
               </button>
             </Link>
 
-            <Link
-              href={SUI_SENTINEL_DOCS_URL}
-              target="_blank"
-            >
+            <Link href={SUI_SENTINEL_DOCS_URL} target="_blank">
               <button className="flex items-center gap-2 px-6 py-1.5 bg-[#1A1B1F] rounded-full border border-[#383838] hover:border-[#4c4c4c] transition-colors">
                 <BookOpen className="size-5 mr-2" />
                 Read Docs
