@@ -211,7 +211,7 @@ export default function ChatInterface({
             className="overflow-hidden"
           >
             <div className="bg-black/40 p-3 sm:p-4 rounded-lg border border-gray-700">
-              <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
+              <p className="text-xs sm:text-sm text-gray-300 leading-relaxed whitespace-pre-wrap">
                 {agent.system_prompt}
               </p>
             </div>
