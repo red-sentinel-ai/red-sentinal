@@ -152,7 +152,7 @@ export const LandingPage = () => {
             </motion.div>
           </div>
         </div>
-        <Characters />
+        {/* <Characters /> */}
       </motion.div>
     </AnimatePresence>
   )

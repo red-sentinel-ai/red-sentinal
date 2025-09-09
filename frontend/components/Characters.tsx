@@ -7,7 +7,6 @@ export default function Characters() {
     src: '/animations/characters3.riv',
     // autoplay: true,
     // animations: ['Img 3'],
-    animations: ['Img 3'],
     layout: new Layout({
       fit: Fit.Contain,
       alignment: Alignment.Center,
