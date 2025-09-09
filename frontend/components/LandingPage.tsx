@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { AnimatePresence, motion } from 'framer-motion'
-import Characters from './Characters'
+// import Characters from './Characters'
 
 export const LandingPage = () => {
   return (
