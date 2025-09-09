@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { AnimatePresence, motion } from 'framer-motion'
+import Characters from './Characters'
 
 export const LandingPage = () => {
   return (
@@ -122,12 +123,7 @@ export const LandingPage = () => {
 
               <div className="flex items-center justify-center gap-2 my-2">
                 <div>
-                  <Image
-                    src="/icons/swords.png"
-                    width={24}
-                    height={24}
-                    alt="local police icon"
-                  />
+                  <Image src="/icons/swords.png" width={24} height={24} alt="local police icon" />
                 </div>
                 <p className="text-lg lg:text-[2rem] leading-normal font-medium">ATTACK</p>
               </div>
@@ -156,6 +152,7 @@ export const LandingPage = () => {
             </motion.div>
           </div>
         </div>
+        <Characters />
       </motion.div>
     </AnimatePresence>
   )
