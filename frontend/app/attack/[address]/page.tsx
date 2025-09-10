@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       siteName: 'Sui Sentinel',
       images: [
         {
-          url: `/attack/${agentObjectId}/opengraph-image`,
+          url: agent.agent_profile,
           width: 1200,
           height: 630,
           alt: `Challenge banner for ${agent.agent_name}`,
