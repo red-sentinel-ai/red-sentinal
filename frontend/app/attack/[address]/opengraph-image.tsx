@@ -22,9 +22,7 @@ export default async function Image({ params }: { params: { address: string } })
   let interBoldFont: ArrayBuffer | undefined
   try {
     const fontRes = await Promise.race([
-      fetch(
-        new URL('https://fonts.gstatic.com/s/inter/v13/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2')
-      ),
+      fetch(new URL('https://fonts.gstatic.com/s/inter/v13/UcC73FwrK3iLTeHuS_fvQtMwCZxSLrA.ttf')), // <-- CHANGED URL!
       new Promise<Response>((_, reject) =>
         setTimeout(() => reject(new Error('Font fetch timed out')), 5000)
       ), // 5 second timeout
@@ -43,7 +41,6 @@ export default async function Image({ params }: { params: { address: string } })
   const shieldLogoUrl = `${SUI_SENTINEL_APP_URL}/icons/shield.svg`
   const fallbackRobotUrl = `${SUI_SENTINEL_APP_URL}/img/robo_to_r.png`
 
-  // Validate agent_profile URL and ensure it's absolute
   const agentProfileImageUrl =
     agent?.agent_profile && agent.agent_profile.startsWith('http')
       ? agent.agent_profile
