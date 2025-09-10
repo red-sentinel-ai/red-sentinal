@@ -13,13 +13,45 @@ export const contentType = 'image/png'
 
 export default async function Image({ params }: { params: { address: string } }) {
   const agent = await getAgentDataForOG(params.address)
+  console.log(
+    `[OG Image] Fetched Agent Data for ${params.address}:`,
+    agent ? agent.agent_name : 'Not Found'
+  )
 
-  const interBold = fetch(
-    new URL('https://fonts.gstatic.com/s/inter/v13/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2')
-  ).then((res) => res.arrayBuffer())
+  // --- Font Loading ---
+  let interBoldFont: ArrayBuffer | undefined
+  try {
+    const fontRes = await Promise.race([
+      fetch(
+        new URL('https://fonts.gstatic.com/s/inter/v13/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2')
+      ),
+      new Promise<Response>((_, reject) =>
+        setTimeout(() => reject(new Error('Font fetch timed out')), 5000)
+      ), // 5 second timeout
+    ])
+
+    if (!fontRes.ok) {
+      console.error(`[OG Image] Failed to fetch font: ${fontRes.status} ${fontRes.statusText}`)
+      throw new Error('Font fetch failed')
+    }
+    interBoldFont = await fontRes.arrayBuffer()
+    console.log('[OG Image] Font loaded successfully.')
+  } catch (error) {
+    console.error('[OG Image] Error loading Inter font:', error)
+  }
 
   const shieldLogoUrl = `${SUI_SENTINEL_APP_URL}/icons/shield.svg`
   const fallbackRobotUrl = `${SUI_SENTINEL_APP_URL}/img/robo_to_r.png`
+
+  // Validate agent_profile URL and ensure it's absolute
+  const agentProfileImageUrl =
+    agent?.agent_profile && agent.agent_profile.startsWith('http')
+      ? agent.agent_profile
+      : fallbackRobotUrl
+
+  console.log(`[OG Image] Shield Logo URL: ${shieldLogoUrl}`)
+  console.log(`[OG Image] Fallback Robot URL: ${fallbackRobotUrl}`)
+  console.log(`[OG Image] Agent Profile Image URL: ${agentProfileImageUrl}`)
 
   return new ImageResponse(
     (
@@ -30,7 +62,7 @@ export default async function Image({ params }: { params: { address: string } })
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontFamily: '"Inter"',
+          fontFamily: interBoldFont ? '"Inter"' : 'sans-serif', // Fallback to sans-serif
           color: 'white',
           background: 'linear-gradient(to bottom right, #1a021d, #000000)',
           backgroundImage:
@@ -78,14 +110,13 @@ export default async function Image({ params }: { params: { address: string } })
                   fontSize: '80px',
                   fontWeight: 700,
                   background: 'linear-gradient(90deg, #558EB4, #86E6DA)',
-                  // Gradient text needs these properties
                   backgroundClip: 'text',
                   color: 'transparent',
                   lineHeight: 1.1,
                   marginTop: '10px',
                   textOverflow: 'ellipsis',
                   overflow: 'hidden',
-                  maxHeight: '180px', // Prevents name from overflowing
+                  maxHeight: '180px',
                 }}
               >
                 {agent?.agent_name || 'Unknown Agent'}
@@ -107,7 +138,7 @@ export default async function Image({ params }: { params: { address: string } })
             }}
           >
             <img
-              src={agent?.agent_profile || fallbackRobotUrl}
+              src={agentProfileImageUrl}
               alt="Agent Profile"
               style={{
                 width: '450px',
@@ -124,14 +155,9 @@ export default async function Image({ params }: { params: { address: string } })
     ),
     {
       ...size,
-      fonts: [
-        {
-          name: 'Inter',
-          data: await interBold,
-          style: 'normal',
-          weight: 700,
-        },
-      ],
+      fonts: interBoldFont
+        ? [{ name: 'Inter', data: interBoldFont, style: 'normal', weight: 700 }]
+        : [],
     }
   )
 }
