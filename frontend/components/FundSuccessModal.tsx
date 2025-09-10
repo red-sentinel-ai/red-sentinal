@@ -30,7 +30,7 @@ export const FundSuccessModal = ({
   }
 
   const handleShareOnX = () => {
-    const text = `I just deployed ${agentName} on @SuiSentinel with ${prizePoolAmount} SUI! Think you can outsmart it? Try now: ${sentinelUrl}`
+    const text = `I just deployed ${agentName} on @SuiSentinal with ${prizePoolAmount} SUI! Think you can outsmart it? Try now: ${sentinelUrl}`
     const encodedText = encodeURIComponent(text)
     const hashtags = 'SuiSentinel,Web3,AI'
     const xUrl = `https://twitter.com/intent/tweet?text=${encodedText}&hashtags=${hashtags}`

@@ -72,12 +72,8 @@ export const FundAgentModal = ({
 
       onSuccess?.(amount)
 
-      // Reset form
       setAmount('')
       setError('')
-
-      // Close modal
-      onClose()
     } catch (err) {
       console.error('Funding error:', err)
       const message = err instanceof Error ? err.message : 'Failed to fund agent'
@@ -86,7 +82,6 @@ export const FundAgentModal = ({
   }
 
   const handleClose = () => {
-    // Reset form when closing
     setAmount('')
     setError('')
     onClose()

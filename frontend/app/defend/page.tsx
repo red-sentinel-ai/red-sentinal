@@ -122,10 +122,6 @@ export default function DefendPage() {
   const [showFundSuccessModal, setShowFundSuccessModal] = useState(false)
   const [fundedAmount, setFundedAmount] = useState('')
 
-  // useEffect(() => {
-  //   setShowFundSuccessModal(true)
-  // }, [])
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
@@ -160,13 +156,17 @@ export default function DefendPage() {
 
   const handleCloseFundModal = () => {
     setShowFundModal(false)
+  }
+
+  const handleAbortAndCloseFundModal = () => {
+    handleCloseFundModal()
     resetAllState()
   }
 
   const handleFundSuccess = (amount: string) => {
     toast.success('Sentinel funded successfully!')
     setFundedAmount(amount)
-    setShowFundModal(false)
+    handleCloseFundModal()
     setShowFundSuccessModal(true)
   }
 
@@ -208,9 +208,6 @@ export default function DefendPage() {
       (obj: any) =>
         obj.objectType === `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Agent`
     )
-
-    console.log('off chain success agent object id', (agentObject as any).objectId)
-    console.log('off chain success agent object', agentObject)
 
     if (agentObject) {
       const agentObjectId = (agentObject as any).objectId
@@ -430,7 +427,7 @@ export default function DefendPage() {
       {deployedAgentObjectId && (
         <FundAgentModal
           open={showFundModal}
-          onClose={handleCloseFundModal}
+          onClose={handleAbortAndCloseFundModal}
           agentObjectId={deployedAgentObjectId}
           onSuccess={handleFundSuccess}
         />
