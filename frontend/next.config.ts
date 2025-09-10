@@ -13,20 +13,8 @@ const nextConfig: NextConfig = {
   },
   webpack(config, { isServer, dev }) {
     config.experiments = {
-      ...config.experiments,
       asyncWebAssembly: true,
       layers: true,
-    }
-
-    config.module.rules.push({
-      test: /\.wasm$/,
-      type: 'asset/resource',
-    })
-
-    if (isServer) {
-      config.output.webassemblyModuleFilename = './../static/wasm/[modulehash].wasm'
-    } else {
-      config.output.webassemblyModuleFilename = 'static/wasm/[modulehash].wasm'
     }
 
     return config
