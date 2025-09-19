@@ -2,10 +2,11 @@
 
 import { useState } from 'react'
 import { User, Folder, Activity } from 'lucide-react'
+import { useCurrentAccount } from '@mysten/dapp-kit'
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { UserActivity } from '@/components/profile/UserActivity'
 import { UserAgents } from '@/components/profile/UserAgents'
-import { useCurrentAccount } from '@mysten/dapp-kit'
 import { ConnectPrompt } from '@/components/ConnectPrompt'
 import { SocialConnectionsSectionWrapper } from '@/components/profile/SocialConnectionsSectionWrapper'
 

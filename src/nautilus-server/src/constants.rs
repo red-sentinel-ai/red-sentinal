@@ -1,0 +1,13 @@
+pub const SERVICE_ACCOUNT_JSON: &str = r#"{
+  "type": "service_account",
+  "project_id": "sui-sentinel-466407",
+  "private_key_id": "8e0c295c007fff5b0d110dcd84a62514bb105882",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC9v2UakMtmZw53\nj/0vHfNZIW4K9abFncwmGF52P1Uimq0W0Hqp8Smbpac+jGuzjeNhBUvFOeHU4O/w\nO3lPB1ggRS0cChqHT+Ao9CcGc1po0Sziijl7WvftOSxbncXvhYtSr5HfT0Fn7oec\nmaFs+1NHH+pqDVLipYqGQM1h7nVe1YWSndnAsvG1EstAJbxyTleP+m0ayx67YG3L\n9Kcw3ujnu0yLktf4MJ6lzhyTe95tDs4JBncWiPUQQ6moAuNpZoR9RTKE8wUMhW4V\nVmhpew275HzSLkj5Ap6SCODmELtPBI/s/3aiT8G+qFvE+zWzaJmFUZ6wOLggRodA\nFzRqxZVtAgMBAAECggEADAkg4599l2BAFatndt6ieevZ7A4K5wwMT/pJu5xmzQwc\noI7WyQLIDdxjEF+d0UTVwGiylq8GORePgKB1IGMp3tokc1vctOqHIHHkK8+TU4S5\nISF9ZequQTjYLHOEg53n6XXDffOsBWim53MDP0Nt09wdZV60/DVd5QglPun+PeaX\nDvF43PfzHdDCc9VIAcpbpBCg8gYToMRtAmXZOICT7g79Fod8zXCg3XInyQRhuyUO\nUlKwi+h2FHynCYBNAzcsJk2I+6ufzMT9hyvito0U39s4zdOz9oian34MNRBdSa9I\nynJudpXRFoEbrfpJQfUPWu+ellc6AkDdJAeesXgpDQKBgQD/luXWbUMQaY77Plei\nlqfS+m9xMbEhf0tcqr1TvtBA7JJrjjEA31xRcyrqfjo6MUosO0ghTYMq7oEOh06g\nWBBwWOBB5OfCi2VaQcvVKLWj9KNM8/sdOkX922VHUh6FuZQ/mPhUN7rGad5pvo3y\n67FXlVnOyIshp72hlk/YVWX3ZwKBgQC+DWwIGi0uOfiuKVuRE/nvppWy5QkjDmJt\nwuFBsCUrPJDSXNydtMrMi+5viDiqe4T8/A2ZrKHnI/5e4+aqrg2ifhQQY6fGRHql\nxI0bcorx4Vwenytc36YULOYBNwtAexuL5ToB5kjiraQPhJy6DRml0zXa/gtLnjs3\ng21neIfsCwKBgQDNINh5zdtDMtT0Q8al0PAEXcZPPKiCz902FDo7Giudz8B73fTq\nVFmNbTcGWCR3S9PRyApN4B3juOOPO30ZJ1SaNlpVyFdRRfskAyaKf0+4tMDTJAVo\nIbrG0Oxp3zhr7tNSb3zuaoPWdmVwzOS0EAGW32DimwU/D5ccNr0CTRe3BQKBgBpW\nTdRJnF09l2K7RH80X3yAf1pNNxjuk2FWklTCDkSRnhgo2kHYngn+kkpOfFvTxjgw\nzcmwDLe1WzjXKE4a1LTh9/HVfZiSQNTcChn1o5+ldVihAidaru840Z71e8+xv72B\nRKqiuRMAsS2dWQLHcfhy7pGshvAxu08UHYMrRtrFAoGAJEZROI8O9cGLj845PQok\nYcxobpSc+wxDZhu7kF7Zy5wsb0hWjcOCA5WXPCTD1md8hlqx3rG+2UZK7z9uW1CV\n+y7IZi9EV6kpPjmnScTqYRZ6RP3ddpGdzBzuBrDXamb6XLtGGSUdxCvDRB6SsWdL\nU+Dc6sLJrRjn11JOSz5ahW8=\n-----END PRIVATE KEY-----\n",
+  "client_email": "sui-sentinel-service-account@sui-sentinel-466407.iam.gserviceaccount.com",
+  "client_id": "105608644907532668473",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/sui-sentinel-service-account%40sui-sentinel-466407.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}"#;

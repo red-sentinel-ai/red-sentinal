@@ -265,9 +265,9 @@ aws sts get-session-token \
 
 ```
 export KEY_PAIR=MyEC2KeyPair
-export AWS_ACCESS_KEY_ID=<new-value>
-export AWS_SECRET_ACCESS_KEY=<new-value>
-export AWS_SESSION_TOKEN=<new-value>
+export AWS_ACCESS_KEY_ID=ASIAV3HCVN2UUEQZJJIL
+export AWS_SECRET_ACCESS_KEY=8Z4DkEXgVY0eCWY2o+3hk3b2+oF16lvB0UOcTySc
+export AWS_SESSION_TOKEN="IQoJb3JpZ2luX2VjELv//////////wEaCXVzLWVhc3QtMSJHMEUCIDPvMFouaVkQK3VTR5uJpfX7HRp/EZmT3Wse9RcIYbfmAiEA1fLr7MlpR6nrVdyucbXOlQb6ZE4BkgayhEzXwuRpEV4q+AEI1P//////////ARAAGgw0MDIwNTQ4MDMxMTMiDIfHcUbT3bpMbbzk9CrMAQft8l2JKPsgtUr3XKY42BIPKvrwn/PL8GrwCinTmMq7cOwygRKjNhVndVgp0dmEhgUosvSiGM89YEW9qqOH2FPInVuxg4mQfLlzQD2sYm0JXclAZTs4nyCioXEQMUOiVdKKk+NTzUQNilKrREPo4nNNStx9J6znd7yrqr1qrG/oQfYt7uyaB7LZBo7L2/TerWvi4gWSvkZGsPDFk3dxlvc+QWniZ5BSbQP3hFN1yc9038NRbrFwAgLR4vrXFDVhiu6MjK0qrxJFwQnczTCDrfjDBjqYAY+Hs3KUnq+1BGie/00uGsirvh9CyV9K0YFYSphTjhxAZqIFQbqccN6nHZgDPyzjmbcZNagJKOve632dXmsugiortWIl6F3vuYUfS6y5d0uxwFILPVg0n7MmlpUfGpLa62LZgr/Nyr/iYtr7SD1NxuArdrPGwJRCX0mL9MukLL+4NteEy+Sq1ImWc3K9PWbFnYdt9pHhUY2v"
 ```
 
 4. Now run `sh configure_enclave.sh`. here for secrets, select existing ARN
@@ -318,3 +318,4 @@ kill -9 <PID>
 ## 📄 License
 
 This project is licensed under the APACHE License - see the LICENSE file for details.
+
