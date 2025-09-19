@@ -40,7 +40,7 @@ export function useCompleteMission() {
     },
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['user-rewards', variables.wallet_address] })
-      toast.success(`Mission completed! +${data.points_earned} ST`)
+      toast.success(`Mission completed! +${data.points_earned} SNTL`)
     },
     onError: (error: Error) => {
       toast.error(error.message)

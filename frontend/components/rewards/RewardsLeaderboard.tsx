@@ -84,7 +84,7 @@ export function RewardsLeaderboard({ pointsSymbol }: RewardsLeaderboardProps) {
                   </motion.div>
                   <div>
                     <CardTitle className="text-2xl text-[#B8B8B8] uppercase">
-                      ST Points Leaderboard
+                      SNTL Points Leaderboard
                     </CardTitle>
                     <p className="text-[#B5B5B5]">Top performers in the Sui Sentinel</p>
                   </div>

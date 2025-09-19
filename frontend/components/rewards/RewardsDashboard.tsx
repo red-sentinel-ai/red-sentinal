@@ -63,7 +63,7 @@ export function RewardsDashboard() {
                   >
                     <Trophy className="h-12 w-12 text-[#558EB4]" />
                   </motion.div>
-                  <h2 className="text-3xl font-bold mb-4 text-[#B8B8B8] uppercase">
+                  <h2 className="text-3xl font-bold mb-4 text-white uppercase">
                     Rewards Coming Soon
                   </h2>
                   <p className="text-[#B5B5B5] text-lg">
@@ -99,7 +99,7 @@ export function RewardsDashboard() {
                   <Sparkles className="h-4 w-4 text-[#558EB4]" />
                   <span className="text-sm font-medium text-[#558EB4]">Sui Sentinel Rewards</span>
                 </motion.div>
-                <h1 className="text-5xl font-bold mb-4 text-[#B8B8B8] uppercase">
+                <h1 className="text-5xl font-bold mb-4 text-white uppercase">
                   Earn. Compete. Conquer.
                 </h1>
                 <p className="text-xl text-[#B5B5B5] max-w-2xl mx-auto mb-6">
@@ -138,7 +138,7 @@ export function RewardsDashboard() {
                 totalPoints={userRewards?.user?.total_points || 0}
                 tier={userRewards?.user.rewards_tier || 'bronze'}
                 isLoading={isLoadingUser}
-                pointsSymbol={effectiveMissionsData?.points_symbol || 'ST'}
+                pointsSymbol={effectiveMissionsData?.points_symbol || 'SNTL'}
               />
             </motion.div>
 
@@ -198,7 +198,7 @@ export function RewardsDashboard() {
                           missions={effectiveMissionsData?.missions || []}
                           completedMissions={userRewards?.completed_missions || {}}
                           isLoading={isLoadingMissions}
-                          pointsSymbol={effectiveMissionsData?.points_symbol || 'ST'}
+                          pointsSymbol={effectiveMissionsData?.points_symbol || 'SNTL'}
                         />
                       </TabsContent>
                       <TabsContent
@@ -208,7 +208,7 @@ export function RewardsDashboard() {
                         <RecentActivity
                           activities={userRewards?.recent_activity || []}
                           isLoading={isLoadingUser}
-                          pointsSymbol={effectiveMissionsData?.points_symbol || 'ST'}
+                          pointsSymbol={effectiveMissionsData?.points_symbol || 'SNTL'}
                         />
                       </TabsContent>
                     </div>
