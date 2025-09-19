@@ -43,8 +43,8 @@ export const metadata: Metadata = {
   ],
 
   icons: {
-    icon: '/icons/shield.svg',
-    shortcut: '/icons/shield.svg',
+    icon: '/icons/shield.png',
+    shortcut: '/icons/shield.png',
     // apple: '/icons/apple-touch-icon.png',
   },
 
