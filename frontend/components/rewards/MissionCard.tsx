@@ -4,11 +4,11 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { Check, Clock, Trophy, Zap, Repeat, Target, ExternalLink } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
-import { Badge } from '../ui/badge'
-import { SOCIAL_MEDIA_URLS } from '@/constants'
-import type { MissionCompletionCounts, RewardsMission } from '@/types/Rewards'
 import { useCurrentAccount } from '@mysten/dapp-kit'
+
+import type { MissionCompletionCounts, RewardsMission } from '@/types/Rewards'
+import { Card, CardContent, CardHeader, CardTitle, Badge } from '../ui'
+import { SOCIAL_MEDIA_URLS } from '@/constants'
 import { useRewardsMissionTracker } from '@/hooks/rewards/useRewardsMissionTracker'
 
 interface MissionCardProps {

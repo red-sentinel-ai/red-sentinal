@@ -3,7 +3,7 @@
 import { Zap, Users } from 'lucide-react'
 import { motion } from 'framer-motion'
 import type { RewardsMission, MissionCompletionCounts } from '@/types/Rewards'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Skeleton } from '@/components/ui'
 import { MissionCard } from './MissionCard'
 
 interface MissionsGridProps {

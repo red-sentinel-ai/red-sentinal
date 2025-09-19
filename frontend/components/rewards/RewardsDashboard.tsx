@@ -11,6 +11,8 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useCurrentAccount } from '@mysten/dapp-kit'
+
 import { Card, CardContent, TabsTrigger, TabsContent, TabsList, Tabs } from '@/components/ui'
 import { PointsDisplay } from './PointsDisplay'
 import { MissionsGrid } from './MissionsGrid'
@@ -20,7 +22,6 @@ import { useRewardsMissions } from '@/hooks/rewards/useRewardsMissions'
 import { RewardsAccessGuard } from './RewardsAccessGuard'
 import { REWARDS_CONSTANTS } from '@/constants/rewards'
 import { REWARDS_DOCS_URL } from '@/constants'
-import { useCurrentAccount } from '@mysten/dapp-kit'
 import { ConnectPrompt } from '../ConnectPrompt'
 
 export function RewardsDashboard() {

@@ -3,11 +3,12 @@
 import type React from 'react'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui'
 import { AlertCircle, ExternalLink, Shield, Sparkles } from 'lucide-react'
+import { useCurrentAccount } from '@mysten/dapp-kit'
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui'
 import { useSocialStatus } from '@/hooks/profile/useSocialStatus'
 import { handleConnectDiscord, handleConnectTwitter } from '@/utils/socialConnection'
-import { useCurrentAccount } from '@mysten/dapp-kit'
 
 interface RewardsAccessGuardProps {
   children: React.ReactNode
