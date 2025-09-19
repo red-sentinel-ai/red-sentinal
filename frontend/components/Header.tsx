@@ -46,7 +46,7 @@ export const Header = () => {
           >
             <div className="relative w-8 h-11">
               <Image
-                src="/icons/shield.svg"
+                src="/icons/shield.png"
                 alt="shield"
                 fill
                 style={{ objectFit: 'contain' }}
