@@ -12,6 +12,7 @@ export const ATTACK_PROMPT_MAX_TOKENS = 600
 export const SUI_SENTINEL_APP_URL = 'https://app.suisentinel.xyz/'
 export const SUI_SENTINEL_DOCS_URL = 'https://docs.suisentinel.xyz/'
 export const SUI_SENTINEL_X_URL = 'https://twitter.com/intent/follow?screen_name=suisentinal'
+export const SUI_SENTINEL_X_USERNAME = 'suisentinal'
 export const SUI_SENTINEL_GITHUB_URL = 'https://github.com/sui-sentinel/contracts'
 export const SUI_SENTINEL_TELEGRAM_URL = 'https://t.me/suisentinel'
 
@@ -29,14 +30,14 @@ export const TEXT_COPIES = {
 
 export const SUI_FAUCET_URL = 'https://faucet.sui.io/'
 
-export const LOCAL_API_PATH = 'http://52.23.169.62:3000'
+export const LOCAL_API_PATH = 'http://3.237.26.201:3000'
 
 export const SUI_CONFIG = {
-  EXAMPLES_PACKAGE_ID: '0xbed3064a1e527e283e0cc66fffde00e47bd659ae13114375037a8dc3c9d1bd73',
+  EXAMPLES_PACKAGE_ID: '0x1d1941cb375a5bdec1c5dd4d9de11799b4e3d0421e24ae9d25835a8287e07981',
   MODULE_NAME: 'sentinel',
   OTW_NAME: 'SENTINEL',
-  AGENT_REGISTRY: '0x2104334fc03a35f766468068234ca295cb3d0e81f6abae5fd92a24245a870a3d',
-  ENCLAVE_OBJECT_ID: '0x8a16e48fe92b7a491457d991fcd9b32c4608f7d32eb6bdec1036808421f9e4da',
+  AGENT_REGISTRY: '0x5de3a56d697e26beb3495a6dbd2378dc71e80d95a4a628b53f7dc0cd5fd97ae0',
+  ENCLAVE_OBJECT_ID: '0x7fcfd0d0f3e1d6380b083fbf271fe8750e8f1270b1c4cf1bec5894b65f1a958d',
   AGENT_OBJECT_IDS: [''],
 }
 
@@ -77,3 +78,18 @@ export const SOCIAL_MEDIA_URLS = {
 
 //TODO: Add the correct docs url
 export const REWARDS_DOCS_URL = 'https://sui-sentinal-plum.vercel.app/'
+export const SENTINEL_GIFS = [
+  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//6.png',
+  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//7.png',
+  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//8.png',
+  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//9.png',
+  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//10.png',
+]
+
+export const SENTINEL_IMAGES = [
+  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//1.png',
+  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//2.png',
+  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//3.png',
+  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//4.png',
+  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//5.png',
+]

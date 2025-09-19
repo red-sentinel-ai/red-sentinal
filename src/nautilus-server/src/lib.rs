@@ -15,12 +15,12 @@ use tokio::sync::RwLock;
 pub mod app;
 pub mod claude;
 pub mod common;
+pub mod constants;
 pub mod models;
 
 #[derive(Debug)]
 pub struct AppState {
     pub eph_kp: Ed25519KeyPair,
-    pub api_key: String,
     pub agents: RwLock<HashMap<String, Agent>>,
     pub agent_counter: RwLock<u64>,
 }

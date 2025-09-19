@@ -144,7 +144,7 @@ export const AgentsList = ({
                       <div className="col-span-3 ps-4 flex gap-4">
                         <button
                           onClick={() => router.push(`/attack/${agent.object_id}`)}
-                          className="text-sm text-red-700 font-bold hover:text-red-500"
+                          className="text-sm text-primary_pink_light hover:text-primary_pink font-bold"
                         >
                           Attack
                         </button>

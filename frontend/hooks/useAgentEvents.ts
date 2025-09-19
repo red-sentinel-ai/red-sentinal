@@ -69,8 +69,6 @@ async function getAgentEvents(client: SuiClient) {
       order: 'descending',
     })
 
-    console.log({ agentDefeatedEvents, promptConsumedEvents })
-
     return {
       agentDefeated: agentDefeatedEvents.data,
       promptConsumed: promptConsumedEvents.data,

@@ -1,9 +1,12 @@
 import { useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
-import { MIST_PER_SUI } from '@/constants'
-import { AgentDetails } from '@/hooks/agents/useAllAgents'
 import Image from 'next/image'
+import { motion } from 'framer-motion'
+import { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { useFundAgentModal } from '@/hooks/useFundAgentModal'
+import { useFeatureAgentModal } from '@/hooks/useFeatureAgentModal'
+import { useCurrentAccount } from '@mysten/dapp-kit'
+import { MIST_PER_SUI } from '@/constants'
+import { AgentDropdown } from './agents/AgentCardDropdown'
 
 type FeaturedAgentCardProps = {
   agent: AgentDetails
@@ -20,6 +23,9 @@ export const FeaturedAgentCard = ({
 }: FeaturedAgentCardProps) => {
   const { Modal, openModal } = useFundAgentModal()
   const router = useRouter()
+  const account = useCurrentAccount()
+  const { Modal: FeatureModal, openModal: openFeatureModal } = useFeatureAgentModal()
+  const isOwner = account?.address === agent.owner
 
   const handleAttack = () => {
     router.push(`/attack/${agent.object_id}`)
@@ -32,9 +38,8 @@ export const FeaturedAgentCard = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
     >
-      {/* Agent Avatar */}
       <div className="relative mb-4">
-        <div className="w-full h-36 rounded-lg flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#558EB4]/20 to-[#1388D5]/10">
+        <div className="w-full h-52 rounded-lg flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#558EB4]/20 to-[#1388D5]/10">
           {agent.agent_profile ? (
             <Image
               src={agent.agent_profile || '/placeholder.svg'}
@@ -48,6 +53,13 @@ export const FeaturedAgentCard = ({
               {agent.agent_name.charAt(0).toUpperCase()}
             </div>
           )}
+
+          <AgentDropdown
+            isOwner={isOwner}
+            agentId={agent.agent_id}
+            openFeatureModal={openFeatureModal}
+          />
+
           <div className="absolute inset-0 pointer-events-auto robo-img-defender rounded-lg transition-all"></div>
         </div>
       </div>
@@ -64,7 +76,6 @@ export const FeaturedAgentCard = ({
             />
           )}
         </div>
-        <p className="text-xs text-[#B5B5B5] mb-3">Agent ID: {agent.agent_id}</p>
         <div className="flex max-w-[394px] mx-auto mb-3">
           <div className="gradient-border blue"></div>
           <div className="gradient-border blue rotate-180"></div>
@@ -79,9 +90,6 @@ export const FeaturedAgentCard = ({
         <div className="flex justify-between items-center text-sm">
           <span className="text-[#B5B5B5]">Attack Cost:</span>
           <span className="text-[#558EB4] font-medium">{formatCost(agent.cost_per_message)}</span>
-        </div>
-        <div className="text-xs text-[#B5B5B5] bg-[#1a1a1a] rounded p-2 max-h-16 overflow-hidden">
-          <p className="line-clamp-3">{agent.system_prompt}</p>
         </div>
       </div>
 
@@ -107,6 +115,7 @@ export const FeaturedAgentCard = ({
       </div>
 
       <Modal onSuccess={() => console.log('Funded successfully!')} />
+      <FeatureModal />
     </motion.div>
   )
 }

@@ -5,9 +5,10 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 
 import { MenuItems } from './MenuItems'
-import { MenuIcon, Plus } from 'lucide-react'
+import { BookOpen, MenuIcon, Plus } from 'lucide-react'
 import Link from 'next/link'
 import { ConnectButton } from './ConnectButton'
+import { SUI_SENTINEL_DOCS_URL } from '@/constants'
 
 export const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -28,7 +29,7 @@ export const Header = () => {
 
   return (
     <header
-      className={clsx('fixed left-0 right-0 top-0 w-full z-50 transition-all duration-200 mt-9', {
+      className={clsx('fixed left-0 right-0 top-0 w-full z-50 transition-all duration-200', {
         'bg-[#12121266] backdrop-blur-xl': menuOpen || scrolled,
         'bg-transparent': !scrolled && !menuOpen,
       })}
@@ -45,7 +46,7 @@ export const Header = () => {
           >
             <div className="relative w-8 h-11">
               <Image
-                src="/icons/shield.svg"
+                src="/icons/shield.png"
                 alt="shield"
                 fill
                 style={{ objectFit: 'contain' }}
@@ -53,10 +54,12 @@ export const Header = () => {
             </div>
           </Link>
           <Link
-            className="block ml-3 xl:ml-4 flex-shrink-0"
-            href="/about"
+            className="flex items-center gap-[6px] ml-1 xl:ml-4 flex-shrink-0 "
+            target="_blank"
+            href={SUI_SENTINEL_DOCS_URL}
           >
-            Learn More
+            <BookOpen width={16} />
+            <span>Documentation</span>
           </Link>
 
           <Link
