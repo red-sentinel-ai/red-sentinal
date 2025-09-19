@@ -4,9 +4,8 @@ import { useState, useEffect, useRef } from 'react'
 import { debounce } from 'lodash'
 import { Trophy, Medal, Crown, TrendingUp, Star, Zap, Search } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Input } from '../ui/input'
+
+import { Skeleton, Input, Card, CardContent, CardHeader, CardTitle } from '@/components/ui'
 import { useRewardsLeaderboard } from '@/hooks/rewards/useRewardsLeaderboard'
 import { UserDisplay } from './LeaderboardUserDisplay'
 

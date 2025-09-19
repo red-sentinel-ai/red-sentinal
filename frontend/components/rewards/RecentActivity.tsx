@@ -1,9 +1,9 @@
 import { Clock, Zap, TrendingUp, Calendar } from 'lucide-react'
-import { motion } from 'framer-motion'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
 import { formatDistanceToNow } from 'date-fns'
+import { motion } from 'framer-motion'
+
 import type { RHRewardsActivity } from '@/types/Rewards'
+import { Card, CardContent, CardHeader, CardTitle, Skeleton } from '@/components/ui'
 
 interface RecentActivityProps {
   activities: RHRewardsActivity[]

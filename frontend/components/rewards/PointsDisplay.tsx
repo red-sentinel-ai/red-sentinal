@@ -1,8 +1,8 @@
 import { Trophy, Crown, Medal, Award, TrendingUp, Zap } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { Card, CardContent } from '@/components/ui/card'
+
 import { REWARDS_CONSTANTS } from '@/constants/rewards'
-import { Skeleton } from '../ui/skeleton'
+import { Skeleton, Card, CardContent } from '../ui'
 
 interface PointsDisplayProps {
   totalPoints: number
