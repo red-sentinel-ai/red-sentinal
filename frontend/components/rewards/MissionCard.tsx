@@ -2,12 +2,22 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { Check, Clock, Trophy, Zap, Repeat, Target, ExternalLink } from 'lucide-react'
+import { Check, Clock, Trophy, Zap, Repeat, Target, ExternalLink, HelpCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 
 import type { MissionCompletionCounts, RewardsMission } from '@/types/Rewards'
-import { Card, CardContent, CardHeader, CardTitle, Badge } from '../ui'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Badge,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '../ui'
 import { SOCIAL_MEDIA_URLS } from '@/constants'
 import { useRewardsMissionTracker } from '@/hooks/rewards/useRewardsMissionTracker'
 
@@ -86,6 +96,33 @@ export function MissionCard({
   const totalCompletions = completionCounts.total
   const currentPeriodCompletions = completionCounts.current_period
 
+  const getPointsDisplay = () => {
+    const format = mission.points_display_format || `+{points} {symbol}`
+
+    const displayText = format
+      .replace('{points}', mission.points.toString())
+      .replace('{symbol}', pointsSymbol)
+
+    if (mission.points_tooltip) {
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="flex items-center gap-1 cursor-help">
+                {displayText} <HelpCircle className="h-3 w-3 opacity-70" />
+              </span>
+            </TooltipTrigger>
+            <TooltipContent className="bg-black border border-gray-700 text-white max-w-xs">
+              <p>{mission.points_tooltip}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )
+    }
+
+    return displayText
+  }
+
   const handleSocialMissionClick = async () => {
     if (!address || isProcessing) return
     const socialUrl = getSocialMissionUrl(mission.type)
@@ -102,19 +139,19 @@ export function MissionCard({
 
       switch (mission.type) {
         case 'follow_x':
-          trackFollowedOnX('social_mission_txn_hash', metadata)
+          trackFollowedOnX('social_mission', metadata)
           break
         case 'retweet':
-          trackRetweet('social_mission_txn_hash', metadata)
+          trackRetweet('social_mission', metadata)
           break
         case 'share_with_hashtag':
-          trackShareWithHashtag('social_mission_txn_hash', metadata)
+          trackShareWithHashtag('social_mission', metadata)
           break
         case 'join_telegram':
-          trackJoinedTelegram('social_mission_txn_hash', metadata)
+          trackJoinedTelegram('social_mission', metadata)
           break
         case 'telegram_engage':
-          trackTelegramEngage('social_mission_txn_hash', metadata)
+          trackTelegramEngage('social_mission', metadata)
           break
       }
     } catch (error) {
@@ -140,7 +177,7 @@ export function MissionCard({
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-3">
               <div
-                className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                className={`w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center ${
                   mission.category === 'on_chain'
                     ? 'bg-gradient-to-br from-[#558EB4]/20 to-[#1388D5]/20'
                     : 'bg-gradient-to-br from-[#8F564E]/20 to-[#E53922]/20'
@@ -154,15 +191,16 @@ export function MissionCard({
               </div>
               <div className="flex-1">
                 <CardTitle className="text-lg text-white leading-tight">{mission.name}</CardTitle>
+                <p className="text-xs text-gray-400 mt-1 pr-4">{mission.description}</p>
               </div>
             </div>
-            <Badge className="flex items-center gap-2 px-4 py-1 bg-[#12121266] backdrop-blur-lg rounded-full border border-[#383838] hover:border-[#558EB4]/30 transition-colors whitespace-nowrap text-[#558EB4]">
-              +{mission.points} {pointsSymbol}
+            <Badge className="flex items-center gap-2 px-3 py-1 bg-[#12121266] backdrop-blur-lg rounded-full border border-[#383838] hover:border-[#558EB4]/30 transition-colors whitespace-nowrap text-[#558EB4]">
+              {getPointsDisplay()}
             </Badge>
           </div>
         </CardHeader>
         <CardContent className="pt-0 flex-grow flex flex-col">
-          <div className="flex flex-col gap-y-3 flex-grow">
+          <div className="flex flex-col gap-y-3 flex-grow mt-2">
             <div className="flex items-center gap-2 flex-wrap">
               {isCompleted && isOneTime ? (
                 <Badge className="bg-[#8F564E]/20 text-[#8F564E] border border-[#8F564E]/30 rounded-full">
@@ -189,16 +227,17 @@ export function MissionCard({
                 </Badge>
               )}
             </div>
-            {isSocialMission && !isCompleted && (
+            <div className="flex-grow" /> {/* Spacer to push button to the bottom */}
+            {isSocialMission && (!isOneTime || !isCompleted) && (
               <motion.button
                 onClick={handleSocialMissionClick}
                 disabled={!address || isProcessing}
-                className="w-full border mt-auto border-[#558EB4] bg-[#12121266] backdrop-blur-lg rounded-lg py-3 text-[#558EB4] hover:bg-[#1388D5] hover:text-black hover:border-[#1388D5] transition-all duration-300 group flex items-center justify-center gap-2"
+                className="w-full border mt-auto border-[#558EB4] bg-[#12121266] backdrop-blur-lg rounded-lg py-3 text-[#558EB4] hover:bg-[#1388D5] hover:text-black hover:border-[#1388D5] transition-all duration-300 group flex items-center justify-center gap-2 disabled:opacity-50"
                 whileTap={{ scale: 0.98 }}
               >
                 {isProcessing ? (
                   <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#558EB4]"></div>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
                     Processing...
                   </>
                 ) : (

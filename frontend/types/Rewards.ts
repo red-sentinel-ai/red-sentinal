@@ -10,6 +10,8 @@ export interface RewardsMission {
   max_per_day?: number
   enabled: boolean
   requirements?: Record<string, string | number | boolean>
+  points_display_format?: string
+  points_tooltip?: string
 }
 
 export interface RewardsConfig {

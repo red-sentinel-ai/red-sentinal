@@ -2,17 +2,6 @@ import { RewardsMission } from '@/types/Rewards'
 
 const DEFAULT_MISSIONS = [
   {
-    id: 'attack_sentinel',
-    name: 'Attack a Sentinel',
-    type: 'attack_sentinel',
-    points: 10,
-    enabled: true,
-    category: 'on_chain',
-    frequency: 'per_occurrence',
-    description: 'Earn points by attacking a sentinel',
-    max_per_week: 8,
-  },
-  {
     id: 'launch_sentinel',
     name: 'Launch a Sentinel',
     type: 'launch_sentinel',
@@ -20,18 +9,20 @@ const DEFAULT_MISSIONS = [
     enabled: true,
     category: 'on_chain',
     frequency: 'per_occurrence',
-    description: 'Create and launch your own Sentinel',
+    description: 'Create and launch your own Sentinel to defend your funds and earn fees.',
     max_per_week: 1,
   },
   {
     id: 'fund_sentinel',
     name: 'Add Funds to a Sentinel',
     type: 'fund_sentinel',
-    points: 25, // This is the multiplier
+    points: 25,
     enabled: true,
     category: 'on_chain',
     frequency: 'per_occurrence',
-    description: "Earn 25 points for every 1 SUI you add to a Sentinel's prize pool.",
+    description: "Earn points for every SUI you add to a Sentinel's prize pool.",
+    points_display_format: 'x{points} / SUI',
+    points_tooltip: 'You get 25 points for every 1 SUI you contribute to a prize pool.',
   },
   {
     id: 'attack_sentinel',
@@ -42,7 +33,10 @@ const DEFAULT_MISSIONS = [
     category: 'on_chain',
     frequency: 'per_occurrence',
     description:
-      'Earn points for each attack. Points increase with the attack fee and number of previous attempts.',
+      "Earn points for each attack attempt. The reward scales with the Sentinel's fee and your persistence.",
+    points_display_format: 'Dynamic',
+    points_tooltip:
+      'Formula: 1 + floor(Attack Fee * 20) + Your Previous Attempts on this Sentinel.',
   },
   {
     id: 'defeat_sentinel',
@@ -53,8 +47,11 @@ const DEFAULT_MISSIONS = [
     category: 'on_chain',
     frequency: 'per_occurrence',
     description:
-      'Earn a massive bonus for successfully defeating a Sentinel and winning the prize.',
+      'Earn a massive bonus for successfully defeating a Sentinel and winning the prize pool.',
+    points_display_format: '+{points} {symbol}',
+    points_tooltip: 'A fixed bonus for a successful win!',
   },
+
   {
     id: 'follow_x',
     name: 'Follow Sui Sentinel on X',
@@ -63,7 +60,7 @@ const DEFAULT_MISSIONS = [
     enabled: true,
     category: 'social_media',
     frequency: 'one_time',
-    description: 'Follow our X account to stay updated',
+    description: 'Follow our X account to stay updated.',
   },
   {
     id: 'retweet',
@@ -73,18 +70,18 @@ const DEFAULT_MISSIONS = [
     enabled: true,
     category: 'social_media',
     frequency: 'weekly',
-    description: 'Share our content with your followers',
+    description: 'Share our content with your followers.',
     max_per_week: 10,
   },
   {
     id: 'share_with_hashtag',
-    name: 'Share a Sui Sentinel post with #SuiSentinel',
+    name: 'Share a post with #SuiSentinel',
     type: 'share_with_hashtag',
     points: 3,
     enabled: true,
     category: 'social_media',
     frequency: 'weekly',
-    description: 'Share our posts with the #SuiSentinel hashtag',
+    description: 'Share our posts with the #SuiSentinel hashtag.',
     max_per_week: 3,
   },
   {
@@ -95,7 +92,7 @@ const DEFAULT_MISSIONS = [
     enabled: true,
     category: 'social_media',
     frequency: 'one_time',
-    description: 'Join our Telegram community',
+    description: 'Join our Telegram community.',
   },
   {
     id: 'telegram_engage',
