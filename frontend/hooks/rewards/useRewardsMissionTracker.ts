@@ -15,15 +15,38 @@ export function useRewardsMissionTracker() {
 
   const isAllowed = hasTwitter || hasDiscord
 
-  const trackAttackSentinel = (txHash: string, metadata?: MissionMetadata) => {
+  const trackAttackSentinel = (
+    txHash: string,
+    attackFeeSui: number,
+    previousAttempts: number,
+    isWinner: boolean,
+    metadata?: MissionMetadata
+  ) => {
     if (!address || !isAllowed) return
+
+    // Calculate dynamic points for the attack itself: 1 + floor(fee * 20) + previous attempts
+    const basePoints = 1
+    const feeBonus = Math.floor(attackFeeSui * 20)
+    const attemptBonus = previousAttempts
+    const totalAttackPoints = basePoints + feeBonus + attemptBonus
 
     completeMission({
       wallet_address: address,
       mission_type: REWARDS_CONSTANTS.MISSION_TYPES.ATTACK_SENTINEL,
       transaction_hash: txHash,
+      points_to_award: totalAttackPoints,
       metadata,
     })
+
+    if (isWinner) {
+      completeMission({
+        wallet_address: address,
+        mission_type: REWARDS_CONSTANTS.MISSION_TYPES.DEFEAT_SENTINEL,
+        transaction_hash: txHash,
+        //TODO: fix using static 300 points from the config
+        metadata,
+      })
+    }
   }
 
   const trackLaunchSentinel = (txHash: string, metadata?: MissionMetadata) => {
@@ -34,6 +57,20 @@ export function useRewardsMissionTracker() {
       mission_type: REWARDS_CONSTANTS.MISSION_TYPES.LAUNCH_SENTINEL,
       transaction_hash: txHash,
       metadata,
+    })
+  }
+
+  const trackFundSentinel = (txHash: string, amountInSui: number, metadata?: MissionMetadata) => {
+    if (!address || !isAllowed) return
+
+    const pointsToAward = Math.floor(25 * amountInSui)
+
+    completeMission({
+      wallet_address: address,
+      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.FUND_SENTINEL,
+      transaction_hash: txHash,
+      points_to_award: pointsToAward,
+      metadata: { ...metadata, funded_amount_sui: amountInSui },
     })
   }
 
@@ -95,6 +132,7 @@ export function useRewardsMissionTracker() {
   return {
     trackAttackSentinel,
     trackLaunchSentinel,
+    trackFundSentinel,
     trackFollowedOnX,
     trackRetweet,
     trackShareWithHashtag,

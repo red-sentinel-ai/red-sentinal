@@ -51,6 +51,8 @@ export interface MissionMetadata {
   discordHandle?: string
   twitterUserName?: string
 
+  funded_amount_sui?: number
+
   // Generic wallet address
   walletAddress?: string
   [key: string]: string | number | boolean | undefined
@@ -71,6 +73,7 @@ export interface CompleteMissionRequest {
   mission_type: string
   transaction_hash?: string
   metadata?: MissionMetadata
+  points_to_award?: number
 }
 
 export interface CompleteMissionResponse {

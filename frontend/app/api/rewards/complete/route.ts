@@ -14,7 +14,7 @@ export async function POST(
 ): Promise<NextResponse<CompleteMissionResponse | { error: string }>> {
   try {
     const body: CompleteMissionRequest = await request.json()
-    const { wallet_address, mission_type, transaction_hash, metadata } = body
+    const { wallet_address, mission_type, transaction_hash, metadata, points_to_award } = body
 
     if (!wallet_address || !mission_type) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -45,7 +45,6 @@ export async function POST(
     const config = configData.config_values as unknown as GlobalConfigValues
     const missions = config.rewards?.missions || REWARDS_CONSTANTS.DEFAULT_MISSIONS
     const mission = missions.find((m: RewardsMission) => m.type === mission_type)
-    console.log('mission', mission)
 
     if (!mission || !mission.enabled) {
       return NextResponse.json({ error: 'Mission not found or disabled' }, { status: 404 })
@@ -96,6 +95,7 @@ export async function POST(
         return NextResponse.json({ error: 'Daily limit reached' }, { status: 400 })
       }
     }
+    const pointsEarned = points_to_award ?? mission.points
 
     // Record the activity
     const { error: activityError } = await supabaseServiceClient
@@ -103,7 +103,7 @@ export async function POST(
       .insert({
         user_id: userId,
         mission_type,
-        points_earned: mission.points,
+        points_earned: pointsEarned,
         transaction_hash,
         completed_at: new Date().toISOString(),
         metadata: metadata ? JSON.parse(JSON.stringify(metadata)) : {},
@@ -127,8 +127,8 @@ export async function POST(
       const currentTotalPoints = existingUser.total_points || 0
       const currentLifetimePoints = existingUser.lifetime_points || 0
 
-      const newTotalPoints = currentTotalPoints + mission.points
-      const newLifetimePoints = currentLifetimePoints + mission.points
+      const newTotalPoints = currentTotalPoints + pointsEarned
+      const newLifetimePoints = currentLifetimePoints + pointsEarned
 
       // Determine tier
       let newTier: RHUser['rewards_tier'] = 'bronze'
@@ -160,8 +160,8 @@ export async function POST(
         .from('ss_users')
         .insert({
           wallet_addresses: [wallet_address],
-          total_points: mission.points,
-          lifetime_points: mission.points,
+          total_points: pointsEarned,
+          lifetime_points: pointsEarned,
           rewards_tier: 'bronze',
           rewards_updated_at: new Date().toISOString(),
         })
@@ -174,7 +174,7 @@ export async function POST(
 
     return NextResponse.json({
       success: true,
-      points_earned: mission.points,
+      points_earned: pointsEarned,
       new_total: user.total_points,
       new_tier: user.rewards_tier,
       user,

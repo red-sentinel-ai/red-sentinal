@@ -12,11 +12,14 @@ import { AttackStatusModal } from '@/components/AttackStatusModal'
 import ChatInterface from '@/components/agents/ChatInterface'
 import RiveLoader from '@/components/rive/Loader'
 import { useRewardsMissionTracker } from '@/hooks/rewards/useRewardsMissionTracker'
+import { MIST_PER_SUI } from '@/constants'
 
 export default function AgentChallengePage({ agentObjectId }: { agentObjectId: string }) {
   const account = useCurrentAccount()
   const { events: allEvents } = useAgentEvents()
   const { trackAttackSentinel } = useRewardsMissionTracker()
+
+  const { data: agent, isLoading, error, refetch } = useAgentByObjectId(agentObjectId)
 
   const { consumePrompt } = useConsumePrompt({
     showToasts: true,
@@ -29,19 +32,23 @@ export default function AgentChallengePage({ agentObjectId }: { agentObjectId: s
       setShowResultModal(true)
       refetch()
 
-      if (account?.address) {
-        trackAttackSentinel(transactionResult.digest, {
-          agent_id: agent?.agent_id,
-          agent_object_id: agent?.object_id,
+      if (account?.address && agent) {
+        console.log('agent while rewarding SNTL points', agent)
+        const attackFeeInSui = agent.cost_per_message / MIST_PER_SUI
+        //TODO: check id the previousAttempts is taking of the same user or all user
+        const previousAttempts = agentEvents.promptConsumed.length
+        const isWinner = apiResponse.response.data.success
+
+        trackAttackSentinel(transactionResult.digest, attackFeeInSui, previousAttempts, isWinner, {
+          agent_id: agent.agent_id,
+          agent_object_id: agent.object_id,
           attacker_address: account.address,
-          attack_success: apiResponse.response.data.success,
+          attack_success: isWinner,
           attack_score: apiResponse.response.data.score,
         })
       }
     },
   })
-
-  const { data: agent, isLoading, error, refetch } = useAgentByObjectId(agentObjectId)
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -132,12 +139,14 @@ export default function AgentChallengePage({ agentObjectId }: { agentObjectId: s
         refetchAgent={refetch}
       />
 
-      <AttackStatusModal
-        apiResponse={apiResponse}
-        showResultModal={showResultModal}
-        setShowResultModal={setShowResultModal}
-        txnHash={txnHash}
-      />
+      {apiResponse && txnHash && (
+        <AttackStatusModal
+          apiResponse={apiResponse}
+          showResultModal={showResultModal}
+          setShowResultModal={setShowResultModal}
+          txnHash={txnHash}
+        />
+      )}
     </div>
   )
 }

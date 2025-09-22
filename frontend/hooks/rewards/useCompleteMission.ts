@@ -7,6 +7,7 @@ export interface CompleteMissionParams {
   mission_type: string
   transaction_hash?: string
   metadata?: MissionMetadata
+  points_to_award?: number
 }
 
 export interface CompleteMissionResponse {
