@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { MissionMetadata, RHUser } from '@/types/Rewards'
 import { toast } from 'react-toastify'
+import { AGENT_EVENTS_QUERY_KEY } from '../useAgentEvents'
 
 export interface CompleteMissionParams {
   wallet_address: string
@@ -41,6 +42,8 @@ export function useCompleteMission() {
     },
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['user-rewards', variables.wallet_address] })
+
+      queryClient.invalidateQueries({ queryKey: [AGENT_EVENTS_QUERY_KEY] })
       toast.success(`Mission completed! +${data.points_earned} SNTL`)
     },
     onError: (error: Error) => {
