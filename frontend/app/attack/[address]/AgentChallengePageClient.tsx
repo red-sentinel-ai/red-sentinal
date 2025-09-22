@@ -11,10 +11,12 @@ import { AgentEvents, useAgentEvents } from '@/hooks/useAgentEvents'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
 import ChatInterface from '@/components/agents/ChatInterface'
 import RiveLoader from '@/components/rive/Loader'
+import { useRewardsMissionTracker } from '@/hooks/rewards/useRewardsMissionTracker'
 
 export default function AgentChallengePage({ agentObjectId }: { agentObjectId: string }) {
   const account = useCurrentAccount()
   const { events: allEvents } = useAgentEvents()
+  const { trackAttackSentinel } = useRewardsMissionTracker()
 
   const { consumePrompt } = useConsumePrompt({
     showToasts: true,
@@ -26,6 +28,16 @@ export default function AgentChallengePage({ agentObjectId }: { agentObjectId: s
       setTxnHash(transactionResult.digest)
       setShowResultModal(true)
       refetch()
+
+      if (account?.address) {
+        trackAttackSentinel(transactionResult.digest, {
+          agent_id: agent?.agent_id,
+          agent_object_id: agent?.object_id,
+          attacker_address: account.address,
+          attack_success: apiResponse.response.data.success,
+          attack_score: apiResponse.response.data.score,
+        })
+      }
     },
   })
 

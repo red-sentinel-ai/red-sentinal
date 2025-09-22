@@ -28,6 +28,7 @@ import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
 import { useTokenCount } from '@/hooks/useTokenCount'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 import { FundSuccessModal } from '@/components/FundSuccessModal'
+import { useRewardsMissionTracker } from '@/hooks/rewards/useRewardsMissionTracker'
 
 interface FormData {
   agentName: string
@@ -121,6 +122,7 @@ export default function DefendPage() {
   const [showFundModal, setShowFundModal] = useState(false)
   const [showFundSuccessModal, setShowFundSuccessModal] = useState(false)
   const [fundedAmount, setFundedAmount] = useState('')
+  const { trackLaunchSentinel } = useRewardsMissionTracker()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -215,6 +217,13 @@ export default function DefendPage() {
       setDeployedAgentObjectId(agentObjectId)
       setTransactionDigest(result.digest.toString())
       setShowSuccessModal(true)
+
+      trackLaunchSentinel(result.digest.toString(), {
+        agent_id: agent_id,
+        agent_name: agentName,
+        agent_object_id: agentObjectId,
+        owner_address: account!.address,
+      })
 
       const payload = new FormData()
       payload.append('agent_id', agent_id)

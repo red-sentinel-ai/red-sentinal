@@ -36,18 +36,23 @@ export interface RHUser {
 }
 
 export interface MissionMetadata {
-  collection_id?: string
-  token_id?: number
-  nft_name?: string
-  nft_id?: string
-  price?: number
-  collection_name?: string
-  collection_address?: string
-  from_address?: string
-  to_address?: string
-  walletAddress?: string
+  // For launching a sentinel
+  agent_id?: string
+  agent_name?: string
+  agent_object_id?: string
+  owner_address?: string
+
+  // For attacking a sentinel
+  attacker_address?: string
+  attack_success?: boolean
+  attack_score?: number
+
+  // For social missions
   discordHandle?: string
   twitterUserName?: string
+
+  // Generic wallet address
+  walletAddress?: string
   [key: string]: string | number | boolean | undefined
 }
 

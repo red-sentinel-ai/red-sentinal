@@ -131,9 +131,14 @@ export function RecentActivity({ activities, isLoading, pointsSymbol }: RecentAc
 function getMissionName(missionType: RHRewardsActivity['mission_type']): string {
   const names: Record<string, string> = {
     attack_sentinel: 'Attacked a Sentinel',
-    share_with_hashtag: 'Shared a post with hashtag',
+    launch_sentinel: 'Launched a Sentinel',
+    follow_x: 'Followed on X',
+    retweet: 'Retweeted a Post',
+    share_with_hashtag: 'Shared with Hashtag',
+    join_telegram: 'Joined Telegram',
+    telegram_engage: 'Engaged in Telegram',
   }
   return (
-    names[missionType] || missionType.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase())
+    names[missionType] || missionType.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())
   )
 }

@@ -26,7 +26,7 @@ export function useRewardsMissionTracker() {
     })
   }
 
-  const trackLaunchCollection = (txHash: string, metadata?: MissionMetadata) => {
+  const trackLaunchSentinel = (txHash: string, metadata?: MissionMetadata) => {
     if (!address || !isAllowed) return
 
     completeMission({
@@ -94,7 +94,7 @@ export function useRewardsMissionTracker() {
 
   return {
     trackAttackSentinel,
-    trackLaunchCollection,
+    trackLaunchSentinel,
     trackFollowedOnX,
     trackRetweet,
     trackShareWithHashtag,
