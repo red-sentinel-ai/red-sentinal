@@ -98,8 +98,6 @@ export function MissionCard({
 
       const metadata = {
         walletAddress: address,
-        discordHandle: 'placeholder', // TODO: add discord handle from session
-        twitterUserName: 'placeholder', // TODO: add twitter handle from session
       }
 
       switch (mission.type) {
