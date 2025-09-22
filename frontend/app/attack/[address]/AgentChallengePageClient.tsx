@@ -33,10 +33,12 @@ export default function AgentChallengePage({ agentObjectId }: { agentObjectId: s
       refetch()
 
       if (account?.address && agent) {
-        console.log('agent while rewarding SNTL points', agent)
         const attackFeeInSui = agent.cost_per_message / MIST_PER_SUI
-        //TODO: check id the previousAttempts is taking of the same user or all user
-        const previousAttempts = agentEvents.promptConsumed.length
+
+        const previousAttempts = agentEvents.promptConsumed.filter(
+          (event) => event.parsedJson.sender === account.address
+        ).length
+
         const isWinner = apiResponse.response.data.success
 
         trackAttackSentinel(transactionResult.digest, attackFeeInSui, previousAttempts, isWinner, {
