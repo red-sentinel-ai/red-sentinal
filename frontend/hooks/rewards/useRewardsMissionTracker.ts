@@ -45,7 +45,6 @@ export function useRewardsMissionTracker() {
         wallet_address: address,
         mission_type: REWARDS_CONSTANTS.MISSION_TYPES.DEFEAT_SENTINEL,
         transaction_hash: txHash,
-        //TODO: fix using static 300 points from the config
         metadata,
       })
     }
