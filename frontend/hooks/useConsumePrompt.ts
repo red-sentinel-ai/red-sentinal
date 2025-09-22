@@ -96,7 +96,6 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         { transaction: tx },
         {
           onSuccess: (result) => {
-            console.log('Payment transaction success:', result)
             onPaymentSuccess?.(result)
             resolve(result)
           },
