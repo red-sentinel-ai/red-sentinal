@@ -5,7 +5,9 @@ import { useCompleteMission } from './useCompleteMission'
 import { useSocialStatus } from '../profile/useSocialStatus'
 
 export function useRewardsMissionTracker() {
-  const { address } = useCurrentAccount()
+  const account = useCurrentAccount()
+  const address = account?.address
+
   const { mutate: completeMission } = useCompleteMission()
 
   const { data: socialStatus } = useSocialStatus(address || undefined)
