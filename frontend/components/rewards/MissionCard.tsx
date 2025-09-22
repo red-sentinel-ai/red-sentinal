@@ -173,8 +173,8 @@ export function MissionCard({
           isCompleted && isOneTime ? 'opacity-75' : ''
         }`}
       >
-        <CardHeader className="pb-4">
-          <div className="flex items-start justify-between">
+        <CardHeader className="p-4">
+          <div className="flex items-start justify-between flex-1">
             <div className="flex items-start gap-3">
               <div
                 className={`w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center ${
@@ -190,16 +190,21 @@ export function MissionCard({
                 )}
               </div>
               <div className="flex-1">
-                <CardTitle className="text-lg text-white leading-tight">{mission.name}</CardTitle>
-                <p className="text-xs text-gray-400 mt-1 pr-4">{mission.description}</p>
+                <div className="flex items-start justify-between gap-1">
+                  <CardTitle className="text-lg text-white leading-tight">{mission.name}</CardTitle>
+
+                  <Badge className="flex items-center gap-2 px-3 py-1 bg-[#12121266] backdrop-blur-lg rounded-full border border-[#383838] hover:border-[#558EB4]/30 transition-colors whitespace-nowrap text-[#558EB4]">
+                    {getPointsDisplay()}
+                  </Badge>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-400 mt-1 pr-4">{mission.description}</p>
+                </div>
               </div>
             </div>
-            <Badge className="flex items-center gap-2 px-3 py-1 bg-[#12121266] backdrop-blur-lg rounded-full border border-[#383838] hover:border-[#558EB4]/30 transition-colors whitespace-nowrap text-[#558EB4]">
-              {getPointsDisplay()}
-            </Badge>
           </div>
         </CardHeader>
-        <CardContent className="pt-0 flex-grow flex flex-col">
+        <CardContent className="pt-0 px-4 pb-4 flex-grow flex flex-col">
           <div className="flex flex-col gap-y-3 flex-grow mt-2">
             <div className="flex items-center gap-2 flex-wrap">
               {isCompleted && isOneTime ? (
@@ -227,28 +232,30 @@ export function MissionCard({
                 </Badge>
               )}
             </div>
-            <div className="flex-grow" /> {/* Spacer to push button to the bottom */}
             {isSocialMission && (!isOneTime || !isCompleted) && (
-              <motion.button
-                onClick={handleSocialMissionClick}
-                disabled={!address || isProcessing}
-                className="w-full border mt-auto border-[#558EB4] bg-[#12121266] backdrop-blur-lg rounded-lg py-3 text-[#558EB4] hover:bg-[#1388D5] hover:text-black hover:border-[#1388D5] transition-all duration-300 group flex items-center justify-center gap-2 disabled:opacity-50"
-                whileTap={{ scale: 0.98 }}
-              >
-                {isProcessing ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
-                    Processing...
-                  </>
-                ) : (
-                  <>
-                    <ExternalLink className="h-4 w-4" />
-                    Do Now
-                  </>
-                )}
-              </motion.button>
+              <div className="mt-auto">
+                <motion.button
+                  onClick={handleSocialMissionClick}
+                  disabled={!address || isProcessing}
+                  className="w-full border mt-auto border-[#558EB4] bg-[#12121266] backdrop-blur-lg rounded-lg py-3 text-[#558EB4] hover:bg-[#1388D5] hover:text-black hover:border-[#1388D5] transition-all duration-300 group flex items-center justify-center gap-2 disabled:opacity-50"
+                  whileTap={{ scale: 0.98 }}
+                >
+                  {isProcessing ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <ExternalLink className="h-4 w-4" />
+                      Do Now
+                    </>
+                  )}
+                </motion.button>
+              </div>
             )}
           </div>
+
           {isRepeatable &&
             currentPeriodCompletions > 0 &&
             (mission.max_per_week || mission.max_per_day) && (
