@@ -132,6 +132,8 @@ function getMissionName(missionType: RHRewardsActivity['mission_type']): string 
   const names: Record<string, string> = {
     attack_sentinel: 'Attacked a Sentinel',
     launch_sentinel: 'Launched a Sentinel',
+    fund_sentinel: 'Funded a Sentinel',
+    defeat_sentinel: 'Defeated a Sentinel',
     follow_x: 'Followed on X',
     retweet: 'Retweeted a Post',
     share_with_hashtag: 'Shared with Hashtag',

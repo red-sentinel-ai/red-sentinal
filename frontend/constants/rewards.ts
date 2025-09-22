@@ -24,6 +24,38 @@ const DEFAULT_MISSIONS = [
     max_per_week: 1,
   },
   {
+    id: 'fund_sentinel',
+    name: 'Add Funds to a Sentinel',
+    type: 'fund_sentinel',
+    points: 25, // This is the multiplier
+    enabled: true,
+    category: 'on_chain',
+    frequency: 'per_occurrence',
+    description: "Earn 25 points for every 1 SUI you add to a Sentinel's prize pool.",
+  },
+  {
+    id: 'attack_sentinel',
+    name: 'Attack a Sentinel',
+    type: 'attack_sentinel',
+    points: 1,
+    enabled: true,
+    category: 'on_chain',
+    frequency: 'per_occurrence',
+    description:
+      'Earn points for each attack. Points increase with the attack fee and number of previous attempts.',
+  },
+  {
+    id: 'defeat_sentinel',
+    name: 'Defeat a Sentinel',
+    type: 'defeat_sentinel',
+    points: 300,
+    enabled: true,
+    category: 'on_chain',
+    frequency: 'per_occurrence',
+    description:
+      'Earn a massive bonus for successfully defeating a Sentinel and winning the prize.',
+  },
+  {
     id: 'follow_x',
     name: 'Follow Sui Sentinel on X',
     type: 'follow_x',
@@ -82,6 +114,8 @@ export const REWARDS_CONSTANTS = {
   MISSION_TYPES: {
     ATTACK_SENTINEL: 'attack_sentinel',
     LAUNCH_SENTINEL: 'launch_sentinel',
+    FUND_SENTINEL: 'fund_sentinel',
+    DEFEAT_SENTINEL: 'defeat_sentinel',
     FOLLOW_X: 'follow_x',
     RETWEET: 'retweet',
     SHARE_WITH_HASHTAG: 'share_with_hashtag',
