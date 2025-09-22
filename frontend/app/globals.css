@@ -16,7 +16,7 @@
     --foreground: #ffffff;
     --text: #F4EEFF;
     --primary_pink: #FC5185;
-  --primary_pink_light: rgba(252, 81, 132, 0.9);
+    --primary_pink_light: rgba(252, 81, 132, 0.9);
   }
 }
 
