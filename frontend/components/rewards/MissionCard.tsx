@@ -51,6 +51,16 @@ const getSocialMissionIcon = (missionType: string) => {
           alt="telegram"
         />
       )
+    case 'join_discord':
+    case 'discord_engage':
+      return (
+        <Image
+          src="/icons/discord.svg"
+          width={20}
+          height={20}
+          alt="discord"
+        />
+      )
     default:
       return <Target className="h-6 w-6 text-primary_blue" />
   }
