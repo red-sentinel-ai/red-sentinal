@@ -58,10 +58,10 @@ export function RewardsDashboard() {
               <Card className="bg-[#12121266] backdrop-blur-lg border border-[#383838] rounded-2xl">
                 <CardContent className="text-center py-16">
                   <motion.div
-                    className="w-24 h-24 rounded-full bg-gradient-to-br from-[#558EB4]/20 to-[#1388D5]/20 flex items-center justify-center mx-auto mb-6"
+                    className="w-24 h-24 rounded-full bg-gradient-to-br from-primary_blue_20 to-[#1388D5]/20 flex items-center justify-center mx-auto mb-6"
                     whileHover={{ scale: 1.05 }}
                   >
-                    <Trophy className="h-12 w-12 text-[#558EB4]" />
+                    <Trophy className="h-12 w-12 text-primary_blue" />
                   </motion.div>
                   <h2 className="text-3xl font-bold mb-4 text-white uppercase">
                     Rewards Coming Soon
@@ -95,9 +95,11 @@ export function RewardsDashboard() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <motion.div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#558EB4]/20 to-[#1388D5]/20 px-4 py-2 rounded-full mb-4 border border-[#558EB4]/30">
-                  <Sparkles className="h-4 w-4 text-[#558EB4]" />
-                  <span className="text-sm font-medium text-[#558EB4]">Sui Sentinel Rewards</span>
+                <motion.div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary_blue_20 to-[#1388D5]/20 px-4 py-2 rounded-full mb-4 border border-primary_blue_30">
+                  <Sparkles className="h-4 w-4 text-primary_blue" />
+                  <span className="text-sm font-medium text-primary_blue">
+                    Sui Sentinel Rewards
+                  </span>
                 </motion.div>
                 <h1 className="text-5xl font-bold mb-4 text-white uppercase">
                   Earn. Compete. Conquer.
@@ -112,7 +114,7 @@ export function RewardsDashboard() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <motion.button className="border border-[#558EB4] bg-[#12121266] backdrop-blur-lg rounded-lg px-6 py-3 text-[#558EB4] hover:bg-[#1388D5] hover:text-black hover:border-[#1388D5] transition-all duration-300 group flex items-center gap-2">
+                    <motion.button className="border border-primary_blue bg-[#12121266] backdrop-blur-lg rounded-lg px-6 py-3 text-primary_blue hover:bg-[#1388D5] hover:text-black hover:border-[#1388D5] transition-all duration-300 group flex items-center gap-2">
                       <BookOpen className="h-4 w-4 group-hover:rotate-12 transition-transform duration-300" />
                       Program Guide
                       <ExternalLink className="h-3 w-3 opacity-60" />
@@ -121,8 +123,8 @@ export function RewardsDashboard() {
                 </div>
                 {isLoadingMissions && (
                   <div className="flex items-center justify-center gap-2 mt-4">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#558EB4]"></div>
-                    <span className="text-sm text-[#558EB4]">Loading latest missions...</span>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary_blue"></div>
+                    <span className="text-sm text-primary_blue">Loading latest missions...</span>
                   </div>
                 )}
               </motion.div>
@@ -174,14 +176,14 @@ export function RewardsDashboard() {
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          <motion.button className="border border-[#558EB4]/30 bg-[#12121266] backdrop-blur-lg rounded-lg px-4 py-2 text-[#558EB4] hover:bg-[#558EB4]/10 hover:border-[#558EB4]/50 transition-all duration-300 group flex items-center gap-2">
+                          <motion.button className="border border-primary_blue_30 bg-[#12121266] backdrop-blur-lg rounded-lg px-4 py-2 text-primary_blue hover:bg-primary_blue_20 hover:border-primary_blue_30 transition-all duration-300 group flex items-center gap-2">
                             <BookOpen className="h-4 w-4 group-hover:rotate-12 transition-transform duration-300" />
                             <span className="hidden sm:inline">Docs</span>
                             <ExternalLink className="h-3 w-3 opacity-60" />
                           </motion.button>
                         </Link>
                         <Link href="/rewards/leaderboard">
-                          <motion.button className="border border-[#8F564E] bg-[#12121266] backdrop-blur-lg rounded-lg px-4 py-2 text-[#8F564E] hover:bg-[#E53922] hover:text-black hover:border-[#E53922] transition-all duration-300 flex items-center gap-2">
+                          <motion.button className="border border-primary_pink_light bg-[#12121266] backdrop-blur-lg rounded-lg px-4 py-2 text-primary_pink_light hover:bg-primary_pink_light hover:text-black hover:border-primary_pink_light transition-all duration-300 flex items-center gap-2">
                             <Trophy className="h-4 w-4" />
                             Leaderboard
                             <ArrowRight className="h-3 w-3" />

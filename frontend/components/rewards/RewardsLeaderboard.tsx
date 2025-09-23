@@ -77,13 +77,13 @@ export function RewardsLeaderboard({ pointsSymbol }: RewardsLeaderboardProps) {
               <CardHeader className="flex-row justify-between items-start">
                 <div className="flex items-center gap-3">
                   <motion.div
-                    className="w-12 h-12 rounded-full bg-gradient-to-br from-[#8F564E]/20 to-[#E53922]/20 flex items-center justify-center"
+                    className="w-12 h-12 rounded-full bg-gradient-to-br from-primary_pink_20 to-[#E53922]/20 flex items-center justify-center"
                     whileHover={{ scale: 1.1, rotate: 5 }}
                   >
-                    <Trophy className="h-6 w-6 text-[#8F564E]" />
+                    <Trophy className="h-6 w-6 text-primary_pink" />
                   </motion.div>
                   <div>
-                    <CardTitle className="text-2xl text-[#B8B8B8] uppercase">
+                    <CardTitle className="text-2xl text-white uppercase">
                       SNTL Points Leaderboard
                     </CardTitle>
                     <p className="text-[#B5B5B5]">Top performers in the Sui Sentinel</p>
@@ -179,7 +179,7 @@ export function RewardsLeaderboard({ pointsSymbol }: RewardsLeaderboardProps) {
                               <div className="flex items-center gap-4 flex-shrink-0">
                                 <div className="text-right">
                                   <div className="flex items-center gap-1 justify-end mb-1">
-                                    <Zap className="h-4 w-4 text-[#558EB4]" />
+                                    <Zap className="h-4 w-4 text-primary_blue" />
                                     <span className="text-xl font-bold text-white">
                                       {entry.total_points?.toLocaleString()}
                                     </span>

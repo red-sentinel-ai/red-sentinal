@@ -55,13 +55,13 @@ export function MissionsGrid({
         >
           <div className="flex items-center gap-3 mb-8">
             <motion.div
-              className="w-10 h-10 rounded-full bg-gradient-to-br from-[#558EB4]/20 to-[#1388D5]/20 flex items-center justify-center"
+              className="w-10 h-10 rounded-full bg-gradient-to-br from-primary_blue_20 to-[#1388D5]/20 flex items-center justify-center"
               whileHover={{ scale: 1.1, rotate: 5 }}
             >
-              <Zap className="h-5 w-5 text-[#558EB4]" />
+              <Zap className="h-5 w-5 text-primary_blue" />
             </motion.div>
             <div>
-              <h3 className="text-2xl font-bold text-[#B8B8B8] uppercase">On-Chain Missions</h3>
+              <h3 className="text-2xl font-bold text-white uppercase">On-Chain Missions</h3>
               <p className="text-[#B5B5B5]">Complete transactions and earn rewards</p>
             </div>
           </div>
@@ -97,13 +97,13 @@ export function MissionsGrid({
         >
           <div className="flex items-center gap-3 mb-8">
             <motion.div
-              className="w-10 h-10 rounded-full bg-gradient-to-br from-[#8F564E]/20 to-[#E53922]/20 flex items-center justify-center"
+              className="w-10 h-10 rounded-full bg-gradient-to-br from-primary_pink_20 to-[#E53922]/20 flex items-center justify-center"
               whileHover={{ scale: 1.1, rotate: 5 }}
             >
-              <Users className="h-5 w-5 text-[#8F564E]" />
+              <Users className="h-5 w-5 text-primary_pink" />
             </motion.div>
             <div>
-              <h3 className="text-2xl font-bold text-[#B8B8B8] uppercase">Social Media Missions</h3>
+              <h3 className="text-2xl font-bold text-white uppercase">Social Media Missions</h3>
               <p className="text-[#B5B5B5]">Engage with our community and spread the word</p>
             </div>
           </div>
@@ -140,9 +140,7 @@ export function MissionsGrid({
           <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#383838]/20 to-[#383838]/30 flex items-center justify-center mx-auto mb-6">
             <Zap className="h-12 w-12 text-[#B5B5B5]" />
           </div>
-          <h3 className="text-xl font-semibold text-[#B8B8B8] mb-2 uppercase">
-            No Missions Available
-          </h3>
+          <h3 className="text-xl font-semibold text-white mb-2 uppercase">No Missions Available</h3>
           <p className="text-[#B5B5B5]">Check back later for new missions to complete!</p>
         </motion.div>
       )}

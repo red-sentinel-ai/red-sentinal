@@ -51,8 +51,8 @@ export function PointsDisplay({ totalPoints, tier, isLoading, pointsSymbol }: Po
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-0">
             <motion.div className="p-8 border-b lg:border-b-0 lg:border-r border-[#383838]">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#558EB4]/20 to-[#1388D5]/20 flex items-center justify-center">
-                  <Zap className="h-8 w-8 text-[#558EB4]" />
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary_blue_20 to-primary_blue_30 flex items-center justify-center">
+                  <Zap className="h-8 w-8 text-primary_blue" />
                 </div>
                 <div>
                   <div className="text-3xl font-bold text-white">
@@ -82,8 +82,8 @@ export function PointsDisplay({ totalPoints, tier, isLoading, pointsSymbol }: Po
             <motion.div className="p-8">
               {nextTier ? (
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#8F564E]/20 to-[#E53922]/20 flex items-center justify-center">
-                    <TrendingUp className="h-8 w-8 text-[#8F564E]" />
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary_pink_20 to-[#E53922]/20 flex items-center justify-center">
+                    <TrendingUp className="h-8 w-8 text-primary_pink" />
                   </div>
                   <div className="flex-1">
                     <div className="text-xl font-bold text-white">
@@ -94,11 +94,11 @@ export function PointsDisplay({ totalPoints, tier, isLoading, pointsSymbol }: Po
                 </div>
               ) : (
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#8F564E]/20 to-[#E53922]/20 flex items-center justify-center">
-                    <Crown className="h-8 w-8 text-[#8F564E]" />
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary_pink_20 to-[#E53922]/20 flex items-center justify-center">
+                    <Crown className="h-8 w-8 text-primary_pink" />
                   </div>
                   <div>
-                    <div className="text-xl font-bold text-[#8F564E]">Max Tier</div>
+                    <div className="text-xl font-bold text-primary_pink">Max Tier</div>
                     <div className="text-[#B5B5B5] font-medium">Congratulations!</div>
                   </div>
                 </div>
@@ -113,13 +113,13 @@ export function PointsDisplay({ totalPoints, tier, isLoading, pointsSymbol }: Po
                   <span className="text-sm font-medium text-[#B5B5B5]">
                     Progress to {nextTier.name}
                   </span>
-                  <span className="bg-[#558EB4]/20 text-[#558EB4] px-2 py-1 rounded-full text-xs font-medium border border-[#558EB4]/30">
+                  <span className="bg-primary_blue_20 text-primary_blue px-2 py-1 rounded-full text-xs font-medium border border-primary_blue_30">
                     {Math.round(progressToNext)}%
                   </span>
                 </div>
                 <div className="h-3 bg-[#383838] rounded-full overflow-hidden">
                   <motion.div
-                    className="h-full bg-gradient-to-r from-[#558EB4] to-[#1388D5] transition-all duration-1000 ease-out relative"
+                    className="h-full bg-gradient-to-r from-primary_blue to-[#1388D5] transition-all duration-1000 ease-out relative"
                     initial={{ width: 0 }}
                     animate={{ width: `${progressToNext}%` }}
                     transition={{ duration: 1, delay: 0.5 }}
@@ -139,25 +139,25 @@ export function PointsDisplay({ totalPoints, tier, isLoading, pointsSymbol }: Po
 const getTierIcon = (tierName: string) => {
   switch (tierName.toLowerCase()) {
     case 'platinum':
-      return <Crown className="h-8 w-8 text-[#8F564E]" />
+      return <Crown className="h-8 w-8 text-primary_pink" />
     case 'gold':
-      return <Trophy className="h-8 w-8 text-[#8F564E]" />
+      return <Trophy className="h-8 w-8 text-primary_pink" />
     case 'silver':
       return <Medal className="h-8 w-8 text-[#B5B5B5]" />
     default:
-      return <Award className="h-8 w-8 text-[#8F564E]" />
+      return <Award className="h-8 w-8 text-primary_pink" />
   }
 }
 
 const getTierGradient = (tierName: string) => {
   switch (tierName.toLowerCase()) {
     case 'platinum':
-      return 'from-[#8F564E]/20 to-[#E53922]/20'
+      return 'from-primary_pink_20 to-[#E53922]/20'
     case 'gold':
-      return 'from-[#8F564E]/20 to-[#E53922]/20'
+      return 'from-primary_pink_20 to-[#E53922]/20'
     case 'silver':
       return 'from-[#B5B5B5]/20 to-[#383838]/20'
     default:
-      return 'from-[#8F564E]/20 to-[#E53922]/20'
+      return 'from-primary_pink_20 to-[#E53922]/20'
   }
 }

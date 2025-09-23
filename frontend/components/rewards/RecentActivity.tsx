@@ -16,7 +16,7 @@ export function RecentActivity({ activities, isLoading, pointsSymbol }: RecentAc
     return (
       <Card className="bg-[#12121266] backdrop-blur-lg border border-[#383838] rounded-2xl">
         <CardHeader>
-          <CardTitle className="text-[#B8B8B8] uppercase">Recent Activity</CardTitle>
+          <CardTitle className="text-xl text-white uppercase">Recent Activity</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -38,13 +38,13 @@ export function RecentActivity({ activities, isLoading, pointsSymbol }: RecentAc
         <CardHeader>
           <div className="flex items-center gap-3">
             <motion.div
-              className="w-10 h-10 rounded-full bg-gradient-to-br from-[#558EB4]/20 to-[#1388D5]/20 flex items-center justify-center"
+              className="w-10 h-10 rounded-full bg-gradient-to-br from-primary_blue_20 to-[#1388D5]/20 flex items-center justify-center"
               whileHover={{ scale: 1.1, rotate: 5 }}
             >
               <TrendingUp className="h-5 w-5 text-[#558EB4]" />
             </motion.div>
             <div>
-              <CardTitle className="text-xl text-[#B8B8B8] uppercase">Recent Activity</CardTitle>
+              <CardTitle className="text-xl text-white uppercase">Recent Activity</CardTitle>
               <p className="text-sm text-[#B5B5B5]">Your latest mission completions</p>
             </div>
           </div>
@@ -59,7 +59,7 @@ export function RecentActivity({ activities, isLoading, pointsSymbol }: RecentAc
             <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#383838]/20 to-[#383838]/30 flex items-center justify-center mx-auto mb-6">
               <Clock className="h-10 w-10 text-[#B5B5B5]" />
             </div>
-            <h3 className="text-lg font-semibold text-[#B8B8B8] mb-2 uppercase">No Activity Yet</h3>
+            <h3 className="text-lg font-semibold text-white mb-2 uppercase">No Activity Yet</h3>
             <p className="text-[#B5B5B5] max-w-sm mx-auto">
               Start completing missions to see your activity history here!
             </p>
@@ -70,22 +70,22 @@ export function RecentActivity({ activities, isLoading, pointsSymbol }: RecentAc
   }
 
   return (
-    <Card className="bg-[#12121266] backdrop-blur-lg border border-[#383838] rounded-2xl">
-      <CardHeader>
+    <Card className="border-none !p-0">
+      <CardHeader className="px-0 pt-0">
         <div className="flex items-center gap-3">
           <motion.div
-            className="w-10 h-10 rounded-full bg-gradient-to-br from-[#558EB4]/20 to-[#1388D5]/20 flex items-center justify-center"
+            className="w-10 h-10 rounded-full bg-gradient-to-br from-primary_blue_20 to-[#1388D5]/20 flex items-center justify-center"
             whileHover={{ scale: 1.1, rotate: 5 }}
           >
             <TrendingUp className="h-5 w-5 text-[#558EB4]" />
           </motion.div>
           <div>
-            <CardTitle className="text-xl text-[#B8B8B8] uppercase">Recent Activity</CardTitle>
+            <CardTitle className="text-xl text-white uppercase">Recent Activity</CardTitle>
             <p className="text-sm text-[#B5B5B5]">Your latest mission completions</p>
           </div>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="px-0">
         <div className="space-y-4">
           {activities.map((activity, index) => (
             <motion.div
@@ -97,8 +97,8 @@ export function RecentActivity({ activities, isLoading, pointsSymbol }: RecentAc
             >
               <div className="relative flex items-center justify-between p-4 bg-[#12121266] backdrop-blur-lg hover:bg-[#12121280] rounded-lg transition-all duration-300 border border-[#383838] hover:border-[#558EB4]/30">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#8F564E]/20 to-[#E53922]/20 flex items-center justify-center">
-                    <Zap className="h-6 w-6 text-[#8F564E]" />
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary_pink_20 to-[#E53922]/20 flex items-center justify-center">
+                    <Zap className="h-6 w-6 text-primary_pink" />
                   </div>
                   <div>
                     <p className="font-semibold text-white mb-1">
@@ -115,7 +115,7 @@ export function RecentActivity({ activities, isLoading, pointsSymbol }: RecentAc
                   </div>
                 </div>
                 <div className="text-right">
-                  <span className="bg-gradient-to-r from-[#8F564E] to-[#E53922] text-white font-semibold px-3 py-1 rounded-full text-sm">
+                  <span className="bg-gradient-to-r from-primary_pink_20 to-primary_pink_light text-white font-semibold px-3 py-1 rounded-full text-sm">
                     +{activity.points_earned} {pointsSymbol}
                   </span>
                 </div>
