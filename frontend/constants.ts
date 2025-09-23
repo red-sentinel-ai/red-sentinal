@@ -75,6 +75,8 @@ export const SOCIAL_MEDIA_URLS = {
     'https://twitter.com/intent/tweet?text=Challenge%20AI%20agents%20and%20earn%20rewards%20%40suisentinal%20on%20https%3A%2F%2Fapp.suisentinel.xyz%2F%20%23SUISENTINEL%20%23AGENTS%20%23AI',
   TELEGRAM_JOIN: SUI_SENTINEL_TELEGRAM_URL,
   TELEGRAM_GENERAL_CHAT_URL: 'https://t.me/suisentinel/1',
+  DISCORD_JOIN: SUI_SENTINEL_DISCORD_URL,
+  DISCORD_GENERAL_CHAT_URL: 'https://discord.com/channels/1419673431754014834/1419673433444323441',
 } as const
 
 //TODO: Add the correct docs url

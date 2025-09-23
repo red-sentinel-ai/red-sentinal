@@ -78,6 +78,10 @@ const getSocialMissionUrl = (missionType: string): string | null => {
       return SOCIAL_MEDIA_URLS.TELEGRAM_JOIN
     case 'telegram_engage':
       return SOCIAL_MEDIA_URLS.TELEGRAM_GENERAL_CHAT_URL
+    case 'join_discord':
+      return SOCIAL_MEDIA_URLS.DISCORD_JOIN
+    case 'discord_engage':
+      return SOCIAL_MEDIA_URLS.DISCORD_GENERAL_CHAT_URL
     default:
       return null
   }
@@ -97,6 +101,8 @@ export function MissionCard({
     trackShareWithHashtag,
     trackJoinedTelegram,
     trackTelegramEngage,
+    trackJoinedDiscord,
+    trackDiscordEngage,
   } = useRewardsMissionTracker()
 
   const isOneTime = mission.frequency === 'one_time'
@@ -162,6 +168,11 @@ export function MissionCard({
           break
         case 'telegram_engage':
           trackTelegramEngage('social_mission', metadata)
+        case 'join_discord':
+          trackJoinedDiscord('social_mission', metadata)
+          break
+        case 'discord_engage':
+          trackDiscordEngage('social_mission', metadata)
           break
       }
     } catch (error) {
