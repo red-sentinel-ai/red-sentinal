@@ -52,7 +52,7 @@ const getSocialMissionIcon = (missionType: string) => {
         />
       )
     default:
-      return <Target className="h-6 w-6 text-[#558EB4]" />
+      return <Target className="h-6 w-6 text-primary_blue" />
   }
 }
 
@@ -169,7 +169,7 @@ export function MissionCard({
       transition={{ duration: 0.3 }}
     >
       <Card
-        className={`relative transition-all duration-300 bg-[#12121266] backdrop-blur-lg border border-[#383838] hover:border-[#558EB4]/50 h-full rounded-2xl flex flex-col ${
+        className={`relative transition-all duration-300 bg-[#12121266] backdrop-blur-lg border border-[#383838] hover:border-primary_blue_50 h-full rounded-2xl flex flex-col ${
           isCompleted && isOneTime ? 'opacity-75' : ''
         }`}
       >
@@ -179,12 +179,12 @@ export function MissionCard({
               <div
                 className={`w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center ${
                   mission.category === 'on_chain'
-                    ? 'bg-gradient-to-br from-[#558EB4]/20 to-[#1388D5]/20'
-                    : 'bg-gradient-to-br from-[#8F564E]/20 to-[#E53922]/20'
+                    ? 'bg-gradient-to-br from-primary_blue_20 to-[#1388D5]/20'
+                    : 'bg-gradient-to-br from-primary_pink_20 to-[#E53922]/20'
                 }`}
               >
                 {mission.category === 'on_chain' ? (
-                  <Zap className="h-6 w-6 text-[#558EB4]" />
+                  <Zap className="h-6 w-6 text-primary_blue" />
                 ) : (
                   getSocialMissionIcon(mission.type)
                 )}
@@ -193,7 +193,7 @@ export function MissionCard({
                 <div className="flex items-start justify-between gap-1">
                   <CardTitle className="text-lg text-white leading-tight">{mission.name}</CardTitle>
 
-                  <Badge className="flex items-center gap-2 px-3 py-1 bg-[#12121266] backdrop-blur-lg rounded-full border border-[#383838] hover:border-[#558EB4]/30 transition-colors whitespace-nowrap text-[#558EB4]">
+                  <Badge className="flex items-center gap-2 px-3 py-1 bg-[#12121266] backdrop-blur-lg rounded-full border border-[#383838] hover:border-primary_blue_50 transition-colors whitespace-nowrap text-primary_blue">
                     {getPointsDisplay()}
                   </Badge>
                 </div>
@@ -208,18 +208,18 @@ export function MissionCard({
           <div className="flex flex-col gap-y-3 flex-grow mt-2">
             <div className="flex items-center gap-2 flex-wrap">
               {isCompleted && isOneTime ? (
-                <Badge className="bg-[#8F564E]/20 text-[#8F564E] border border-[#8F564E]/30 rounded-full">
+                <Badge className="bg-primary_pink/20 text-primary_pink border border-primary_pink_light rounded-full">
                   <Check className="h-3 w-3 mr-1" />
                   Completed
                 </Badge>
               ) : totalCompletions > 0 ? (
-                <Badge className="bg-[#558EB4]/20 text-[#558EB4] border border-[#558EB4]/30 rounded-full">
+                <Badge className="bg-primary_blue_20 text-primary_blue border border-primary_blue_30 rounded-full">
                   <Trophy className="h-3 w-3 mr-1" />
                   {totalCompletions} completed
                 </Badge>
               ) : null}
               {isRepeatable && (
-                <Badge className="bg-[#8F564E]/20 text-[#8F564E] border border-[#8F564E]/30 rounded-full">
+                <Badge className="bg-primary_pink/20 text-primary_pink_light border border-primary_pink_light rounded-full">
                   <Repeat className="h-3 w-3 mr-1" />
                   Repeatable
                 </Badge>
@@ -237,7 +237,7 @@ export function MissionCard({
                 <motion.button
                   onClick={handleSocialMissionClick}
                   disabled={!address || isProcessing}
-                  className="w-full border mt-auto border-[#558EB4] bg-[#12121266] backdrop-blur-lg rounded-lg py-3 text-[#558EB4] hover:bg-[#1388D5] hover:text-black hover:border-[#1388D5] transition-all duration-300 group flex items-center justify-center gap-2 disabled:opacity-50"
+                  className="w-full border mt-auto border-primary_blue bg-[#12121266] backdrop-blur-lg rounded-lg py-3 text-primary_blue hover:bg-[#1388D5] hover:text-black hover:border-[#1388D5] transition-all duration-300 group flex items-center justify-center gap-2 disabled:opacity-50"
                   whileTap={{ scale: 0.98 }}
                 >
                   {isProcessing ? (
@@ -263,7 +263,7 @@ export function MissionCard({
                 <div className="flex items-center gap-2">
                   <div className="flex-1 h-1 bg-[#383838] rounded-full overflow-hidden">
                     <motion.div
-                      className="h-full bg-gradient-to-r from-[#558EB4] to-[#1388D5] transition-all duration-500"
+                      className="h-full bg-gradient-to-r from-primary_blue to-[#1388D5] transition-all duration-500"
                       initial={{ width: 0 }}
                       animate={{
                         width: `${Math.min(
