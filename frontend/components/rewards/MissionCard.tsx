@@ -196,7 +196,7 @@ export function MissionCard({
       >
         <CardHeader className="p-4">
           <div className="flex items-start justify-between flex-1">
-            <div className="flex items-start gap-3">
+            <div className="flex items-start gap-3 w-full">
               <div
                 className={`w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center ${
                   mission.category === 'on_chain'
