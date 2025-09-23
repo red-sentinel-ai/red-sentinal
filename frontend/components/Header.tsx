@@ -62,12 +62,6 @@ export const Header = () => {
             <span>Documentation</span>
           </Link>
 
-          <Link
-            className="block ml-3 xl:ml-4 flex-shrink-0"
-            href="/rewards"
-          >
-            Rewards
-          </Link>
           <div className="hidden xl:block">
             <MenuItems menuOpen={menuOpen} />
           </div>
