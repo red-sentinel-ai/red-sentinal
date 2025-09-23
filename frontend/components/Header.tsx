@@ -39,7 +39,7 @@ export const Header = () => {
           'pt-[10px]': !bannerVisible,
         })}
       >
-        <div className="flex items-center">
+        <div className="flex items-center flex-1">
           <Link
             className="block mr-1 xl:mr-4 flex-shrink-0"
             href="/"
@@ -62,7 +62,7 @@ export const Header = () => {
             <span>Documentation</span>
           </Link>
 
-          <div className="hidden xl:block">
+          <div className="hidden xl:block w-full">
             <MenuItems menuOpen={menuOpen} />
           </div>
         </div>
