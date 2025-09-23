@@ -128,6 +128,8 @@ export const REWARDS_CONSTANTS = {
     SHARE_WITH_HASHTAG: 'share_with_hashtag',
     JOIN_TELEGRAM: 'join_telegram',
     TELEGRAM_ENGAGE: 'telegram_engage',
+    JOIN_DISCORD: 'join_discord',
+    DISCORD_ENGAGE: 'discord_engage',
   } as const,
 
   TIERS: {

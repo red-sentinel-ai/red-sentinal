@@ -129,6 +129,27 @@ export function useRewardsMissionTracker() {
       metadata,
     })
   }
+  const trackJoinedDiscord = (txHash: string, metadata?: MissionMetadata) => {
+    if (!address || !isAllowed) return
+
+    completeMission({
+      wallet_address: address,
+      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.JOIN_DISCORD,
+      transaction_hash: txHash,
+      metadata,
+    })
+  }
+
+  const trackDiscordEngage = (txHash: string, metadata?: MissionMetadata) => {
+    if (!address || !isAllowed) return
+
+    completeMission({
+      wallet_address: address,
+      mission_type: REWARDS_CONSTANTS.MISSION_TYPES.DISCORD_ENGAGE,
+      transaction_hash: txHash,
+      metadata,
+    })
+  }
 
   return {
     trackAttackSentinel,
@@ -139,5 +160,7 @@ export function useRewardsMissionTracker() {
     trackShareWithHashtag,
     trackJoinedTelegram,
     trackTelegramEngage,
+    trackJoinedDiscord,
+    trackDiscordEngage,
   }
 }
