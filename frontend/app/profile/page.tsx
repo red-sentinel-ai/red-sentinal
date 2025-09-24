@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { UserActivity } from '@/components/profile/UserActivity'
 import { UserAgents } from '@/components/profile/UserAgents'
 import { ConnectPrompt } from '@/components/ConnectPrompt'
+import { SocialConnectionsSectionWrapper } from '@/components/profile/SocialConnectionsSectionWrapper'
 
 const PROFILE_TABS = {
   AGENTS: 'agents',
@@ -44,6 +45,10 @@ export default function ProfilePage() {
               <p className="text-gray-400 mt-1">{account?.address}</p>
             </div>
           </div>
+        </div>
+
+        <div className="mb-4">
+          <SocialConnectionsSectionWrapper />
         </div>
 
         <Tabs

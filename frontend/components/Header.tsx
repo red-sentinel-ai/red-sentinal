@@ -39,7 +39,7 @@ export const Header = () => {
           'pt-[10px]': !bannerVisible,
         })}
       >
-        <div className="flex items-center">
+        <div className="flex items-center flex-1">
           <Link
             className="block mr-1 xl:mr-4 flex-shrink-0"
             href="/"
@@ -61,7 +61,8 @@ export const Header = () => {
             <BookOpen width={16} />
             <span>Documentation</span>
           </Link>
-          <div className="hidden xl:block">
+
+          <div className="hidden xl:block w-full">
             <MenuItems menuOpen={menuOpen} />
           </div>
         </div>
@@ -78,7 +79,7 @@ export const Header = () => {
         </button>
 
         {/* <Link
-          className="block ml-1 xl:ml-4 flex-shrink-0"
+          className="block ml-3 xl:ml-4 flex-shrink-0"
           href={YOUTUBE_VIDEO_URL}
           target="_blank"
         >

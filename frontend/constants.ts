@@ -13,6 +13,7 @@ export const SUI_SENTINEL_APP_URL = 'https://app.suisentinel.xyz/'
 export const SUI_SENTINEL_DOCS_URL = 'https://docs.suisentinel.xyz/'
 export const SUI_SENTINEL_X_URL = 'https://twitter.com/intent/follow?screen_name=suisentinal'
 export const SUI_SENTINEL_X_USERNAME = 'suisentinal'
+export const SUI_SENTINEL_DISCORD_URL = 'https://discord.gg/bAz9g9u69K'
 export const SUI_SENTINEL_GITHUB_URL = 'https://github.com/sui-sentinel/contracts'
 export const SUI_SENTINEL_TELEGRAM_URL = 'https://t.me/suisentinel'
 
@@ -62,10 +63,24 @@ export const MOCK_RESULT = {
     },
   ],
 }
+export const PROJECT_DISCORD_URL = 'https://discord.gg'
 
 export const DEFAULT_PROFILE_URL =
   'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/ss-agents//default_profile.jpg'
 
+export const SOCIAL_MEDIA_URLS = {
+  TWITTER_FOLLOW: 'https://twitter.com/intent/follow?screen_name=suisentinal',
+  TWITTER_PROFILE: X_URL,
+  TWITTER_TWEET:
+    'https://twitter.com/intent/tweet?text=Challenge%20AI%20agents%20and%20earn%20rewards%20%40suisentinal%20on%20https%3A%2F%2Fapp.suisentinel.xyz%2F%20%23SUISENTINEL%20%23AGENTS%20%23AI',
+  TELEGRAM_JOIN: SUI_SENTINEL_TELEGRAM_URL,
+  TELEGRAM_GENERAL_CHAT_URL: 'https://t.me/suisentinel/1',
+  DISCORD_JOIN: SUI_SENTINEL_DISCORD_URL,
+  DISCORD_GENERAL_CHAT_URL: 'https://discord.com/channels/1419673431754014834/1419673433444323441',
+} as const
+
+//TODO: Add the correct docs url
+export const REWARDS_DOCS_URL = 'https://sui-sentinal-plum.vercel.app/'
 export const SENTINEL_GIFS = [
   'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//6.png',
   'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//7.png',

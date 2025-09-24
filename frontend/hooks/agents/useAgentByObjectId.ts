@@ -2,11 +2,13 @@ import { useQuery } from '@tanstack/react-query'
 import { useSuiClient } from '@mysten/dapp-kit'
 import { AgentDetails, fetchAgentDetailsViaObject } from './useAllAgents'
 
+export const AGENT_DETAILS_QUERY_KEY = 'agentByObjectId'
+
 export const useAgentByObjectId = (objectId?: string) => {
   const client = useSuiClient()
 
   return useQuery<AgentDetails, Error>({
-    queryKey: ['agentByObjectId', objectId],
+    queryKey: [AGENT_DETAILS_QUERY_KEY, objectId],
     enabled: !!objectId,
     queryFn: async () => {
       const res = await fetch(`/api/agents/single?object_id=${objectId}`)

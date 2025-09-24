@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect, useCallback } from 'react'
 import { useSuiClient } from '@mysten/dapp-kit'
 import { SuiClient } from '@mysten/sui/client'
+import { useQuery } from '@tanstack/react-query'
 import { SUI_CONFIG } from '@/constants'
 
 export interface AgentEvents {
@@ -9,44 +9,30 @@ export interface AgentEvents {
   promptConsumed: any[]
 }
 
-interface UseAgentEventsResult {
-  events: AgentEvents
-  loading: boolean
-  error: string | null
-  refetch: () => Promise<void>
-}
+export const AGENT_EVENTS_QUERY_KEY = 'agentEvents'
 
-export function useAgentEvents(): UseAgentEventsResult {
+export function useAgentEvents() {
   const client = useSuiClient()
-  const [events, setEvents] = useState({
-    agentDefeated: [],
-    promptConsumed: [],
+
+  const {
+    data: events,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery<AgentEvents, Error>({
+    queryKey: [AGENT_EVENTS_QUERY_KEY],
+    queryFn: () => getAgentEvents(client),
+    staleTime: 60 * 1000,
   })
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
-  const fetchEvents = useCallback(async () => {
-    setLoading(true)
-    setError(null)
-
-    try {
-      //TODO: Implement cursor here
-      const result = await getAgentEvents(client)
-      setEvents(result)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error')
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchEvents()
-  }, [fetchEvents])
-
-  return { events, loading, error, refetch: fetchEvents }
+  return {
+    events: events || { agentDefeated: [], promptConsumed: [] },
+    loading: isLoading,
+    error: isError ? error.message : null,
+    refetch,
+  }
 }
-
 async function getAgentEvents(client: SuiClient) {
   const packageId = SUI_CONFIG.EXAMPLES_PACKAGE_ID
   const moduleName = SUI_CONFIG.MODULE_NAME

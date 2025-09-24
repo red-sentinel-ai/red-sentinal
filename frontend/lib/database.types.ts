@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "12.0.2 (a4e00ff)"
+    PostgrestVersion: "13.0.5"
   }
   public: {
     Tables: {
@@ -696,6 +696,50 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "places"
             referencedColumns: ["place_id"]
+          },
+        ]
+      }
+      rh_feature_requests: {
+        Row: {
+          collection_id: string
+          created_at: string | null
+          email: string
+          id: string
+          name: string
+          notes: string | null
+          telegram_username: string | null
+          twitter_username: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          collection_id: string
+          created_at?: string | null
+          email: string
+          id?: string
+          name: string
+          notes?: string | null
+          telegram_username?: string | null
+          twitter_username?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          collection_id?: string
+          created_at?: string | null
+          email?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          telegram_username?: string | null
+          twitter_username?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_feature_requests_collection_id"
+            columns: ["collection_id"]
+            isOneToOne: false
+            referencedRelation: "aztec_nft_collections"
+            referencedColumns: ["collection_id"]
           },
         ]
       }
