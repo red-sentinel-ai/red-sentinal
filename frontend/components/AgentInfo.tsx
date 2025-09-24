@@ -100,7 +100,10 @@ export const AgentInfo = ({
                     asChild
                     className="cursor-help"
                   >
-                    <Info width={12} />
+                    <Info
+                      width={12}
+                      height={12}
+                    />
                   </TooltipTrigger>
                   <TooltipContent className="bg-black border border-gray-700 text-white">
                     <p>Format: D:H:M:S (Days:Hours:Minutes:Seconds)</p>
