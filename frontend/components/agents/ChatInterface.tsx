@@ -190,23 +190,27 @@ export default function ChatInterface({
                     />
                   )}
                 </div>
-                <p className="text-xs sm:text-sm text-gray-300 truncate">
-                  Sentinel ID: {agent.agent_id}
-                </p>
+                <div className="flex items-center gap-1">
+                  <p className="text-xs sm:text-sm text-gray-300 truncate">
+                    Sentinel ID: {agent.agent_id}
+                  </p>
+
+                  <button
+                    onClick={() => setShowAgentDetails(!showAgentDetails)}
+                    className="p-2 hover:bg-[#2E40494D] rounded-md transition-colors flex items-center gap-1 mt1"
+                  >
+                    <p className="text-xs sm:text-sm font-semibold underline">
+                      View Sentinel Instructions
+                    </p>
+                    {showAgentDetails ? (
+                      <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5" />
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
-
-            <button
-              onClick={() => setShowAgentDetails(!showAgentDetails)}
-              className="p-2 hover:bg-[#2E40494D] rounded-md transition-colors flex items-center gap-1 mt1"
-            >
-              <p className="text-xs sm:text-sm font-semibold underline"> View System Prompt</p>
-              {showAgentDetails ? (
-                <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5" />
-              ) : (
-                <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5" />
-              )}
-            </button>
           </div>
 
           <div className="flex-1 sm:flex-none">
