@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Clock, Coins, Zap } from 'lucide-react'
+import { Clock, Coins, Info, Zap } from 'lucide-react'
 import clsx from 'clsx'
 import { MIST_PER_SUI } from '@/constants'
 import { formatBalance, formatDuration } from '@/lib/utils'
@@ -87,26 +87,33 @@ export const AgentInfo = ({
 
         <div className="w-px h-12 bg-gradient-to-b from-transparent via-gray-500 to-transparent"></div>
 
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="flex items-center gap-3 flex-1 cursor-help">
-                <div className="w-10 h-10 bg-gradient-to-r from-text to-primary_pink rounded-full flex items-center justify-center shadow-md">
-                  <Clock className="w-5 h-5 text-white" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs font-medium text-gray-300 mb-1">Active Time</p>
-                  <p className="text-lg font-bold text-white flex items-center gap-1 min-w-[108px]">
-                    <span>{activeSince}</span>
-                  </p>
-                </div>
-              </div>
-            </TooltipTrigger>
-            <TooltipContent className="bg-black border border-gray-700 text-white">
-              <p>Format: D:H:M:S (Days:Hours:Minutes:Seconds)</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <div className="flex items-center gap-3 flex-1">
+          <div className="w-10 h-10 bg-gradient-to-r from-text to-primary_pink rounded-full flex items-center justify-center shadow-md">
+            <Clock className="w-5 h-5 text-white" />
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center gap-1 mb-1">
+              <p className="text-xs font-medium text-gray-300">Active Time</p>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger
+                    asChild
+                    className="cursor-help"
+                  >
+                    <Info width={12} />
+                  </TooltipTrigger>
+                  <TooltipContent className="bg-black border border-gray-700 text-white">
+                    <p>Format: D:H:M:S (Days:Hours:Minutes:Seconds)</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+
+            <p className="text-lg font-bold text-white flex items-center gap-1 min-w-[108px]">
+              <span>{activeSince}</span>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   )
