@@ -1181,7 +1181,7 @@ export type Database = {
           rewards_tier: string | null
           rewards_updated_at: string | null
           total_points: number | null
-          username: string | null
+          username: string
           wallet_addresses: string[] | null
         }
         Insert: {
@@ -1192,7 +1192,7 @@ export type Database = {
           rewards_tier?: string | null
           rewards_updated_at?: string | null
           total_points?: number | null
-          username?: string | null
+          username: string
           wallet_addresses?: string[] | null
         }
         Update: {
@@ -1203,7 +1203,7 @@ export type Database = {
           rewards_tier?: string | null
           rewards_updated_at?: string | null
           total_points?: number | null
-          username?: string | null
+          username?: string
           wallet_addresses?: string[] | null
         }
         Relationships: []
