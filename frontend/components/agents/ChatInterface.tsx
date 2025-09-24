@@ -215,7 +215,6 @@ export default function ChatInterface({
               decimal={9}
               promptPrice={agent.cost_per_message.toString()}
               symbol="SUI"
-              className="w-full sm:w-auto text-xs sm:text-sm"
               breakAttempts={0}
               isDrained={isAgentDrained}
               drainAmount="0"
