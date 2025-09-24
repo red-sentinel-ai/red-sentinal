@@ -23,9 +23,13 @@ async function getUserProfile(username: string) {
   return { user, agents: (agents as AgentDetails[]) || [] }
 }
 
-export default async function PublicProfilePage({ params }: { params: { username: string } }) {
-  const profileData = await getUserProfile(params.username)
-
+export default async function PublicProfilePage({
+  params,
+}: {
+  params: Promise<{ username: string }>
+}) {
+  const { username } = await params
+  const profileData = await getUserProfile(username)
   if (!profileData) {
     notFound()
   }
