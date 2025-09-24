@@ -32,8 +32,12 @@ export function useUserProfile() {
     refetchOnWindowFocus: false,
   })
 }
+interface UseUpdateProfileOptions {
+  onSuccess?: (data: UserProfile) => void
+  onError?: (error: Error) => void
+}
 
-export function useUpdateProfile() {
+export function useUpdateProfile(options: UseUpdateProfileOptions = {}) {
   const queryClient = useQueryClient()
   const account = useCurrentAccount()
   const walletAddress = account?.address
@@ -57,9 +61,11 @@ export function useUpdateProfile() {
     onSuccess: (updatedProfile) => {
       toast.success('Profile updated successfully!')
       queryClient.setQueryData([USER_PROFILE_QUERY_KEY, walletAddress], updatedProfile)
+      options.onSuccess?.(updatedProfile)
     },
     onError: (error: Error) => {
       toast.error(error.message)
+      options.onError?.(error)
     },
   })
 }

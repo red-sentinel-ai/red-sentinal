@@ -4,10 +4,18 @@ import { useDebounce } from 'use-debounce'
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react'
 import { useUserProfile, useUpdateProfile } from '@/hooks/profile/useUserProfile'
 
-export function ProfileEditForm() {
-  const { data: profile, isLoading: isLoadingProfile } = useUserProfile()
-  const { mutate: updateProfile, isPending: isUpdating } = useUpdateProfile()
+interface ProfileEditFormProps {
+  onSuccess?: () => void
+}
 
+export function ProfileEditForm({ onSuccess }: ProfileEditFormProps) {
+  const { data: profile, isLoading: isLoadingProfile } = useUserProfile()
+
+  const { mutate: updateProfile, isPending: isUpdating } = useUpdateProfile({
+    onSuccess: () => {
+      onSuccess?.()
+    },
+  })
   const [username, setUsername] = useState('')
   const [displayName, setDisplayName] = useState('')
   const [debouncedUsername] = useDebounce(username, 500)
@@ -52,7 +60,7 @@ export function ProfileEditForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-6 bg-gray-900 p-6 rounded-lg border border-gray-700"
+      className="space-y-6"
     >
       <div>
         <label className="block text-sm font-medium text-gray-300 mb-2">Display Name</label>
