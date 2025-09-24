@@ -4,6 +4,7 @@ import { Transaction } from '@mysten/sui/transactions'
 import { useSignAndExecuteTransaction, useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
 import { MIST_PER_SUI, SUI_CONFIG } from '@/constants'
 import { toast } from 'react-toastify'
+import { useRewardsMissionTracker } from './rewards/useRewardsMissionTracker'
 
 const GAS_BUDGET = 1_000_000
 const GAS_OBJECT_MIN_BALANCE = BigInt(GAS_BUDGET) * BigInt(2)
@@ -26,6 +27,7 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [lastResult, setLastResult] = useState<any>(null)
+  const { trackFundSentinel } = useRewardsMissionTracker()
 
   const account = useCurrentAccount()
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction({
@@ -205,6 +207,10 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
               onSuccess: (result) => {
                 console.log('Fund agent transaction success:', result)
                 setLastResult(result)
+
+                trackFundSentinel(result.digest, amount, {
+                  agent_object_id: agentObjectId,
+                })
 
                 if (showToasts) {
                   toast.success(`Successfully funded agent with ${amount} SUI`)

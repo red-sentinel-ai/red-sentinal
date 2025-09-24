@@ -59,7 +59,6 @@ export default function ChatInterface({
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
 
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false)
-  console.log({ chatMessages })
 
   const isAgentDrained = chatMessages.some(
     (message) => message.type === 'agent' && message.isSuccess === true

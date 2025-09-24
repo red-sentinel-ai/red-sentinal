@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { SUI_SENTINEL_APP_URL } from '@/constants'
+import { SUI_SENTINEL_APP_URL, SUI_SENTINEL_DISCORD_URL } from '@/constants'
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -65,6 +65,24 @@ export function Navbar() {
             >
               Community
             </a>
+
+            <Link
+              href={SUI_SENTINEL_DISCORD_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <button className="bg-[#5865F2] hover:bg-[#5865F2]/90 text-white font-semibold animate-pulse-glow rounded-full flex px-6 py-2">
+                <Image
+                  src="/icons/discord.svg"
+                  width={20}
+                  height={20}
+                  alt="discord"
+                  className="mr-2"
+                />
+                Join Discord
+              </button>
+            </Link>
+
             <Link
               href={SUI_SENTINEL_APP_URL}
               target="_blank"
