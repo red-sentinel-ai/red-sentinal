@@ -1,5 +1,6 @@
-import { AgentDetails } from '@/types'
 import { SuiClient } from '@mysten/sui/client'
+import { AgentDetails } from '@/types'
+import { SUI_CONFIG } from '@/constants'
 
 export const fetchAgentDetailsViaObject = async (
   client: SuiClient,
@@ -35,5 +36,26 @@ export const fetchAgentDetailsViaObject = async (
   } catch (error) {
     console.error('Error fetching agent via getObject:', error)
     throw new Error('Failed to fetch agent details via object query')
+  }
+}
+
+export async function getDefeatedAgentIds(client: SuiClient): Promise<Set<string>> {
+  const packageId = SUI_CONFIG.EXAMPLES_PACKAGE_ID
+  const moduleName = SUI_CONFIG.MODULE_NAME
+
+  try {
+    const defeatedEvents = await client.queryEvents({
+      query: {
+        MoveEventType: `${packageId}::${moduleName}::AgentDefeated`,
+      },
+      limit: 100,
+      order: 'descending',
+    })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const defeatedIds = defeatedEvents.data.map((event: any) => event.parsedJson.agent_id)
+    return new Set(defeatedIds)
+  } catch (error) {
+    console.error('Error fetching defeated agent events:', error)
+    return new Set()
   }
 }
