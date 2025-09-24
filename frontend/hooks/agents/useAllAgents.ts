@@ -15,6 +15,7 @@ export interface AgentDetails {
   system_prompt: string
   balance: number
   status: AgentStatus
+  agent_path: string
 }
 
 async function getDefeatedAgentIds(client: SuiClient): Promise<Set<string>> {

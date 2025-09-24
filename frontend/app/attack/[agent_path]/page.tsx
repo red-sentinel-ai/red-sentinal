@@ -4,12 +4,12 @@ import { getAgentDataForOG } from '@/lib/agentData'
 import { SUI_SENTINEL_APP_URL, SUI_SENTINEL_X_USERNAME } from '@/constants'
 
 interface PageProps {
-  params: Promise<{ address: string }>
+  params: Promise<{ agent_path: string }>
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { address: agentObjectId } = await params
-  const agent = await getAgentDataForOG(agentObjectId)
+  const { agent_path } = await params
+  const agent = await getAgentDataForOG(agent_path)
 
   if (!agent) {
     return {
@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const title = `Challenge ${agent.agent_name} | Sui Sentinel`
   const description = `Attempt to defeat the AI agent "${agent.agent_name}" on the Sui network. Outsmart its prompts and earn rewards!`
-  const url = `${SUI_SENTINEL_APP_URL}/attack/${agentObjectId}`
+  const url = `${SUI_SENTINEL_APP_URL}/attack/${agent_path}`
 
   return {
     title: title,
@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: title,
       description: description,
       creator: `@${SUI_SENTINEL_X_USERNAME}`,
-      images: [`/attack/${agentObjectId}/opengraph-image`],
+      images: [`/attack/${agent_path}/opengraph-image`],
     },
     alternates: {
       canonical: url,
@@ -55,7 +55,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function AgentChallengePage({ params }: PageProps) {
-  const { address: agentObjectId } = await params
-
-  return <AgentChallengePageClient agentObjectId={agentObjectId} />
+  const { agent_path } = await params
+  return <AgentChallengePageClient agentPath={agent_path} />
 }

@@ -71,7 +71,7 @@ export const AgentsList = ({
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.2, delay: idx * 0.05 }}
                     className="bg-[#2E40494D] backdrop-blur-xl p-3 rounded-lg hover:bg-[#2E40497D] cursor-pointer"
-                    onClick={() => router.push(`/attack/${agent.object_id}`)}
+                    onClick={() => router.push(`/attack/${agent.agent_path}`)}
                   >
                     <div className="md:hidden space-y-3">
                       <div className="flex justify-between items-center">
@@ -121,7 +121,7 @@ export const AgentsList = ({
                           Refresh
                         </button>
                         <button
-                          onClick={() => router.push(`/attack/${agent.object_id}`)}
+                          onClick={() => router.push(`/attack/${agent.agent_path}`)}
                           className="text-red-500 hover:text-red-400"
                         >
                           Attack
@@ -167,7 +167,7 @@ export const AgentsList = ({
                       </div>
                       <div className="col-span-2 ps-4 flex gap-4">
                         <button
-                          onClick={() => router.push(`/attack/${agent.object_id}`)}
+                          onClick={() => router.push(`/attack/${agent.agent_path}`)}
                           className="text-sm text-primary_pink_light hover:text-primary_pink font-bold"
                         >
                           Attack
