@@ -53,6 +53,7 @@ export async function POST(req: NextRequest) {
 
   const agent_id_number = Number(agent_id)
   const digest_str = digest?.toString()
+  const agent_path = agent_name.toLowerCase().replace(/\s+/g, '_')
 
   const { data, error } = await supabaseServiceClient
     .from('ss_agents')
@@ -60,6 +61,7 @@ export async function POST(req: NextRequest) {
       {
         agent_id: agent_id_number,
         agent_name,
+        agent_path: agent_path,
         agent_profile: imageUrl,
         object_id,
         owner,
