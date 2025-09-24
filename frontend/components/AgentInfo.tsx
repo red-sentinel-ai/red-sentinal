@@ -3,6 +3,7 @@ import { Clock, Coins, Zap } from 'lucide-react'
 import clsx from 'clsx'
 import { MIST_PER_SUI } from '@/constants'
 import { formatBalance, formatDuration } from '@/lib/utils'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 export type AgentInfoProps = {
   balance: string
@@ -29,9 +30,11 @@ export const AgentInfo = ({
   const prizePool = (Number(balance) / MIST_PER_SUI).toFixed(2)
   const messagePrice = (Number(promptPrice) / MIST_PER_SUI).toFixed(2)
   const drainAmountFormatted = formatBalance(BigInt(drainAmount), decimal)
-  const [activeSince, setActiveSince] = useState('')
+  const [activeSince, setActiveSince] = useState('0:00:00:00')
 
   useEffect(() => {
+    if (!createdAt) return
+
     const createdTime = new Date(createdAt).getTime()
 
     const updateTimer = () => {
@@ -75,7 +78,7 @@ export const AgentInfo = ({
           </div>
           <div className="flex-1">
             <p className="text-xs font-medium text-gray-300 mb-1">Attack Fee</p>
-            <p className="text-lg font-bold text-white flex items-center gap-1 min-w-[80px]">
+            <p className="text-lg font-bold text-white flex items-center gap-1 ">
               <span>{messagePrice}</span>
               <span className="text-sm font-medium">{symbol}</span>
             </p>
@@ -84,17 +87,26 @@ export const AgentInfo = ({
 
         <div className="w-px h-12 bg-gradient-to-b from-transparent via-gray-500 to-transparent"></div>
 
-        <div className="flex items-center gap-3 flex-1">
-          <div className="w-10 h-10 bg-gradient-to-r from-text to-primary_pink rounded-full flex items-center justify-center shadow-md">
-            <Clock className="w-5 h-5 text-white" />
-          </div>
-          <div className="flex-1">
-            <p className="text-xs font-medium text-gray-300 mb-1">Active Time</p>
-            <p className="text-lg font-bold text-white flex items-center gap-1">
-              <span>{activeSince}</span>
-            </p>
-          </div>
-        </div>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="flex items-center gap-3 flex-1 cursor-help">
+                <div className="w-10 h-10 bg-gradient-to-r from-text to-primary_pink rounded-full flex items-center justify-center shadow-md">
+                  <Clock className="w-5 h-5 text-white" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-xs font-medium text-gray-300 mb-1">Active Time</p>
+                  <p className="text-lg font-bold text-white flex items-center gap-1 min-w-[108px]">
+                    <span>{activeSince}</span>
+                  </p>
+                </div>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent className="bg-black border border-gray-700 text-white">
+              <p>Format: D:H:M:S (Days:Hours:Minutes:Seconds)</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
     </div>
   )
