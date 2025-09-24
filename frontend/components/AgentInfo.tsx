@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Clock, Coins, Info, Zap } from 'lucide-react'
-import clsx from 'clsx'
 import { MIST_PER_SUI } from '@/constants'
 import { formatBalance, formatDuration } from '@/lib/utils'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
@@ -13,7 +12,6 @@ export type AgentInfoProps = {
   breakAttempts: number
   isDrained: boolean
   drainAmount: string
-  className?: string
   createdAt?: string
 }
 
@@ -24,7 +22,6 @@ export const AgentInfo = ({
   symbol,
   isDrained,
   drainAmount,
-  className,
   createdAt,
 }: AgentInfoProps) => {
   const prizePool = (Number(balance) / MIST_PER_SUI).toFixed(2)
@@ -50,12 +47,7 @@ export const AgentInfo = ({
   }, [createdAt])
 
   return (
-    <div
-      className={clsx(
-        className,
-        'bg-gradient-to-r from-gray-800/80 to-gray-700/80 backdrop-blur-sm rounded-xl px-4 py-2 border border-gray-600/50 shadow-lg whitespace-nowrap'
-      )}
-    >
+    <div className="bg-gradient-to-r from-gray-800/80 to-gray-700/80 backdrop-blur-sm rounded-xl px-4 py-2 border border-gray-600/50 shadow-lg whitespace-nowrap w-full sm:w-auto text-xs sm:text-sm">
       <div className="flex justify-between items-center gap-6">
         <div className="flex items-center gap-3 flex-1">
           <div className="w-10 h-10 bg-gradient-to-r from-[#558EB4] to-[#1388D5] rounded-full flex items-center justify-center shadow-md">
