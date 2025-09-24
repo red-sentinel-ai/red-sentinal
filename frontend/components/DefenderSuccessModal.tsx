@@ -9,7 +9,7 @@ interface SuccessModalProps {
   onAddFunds: () => void
   agentName: string
   transactionDigest: string
-  agentObjectId: string
+  agentPath: string
 }
 
 export const SuccessModal: React.FC<SuccessModalProps> = ({
@@ -18,7 +18,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
   onAddFunds,
   agentName,
   transactionDigest,
-  agentObjectId,
+  agentPath,
 }) => {
   if (!open) return null
 
@@ -72,7 +72,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
               Add Funds Now
             </button>
             <Link
-              href={`/attack/${agentObjectId}`}
+              href={`/attack/${agentPath}`}
               className="w-full block"
             >
               <button className="w-full border border-[#383838] hover:border-[#424242] transition-colors font-medium bg-transparent text-gray-300 px-6 py-3 rounded-full hover:bg-[#1a1b1f]">

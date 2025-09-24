@@ -116,6 +116,7 @@ export default function DefendPage() {
   const [isLoading, setIsLoading] = useState(false)
 
   const [deployedAgentObjectId, setDeployedAgentObjectId] = useState<string | null>(null)
+  const [deployedAgentPath, setDeployedAgentPath] = useState<string | null>(null)
   const [transactionDigest, setTransactionDigest] = useState('')
 
   const [showSuccessModal, setShowSuccessModal] = useState(false)
@@ -238,7 +239,13 @@ export default function DefendPage() {
         payload.append('image_url', selectedImage.url)
       }
 
-      createAgent(payload)
+      createAgent(payload, {
+        onSuccess: (data) => {
+          if (data?.data?.agent_path) {
+            setDeployedAgentPath(data.data.agent_path)
+          }
+        },
+      })
     }
   }
 
@@ -447,7 +454,7 @@ export default function DefendPage() {
         onAddFunds={handleAddFunds}
         agentName={formData.agentName}
         transactionDigest={transactionDigest}
-        agentObjectId={deployedAgentObjectId}
+        agentPath={deployedAgentPath}
       />
 
       {/* Fund Agent Modal */}

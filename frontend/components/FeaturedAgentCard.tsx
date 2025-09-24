@@ -28,7 +28,7 @@ export const FeaturedAgentCard = ({
   const isOwner = account?.address === agent.owner
 
   const handleAttack = () => {
-    router.push(`/attack/${agent.object_id}`)
+    router.push(`/attack/${agent.agent_path}`)
   }
 
   return (

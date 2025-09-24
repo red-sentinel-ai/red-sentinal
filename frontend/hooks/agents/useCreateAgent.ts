@@ -6,6 +6,7 @@ interface CreateAgentResponse {
   data: {
     agent_id: number
     agent_name: string
+    agent_path: string
     agent_profile?: string
     message_price?: number
     object_id: string
