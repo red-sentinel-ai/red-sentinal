@@ -37,3 +37,5 @@ export interface AgentDetails {
   is_featured: boolean
   agent_profile: string
 }
+
+export type AgentStatus = 'Active' | 'Defeated'

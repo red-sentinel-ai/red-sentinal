@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { useSuiClient } from '@mysten/dapp-kit'
 import { SuiClient } from '@mysten/sui/client'
+import { SUI_CONFIG } from '@/constants'
+import { AgentStatus } from '@/types'
 
 export interface AgentDetails {
   agent_id: string
@@ -12,7 +14,28 @@ export interface AgentDetails {
   cost_per_message: number
   system_prompt: string
   balance: number
-  created_at?: string
+  status: AgentStatus
+}
+
+async function getDefeatedAgentIds(client: SuiClient): Promise<Set<string>> {
+  const packageId = SUI_CONFIG.EXAMPLES_PACKAGE_ID
+  const moduleName = SUI_CONFIG.MODULE_NAME
+
+  try {
+    const defeatedEvents = await client.queryEvents({
+      query: {
+        MoveEventType: `${packageId}::${moduleName}::AgentDefeated`,
+      },
+      limit: 100,
+      order: 'descending',
+    })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const defeatedIds = defeatedEvents.data.map((event: any) => event.parsedJson.agent_id)
+    return new Set(defeatedIds)
+  } catch (error) {
+    console.error('Error fetching defeated agent events:', error)
+    return new Set()
+  }
 }
 
 export const fetchAgentDetailsViaObject = async (
@@ -56,23 +79,33 @@ export const useAllAgents = () => {
   return useQuery<AgentDetails[], Error>({
     queryKey: ['allAgents'],
     queryFn: async () => {
-      console.log('refetching agent')
-      const res = await fetch('/api/agents/all')
-      if (!res.ok) {
-        const err = await res.json()
+      const [defeatedAgentIds, basicAgentsRes] = await Promise.all([
+        getDefeatedAgentIds(client),
+        fetch('/api/agents/all'),
+      ])
+
+      if (!basicAgentsRes.ok) {
+        const err = await basicAgentsRes.json()
         throw new Error(err.error || 'Failed to fetch agents')
       }
 
-      const basicAgents: Omit<AgentDetails, 'cost_per_message' | 'system_prompt' | 'balance'>[] =
-        await res.json()
+      const basicAgents: Omit<
+        AgentDetails,
+        'cost_per_message' | 'system_prompt' | 'balance' | 'status'
+      >[] = await basicAgentsRes.json()
 
-      // Enrich each agent with Sui on-chain details
       const enrichedAgents = await Promise.all(
         basicAgents.map(async (agent) => {
           const onchain = await fetchAgentDetailsViaObject(client, agent.object_id)
+
+          const status: AgentDetails['status'] = defeatedAgentIds.has(String(agent.agent_id))
+            ? 'Defeated'
+            : 'Active'
+
           return {
             ...agent,
             ...onchain,
+            status,
           }
         })
       )
