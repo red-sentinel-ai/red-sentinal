@@ -27,7 +27,10 @@ export async function POST(
       .single()
 
     if (userError || !userData) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+      return NextResponse.json(
+        { error: 'User not found. Please reconnect wallet to create a profile.' },
+        { status: 404 }
+      )
     }
 
     const userId = userData.id
@@ -113,64 +116,49 @@ export async function POST(
       throw activityError
     }
 
-    // Get user from ss_users table
+    // Get the full user object to update points
     const { data: existingUser } = await supabaseServiceClient
       .from('ss_users')
       .select('*')
-      .contains('wallet_addresses', [wallet_address])
+      .eq('id', userId)
       .single()
 
-    let user: RHUser
-
-    if (existingUser) {
-      // Update existing user - handle null values
-      const currentTotalPoints = existingUser.total_points || 0
-      const currentLifetimePoints = existingUser.lifetime_points || 0
-
-      const newTotalPoints = currentTotalPoints + pointsEarned
-      const newLifetimePoints = currentLifetimePoints + pointsEarned
-
-      // Determine tier
-      let newTier: RHUser['rewards_tier'] = 'bronze'
-      if (newTotalPoints >= REWARDS_CONSTANTS.TIERS.PLATINUM.minPoints) {
-        newTier = 'platinum'
-      } else if (newTotalPoints >= REWARDS_CONSTANTS.TIERS.GOLD.minPoints) {
-        newTier = 'gold'
-      } else if (newTotalPoints >= REWARDS_CONSTANTS.TIERS.SILVER.minPoints) {
-        newTier = 'silver'
-      }
-
-      const { data: updatedUser, error: updateError } = await supabaseServiceClient
-        .from('ss_users')
-        .update({
-          total_points: newTotalPoints,
-          lifetime_points: newLifetimePoints,
-          rewards_tier: newTier,
-          rewards_updated_at: new Date().toISOString(),
-        })
-        .eq('id', existingUser.id)
-        .select()
-        .single()
-
-      if (updateError) throw updateError
-      user = updatedUser as RHUser
-    } else {
-      // TODO: no need to create new user, we will handle this differently
-      const { data: newUser, error: createError } = await supabaseServiceClient
-        .from('ss_users')
-        .insert({
-          wallet_addresses: [wallet_address],
-          total_points: pointsEarned,
-          lifetime_points: pointsEarned,
-          rewards_tier: 'bronze',
-          rewards_updated_at: new Date().toISOString(),
-        })
-        .select()
-        .single()
-
-      if (createError) throw createError
-      user = newUser as RHUser
+    if (!existingUser) {
+      return NextResponse.json({ error: 'User disappeared during transaction.' }, { status: 404 })
     }
+
+    // Update existing user - handle null values
+    const currentTotalPoints = existingUser.total_points || 0
+    const currentLifetimePoints = existingUser.lifetime_points || 0
+
+    const newTotalPoints = currentTotalPoints + pointsEarned
+    const newLifetimePoints = currentLifetimePoints + pointsEarned
+
+    // Determine tier
+    let newTier: RHUser['rewards_tier'] = 'bronze'
+    if (newTotalPoints >= REWARDS_CONSTANTS.TIERS.PLATINUM.minPoints) {
+      newTier = 'platinum'
+    } else if (newTotalPoints >= REWARDS_CONSTANTS.TIERS.GOLD.minPoints) {
+      newTier = 'gold'
+    } else if (newTotalPoints >= REWARDS_CONSTANTS.TIERS.SILVER.minPoints) {
+      newTier = 'silver'
+    }
+
+    const { data: updatedUser, error: updateError } = await supabaseServiceClient
+      .from('ss_users')
+      .update({
+        total_points: newTotalPoints,
+        lifetime_points: newLifetimePoints,
+        rewards_tier: newTier,
+        rewards_updated_at: new Date().toISOString(),
+      })
+      .eq('id', existingUser.id)
+      .select()
+      .single()
+
+    if (updateError) throw updateError
+
+    const user = updatedUser as RHUser
 
     return NextResponse.json({
       success: true,
