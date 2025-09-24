@@ -1,4 +1,3 @@
-import { AgentStatus } from '@/types'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
@@ -93,22 +92,6 @@ export const formatBalance = (
   }
 
   return bigIntToString(balance, decimals, precision, ceil)
-}
-
-export const getAgentStatus = ({
-  isDrained = false,
-  isFinalized = false,
-}: {
-  isDrained?: boolean
-  isFinalized?: boolean
-}): AgentStatus => {
-  if (isDrained) {
-    return AgentStatus.DEFEATED
-  }
-  if (isFinalized) {
-    return AgentStatus.UNDEFEATED
-  }
-  return AgentStatus.ACTIVE
 }
 
 export const truncateAddress = (addr: string) => {
