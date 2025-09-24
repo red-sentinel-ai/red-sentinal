@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { useSuiClient } from '@mysten/dapp-kit'
 import { SuiClient } from '@mysten/sui/client'
-import { SUI_CONFIG } from '@/constants'
 import { AgentStatus } from '@/types'
+import { getDefeatedAgentIds } from '@/lib/sui-utils'
 
 export interface AgentDetails {
   agent_id: string
@@ -17,27 +17,6 @@ export interface AgentDetails {
   status: AgentStatus
   agent_path: string
   created_at: string
-}
-
-async function getDefeatedAgentIds(client: SuiClient): Promise<Set<string>> {
-  const packageId = SUI_CONFIG.EXAMPLES_PACKAGE_ID
-  const moduleName = SUI_CONFIG.MODULE_NAME
-
-  try {
-    const defeatedEvents = await client.queryEvents({
-      query: {
-        MoveEventType: `${packageId}::${moduleName}::AgentDefeated`,
-      },
-      limit: 100,
-      order: 'descending',
-    })
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const defeatedIds = defeatedEvents.data.map((event: any) => event.parsedJson.agent_id)
-    return new Set(defeatedIds)
-  } catch (error) {
-    console.error('Error fetching defeated agent events:', error)
-    return new Set()
-  }
 }
 
 export const fetchAgentDetailsViaObject = async (
