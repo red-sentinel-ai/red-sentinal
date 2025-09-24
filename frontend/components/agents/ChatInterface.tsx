@@ -57,7 +57,6 @@ export default function ChatInterface({
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const account = useCurrentAccount()
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
-  const [activeSince, setActiveSince] = useState('')
 
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false)
 
@@ -83,21 +82,6 @@ export default function ChatInterface({
 
     return null
   }, [chatMessages])
-
-  useEffect(() => {
-    const createdTime = new Date(agent.created_at).getTime()
-
-    const updateTimer = () => {
-      const now = Date.now()
-      const diff = now - createdTime
-      setActiveSince(formatDuration(diff))
-    }
-
-    updateTimer()
-    const interval = setInterval(updateTimer, 1000)
-
-    return () => clearInterval(interval)
-  }, [agent.created_at])
 
   useEffect(() => {
     const initialMessages: ChatMessage[] = []
@@ -179,8 +163,6 @@ export default function ChatInterface({
   return (
     <div className="flex flex-col text-[#E5E7EB] h-full flex-1">
       <div className="backdrop-blur-xl border-b border-[#2E40494D] p-3 shadow-lg">
-        <p className="text-xs sm:text-sm text-gray-400 truncate">Active since {activeSince}</p>
-
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4">
           <div>
             <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
@@ -237,6 +219,7 @@ export default function ChatInterface({
               breakAttempts={0}
               isDrained={isAgentDrained}
               drainAmount="0"
+              createdAt={agent.created_at}
             />
           </div>
         </div>
@@ -417,17 +400,4 @@ export default function ChatInterface({
       />
     </div>
   )
-}
-
-function formatDuration(ms: number) {
-  const totalSeconds = Math.floor(ms / 1000)
-
-  const days = Math.floor(totalSeconds / (24 * 3600))
-  const hours = Math.floor((totalSeconds % (24 * 3600)) / 3600)
-  const minutes = Math.floor((totalSeconds % 3600) / 60)
-  const seconds = totalSeconds % 60
-
-  return `${days} day${days !== 1 ? 's' : ''} ${String(hours).padStart(2, '0')}:${String(
-    minutes
-  ).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
 }

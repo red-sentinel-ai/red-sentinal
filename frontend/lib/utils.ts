@@ -165,3 +165,16 @@ export const hexToVector = (hex: string): number[] => {
   }
   return bytes
 }
+
+export function formatDuration(ms: number) {
+  const totalSeconds = Math.floor(ms / 1000)
+
+  const days = Math.floor(totalSeconds / (24 * 3600))
+  const hours = Math.floor((totalSeconds % (24 * 3600)) / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = totalSeconds % 60
+
+  return `${days} day${days !== 1 ? 's' : ''} ${String(hours).padStart(2, '0')}:${String(
+    minutes
+  ).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+}
