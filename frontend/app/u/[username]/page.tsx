@@ -39,14 +39,17 @@ async function getUserProfile(username: string) {
         ? 'Defeated'
         : 'Active'
 
-      return {
+      const returnData = {
         ...agent,
+        agent_id: String(agent.agent_id),
         ...onchainData,
-        //TODO: remove below these, why they will be null, they are in the db
+
         agent_path: agent.agent_path || '',
         created_at: agent.created_at || new Date().toISOString(),
         status,
       } as AgentDetails
+
+      return returnData
     })
   )
 
