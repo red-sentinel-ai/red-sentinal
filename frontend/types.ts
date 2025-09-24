@@ -12,26 +12,6 @@ export interface Token {
   image: string
 }
 
-export enum AgentStatus {
-  ACTIVE,
-  DEFEATED,
-  UNDEFEATED,
-}
-
-export type RegisterAgentApiResponse = {
-  response: {
-    intent: number
-    timestamp_ms: number
-    data: {
-      agent_id: string
-      cost_per_message: number
-      system_prompt: string
-      is_defeated: boolean
-    }
-  }
-  signature: string
-}
-
 export type ConsumePromptApiResponse = {
   response: {
     intent: number
