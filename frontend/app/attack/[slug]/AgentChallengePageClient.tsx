@@ -5,7 +5,7 @@ import { ChevronLeft } from 'lucide-react'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 
 import { useConsumePrompt } from '@/hooks/useConsumePrompt'
-import { useAgentByPath } from '@/hooks/agents/useAgentByPath'
+import { useAgentBySlug } from '@/hooks/agents/useAgentBySlug'
 import type { ConsumePromptApiResponse } from '@/types'
 import { AgentEvents, useAgentEvents } from '@/hooks/useAgentEvents'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
@@ -14,12 +14,12 @@ import RiveLoader from '@/components/rive/Loader'
 import { useRewardsMissionTracker } from '@/hooks/rewards/useRewardsMissionTracker'
 import { MIST_PER_SUI } from '@/constants'
 
-export default function AgentChallengePage({ agentPath }: { agentPath: string }) {
+export default function AgentChallengePage({ slug }: { slug: string }) {
   const account = useCurrentAccount()
   const { events: allEvents } = useAgentEvents()
   const { trackAttackSentinel } = useRewardsMissionTracker()
 
-  const { data: agent, isLoading, error, refetch } = useAgentByPath(agentPath)
+  const { data: agent, isLoading, error, refetch } = useAgentBySlug(slug)
 
   const { consumePrompt } = useConsumePrompt({
     showToasts: true,

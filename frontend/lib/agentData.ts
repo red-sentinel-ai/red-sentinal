@@ -5,24 +5,22 @@ export interface AgentOGData {
   agent_profile: string | null
 }
 
-/**
- * This function is safe to use in Server Components.
- * @param agentPath The agent_path of the agent.
- * @returns The agent's data or null if not found.
- */
-export async function getAgentDataForOG(agentPath: string): Promise<AgentOGData | null> {
-  if (!agentPath) {
+export async function getAgentDataForOG(slug: string): Promise<AgentOGData | null> {
+  if (!slug) {
     return null
   }
+
+  const isObjectId = slug.startsWith('0x') && slug.length > 60
+  const columnToQuery = isObjectId ? 'object_id' : 'agent_path'
 
   const { data, error } = await supabaseServiceClient
     .from('ss_agents')
     .select('agent_name, agent_profile')
-    .eq('agent_path', agentPath)
+    .eq(columnToQuery, slug)
     .single()
 
   if (error) {
-    console.error(`[Supabase Fetch Error for OG Agent: ${agentPath}]`, error.message)
+    console.error(`[Supabase Fetch Error for OG Agent: ${slug}]`, error.message)
     return null
   }
 
