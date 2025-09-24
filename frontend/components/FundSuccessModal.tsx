@@ -20,7 +20,6 @@ export const FundSuccessModal = ({
   prizePoolAmount,
   sentinelId,
 }: FundSuccessModalProps) => {
-  console.log('sentinelId', sentinelId)
   const sentinelUrl = sentinelId ? `${window.location.origin}/sentinel/${sentinelId}` : ''
 
   const handleCopyLink = () => {
