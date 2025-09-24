@@ -58,11 +58,9 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
         )}
 
         <div
-          className={clsx('rounded-2xl shadow-lg relative min-w-[350px]', {
-            'bg-gradient-to-r from-[#558EB4] to-[#1388D5] text-white border border-[#558EB4]/30':
-              message.type === 'agent',
-            'bg-gradient-to-r from-gray-800/60 to-gray-700/60 text-gray-200 border border-gray-600/50':
-              message.type === 'user',
+          className={clsx('rounded-2xl shadow-lg relative min-w-[350px] text-text', {
+            ' border border-[#558EB4]/30': message.type === 'agent',
+            ' border border-gray-600/50': message.type === 'user',
           })}
         >
           {message.type === 'agent' && message.isSuccess !== undefined && (
@@ -70,7 +68,7 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
           )}
           <div className="relative p-3 sm:p-4">
             {message.type === 'user' && message.sender && (
-              <div className="flex flex-col gap-1 text-xs opacity-75 text-white mb-2 -mt-1">
+              <div className="flex flex-col gap-1 text-xs mb-2 -mt-1">
                 <Link
                   href={`${EXPLORER_BASE_URL}/account/${message.sender}`}
                   className="text-right underline"
@@ -85,7 +83,7 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
               <p
                 ref={contentRef}
                 className={clsx(
-                  'text-xs sm:text-sm leading-relaxed break-words  transition-all duration-200 ease-in-out',
+                  'text-xs sm:text-sm leading-relaxed break-words  transition-all duration-200 ease-in-out text-text',
                   !isExpanded && 'line-clamp-4'
                 )}
               >

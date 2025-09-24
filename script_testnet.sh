@@ -14,13 +14,13 @@ echo "module name": $MODULE_NAME
 echo "otw name": $OTW_NAME
 echo "ENCLAVE_URL: " $ENCLAVE_URL
 
-export ENCLAVE_PACKAGE_ID=0x2f0d8d7ae537c256141b74c9b68c243aa843851d6ae8e2f2e9455c2436ae2bba
+export ENCLAVE_PACKAGE_ID=0xe9875ddf4bce2b929b73b9d7a3ee9027d86bd06c3d4dd183b211e9a18a419ee9
 echo "ENCLAVE_PACKAGE_ID:" $ENCLAVE_PACKAGE_ID
 
-export CAP_OBJECT_ID=0x6e6012c5ad7024630c8d77c86d2194aeafff424fee7dd3761ffa756ef33d3493
-export ENCLAVE_CONFIG_OBJECT_ID=0x0972d56e4c16146906fa37bb453474839e1533cd5f366a614f26a99cba48994b
-export EXAMPLES_PACKAGE_ID=0x563b487c949e556708d877f49c9c02c13bbfd217dd6ff42b7c5787f9478f0afc
-export AGENT_REGISTRY=0xe2d060ba1c27e8fd6ab8883741734a1cbc9481137a70cd7ed6a6c17fd36a7acd
+export CAP_OBJECT_ID=0x8558a9f0ae9467f33d59897de4612c6b705ff0b1fdb5f73180dee425d1731e82
+export ENCLAVE_CONFIG_OBJECT_ID=0x88725910ca03b8d4406362780bd6fb766f146d6a371b415257d5218ce2c83e9d
+export EXAMPLES_PACKAGE_ID=0x1d1941cb375a5bdec1c5dd4d9de11799b4e3d0421e24ae9d25835a8287e07981
+export AGENT_REGISTRY=0x5de3a56d697e26beb3495a6dbd2378dc71e80d95a4a628b53f7dc0cd5fd97ae0
 
 echo "CAP_OBJECT_ID:" $CAP_OBJECT_ID
 echo "ENCLAVE_CONFIG_OBJECT_ID:" $ENCLAVE_CONFIG_OBJECT_ID
@@ -28,12 +28,12 @@ echo "AGENT_REGISTRY:" $AGENT_REGISTRY
 echo "EXAMPLES_PACKAGE_ID": $EXAMPLES_PACKAGE_ID
 
 # this calls the update_pcrs onchain with the enclave cap and built PCRs, this can be reused to update PCRs if Rust server code is updated
-sui client call --function update_pcrs --module enclave --package $ENCLAVE_PACKAGE_ID --type-args "$EXAMPLES_PACKAGE_ID::$MODULE_NAME::$OTW_NAME" --args $ENCLAVE_CONFIG_OBJECT_ID $CAP_OBJECT_ID 0x$PCR0 0x$PCR1 0x$PCR2
+# sui client call --function update_pcrs --module enclave --package $ENCLAVE_PACKAGE_ID --type-args "$EXAMPLES_PACKAGE_ID::$MODULE_NAME::$OTW_NAME" --args $ENCLAVE_CONFIG_OBJECT_ID $CAP_OBJECT_ID 0x$PCR0 0x$PCR1 0x$PCR2
 
 # # # this script calls the get_attestation endpoint from your enclave url and use it to calls register_enclave onchain to register the public key, results in the created enclave object
 sh register_enclave.sh $ENCLAVE_PACKAGE_ID $EXAMPLES_PACKAGE_ID $ENCLAVE_CONFIG_OBJECT_ID $ENCLAVE_URL $MODULE_NAME $OTW_NAME
 
-export ENCLAVE_OBJECT_ID=0xf907c3741320062151e33af37224a0e30f21bb43ecb63a74d18fff688b782012
+export ENCLAVE_OBJECT_ID=0x7fcfd0d0f3e1d6380b083fbf271fe8750e8f1270b1c4cf1bec5894b65f1a958d
 
 # echo "ENCLAVE_OBJECT_ID:" $ENCLAVE_OBJECT_ID
 

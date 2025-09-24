@@ -63,7 +63,7 @@ export const AttackStatusModal = ({
               : 'The Sentinel held strong against your attack.'}
           </p>
 
-          <div className="border border-[#558eb466] rounded-xl p-4 mb-6 text-left">
+          <div className="border border-[#558eb466] rounded-xl p-4 mb-6 text-left max-h-[calc(100vh-500px)] overflow-auto">
             <h3 className="text-sm font-semibold text-gray-300 mb-2">Explanation:</h3>
             <p className="text-sm text-gray-400 leading-relaxed">
               {apiResponse?.response.data.explanation}

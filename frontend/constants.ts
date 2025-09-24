@@ -12,6 +12,8 @@ export const ATTACK_PROMPT_MAX_TOKENS = 600
 export const SUI_SENTINEL_APP_URL = 'https://app.suisentinel.xyz/'
 export const SUI_SENTINEL_DOCS_URL = 'https://docs.suisentinel.xyz/'
 export const SUI_SENTINEL_X_URL = 'https://twitter.com/intent/follow?screen_name=suisentinal'
+export const SUI_SENTINEL_X_USERNAME = 'suisentinal'
+export const SUI_SENTINEL_DISCORD_URL = 'https://discord.gg/bAz9g9u69K'
 export const SUI_SENTINEL_GITHUB_URL = 'https://github.com/sui-sentinel/contracts'
 export const SUI_SENTINEL_TELEGRAM_URL = 'https://t.me/suisentinel'
 
@@ -32,11 +34,11 @@ export const SUI_FAUCET_URL = 'https://faucet.sui.io/'
 export const LOCAL_API_PATH = 'http://3.237.26.201:3000'
 
 export const SUI_CONFIG = {
-  EXAMPLES_PACKAGE_ID: '0x563b487c949e556708d877f49c9c02c13bbfd217dd6ff42b7c5787f9478f0afc',
+  EXAMPLES_PACKAGE_ID: '0x1d1941cb375a5bdec1c5dd4d9de11799b4e3d0421e24ae9d25835a8287e07981',
   MODULE_NAME: 'sentinel',
   OTW_NAME: 'SENTINEL',
-  AGENT_REGISTRY: '0xe2d060ba1c27e8fd6ab8883741734a1cbc9481137a70cd7ed6a6c17fd36a7acd',
-  ENCLAVE_OBJECT_ID: '0xf907c3741320062151e33af37224a0e30f21bb43ecb63a74d18fff688b782012',
+  AGENT_REGISTRY: '0x5de3a56d697e26beb3495a6dbd2378dc71e80d95a4a628b53f7dc0cd5fd97ae0',
+  ENCLAVE_OBJECT_ID: '0x7fcfd0d0f3e1d6380b083fbf271fe8750e8f1270b1c4cf1bec5894b65f1a958d',
   AGENT_OBJECT_IDS: [''],
 }
 
@@ -61,6 +63,36 @@ export const MOCK_RESULT = {
     },
   ],
 }
+export const PROJECT_DISCORD_URL = 'https://discord.gg'
 
 export const DEFAULT_PROFILE_URL =
   'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/ss-agents//default_profile.jpg'
+
+export const SOCIAL_MEDIA_URLS = {
+  TWITTER_FOLLOW: 'https://twitter.com/intent/follow?screen_name=suisentinal',
+  TWITTER_PROFILE: X_URL,
+  TWITTER_TWEET:
+    'https://twitter.com/intent/tweet?text=Challenge%20AI%20agents%20and%20earn%20rewards%20%40suisentinal%20on%20https%3A%2F%2Fapp.suisentinel.xyz%2F%20%23SUISENTINEL%20%23AGENTS%20%23AI',
+  TELEGRAM_JOIN: SUI_SENTINEL_TELEGRAM_URL,
+  TELEGRAM_GENERAL_CHAT_URL: 'https://t.me/suisentinel/1',
+  DISCORD_JOIN: SUI_SENTINEL_DISCORD_URL,
+  DISCORD_GENERAL_CHAT_URL: 'https://discord.com/channels/1419673431754014834/1419673433444323441',
+} as const
+
+//TODO: Add the correct docs url
+export const REWARDS_DOCS_URL = 'https://sui-sentinal-plum.vercel.app/'
+export const SENTINEL_GIFS = [
+  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//6.png',
+  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//7.png',
+  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//8.png',
+  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//9.png',
+  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//10.png',
+]
+
+export const SENTINEL_IMAGES = [
+  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//1.png',
+  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//2.png',
+  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//3.png',
+  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//4.png',
+  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//5.png',
+]

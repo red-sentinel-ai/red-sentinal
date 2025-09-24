@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 
 import { MenuItems } from './MenuItems'
-import { MenuIcon, Plus } from 'lucide-react'
+import { BookOpen, MenuIcon, Plus } from 'lucide-react'
 import Link from 'next/link'
 import { ConnectButton } from './ConnectButton'
 import { SUI_SENTINEL_DOCS_URL } from '@/constants'
@@ -39,14 +39,14 @@ export const Header = () => {
           'pt-[10px]': !bannerVisible,
         })}
       >
-        <div className="flex items-center">
+        <div className="flex items-center flex-1">
           <Link
             className="block mr-1 xl:mr-4 flex-shrink-0"
             href="/"
           >
             <div className="relative w-8 h-11">
               <Image
-                src="/icons/shield.svg"
+                src="/icons/shield.png"
                 alt="shield"
                 fill
                 style={{ objectFit: 'contain' }}
@@ -54,13 +54,15 @@ export const Header = () => {
             </div>
           </Link>
           <Link
-            className="block ml-1 xl:ml-4 flex-shrink-0"
+            className="flex items-center gap-[6px] ml-1 xl:ml-4 flex-shrink-0 "
             target="_blank"
             href={SUI_SENTINEL_DOCS_URL}
           >
-            Read Docs
+            <BookOpen width={16} />
+            <span>Documentation</span>
           </Link>
-          <div className="hidden xl:block">
+
+          <div className="hidden xl:block w-full">
             <MenuItems menuOpen={menuOpen} />
           </div>
         </div>
@@ -77,7 +79,7 @@ export const Header = () => {
         </button>
 
         {/* <Link
-          className="block ml-1 xl:ml-4 flex-shrink-0"
+          className="block ml-3 xl:ml-4 flex-shrink-0"
           href={YOUTUBE_VIDEO_URL}
           target="_blank"
         >

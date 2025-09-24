@@ -1,133 +1,61 @@
-'use client'
-import { useState, useMemo } from 'react'
-import Link from 'next/link'
-import { useParams } from 'next/navigation'
-import { Loader2, ChevronLeft } from 'lucide-react'
-import { useCurrentAccount } from '@mysten/dapp-kit'
+import { Metadata } from 'next'
+import AgentChallengePageClient from './AgentChallengePageClient'
+import { getAgentDataForOG } from '@/lib/agentData'
+import { SUI_SENTINEL_APP_URL, SUI_SENTINEL_X_USERNAME } from '@/constants'
 
-import { useConsumePrompt } from '@/hooks/useConsumePrompt'
-import { useAgentByObjectId } from '@/hooks/agents/useAgentByObjectId'
-import type { ConsumePromptApiResponse } from '@/types'
-import { AgentEvents, useAgentEvents } from '@/hooks/useAgentEvents'
-import { AttackStatusModal } from '@/components/AttackStatusModal'
-import ChatInterface from '@/components/agents/ChatInterface'
+interface PageProps {
+  params: Promise<{ address: string }>
+}
 
-export default function AgentChallengePage() {
-  const params = useParams()
-  const agentObjectId = params.address as string
-  const account = useCurrentAccount()
-  const { events: allEvents } = useAgentEvents()
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { address: agentObjectId } = await params
+  const agent = await getAgentDataForOG(agentObjectId)
 
-  const { consumePrompt } = useConsumePrompt({
-    showToasts: true,
-    onError: (err) => {
-      setSubmitError(err.message || 'Something went wrong')
-    },
-    onComplete: ({ apiResponse, transactionResult }) => {
-      setApiResponse(apiResponse)
-      setTxnHash(transactionResult.digest)
-      setShowResultModal(true)
-      refetch()
-    },
-  })
-
-  const { data: agent, isLoading, error, refetch } = useAgentByObjectId(agentObjectId)
-
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitError, setSubmitError] = useState<string | null>(null)
-  const [apiResponse, setApiResponse] = useState<ConsumePromptApiResponse | null>(null)
-  const [txnHash, setTxnHash] = useState<string | null>(null)
-  const [showResultModal, setShowResultModal] = useState(false)
-
-  const agentEvents: AgentEvents = useMemo(() => {
-    if (!agent) return { agentDefeated: [], promptConsumed: [] }
+  if (!agent) {
     return {
-      agentDefeated: allEvents.agentDefeated.filter(
-        (e) => e.parsedJson.agent_id === `${agent.agent_id}`
-      ),
-      promptConsumed: allEvents.promptConsumed.filter(
-        (e) => e.parsedJson.agent_id === `${agent.agent_id}`
-      ),
-    }
-  }, [agent, allEvents])
-
-  const handleSendMessage = async (prompt: string) => {
-    if (!account?.address) {
-      setSubmitError('Please connect your wallet')
-      return
-    }
-    if (!agent) {
-      setSubmitError('Agent not loaded')
-      return
-    }
-    if (prompt.length === 0) {
-      setSubmitError('Please enter a prompt')
-      return
-    }
-
-    try {
-      setIsSubmitting(true)
-      setSubmitError(null)
-      await consumePrompt({ agentDetails: agent, message: prompt })
-    } catch (err) {
-      setSubmitError('Failed to submit prompt')
-      console.error(err)
-    } finally {
-      setIsSubmitting(false)
+      title: 'Agent Not Found | Sui Sentinel',
+      description: 'The requested AI agent could not be found.',
     }
   }
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
-        <Loader2 className="w-8 h-8 animate-spin text-[#B8B8B8]" />
-      </div>
-    )
+  const title = `Challenge ${agent.agent_name} | Sui Sentinel`
+  const description = `Attempt to defeat the AI agent "${agent.agent_name}" on the Sui network. Outsmart its prompts and earn rewards!`
+  const url = `${SUI_SENTINEL_APP_URL}/attack/${agentObjectId}`
+
+  return {
+    title: title,
+    description: description,
+    openGraph: {
+      title: title,
+      description: description,
+      url: url,
+      siteName: 'Sui Sentinel',
+      images: [
+        {
+          url: agent.agent_profile,
+          width: 1200,
+          height: 630,
+          alt: `Challenge banner for ${agent.agent_name}`,
+        },
+      ],
+      locale: 'en_US',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: title,
+      description: description,
+      creator: `@${SUI_SENTINEL_X_USERNAME}`,
+      images: [`/attack/${agentObjectId}/opengraph-image`],
+    },
+    alternates: {
+      canonical: url,
+    },
   }
+}
 
-  if (error || !agent) {
-    return (
-      <div className="min-h-screen bg-black text-[#B5B5B5] p-4">
-        <Link
-          href="/attack"
-          className="flex items-center gap-1 text-[#558EB4] hover:underline mb-8"
-        >
-          <ChevronLeft className="w-5 h-5" /> Back to Sentinels
-        </Link>
-        <div className="flex items-center justify-center min-h-[400px]">
-          <p className="text-lg text-gray-400">{error?.message || 'Agent not found'}</p>
-        </div>
-      </div>
-    )
-  }
+export default async function AgentChallengePage({ params }: PageProps) {
+  const { address: agentObjectId } = await params
 
-  return (
-    <div className="min-h-screen pt-12 max-w-4xl mx-auto relative flex flex-col">
-      <div className="absolute top-[75px] -left-[156px] z-10">
-        <Link
-          href="/attack"
-          className="hidden lg:flex items-center gap-1 text-gray-400 hover:text-white transition-colors"
-        >
-          <ChevronLeft className="w-5 h-5" /> Back to Sentinels
-        </Link>
-      </div>
-
-      <ChatInterface
-        agent={agent}
-        agentEvents={agentEvents}
-        apiResponse={apiResponse}
-        onSendMessage={handleSendMessage}
-        isSubmitting={isSubmitting}
-        submitError={submitError}
-        refetchAgent={refetch}
-      />
-
-      <AttackStatusModal
-        apiResponse={apiResponse}
-        showResultModal={showResultModal}
-        setShowResultModal={setShowResultModal}
-        txnHash={txnHash}
-      />
-    </div>
-  )
+  return <AgentChallengePageClient agentObjectId={agentObjectId} />
 }

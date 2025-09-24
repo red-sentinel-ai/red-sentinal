@@ -58,7 +58,7 @@ export const ConnectButton = () => {
   }, [account?.address])
 
   if (!account) {
-    return <SuiConnectButton />
+    return <SuiConnectButton className="min-w-[180px]" />
   }
 
   return (

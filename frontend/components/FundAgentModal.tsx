@@ -11,8 +11,8 @@ export interface FundAgentModalProps {
   onClose: () => void
   /** Agent object ID to fund */
   agentObjectId: string
-  /** Optional callback when funding is successful */
-  onSuccess?: () => void
+  /** Optional callback when funding is successful, receives the amount */
+  onSuccess?: (amount: string) => void
 }
 
 /**
@@ -70,15 +70,10 @@ export const FundAgentModal = ({
     try {
       await fundAgent({ agentObjectId, amount: +amount })
 
-      // Reset form
+      onSuccess?.(amount)
+
       setAmount('')
       setError('')
-
-      // Call success callback
-      onSuccess?.()
-
-      // Close modal
-      onClose()
     } catch (err) {
       console.error('Funding error:', err)
       const message = err instanceof Error ? err.message : 'Failed to fund agent'
@@ -87,7 +82,6 @@ export const FundAgentModal = ({
   }
 
   const handleClose = () => {
-    // Reset form when closing
     setAmount('')
     setError('')
     onClose()
