@@ -1006,6 +1006,7 @@ export type Database = {
         Row: {
           agent_id: number
           agent_name: string
+          agent_path: string
           agent_profile: string | null
           created_at: string | null
           digest: string | null
@@ -1016,6 +1017,7 @@ export type Database = {
         Insert: {
           agent_id: number
           agent_name: string
+          agent_path: string
           agent_profile?: string | null
           created_at?: string | null
           digest?: string | null
@@ -1026,6 +1028,7 @@ export type Database = {
         Update: {
           agent_id?: number
           agent_name?: string
+          agent_path?: string
           agent_profile?: string | null
           created_at?: string | null
           digest?: string | null
