@@ -282,6 +282,24 @@ export default function DefendPage() {
     setIsLoading(true)
 
     try {
+      const checkResponse = await fetch(
+        `/api/agents/check-name?name=${encodeURIComponent(formData.agentName)}`
+      )
+      const checkData = await checkResponse.json()
+
+      if (!checkResponse.ok) {
+        throw new Error(checkData.error || 'Failed to validate Sentinel name.')
+      }
+
+      if (checkData.exists) {
+        setErrors((prev) => ({
+          ...prev,
+          agentName: 'This Sentinel name is already taken. Please choose another.',
+        }))
+        setIsLoading(false)
+        return
+      }
+
       const feePerMessage = parseFloat(formData.feePerMessage) * MIST_PER_SUI
       const agentDetails = await registerAgentUtil(formData.systemPrompt, feePerMessage)
       await createAgentTransaction(agentDetails)
