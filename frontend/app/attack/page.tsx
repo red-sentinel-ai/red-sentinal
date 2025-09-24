@@ -1,5 +1,3 @@
-'use client'
-
 import { AgentListView } from '@/components/AgentListView'
 import { TEXT_COPIES } from '@/constants'
 
