@@ -3,6 +3,9 @@ import { supabaseServiceClient } from '@/db/config/server'
 import { User, Folder } from 'lucide-react'
 import { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { FeaturedAgentCard } from '@/components/FeaturedAgentCard'
+import { SuiClient, getFullnodeUrl } from '@mysten/sui/client'
+import { getDefeatedAgentIds, fetchAgentDetailsViaObject } from '@/lib/sui-utils'
+import { AgentStatus } from '@/types'
 
 async function getUserProfile(username: string) {
   const { data: user } = await supabaseServiceClient
@@ -11,16 +14,42 @@ async function getUserProfile(username: string) {
     .eq('username', username)
     .single()
 
-  if (!user) {
+  if (!user || !user.wallet_addresses) {
     return null
   }
 
-  const { data: agents } = await supabaseServiceClient
+  const { data: basicAgents } = await supabaseServiceClient
     .from('ss_agents')
     .select('*')
-    .in('owner', user.wallet_addresses || [])
+    .in('owner', user.wallet_addresses)
 
-  return { user, agents: (agents as AgentDetails[]) || [] }
+  if (!basicAgents) {
+    return { user, agents: [] }
+  }
+
+  const client = new SuiClient({ url: getFullnodeUrl('testnet') })
+  const defeatedAgentIds = await getDefeatedAgentIds(client)
+
+  const enrichedAgents = await Promise.all(
+    basicAgents.map(async (agent) => {
+      const onchainData = await fetchAgentDetailsViaObject(client, agent.object_id)
+
+      const status: AgentStatus = defeatedAgentIds.has(String(agent.agent_id))
+        ? 'Defeated'
+        : 'Active'
+
+      return {
+        ...agent,
+        ...onchainData,
+        //TODO: remove below these, why they will be null, they are in the db
+        agent_path: agent.agent_path || '',
+        created_at: agent.created_at || new Date().toISOString(),
+        status,
+      } as AgentDetails
+    })
+  )
+
+  return { user, agents: enrichedAgents }
 }
 
 export default async function PublicProfilePage({
