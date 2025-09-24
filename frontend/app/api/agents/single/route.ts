@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
 
   const { data, error } = await supabaseServiceClient
     .from('ss_agents')
-    .select('agent_id, agent_name, agent_profile, object_id, owner, is_featured')
+    .select('agent_id, agent_name, agent_profile, object_id, owner, is_featured, created_at')
     .eq('object_id', objectId)
     .single()
 

@@ -219,6 +219,7 @@ export default function ChatInterface({
               breakAttempts={0}
               isDrained={isAgentDrained}
               drainAmount="0"
+              createdAt={agent.created_at}
             />
           </div>
         </div>
