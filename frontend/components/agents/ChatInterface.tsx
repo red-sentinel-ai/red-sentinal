@@ -1,14 +1,17 @@
 'use client'
 
 import type React from 'react'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useMemo } from 'react'
+import Link from 'next/link'
 import Image from 'next/image'
 import clsx from 'clsx'
 import { Loader2, AlertCircle, ChevronDown, ChevronUp, Send } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { formatAddress } from '@mysten/sui/utils'
 import { ConnectModal, useCurrentAccount } from '@mysten/dapp-kit'
+
 import { AgentInfo } from '@/components/AgentInfo'
-import { ATTACK_PROMPT_MAX_TOKENS, DEFAULT_PROFILE_URL } from '@/constants'
+import { ATTACK_PROMPT_MAX_TOKENS, DEFAULT_PROFILE_URL, EXPLORER_BASE_URL } from '@/constants'
 import type { ConsumePromptApiResponse } from '@/types'
 import type { AgentEvents } from '@/hooks/useAgentEvents'
 import type { AgentDetails } from '@/hooks/agents/useAllAgents'
@@ -61,6 +64,25 @@ export default function ChatInterface({
   const isAgentDrained = chatMessages.some(
     (message) => message.type === 'agent' && message.isSuccess === true
   )
+
+  const winnerInfo = useMemo(() => {
+    const winningAgentMessageIndex = chatMessages.findIndex(
+      (msg) => msg.type === 'agent' && msg.isSuccess === true
+    )
+
+    if (winningAgentMessageIndex > 0) {
+      const correspondingUserMessage = chatMessages[winningAgentMessageIndex - 1]
+
+      if (correspondingUserMessage?.type === 'user') {
+        return {
+          winnerAddress: correspondingUserMessage.sender,
+          wonAmount: correspondingUserMessage.amountSent,
+        }
+      }
+    }
+
+    return null
+  }, [chatMessages])
 
   useEffect(() => {
     const createdTime = new Date(agent.created_at).getTime()
@@ -229,7 +251,7 @@ export default function ChatInterface({
             className="overflow-hidden"
           >
             <div className="bg-black/40 p-3 sm:p-4 rounded-lg border border-gray-700">
-              <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
+              <p className="text-xs sm:text-sm text-gray-300 leading-relaxed whitespace-pre-wrap">
                 {agent.system_prompt}
               </p>
             </div>
@@ -239,7 +261,7 @@ export default function ChatInterface({
 
       <div
         ref={chatContainerRef}
-        className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-4 sm:space-y-6 custom-scrollbar max-h-[calc(100vh-280px)] sm:max-h-[calc(100vh-295px)] backdrop-blur-md"
+        className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-4 sm:space-y-6 custom-scrollbar max-h-[calc(100vh-280px)] sm:max-h-[calc(100vh-270px)] backdrop-blur-md"
       >
         {chatMessages.length === 0 && (
           <div className="text-center py-8 sm:py-12 text-gray-400">
@@ -289,14 +311,36 @@ export default function ChatInterface({
       </div>
 
       {isAgentDrained ? (
-        <div className="bg-gradient-to-r from-[#12121266] flex items-center justify-center min-h-[170px] to-[#1a1a1a66] backdrop-blur-xl border-t border-[#2E40494D] p-3 sm:p-6 shadow-2xl">
-          <div className="text-center">
-            <h3 className="text-xl sm:text-2xl font-bold text-red-400 mb-2">
-              This Sentinel is Drained
-            </h3>
-            <p className="text-sm sm:text-base text-gray-400">
-              The sentinel is defeated successfully and is no longer active.
+        <div className="bg-gradient-to-r from-[#12121266] to-[#1a1a1a66] backdrop-blur-xl border-t border-[#2E40494D] p-4 shadow-2xl">
+          <div className="text-center w-full">
+            <h3 className="text-lg font-bold text-primary_pink">This Sentinel is Drained</h3>
+            <p className="text-xs text-gray-400 mb-2">
+              The sentinel has been successfully defeated.
             </p>
+
+            {winnerInfo && (
+              <div className="bg-black/30 border border-[#2E40494D] rounded-lg mx-auto px-3">
+                <div className="flex flex-col sm:flex-row items-center justify-center sm:divide-x sm:divide-gray-700 gap-y-2 sm:gap-y-0">
+                  <div className="flex items-baseline gap-x-2 px-3 w-full sm:w-auto justify-center">
+                    <p className="text-xs font-semibold text-gray-300 shrink-0">Winner:</p>
+
+                    <Link
+                      href={`${EXPLORER_BASE_URL}/account/${winnerInfo.winnerAddress}`}
+                      className="text-right underline text-sm"
+                      target="_blank"
+                    >
+                      {' '}
+                      {formatAddress(winnerInfo.winnerAddress)}
+                    </Link>
+                  </div>
+
+                  <div className="flex items-baseline gap-x-2 px-3 w-full sm:w-auto justify-center">
+                    <p className="text-xs font-semibold text-gray-300 shrink-0">Amount:</p>
+                    <p className="text-base font-bold text-green-400">{winnerInfo.wonAmount} SUI</p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       ) : (

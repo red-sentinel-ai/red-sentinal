@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss'
+import animate from 'tailwindcss-animate'
 
 export default {
   content: [
@@ -11,6 +12,15 @@ export default {
       colors: {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
+        text: 'var(--text)',
+        primary_pink: 'var(--primary_pink)',
+        primary_pink_20: 'var(--primary_pink_20)',
+        primary_pink_light: 'var(--primary_pink_light)',
+
+        primary_blue: 'var(--primary_blue)',
+        primary_blue_20: 'var(--primary_blue_20)',
+        primary_blue_30: 'var(--primary_blue_30)',
+        primary_blue_50: 'var(--primary_blue_50)',
       },
       animation: {
         marquee: 'marquee 25s linear infinite',
@@ -39,5 +49,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [animate],
 } satisfies Config

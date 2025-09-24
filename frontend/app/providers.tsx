@@ -30,7 +30,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         defaultNetwork="testnet"
       >
         <WalletProvider>
-          <div className="bg-[url('/img/abstract_bg.png')] bg-left bg-repeat-y">
+          <div>
             {/* <LaunchMainnetBanner /> */}
             <Header />
             {children}

@@ -2,7 +2,8 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
-import { ChevronLeft, Loader2 } from 'lucide-react'
+import Image from 'next/image'
+import { CameraIcon, ChevronLeft, Loader2 } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { Transaction } from '@mysten/sui/transactions'
 import { SuiTransactionBlockResponse } from '@mysten/sui/client'
@@ -25,6 +26,9 @@ import { FundAgentModal } from '@/components/FundAgentModal'
 import { SuccessModal } from '@/components/DefenderSuccessModal'
 import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
 import { useTokenCount } from '@/hooks/useTokenCount'
+import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
+import { FundSuccessModal } from '@/components/FundSuccessModal'
+import { useRewardsMissionTracker } from '@/hooks/rewards/useRewardsMissionTracker'
 
 interface FormData {
   agentName: string
@@ -83,6 +87,12 @@ export default function DefendPage() {
   const { mutate: createAgent } = useCreateAgent()
   const [agentImage, setAgentImage] = useState<File | null>(null)
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
+  const [imagePickerOpen, setImagePickerOpen] = useState(false)
+  const [selectedImage, setSelectedImage] = useState<{
+    url: string
+    isCustom: boolean
+    file?: File | null
+  } | null>(null)
 
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction({
     execute: async ({ bytes, signature }) =>
@@ -90,9 +100,7 @@ export default function DefendPage() {
         transactionBlock: bytes,
         signature,
         options: {
-          // Raw effects are required so the effects can be reported back to the wallet
           showRawEffects: true,
-          // Select additional data to return
           showObjectChanges: true,
         },
       }),
@@ -108,9 +116,13 @@ export default function DefendPage() {
   const [isLoading, setIsLoading] = useState(false)
 
   const [deployedAgentObjectId, setDeployedAgentObjectId] = useState<string | null>(null)
+  const [transactionDigest, setTransactionDigest] = useState('')
+
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [showFundModal, setShowFundModal] = useState(false)
-  const [transactionDigest, setTransactionDigest] = useState<string>('')
+  const [showFundSuccessModal, setShowFundSuccessModal] = useState(false)
+  const [fundedAmount, setFundedAmount] = useState('')
+  const { trackLaunchSentinel } = useRewardsMissionTracker()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -120,22 +132,23 @@ export default function DefendPage() {
       countTokens(value)
     }
 
-    // Clear error when user starts typing
     if (errors[name as keyof FormData]) {
       setErrors((prev) => ({ ...prev, [name]: '' }))
     }
   }
 
-  const handleCloseSuccessModal = () => {
-    setShowSuccessModal(false)
+  const resetAllState = () => {
     setDeployedAgentObjectId(null)
     setTransactionDigest('')
-    // Reset form
-    setFormData({
-      agentName: '',
-      systemPrompt: '',
-      feePerMessage: '',
-    })
+    setFormData({ agentName: '', systemPrompt: '', feePerMessage: '' })
+    setFundedAmount('')
+    setSelectedImage(null)
+    setAgentImage(null)
+  }
+
+  const handleCloseSuccessModal = () => {
+    setShowSuccessModal(false)
+    resetAllState()
   }
 
   const handleAddFunds = () => {
@@ -145,19 +158,23 @@ export default function DefendPage() {
 
   const handleCloseFundModal = () => {
     setShowFundModal(false)
-    setDeployedAgentObjectId(null)
-    setTransactionDigest('')
-    // Reset form
-    setFormData({
-      agentName: '',
-      systemPrompt: '',
-      feePerMessage: '',
-    })
   }
 
-  const handleFundSuccess = () => {
-    toast.success('Sentinel funded successfully!')
+  const handleAbortAndCloseFundModal = () => {
     handleCloseFundModal()
+    resetAllState()
+  }
+
+  const handleFundSuccess = (amount: string) => {
+    toast.success('Sentinel funded successfully!')
+    setFundedAmount(amount)
+    handleCloseFundModal()
+    setShowFundSuccessModal(true)
+  }
+
+  const handleCloseFundSuccessModal = () => {
+    setShowFundSuccessModal(false)
+    resetAllState()
   }
 
   const validateForm = (): boolean => {
@@ -171,7 +188,9 @@ export default function DefendPage() {
 
     if (!formData.systemPrompt.trim()) {
       newErrors.systemPrompt = 'System prompt is required'
-    } else if (tokenCount > SYSTEM_PROMPT_MAX_TOKENS) return
+    } else if (tokenCount > SYSTEM_PROMPT_MAX_TOKENS) {
+      return false
+    }
 
     const fee = parseFloat(formData.feePerMessage)
     if (isNaN(fee) || fee < 0) {
@@ -199,15 +218,24 @@ export default function DefendPage() {
       setTransactionDigest(result.digest.toString())
       setShowSuccessModal(true)
 
+      trackLaunchSentinel(result.digest.toString(), {
+        agent_id: agent_id,
+        agent_name: agentName,
+        agent_object_id: agentObjectId,
+        owner_address: account!.address,
+      })
+
       const payload = new FormData()
       payload.append('agent_id', agent_id)
       payload.append('agent_name', agentName)
       payload.append('object_id', agentObjectId)
-      payload.append('owner', account.address)
+      payload.append('owner', account!.address)
       payload.append('digest', result.digest.toString())
 
       if (agentImage) {
         payload.append('image', agentImage)
+      } else if (selectedImage?.url && !selectedImage.isCustom) {
+        payload.append('image_url', selectedImage.url)
       }
 
       createAgent(payload)
@@ -238,7 +266,6 @@ export default function DefendPage() {
       { transaction: tx },
       {
         onSuccess: async (result) => {
-          console.log('RESULT', result)
           await handleOffChainSuccess(
             result,
             formData.agentName,
@@ -251,26 +278,12 @@ export default function DefendPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
     if (!validateForm() || !account) return
-
     setIsLoading(true)
 
     try {
-      toast.info('Processing payment...')
-
-      toast.info('Registering agent...')
-
-      // await handleOffChainSuccess(
-      //   MOCK_RESULT as unknown as SuiTransactionBlockResponse,
-      //   formData.agentName
-      // )
-      // return
-
       const feePerMessage = parseFloat(formData.feePerMessage) * MIST_PER_SUI
       const agentDetails = await registerAgentUtil(formData.systemPrompt, feePerMessage)
-
-      toast.info('Creating blockchain transaction...')
       await createAgentTransaction(agentDetails)
     } catch (error) {
       console.error('Deployment error:', error)
@@ -295,7 +308,44 @@ export default function DefendPage() {
           <span>Home</span>
         </Link>
 
-        <h1 className="text-4xl font-bold">Deploy Sentinel</h1>
+        <div className="flex items-center gap-4 justify-between">
+          <h1 className="text-4xl font-bold">Deploy Sentinel</h1>
+          <div className="flex flex-col items-center justify-center gap-1">
+            <div
+              className="relative w-20 h-20 rounded-full border border-gray-600 overflow-hidden cursor-pointer transition-colors text-gray-400 hover:text-gray-300 group flex items-center justify-center"
+              onClick={() => setImagePickerOpen(true)}
+            >
+              {selectedImage?.url ? (
+                <Image
+                  src={selectedImage.url}
+                  alt="Selected"
+                  width={80}
+                  height={80}
+                  className="w-full h-full object-cover z-10 relative"
+                />
+              ) : null}
+              <div className="w-full h-full absolute inset-0 bg-black/50 z-10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+                <CameraIcon />
+              </span>
+            </div>
+            <p className="text-xs text-gray-500 text-center">Choose Sentinel Image</p>
+          </div>
+        </div>
+
+        <ImagePickerSheet
+          open={imagePickerOpen}
+          onClose={() => setImagePickerOpen(false)}
+          onSelectImage={(img) => {
+            setSelectedImage(img)
+            setImagePickerOpen(false)
+            if (img.isCustom) {
+              setAgentImage(img.file ?? null)
+            } else {
+              setAgentImage(null)
+            }
+          }}
+        />
 
         <FormInput
           label="Sentinel Name"
@@ -308,8 +358,8 @@ export default function DefendPage() {
         />
 
         <div>
-          <div className="flex justify-between mb-2">
-            <label className="block text-sm font-medium ">Sentinel Instructions</label>
+          <div className="flex justify-between mb-2 items-center">
+            <label className="block text-sm font-medium">Sentinel Instructions</label>
             <Link
               href={`${SUI_SENTINEL_DOCS_URL}/guides/defender-guide`}
               target="_blank"
@@ -352,19 +402,6 @@ export default function DefendPage() {
           required
         />
 
-        <div>
-          <label className="block text-sm font-medium mb-2">Sentinel Image</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => {
-              const file = e.target.files?.[0] || null
-              setAgentImage(file)
-            }}
-            className="block w-full text-sm text-gray-300 file:bg-gray-700 file:border-0 file:rounded-md file:px-4 file:py-2 file:text-white"
-          />
-        </div>
-
         {account?.address ? (
           <button
             type="submit"
@@ -385,7 +422,7 @@ export default function DefendPage() {
         )}
       </form>
 
-      {/* Success Modal */}
+      {/* Deployment Success Modal */}
       <SuccessModal
         open={showSuccessModal}
         onClose={handleCloseSuccessModal}
@@ -395,15 +432,24 @@ export default function DefendPage() {
         agentObjectId={deployedAgentObjectId}
       />
 
-      {/* Fund Modal */}
+      {/* Fund Agent Modal */}
       {deployedAgentObjectId && (
         <FundAgentModal
           open={showFundModal}
-          onClose={handleCloseFundModal}
+          onClose={handleAbortAndCloseFundModal}
           agentObjectId={deployedAgentObjectId}
           onSuccess={handleFundSuccess}
         />
       )}
+
+      {/* Fund Success Modal */}
+      <FundSuccessModal
+        open={showFundSuccessModal}
+        onClose={handleCloseFundSuccessModal}
+        agentName={formData.agentName}
+        prizePoolAmount={fundedAmount}
+        sentinelId={deployedAgentObjectId}
+      />
     </div>
   )
 }
