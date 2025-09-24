@@ -1,10 +1,11 @@
 import { notFound } from 'next/navigation'
-import { supabaseServiceClient } from '@/db/config/server'
 import { User, Folder } from 'lucide-react'
-import { AgentDetails } from '@/hooks/agents/useAllAgents'
-import { FeaturedAgentCard } from '@/components/FeaturedAgentCard'
 import { SuiClient, getFullnodeUrl } from '@mysten/sui/client'
+
+import { supabaseServiceClient } from '@/db/config/server'
 import { getDefeatedAgentIds, fetchAgentDetailsViaObject } from '@/lib/sui-utils'
+import { FeaturedAgentCard } from '@/components/FeaturedAgentCard'
+import { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { AgentStatus } from '@/types'
 
 async function getUserProfile(username: string) {
