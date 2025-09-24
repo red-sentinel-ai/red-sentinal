@@ -121,7 +121,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   }
 
   return (
-    <div className="min-h-screen pt-12 max-w-4xl mx-auto relative flex flex-col">
+    <div className="min-h-screen pt-16 max-w-[970px] mx-auto relative flex flex-col">
       <div className="absolute top-[75px] -left-[156px] z-10">
         <Link
           href="/attack"
