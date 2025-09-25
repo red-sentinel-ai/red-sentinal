@@ -50,7 +50,7 @@ export default function ProfilePage() {
   return (
     <>
       <div className="container mx-auto px-4 pb-12 pt-24 min-h-body">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="mb-8">
             <div className="flex flex-col sm:flex-row items-start gap-4 mb-6">
               <div className="w-16 h-16 rounded-full bg-foreground/20 flex items-center justify-center">
