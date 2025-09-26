@@ -1,13 +1,19 @@
 'use client'
 
 import { useState } from 'react'
-import { X, User, Camera, Loader2 } from 'lucide-react'
+import { X, User, Camera } from 'lucide-react'
 import Image from 'next/image'
 import { Dialog } from '@/components/Dialog'
 import { ProfileEditForm } from './ProfileEditForm'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
-import { useUpdateAvatar } from '@/hooks/profile/useUserProfile'
 import type { Tables } from '@/lib/database.types'
+
+type SelectedImage = {
+  previewUrl: string
+  file: File | null
+  isCustom: boolean
+  sourceUrl?: string
+}
 
 interface EditProfileModalProps {
   open: boolean
@@ -17,32 +23,37 @@ interface EditProfileModalProps {
 
 export function EditProfileModal({ open, onClose, profile }: EditProfileModalProps) {
   const [isImagePickerOpen, setIsImagePickerOpen] = useState(false)
-  const { mutate: updateAvatar, isPending: isUpdatingAvatar } = useUpdateAvatar()
+  const [selectedImage, setSelectedImage] = useState<SelectedImage | null>(null)
 
   const handleImageSelect = (img: { url: string; isCustom: boolean; file?: File | null }) => {
+    setSelectedImage({
+      previewUrl: img.url,
+      file: img.file || null,
+      isCustom: img.isCustom,
+      sourceUrl: img.isCustom ? undefined : img.url,
+    })
     setIsImagePickerOpen(false)
-
-    const formData = new FormData()
-    if (img.isCustom && img.file) {
-      formData.append('image', img.file)
-    } else {
-      formData.append('image_url', img.url)
-    }
-    updateAvatar(formData)
   }
+
+  const handleClose = () => {
+    setSelectedImage(null)
+    onClose()
+  }
+
+  const displayAvatarUrl = selectedImage?.previewUrl || profile?.avatar_url
 
   return (
     <>
       <Dialog
         open={open}
-        onClose={onClose}
+        onClose={handleClose}
         className="max-w-md"
       >
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold">Edit Profile</h2>
             <button
-              onClick={onClose}
+              onClick={handleClose}
               className="text-gray-400 hover:text-white"
             >
               <X className="w-5 h-5" />
@@ -54,13 +65,9 @@ export function EditProfileModal({ open, onClose, profile }: EditProfileModalPro
               className="relative w-24 h-24 rounded-full border-2 border-gray-600 overflow-hidden cursor-pointer group"
               onClick={() => setIsImagePickerOpen(true)}
             >
-              {isUpdatingAvatar ? (
-                <div className="w-full h-full flex items-center justify-center bg-black/70">
-                  <Loader2 className="w-8 h-8 animate-spin" />
-                </div>
-              ) : profile?.avatar_url ? (
+              {displayAvatarUrl ? (
                 <Image
-                  src={profile.avatar_url}
+                  src={displayAvatarUrl}
                   alt="User Avatar"
                   fill
                   className="object-cover"
@@ -76,7 +83,11 @@ export function EditProfileModal({ open, onClose, profile }: EditProfileModalPro
             </div>
           </div>
 
-          <ProfileEditForm onSuccess={onClose} />
+          <ProfileEditForm
+            onSuccess={handleClose}
+            profile={profile}
+            selectedImage={selectedImage}
+          />
         </div>
       </Dialog>
 
@@ -85,7 +96,7 @@ export function EditProfileModal({ open, onClose, profile }: EditProfileModalPro
         onClose={() => setIsImagePickerOpen(false)}
         onSelectImage={handleImageSelect}
         title="Select Profile Image"
-        subtitle="Choose a new avatar for your profile."
+        subtitle="Your selection will be saved when you update your profile."
       />
     </>
   )
