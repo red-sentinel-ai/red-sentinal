@@ -32,6 +32,7 @@ export function useUserProfile() {
     refetchOnWindowFocus: false,
   })
 }
+
 interface UseUpdateProfileOptions {
   onSuccess?: (data: UserProfile) => void
   onError?: (error: Error) => void
@@ -60,6 +61,39 @@ export function useUpdateProfile(options: UseUpdateProfileOptions = {}) {
     },
     onSuccess: (updatedProfile) => {
       toast.success('Profile updated successfully!')
+      queryClient.setQueryData([USER_PROFILE_QUERY_KEY, walletAddress], updatedProfile)
+      options.onSuccess?.(updatedProfile)
+    },
+    onError: (error: Error) => {
+      toast.error(error.message)
+      options.onError?.(error)
+    },
+  })
+}
+
+export function useUpdateAvatar(options: UseUpdateProfileOptions = {}) {
+  const queryClient = useQueryClient()
+  const account = useCurrentAccount()
+  const walletAddress = account?.address
+
+  return useMutation({
+    mutationFn: async (formData: FormData) => {
+      if (!walletAddress) throw new Error('Wallet not connected')
+      formData.append('walletAddress', walletAddress)
+
+      const response = await fetch('/api/profile/update-avatar', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to update avatar')
+      }
+      return (await response.json()).data as UserProfile
+    },
+    onSuccess: (updatedProfile) => {
+      toast.success('Profile picture updated!')
       queryClient.setQueryData([USER_PROFILE_QUERY_KEY, walletAddress], updatedProfile)
       options.onSuccess?.(updatedProfile)
     },

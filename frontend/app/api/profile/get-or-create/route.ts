@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { generateSlug } from 'random-word-slugs'
 import { supabaseServiceClient } from '@/db/config/server'
+import { DEFAULT_PROFILE_URL } from '@/constants'
 
 export async function POST(request: Request) {
   try {
@@ -29,7 +30,6 @@ export async function POST(request: Request) {
     let isUsernameUnique = false
     let attempts = 0
 
-    // Generate a unique username, handling potential collisions
     while (!isUsernameUnique && attempts < 5) {
       newUsername = generateSlug(2, { format: 'kebab' }) + `-${walletAddress.slice(-4)}`
       const { data: usernameCheck } = await supabaseServiceClient
@@ -54,6 +54,7 @@ export async function POST(request: Request) {
         wallet_addresses: [walletAddress],
         username: newUsername,
         display_name: newUsername,
+        avatar_url: DEFAULT_PROFILE_URL,
       })
       .select()
       .single()

@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { User, Folder, Activity, Loader2, Edit } from 'lucide-react'
+import Image from 'next/image'
+import { User, Folder, Activity, Loader2, Edit, Camera } from 'lucide-react'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
@@ -11,7 +12,8 @@ import { UserAgents } from '@/components/profile/UserAgents'
 import { ConnectPrompt } from '@/components/ConnectPrompt'
 import { EditProfileModal } from '@/components/profile/EditProfileModal'
 import { SocialConnectionsSectionWrapper } from '@/components/profile/SocialConnectionsSectionWrapper'
-import { useUserProfile } from '@/hooks/profile/useUserProfile'
+import { useUserProfile, useUpdateAvatar } from '@/hooks/profile/useUserProfile'
+import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 
 const PROFILE_TABS = {
   AGENTS: 'agents',
@@ -23,12 +25,28 @@ type ProfileTabValue = (typeof PROFILE_TABS)[keyof typeof PROFILE_TABS]
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState<ProfileTabValue>(PROFILE_TABS.AGENTS)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isImagePickerOpen, setIsImagePickerOpen] = useState(false)
   const account = useCurrentAccount()
   const { data: profile, isLoading: isLoadingProfile } = useUserProfile()
+
+  const { mutate: updateAvatar, isPending: isUpdatingAvatar } = useUpdateAvatar({
+    onSuccess: () => setIsImagePickerOpen(false),
+  })
 
   const handleTabChange = (value: string) => {
     setActiveTab(value as ProfileTabValue)
   }
+
+  const handleImageSelect = (img: { url: string; isCustom: boolean; file?: File | null }) => {
+    const formData = new FormData()
+    if (img.isCustom && img.file) {
+      formData.append('image', img.file)
+    } else {
+      formData.append('image_url', img.url)
+    }
+    updateAvatar(formData)
+  }
+
   if (!account?.address) {
     return (
       <ConnectPrompt
@@ -53,16 +71,38 @@ export default function ProfilePage() {
         <div className="max-w-6xl mx-auto">
           <div className="mb-8">
             <div className="flex flex-col sm:flex-row items-start gap-4 mb-6">
-              <div className="w-16 h-16 rounded-full bg-foreground/20 flex items-center justify-center">
-                <User className="h-8 w-8" />
+              <div
+                className="relative w-24 h-24 rounded-full border-2 border-gray-600 overflow-hidden cursor-pointer group flex-shrink-0"
+                onClick={() => setIsImagePickerOpen(true)}
+              >
+                {isUpdatingAvatar ? (
+                  <div className="w-full h-full flex items-center justify-center bg-black/70">
+                    <Loader2 className="w-8 h-8 animate-spin" />
+                  </div>
+                ) : profile?.avatar_url ? (
+                  <Image
+                    src={profile.avatar_url}
+                    alt="User Avatar"
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-foreground/20 flex items-center justify-center">
+                    <User className="h-12 w-12" />
+                  </div>
+                )}
+                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <Camera className="w-8 h-8" />
+                </div>
               </div>
-              <div className="flex-1 min-w-0">
+
+              <div className="flex-1 min-w-0 pt-2">
                 <h1 className="text-2xl sm:text-3xl font-bold truncate">
                   {profile?.display_name || 'Your Profile'}
                 </h1>
                 <p className="text-gray-400 mt-1">@{profile?.username}</p>
               </div>
-              <div className="flex items-center gap-2 sm:ml-auto">
+              <div className="flex items-center gap-2 sm:ml-auto pt-2">
                 {profile?.username && (
                   <Link
                     href={`/u/${profile.username}`}
@@ -81,7 +121,6 @@ export default function ProfilePage() {
               </div>
             </div>
           </div>
-
           <div className="mb-12">
             <SocialConnectionsSectionWrapper />
           </div>
@@ -126,6 +165,12 @@ export default function ProfilePage() {
       <EditProfileModal
         open={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
+      />
+
+      <ImagePickerSheet
+        open={isImagePickerOpen}
+        onClose={() => setIsImagePickerOpen(false)}
+        onSelectImage={handleImageSelect}
       />
     </>
   )
