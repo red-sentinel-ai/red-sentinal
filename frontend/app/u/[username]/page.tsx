@@ -71,7 +71,7 @@ export default async function PublicProfilePage({
 
   return (
     <div className="container mx-auto px-4 pb-12 pt-24 min-h-body">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <div className="mb-12">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-6">
             <div className="relative w-28 h-28 rounded-full border-2 border-gray-600 overflow-hidden flex-shrink-0">
