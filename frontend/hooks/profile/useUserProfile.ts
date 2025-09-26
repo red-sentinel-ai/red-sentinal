@@ -44,13 +44,13 @@ export function useUpdateProfile(options: UseUpdateProfileOptions = {}) {
   const walletAddress = account?.address
 
   return useMutation({
-    mutationFn: async (payload: { username: string; displayName: string }) => {
+    mutationFn: async (formData: FormData) => {
       if (!walletAddress) throw new Error('Wallet not connected')
+      formData.append('walletAddress', walletAddress)
 
       const response = await fetch('/api/profile/update', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...payload, walletAddress }),
+        body: formData,
       })
 
       if (!response.ok) {

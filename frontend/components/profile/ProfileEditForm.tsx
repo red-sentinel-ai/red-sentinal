@@ -2,15 +2,23 @@
 import { useState, useEffect } from 'react'
 import { useDebounce } from 'use-debounce'
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react'
-import { useUserProfile, useUpdateProfile } from '@/hooks/profile/useUserProfile'
+import { useUpdateProfile } from '@/hooks/profile/useUserProfile'
+import type { Tables } from '@/lib/database.types'
+
+type SelectedImage = {
+  previewUrl: string
+  file: File | null
+  isCustom: boolean
+  sourceUrl?: string
+}
 
 interface ProfileEditFormProps {
   onSuccess?: () => void
+  profile: Tables<'ss_users'> | null
+  selectedImage: SelectedImage | null
 }
 
-export function ProfileEditForm({ onSuccess }: ProfileEditFormProps) {
-  const { data: profile, isLoading: isLoadingProfile } = useUserProfile()
-
+export function ProfileEditForm({ onSuccess, profile, selectedImage }: ProfileEditFormProps) {
   const { mutate: updateProfile, isPending: isUpdating } = useUpdateProfile({
     onSuccess: () => {
       onSuccess?.()
@@ -49,12 +57,21 @@ export function ProfileEditForm({ onSuccess }: ProfileEditFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (isAvailable === false) return
-    updateProfile({ username, displayName })
-  }
+    if (isAvailable === false || isUpdating || isChecking) return
 
-  if (isLoadingProfile) {
-    return <div className="animate-pulse bg-gray-800 rounded-lg h-64 w-full"></div>
+    const formData = new FormData()
+    formData.append('displayName', displayName)
+    formData.append('username', username)
+
+    if (selectedImage) {
+      if (selectedImage.isCustom && selectedImage.file) {
+        formData.append('imageFile', selectedImage.file)
+      } else if (selectedImage.sourceUrl) {
+        formData.append('imageUrl', selectedImage.sourceUrl)
+      }
+    }
+
+    updateProfile(formData)
   }
 
   return (

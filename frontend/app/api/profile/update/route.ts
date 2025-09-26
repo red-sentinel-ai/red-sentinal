@@ -1,15 +1,21 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
 import { supabaseServiceClient } from '@/db/config/server'
 
-export async function PUT(request: Request) {
+const AVATARS_BUCKET_NAME = 'ss-avatars'
+
+export async function PUT(request: NextRequest) {
   try {
-    const { walletAddress, username, displayName } = await request.json()
+    const formData = await request.formData()
+    const walletAddress = formData.get('walletAddress') as string
+    const username = formData.get('username') as string
+    const displayName = formData.get('displayName') as string
+    const imageFile = formData.get('imageFile') as File | null
+    const imageUrl = formData.get('imageUrl') as string | null
 
     if (!walletAddress || !username || !displayName) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+      return NextResponse.json({ error: 'Missing required text fields' }, { status: 400 })
     }
 
-    // 1. Find the user by their wallet address (authentication check)
     const { data: user, error: findError } = await supabaseServiceClient
       .from('ss_users')
       .select('id')
@@ -20,34 +26,51 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: 'User not found or unauthorized' }, { status: 404 })
     }
 
-    // 2. Final uniqueness check for the username, excluding the current user
-    const { data: existingUsername, error: uniqueError } = await supabaseServiceClient
+    const { data: existingUsername } = await supabaseServiceClient
       .from('ss_users')
       .select('id')
       .eq('username', username)
       .neq('id', user.id)
       .single()
 
-    if (uniqueError && uniqueError.code !== 'PGRST116') throw uniqueError
     if (existingUsername) {
       return NextResponse.json({ error: 'Username is already taken' }, { status: 409 })
     }
 
-    // 3. Update the user's profile
+    let newAvatarUrl: string | undefined = undefined
+
+    if (imageFile) {
+      const buffer = Buffer.from(await imageFile.arrayBuffer())
+      const filePath = `${user.id}.${imageFile.name.split('.').pop()}`
+      await supabaseServiceClient.storage
+        .from(AVATARS_BUCKET_NAME)
+        .upload(filePath, buffer, { contentType: imageFile.type, upsert: true })
+      newAvatarUrl = `${
+        supabaseServiceClient.storage.from(AVATARS_BUCKET_NAME).getPublicUrl(filePath).data
+          .publicUrl
+      }?t=${new Date().getTime()}`
+    } else if (imageUrl) {
+      newAvatarUrl = imageUrl
+    }
+
+    const updateData: { [key: string]: unknown } = {
+      username: username,
+      display_name: displayName,
+      rewards_updated_at: new Date().toISOString(),
+    }
+
+    if (newAvatarUrl !== undefined) {
+      updateData.avatar_url = newAvatarUrl
+    }
+
     const { data: updatedUser, error: updateError } = await supabaseServiceClient
       .from('ss_users')
-      .update({
-        username: username,
-        display_name: displayName,
-        rewards_updated_at: new Date().toISOString(),
-      })
+      .update(updateData)
       .eq('id', user.id)
       .select()
       .single()
 
-    if (updateError) {
-      throw updateError
-    }
+    if (updateError) throw updateError
 
     return NextResponse.json(updatedUser)
   } catch (error) {
