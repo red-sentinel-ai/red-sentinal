@@ -38,6 +38,7 @@ export default function ProfilePage() {
   }
 
   const handleImageSelect = (img: { url: string; isCustom: boolean; file?: File | null }) => {
+    setIsImagePickerOpen(false)
     const formData = new FormData()
     if (img.isCustom && img.file) {
       formData.append('image', img.file)

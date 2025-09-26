@@ -17,11 +17,11 @@ interface EditProfileModalProps {
 
 export function EditProfileModal({ open, onClose, profile }: EditProfileModalProps) {
   const [isImagePickerOpen, setIsImagePickerOpen] = useState(false)
-  const { mutate: updateAvatar, isPending: isUpdatingAvatar } = useUpdateAvatar({
-    onSuccess: () => setIsImagePickerOpen(false),
-  })
+  const { mutate: updateAvatar, isPending: isUpdatingAvatar } = useUpdateAvatar()
 
   const handleImageSelect = (img: { url: string; isCustom: boolean; file?: File | null }) => {
+    setIsImagePickerOpen(false)
+
     const formData = new FormData()
     if (img.isCustom && img.file) {
       formData.append('image', img.file)
