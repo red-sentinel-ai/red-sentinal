@@ -171,6 +171,8 @@ export default function ProfilePage() {
         open={isImagePickerOpen}
         onClose={() => setIsImagePickerOpen(false)}
         onSelectImage={handleImageSelect}
+        title="Select Profile Image"
+        subtitle="Choose a new avatar from our collection or upload your own."
       />
     </>
   )

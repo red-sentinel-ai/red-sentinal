@@ -14,9 +14,17 @@ interface ImagePickerSheetProps {
   open: boolean
   onClose: () => void
   onSelectImage: (img: { url: string; isCustom: boolean; file?: File | null }) => void
+  title?: string
+  subtitle?: string
 }
 
-export const ImagePickerSheet = ({ open, onClose, onSelectImage }: ImagePickerSheetProps) => {
+export const ImagePickerSheet = ({
+  open,
+  onClose,
+  onSelectImage,
+  title = 'Select Sentinel Image',
+  subtitle = 'Choose from our collection or upload your own',
+}: ImagePickerSheetProps) => {
   const [selectedURL, setSelectedURL] = useState<string | null>(null)
   const [customFile, setCustomFile] = useState<File | null>(null)
   const [dragActive, setDragActive] = useState(false)
@@ -73,11 +81,9 @@ export const ImagePickerSheet = ({ open, onClose, onSelectImage }: ImagePickerSh
         <SheetHeader className="pb-6 border-b border-[#1A1A1A]">
           <SheetTitle className="text-white text-xl font-semibold flex items-center gap-2">
             <ImageIcon className="w-5 h-5" />
-            Select Sentinel Image
+            {title}
           </SheetTitle>
-          <p className="text-gray-400 text-sm mt-1">
-            Choose from our collection or upload your own
-          </p>
+          <p className="text-gray-400 text-sm mt-1">{subtitle}</p>
         </SheetHeader>
 
         <div className="px-4">
