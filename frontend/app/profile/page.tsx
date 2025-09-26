@@ -165,6 +165,7 @@ export default function ProfilePage() {
       <EditProfileModal
         open={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
+        profile={profile}
       />
 
       <ImagePickerSheet
