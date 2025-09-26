@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
+import Image from 'next/image'
 import { User, Folder } from 'lucide-react'
 import { SuiClient, getFullnodeUrl } from '@mysten/sui/client'
-
 import { supabaseServiceClient } from '@/db/config/server'
 import { getDefeatedAgentIds, fetchAgentDetailsViaObject } from '@/lib/sui-utils'
 import { FeaturedAgentCard } from '@/components/FeaturedAgentCard'
@@ -72,10 +72,21 @@ export default async function PublicProfilePage({
   return (
     <div className="container mx-auto px-4 pb-12 pt-24 min-h-body">
       <div className="max-w-4xl mx-auto">
-        <div className="mb-8">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-6">
-            <div className="w-20 h-20 rounded-full bg-foreground/20 flex items-center justify-center">
-              <User className="h-10 w-10" />
+        <div className="mb-12">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-6">
+            <div className="relative w-28 h-28 rounded-full border-2 border-gray-600 overflow-hidden flex-shrink-0">
+              {user.avatar_url ? (
+                <Image
+                  src={user.avatar_url}
+                  alt="User Avatar"
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-foreground/20 flex items-center justify-center">
+                  <User className="h-14 w-14" />
+                </div>
+              )}
             </div>
             <div className="flex-1">
               <h1 className="text-3xl sm:text-4xl font-bold">
@@ -87,9 +98,11 @@ export default async function PublicProfilePage({
         </div>
 
         <div>
-          <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-            <Folder className="h-6 w-6" />
-            Sentinels ({agents.length})
+          <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
+            <Folder className="h-6 w-6 text-blue-400" />
+            <span>
+              {user.display_name}&apos;s Sentinels ({agents.length})
+            </span>
           </h2>
           {agents.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
