@@ -1,17 +1,16 @@
 import { SuiClient } from '@mysten/sui/client'
-import { AgentDetails } from '@/types'
+import type { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { SUI_CONFIG } from '@/constants'
 
 export const fetchAgentDetailsViaObject = async (
   client: SuiClient,
   agentObjectId: string
-): Promise<AgentDetails> => {
+): Promise<Pick<AgentDetails, 'cost_per_message' | 'system_prompt' | 'balance'>> => {
   try {
     const response = await client.getObject({
       id: agentObjectId,
       options: {
         showContent: true,
-        showType: true,
       },
     })
 
@@ -23,19 +22,17 @@ export const fetchAgentDetailsViaObject = async (
     const fields = (response.data.content as any).fields
 
     return {
-      agent_name: '',
-      agent_id: fields.agent_id,
-      agent_object_id: fields.id.id,
-      creator: fields.creator,
       cost_per_message: Number(fields.cost_per_message),
       system_prompt: fields.system_prompt,
       balance: Number(fields.balance),
-      is_featured: false,
-      agent_profile: '',
     }
   } catch (error) {
-    console.error('Error fetching agent via getObject:', error)
-    throw new Error('Failed to fetch agent details via object query')
+    console.error(`Error fetching on-chain details for ${agentObjectId}:`, error)
+    return {
+      cost_per_message: 0,
+      system_prompt: 'Error fetching on-chain data.',
+      balance: 0,
+    }
   }
 }
 
