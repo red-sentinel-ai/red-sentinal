@@ -124,125 +124,101 @@ function getAvatarUrl(profile: any, provider: string): string | null {
 
 async function saveSocialConnection(walletAddress: string, provider: string, profile: any) {
   try {
-    console.log('Saving social connection:', { walletAddress, provider, profile })
-
-    // Handle different profile structures for different providers
-    let platformUserId: string
-    let platformUsername: string
-    let platformAvatarUrl: string | null
-
-    if (provider === 'twitter') {
-      platformUserId = profile.data?.id
-      platformUsername = profile.data?.username || profile.data?.name
-      platformAvatarUrl = profile.data?.profile_image_url || null
-    } else if (provider === 'discord') {
-      platformUserId = profile.id || profile.sub
-      platformUsername = profile.username || profile.name
-      platformAvatarUrl = profile.image || profile.avatar_url || null
-    } else {
-      platformUserId = profile.id || profile.sub || profile.data?.id
-      platformUsername =
-        profile.username || profile.name || profile.data?.username || profile.data?.name
-      platformAvatarUrl =
-        profile.image || profile.avatar_url || profile.data?.profile_image_url || null
-    }
+    const platformUserId: string = getPlatformUserId(profile, provider)
+    const platformUsername: string = getUsername(profile, provider)
+    const platformAvatarUrl: string | null = getAvatarUrl(profile, provider)
 
     if (!platformUserId) {
       console.error('Could not extract platform user ID from profile:', profile)
       return
     }
 
-    console.log('Extracted platform data:', { platformUserId, platformUsername, platformAvatarUrl })
-
-    // Check if this social account already exists for ANY user
     const { data: existingSocialConnection } = await supabaseServiceClient
       .from('ss_social_connections')
-      .select(
-        `
-        *,
-        ss_users (*)
-      `
-      )
+      .select('user_id')
       .eq('platform', provider)
       .eq('platform_user_id', platformUserId)
       .single()
 
-    if (existingSocialConnection?.ss_users) {
-      console.log('Social account already exists, merging wallets')
-      const existingUser = existingSocialConnection.ss_users as any
-      const currentWallets: string[] = existingUser.wallet_addresses || []
-
-      if (!currentWallets.includes(walletAddress)) {
-        const { error: updateError } = await supabaseServiceClient
-          .from('ss_users')
-          .update({
-            wallet_addresses: [...currentWallets, walletAddress],
-          } as any)
-          .eq('id', existingUser.id)
-
-        if (updateError) {
-          console.error('Error updating user wallets:', updateError)
-        } else {
-          console.log('Wallet added to existing user successfully')
-        }
-      } else {
-        console.log('Wallet already associated with this user')
-      }
-      return
-    }
-
-    // Check if user exists by wallet
-    const { data: existingUser } = await supabaseServiceClient
+    const { data: sourceUser } = await supabaseServiceClient
       .from('ss_users')
       .select('*')
       .contains('wallet_addresses', [walletAddress])
       .single()
 
-    let finalUser = existingUser
-
-    // Create user if doesn't exist
-    if (!finalUser) {
-      const { data: newUser, error: userError } = await supabaseServiceClient
-        .from('ss_users')
-        .insert({
-          wallet_addresses: [walletAddress],
-          username: platformUsername || `user_${Date.now()}`,
-          avatar_url: platformAvatarUrl,
-        } as any)
-        .select()
-        .single()
-
-      if (userError) {
-        console.error('Error creating user:', userError)
-        return
+    if (existingSocialConnection && sourceUser) {
+      const targetUserId = existingSocialConnection.user_id
+      if (sourceUser.id !== targetUserId) {
+        console.log(
+          `Merging wallet ${walletAddress} into user ${targetUserId} and deleting temporary user ${sourceUser.id}`
+        )
+        const { error: deleteError } = await supabaseServiceClient
+          .from('ss_users')
+          .delete()
+          .eq('id', sourceUser.id)
+        if (deleteError) {
+          console.error('Error deleting temporary user profile:', deleteError)
+        }
+        const { data: targetUser, error: findTargetError } = await supabaseServiceClient
+          .from('ss_users')
+          .select('wallet_addresses')
+          .eq('id', targetUserId)
+          .single()
+        if (findTargetError || !targetUser) {
+          console.error('Could not find the target user to merge into.')
+          return
+        }
+        const updatedWallets = [...(targetUser.wallet_addresses || []), walletAddress]
+        const { error: updateError } = await supabaseServiceClient
+          .from('ss_users')
+          .update({ wallet_addresses: updatedWallets })
+          .eq('id', targetUserId)
+        if (updateError) {
+          console.error('Error merging wallet address:', updateError)
+        }
+      } else {
+        console.log('Wallet address already belongs to the correct user. No action needed.')
       }
-      finalUser = newUser
-    }
-
-    if (!finalUser) {
-      console.error('Could not create or find user')
       return
     }
 
-    // Create new social connection
-    const { data: connection, error: connectionError } = await supabaseServiceClient
-      .from('ss_social_connections')
-      .insert({
-        user_id: finalUser.id,
+    if (sourceUser) {
+      await supabaseServiceClient.from('ss_social_connections').insert({
+        user_id: sourceUser.id,
         platform: provider,
         platform_user_id: platformUserId,
-        platform_username: platformUsername || 'Unknown',
+        platform_username: platformUsername,
         platform_avatar_url: platformAvatarUrl,
       })
-      .select()
-      .single()
+      console.log(`New social connection added for existing user ${sourceUser.id}`)
+      return
+    }
 
-    if (connectionError) {
-      console.error('Error creating social connection:', connectionError)
-    } else {
-      console.log('Social connection created successfully:', connection)
+    if (!sourceUser && !existingSocialConnection) {
+      const { data: newUser, error: createUserError } = await supabaseServiceClient
+        .from('ss_users')
+        .insert({
+          wallet_addresses: [walletAddress],
+          username: platformUsername,
+          display_name: platformUsername,
+          avatar_url: platformAvatarUrl,
+        })
+        .select()
+        .single()
+      if (createUserError) {
+        console.error('Error creating new user:', createUserError)
+        return
+      }
+      await supabaseServiceClient.from('ss_social_connections').insert({
+        user_id: newUser.id,
+        platform: provider,
+        platform_user_id: platformUserId,
+        platform_username: platformUsername,
+        platform_avatar_url: platformAvatarUrl,
+      })
+      console.log(`Created new user ${newUser.id} with social connection.`)
     }
   } catch (error) {
-    console.error('Error saving social connection:', error)
+    console.error('Error in saveSocialConnection:', error)
   }
 }

@@ -370,6 +370,8 @@ export default function DefendPage() {
               setAgentImage(null)
             }
           }}
+          title="Select Sentinel Image"
+          subtitle="Choose a profile image for your Sentinel."
         />
 
         <FormInput
