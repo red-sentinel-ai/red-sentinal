@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { ChevronLeft, Info } from 'lucide-react'
@@ -8,7 +8,7 @@ import { ChevronLeft, Info } from 'lucide-react'
 import { DEFAULT_PROFILE_URL, MIST_PER_SUI } from '@/constants'
 import { type AgentDetails } from '@/hooks/agents/useAllAgents'
 import { type AgentEvents } from '@/hooks/useAgentEvents'
-import { formatDuration } from '@/lib/utils'
+import { formatDuration, cn } from '@/lib/utils'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 interface AgentSidebarProps {
@@ -18,6 +18,9 @@ interface AgentSidebarProps {
 
 export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
   const [activeSince, setActiveSince] = useState('0:00:00:00')
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [shouldTruncate, setShouldTruncate] = useState(false)
+  const instructionsRef = useRef<HTMLParagraphElement>(null)
 
   useEffect(() => {
     if (!agent.created_at) return
@@ -36,13 +39,25 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
     return () => clearInterval(interval)
   }, [agent.created_at])
 
+  useEffect(() => {
+    if (instructionsRef.current) {
+      const lineHeight = parseFloat(getComputedStyle(instructionsRef.current).lineHeight)
+      const maxHeightForFourLines = lineHeight * 4
+      if (instructionsRef.current.scrollHeight > maxHeightForFourLines) {
+        setShouldTruncate(true)
+      } else {
+        setShouldTruncate(false)
+      }
+    }
+  }, [agent.system_prompt])
+
   const breakAttempts = agentEvents.promptConsumed.length
   const totalParticipants = new Set(
     agentEvents.promptConsumed.map((event) => event.parsedJson.sender)
   ).size
 
   return (
-    <div className="hidden lg:flex max-w-[300px] bg-gradient-to-r from-gray-800/40 to-gray-700/40 backdrop-blur-sm h-screen flex-col overflow-x-hidden overflow-y-auto px-6 py-2 mr-4 w-full">
+    <div className="max-w-[300px] bg-gradient-to-r from-gray-800/40 to-gray-700/40 backdrop-blur-sm h-screen flex-col overflow-x-hidden overflow-y-scroll px-6 py-2 mr-4 w-full">
       <div>
         <Link
           href="/attack"
@@ -104,7 +119,23 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
       <div className="z-20 mt-4 flex flex-col rounded-xl p-0 text-sm">
         <div className="flex flex-col gap-2">
           <h3 className="text-white/60 text-sm font-semibold uppercase">Instructions</h3>
-          <p className="text-sm font-medium whitespace-pre-wrap">{agent.system_prompt}</p>
+          <p
+            ref={instructionsRef}
+            className={cn(
+              'text-sm font-medium whitespace-pre-wrap transition-all duration-300',
+              !isExpanded && shouldTruncate && 'line-clamp-4'
+            )}
+          >
+            {agent.system_prompt}
+          </p>
+          {shouldTruncate && (
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="text-sm text-blue-400 hover:underline self-start"
+            >
+              {isExpanded ? 'See less' : 'See more'}
+            </button>
+          )}
         </div>
       </div>
 
