@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { ExternalLink, Star } from 'lucide-react'
+import { User } from 'lucide-react'
 import type { LeaderboardEntry } from '@/types/Rewards'
 
 const buildTwitterLink = (username: string): string => {
@@ -21,70 +21,79 @@ interface UserDisplayProps {
 export const UserDisplay = ({ entry }: UserDisplayProps) => {
   const hasTwitter = entry.twitter_username && entry.twitter_user_id
   const hasDiscord = entry.discord_username && entry.discord_user_id
+  const avatar = entry.avatar_url || entry.twitter_avatar || entry.discord_avatar
 
   return (
-    <div className="flex items-center gap-3 min-w-0 flex-1">
+    <div className="flex items-center gap-4 min-w-0 flex-1">
+      <Link
+        href={entry.username ? `/u/${entry.username}` : '#'}
+        className={!entry.username ? 'pointer-events-none' : ''}
+      >
+        <div className="relative w-10 h-10 rounded-full flex-shrink-0 bg-gray-800">
+          {avatar ? (
+            <Image
+              src={avatar}
+              alt={entry.username || 'User Avatar'}
+              fill
+              className="rounded-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <User className="h-5 w-5 text-gray-500" />
+            </div>
+          )}
+        </div>
+      </Link>
+
       <div className="flex flex-col gap-1 min-w-0">
-        {hasTwitter && (
-          <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#558EB4]/20 to-[#1388D5]/20 flex items-center justify-center flex-shrink-0">
+        {entry.username ? (
+          <Link
+            href={`/u/${entry.username}`}
+            className="font-semibold text-white truncate hover:underline"
+          >
+            {entry.username}
+          </Link>
+        ) : (
+          <p className="font-medium text-[#B5B5B5] truncate">User #{entry.user_id?.slice(-6)}</p>
+        )}
+
+        <div className="flex items-center gap-3 text-xs text-gray-400">
+          {hasTwitter && (
+            <a
+              href={buildTwitterLink(entry.twitter_username!)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 hover:text-white transition-colors"
+            >
               <Image
                 src="/icons/x.png"
                 width={12}
                 height={12}
-                alt="twitter"
-                className="opacity-80"
+                alt="X (Twitter)"
+                className="opacity-70"
               />
-            </div>
-            <Link
-              target="_blank"
-              className="flex gap-1 items-center underline hover:no-underline"
-              href={buildTwitterLink(entry.twitter_username!)}
-            >
               <span className="truncate">@{entry.twitter_username}</span>
-              <ExternalLink className="h-3 w-3 ml-1 flex-shrink-0 opacity-60" />
-            </Link>
-          </div>
-        )}
-        {hasDiscord && (
-          <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#8F564E]/20 to-[#E53922]/20 flex items-center justify-center flex-shrink-0">
+            </a>
+          )}
+          {hasDiscord && (
+            <a
+              href={buildDiscordLink(entry.discord_user_id!)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 hover:text-white transition-colors"
+            >
               <Image
                 src="/icons/discord.svg"
                 width={12}
                 height={12}
-                alt="discord"
-                className="opacity-80"
+                alt="Discord"
+                className="opacity-70"
               />
-            </div>
-            <Link
-              target="_blank"
-              className="flex gap-1 items-center underline hover:no-underline"
-              href={buildDiscordLink(entry.discord_user_id!)}
-            >
               <span className="truncate">{entry.discord_username}</span>
-              <ExternalLink className="h-3 w-3 ml-1 flex-shrink-0 opacity-60" />
-            </Link>
-          </div>
-        )}
-        {!hasTwitter && !hasDiscord && entry.username && (
-          <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#383838]/20 to-[#383838]/30 flex items-center justify-center flex-shrink-0">
-              <Star className="h-3 w-3 text-[#B5B5B5]" />
-            </div>
-            <span className="font-semibold text-white truncate">{entry.username}</span>
-          </div>
-        )}
-        {!hasTwitter && !hasDiscord && !entry.username && (
-          <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#383838]/20 to-[#383838]/30 flex items-center justify-center flex-shrink-0">
-              <span className="text-xs font-bold text-[#B5B5B5]">#</span>
-            </div>
-            <span className="font-medium text-[#B5B5B5] truncate">
-              User #{entry.user_id.slice(-6)}
-            </span>
-          </div>
-        )}
+            </a>
+          )}
+          {!hasTwitter && !hasDiscord && <div className="h-[18px]"></div>}
+        </div>
       </div>
     </div>
   )

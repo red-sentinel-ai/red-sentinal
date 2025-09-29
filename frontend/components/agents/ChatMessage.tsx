@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import clsx from 'clsx'
 import { formatDistanceToNow } from 'date-fns'
-import { DEFAULT_PROFILE_URL, EXPLORER_BASE_URL, SUI_TESTNET_BASE_URL } from '@/constants'
+import { DEFAULT_PROFILE_URL, SUI_TESTNET_BASE_URL } from '@/constants'
 import type { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { type ChatMessage as ChatMessageType } from './ChatInterface'
 import Link from 'next/link'
@@ -70,11 +70,9 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
             {message.type === 'user' && message.sender && (
               <div className="flex flex-col gap-1 text-xs mb-2 -mt-1">
                 <Link
-                  href={`${EXPLORER_BASE_URL}/account/${message.sender}`}
-                  className="text-right underline"
-                  target="_blank"
+                  href={`/u/${message.sender}`}
+                  className="text-right underline hover:text-blue-300"
                 >
-                  {' '}
                   {formatAddress(message.sender)}
                 </Link>
               </div>
