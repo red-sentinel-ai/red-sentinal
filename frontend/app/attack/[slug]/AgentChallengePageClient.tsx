@@ -1,18 +1,20 @@
 'use client'
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ChevronLeft } from 'lucide-react'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 
-import { useConsumePrompt } from '@/hooks/useConsumePrompt'
-import { useAgentBySlug } from '@/hooks/agents/useAgentBySlug'
+import { Card, CardHeader } from '@/components/ui'
+import { MIST_PER_SUI } from '@/constants'
 import type { ConsumePromptApiResponse } from '@/types'
-import { AgentEvents, useAgentEvents } from '@/hooks/useAgentEvents'
+import { useConsumePrompt } from '@/hooks/useConsumePrompt'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
 import ChatInterface from '@/components/agents/ChatInterface'
 import RiveLoader from '@/components/rive/Loader'
+import { AgentEvents, useAgentEvents } from '@/hooks/useAgentEvents'
+import { useAgentBySlug } from '@/hooks/agents/useAgentBySlug'
 import { useRewardsMissionTracker } from '@/hooks/rewards/useRewardsMissionTracker'
-import { MIST_PER_SUI } from '@/constants'
 
 export default function AgentChallengePage({ slug }: { slug: string }) {
   const account = useCurrentAccount()
@@ -121,25 +123,65 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   }
 
   return (
-    <div className="min-h-screen pt-16 max-w-[970px] mx-auto relative flex flex-col">
-      <div className="absolute top-[75px] -left-[156px] z-10">
-        <Link
-          href="/attack"
-          className="hidden lg:flex items-center gap-1 text-gray-400 hover:text-white transition-colors"
-        >
-          <ChevronLeft className="w-5 h-5" /> Back to Sentinels
-        </Link>
-      </div>
+    <div className="min-h-screen pt-16 mx-auto relative flex flex-col">
+      <div className="flex">
+        <div className="max-w-v2 bg-brown-50 flex h-screen flex-col overflow-x-hidden overflow-y-auto px-9 py-2 mr-4 w-full">
+          <div>
+            <Link
+              href="/attack"
+              className="hidden lg:flex items-center gap-1 text-gray-400 hover:text-white transition-colors py-3"
+            >
+              <ChevronLeft className="w-5 h-5" /> Back to Sentinels
+            </Link>
+          </div>
 
-      <ChatInterface
-        agent={agent}
-        agentEvents={agentEvents}
-        apiResponse={apiResponse}
-        onSendMessage={handleSendMessage}
-        isSubmitting={isSubmitting}
-        submitError={submitError}
-        refetchAgent={refetch}
-      />
+          <Card className="border-none bg-white/20">
+            <CardHeader className="p-4">
+              <div>
+                <div className="w-10 h-10 rounded-full overflow-hidden">
+                  <Image
+                    src={agent.agent_profile}
+                    width={40}
+                    height={40}
+                    alt={agent.agent_name}
+                    className="rounded-full"
+                  />
+                </div>
+              </div>
+            </CardHeader>
+          </Card>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
+              <h3 className="text-muted-foreground text-sm font-semibold uppercase">Prize pool</h3>
+              <p className="inline-block text-[24px] font-semibold xl:text-[28px] xl:leading-[28px]">
+                $47,147.97
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <h3 className="text-muted-foreground text-sm font-semibold uppercase">
+                Time Remaining
+              </h3>
+              <p className="inline-block text-[24px] font-semibold xl:text-[28px] xl:leading-[28px]">
+                Game Ended
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="flex-1">
+          <div className="max-w-v1 mx-auto">
+            <ChatInterface
+              agent={agent}
+              agentEvents={agentEvents}
+              apiResponse={apiResponse}
+              onSendMessage={handleSendMessage}
+              isSubmitting={isSubmitting}
+              submitError={submitError}
+              refetchAgent={refetch}
+            />
+          </div>
+        </div>
+      </div>
 
       {apiResponse && txnHash && (
         <AttackStatusModal
