@@ -7,13 +7,13 @@ import { useCurrentAccount } from '@mysten/dapp-kit'
 import { MIST_PER_SUI } from '@/constants'
 import type { ConsumePromptApiResponse } from '@/types'
 import { useConsumePrompt } from '@/hooks/useConsumePrompt'
+import { useAgentBySlug } from '@/hooks/agents/useAgentBySlug'
+import { AgentEvents, useAgentEvents } from '@/hooks/useAgentEvents'
+import { useRewardsMissionTracker } from '@/hooks/rewards/useRewardsMissionTracker'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
 import ChatInterface from '@/components/agents/ChatInterface'
-import { AgentSidebar } from '@/components/agents/AgentSidebar'
 import RiveLoader from '@/components/rive/Loader'
-import { AgentEvents, useAgentEvents } from '@/hooks/useAgentEvents'
-import { useAgentBySlug } from '@/hooks/agents/useAgentBySlug'
-import { useRewardsMissionTracker } from '@/hooks/rewards/useRewardsMissionTracker'
+import { AgentSidebar } from '@/components/agents/AgentSidebar'
 
 export default function AgentChallengePage({ slug }: { slug: string }) {
   const account = useCurrentAccount()
@@ -122,23 +122,22 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   }
 
   return (
-    <div className="min-h-screen pt-16 mx-auto relative flex flex-col">
-      <div className="flex">
-        <AgentSidebar agent={agent} />
+    <div className="min-h-screen pt-16 mx-auto flex">
+      <AgentSidebar
+        agent={agent}
+        agentEvents={agentEvents}
+      />
 
-        <div className="flex-1">
-          <div className="max-w-v1 mx-auto">
-            <ChatInterface
-              agent={agent}
-              agentEvents={agentEvents}
-              apiResponse={apiResponse}
-              onSendMessage={handleSendMessage}
-              isSubmitting={isSubmitting}
-              submitError={submitError}
-              refetchAgent={refetch}
-            />
-          </div>
-        </div>
+      <div className="flex-1 overflow-hidden">
+        <ChatInterface
+          agent={agent}
+          agentEvents={agentEvents}
+          apiResponse={apiResponse}
+          onSendMessage={handleSendMessage}
+          isSubmitting={isSubmitting}
+          submitError={submitError}
+          refetchAgent={refetch}
+        />
       </div>
 
       {apiResponse && txnHash && (
