@@ -5,7 +5,7 @@ import { useState, useRef, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import clsx from 'clsx'
-import { Loader2, AlertCircle, Send } from 'lucide-react'
+import { Loader2, Send } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { formatAddress } from '@mysten/sui/utils'
 import { ConnectModal, useCurrentAccount } from '@mysten/dapp-kit'
@@ -260,9 +260,13 @@ export default function ChatInterface({
       >
         {chatMessages.length === 0 && (
           <div className="text-center py-8 sm:py-12 text-gray-400">
-            <div className="bg-gradient-to-r from-gray-800 to-gray-700 rounded-full w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 flex items-center justify-center">
-              <AlertCircle className="w-8 h-8 sm:w-10 sm:h-10 opacity-50" />
-            </div>
+            <Image
+              src="/icons/exclamation.png"
+              width={60}
+              height={60}
+              alt="exclamation"
+              className="mx-auto mb-4"
+            />
             <p className="text-base sm:text-lg">No messages yet. Start attacking the agent!</p>
             <p className="text-xs sm:text-sm mt-2 opacity-75 px-4">
               Try to break through their defenses with clever prompts.
@@ -350,7 +354,7 @@ export default function ChatInterface({
                   setPromptInput(e.target.value)
                   countTokens(e.target.value)
                 }}
-                className="w-full bg-gradient-to-r from-gray-800 to-gray-700 border-2 border-gray-600 rounded-2xl p-3 sm:p-4 pr-16 sm:pr-20 pb-10 sm:pb-12 min-h-[50px] sm:min-h-[60px] max-h-[120px] sm:max-h-[150px] text-sm sm:text-base text-white focus:ring-2 focus:ring-[#558EB4] focus:border-[#558EB4] outline-none placeholder:text-gray-400 resize-none shadow-inner transition-all duration-200"
+                className="w-full bg-[#101112] border border-gray-600 rounded-2xl p-3 sm:p-4 pr-16 sm:pr-20 pb-10 sm:pb-12 min-h-[50px] sm:min-h-[60px] max-h-[120px] sm:max-h-[150px] text-sm sm:text-base text-white focus:ring-1  focus:ring-[#454545] outline-none placeholder:text-gray-400 resize-none shadow-inner transition-all duration-200"
                 disabled={isSubmitting}
                 placeholder="Craft your attack prompt..."
                 onKeyDown={(e) => {
@@ -363,7 +367,7 @@ export default function ChatInterface({
 
               <div
                 className={clsx(
-                  'absolute bottom-2 sm:bottom-3 backdrop-blur-lg left-3 sm:left-4 text-xs text-gray-400 bg-black/50 px-2 py-1 rounded'
+                  'absolute bottom-2 sm:bottom-3 backdrop-blur-lg left-3 sm:left-4 text-xs text-gray-400 bg-[#202122] px-2 py-1 rounded'
                 )}
               >
                 <span

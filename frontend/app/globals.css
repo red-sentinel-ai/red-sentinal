@@ -99,12 +99,12 @@ html body[data-scroll-locked] {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #558eb4 #12121266;
+  scrollbar-color: #bebebe #12121266;
 }
 
 html {
   scrollbar-width: thin;
-  scrollbar-color: #558eb4 #12121266;
+  scrollbar-color: #bebebe #12121266;
 }
 
 body::-webkit-scrollbar {
