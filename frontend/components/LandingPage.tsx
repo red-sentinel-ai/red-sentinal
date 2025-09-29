@@ -56,11 +56,11 @@ export const LandingPage = () => {
             >
               <div className="relative">
                 <Image
-                  src="/img/robo_to_r.png"
-                  width={334}
+                  src="/img/robot_defend.png"
+                  width={300}
                   height={399}
                   alt="robo"
-                  className="relative z-10 -mt-10"
+                  className="relative z-10 -mt-10 mx-auto"
                 />
 
                 <div className="absolute inset-0 pointer-events-auto robo-img-defender rounded-lg transition-all mt-10"></div>
@@ -112,18 +112,23 @@ export const LandingPage = () => {
             >
               <div className="relative">
                 <Image
-                  src="/img/robo_to_r.png"
-                  width={334}
+                  src="/img/robot_attack.png"
+                  width={300}
                   height={399}
                   alt="robo"
-                  className="rotate-y-180 -mt-10 z-10 relative"
+                  className="-mt-10 z-10 relative mx-auto"
                 />
                 <div className="absolute inset-0 pointer-events-auto robo-img-attacker rounded-lg transition-all mt-10"></div>
               </div>
 
               <div className="flex items-center justify-center gap-2 my-2">
                 <div>
-                  <Image src="/icons/swords.png" width={24} height={24} alt="local police icon" />
+                  <Image
+                    src="/icons/swords.png"
+                    width={24}
+                    height={24}
+                    alt="local police icon"
+                  />
                 </div>
                 <p className="text-lg lg:text-[2rem] leading-normal font-medium">ATTACK</p>
               </div>
