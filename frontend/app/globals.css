@@ -71,6 +71,14 @@
    .max-h-body{
     max-height: 100vh;
   }
+
+  .max-w-v1{
+    max-width: 856px;
+  }
+
+  .max-w-v2{
+    max-width: 367px;
+  }
 }
 
 html {
