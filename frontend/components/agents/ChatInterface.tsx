@@ -5,12 +5,11 @@ import { useState, useRef, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import clsx from 'clsx'
-import { Loader2, AlertCircle, ChevronDown, ChevronUp, Send } from 'lucide-react'
+import { Loader2, AlertCircle, Send } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { formatAddress } from '@mysten/sui/utils'
 import { ConnectModal, useCurrentAccount } from '@mysten/dapp-kit'
 
-import { AgentInfo } from '@/components/AgentInfo'
 import { ATTACK_PROMPT_MAX_TOKENS, DEFAULT_PROFILE_URL } from '@/constants'
 import type { ConsumePromptApiResponse } from '@/types'
 import type { AgentEvents } from '@/hooks/useAgentEvents'
@@ -54,7 +53,7 @@ export default function ChatInterface({
 }: ChatInterfaceProps) {
   const [promptInput, setPromptInput] = useState('')
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
-  const [showAgentDetails, setShowAgentDetails] = useState(false)
+  // const [showAgentDetails, setShowAgentDetails] = useState(false)
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const account = useCurrentAccount()
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
@@ -172,7 +171,7 @@ export default function ChatInterface({
 
   return (
     <div className="flex flex-col text-[#E5E7EB] h-full flex-1">
-      <div className="backdrop-blur-xl border-b border-[#2E40494D] p-3 shadow-lg">
+      {/* <div className="backdrop-blur-xl border-b border-[#2E40494D] p-3 shadow-lg">
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4">
           <div>
             <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
@@ -253,11 +252,11 @@ export default function ChatInterface({
             </div>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence> */}
 
       <div
         ref={chatContainerRef}
-        className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-4 sm:space-y-6 custom-scrollbar max-h-[calc(100vh-280px)] sm:max-h-[calc(100vh-270px)] backdrop-blur-md"
+        className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-4 sm:space-y-6 custom-scrollbar max-h-[calc(100vh-205px)] backdrop-blur-md"
       >
         {chatMessages.length === 0 && (
           <div className="text-center py-8 sm:py-12 text-gray-400">
