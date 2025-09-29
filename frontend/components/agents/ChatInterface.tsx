@@ -11,7 +11,7 @@ import { formatAddress } from '@mysten/sui/utils'
 import { ConnectModal, useCurrentAccount } from '@mysten/dapp-kit'
 
 import { AgentInfo } from '@/components/AgentInfo'
-import { ATTACK_PROMPT_MAX_TOKENS, DEFAULT_PROFILE_URL, EXPLORER_BASE_URL } from '@/constants'
+import { ATTACK_PROMPT_MAX_TOKENS, DEFAULT_PROFILE_URL } from '@/constants'
 import type { ConsumePromptApiResponse } from '@/types'
 import type { AgentEvents } from '@/hooks/useAgentEvents'
 import type { AgentDetails } from '@/hooks/agents/useAllAgents'
@@ -311,11 +311,9 @@ export default function ChatInterface({
                     <p className="text-xs font-semibold text-gray-300 shrink-0">Winner:</p>
 
                     <Link
-                      href={`${EXPLORER_BASE_URL}/account/${winnerInfo.winnerAddress}`}
+                      href={`/u/${winnerInfo.winnerAddress}`}
                       className="text-right underline text-sm"
-                      target="_blank"
                     >
-                      {' '}
                       {formatAddress(winnerInfo.winnerAddress)}
                     </Link>
                   </div>
