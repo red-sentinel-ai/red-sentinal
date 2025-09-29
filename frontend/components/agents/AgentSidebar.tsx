@@ -91,6 +91,11 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
         </div>
 
         <div className="flex flex-col gap-2">
+          <h3 className="text-white/60 text-sm font-semibold uppercase">Senntinel ID</h3>
+          <p className="inline-block text-2xl font-semibold">{agent.agent_id}</p>
+        </div>
+
+        <div className="flex flex-col gap-2">
           <div className="flex items-center gap-1">
             <h3 className="text-white/60 text-sm font-semibold uppercase">Active Time</h3>
             <TooltipProvider>
