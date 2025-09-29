@@ -8,14 +8,21 @@ import { FeaturedAgentCard } from '@/components/FeaturedAgentCard'
 import { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { AgentStatus } from '@/types'
 
-async function getUserProfile(username: string) {
-  const { data: user } = await supabaseServiceClient
-    .from('ss_users')
-    .select('*')
-    .eq('username', username)
-    .single()
+async function getUserProfile(identifier: string) {
+  const isWalletAddress = identifier.startsWith('0x') && identifier.length > 60
 
-  if (!user || !user.wallet_addresses) {
+  let query = supabaseServiceClient.from('ss_users').select('*')
+
+  if (isWalletAddress) {
+    query = query.contains('wallet_addresses', [identifier])
+  } else {
+    query = query.eq('username', identifier)
+  }
+
+  const { data: user, error: userError } = await query.single()
+
+  if (userError || !user || !user.wallet_addresses) {
+    console.error('User lookup error:', userError?.message)
     return null
   }
 
@@ -59,10 +66,11 @@ async function getUserProfile(username: string) {
 export default async function PublicProfilePage({
   params,
 }: {
-  params: Promise<{ username: string }>
+  params: Promise<{ identifier: string }> // Changed from 'username' to 'identifier'
 }) {
-  const { username } = await params
-  const profileData = await getUserProfile(username)
+  const { identifier } = await params // Changed from 'username' to 'identifier'
+  const profileData = await getUserProfile(identifier) // Pass the identifier to the fetching function
+
   if (!profileData) {
     notFound()
   }
