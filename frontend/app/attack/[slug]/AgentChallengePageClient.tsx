@@ -153,7 +153,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
             <div className="flex flex-col gap-2">
               <h3 className="text-white/60 text-sm font-semibold uppercase">Prize pool</h3>
               <p className="inline-block text-[24px] font-semibold xl:text-[28px] xl:leading-[28px]">
-                $47,147.97
+                {(Number(agent.balance) / MIST_PER_SUI).toFixed(2)} SUI
               </p>
             </div>
 
@@ -203,7 +203,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
             <div className="flex flex-col gap-2">
               <h3 className="text-white/60 text-sm font-semibold uppercase">Message Price</h3>
               <p className="inline-block text-[24px] font-semibold xl:text-[28px] xl:leading-[28px]">
-                $470.89
+                {(Number(agent.cost_per_message) / MIST_PER_SUI).toFixed(2)} SUI
               </p>
             </div>
 
