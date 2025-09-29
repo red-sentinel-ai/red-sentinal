@@ -57,7 +57,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
   ).size
 
   return (
-    <div className="max-w-[300px] bg-gradient-to-r from-gray-800/40 to-gray-700/40 backdrop-blur-sm h-screen flex-col overflow-x-hidden overflow-y-scroll px-6 py-2 mr-4 w-full">
+    <div className="max-w-[300px] bg-gradient-to-r from-gray-800/40 to-gray-700/40 backdrop-blur-sm flex-col overflow-x-hidden overflow-y-scroll px-6 py-2 mr-4 w-full max-h-[calc(100vh-64px)]">
       <div>
         <Link
           href="/attack"
@@ -69,7 +69,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
       <div className="bg-gradient-to-r from-gray-800/80 to-gray-700/80 backdrop-blur-sm rounded-xl p-4 my-4 border border-gray-600/50 shadow-lg w-full text-xs sm:text-sm">
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-full overflow-hidden">
+          <div className="w-10 h-10 rounded-full overflow-hidden grow-0 shrink-0 basis-auto">
             <Image
               src={agent.agent_profile || DEFAULT_PROFILE_URL}
               width={40}
@@ -78,7 +78,18 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
               className="rounded-full object-cover w-full h-full"
             />
           </div>
-          <p className="text-xl font-semibold">{agent.agent_name}</p>
+          <div className="flex items-center gap-1">
+            <p className="text-xl font-semibold">{agent.agent_name}</p>
+            {agent.is_featured && (
+              <Image
+                src="/icons/check-mark.svg"
+                width={20}
+                height={20}
+                alt="checkmark"
+                className="flex-shrink-0"
+              />
+            )}
+          </div>
         </div>
       </div>
 
@@ -91,13 +102,13 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
         </div>
 
         <div className="flex flex-col gap-2">
-          <h3 className="text-white/60 text-sm font-semibold uppercase">Senntinel ID</h3>
+          <h3 className="text-white/60 text-sm font-semibold uppercase">Sentinel ID</h3>
           <p className="inline-block text-2xl font-semibold">{agent.agent_id}</p>
         </div>
 
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-1">
-            <h3 className="text-white/60 text-sm font-semibold uppercase">Active Time</h3>
+            <h3 className="text-white/70 text-sm font-semibold uppercase">Active Time</h3>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger
