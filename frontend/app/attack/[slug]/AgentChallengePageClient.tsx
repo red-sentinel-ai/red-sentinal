@@ -128,7 +128,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
         agentEvents={agentEvents}
       />
 
-      <div className="flex-1 overflow-hidden">
+      <div className="max-w-v1 mx-auto w-full">
         <ChatInterface
           agent={agent}
           agentEvents={agentEvents}
