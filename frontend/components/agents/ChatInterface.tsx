@@ -17,6 +17,7 @@ import type { AgentEvents } from '@/hooks/useAgentEvents'
 import type { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { ChatMessage } from './ChatMessage'
 import { useTokenCount } from '@/hooks/useTokenCount'
+import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
 
 export interface ChatMessage {
   id: string
@@ -57,6 +58,15 @@ export default function ChatInterface({
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const account = useCurrentAccount()
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
+
+  const senderAddresses = useMemo(() => {
+    const addresses = chatMessages
+      .filter((msg) => msg.type === 'user' && msg.sender)
+      .map((msg) => msg.sender!)
+    return [...new Set(addresses)]
+  }, [chatMessages])
+
+  const { data: userProfilesMap } = useUserProfiles(senderAddresses)
 
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false)
 
@@ -267,6 +277,7 @@ export default function ChatInterface({
               key={message.id}
               message={message}
               agent={agent}
+              senderProfile={userProfilesMap?.[message.sender!] || null}
             />
           ))}
 
