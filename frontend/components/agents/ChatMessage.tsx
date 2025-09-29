@@ -9,13 +9,17 @@ import { DEFAULT_PROFILE_URL, SUI_TESTNET_BASE_URL } from '@/constants'
 import type { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { type ChatMessage as ChatMessageType } from './ChatInterface'
 import Link from 'next/link'
+import type { Tables } from '@/lib/database.types'
+
+type UserProfile = Pick<Tables<'ss_users'>, 'username' | 'avatar_url'> | null
 
 type ChatMessageProps = {
   message: ChatMessageType
   agent: AgentDetails
+  senderProfile: UserProfile
 }
 
-export const ChatMessage = ({ message }: ChatMessageProps) => {
+export const ChatMessage = ({ message, senderProfile }: ChatMessageProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const [shouldTruncate, setShouldTruncate] = useState(false)
   const contentRef = useRef<HTMLParagraphElement>(null)
@@ -27,6 +31,11 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
       setShouldTruncate(totalLines > 4)
     }
   }, [message.content])
+
+  const avatarUrl = senderProfile?.avatar_url || DEFAULT_PROFILE_URL
+  const displayName =
+    senderProfile?.username || (message.sender ? formatAddress(message.sender) : 'User')
+  const profileLink = `/u/${senderProfile?.username || message.sender}`
 
   return (
     <motion.div
@@ -46,14 +55,16 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
       >
         {message.type === 'user' && (
           <div className="flex-shrink-0">
-            <div className="w-7 h-7 rounded-full relative ring-2 ring-opacity-60">
-              <Image
-                src={DEFAULT_PROFILE_URL}
-                fill
-                alt="profile"
-                className="rounded-full object-cover"
-              />
-            </div>
+            <Link href={profileLink}>
+              <div className="w-7 h-7 rounded-full relative ring-2 ring-opacity-60">
+                <Image
+                  src={avatarUrl}
+                  fill
+                  alt={displayName}
+                  className="rounded-full object-cover"
+                />
+              </div>
+            </Link>
           </div>
         )}
 
@@ -70,10 +81,10 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
             {message.type === 'user' && message.sender && (
               <div className="flex flex-col gap-1 text-xs mb-2 -mt-1">
                 <Link
-                  href={`/u/${message.sender}`}
-                  className="text-right underline hover:text-blue-300"
+                  href={profileLink}
+                  className="text-right font-semibold text-white hover:underline"
                 >
-                  {formatAddress(message.sender)}
+                  {displayName}
                 </Link>
               </div>
             )}
