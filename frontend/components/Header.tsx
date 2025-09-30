@@ -96,7 +96,7 @@ export const Header = () => {
           <div className="py-4">
             <MenuItems menuOpen={menuOpen} />
           </div>
-          <div className="mt-4">
+          <div className="mt-4 flex justify-center">
             <ConnectButton />
           </div>
         </div>
