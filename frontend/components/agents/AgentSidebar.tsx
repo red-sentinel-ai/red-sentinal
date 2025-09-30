@@ -22,8 +22,14 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
   const [shouldTruncate, setShouldTruncate] = useState(false)
   const instructionsRef = useRef<HTMLParagraphElement>(null)
 
+  const isDrained = agentEvents.agentDefeated.length > 0
+  const bountyWonEvent = isDrained ? agentEvents.agentDefeated[0] : null
+  const bountyWonAmount = bountyWonEvent
+    ? (Number(bountyWonEvent.parsedJson.amount_won) / MIST_PER_SUI).toFixed(2)
+    : '0.00'
+
   useEffect(() => {
-    if (!agent.created_at) return
+    if (!agent.created_at || isDrained) return
 
     const createdTime = new Date(agent.created_at).getTime()
 
@@ -37,7 +43,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
     const interval = setInterval(updateTimer, 1000)
 
     return () => clearInterval(interval)
-  }, [agent.created_at])
+  }, [agent.created_at, isDrained])
 
   useEffect(() => {
     if (instructionsRef.current) {
@@ -94,41 +100,52 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
       </div>
 
       <div className="flex flex-col gap-6 py-4">
-        <div className="flex flex-col gap-2">
-          <h3 className="text-white/60 text-sm font-semibold uppercase">Prize pool</h3>
-          <p className="inline-block text-2xl font-semibold">
-            {(Number(agent.balance) / MIST_PER_SUI).toFixed(2)} SUI
-          </p>
-        </div>
+        {isDrained ? (
+          <div className="flex flex-col gap-2">
+            <h3 className="text-white/60 text-sm font-semibold uppercase flex items-center gap-1.5">
+              Bounty Won
+            </h3>
+            <p className="inline-block text-2xl font-semibold">{bountyWonAmount} SUI</p>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-2">
+            <h3 className="text-white/60 text-sm font-semibold uppercase">Prize pool</h3>
+            <p className="inline-block text-2xl font-semibold">
+              {(Number(agent.balance) / MIST_PER_SUI).toFixed(2)} SUI
+            </p>
+          </div>
+        )}
 
         <div className="flex flex-col gap-2">
           <h3 className="text-white/60 text-sm font-semibold uppercase">Sentinel ID</h3>
           <p className="inline-block text-2xl font-semibold">{agent.agent_id}</p>
         </div>
 
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-1">
-            <h3 className="text-white/70 text-sm font-semibold uppercase">Active Since</h3>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger
-                  asChild
-                  className="cursor-help"
-                >
-                  <Info
-                    width={12}
-                    height={12}
-                    className="text-white/60"
-                  />
-                </TooltipTrigger>
-                <TooltipContent className="bg-black border border-gray-700 text-white">
-                  <p>Format: D:H:M:S (Days:Hours:Minutes:Seconds)</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+        {!isDrained && (
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-1">
+              <h3 className="text-white/70 text-sm font-semibold uppercase">Active Time</h3>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger
+                    asChild
+                    className="cursor-help"
+                  >
+                    <Info
+                      width={12}
+                      height={12}
+                      className="text-white/60"
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent className="bg-black border border-gray-700 text-white">
+                    <p>Format: D:H:M:S (Days:Hours:Minutes:Seconds)</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+            <p className="inline-block text-2xl font-semibold">{activeSince}</p>
           </div>
-          <p className="inline-block text-2xl font-semibold">{activeSince}</p>
-        </div>
+        )}
       </div>
       <div className="border-t border-t-white/20"></div>
 
