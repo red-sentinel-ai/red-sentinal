@@ -4,15 +4,17 @@ import Link from 'next/link'
 import { ChevronLeft } from 'lucide-react'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 
+import { MIST_PER_SUI } from '@/constants'
+import type { ConsumePromptApiResponse } from '@/types'
+import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from '@/components/ui'
 import { useConsumePrompt } from '@/hooks/useConsumePrompt'
 import { useAgentBySlug } from '@/hooks/agents/useAgentBySlug'
-import type { ConsumePromptApiResponse } from '@/types'
 import { AgentEvents, useAgentEvents } from '@/hooks/useAgentEvents'
+import { useRewardsMissionTracker } from '@/hooks/rewards/useRewardsMissionTracker'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
 import ChatInterface from '@/components/agents/ChatInterface'
 import RiveLoader from '@/components/rive/Loader'
-import { useRewardsMissionTracker } from '@/hooks/rewards/useRewardsMissionTracker'
-import { MIST_PER_SUI } from '@/constants'
+import { AgentSidebar } from '@/components/agents/AgentSidebar'
 
 export default function AgentChallengePage({ slug }: { slug: string }) {
   const account = useCurrentAccount()
@@ -121,25 +123,38 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   }
 
   return (
-    <div className="min-h-screen pt-16 max-w-[970px] mx-auto relative flex flex-col">
-      <div className="absolute top-[75px] -left-[156px] z-10">
-        <Link
-          href="/attack"
-          className="hidden lg:flex items-center gap-1 text-gray-400 hover:text-white transition-colors"
+    <div className="min-h-screen pt-16 flex">
+      <ResizablePanelGroup
+        direction="horizontal"
+        className="w-full"
+      >
+        <ResizablePanel
+          defaultSize={20}
+          minSize={20}
+          maxSize={40}
         >
-          <ChevronLeft className="w-5 h-5" /> Back to Sentinels
-        </Link>
-      </div>
+          <AgentSidebar
+            agent={agent}
+            agentEvents={agentEvents}
+          />
+        </ResizablePanel>
 
-      <ChatInterface
-        agent={agent}
-        agentEvents={agentEvents}
-        apiResponse={apiResponse}
-        onSendMessage={handleSendMessage}
-        isSubmitting={isSubmitting}
-        submitError={submitError}
-        refetchAgent={refetch}
-      />
+        <ResizableHandle withHandle={true} />
+
+        <ResizablePanel defaultSize={80}>
+          <div className="max-w-v1 mx-auto w-full h-full">
+            <ChatInterface
+              agent={agent}
+              agentEvents={agentEvents}
+              apiResponse={apiResponse}
+              onSendMessage={handleSendMessage}
+              isSubmitting={isSubmitting}
+              submitError={submitError}
+              refetchAgent={refetch}
+            />
+          </div>
+        </ResizablePanel>
+      </ResizablePanelGroup>
 
       {apiResponse && txnHash && (
         <AttackStatusModal
