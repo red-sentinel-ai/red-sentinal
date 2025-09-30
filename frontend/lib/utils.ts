@@ -163,3 +163,56 @@ export function formatDuration(ms: number): string {
     seconds
   ).padStart(2, '0')}`
 }
+const simpleHash = (str: string): number => {
+  let hash = 0
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i)
+    hash = (hash << 5) - hash + char
+    hash |= 0
+  }
+  return Math.abs(hash)
+}
+
+export const generateGradientAvatar = (seed: string): string => {
+  const palettes = [
+    ['#2E3192', '#1BFFFF'],
+    ['#FF4E50', '#F9D423'],
+    ['#009245', '#FCEE21'],
+    ['#6A3093', '#A044FF', '#E863AE'],
+    ['#4776E6', '#8E54E9'],
+    ['#1D9BF0', '#7C4DFF', '#FC5185'],
+    ['#1D976C', '#93F9B9'],
+  ]
+
+  const hash = simpleHash(seed)
+  const colorPair = palettes[hash % palettes.length]
+
+  const gradId = `grad-${hash}`
+
+  const stops = colorPair
+    .map((color, index) => {
+      const offset = (index / (colorPair.length - 1)) * 100
+      return `<stop offset="${offset}%" stop-color="${color}" />`
+    })
+    .join('')
+
+  const cx = (hash % 50) + 25
+  const cy = (hash % 50) + 25
+  const r = (hash % 25) + 7
+  const fx = (hash % 80) + 10
+  const fy = (hash % 80) + 10
+
+  const svg = `
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="${gradId}" cx="${cx}%" cy="${cy}%" r="${r}%" fx="${fx}%" fy="${fy}%">
+          ${stops}
+        </radialGradient>
+      </defs>
+      <circle cx="50" cy="50" r="50" fill="url(#${gradId})" />
+    </svg>
+  `
+
+  const base64 = Buffer.from(svg).toString('base64')
+  return `data:image/svg+xml;base64,${base64}`
+}
