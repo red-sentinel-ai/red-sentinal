@@ -2,20 +2,12 @@ import { MissionMetadata } from '@/types/Rewards'
 import { REWARDS_CONSTANTS } from '@/constants/rewards'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { useCompleteMission } from './useCompleteMission'
-import { useSocialStatus } from '../profile/useSocialStatus'
 
 export function useRewardsMissionTracker() {
   const account = useCurrentAccount()
   const address = account?.address
 
   const { mutate: completeMission } = useCompleteMission()
-
-  const { data: socialStatus } = useSocialStatus(address || undefined)
-
-  const hasTwitter = socialStatus?.isXConnected || false
-  const hasDiscord = socialStatus?.isDiscordConnected || false
-
-  const isAllowed = hasTwitter || hasDiscord
 
   const trackAttackSentinel = (
     txHash: string,
@@ -24,7 +16,7 @@ export function useRewardsMissionTracker() {
     isWinner: boolean,
     metadata?: MissionMetadata
   ) => {
-    if (!address || !isAllowed) return
+    if (!address) return
 
     // Calculate dynamic points for the attack itself: 1 + floor(fee * 20) + previous attempts
     const basePoints = 1
@@ -51,7 +43,7 @@ export function useRewardsMissionTracker() {
   }
 
   const trackLaunchSentinel = (txHash: string, metadata?: MissionMetadata) => {
-    if (!address || !isAllowed) return
+    if (!address) return
 
     completeMission({
       wallet_address: address,
@@ -62,7 +54,7 @@ export function useRewardsMissionTracker() {
   }
 
   const trackFundSentinel = (txHash: string, amountInSui: number, metadata?: MissionMetadata) => {
-    if (!address || !isAllowed) return
+    if (!address) return
 
     const pointsToAward = Math.floor(25 * amountInSui)
 
@@ -76,7 +68,11 @@ export function useRewardsMissionTracker() {
   }
 
   const trackFollowedOnX = (txHash: string, metadata?: MissionMetadata) => {
-    if (!address || !isAllowed) return
+    if (!address) return
+    // if (!hasTwitter) {
+    //   toast.error('Please connect your X (Twitter) account first.')
+    //   return
+    // }
 
     completeMission({
       wallet_address: address,
@@ -87,7 +83,11 @@ export function useRewardsMissionTracker() {
   }
 
   const trackRetweet = (txHash: string, metadata?: MissionMetadata) => {
-    if (!address || !isAllowed) return
+    if (!address) return
+    // if (!hasTwitter) {
+    //   toast.error('Please connect your X (Twitter) account first.')
+    //   return
+    // }
 
     completeMission({
       wallet_address: address,
@@ -98,7 +98,11 @@ export function useRewardsMissionTracker() {
   }
 
   const trackShareWithHashtag = (txHash: string, metadata?: MissionMetadata) => {
-    if (!address || !isAllowed) return
+    if (!address) return
+    // if (!hasTwitter) {
+    //   toast.error('Please connect your X (Twitter) account first.')
+    //   return
+    // }
 
     completeMission({
       wallet_address: address,
@@ -109,7 +113,7 @@ export function useRewardsMissionTracker() {
   }
 
   const trackJoinedTelegram = (txHash: string, metadata?: MissionMetadata) => {
-    if (!address || !isAllowed) return
+    if (!address) return
 
     completeMission({
       wallet_address: address,
@@ -120,7 +124,7 @@ export function useRewardsMissionTracker() {
   }
 
   const trackTelegramEngage = (txHash: string, metadata?: MissionMetadata) => {
-    if (!address || !isAllowed) return
+    if (!address) return
 
     completeMission({
       wallet_address: address,
@@ -130,7 +134,11 @@ export function useRewardsMissionTracker() {
     })
   }
   const trackJoinedDiscord = (txHash: string, metadata?: MissionMetadata) => {
-    if (!address || !isAllowed) return
+    if (!address) return
+    // if (!hasDiscord) {
+    //   toast.error('Please connect your Discord account first.')
+    //   return
+    // }
 
     completeMission({
       wallet_address: address,
@@ -141,7 +149,11 @@ export function useRewardsMissionTracker() {
   }
 
   const trackDiscordEngage = (txHash: string, metadata?: MissionMetadata) => {
-    if (!address || !isAllowed) return
+    if (!address) return
+    // if (!hasDiscord) {
+    //   toast.error('Please connect your Discord account first.')
+    //   return
+    // }
 
     completeMission({
       wallet_address: address,

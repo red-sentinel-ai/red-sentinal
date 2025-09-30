@@ -8,7 +8,6 @@ import {
   MissionCompletionCounts,
 } from '@/types/Rewards'
 import { GlobalConfigValues } from '@/types/globalConfig'
-import { checkSocialConnections } from '@/utils/socialConnectionCheck'
 
 const getMissionCompletionCounts = (
   activities: RHRewardsActivity[],
@@ -55,14 +54,13 @@ export async function GET(
   try {
     const address = (await params).address
 
-    // Check if user has social authentication
-    const socialCheck = await checkSocialConnections(address)
-    if (!socialCheck.hasAnyConnection) {
-      return NextResponse.json(
-        { error: 'Social authentication required. Please connect at least one social account.' },
-        { status: 403 }
-      )
-    }
+    // - const socialCheck = await checkSocialConnections(address)
+    // - if (!socialCheck.hasAnyConnection) {
+    // -   return NextResponse.json(
+    // -     { error: 'Social authentication required. Please connect at least one social account.' },
+    // -     { status: 403 }
+    // -   )
+    // - }
 
     const userData = await supabaseServiceClient
       .from('ss_users')

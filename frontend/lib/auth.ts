@@ -133,90 +133,45 @@ async function saveSocialConnection(walletAddress: string, provider: string, pro
       return
     }
 
-    const { data: existingSocialConnection } = await supabaseServiceClient
-      .from('ss_social_connections')
-      .select('user_id')
-      .eq('platform', provider)
-      .eq('platform_user_id', platformUserId)
-      .single()
-
-    const { data: sourceUser } = await supabaseServiceClient
+    const { data: user, error: userError } = await supabaseServiceClient
       .from('ss_users')
-      .select('*')
+      .select('id, avatar_url')
       .contains('wallet_addresses', [walletAddress])
       .single()
 
-    if (existingSocialConnection && sourceUser) {
-      const targetUserId = existingSocialConnection.user_id
-      if (sourceUser.id !== targetUserId) {
-        console.log(
-          `Merging wallet ${walletAddress} into user ${targetUserId} and deleting temporary user ${sourceUser.id}`
-        )
-        const { error: deleteError } = await supabaseServiceClient
-          .from('ss_users')
-          .delete()
-          .eq('id', sourceUser.id)
-        if (deleteError) {
-          console.error('Error deleting temporary user profile:', deleteError)
-        }
-        const { data: targetUser, error: findTargetError } = await supabaseServiceClient
-          .from('ss_users')
-          .select('wallet_addresses')
-          .eq('id', targetUserId)
-          .single()
-        if (findTargetError || !targetUser) {
-          console.error('Could not find the target user to merge into.')
-          return
-        }
-        const updatedWallets = [...(targetUser.wallet_addresses || []), walletAddress]
-        const { error: updateError } = await supabaseServiceClient
-          .from('ss_users')
-          .update({ wallet_addresses: updatedWallets })
-          .eq('id', targetUserId)
-        if (updateError) {
-          console.error('Error merging wallet address:', updateError)
-        }
-      } else {
-        console.log('Wallet address already belongs to the correct user. No action needed.')
-      }
+    if (userError || !user) {
+      console.error(
+        `Auth Error: User profile for wallet ${walletAddress} not found. This should not happen if the get-or-create flow on wallet connect is working.`
+      )
       return
     }
 
-    if (sourceUser) {
-      await supabaseServiceClient.from('ss_social_connections').insert({
-        user_id: sourceUser.id,
+    const { error: upsertError } = await supabaseServiceClient.from('ss_social_connections').upsert(
+      {
+        user_id: user.id,
         platform: provider,
         platform_user_id: platformUserId,
         platform_username: platformUsername,
         platform_avatar_url: platformAvatarUrl,
-      })
-      console.log(`New social connection added for existing user ${sourceUser.id}`)
-      return
+      },
+      {
+        onConflict: 'user_id,platform',
+      }
+    )
+
+    if (upsertError) {
+      throw upsertError
     }
 
-    if (!sourceUser && !existingSocialConnection) {
-      const { data: newUser, error: createUserError } = await supabaseServiceClient
+    console.log(`Successfully upserted ${provider} connection for user ${user.id}`)
+
+    if (platformAvatarUrl && user.avatar_url && user.avatar_url.startsWith('data:image/svg+xml')) {
+      await supabaseServiceClient
         .from('ss_users')
-        .insert({
-          wallet_addresses: [walletAddress],
-          username: platformUsername,
-          display_name: platformUsername,
-          avatar_url: platformAvatarUrl,
-        })
-        .select()
-        .single()
-      if (createUserError) {
-        console.error('Error creating new user:', createUserError)
-        return
-      }
-      await supabaseServiceClient.from('ss_social_connections').insert({
-        user_id: newUser.id,
-        platform: provider,
-        platform_user_id: platformUserId,
-        platform_username: platformUsername,
-        platform_avatar_url: platformAvatarUrl,
-      })
-      console.log(`Created new user ${newUser.id} with social connection.`)
+        .update({ avatar_url: platformAvatarUrl })
+        .eq('id', user.id)
+
+      console.log(`Updated avatar for user ${user.id} with ${provider} avatar.`)
     }
   } catch (error) {
     console.error('Error in saveSocialConnection:', error)

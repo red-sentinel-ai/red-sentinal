@@ -1,16 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { UserRewardsData } from '@/types/Rewards'
-import { useSocialStatus } from '../profile/useSocialStatus'
 
 export function useUserRewards(walletAddress: string | null) {
-  const { data: socialStatus, isLoading: socialLoading } = useSocialStatus(
-    walletAddress || undefined
-  )
-
-  const hasTwitter = socialStatus?.isXConnected || false
-  const hasDiscord = socialStatus?.isDiscordConnected || false
-  const hasAnyConnection = hasTwitter || hasDiscord
-
   return useQuery<UserRewardsData>({
     queryKey: ['user-rewards', walletAddress],
     queryFn: async () => {
@@ -19,9 +10,9 @@ export function useUserRewards(walletAddress: string | null) {
       }
       const response = await fetch(`/api/rewards/user/${walletAddress}`)
 
-      if (response.status === 403) {
+      if (response.status === 404) {
         const errorData = await response.json()
-        throw new Error(errorData.error || 'Access denied to rewards program')
+        throw new Error(errorData.error || 'User profile not found.')
       }
 
       if (!response.ok) {
@@ -29,10 +20,10 @@ export function useUserRewards(walletAddress: string | null) {
       }
       return response.json()
     },
-    enabled: !!walletAddress && hasAnyConnection && !socialLoading,
+    enabled: !!walletAddress,
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: (failureCount, error) => {
-      if (error.message.includes('Access denied')) {
+      if (error.message.includes('User profile not found')) {
         return false
       }
       return failureCount < 2
