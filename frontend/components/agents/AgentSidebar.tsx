@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ChevronLeft, Info } from 'lucide-react'
+import { ChevronLeft, Info, User } from 'lucide-react'
+import { formatAddress } from '@mysten/sui/utils'
 
 import { DEFAULT_PROFILE_URL, MIST_PER_SUI } from '@/constants'
 import { type AgentDetails } from '@/hooks/agents/useAllAgents'
@@ -27,6 +28,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
   const bountyWonAmount = bountyWonEvent
     ? (Number(bountyWonEvent.parsedJson.amount_won) / MIST_PER_SUI).toFixed(2)
     : '0.00'
+  const winnerAddress = bountyWonEvent ? bountyWonEvent.parsedJson.winner : null
 
   useEffect(() => {
     if (!agent.created_at || isDrained) return
@@ -103,7 +105,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
         {isDrained ? (
           <div className="flex flex-col gap-2">
             <h3 className="text-white/60 text-sm font-semibold uppercase flex items-center gap-1.5">
-              Bounty Won
+              Total Bounty Won
             </h3>
             <p className="inline-block text-2xl font-semibold">{bountyWonAmount} SUI</p>
           </div>
@@ -113,6 +115,22 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
             <p className="inline-block text-2xl font-semibold">
               {(Number(agent.balance) / MIST_PER_SUI).toFixed(2)} SUI
             </p>
+          </div>
+        )}
+
+        {isDrained && winnerAddress && (
+          <div className="flex flex-col gap-2">
+            <h3 className="text-white/60 text-sm font-semibold uppercase flex items-center gap-1.5">
+              <User className="w-4 h-4" />
+              Winner
+            </h3>
+            <Link
+              href={`/u/${winnerAddress}`}
+              className="inline-block text-lg font-mono hover:underline"
+              title={winnerAddress}
+            >
+              {formatAddress(winnerAddress)}
+            </Link>
           </div>
         )}
 
