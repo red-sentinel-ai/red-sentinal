@@ -1,19 +1,18 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { AnimatePresence, motion } from 'framer-motion'
-// import Characters from './Characters'
 
 export const LandingPage = () => {
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        className="mt-32 px-4 w-full max-w-[1900px] mx-auto relative"
+        className="mt-24 lg:mt-32 px-4 w-full max-w-[1900px] mx-auto relative"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.3 }}
       >
-        <div>
+        <div className="hidden lg:block">
           <Image
             src="/animations/smoke.gif"
             alt="smoke"
@@ -21,9 +20,6 @@ export const LandingPage = () => {
             height={600}
             className="absolute -z-10 left-[140px] top-8"
           />
-        </div>
-
-        <div>
           <Image
             src="/animations/smoke.gif"
             alt="smoke"
@@ -40,16 +36,16 @@ export const LandingPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.1 }}
           >
-            <h2 className="text-[40px] uppercase text-text">#Sui Sentinel</h2>
-            <p className="">
+            <h2 className="text-3xl md:text-[40px] uppercase text-text">#Sui Sentinel</h2>
+            <p className="text-sm md:text-base">
               A trustless coordination layer for AI red-teaming, powered by verifiable compute +
               smart contracts.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 justify-center pt-8 text-center gap-9  overflow-hidden px-4 pb-4 z-10 relative">
+          <div className="grid grid-cols-1 lg:grid-cols-2 justify-center pt-8 text-center gap-9 overflow-hidden px-4 pb-4 z-10 relative">
             <motion.div
-              className="border border-[#558EB4] rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-2 lg:col-span-1 robo-card attacker backdrop-blur-[0.1px] group"
+              className="border border-[#558EB4] rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-1 robo-card attacker backdrop-blur-[0.1px] group"
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: 0.2 }}
@@ -105,7 +101,7 @@ export const LandingPage = () => {
             </motion.div>
 
             <motion.div
-              className="border border-primary_pink bg-[#12121266] rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-2 lg:col-span-1 robo-card backdrop-blur-[0.1px] defender group"
+              className="border border-primary_pink bg-[#12121266] rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-1 robo-card backdrop-blur-[0.1px] defender group"
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: 0.3 }}
