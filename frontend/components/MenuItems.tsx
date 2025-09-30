@@ -2,13 +2,13 @@ import Link from 'next/link'
 import Image from 'next/image'
 import clsx from 'clsx'
 
-import { Button } from './ui'
+import { Button, Badge } from './ui'
 import { SUI_SENTINEL_DISCORD_URL } from '@/constants'
 
 export const MenuItems = ({ menuOpen }: { menuOpen: boolean }) => {
   return (
     <ul
-      className={clsx('flex flex-col xl:flex-row items-center gap-3 mr-4', {
+      className={clsx('flex flex-col xl:flex-row items-center gap-6 mr-4', {
         'w-full': menuOpen,
       })}
     >
@@ -31,6 +31,15 @@ export const MenuItems = ({ menuOpen }: { menuOpen: boolean }) => {
       </li>
 
       <li className="xl:ms-auto">
+        <Badge
+          variant="secondary"
+          className="bg-green-500/10 text-green-400 border-green-500/20"
+        >
+          Testnet
+        </Badge>
+      </li>
+
+      <li>
         <Link
           href={SUI_SENTINEL_DISCORD_URL}
           target="_blank"
