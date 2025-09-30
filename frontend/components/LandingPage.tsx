@@ -42,7 +42,8 @@ export const LandingPage = () => {
           >
             <h2 className="text-[40px] uppercase text-text">#Sui Sentinel</h2>
             <p className="">
-              Compete for real SUI rewards by challenging agents or creating your own
+              A trustless coordination layer for AI red-teaming, powered by verifiable compute +
+              smart contracts.
             </p>
           </motion.div>
 
@@ -98,7 +99,7 @@ export const LandingPage = () => {
                   href="/defend"
                   className="block border border-[#558EB4] rounded-[8px] w-full min-h-11 p-2 transition-all text-[#558EB4] group-hover:bg-[#1388D5] group-hover:text-black group-hover:border-[#1388D5]"
                 >
-                  Launch an agent
+                  Launch Sentinel
                 </Link>
               </div>
             </motion.div>
@@ -151,7 +152,7 @@ export const LandingPage = () => {
                   href="/attack"
                   className="block border border-primary_pink rounded-[8px] w-full min-h-11 p-2 transition-all text-primary_pink group-hover:bg-primary_pink group-hover:text-black group-hover:border-primary_pink"
                 >
-                  Challenge an agent
+                  Attack Sentinel
                 </Link>
               </div>
             </motion.div>
