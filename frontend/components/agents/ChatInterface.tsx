@@ -275,14 +275,19 @@ export default function ChatInterface({
         )}
 
         <AnimatePresence>
-          {chatMessages.map((message) => (
-            <ChatMessage
-              key={message.id}
-              message={message}
-              agent={agent}
-              senderProfile={userProfilesMap?.[message.sender!] || null}
-            />
-          ))}
+          {chatMessages.map((message, index) => {
+            const isWinningUserPrompt =
+              message.type === 'user' && chatMessages[index + 1]?.isSuccess === true
+            return (
+              <ChatMessage
+                key={message.id}
+                message={message}
+                agent={agent}
+                senderProfile={userProfilesMap?.[message.sender!] || null}
+                isWinningPrompt={isWinningUserPrompt}
+              />
+            )
+          })}
 
           {isSubmitting && (
             <motion.div
