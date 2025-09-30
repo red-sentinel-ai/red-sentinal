@@ -80,7 +80,7 @@ export const SOCIAL_MEDIA_URLS = {
 } as const
 
 //TODO: Add the correct docs url
-export const REWARDS_DOCS_URL = 'https://sui-sentinal-plum.vercel.app/'
+export const REWARDS_DOCS_URL = 'https://docs.suisentinel.xyz/rewards-program/'
 export const SENTINEL_GIFS = [
   'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//6.png',
   'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//7.png',
