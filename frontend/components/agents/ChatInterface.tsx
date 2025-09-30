@@ -5,7 +5,7 @@ import { useState, useRef, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import clsx from 'clsx'
-import { Loader2, Send } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { formatAddress } from '@mysten/sui/utils'
 import { ConnectModal, useCurrentAccount } from '@mysten/dapp-kit'
@@ -390,12 +390,17 @@ export default function ChatInterface({
                 disabled={
                   isSubmitting || promptInput.length === 0 || tokenCount > ATTACK_PROMPT_MAX_TOKENS
                 }
-                className="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#558EB4] to-[#1388D5] hover:from-[#1388D5] hover:to-[#558EB4] text-white rounded-full flex items-center justify-center transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none"
+                className="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 w-8 h-8 sm:w-10 sm:h-10 text-black bg-white rounded-full flex items-center justify-center transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform disabled:transform-none"
               >
                 {isSubmitting ? (
                   <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
                 ) : (
-                  <Send className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <Image
+                    src="/icons/top-arrow.svg"
+                    width={24}
+                    height={24}
+                    alt="top arrow"
+                  />
                 )}
               </button>
             </div>
