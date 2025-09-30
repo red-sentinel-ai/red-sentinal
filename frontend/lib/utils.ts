@@ -198,7 +198,7 @@ export const generateGradientAvatar = (seed: string): string => {
 
   const cx = (hash % 50) + 25
   const cy = (hash % 50) + 25
-  const r = (hash % 25) + 7
+  const r = (hash % 25) + 75
   const fx = (hash % 80) + 10
   const fy = (hash % 80) + 10
 
