@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import clsx from 'clsx'
 import { formatDistanceToNow } from 'date-fns'
+import { Trophy } from 'lucide-react'
 import { DEFAULT_PROFILE_URL, SUI_TESTNET_BASE_URL } from '@/constants'
 import type { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { type ChatMessage as ChatMessageType } from './ChatInterface'
@@ -17,9 +18,10 @@ type ChatMessageProps = {
   message: ChatMessageType
   agent: AgentDetails
   senderProfile: UserProfile
+  isWinningPrompt?: boolean
 }
 
-export const ChatMessage = ({ message, senderProfile }: ChatMessageProps) => {
+export const ChatMessage = ({ message, senderProfile, isWinningPrompt }: ChatMessageProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const [shouldTruncate, setShouldTruncate] = useState(false)
   const contentRef = useRef<HTMLParagraphElement>(null)
@@ -71,7 +73,9 @@ export const ChatMessage = ({ message, senderProfile }: ChatMessageProps) => {
         <div
           className={clsx('rounded-2xl shadow-lg relative min-w-[350px] text-text', {
             ' border border-[#558EB4]/30': message.type === 'agent',
-            ' border border-gray-600/50': message.type === 'user',
+            ' border border-gray-600/50': message.type === 'user' && !isWinningPrompt,
+            ' border border-yellow-400/30 bg-yellow-500/10 shadow-lg shadow-yellow-500/10':
+              isWinningPrompt,
           })}
         >
           {message.type === 'agent' && message.isSuccess !== undefined && (
@@ -79,13 +83,19 @@ export const ChatMessage = ({ message, senderProfile }: ChatMessageProps) => {
           )}
           <div className="relative p-3 sm:p-4">
             {message.type === 'user' && message.sender && (
-              <div className="flex flex-col gap-1 text-xs mb-2 -mt-1">
+              <div className="flex items-center justify-between gap-1 text-xs mb-2 -mt-1">
                 <Link
                   href={profileLink}
-                  className="text-right font-semibold text-white hover:underline"
+                  className="font-semibold text-white hover:underline"
                 >
                   {displayName}
                 </Link>
+                {isWinningPrompt && (
+                  <div className="flex items-center gap-1.5 bg-yellow-400/20 text-yellow-300 px-2 py-0.5 rounded-full text-xs font-semibold">
+                    <Trophy className="w-3 h-3" />
+                    Winner
+                  </div>
+                )}
               </div>
             )}
             <div className="mb-2 sm:mb-3">
