@@ -139,7 +139,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
           />
         </ResizablePanel>
 
-        <ResizableHandle />
+        <ResizableHandle withHandle={true} />
 
         <ResizablePanel defaultSize={80}>
           <div className="max-w-v1 mx-auto w-full h-full">
