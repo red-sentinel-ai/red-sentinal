@@ -5,6 +5,7 @@ import { SuiClientProvider, WalletProvider } from '@mysten/dapp-kit'
 import { getFullnodeUrl } from '@mysten/sui/client'
 import { Header } from '@/components/Header'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ProfileInitializer } from '@/components/profile/ProfileInitializer'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -33,6 +34,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
           <div>
             {/* <LaunchMainnetBanner /> */}
             <Header />
+            <ProfileInitializer />
             {children}
           </div>
         </WalletProvider>
