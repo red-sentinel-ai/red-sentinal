@@ -7,7 +7,6 @@ import Image from 'next/image'
 import { Upload, ImageIcon } from 'lucide-react'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
-import { SENTINEL_GIFS, SENTINEL_IMAGES } from '@/constants'
 import { cn } from '@/lib/utils'
 
 interface ImagePickerSheetProps {
@@ -16,6 +15,9 @@ interface ImagePickerSheetProps {
   onSelectImage: (img: { url: string; isCustom: boolean; file?: File | null }) => void
   title?: string
   subtitle?: string
+  imageArray: string[]
+  gifArray: string[]
+  disableGifs?: boolean
 }
 
 export const ImagePickerSheet = ({
@@ -24,6 +26,9 @@ export const ImagePickerSheet = ({
   onSelectImage,
   title = 'Select Sentinel Image',
   subtitle = 'Choose from our collection or upload your own',
+  imageArray,
+  gifArray,
+  disableGifs = false,
 }: ImagePickerSheetProps) => {
   const [selectedURL, setSelectedURL] = useState<string | null>(null)
   const [customFile, setCustomFile] = useState<File | null>(null)
@@ -88,13 +93,14 @@ export const ImagePickerSheet = ({
 
         <div className="px-4">
           <Tabs
-            defaultValue="gifs"
+            defaultValue="images"
             className="w-full"
           >
             <TabsList className="w-full grid grid-cols-3 bg-transparent border-0 p-0 h-auto gap-2 mb-6">
               <TabsTrigger
                 value="gifs"
-                className="group relative flex flex-col sm:flex-row items-center justify-center gap-2 h-16 sm:h-12 px-4 py-3 bg-[#111111] border border-[#2A2A2A] rounded-xl transition-all duration-300 hover:bg-[#1A1A1A] hover:border-[#3A3A3A] data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#1D9BF0]/20 data-[state=active]:to-[#1D9BF0]/10 data-[state=active]:border-[#1D9BF0] data-[state=active]:shadow-[0_0_20px_rgba(29,155,240,0.2)] text-gray-400 data-[state=active]:text-white font-medium"
+                disabled={disableGifs}
+                className="group relative flex flex-col sm:flex-row items-center justify-center gap-2 h-16 sm:h-12 px-4 py-3 bg-[#111111] border border-[#2A2A2A] rounded-xl transition-all duration-300 hover:bg-[#1A1A1A] hover:border-[#3A3A3A] data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#1D9BF0]/20 data-[state=active]:to-[#1D9BF0]/10 data-[state=active]:border-[#1D9BF0] data-[state=active]:shadow-[0_0_20px_rgba(29,155,240,0.2)] text-gray-400 data-[state=active]:text-white font-medium disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="text-xs sm:text-sm font-medium">GIFs</span>
                 <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#1D9BF0]/0 to-[#1D9BF0]/0 group-data-[state=active]:from-[#1D9BF0]/5 group-data-[state=active]:to-[#1D9BF0]/0 transition-all duration-300" />
@@ -125,10 +131,10 @@ export const ImagePickerSheet = ({
             >
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-medium text-gray-300">Animated GIFs</h3>
-                <span className="text-xs text-gray-500">{SENTINEL_GIFS.length} available</span>
+                <span className="text-xs text-gray-500">{gifArray.length} available</span>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                {SENTINEL_GIFS.map((url, idx) => (
+                {gifArray.map((url, idx) => (
                   <div
                     key={idx}
                     className={cn(
@@ -164,10 +170,10 @@ export const ImagePickerSheet = ({
             >
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-medium text-gray-300">Static Images</h3>
-                <span className="text-xs text-gray-500">{SENTINEL_IMAGES.length} available</span>
+                <span className="text-xs text-gray-500">{imageArray.length} available</span>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                {SENTINEL_IMAGES.map((url, idx) => (
+                {imageArray.map((url, idx) => (
                   <div
                     key={idx}
                     className={cn(

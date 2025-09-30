@@ -7,6 +7,7 @@ import { Dialog } from '@/components/Dialog'
 import { ProfileEditForm } from './ProfileEditForm'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 import type { Tables } from '@/lib/database.types'
+import { SENTINEL_GIFS, USER_IMAGES } from '@/constants'
 
 type SelectedImage = {
   previewUrl: string
@@ -97,6 +98,9 @@ export function EditProfileModal({ open, onClose, profile }: EditProfileModalPro
         onSelectImage={handleImageSelect}
         title="Select Profile Image"
         subtitle="Your selection will be saved when you update your profile."
+        imageArray={USER_IMAGES}
+        gifArray={SENTINEL_GIFS}
+        disableGifs={true}
       />
     </>
   )
