@@ -5,10 +5,9 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 
 import { MenuItems } from './MenuItems'
-import { BookOpen, MenuIcon, Plus } from 'lucide-react'
+import { MenuIcon, Plus } from 'lucide-react'
 import Link from 'next/link'
 import { ConnectButton } from './ConnectButton'
-import { SUI_SENTINEL_DOCS_URL } from '@/constants'
 
 export const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -52,14 +51,6 @@ export const Header = () => {
                 style={{ objectFit: 'contain' }}
               />
             </div>
-          </Link>
-          <Link
-            className="flex items-center gap-[6px] ml-1 xl:ml-4 flex-shrink-0 "
-            target="_blank"
-            href={SUI_SENTINEL_DOCS_URL}
-          >
-            <BookOpen width={16} />
-            <span>Documentation</span>
           </Link>
 
           <div className="hidden xl:block w-full">

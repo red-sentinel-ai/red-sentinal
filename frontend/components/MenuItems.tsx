@@ -1,9 +1,10 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import clsx from 'clsx'
+import { BookOpen } from 'lucide-react'
 
 import { Button, Badge } from './ui'
-import { SUI_SENTINEL_DISCORD_URL } from '@/constants'
+import { SUI_SENTINEL_DISCORD_URL, SUI_SENTINEL_DOCS_URL } from '@/constants'
 
 export const MenuItems = ({ menuOpen }: { menuOpen: boolean }) => {
   return (
@@ -12,6 +13,14 @@ export const MenuItems = ({ menuOpen }: { menuOpen: boolean }) => {
         'w-full': menuOpen,
       })}
     >
+      <li>
+        <Link
+          className="block ml-3 xl:ml-4 flex-shrink-0"
+          href="/"
+        >
+          Home
+        </Link>
+      </li>
       <li>
         <Link
           className="block ml-3 xl:ml-4 flex-shrink-0"
@@ -27,6 +36,17 @@ export const MenuItems = ({ menuOpen }: { menuOpen: boolean }) => {
           href="/rewards/leaderboard"
         >
           Leaderboard
+        </Link>
+      </li>
+
+      <li>
+        <Link
+          className="flex items-center gap-[6px] ml-1 xl:ml-4 flex-shrink-0 "
+          target="_blank"
+          href={SUI_SENTINEL_DOCS_URL}
+        >
+          <BookOpen width={16} />
+          <span>Documentation</span>
         </Link>
       </li>
 
