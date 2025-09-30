@@ -57,7 +57,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
   ).size
 
   return (
-    <div className="max-w-[300px] bg-[#101112] flex-col overflow-x-hidden overflow-y-scroll px-6 py-2 mr-4 w-full max-h-[calc(100vh-64px)]">
+    <div className="w-full bg-[#101112] flex-col overflow-x-hidden overflow-y-scroll px-6 py-2 mr-4 h-[calc(100vh-64px)]">
       <div>
         <Link
           href="/attack"

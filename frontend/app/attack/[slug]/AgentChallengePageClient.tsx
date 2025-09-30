@@ -6,6 +6,7 @@ import { useCurrentAccount } from '@mysten/dapp-kit'
 
 import { MIST_PER_SUI } from '@/constants'
 import type { ConsumePromptApiResponse } from '@/types'
+import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from '@/components/ui'
 import { useConsumePrompt } from '@/hooks/useConsumePrompt'
 import { useAgentBySlug } from '@/hooks/agents/useAgentBySlug'
 import { AgentEvents, useAgentEvents } from '@/hooks/useAgentEvents'
@@ -122,23 +123,38 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   }
 
   return (
-    <div className="min-h-screen pt-16 mx-auto flex">
-      <AgentSidebar
-        agent={agent}
-        agentEvents={agentEvents}
-      />
+    <div className="min-h-screen pt-16 flex">
+      <ResizablePanelGroup
+        direction="horizontal"
+        className="w-full"
+      >
+        <ResizablePanel
+          defaultSize={20}
+          minSize={20}
+          maxSize={40}
+        >
+          <AgentSidebar
+            agent={agent}
+            agentEvents={agentEvents}
+          />
+        </ResizablePanel>
 
-      <div className="max-w-v1 mx-auto w-full">
-        <ChatInterface
-          agent={agent}
-          agentEvents={agentEvents}
-          apiResponse={apiResponse}
-          onSendMessage={handleSendMessage}
-          isSubmitting={isSubmitting}
-          submitError={submitError}
-          refetchAgent={refetch}
-        />
-      </div>
+        <ResizableHandle />
+
+        <ResizablePanel defaultSize={80}>
+          <div className="max-w-v1 mx-auto w-full h-full">
+            <ChatInterface
+              agent={agent}
+              agentEvents={agentEvents}
+              apiResponse={apiResponse}
+              onSendMessage={handleSendMessage}
+              isSubmitting={isSubmitting}
+              submitError={submitError}
+              refetchAgent={refetch}
+            />
+          </div>
+        </ResizablePanel>
+      </ResizablePanelGroup>
 
       {apiResponse && txnHash && (
         <AttackStatusModal
