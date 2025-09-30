@@ -56,7 +56,7 @@ export const ChatMessage = ({ message, senderProfile }: ChatMessageProps) => {
         {message.type === 'user' && (
           <div className="flex-shrink-0">
             <Link href={profileLink}>
-              <div className="w-7 h-7 rounded-full relative ring-2 ring-opacity-60">
+              <div className="w-7 h-7 rounded-full relative">
                 <Image
                   src={avatarUrl}
                   fill
