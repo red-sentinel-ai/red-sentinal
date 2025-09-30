@@ -14,6 +14,7 @@ import { EditProfileModal } from '@/components/profile/EditProfileModal'
 import { SocialConnectionsSectionWrapper } from '@/components/profile/SocialConnectionsSectionWrapper'
 import { useUserProfile, useUpdateAvatar } from '@/hooks/profile/useUserProfile'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
+import { SENTINEL_GIFS, USER_IMAGES } from '@/constants'
 
 const PROFILE_TABS = {
   AGENTS: 'agents',
@@ -175,6 +176,9 @@ export default function ProfilePage() {
         onSelectImage={handleImageSelect}
         title="Select Profile Image"
         subtitle="Choose a new avatar from our collection or upload your own."
+        imageArray={USER_IMAGES}
+        gifArray={SENTINEL_GIFS}
+        disableGifs={true}
       />
     </>
   )

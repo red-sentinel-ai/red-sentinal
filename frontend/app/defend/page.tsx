@@ -15,6 +15,8 @@ import {
 } from '@mysten/dapp-kit'
 import {
   MIST_PER_SUI,
+  SENTINEL_GIFS,
+  SENTINEL_IMAGES,
   SUI_CONFIG,
   SUI_SENTINEL_DOCS_URL,
   SYSTEM_PROMPT_MAX_TOKENS,
@@ -372,6 +374,9 @@ export default function DefendPage() {
           }}
           title="Select Sentinel Image"
           subtitle="Choose a profile image for your Sentinel."
+          imageArray={SENTINEL_IMAGES}
+          gifArray={SENTINEL_GIFS}
+          disableGifs={true}
         />
 
         <FormInput

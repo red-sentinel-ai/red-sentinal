@@ -40,7 +40,7 @@ export const FundSuccessModal = ({
     <Dialog
       open={open}
       onClose={onClose}
-      className="max-w-[600px]"
+      className="max-w-[600px] border-white/30"
     >
       <div className="space-y-6 text-center">
         <div className="flex items-center justify-between">
