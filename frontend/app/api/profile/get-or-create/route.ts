@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { generateSlug } from 'random-word-slugs'
 import { supabaseServiceClient } from '@/db/config/server'
-import { DEFAULT_PROFILE_URL } from '@/constants'
+import { generateGradientAvatar } from '@/lib/utils'
 
 export async function POST(request: Request) {
   try {
@@ -48,13 +48,15 @@ export async function POST(request: Request) {
       newUsername = `user-${Date.now()}`
     }
 
+    const avatarUrl = generateGradientAvatar(walletAddress)
+
     const { data: newUser, error: createError } = await supabaseServiceClient
       .from('ss_users')
       .insert({
         wallet_addresses: [walletAddress],
         username: newUsername,
         display_name: newUsername,
-        avatar_url: DEFAULT_PROFILE_URL,
+        avatar_url: avatarUrl,
       })
       .select()
       .single()

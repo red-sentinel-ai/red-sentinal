@@ -1,24 +1,21 @@
-import { useEffect, useState } from 'react'
+import { useMemo } from 'react'
 import { CheckCircle, XCircle, Trophy, Clock, User, AlertCircle } from 'lucide-react'
 import { useAgentEvents } from '@/hooks/useAgentEvents'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { SUI_TESTNET_BASE_URL } from '@/constants'
 
 export const UserActivity = () => {
-  const { events } = useAgentEvents()
+  const { events, loading } = useAgentEvents()
   const account = useCurrentAccount()
-  const [loading, setLoading] = useState(true)
-  const [userEvents, setUserEvents] = useState({
-    promptConsumed: [],
-    agentDefeated: [],
-  })
-
   const accountAddress = account?.address
 
-  useEffect(() => {
-    if (!accountAddress || !events.promptConsumed || !events.agentDefeated) return
-
-    setLoading(true)
+  const userEvents = useMemo(() => {
+    if (!accountAddress || !events.promptConsumed || !events.agentDefeated) {
+      return {
+        promptConsumed: [],
+        agentDefeated: [],
+      }
+    }
 
     const filteredPrompts = events.promptConsumed.filter(
       (event) => event.parsedJson.sender === accountAddress
@@ -28,13 +25,11 @@ export const UserActivity = () => {
       (event) => event.parsedJson.winner === accountAddress
     )
 
-    setUserEvents({
+    return {
       promptConsumed: filteredPrompts,
       agentDefeated: filteredDefeated,
-    })
-
-    setLoading(false)
-  }, [account?.address, accountAddress, events])
+    }
+  }, [events.promptConsumed, events.agentDefeated, accountAddress])
 
   const formatAddress = (addr: string) => `${addr.slice(0, 6)}...${addr.slice(-4)}`
   const formatTimestamp = (ms: string) =>

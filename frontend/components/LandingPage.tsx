@@ -42,7 +42,8 @@ export const LandingPage = () => {
           >
             <h2 className="text-[40px] uppercase text-text">#Sui Sentinel</h2>
             <p className="">
-              Compete for real SUI rewards by challenging agents or creating your own
+              A trustless coordination layer for AI red-teaming, powered by verifiable compute +
+              smart contracts.
             </p>
           </motion.div>
 
@@ -56,11 +57,11 @@ export const LandingPage = () => {
             >
               <div className="relative">
                 <Image
-                  src="/img/robo_to_r.png"
-                  width={334}
+                  src="/img/robot_defend.png"
+                  width={300}
                   height={399}
                   alt="robo"
-                  className="relative z-10 -mt-10"
+                  className="relative z-10 -mt-10 mx-auto"
                 />
 
                 <div className="absolute inset-0 pointer-events-auto robo-img-defender rounded-lg transition-all mt-10"></div>
@@ -98,7 +99,7 @@ export const LandingPage = () => {
                   href="/defend"
                   className="block border border-[#558EB4] rounded-[8px] w-full min-h-11 p-2 transition-all text-[#558EB4] group-hover:bg-[#1388D5] group-hover:text-black group-hover:border-[#1388D5]"
                 >
-                  Launch an agent
+                  Launch Sentinel
                 </Link>
               </div>
             </motion.div>
@@ -112,18 +113,23 @@ export const LandingPage = () => {
             >
               <div className="relative">
                 <Image
-                  src="/img/robo_to_r.png"
-                  width={334}
+                  src="/img/robot_attack.png"
+                  width={300}
                   height={399}
                   alt="robo"
-                  className="rotate-y-180 -mt-10 z-10 relative"
+                  className="-mt-10 z-10 relative mx-auto"
                 />
                 <div className="absolute inset-0 pointer-events-auto robo-img-attacker rounded-lg transition-all mt-10"></div>
               </div>
 
               <div className="flex items-center justify-center gap-2 my-2">
                 <div>
-                  <Image src="/icons/swords.png" width={24} height={24} alt="local police icon" />
+                  <Image
+                    src="/icons/swords.png"
+                    width={24}
+                    height={24}
+                    alt="local police icon"
+                  />
                 </div>
                 <p className="text-lg lg:text-[2rem] leading-normal font-medium">ATTACK</p>
               </div>
@@ -146,7 +152,7 @@ export const LandingPage = () => {
                   href="/attack"
                   className="block border border-primary_pink rounded-[8px] w-full min-h-11 p-2 transition-all text-primary_pink group-hover:bg-primary_pink group-hover:text-black group-hover:border-primary_pink"
                 >
-                  Challenge an agent
+                  Attack Sentinel
                 </Link>
               </div>
             </motion.div>

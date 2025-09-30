@@ -71,6 +71,14 @@
    .max-h-body{
     max-height: 100vh;
   }
+
+  .max-w-v1{
+    max-width: 856px;
+  }
+
+  .max-w-v2{
+    max-width: 367px;
+  }
 }
 
 html {
@@ -91,12 +99,12 @@ html body[data-scroll-locked] {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #558eb4 #12121266;
+  scrollbar-color: #bebebe #12121266;
 }
 
 html {
   scrollbar-width: thin;
-  scrollbar-color: #558eb4 #12121266;
+  scrollbar-color: #bebebe #12121266;
 }
 
 body::-webkit-scrollbar {
