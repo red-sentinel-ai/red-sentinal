@@ -9,7 +9,7 @@ interface MobileAgentHeaderProps {
 
 export const MobileAgentHeader = ({ agentName, onInfoClick }: MobileAgentHeaderProps) => {
   return (
-    <div className="flex items-center justify-between p-3 border-b border-gray-700 bg-[#101112] flex-shrink-0">
+    <div className="flex items-center justify-between px-3 py-2 border-b border-gray-700 bg-[#101112] flex-shrink-0">
       <h1 className="text-lg font-bold text-white truncate">Target: {agentName}</h1>
       <button
         onClick={onInfoClick}
