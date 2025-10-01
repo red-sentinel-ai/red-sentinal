@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ChevronLeft, Info, User } from 'lucide-react'
 import { formatAddress } from '@mysten/sui/utils'
+import { QRCodeSVG } from 'qrcode.react'
 
 import { DEFAULT_PROFILE_URL, MIST_PER_SUI } from '@/constants'
 import { type AgentDetails } from '@/hooks/agents/useAllAgents'
@@ -22,6 +23,11 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const [shouldTruncate, setShouldTruncate] = useState(false)
   const instructionsRef = useRef<HTMLParagraphElement>(null)
+  const [pageUrl, setPageUrl] = useState('')
+
+  useEffect(() => {
+    setPageUrl(window.location.href)
+  }, [])
 
   const isDrained = agentEvents.agentDefeated.length > 0
   const bountyWonEvent = isDrained ? agentEvents.agentDefeated[0] : null
@@ -65,7 +71,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
   ).size
 
   return (
-    <div className="w-full bg-[#101112] flex-col overflow-x-hidden overflow-y-scroll px-6 py-2 mr-4 h-[calc(100vh-64px)]">
+    <div className="w-full bg-[#101112] flex flex-col overflow-x-hidden overflow-y-scroll px-6 py-2 mr-4 h-[calc(100vh-64px)]">
       <div>
         <Link
           href="/attack"
@@ -190,7 +196,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-6 py-4 mt-auto">
+      <div className="flex flex-col gap-6 py-4">
         <div className="border-t border-t-white/20"></div>
         <div className="flex flex-col gap-2">
           <h3 className="text-white/60 text-sm font-semibold uppercase">Message Price</h3>
@@ -207,6 +213,29 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
         <div className="flex flex-col gap-2">
           <h3 className="text-white/60 text-sm font-semibold uppercase">Total Participants</h3>
           <p className="inline-block text-2xl font-semibold">{totalParticipants}</p>
+        </div>
+      </div>
+
+      {/* --- QR CODE SECTION --- */}
+      <div className="mt-auto pt-6 border-t border-white/20">
+        <h3 className="text-white/80 text-sm font-semibold text-center mb-4">
+          Scan this QR Code if you want to try to attack this agent using slush mobile wallet
+        </h3>
+        <div className="bg-[#202122] rounded-xl p-4 border border-gray-600/50 flex justify-center">
+          {pageUrl ? (
+            <QRCodeSVG
+              value={pageUrl}
+              size={128}
+              bgColor="transparent"
+              fgColor="#FFFFFF"
+              level="L"
+              includeMargin={true}
+            />
+          ) : (
+            <div className="w-32 h-32 bg-gray-700 animate-pulse rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 border-4 border-gray-500 rounded-full animate-spin border-t-transparent"></div>
+            </div>
+          )}
         </div>
       </div>
     </div>
