@@ -30,7 +30,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         networks={networks}
         defaultNetwork="testnet"
       >
-        <WalletProvider>
+        <WalletProvider autoConnect>
           <div>
             {/* <LaunchMainnetBanner /> */}
             <Header />
