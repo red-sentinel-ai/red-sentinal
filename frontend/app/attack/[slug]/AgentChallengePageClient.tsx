@@ -1,7 +1,6 @@
 'use client'
 import { useState, useMemo } from 'react'
-import Link from 'next/link'
-import { ChevronLeft } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 
 import { MIST_PER_SUI } from '@/constants'
@@ -15,6 +14,8 @@ import { AttackStatusModal } from '@/components/AttackStatusModal'
 import ChatInterface from '@/components/agents/ChatInterface'
 import RiveLoader from '@/components/rive/Loader'
 import { AgentSidebar } from '@/components/agents/AgentSidebar'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { MobileAgentHeader } from './MobileAgentHeader'
 
 export default function AgentChallengePage({ slug }: { slug: string }) {
   const account = useCurrentAccount()
@@ -59,6 +60,9 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   const [apiResponse, setApiResponse] = useState<ConsumePromptApiResponse | null>(null)
   const [txnHash, setTxnHash] = useState<string | null>(null)
   const [showResultModal, setShowResultModal] = useState(false)
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const isMobile = useMediaQuery('(max-width: 768px)')
 
   const agentEvents: AgentEvents = useMemo(() => {
     if (!agent) return { agentDefeated: [], promptConsumed: [] }
@@ -108,13 +112,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
   if (error || !agent) {
     return (
-      <div className="min-h-screen bg-black text-[#B5B5B5] p-4">
-        <Link
-          href="/attack"
-          className="flex items-center gap-1 text-[#558EB4] hover:underline mb-8"
-        >
-          <ChevronLeft className="w-5 h-5" /> Back to Sentinels
-        </Link>
+      <div className="min-h-screen bg-black text-[#B5B5B5] p-4 pt-20">
         <div className="flex items-center justify-center min-h-[400px]">
           <p className="text-lg text-gray-400">{error?.message || 'Agent not found'}</p>
         </div>
@@ -122,39 +120,94 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
     )
   }
 
-  return (
-    <div className="min-h-screen pt-16 flex">
-      <ResizablePanelGroup
-        direction="horizontal"
-        className="w-full"
-      >
-        <ResizablePanel
-          defaultSize={20}
-          minSize={20}
-          maxSize={40}
+  if (!isMobile) {
+    return (
+      <div className="min-h-screen pt-16 flex">
+        <ResizablePanelGroup
+          direction="horizontal"
+          className="w-full"
         >
-          <AgentSidebar
-            agent={agent}
-            agentEvents={agentEvents}
-          />
-        </ResizablePanel>
-
-        <ResizableHandle withHandle={true} />
-
-        <ResizablePanel defaultSize={80}>
-          <div className="max-w-v1 mx-auto w-full h-full">
-            <ChatInterface
+          <ResizablePanel
+            defaultSize={20}
+            minSize={20}
+            maxSize={40}
+          >
+            <AgentSidebar
               agent={agent}
               agentEvents={agentEvents}
-              apiResponse={apiResponse}
-              onSendMessage={handleSendMessage}
-              isSubmitting={isSubmitting}
-              submitError={submitError}
-              refetchAgent={refetch}
             />
-          </div>
-        </ResizablePanel>
-      </ResizablePanelGroup>
+          </ResizablePanel>
+          <ResizableHandle withHandle={true} />
+          <ResizablePanel defaultSize={80}>
+            <div className="max-w-v1 mx-auto w-full h-full">
+              <ChatInterface
+                agent={agent}
+                agentEvents={agentEvents}
+                apiResponse={apiResponse}
+                onSendMessage={handleSendMessage}
+                isSubmitting={isSubmitting}
+                submitError={submitError}
+                refetchAgent={refetch}
+              />
+            </div>
+          </ResizablePanel>
+        </ResizablePanelGroup>
+        {apiResponse && txnHash && (
+          <AttackStatusModal
+            apiResponse={apiResponse}
+            showResultModal={showResultModal}
+            setShowResultModal={setShowResultModal}
+            txnHash={txnHash}
+          />
+        )}
+      </div>
+    )
+  }
+
+  return (
+    <div className="h-screen pt-16 flex flex-col bg-[#101112]">
+      <MobileAgentHeader
+        agentName={agent.agent_name}
+        onInfoClick={() => setIsSidebarOpen(true)}
+      />
+
+      <div className="flex-1 min-h-0">
+        <ChatInterface
+          agent={agent}
+          agentEvents={agentEvents}
+          apiResponse={apiResponse}
+          onSendMessage={handleSendMessage}
+          isSubmitting={isSubmitting}
+          submitError={submitError}
+          refetchAgent={refetch}
+        />
+      </div>
+
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsSidebarOpen(false)}
+              className="fixed inset-0 bg-black/60 z-40"
+            />
+            <motion.div
+              initial={{ x: '-100%' }}
+              animate={{ x: '0%' }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              className="fixed top-0 left-0 bottom-0 w-[85%] max-w-sm z-50 shadow-2xl"
+            >
+              <AgentSidebar
+                agent={agent}
+                agentEvents={agentEvents}
+              />
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {apiResponse && txnHash && (
         <AttackStatusModal
