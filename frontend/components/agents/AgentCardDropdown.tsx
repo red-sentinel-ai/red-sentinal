@@ -11,12 +11,18 @@ import Image from 'next/image'
 
 interface AgentDropdownProps {
   isOwner: boolean
+  isFeatured: boolean
   agentId: string | number
   openFeatureModal: (agentId: number) => void
 }
 
-export const AgentDropdown = ({ isOwner, agentId, openFeatureModal }: AgentDropdownProps) => {
-  if (!isOwner) return null
+export const AgentDropdown = ({
+  isOwner,
+  isFeatured,
+  agentId,
+  openFeatureModal,
+}: AgentDropdownProps) => {
+  if (!isOwner || isFeatured) return null
 
   return (
     <div className="absolute top-2 right-2 z-20">
