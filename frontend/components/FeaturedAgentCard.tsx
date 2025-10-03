@@ -58,6 +58,7 @@ export const FeaturedAgentCard = ({
 
           <AgentDropdown
             isOwner={isOwner}
+            isFeatured={agent.is_featured}
             agentId={agent.agent_id}
             openFeatureModal={openFeatureModal}
           />
