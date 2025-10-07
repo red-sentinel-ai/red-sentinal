@@ -27,7 +27,7 @@ export default function BlogIndex() {
               key={post.slug}
               passHref
             >
-              <div className="group block h-full border border-[#558eb466] bg-[#12121266] backdrop-blur-sm rounded-2xl overflow-hidden robo-card attacker">
+              <div className="group h-full border border-[#558eb466] bg-[#12121266] backdrop-blur-sm rounded-2xl overflow-hidden robo-card attacker flex flex-col">
                 <div className="relative w-full h-48 overflow-hidden">
                   <Image
                     src={post.image}
@@ -37,12 +37,12 @@ export default function BlogIndex() {
                     className="transition-transform duration-300 group-hover:scale-105"
                   />
                 </div>
-                <div className="p-6">
+                <div className="p-6 flex-1 flex flex-col">
                   <h2 className="text-2xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
                     {post.title}
                   </h2>
                   <p className="text-gray-400 text-sm mb-4 line-clamp-3">{post.description}</p>
-                  <div className="flex flex-wrap gap-2 mb-4">
+                  <div className="flex flex-wrap gap-2 mb-4 mt-auto">
                     {post.tags.map((tag) => (
                       <span
                         key={tag}
