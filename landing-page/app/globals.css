@@ -123,6 +123,46 @@
   button{
     @apply cursor-pointer;
   }
+
+  .prose-invert h1 {
+    @apply text-white text-4xl md:text-5xl font-bold mt-12 mb-4;
+  }
+
+  .prose-invert h2 {
+    @apply text-white text-3xl md:text-4xl font-bold mt-10 mb-4;
+  }
+
+  .prose-invert h3 {
+    @apply text-white text-2xl md:text-3xl font-bold mt-8 mb-3;
+  }
+
+  .prose-invert p {
+    @apply text-gray-300 leading-relaxed mb-6;
+  }
+
+  .prose-invert a {
+    @apply text-blue-400 hover:text-blue-500 transition-colors;
+  }
+
+  .prose-invert ul {
+    @apply list-disc list-inside space-y-2 text-gray-300 mb-6;
+  }
+
+  .prose-invert li {
+    @apply pl-2;
+  }
+
+  .prose-invert blockquote {
+    @apply border-l-4 border-gray-600 pl-4 text-gray-400 italic my-6;
+  }
+  
+  .prose-invert pre {
+    @apply bg-gray-900 text-gray-200 rounded-lg p-4 overflow-x-auto my-6;
+  }
+
+  .prose-invert code {
+    @apply bg-gray-800 text-gray-200 px-1 py-0.5 rounded-md;
+  }
 }
 
 .robo-card {
