@@ -37,7 +37,7 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
             <ChevronLeft size={20} /> Back to all posts
           </Link>
 
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-[#558EB4] via-[#1388D5] to-[#8F564E] bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-[#558EB4] via-[#1388D5] to-[#8F564E] bg-clip-text text-transparent leading-normal">
             {post.title}
           </h1>
 
