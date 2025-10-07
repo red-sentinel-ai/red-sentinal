@@ -19,10 +19,12 @@ const getRelatedPosts = (currentPost: BlogPost, allPosts: BlogPost[]): BlogPost[
   return relatedPosts.slice(0, 3)
 }
 
-export default function BlogPostPage({ params }: { params: { slug: string } }) {
+export default async function BlogPostPage(props: { params: Promise<{ slug: string }> }) {
+  const { slug } = await props.params
+
   try {
     const allPosts = getAllBlogPosts()
-    const post = getPostBySlug(params.slug)
+    const post = getPostBySlug(slug)
     const relatedPosts = getRelatedPosts(post, allPosts)
 
     return (
