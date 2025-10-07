@@ -3,12 +3,15 @@ import path from 'path'
 import matter from 'gray-matter'
 import { remark } from 'remark'
 import html from 'remark-html'
+import gfm from 'remark-gfm'
 
 export interface BlogMetadata {
   title: string
   date: string
   description: string
   author: string
+  image: string
+  tags: string[]
 }
 
 export interface BlogPost extends BlogMetadata {
@@ -48,7 +51,7 @@ export function getPostBySlug(slug: string): BlogPost {
   const fullPath = path.join(blogsDirectory, `${slug}.md`)
   const fileContents = fs.readFileSync(fullPath, 'utf8')
   const matterResult = matter(fileContents)
-  const contentHtml = remark().use(html).processSync(matterResult.content).toString()
+  const contentHtml = remark().use(gfm).use(html).processSync(matterResult.content).toString()
 
   return {
     slug,
