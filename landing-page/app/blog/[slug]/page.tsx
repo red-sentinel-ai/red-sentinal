@@ -75,7 +75,7 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
             <>
               <hr className="my-12 border-gray-800" />
               <div className="mt-12">
-                <h2 className="text-3xl font-bold mb-6">Related Blogs</h2>
+                <h2 className="text-3xl font-bold mb-6 text-white">Related Blogs</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {relatedPosts.map((relatedPost) => (
                     <Link
@@ -83,15 +83,26 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
                       key={relatedPost.slug}
                       passHref
                     >
-                      <div className="group block h-full border border-[#558eb466] bg-[#12121266] backdrop-blur-sm rounded-lg lg:rounded-2xl p-8 robo-card attacker">
-                        <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-blue-400 transition-colors line-clamp-2">
-                          {relatedPost.title}
-                        </h3>
-                        <p className="text-gray-400 text-sm line-clamp-3">
-                          {relatedPost.description}
-                        </p>
-                        <div className="mt-4 text-[#558EB4] flex items-center gap-2">
-                          Read More <ArrowRight size={16} />
+                      <div className="group block h-full border border-[#558eb466] bg-[#12121266] backdrop-blur-sm rounded-lg lg:rounded-2xl overflow-hidden robo-card attacker">
+                        <div className="relative w-full h-48 overflow-hidden">
+                          <Image
+                            src={relatedPost.image}
+                            alt={relatedPost.title}
+                            layout="fill"
+                            objectFit="cover"
+                            className="transition-transform duration-300 group-hover:scale-105"
+                          />
+                        </div>
+                        <div className="p-8">
+                          <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-blue-400 transition-colors line-clamp-2">
+                            {relatedPost.title}
+                          </h3>
+                          <p className="text-gray-400 text-sm line-clamp-3">
+                            {relatedPost.description}
+                          </p>
+                          <div className="mt-4 text-[#558EB4] flex items-center gap-2">
+                            Read More <ArrowRight size={16} />
+                          </div>
                         </div>
                       </div>
                     </Link>
