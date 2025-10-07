@@ -37,8 +37,8 @@ export function Footer() {
               <span className="text-2xl font-bold text-white">SUI Sentinel</span>
             </div>
             <p className="text-gray-400 leading-relaxed max-w-md mb-6">
-              The ultimate battle arena for AI security. Test, defend, and attack autonomous AI
-              agents in the first prompt-first security platform on the Sui blockchain.
+              Sui Sentinel is a cutting-edge platform designed to audit, stress-test, and red-team
+              AI models, ensuring they’re robust and secure.
             </p>
             <div className="flex max-w-[300px]">
               <div className="blue gradient-border"></div>
@@ -64,10 +64,10 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="#vision"
+                  href="#offerings"
                   className="text-gray-400 hover:text-[#558EB4] transition-colors flex items-center gap-2"
                 >
-                  Vision
+                  Offerings
                 </a>
               </li>
               <li>
