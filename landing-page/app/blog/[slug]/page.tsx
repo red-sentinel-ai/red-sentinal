@@ -28,22 +28,24 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
     const relatedPosts = getRelatedPosts(post, allPosts)
 
     return (
-      <div className="container mx-auto px-4 py-24 min-h-body">
+      <div className="container mx-auto px-4 py-24 min-h-screen">
         <div className="max-w-4xl mx-auto">
           <Link
             href="/blog"
-            className="flex items-center gap-2 text-blue-500 hover:text-blue-400 transition-colors mb-8"
+            className="flex items-center gap-2 text-[#558EB4] hover:text-[#1388D5] transition-colors mb-8"
           >
             <ChevronLeft size={20} /> Back to all posts
           </Link>
 
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">{post.title}</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-[#558EB4] via-[#1388D5] to-[#8F564E] bg-clip-text text-transparent">
+            {post.title}
+          </h1>
 
           <div className="flex flex-wrap gap-2 mb-4">
             {post.tags.map((tag) => (
               <span
                 key={tag}
-                className="bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                className="bg-blue-500/10 text-blue-400 text-xs px-3 py-1 rounded-full border border-blue-500/20"
               >
                 {tag}
               </span>
@@ -81,14 +83,14 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
                       key={relatedPost.slug}
                       passHref
                     >
-                      <div className="group block p-4 bg-gray-900 rounded-lg border border-gray-700 hover:border-blue-500 transition-colors duration-200">
+                      <div className="group block h-full border border-[#558eb466] bg-[#12121266] backdrop-blur-sm rounded-lg lg:rounded-2xl p-8 robo-card attacker">
                         <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-blue-400 transition-colors line-clamp-2">
                           {relatedPost.title}
                         </h3>
                         <p className="text-gray-400 text-sm line-clamp-3">
                           {relatedPost.description}
                         </p>
-                        <div className="mt-4 text-blue-500 flex items-center gap-2">
+                        <div className="mt-4 text-[#558EB4] flex items-center gap-2">
                           Read More <ArrowRight size={16} />
                         </div>
                       </div>
