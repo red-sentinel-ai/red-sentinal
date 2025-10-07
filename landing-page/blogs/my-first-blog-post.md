@@ -3,6 +3,8 @@ title: 'My First Blog Post'
 date: '2025-10-06'
 description: 'A short post to test out the new blog section on Sui Sentinel.'
 author: 'The Sui Sentinel Team'
+tags: []
+image: 'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/ss-agents/DEFAULTS/1.png'
 ---
 
 Welcome to the new blog section of Sui Sentinel! This is where we'll be sharing updates, technical deep-dives, and community announcements.
