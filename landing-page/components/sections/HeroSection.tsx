@@ -8,7 +8,7 @@ import { SUI_SENTINEL_APP_URL, SUI_SENTINEL_DOCS_URL } from '@/constants'
 
 export function HeroSection() {
   const [typewriterText, setTypewriterText] = useState('')
-  const fullText = 'Prompt with English. Defend with AI. Win on SUI.'
+  const fullText = 'Red-team and secure AI models on the Sui blockchain.'
 
   useEffect(() => {
     let i = 0
@@ -40,7 +40,6 @@ export function HeroSection() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent"
             >
-              Welcome to the{' '}
               <span className="bg-gradient-to-r from-[#558EB4] via-[#1388D5] to-[#8F564E] bg-clip-text text-transparent">
                 SUI Sentinel
               </span>
@@ -69,9 +68,10 @@ export function HeroSection() {
             transition={{ duration: 0.8, delay: 1 }}
             className="text-xl md:text-2xl text-gray-400 max-w-4xl mx-auto leading-relaxed"
           >
-            Sui Sentinel is a gamified AI agent battle platform on the Sui blockchain, where
-            defenders deploy secure AI Sentinels with prize pools and attackers attempt to outsmart
-            them, stress-testing AI security through verifiable off-chain computation.
+            In Web3, AI and large language models (LLMs) are transforming projects, but they’re
+            vulnerable to attacks. Malicious prompts can exploit even the best models, leading to
+            unintended or harmful outputs. Sui Sentinel is a cutting-edge platform designed to
+            audit, stress-test, and red-team AI models, ensuring they’re robust and secure.
           </motion.p>
 
           <motion.div
@@ -80,7 +80,10 @@ export function HeroSection() {
             transition={{ duration: 0.8, delay: 1.3 }}
             className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8"
           >
-            <Link href={SUI_SENTINEL_APP_URL} target="_blank">
+            <Link
+              href={SUI_SENTINEL_APP_URL}
+              target="_blank"
+            >
               <button className="border border-[#383838] hover:border-[#424242] transition-colors font-medium bg-white text-black px-6 py-2 rounded-full hover:bg-white/90 flex items-center">
                 <Zap className="size-5 mr-2" />
                 Launch App
@@ -88,7 +91,10 @@ export function HeroSection() {
               </button>
             </Link>
 
-            <Link href={SUI_SENTINEL_DOCS_URL} target="_blank">
+            <Link
+              href={SUI_SENTINEL_DOCS_URL}
+              target="_blank"
+            >
               <button className="flex items-center gap-2 px-6 py-1.5 bg-[#1A1B1F] rounded-full border border-[#383838] hover:border-[#4c4c4c] transition-colors">
                 <BookOpen className="size-5 mr-2" />
                 Read Docs
