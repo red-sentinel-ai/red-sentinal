@@ -1,12 +1,15 @@
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
+import Link from 'next/link'
 import { User, Folder } from 'lucide-react'
 import { SuiClient, getFullnodeUrl } from '@mysten/sui/client'
+import { formatAddress } from '@mysten/sui/utils'
 import { supabaseServiceClient } from '@/db/config/server'
 import { getDefeatedAgentIds, fetchAgentDetailsViaObject } from '@/lib/sui-utils'
 import { FeaturedAgentCard } from '@/components/FeaturedAgentCard'
 import { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { AgentStatus } from '@/types'
+import { EXPLORER_BASE_URL } from '@/constants'
 
 async function getUserProfile(identifier: string) {
   const isWalletAddress = identifier.startsWith('0x') && identifier.length > 60
@@ -66,10 +69,10 @@ async function getUserProfile(identifier: string) {
 export default async function PublicProfilePage({
   params,
 }: {
-  params: Promise<{ identifier: string }> // Changed from 'username' to 'identifier'
+  params: Promise<{ identifier: string }>
 }) {
-  const { identifier } = await params // Changed from 'username' to 'identifier'
-  const profileData = await getUserProfile(identifier) // Pass the identifier to the fetching function
+  const { identifier } = await params
+  const profileData = await getUserProfile(identifier)
 
   if (!profileData) {
     notFound()
@@ -101,6 +104,19 @@ export default async function PublicProfilePage({
                 {user.display_name || user.username}
               </h1>
               <p className="text-gray-400 mt-1">@{user.username}</p>
+              {user.wallet_addresses?.[0] && (
+                <div className="mt-3 flex flex-col sm:flex-row items-start sm:items-center gap-1">
+                  <p className="text-gray-400 text-sm font-medium">Wallet Address:</p>
+                  <Link
+                    href={`${EXPLORER_BASE_URL}/address/${user.wallet_addresses[0]}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#558EB4] hover:underline font-mono text-sm"
+                  >
+                    {formatAddress(user.wallet_addresses[0])}
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>

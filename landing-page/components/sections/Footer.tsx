@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { Github, BookOpen } from 'lucide-react'
 import Image from 'next/image'
 import {
+  SUI_SENTINEL_DISCORD_URL,
   SUI_SENTINEL_DOCS_URL,
   SUI_SENTINEL_GITHUB_URL,
   SUI_SENTINEL_TELEGRAM_URL,
@@ -37,8 +38,8 @@ export function Footer() {
               <span className="text-2xl font-bold text-white">SUI Sentinel</span>
             </div>
             <p className="text-gray-400 leading-relaxed max-w-md mb-6">
-              The ultimate battle arena for AI security. Test, defend, and attack autonomous AI
-              agents in the first prompt-first security platform on the Sui blockchain.
+              Sui Sentinel is a cutting-edge platform designed to audit, stress-test, and red-team
+              AI models, ensuring they’re robust and secure.
             </p>
             <div className="flex max-w-[300px]">
               <div className="blue gradient-border"></div>
@@ -64,10 +65,10 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="#vision"
+                  href="#offerings"
                   className="text-gray-400 hover:text-[#558EB4] transition-colors flex items-center gap-2"
                 >
-                  Vision
+                  Offerings
                 </a>
               </li>
               <li>
@@ -139,6 +140,20 @@ export function Footer() {
                   className="group-hover:scale-110 transition-transform duration-300"
                 />
               </Link>
+
+              <Link
+                href={SUI_SENTINEL_DISCORD_URL}
+                className="size-12 border-[3px] border-white/20 bg-black hover:border-white/80 rounded-xl flex items-center justify-center transition-all duration-300 hover:shadow-glow-blue "
+                target="_blank"
+              >
+                <Image
+                  src="/icons/discord.svg"
+                  alt="Discord"
+                  width={20}
+                  height={20}
+                  className="group-hover:scale-110 transition-transform duration-300"
+                />
+              </Link>
             </div>
 
             <Link
@@ -166,26 +181,26 @@ export function Footer() {
           className="border-t border-[#383838] mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4"
         >
           <p className="text-gray-400 text-sm">All Rights Reserved @Cyphronix Software</p>
-          <div className="flex gap-6 text-sm text-gray-400">
-            <a
+          {/* <div className="flex gap-6 text-sm text-gray-400">
+            <Link
               href="#"
               className="hover:text-[#558EB4] transition-colors"
             >
               Privacy Policy
-            </a>
-            <a
+            </Link>
+            <Link
               href="#"
               className="hover:text-[#558EB4] transition-colors"
             >
               Terms of Service
-            </a>
-            <a
+            </Link>
+            <Link
               href="#"
               className="hover:text-[#558EB4] transition-colors"
             >
               Security
-            </a>
-          </div>
+            </Link>
+          </div> */}
         </motion.div>
       </div>
     </footer>
