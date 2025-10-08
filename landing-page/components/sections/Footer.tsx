@@ -5,7 +5,6 @@ import { motion } from 'framer-motion'
 import { Github, BookOpen } from 'lucide-react'
 import Image from 'next/image'
 import {
-  SUI_SENTINEL_DISCORD_URL,
   SUI_SENTINEL_DOCS_URL,
   SUI_SENTINEL_GITHUB_URL,
   SUI_SENTINEL_TELEGRAM_URL,
@@ -135,20 +134,6 @@ export function Footer() {
                 <Image
                   src="/icons/telegram.png"
                   alt="X (Twitter)"
-                  width={20}
-                  height={20}
-                  className="group-hover:scale-110 transition-transform duration-300"
-                />
-              </Link>
-
-              <Link
-                href={SUI_SENTINEL_DISCORD_URL}
-                className="size-12 border-[3px] border-white/20 bg-black hover:border-white/80 rounded-xl flex items-center justify-center transition-all duration-300 hover:shadow-glow-blue "
-                target="_blank"
-              >
-                <Image
-                  src="/icons/discord.svg"
-                  alt="Discord"
                   width={20}
                   height={20}
                   className="group-hover:scale-110 transition-transform duration-300"
