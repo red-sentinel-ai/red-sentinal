@@ -3,15 +3,16 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ChevronLeft, Info, User } from 'lucide-react'
+import { ChevronLeft, Info, User, Copy } from 'lucide-react'
 import { formatAddress } from '@mysten/sui/utils'
 import { QRCodeSVG } from 'qrcode.react'
+import { toast } from 'react-toastify'
 
-import { DEFAULT_PROFILE_URL, MIST_PER_SUI } from '@/constants'
+import { DEFAULT_PROFILE_URL, MIST_PER_SUI, EXPLORER_BASE_URL } from '@/constants'
 import { type AgentDetails } from '@/hooks/agents/useAllAgents'
 import { type AgentEvents } from '@/hooks/useAgentEvents'
 import { formatDuration, cn } from '@/lib/utils'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, Button } from '@/components/ui'
 
 interface AgentSidebarProps {
   agent: AgentDetails
@@ -70,6 +71,13 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
     agentEvents.promptConsumed.map((event) => event.parsedJson.sender)
   ).size
 
+  const handleCopyLink = () => {
+    if (pageUrl) {
+      navigator.clipboard.writeText(pageUrl)
+      toast.success('Link copied to clipboard!')
+    }
+  }
+
   return (
     <div className="w-full bg-[#101112] flex flex-col overflow-x-hidden overflow-y-scroll px-6 py-2 mr-4 h-[calc(100vh-64px)]">
       <div>
@@ -108,6 +116,19 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
       </div>
 
       <div className="flex flex-col gap-6 py-4">
+        <div className="flex flex-col gap-2">
+          <h3 className="text-white/60 text-sm font-semibold uppercase">Sentinel Object Id</h3>
+          <Link
+            href={`${EXPLORER_BASE_URL}/object/${agent.object_id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block text-lg font-mono hover:underline"
+            title={agent.object_id}
+          >
+            {formatAddress(agent.object_id)}
+          </Link>
+        </div>
+
         {isDrained ? (
           <div className="flex flex-col gap-2">
             <h3 className="text-white/60 text-sm font-semibold uppercase flex items-center gap-1.5">
@@ -123,7 +144,6 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
             </p>
           </div>
         )}
-
         {isDrained && winnerAddress && (
           <div className="flex flex-col gap-2">
             <h3 className="text-white/60 text-sm font-semibold uppercase flex items-center gap-1.5">
@@ -141,8 +161,10 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
         )}
 
         <div className="flex flex-col gap-2">
-          <h3 className="text-white/60 text-sm font-semibold uppercase">Sentinel ID</h3>
-          <p className="inline-block text-2xl font-semibold">{agent.agent_id}</p>
+          <h3 className="text-white/60 text-sm font-semibold uppercase">Message Price</h3>
+          <p className="inline-block text-2xl font-semibold">
+            {(Number(agent.cost_per_message) / MIST_PER_SUI).toFixed(4)} SUI
+          </p>
         </div>
 
         {!isDrained && (
@@ -198,23 +220,35 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
       <div className="flex flex-col gap-6 py-4">
         <div className="border-t border-t-white/20"></div>
-        <div className="flex flex-col gap-2">
-          <h3 className="text-white/60 text-sm font-semibold uppercase">Message Price</h3>
-          <p className="inline-block text-2xl font-semibold">
-            {(Number(agent.cost_per_message) / MIST_PER_SUI).toFixed(4)} SUI
-          </p>
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <h3 className="text-white/60 text-sm font-semibold uppercase">Break Attempts</h3>
-          <p className="inline-block text-2xl font-semibold">{breakAttempts}</p>
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <h3 className="text-white/60 text-sm font-semibold uppercase">Total Participants</h3>
-          <p className="inline-block text-2xl font-semibold">{totalParticipants}</p>
+        <div className="flex justify-between">
+          <div className="flex flex-col gap-2">
+            <h3 className="text-white/60 text-sm font-semibold uppercase">Total Participants</h3>
+            <p className="inline-block text-2xl font-semibold text-center">{totalParticipants}</p>
+          </div>
+          <div className="flex flex-col gap-2 text-center">
+            <h3 className="text-white/60 text-sm font-semibold uppercase">Break Attempts</h3>
+            <p className="inline-block text-2xl font-semibold">{breakAttempts}</p>
+          </div>
         </div>
       </div>
+
+      <Button
+        onClick={handleCopyLink}
+        className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold flex items-center gap-2 mt-4"
+      >
+        <Copy className="w-4 h-4" />
+        Share Link
+      </Button>
+
+      <Link href={`/u/${agent.owner}`}>
+        <Button
+          variant="outline"
+          className="w-full mt-2"
+        >
+          <User className="w-4 h-4 mr-2" />
+          View Defender Profile
+        </Button>
+      </Link>
 
       {/* --- QR CODE SECTION --- */}
       <div className="mt-auto pt-6 border-t border-white/20">
