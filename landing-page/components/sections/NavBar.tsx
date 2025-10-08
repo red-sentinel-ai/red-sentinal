@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { SUI_SENTINEL_APP_URL, SUI_SENTINEL_DISCORD_URL, SUI_SENTINEL_DOCS_URL } from '@/constants'
+import { SUI_SENTINEL_APP_URL, SUI_SENTINEL_DOCS_URL, SUI_SENTINEL_TELEGRAM_URL } from '@/constants'
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -68,22 +68,19 @@ export function Navbar() {
             </a>
 
             <Link
-              href={SUI_SENTINEL_DISCORD_URL}
+              href={SUI_SENTINEL_TELEGRAM_URL}
               target="_blank"
-              rel="noopener noreferrer"
+              className="flex items-center w-fit gap-3 px-6 py-3 bg-gradient-to-r from-[#0088cc] to-[#0077b5] rounded-full text-white font-medium hover:from-[#0077b5] hover:to-[#006699] transition-all duration-300 shadow-lg hover:shadow-xl transform group"
             >
-              <button className="bg-[#5865F2] hover:bg-[#5865F2]/90 text-white font-semibold animate-pulse-glow rounded-full flex px-6 py-2">
-                <Image
-                  src="/icons/discord.svg"
-                  width={20}
-                  height={20}
-                  alt="discord"
-                  className="mr-2"
-                />
-                Join Discord
-              </button>
+              <Image
+                src="/icons/telegram.png"
+                alt="Telegram"
+                width={20}
+                height={20}
+                className="group-hover:scale-110 transition-transform duration-300 filter brightness-0 invert"
+              />
+              <span className="text-sm font-semibold">Join Telegram</span>
             </Link>
-
             <Link
               href={SUI_SENTINEL_APP_URL}
               target="_blank"
