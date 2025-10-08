@@ -1504,6 +1504,7 @@ export type Database = {
           twitter_username: string | null
           user_id: string | null
           username: string | null
+          wallet_addresses: string[] | null
         }
         Relationships: []
       }
