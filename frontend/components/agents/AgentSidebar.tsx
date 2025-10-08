@@ -148,7 +148,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
         {!isDrained && (
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-1">
-              <h3 className="text-white/70 text-sm font-semibold uppercase">Active Time</h3>
+              <h3 className="text-white/70 text-sm font-semibold uppercase">Active Since</h3>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger
