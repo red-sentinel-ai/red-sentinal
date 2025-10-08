@@ -91,7 +91,7 @@ export const FeaturedAgentCard = ({
           <span className="text-[#558EB4] font-medium">{formatBalance(agent.balance)}</span>
         </div>
         <div className="flex justify-between items-center text-sm">
-          <span className="text-[#B5B5B5]">Attack Cost:</span>
+          <span className="text-[#B5B5B5]">Message price:</span>
           <span className="text-[#558EB4] font-medium">{formatCost(agent.cost_per_message)}</span>
         </div>
       </div>
