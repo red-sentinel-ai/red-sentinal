@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ChevronLeft, Info, User, Copy } from 'lucide-react'
+import { ChevronLeft, Info, Share2, User } from 'lucide-react'
 import { formatAddress } from '@mysten/sui/utils'
 import { QRCodeSVG } from 'qrcode.react'
 import { toast } from 'react-toastify'
@@ -234,21 +234,22 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
       <Button
         onClick={handleCopyLink}
-        className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold flex items-center gap-2 mt-4"
+        className="w-full bg-transparent border border-[#558EB4] text-[#558EB4] hover:bg-[#558EB4]/20 hover:text-white transition-colors duration-300 font-semibold flex items-center gap-2 mt-4"
       >
-        <Copy className="w-4 h-4" />
+        <Share2 className="w-4 h-4" />
         Share Link
       </Button>
 
-      <Link href={`/u/${agent.owner}`}>
-        <Button
-          variant="outline"
-          className="w-full mt-2"
+      <div className="flex flex-col gap-2 my-4">
+        <h3 className="text-white/60 text-sm font-semibold uppercase">Defender Address</h3>
+        <Link
+          href={`/u/${agent.owner}`}
+          className="inline-block text-lg font-mono hover:underline"
+          title={agent.owner}
         >
-          <User className="w-4 h-4 mr-2" />
-          View Defender Profile
-        </Button>
-      </Link>
+          {formatAddress(agent.owner)}
+        </Link>
+      </div>
 
       {/* --- QR CODE SECTION --- */}
       <div className="mt-auto pt-6 border-t border-white/20">
