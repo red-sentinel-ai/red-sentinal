@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { SUI_SENTINEL_APP_URL, SUI_SENTINEL_DISCORD_URL } from '@/constants'
+import { SUI_SENTINEL_APP_URL, SUI_SENTINEL_DISCORD_URL, SUI_SENTINEL_DOCS_URL } from '@/constants'
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -60,10 +60,11 @@ export function Navbar() {
               Vision
             </a>
             <a
-              href="#community"
+              href={SUI_SENTINEL_DOCS_URL}
+              target="_blank"
               className="text-gray-300 hover:text-white transition-colors"
             >
-              Community
+              Docs
             </a>
 
             <Link
@@ -120,11 +121,13 @@ export function Navbar() {
               >
                 Vision
               </Link>
+
               <Link
-                href="#community"
+                href={SUI_SENTINEL_DOCS_URL}
+                target="_blank"
                 className="text-gray-300 hover:text-white transition-colors"
               >
-                Community
+                Docs
               </Link>
               <Link
                 href={SUI_SENTINEL_APP_URL}
