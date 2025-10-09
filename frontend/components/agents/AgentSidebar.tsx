@@ -3,38 +3,27 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ChevronLeft, Info, Share2, User, TrendingUp } from 'lucide-react'
+import { ChevronLeft, Info, Share2, User } from 'lucide-react'
 import { formatAddress } from '@mysten/sui/utils'
 import { QRCodeSVG } from 'qrcode.react'
 import { toast } from 'react-toastify'
 
-import { DEFAULT_PROFILE_URL, MIST_PER_SUI, EXPLORER_BASE_URL, SLUSH_BASE_URL } from '@/constants'
+import {
+  DEFAULT_PROFILE_URL,
+  MIST_PER_SUI,
+  EXPLORER_BASE_URL,
+  SLUSH_BASE_URL,
+  mockPrizePoolHistory,
+} from '@/constants'
 import { type AgentDetails } from '@/hooks/agents/useAllAgents'
 import { type AgentEvents } from '@/hooks/useAgentEvents'
 import { formatDuration, cn } from '@/lib/utils'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, Button } from '@/components/ui'
-import { SparklineChart } from '@/components/ui/common/SparklineChart'
-import { PrizePoolChartModal, ChartDataPoint } from '@/components/charts/PrizePoolChartModal'
+import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
 
 interface AgentSidebarProps {
   agent: AgentDetails
   agentEvents: AgentEvents
-}
-
-const mockPrizePoolHistory: ChartDataPoint[] = [
-  { time: new Date('2025-10-01T10:00:00Z'), value: 120 },
-  { time: new Date('2025-10-02T14:30:00Z'), value: 122 },
-  { time: new Date('2025-10-03T18:00:00Z'), value: 125 },
-  { time: new Date('2025-10-04T22:15:00Z'), value: 124 },
-  { time: new Date('2025-10-05T02:00:00Z'), value: 130 },
-  { time: new Date('2025-10-06T06:45:00Z'), value: 135 },
-  { time: new Date('2025-10-07T09:00:00Z'), value: 142 },
-  { time: new Date('2025-10-08T11:30:00Z'), value: 145 },
-  { time: new Date('2025-10-08T13:00:00Z'), value: 150 },
-]
-const mockPrizePool7dChange = {
-  amount: 30.0,
-  percentage: 18.2,
 }
 
 export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
@@ -165,26 +154,27 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
             <div className="flex flex-col gap-2">
               <div className="flex justify-between items-center">
                 <h3 className="text-white/60 text-sm font-semibold uppercase">Prize pool</h3>
-                <div className="flex items-center gap-1 text-green-400 text-xs font-medium">
+                {/* // TODO: Uncomment below comments when enabling chart feature */}
+                {/* <div className="flex items-center gap-1 text-green-400 text-xs font-medium">
                   <TrendingUp className="w-3 h-3" />
                   <span>+{mockPrizePool7dChange.percentage.toFixed(1)}% (In last 7 days)</span>
-                </div>
+                </div> */}
               </div>
               <div className="flex items-end justify-between gap-4">
                 <p className="inline-block text-2xl font-semibold">
                   {(Number(agent.balance) / MIST_PER_SUI).toFixed(2)} SUI
                 </p>
-                <div>
+                {/* <div>
                   <SparklineChart data={mockPrizePoolHistory.map((p) => p.value)} />
-                </div>
+                </div> */}
               </div>
-              <Button
+              {/* <Button
                 onClick={() => setIsChartModalOpen(true)}
                 className="w-full bg-transparent border border-[#558EB4]/50 text-[#558EB4] hover:bg-[#558EB4]/20 hover:text-white transition-colors duration-300 font-semibold text-sm mt-2"
                 size="sm"
               >
                 See Growth Chart
-              </Button>
+              </Button> */}
             </div>
           )}
           {isDrained && winnerAddress && (
