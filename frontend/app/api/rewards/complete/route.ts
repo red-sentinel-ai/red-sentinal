@@ -8,6 +8,7 @@ import {
   RewardsMission,
 } from '@/types/Rewards'
 import { REWARDS_CONSTANTS } from '@/constants/rewards'
+import { TEAM_MEMBER_WALLETS } from '@/constants'
 
 export async function POST(
   request: Request
@@ -18,6 +19,13 @@ export async function POST(
 
     if (!wallet_address || !mission_type) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+    }
+
+    if (TEAM_MEMBER_WALLETS.includes(wallet_address.toLowerCase())) {
+      return NextResponse.json(
+        { error: 'Team members are not eligible for rewards.' },
+        { status: 403 }
+      )
     }
 
     const { data: userData, error: userError } = await supabaseServiceClient
