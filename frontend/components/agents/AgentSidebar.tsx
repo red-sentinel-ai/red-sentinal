@@ -279,7 +279,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           className="w-full bg-transparent border border-[#558EB4] text-[#558EB4] hover:bg-[#558EB4]/20 hover:text-white transition-colors duration-300 font-semibold flex items-center gap-2 mt-4"
         >
           <Share2 className="w-4 h-4" />
-          Share Link
+          Share {agent.agent_name} Link
         </Button>
 
         <div className="flex flex-col gap-2 my-4">
