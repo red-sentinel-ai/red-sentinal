@@ -3,8 +3,8 @@ import Image from 'next/image'
 import clsx from 'clsx'
 import { BookOpen } from 'lucide-react'
 
-import { Button, Badge } from './ui'
-import { SUI_SENTINEL_DISCORD_URL, SUI_SENTINEL_DOCS_URL } from '@/constants'
+import { Badge } from './ui'
+import { SUI_SENTINEL_TELEGRAM_URL, SUI_SENTINEL_DOCS_URL } from '@/constants'
 
 export const MenuItems = ({ menuOpen }: { menuOpen: boolean }) => {
   return (
@@ -61,20 +61,17 @@ export const MenuItems = ({ menuOpen }: { menuOpen: boolean }) => {
 
       <li>
         <Link
-          href={SUI_SENTINEL_DISCORD_URL}
+          href={SUI_SENTINEL_TELEGRAM_URL}
           target="_blank"
-          rel="noopener noreferrer"
+          className="flex items-center w-fit gap-3 px-6 py-3 bg-gradient-to-r from-[#0088cc] to-[#0077b5] rounded-full text-white font-medium hover:from-[#0077b5] hover:to-[#006699] transition-all duration-300 shadow-lg hover:shadow-xl transform group"
         >
-          <Button className="bg-[#5865F2] hover:bg-[#5865F2]/90 text-white font-semibold animate-pulse-glow">
-            <Image
-              src="/icons/discord.svg"
-              width={20}
-              height={20}
-              alt="discord"
-              className="mr-2"
-            />
-            Join Discord
-          </Button>
+          <Image
+            src="/icons/telegram.png"
+            alt="Telegram"
+            width={20}
+            height={20}
+          />
+          <span className="text-sm font-semibold">Join Telegram</span>
         </Link>
       </li>
     </ul>
