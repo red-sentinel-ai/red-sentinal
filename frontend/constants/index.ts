@@ -16,6 +16,8 @@ export const SUI_SENTINEL_X_USERNAME = 'suisentinal'
 export const SUI_SENTINEL_GITHUB_URL = 'https://github.com/sui-sentinel/contracts'
 export const SUI_SENTINEL_TELEGRAM_URL = 'https://t.me/suisentinel'
 
+export const SLUSH_BASE_URL = 'https://my.slush.app/browse/'
+
 export const TEXT_COPIES = {
   leaderboard: {
     heading: 'Leaderboard',
