@@ -5,7 +5,6 @@ import { motion } from 'framer-motion'
 import { Github, BookOpen } from 'lucide-react'
 import Image from 'next/image'
 import {
-  SUI_SENTINEL_DISCORD_URL,
   SUI_SENTINEL_DOCS_URL,
   SUI_SENTINEL_GITHUB_URL,
   SUI_SENTINEL_TELEGRAM_URL,
@@ -18,13 +17,13 @@ export function Footer() {
       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/95 to-transparent" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid md:grid-cols-4 gap-8 lg:gap-12">
+        <div className="grid md:grid-cols-12 gap-4 md:gap-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="md:col-span-2"
+            className="md:col-span-4"
           >
             <div className="flex items-center gap-3 mb-6">
               <div className="relative w-8 h-11">
@@ -52,43 +51,46 @@ export function Footer() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
             viewport={{ once: true }}
+            className="col-span-4"
           >
-            <h3 className="text-white font-bold mb-6">Quick Links</h3>
-            <ul className="space-y-3">
-              <li>
-                <a
-                  href="#how-it-works"
-                  className="text-gray-400 hover:text-[#558EB4] transition-colors flex items-center gap-2"
-                >
-                  How It Works
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#offerings"
-                  className="text-gray-400 hover:text-[#558EB4] transition-colors flex items-center gap-2"
-                >
-                  Offerings
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#community"
-                  className="text-gray-400 hover:text-[#558EB4] transition-colors flex items-center gap-2"
-                >
-                  Community
-                </a>
-              </li>
-              <li>
-                <Link
-                  href={SUI_SENTINEL_DOCS_URL}
-                  target="_blank"
-                  className="text-gray-400 hover:text-[#558EB4] transition-colors flex items-center gap-2"
-                >
-                  Documentation
-                </Link>
-              </li>
-            </ul>
+            <div className="mx-auto w-fit">
+              <h3 className="text-white font-bold mb-6">Quick Links</h3>
+              <ul className="space-y-3">
+                <li>
+                  <a
+                    href="#how-it-works"
+                    className="text-gray-400 hover:text-[#558EB4] transition-colors flex items-center gap-2"
+                  >
+                    How It Works
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#offerings"
+                    className="text-gray-400 hover:text-[#558EB4] transition-colors flex items-center gap-2"
+                  >
+                    Offerings
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#community"
+                    className="text-gray-400 hover:text-[#558EB4] transition-colors flex items-center gap-2"
+                  >
+                    Community
+                  </a>
+                </li>
+                <li>
+                  <Link
+                    href={SUI_SENTINEL_DOCS_URL}
+                    target="_blank"
+                    className="text-gray-400 hover:text-[#558EB4] transition-colors flex items-center gap-2"
+                  >
+                    Documentation
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </motion.div>
 
           <motion.div
@@ -96,6 +98,7 @@ export function Footer() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
+            className="col-span-4"
           >
             <h3 className="text-white font-bold mb-6">Connect</h3>
             <div className="flex gap-3 mb-6">
@@ -140,36 +143,38 @@ export function Footer() {
                   className="group-hover:scale-110 transition-transform duration-300"
                 />
               </Link>
+            </div>
 
+            <div className="flex flex-col sm:flex-row gap-4">
               <Link
-                href={SUI_SENTINEL_DISCORD_URL}
-                className="size-12 border-[3px] border-white/20 bg-black hover:border-white/80 rounded-xl flex items-center justify-center transition-all duration-300 hover:shadow-glow-blue "
+                href={SUI_SENTINEL_X_URL}
                 target="_blank"
+                className="flex items-center w-fit gap-3 px-6 py-3 bg-white text-black rounded-full font-medium hover:bg-white/90 transition-all duration-300 shadow-lg hover:shadow-xl transform group"
               >
                 <Image
-                  src="/icons/discord.svg"
-                  alt="Discord"
+                  src="/icons/x_black.png"
+                  alt="X (Twitter)"
                   width={20}
                   height={20}
                   className="group-hover:scale-110 transition-transform duration-300"
                 />
+                <span className="text-sm font-semibold">Join X (Twitter)</span>
+              </Link>
+              <Link
+                href={SUI_SENTINEL_TELEGRAM_URL}
+                target="_blank"
+                className="flex items-center w-fit gap-3 px-6 py-3 bg-gradient-to-r from-[#0088cc] to-[#0077b5] rounded-full text-white font-medium hover:from-[#0077b5] hover:to-[#006699] transition-all duration-300 shadow-lg hover:shadow-xl transform group"
+              >
+                <Image
+                  src="/icons/telegram.png"
+                  alt="Telegram"
+                  width={20}
+                  height={20}
+                  className="group-hover:scale-110 transition-transform duration-300 filter brightness-0 invert"
+                />
+                <span className="text-sm font-semibold">Join Telegram</span>
               </Link>
             </div>
-
-            <Link
-              href={SUI_SENTINEL_TELEGRAM_URL}
-              target="_blank"
-              className="flex items-center w-fit gap-3 px-6 py-3 bg-gradient-to-r from-[#0088cc] to-[#0077b5] rounded-full text-white font-medium hover:from-[#0077b5] hover:to-[#006699] transition-all duration-300 shadow-lg hover:shadow-xl transform group"
-            >
-              <Image
-                src="/icons/telegram.png"
-                alt="Telegram"
-                width={20}
-                height={20}
-                className="group-hover:scale-110 transition-transform duration-300 filter brightness-0 invert"
-              />
-              <span className="text-sm font-semibold">Join Telegram</span>
-            </Link>
           </motion.div>
         </div>
 
