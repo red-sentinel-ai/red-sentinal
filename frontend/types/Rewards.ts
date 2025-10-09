@@ -106,6 +106,7 @@ export interface LeaderboardEntry {
   rank: number
   username: string | null
   avatar_url: string | null
+  wallet_addresses: string[] | null
 
   twitter_username: string | null
   twitter_user_id: string | null
