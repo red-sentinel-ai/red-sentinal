@@ -1,3 +1,5 @@
+import { ChartDataPoint } from '@/components/charts/PrizePoolChartModal'
+
 export const AGENT_REGISTRY_ADDRESS =
   '0x6eea1a6fd3fbf870a043f311ad260c0dc6f384f3c869dd4ccfa550c2202bc485'
 export const INDEXER_BASE_URL = process.env.NEXT_PUBLIC_INDEXER_BASE_URL || 'http://localhost:4000'
@@ -106,3 +108,20 @@ export const SENTINEL_IMAGES = [
   'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/ss-agents/DEFAULTS/7.png',
   'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/ss-agents/DEFAULTS/8.png',
 ]
+
+export const mockPrizePoolHistory: ChartDataPoint[] = [
+  { time: new Date('2025-10-01T10:00:00Z'), value: 120 },
+  { time: new Date('2025-10-02T14:30:00Z'), value: 122 },
+  { time: new Date('2025-10-03T18:00:00Z'), value: 125 },
+  { time: new Date('2025-10-04T22:15:00Z'), value: 124 },
+  { time: new Date('2025-10-05T02:00:00Z'), value: 130 },
+  { time: new Date('2025-10-06T06:45:00Z'), value: 135 },
+  { time: new Date('2025-10-07T09:00:00Z'), value: 142 },
+  { time: new Date('2025-10-08T11:30:00Z'), value: 145 },
+  { time: new Date('2025-10-08T13:00:00Z'), value: 150 },
+]
+
+export const mockPrizePool7dChange = {
+  amount: 30.0,
+  percentage: 18.2,
+}
