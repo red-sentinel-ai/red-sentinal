@@ -129,4 +129,5 @@ export const mockPrizePool7dChange = {
 export const TEAM_MEMBER_WALLETS = [
   '0xe4e8af19c2943fc2e3cbefa2fca9149985fc3b3c3d9dd312902b2c26dc600d95',
   '0x5a8f695e50fff36c97dd1f7999c85293b811a932db508bbd51ab1fa5f742417f',
+  '0xc647dfdb8d8b575809902c9b86a26b6ace9f9271dfe5385468f503833a237177',
 ].map((wallet) => wallet.toLowerCase())
