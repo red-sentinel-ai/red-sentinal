@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ChevronLeft, Info, Share2, User } from 'lucide-react'
+import { ChevronLeft, Info, LinkIcon, User } from 'lucide-react'
 import { formatAddress } from '@mysten/sui/utils'
 import { QRCodeSVG } from 'qrcode.react'
 import { toast } from 'react-toastify'
@@ -284,8 +284,8 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           onClick={handleCopyLink}
           className="w-full bg-transparent border border-[#558EB4] text-[#558EB4] hover:bg-[#558EB4]/20 hover:text-white transition-colors duration-300 font-semibold flex items-center gap-2 mt-4"
         >
-          <Share2 className="w-4 h-4" />
           Share {agent.agent_name} Link
+          <LinkIcon className="w-4 h-4" />
         </Button>
 
         <DefenderProfile
