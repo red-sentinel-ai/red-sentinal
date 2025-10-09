@@ -20,7 +20,7 @@ interface AgentSidebarProps {
 }
 
 export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
-  const [activeSince, setActiveSince] = useState('0:00:00:00')
+  const [activeSince, setActiveSince] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
   const [isExpanded, setIsExpanded] = useState(false)
   const [shouldTruncate, setShouldTruncate] = useState(false)
   const instructionsRef = useRef<HTMLParagraphElement>(null)
@@ -189,12 +189,21 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
                     />
                   </TooltipTrigger>
                   <TooltipContent className="bg-black border border-gray-700 text-white">
-                    <p>Format: D:H:M:S (Days:Hours:Minutes:Seconds)</p>
+                    <p>Format: Days, Hours, Minutes, Seconds</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             </div>
-            <p className="inline-block text-2xl font-semibold">{activeSince}</p>
+            <p className="inline-block text-2xl font-semibold">
+              {activeSince.days}
+              <span className="text-lg text-white/60">D</span>{' '}
+              {String(activeSince.hours).padStart(2, '0')}
+              <span className="text-lg text-white/60">H</span>{' '}
+              {String(activeSince.minutes).padStart(2, '0')}
+              <span className="text-lg text-white/60">M</span>{' '}
+              {String(activeSince.seconds).padStart(2, '0')}
+              <span className="text-lg text-white/60">S</span>
+            </p>
           </div>
         )}
       </div>
