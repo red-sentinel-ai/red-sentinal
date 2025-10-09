@@ -139,8 +139,6 @@ function getMissionName(missionType: RHRewardsActivity['mission_type']): string 
     share_with_hashtag: 'Shared with Hashtag',
     join_telegram: 'Joined Telegram',
     telegram_engage: 'Engaged in Telegram',
-    join_discord: 'Joined Discord',
-    discord_engage: 'Engaged in Discord',
   }
   return (
     names[missionType] || missionType.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())

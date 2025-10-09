@@ -3,50 +3,36 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ChevronLeft, Info, Share2, User, TrendingUp } from 'lucide-react'
+import { ChevronLeft, Info, Share2, User } from 'lucide-react'
 import { formatAddress } from '@mysten/sui/utils'
 import { QRCodeSVG } from 'qrcode.react'
 import { toast } from 'react-toastify'
 
-import { DEFAULT_PROFILE_URL, MIST_PER_SUI, EXPLORER_BASE_URL } from '@/constants'
+import { DEFAULT_PROFILE_URL, MIST_PER_SUI, EXPLORER_BASE_URL, SLUSH_BASE_URL } from '@/constants'
 import { type AgentDetails } from '@/hooks/agents/useAllAgents'
 import { type AgentEvents } from '@/hooks/useAgentEvents'
 import { formatDuration, cn } from '@/lib/utils'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, Button } from '@/components/ui'
-import { SparklineChart } from '@/components/ui/common/SparklineChart'
-import { PrizePoolChartModal, ChartDataPoint } from '@/components/charts/PrizePoolChartModal'
 
 interface AgentSidebarProps {
   agent: AgentDetails
   agentEvents: AgentEvents
 }
 
-const mockPrizePoolHistory: ChartDataPoint[] = [
-  { time: new Date('2025-10-01T10:00:00Z'), value: 120 },
-  { time: new Date('2025-10-02T14:30:00Z'), value: 122 },
-  { time: new Date('2025-10-03T18:00:00Z'), value: 125 },
-  { time: new Date('2025-10-04T22:15:00Z'), value: 124 },
-  { time: new Date('2025-10-05T02:00:00Z'), value: 130 },
-  { time: new Date('2025-10-06T06:45:00Z'), value: 135 },
-  { time: new Date('2025-10-07T09:00:00Z'), value: 142 },
-  { time: new Date('2025-10-08T11:30:00Z'), value: 145 },
-  { time: new Date('2025-10-08T13:00:00Z'), value: 150 },
-]
-const mockPrizePool7dChange = {
-  amount: 30.0,
-  percentage: 18.2,
-}
-
 export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
-  const [activeSince, setActiveSince] = useState('0:00:00:00')
+  const [activeSince, setActiveSince] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
   const [isExpanded, setIsExpanded] = useState(false)
   const [shouldTruncate, setShouldTruncate] = useState(false)
   const instructionsRef = useRef<HTMLParagraphElement>(null)
   const [pageUrl, setPageUrl] = useState('')
-  const [isChartModalOpen, setIsChartModalOpen] = useState(false)
+  const [deepLinkUrl, setDeepLinkUrl] = useState('')
 
   useEffect(() => {
-    setPageUrl(window.location.href)
+    const currentUrl = window.location.href
+    setPageUrl(currentUrl)
+
+    const encodedUrl = encodeURIComponent(currentUrl)
+    setDeepLinkUrl(SLUSH_BASE_URL + encodedUrl)
   }, [])
 
   const isDrained = agentEvents.agentDefeated.length > 0
@@ -98,226 +84,209 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
   }
 
   return (
-    <>
-      <div className="w-full bg-[#101112] flex flex-col overflow-x-hidden overflow-y-scroll px-6 py-2 mr-4 h-[calc(100vh-64px)]">
-        <div>
-          <Link
-            href="/attack"
-            className="flex items-center gap-1 text-gray-400 hover:text-white transition-colors py-3"
-          >
-            <ChevronLeft className="w-5 h-5" /> Back to Sentinels
-          </Link>
-        </div>
-
-        <div className="bg-[#202122] rounded-xl p-4 my-4 border border-gray-600/50 shadow-lg w-full text-xs sm:text-sm">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-full overflow-hidden grow-0 shrink-0 basis-auto">
-              <Image
-                src={agent.agent_profile || DEFAULT_PROFILE_URL}
-                width={40}
-                height={40}
-                alt={agent.agent_name}
-                className="rounded-full object-cover w-full h-full"
-              />
-            </div>
-            <div className="flex items-center gap-1">
-              <p className="text-xl font-semibold">{agent.agent_name}</p>
-              {agent.is_featured && (
-                <Image
-                  src="/icons/check-mark.svg"
-                  width={20}
-                  height={20}
-                  alt="checkmark"
-                  className="flex-shrink-0"
-                />
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-6 py-4">
-          <div className="flex flex-col gap-2">
-            <h3 className="text-white/60 text-sm font-semibold uppercase">Sentinel Object Id</h3>
-            <Link
-              href={`${EXPLORER_BASE_URL}/object/${agent.object_id}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block text-lg font-mono hover:underline"
-              title={agent.object_id}
-            >
-              {formatAddress(agent.object_id)}
-            </Link>
-          </div>
-
-          {isDrained ? (
-            <div className="flex flex-col gap-2">
-              <h3 className="text-white/60 text-sm font-semibold uppercase flex items-center gap-1.5">
-                Total Bounty Won
-              </h3>
-              <p className="inline-block text-2xl font-semibold">{bountyWonAmount} SUI</p>
-            </div>
-          ) : (
-            <div className="flex flex-col gap-2">
-              <div className="flex justify-between items-center">
-                <h3 className="text-white/60 text-sm font-semibold uppercase">Prize pool</h3>
-                <div className="flex items-center gap-1 text-green-400 text-xs font-medium">
-                  <TrendingUp className="w-3 h-3" />
-                  <span>+{mockPrizePool7dChange.percentage.toFixed(1)}% (In last 7 days)</span>
-                </div>
-              </div>
-              <div className="flex items-end justify-between gap-4">
-                <p className="inline-block text-2xl font-semibold">
-                  {(Number(agent.balance) / MIST_PER_SUI).toFixed(2)} SUI
-                </p>
-                <div>
-                  <SparklineChart data={mockPrizePoolHistory.map((p) => p.value)} />
-                </div>
-              </div>
-              <Button
-                onClick={() => setIsChartModalOpen(true)}
-                className="w-full bg-transparent border border-[#558EB4]/50 text-[#558EB4] hover:bg-[#558EB4]/20 hover:text-white transition-colors duration-300 font-semibold text-sm mt-2"
-                size="sm"
-              >
-                See Growth Chart
-              </Button>
-            </div>
-          )}
-          {isDrained && winnerAddress && (
-            <div className="flex flex-col gap-2">
-              <h3 className="text-white/60 text-sm font-semibold uppercase flex items-center gap-1.5">
-                <User className="w-4 h-4" />
-                Winner
-              </h3>
-              <Link
-                href={`/u/${winnerAddress}`}
-                className="inline-block text-lg font-mono hover:underline"
-                title={winnerAddress}
-              >
-                {formatAddress(winnerAddress)}
-              </Link>
-            </div>
-          )}
-
-          <div className="flex flex-col gap-2">
-            <h3 className="text-white/60 text-sm font-semibold uppercase">Message Price</h3>
-            <p className="inline-block text-2xl font-semibold">
-              {(Number(agent.cost_per_message) / MIST_PER_SUI).toFixed(4)} SUI
-            </p>
-          </div>
-
-          {!isDrained && (
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-1">
-                <h3 className="text-white/70 text-sm font-semibold uppercase">Active Since</h3>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger
-                      asChild
-                      className="cursor-help"
-                    >
-                      <Info
-                        width={12}
-                        height={12}
-                        className="text-white/60"
-                      />
-                    </TooltipTrigger>
-                    <TooltipContent className="bg-black border border-gray-700 text-white">
-                      <p>Format: D:H:M:S (Days:Hours:Minutes:Seconds)</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-              <p className="inline-block text-2xl font-semibold">{activeSince}</p>
-            </div>
-          )}
-        </div>
-        <div className="border-t border-t-white/20"></div>
-
-        <div className="z-20 mt-4 flex flex-col rounded-xl p-0 text-sm">
-          <div className="flex flex-col gap-2">
-            <h3 className="text-white/60 text-sm font-semibold uppercase">Instructions</h3>
-            <p
-              ref={instructionsRef}
-              className={cn(
-                'text-sm font-medium whitespace-pre-wrap transition-all duration-300',
-                !isExpanded && shouldTruncate && 'line-clamp-4'
-              )}
-            >
-              {agent.system_prompt}
-            </p>
-            {shouldTruncate && (
-              <button
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="text-sm text-blue-400 hover:underline self-start"
-              >
-                {isExpanded ? 'See less' : 'See more'}
-              </button>
-            )}
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-6 py-4">
-          <div className="border-t border-t-white/20"></div>
-          <div className="flex justify-between">
-            <div className="flex flex-col gap-2">
-              <h3 className="text-white/60 text-sm font-semibold uppercase">Total Participants</h3>
-              <p className="inline-block text-2xl font-semibold text-center">{totalParticipants}</p>
-            </div>
-            <div className="flex flex-col gap-2 text-center">
-              <h3 className="text-white/60 text-sm font-semibold uppercase">Break Attempts</h3>
-              <p className="inline-block text-2xl font-semibold">{breakAttempts}</p>
-            </div>
-          </div>
-        </div>
-
-        <Button
-          onClick={handleCopyLink}
-          className="w-full bg-transparent border border-[#558EB4] text-[#558EB4] hover:bg-[#558EB4]/20 hover:text-white transition-colors duration-300 font-semibold flex items-center gap-2 mt-4"
+    <div className="w-full bg-[#101112] flex flex-col overflow-x-hidden overflow-y-scroll px-6 py-2 mr-4 h-[calc(100vh-64px)]">
+      <div>
+        <Link
+          href="/attack"
+          className="flex items-center gap-1 text-gray-400 hover:text-white transition-colors py-3"
         >
-          <Share2 className="w-4 h-4" />
-          Share Link
-        </Button>
+          <ChevronLeft className="w-5 h-5" /> Back to Sentinels
+        </Link>
+      </div>
 
-        <div className="flex flex-col gap-2 my-4">
-          <h3 className="text-white/60 text-sm font-semibold uppercase">Defender Address</h3>
-          <Link
-            href={`/u/${agent.owner}`}
-            className="inline-block text-lg font-mono hover:underline"
-            title={agent.owner}
-          >
-            {formatAddress(agent.owner)}
-          </Link>
-        </div>
-
-        <div className="mt-auto pt-6 border-t border-white/20">
-          <h3 className="text-white/80 text-sm font-semibold text-center mb-4">
-            Scan this QR Code if you want to try to attack this agent using slush mobile wallet
-          </h3>
-          <div className="bg-[#202122] rounded-xl p-4 border border-gray-600/50 flex justify-center">
-            {pageUrl ? (
-              <QRCodeSVG
-                value={pageUrl}
-                size={128}
-                bgColor="transparent"
-                fgColor="#FFFFFF"
-                level="L"
-                includeMargin={true}
+      <div className="bg-[#202122] rounded-xl p-4 my-4 border border-gray-600/50 shadow-lg w-full text-xs sm:text-sm">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 rounded-full overflow-hidden grow-0 shrink-0 basis-auto">
+            <Image
+              src={agent.agent_profile || DEFAULT_PROFILE_URL}
+              width={40}
+              height={40}
+              alt={agent.agent_name}
+              className="rounded-full object-cover w-full h-full"
+            />
+          </div>
+          <div className="flex items-center gap-1">
+            <p className="text-xl font-semibold">{agent.agent_name}</p>
+            {agent.is_featured && (
+              <Image
+                src="/icons/check-mark.svg"
+                width={20}
+                height={20}
+                alt="checkmark"
+                className="flex-shrink-0"
               />
-            ) : (
-              <div className="w-32 h-32 bg-gray-700 animate-pulse rounded-lg flex items-center justify-center">
-                <div className="w-8 h-8 border-4 border-gray-500 rounded-full animate-spin border-t-transparent"></div>
-              </div>
             )}
           </div>
         </div>
       </div>
 
-      <PrizePoolChartModal
-        open={isChartModalOpen}
-        onClose={() => setIsChartModalOpen(false)}
-        data={mockPrizePoolHistory}
-        agentName={agent.agent_name}
-      />
-    </>
+      <div className="flex flex-col gap-6 py-4">
+        <div className="flex flex-col gap-2">
+          <h3 className="text-white/60 text-sm font-semibold uppercase">Sentinel Object Id</h3>
+          <Link
+            href={`${EXPLORER_BASE_URL}/object/${agent.object_id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block text-lg font-mono hover:underline"
+            title={agent.object_id}
+          >
+            {formatAddress(agent.object_id)}
+          </Link>
+        </div>
+
+        {isDrained ? (
+          <div className="flex flex-col gap-2">
+            <h3 className="text-white/60 text-sm font-semibold uppercase flex items-center gap-1.5">
+              Total Bounty Won
+            </h3>
+            <p className="inline-block text-2xl font-semibold">{bountyWonAmount} SUI</p>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-2">
+            <h3 className="text-white/60 text-sm font-semibold uppercase">Prize pool</h3>
+            <p className="inline-block text-2xl font-semibold">
+              {(Number(agent.balance) / MIST_PER_SUI).toFixed(2)} SUI
+            </p>
+          </div>
+        )}
+        {isDrained && winnerAddress && (
+          <div className="flex flex-col gap-2">
+            <h3 className="text-white/60 text-sm font-semibold uppercase flex items-center gap-1.5">
+              <User className="w-4 h-4" />
+              Winner
+            </h3>
+            <Link
+              href={`/u/${winnerAddress}`}
+              className="inline-block text-lg font-mono hover:underline"
+              title={winnerAddress}
+            >
+              {formatAddress(winnerAddress)}
+            </Link>
+          </div>
+        )}
+
+        <div className="flex flex-col gap-2">
+          <h3 className="text-white/60 text-sm font-semibold uppercase">Message Price</h3>
+          <p className="inline-block text-2xl font-semibold">
+            {(Number(agent.cost_per_message) / MIST_PER_SUI).toFixed(4)} SUI
+          </p>
+        </div>
+
+        {!isDrained && (
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-1">
+              <h3 className="text-white/70 text-sm font-semibold uppercase">Active Since</h3>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger
+                    asChild
+                    className="cursor-help"
+                  >
+                    <Info
+                      width={12}
+                      height={12}
+                      className="text-white/60"
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent className="bg-black border border-gray-700 text-white">
+                    <p>Format: Days, Hours, Minutes, Seconds</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+            <p className="inline-block text-2xl font-semibold">
+              {activeSince.days}
+              <span className="text-lg text-white/60">D</span>{' '}
+              {String(activeSince.hours).padStart(2, '0')}
+              <span className="text-lg text-white/60">H</span>{' '}
+              {String(activeSince.minutes).padStart(2, '0')}
+              <span className="text-lg text-white/60">M</span>{' '}
+              {String(activeSince.seconds).padStart(2, '0')}
+              <span className="text-lg text-white/60">S</span>
+            </p>
+          </div>
+        )}
+      </div>
+      <div className="border-t border-t-white/20"></div>
+
+      <div className="z-20 mt-4 flex flex-col rounded-xl p-0 text-sm">
+        <div className="flex flex-col gap-2">
+          <h3 className="text-white/60 text-sm font-semibold uppercase">Instructions</h3>
+          <p
+            ref={instructionsRef}
+            className={cn(
+              'text-sm font-medium whitespace-pre-wrap transition-all duration-300',
+              !isExpanded && shouldTruncate && 'line-clamp-4'
+            )}
+          >
+            {agent.system_prompt}
+          </p>
+          {shouldTruncate && (
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="text-sm text-blue-400 hover:underline self-start"
+            >
+              {isExpanded ? 'See less' : 'See more'}
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-6 py-4">
+        <div className="border-t border-t-white/20"></div>
+        <div className="flex justify-between">
+          <div className="flex flex-col gap-2">
+            <h3 className="text-white/60 text-sm font-semibold uppercase">Total Participants</h3>
+            <p className="inline-block text-2xl font-semibold text-center">{totalParticipants}</p>
+          </div>
+          <div className="flex flex-col gap-2 text-center">
+            <h3 className="text-white/60 text-sm font-semibold uppercase">Break Attempts</h3>
+            <p className="inline-block text-2xl font-semibold">{breakAttempts}</p>
+          </div>
+        </div>
+      </div>
+
+      <Button
+        onClick={handleCopyLink}
+        className="w-full bg-transparent border border-[#558EB4] text-[#558EB4] hover:bg-[#558EB4]/20 hover:text-white transition-colors duration-300 font-semibold flex items-center gap-2 mt-4"
+      >
+        <Share2 className="w-4 h-4" />
+        Share Link
+      </Button>
+
+      <div className="flex flex-col gap-2 my-4">
+        <h3 className="text-white/60 text-sm font-semibold uppercase">Defender Address</h3>
+        <Link
+          href={`/u/${agent.owner}`}
+          className="inline-block text-lg font-mono hover:underline"
+          title={agent.owner}
+        >
+          {formatAddress(agent.owner)}
+        </Link>
+      </div>
+
+      {/* --- QR CODE SECTION --- */}
+      <div className="mt-auto pt-6 border-t border-white/20">
+        <h3 className="text-white/80 text-sm font-semibold text-center mb-4">
+          Scan this QR Code if you want to try to attack this agent using slush mobile wallet
+        </h3>
+        <div className="bg-[#202122] rounded-xl p-4 border border-gray-600/50 flex justify-center">
+          {deepLinkUrl ? (
+            <QRCodeSVG
+              value={deepLinkUrl}
+              size={128}
+              bgColor="transparent"
+              fgColor="#FFFFFF"
+              level="L"
+              includeMargin={true}
+            />
+          ) : (
+            <div className="w-32 h-32 bg-gray-700 animate-pulse rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 border-4 border-gray-500 rounded-full animate-spin border-t-transparent"></div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   )
 }
