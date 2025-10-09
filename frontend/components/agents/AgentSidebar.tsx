@@ -8,7 +8,12 @@ import { formatAddress } from '@mysten/sui/utils'
 import { QRCodeSVG } from 'qrcode.react'
 import { toast } from 'react-toastify'
 
-import { DEFAULT_PROFILE_URL, MIST_PER_SUI, EXPLORER_BASE_URL } from '@/constants'
+import {
+  DEFAULT_PROFILE_URL,
+  MIST_PER_SUI,
+  EXPLORER_BASE_URL,
+  SUI_SENTINEL_APP_URL,
+} from '@/constants'
 import { type AgentDetails } from '@/hooks/agents/useAllAgents'
 import { type AgentEvents } from '@/hooks/useAgentEvents'
 import { formatDuration, cn } from '@/lib/utils'
@@ -24,11 +29,13 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const [shouldTruncate, setShouldTruncate] = useState(false)
   const instructionsRef = useRef<HTMLParagraphElement>(null)
-  const [pageUrl, setPageUrl] = useState('')
+  const [deepLink, setDeepLink] = useState('')
 
   useEffect(() => {
-    setPageUrl(window.location.href)
-  }, [])
+    const currentUrl = `${SUI_SENTINEL_APP_URL}/attack/${agent.agent_path}`
+    const encodedUrl = encodeURIComponent(currentUrl)
+    setDeepLink(`https://my.slush.app/browse/${encodedUrl}`)
+  }, [agent.agent_path])
 
   const isDrained = agentEvents.agentDefeated.length > 0
   const bountyWonEvent = isDrained ? agentEvents.agentDefeated[0] : null
@@ -72,9 +79,9 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
   ).size
 
   const handleCopyLink = () => {
-    if (pageUrl) {
-      navigator.clipboard.writeText(pageUrl)
-      toast.success('Link copied to clipboard!')
+    if (deepLink) {
+      navigator.clipboard.writeText(deepLink)
+      toast.success('Deep link copied to clipboard!')
     }
   }
 
@@ -257,9 +264,9 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           Scan this QR Code if you want to try to attack this agent using slush mobile wallet
         </h3>
         <div className="bg-[#202122] rounded-xl p-4 border border-gray-600/50 flex justify-center">
-          {pageUrl ? (
+          {deepLink ? (
             <QRCodeSVG
-              value={pageUrl}
+              value={deepLink}
               size={128}
               bgColor="transparent"
               fgColor="#FFFFFF"
