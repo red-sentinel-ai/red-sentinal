@@ -17,6 +17,8 @@ import {
 } from '@/constants'
 import { type AgentDetails } from '@/hooks/agents/useAllAgents'
 import { type AgentEvents } from '@/hooks/useAgentEvents'
+import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
+import { DefenderProfile } from './DefenderProfile'
 import { formatDuration, cn } from '@/lib/utils'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, Button } from '@/components/ui'
 import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
@@ -34,6 +36,10 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
   const [pageUrl, setPageUrl] = useState('')
   const [deepLinkUrl, setDeepLinkUrl] = useState('')
   const [isChartModalOpen, setIsChartModalOpen] = useState(false)
+
+  const { data: userProfilesMap, isLoading: isLoadingProfile } = useUserProfiles([agent.owner])
+  console.log({ userProfilesMap })
+  const defenderProfile = userProfilesMap?.[agent.owner]
 
   useEffect(() => {
     const currentUrl = window.location.href
@@ -282,16 +288,11 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           Share {agent.agent_name} Link
         </Button>
 
-        <div className="flex flex-col gap-2 my-4">
-          <h3 className="text-white/60 text-sm font-semibold uppercase">Defender Address</h3>
-          <Link
-            href={`/u/${agent.owner}`}
-            className="inline-block text-lg font-mono hover:underline"
-            title={agent.owner}
-          >
-            {formatAddress(agent.owner)}
-          </Link>
-        </div>
+        <DefenderProfile
+          ownerAddress={agent.owner}
+          profile={defenderProfile}
+          isLoading={isLoadingProfile}
+        />
 
         {/* --- QR CODE SECTION --- */}
         <div className="mt-auto pt-6 border-t border-white/20">
