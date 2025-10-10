@@ -9,10 +9,15 @@ import { WhyChooseUsSection } from '@/components/sections/WhyChooseUsSection'
 import { TweetsSection } from '@/components/sections/TweetsSection'
 import { Footer } from '@/components/sections/Footer'
 import { Navbar } from '@/components/sections/NavBar'
+import { ParticleSphereAnimation } from '@/components/ParticleSphereAnimation'
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen text-white overflow-x-hidden">
+      <div className="absolute z-10 pointer-events-none inset-0">
+        <ParticleSphereAnimation />
+      </div>
+
       <Navbar />
       <HeroSection />
       <HowItWorksSection />
