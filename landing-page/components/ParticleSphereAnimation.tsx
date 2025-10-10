@@ -3,32 +3,26 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react'
 import * as THREE from 'three'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { OrbitControls } from '@react-three/drei'
 
-// ==========================================================
-// The main component that renders the particle system
-// ==========================================================
 const Particles = () => {
   const pointsRef = useRef<THREE.Points>(null!)
   const [scrollProgress, setScrollProgress] = useState(0)
 
   const particleCount = 5000
-  const sphereRadius = 2.5
+  const sphereRadius = 1.5
 
   const [planePositions, spherePositions] = useMemo(() => {
     const plane = new Float32Array(particleCount * 3)
     const sphere = new Float32Array(particleCount * 3)
 
-    // --- Create the Wavy Plane Positions ---
     const planeSize = 8
     for (let i = 0; i < particleCount; i++) {
       const i3 = i * 3
-      plane[i3] = (Math.random() - 0.5) * planeSize // x
-      plane[i3 + 1] = (Math.random() - 0.5) * planeSize // y
-      plane[i3 + 2] = (Math.sin(plane[i3] * 2) + Math.cos(plane[i3 + 1] * 2)) * 0.3 // z
+      plane[i3] = (Math.random() - 0.5) * planeSize
+      plane[i3 + 1] = (Math.random() - 0.5) * planeSize
+      plane[i3 + 2] = (Math.sin(plane[i3] * 2) + Math.cos(plane[i3 + 1] * 2)) * 0.3
     }
 
-    // --- Create the Sphere Positions using the Fibonacci Sphere algorithm ---
     const goldenAngle = Math.PI * (3 - Math.sqrt(5))
     for (let i = 0; i < particleCount; i++) {
       const y = 1 - (i / (particleCount - 1)) * 2
@@ -48,13 +42,15 @@ const Particles = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight
       const currentScroll = window.scrollY
-      const progress = Math.min(currentScroll / 500, 1.0)
+
+      const progress = Math.min(currentScroll / window.innerHeight, 1.0)
       setScrollProgress(progress)
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll()
+
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
@@ -95,11 +91,8 @@ const Particles = () => {
   return (
     <points ref={pointsRef}>
       <bufferGeometry>
-        {/* CORRECTED CODE BLOCK */}
         <bufferAttribute
           attach="attributes-position"
-          // The 'args' prop passes arguments to the THREE.BufferAttribute constructor
-          // new THREE.BufferAttribute(array, itemSize)
           args={[planePositions, 3]}
         />
       </bufferGeometry>
@@ -114,13 +107,12 @@ const Particles = () => {
   )
 }
 
-// The main export component remains the same
 export const ParticleSphereAnimation = () => {
   return (
-    <div style={{ width: '100%', height: '100vh', gridArea: '1 / 1' }}>
+    <div style={{ width: '100%', height: '100%' }}>
       <Canvas
         camera={{ position: [0, 0, 5], fov: 60 }}
-        style={{ background: '#0a0a0a' }}
+        style={{ background: 'transparent' }}
       >
         <ambientLight intensity={0.5} />
         <Particles />
