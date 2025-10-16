@@ -34,15 +34,13 @@ export function Navbar() {
               className="mr-1 xl:mr-4 flex-shrink-0 flex items-center gap-2"
               href="/"
             >
-              <div className="relative w-8 h-11">
-                <Image
-                  src="/icons/shield.png"
-                  alt="shield"
-                  fill
-                  style={{ objectFit: 'contain' }}
-                />
-              </div>
-              <span className="text-xl font-bold text-white">SUI Sentinel</span>
+              <Image
+                src="/icons/logo_large.png"
+                alt="shield"
+                style={{ objectFit: 'contain' }}
+                height={49}
+                width={198}
+              />
             </Link>
           </motion.div>
 
