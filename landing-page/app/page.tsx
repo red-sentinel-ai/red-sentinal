@@ -9,18 +9,23 @@ import { WhyChooseUsSection } from '@/components/sections/WhyChooseUsSection'
 import { TweetsSection } from '@/components/sections/TweetsSection'
 import { Footer } from '@/components/sections/Footer'
 import { Navbar } from '@/components/sections/NavBar'
+import { AnimationSection } from '@/components/sections/AnimationSection'
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen text-white overflow-x-hidden">
+    <div className="min-h-screen text-black bg-white overflow-x-hidden">
       <Navbar />
       <HeroSection />
-      <HowItWorksSection />
-      <VisionSection />
-      <OfferingsSection />
-      <PassiveIncomeSection />
-      <WhyChooseUsSection />
-      <TweetsSection />
+      <div className="px-10">
+        <AnimationSection />
+        <HowItWorksSection />
+        <VisionSection />
+        <OfferingsSection />
+        <PassiveIncomeSection />
+        <WhyChooseUsSection />
+        <TweetsSection />
+      </div>
+
       <Footer />
     </div>
   )
