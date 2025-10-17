@@ -20,6 +20,7 @@ export const AnimationSection = () => {
           width={400}
           height={400}
           alt="circle 1 animation"
+          unoptimized
         />
       </div>
     </div>
