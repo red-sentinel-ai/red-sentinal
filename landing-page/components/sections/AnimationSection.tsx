@@ -8,11 +8,11 @@ export const AnimationSection = () => {
   const containerRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ['start end', 'end start'],
+    offset: ['start start', 'end start'],
   })
 
-  const x = useTransform(scrollYProgress, [0.25, 0.85], ['0px', '400px'])
-  const y = useTransform(scrollYProgress, [0.25, 0.85], ['-200px', '700px'])
+  const x = useTransform(scrollYProgress, [0, 0.6], ['0px', '400px'])
+  const y = useTransform(scrollYProgress, [0, 0.6], ['0px', '700px'])
 
   const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 }
   const springX = useSpring(x, springConfig)
