@@ -249,3 +249,12 @@
 .btn-outline:hover{
   background-color: rgba(0, 0, 0 , 0.1);
 }
+
+.btn-black {
+  background-color: black;
+  color: white;
+}
+
+.btn-black:hover{
+  background-color: rgb(21, 19, 19);
+}
