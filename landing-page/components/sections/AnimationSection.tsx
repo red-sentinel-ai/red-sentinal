@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import { useRef } from 'react'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 
@@ -23,29 +22,31 @@ export const AnimationSection = () => {
       ref={containerRef}
       className="relative flex items-center min-h-[80vh]"
     >
-      <div className="relative z-10 max-w-3xl">
+      <div className="relative z-10">
         <h2 className="text-[48px] leading-tight font-medium">
-          Enterprise-Grade AI Audits. Stress-test your AI models with real-world attacks and
-          actionable insights.
+          Sui Sentinel lets you stress-test, audit, and defend AI models through real-world attacks while earning digital rewards for your mastery.
         </h2>
         <div className="flex gap-6 mt-10">
-          <button className="btn btn-black">Explore</button>
+          <button className="btn btn-black">Explore Platform</button>
           <button className="btn btn-outline">Join Telegram</button>
         </div>
       </div>
 
-      <motion.div
+      <motion.video 
         style={{ x: springX, y: springY }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px]"
+        src="/videos/circle1.mp4" 
+        autoPlay 
+        loop 
+        muted 
+        playsInline 
+        width={400}
+        height={400}
+        aria-label="circle 1 animation video"
+        
       >
-        <Image
-          src="/gifs/circle1.gif"
-          width={400}
-          height={400}
-          alt="circle 1 animation"
-          unoptimized
-        />
-      </motion.div>
+        Your browser does not support the video tag.
+      </motion.video>
     </div>
   )
 }
