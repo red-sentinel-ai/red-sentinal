@@ -24,7 +24,7 @@ export function HowItWorksSection() {
       id="how-it-works"
       className="py-24 relative text-black"
     >
-      <div className="relative z-10 max-w-[1390px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -49,22 +49,17 @@ export function HowItWorksSection() {
           whileInView={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7, delay: 0.2 }}
           viewport={{ once: true }}
-          className="relative grid grid-cols-5 grid-rows-3 gap-8 items-center text-black"
+          className="relative grid grid-cols-5 grid-rows-3 gap-8 items-center text-black bg-center bg-no-repeat bg-contain min-h-[760px]"
+          style={{backgroundImage: "url('/img/threeCubes.png')"}}
+          
         >
-          <div className="col-span-1 row-start-2 text-[24px] ">
+          <div className="col-span-1 row-start-2 text-[24px]">
             <h3 className="mb-1">{features.attack.title}</h3>
             <p>{features.attack.description}</p>
           </div>
 
-          <div className="col-span-3 col-start-2 row-span-3 border border-gray-200 rounded-lg p-4 relative min-h-[400px]">
-            <div>
-                 <Image
-                    src="/img/vulnerability-art.png" 
-                    alt="Decorative element"
-                    className='object-cover'
-                    fill
-                />
-            </div>
+          <div className="col-span-3 col-start-2 row-span-3">
+           
           </div>
 
           <div className="col-span-1 col-start-5 row-start-1 text-[24px]">
