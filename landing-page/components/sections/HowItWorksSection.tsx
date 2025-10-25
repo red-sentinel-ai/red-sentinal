@@ -38,8 +38,7 @@ export function HowItWorksSection() {
             Sui Sentinel's Gamified AI Security
           </h2>
           <p className="max-w-3xl mx-auto text-[20px]">
-            We turned defense into a game of intelligence. <br /> Attack, defend, and evolve in an
-            ecosystem where every move strengthens the network.
+            We turned defense into a game of intelligence. <br /> Attack, defend, and evolve in an ecosystem where every move strengthens the network.
           </p>
         </motion.div>
 

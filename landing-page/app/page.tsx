@@ -21,8 +21,8 @@ export default function LandingPage() {
         <AnimationSection />
         <VulnerabilitySection />
         <HowItWorksSection />
-        <VisionSection />
         <OfferingsSection />
+        <VisionSection />
         <PassiveIncomeSection />
         <WhyChooseUsSection />
         <TweetsSection />
