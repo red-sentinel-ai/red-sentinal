@@ -12,6 +12,16 @@ export const LandingPage = () => {
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.3 }}
       >
+        <div>
+          <Image
+            src="/img/threeCircles.png"
+            width={813}
+            height={979}
+            alt="three circles"
+            className="absolute left-1/2 -translate-x-1/2 -top-28"
+          />
+        </div>
+
         <div className="max-w-[933px] mx-auto">
           <motion.div
             className="text-center z-10 "
@@ -27,11 +37,10 @@ export const LandingPage = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 justify-center pt-32 text-center gap-9 overflow-hidden px-4 pb-4 z-10 relative">
             <motion.div
-              className="border border-[#558EB4] rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-1 backdrop-blur-[0.1px] group"
+              className="border border-black rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-1 backdrop-blur-[0.1px] group"
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: 0.2 }}
-              whileHover={{ scale: 1.02 }}
             >
               <div className="relative">
                 <Image
@@ -66,17 +75,15 @@ export const LandingPage = () => {
               </div>
 
               <div className="my-4">
-                <ul className="text-center flex flex-col justify-center items-center text-[#B5B5B5] ps-4 md:ps-0 list-disc text-sm md:text-base">
-                  <li>Create unbreakable prompts</li>
-                  <li>Earn fees for every attempt</li>
-                  <li>Survive to the end</li>
-                </ul>
+                <p className="max-w-[326px] mx-auto">
+                  Build Sentinels that can’t be broken. Earn every time they’re tested.
+                </p>
               </div>
 
               <div>
                 <Link
                   href="/defend"
-                  className="block border border-[#558EB4] rounded-[8px] w-full min-h-11 p-2 transition-all text-[#558EB4] group-hover:bg-[#1388D5] group-hover:text-black group-hover:border-[#1388D5]"
+                  className="border border-primary_blue rounded-[8px] w-full p-2 transition-all text-primary_blue group-hover:bg-primary_blue group-hover:text-white group-hover:border-primary_blue text-2xl font-bold min-h-[62px] flex items-center justify-center"
                 >
                   Launch Sentinel
                 </Link>
@@ -84,11 +91,10 @@ export const LandingPage = () => {
             </motion.div>
 
             <motion.div
-              className="border border-primary_pink rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-1 backdrop-blur-[0.1px] group"
+              className="border border-black rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-1 backdrop-blur-[0.1px] group"
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: 0.3 }}
-              whileHover={{ scale: 1.02 }}
             >
               <div className="relative">
                 <Image
@@ -121,17 +127,15 @@ export const LandingPage = () => {
               </div>
 
               <div className="my-4">
-                <ul className="text-center flex flex-col justify-center items-center text-[#B5B5B5] ps-4 md:ps-0 list-disc text-sm md:text-base">
-                  <li>Break AI defenses</li>
-                  <li>Win rewards for successful attacks</li>
-                  <li>Outsmart the system</li>
-                </ul>
+                <p className="max-w-[326px] mx-auto">
+                  Break Sentinels. Earn every time you outsmart them.
+                </p>
               </div>
 
               <div>
                 <Link
                   href="/attack"
-                  className="block border border-primary_pink rounded-[8px] w-full min-h-11 p-2 transition-all text-primary_pink group-hover:bg-primary_pink group-hover:text-black group-hover:border-primary_pink"
+                  className="border border-primary_pink rounded-[8px] w-full p-2 transition-all text-primary_pink group-hover:bg-primary_pink group-hover:text-white group-hover:border-primary_pink text-2xl font-bold min-h-[62px] flex items-center justify-center"
                 >
                   Attack Sentinel
                 </Link>

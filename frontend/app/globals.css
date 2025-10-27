@@ -9,14 +9,14 @@
   --background: #ffffff;
   --foreground: #000000;
   --text: #F4EEFF;
-  --primary_pink: rgb(252, 81, 133);
-  --primary_pink_20: rgb(252, 81, 133, 0.2);
+  --primary_pink: rgb(234, 69, 97);
+  --primary_pink_20: rgb(234, 69, 97, 0.2);
   --primary_pink_light: rgba(252, 81, 132, 0.9);
 
-  --primary_blue: rgb(19, 136, 213);
-  --primary_blue_20: rgb(19, 136, 213, 0.2);
-  --primary_blue_30: rgb(19, 136, 213, 0.3);
-  --primary_blue_50: rgb(19, 136, 213, 0.5);
+  --primary_blue: rgb(39, 103, 243);
+  --primary_blue_20: rgb(39, 103, 243, 0.2);
+  --primary_blue_30: rgb(39, 103, 243, 0.3);
+  --primary_blue_50: rgb(39, 103, 243, 0.5);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -25,13 +25,13 @@
     --foreground: #000000;
     --text: #F4EEFF;
     --primary_pink: #FC5185;
-    --primary_pink_20: rgb(252, 81, 133, 0.2);
+    --primary_pink_20: rgb(234, 69, 97, 0.2);
     --primary_pink_light: rgba(252, 81, 132, 0.9);
 
-    --primary_blue: rgb(19, 136, 213);
-    --primary_blue_20: rgb(19, 136, 213, 0.2);
-    --primary_blue_30: rgb(19, 136, 213, 0.3);
-    --primary_blue_50: rgb(19, 136, 213, 0.5);
+    --primary_blue: rgb(39, 103, 243);
+    --primary_blue_20: rgb(39, 103, 243, 0.2);
+    --primary_blue_30: rgb(39, 103, 243, 0.3);
+    --primary_blue_50: rgb(39, 103, 243, 0.5);
   }
 }
 
@@ -194,8 +194,8 @@ body::-webkit-scrollbar-thumb:hover {
 .robo-card:hover .robo-img-attacker {
   background: linear-gradient(
     to left,
-    rgb(252, 81, 133 , 0.4),
-    rgb(252, 81, 133 , 0.4),
+    rgb(234, 69, 97 , 0.4),
+    rgb(234, 69, 97 , 0.4),
     transparent
   );
   backdrop-filter: blur(10px);
