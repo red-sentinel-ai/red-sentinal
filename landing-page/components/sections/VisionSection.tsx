@@ -18,11 +18,9 @@ export function VisionSection() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-6xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-              Our Mission
-            </span>
+            <span>Our Mission</span>
           </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+          <p className="text-xl max-w-3xl mx-auto">
             Ensuring the future of on-chain AI is robust, secure, and trustworthy.
           </p>
         </motion.div>
@@ -34,9 +32,9 @@ export function VisionSection() {
           viewport={{ once: true }}
           className="text-center"
         >
-          <div className="border border-[#383838] bg-[#12121266] backdrop-blur-sm rounded-lg lg:rounded-2xl p-8 lg:p-12 max-w-5xl mx-auto">
+          <div className="border border-[#383838] backdrop-blur-sm p-8 lg:p-12 max-w-5xl mx-auto">
             <div className="text-center mb-8">
-              <div className="inline-flex items-center gap-3 border-[#558eb480] bg-[#12121266] backdrop-blur-sm border rounded-full px-6 py-3 mb-6">
+              <div className="inline-flex items-center gap-3 border border-black rounded-full px-6 py-3 mb-6">
                 <div className="size-8 bg-gradient-to-r from-[#558EB4] to-[#1388D5] rounded-full flex items-center justify-center">
                   <div>
                     <Image
@@ -47,33 +45,21 @@ export function VisionSection() {
                     />
                   </div>
                 </div>
-                <h3 className="font-bold text-white">The Future of AI Security</h3>
+                <h3 className="font-bold ">The Future of AI Security</h3>
               </div>
             </div>
 
-            <p className="text-lg md:text-xl text-gray-300 leading-relaxed mb-8">
+            <p className="text-lg md:text-xl leading-relaxed mb-8">
               Sui Sentinel is built on this fundamental truth. We provide the first-ever platform
-              for{' '}
-              <span className="bg-gradient-to-r from-[#558EB4] to-[#1388D5] bg-clip-text text-transparent font-semibold">
-                &quot;Prompt-First Security.&quot;
-              </span>{' '}
-              This isn&apos;t just a game; it&apos;s the necessary evolution of smart contract
-              audits for the AI era. We battle-test the models that will soon underpin the
-              decentralized world.
+              for <span className="font-semibold">&quot;Prompt-First Security.&quot;</span> This
+              isn&apos;t just a game; it&apos;s the necessary evolution of smart contract audits for
+              the AI era. We battle-test the models that will soon underpin the decentralized world.
             </p>
-            <p className="text-lg md:text-xl text-gray-300 leading-relaxed mb-8">
+            <p className="text-lg md:text-xl leading-relaxed mb-8">
               Our mission is to empower the pioneers of this new world—the{' '}
-              <span className="bg-gradient-to-r from-[#558EB4] to-[#1388D5] bg-clip-text text-transparent font-semibold">
-                prompt engineers
-              </span>
-              , the{' '}
-              <span className="bg-gradient-to-r from-[#558EB4] to-[#1388D5] bg-clip-text text-transparent font-semibold">
-                AI whisperers
-              </span>
-              , the{' '}
-              <span className="bg-gradient-to-r from-[#558EB4] to-[#1388D5] bg-clip-text text-transparent font-semibold">
-                digital architects
-              </span>
+              <span className="font-semibold">prompt engineers</span>, the{' '}
+              <span className="font-semibold">AI whisperers</span>, the{' '}
+              <span className="font-semibold">digital architects</span>
               —and to ensure the future of on-chain AI is robust, secure, and trustworthy.
             </p>
 
@@ -82,7 +68,7 @@ export function VisionSection() {
               <div className="blue gradient-border rotate-180"></div>
             </div>
 
-            <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
+            <p className="text-lg md:text-xl leading-relaxed">
               This is the future of smart contract audits for the AI era.
             </p>
           </div>
