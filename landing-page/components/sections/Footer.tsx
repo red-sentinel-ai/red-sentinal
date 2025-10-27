@@ -91,10 +91,6 @@ export function Footer() {
                   )}
                 </Link>
               ))}
-              <div
-                className="w-16 h-10 border-2 border-black rounded-lg"
-                aria-hidden="true"
-              />
             </div>
           </div>
         </div>
