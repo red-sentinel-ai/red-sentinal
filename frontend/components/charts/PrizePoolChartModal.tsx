@@ -75,10 +75,7 @@ export const PrizePoolChartModal = ({
         </button>
       </div>
 
-      <div
-        className="w-full h-[400px]"
-        style={{ fontFamily: 'var(--font-inter)' }}
-      >
+      <div className="w-full h-[400px]">
         <ResponsiveContainer
           width="100%"
           height="100%"
