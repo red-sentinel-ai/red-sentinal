@@ -16,9 +16,9 @@ export function TweetsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-28"
         >
-          <h2 className="text-4xl md:text-6xl font-bold mb-6 text-gray-800">Community Buzz</h2>
+          <h2 className="text-4xl md:text-6xl font-bold text-gray-800">Community Buzz</h2>
         </motion.div>
 
         <div className="relative">
@@ -42,16 +42,15 @@ export function TweetsSection() {
                 className="flex-shrink-0 w-80 sm:w-96"
               >
                 <div className="relative bg-gradient-to-r from-[#FFFFFF00] to-[#AD90BC33] backdrop-blur-md rounded-md p-6 h-full flex flex-col text-gray-800 border border-[#D2C3FC]">
-                  <span className="absolute top-5 right-6 text-sm text-gray-600">{tweet.time}</span>
+                  <span className="absolute top-5 right-6">{tweet.time}</span>
                   <div className="flex items-center gap-4">
-                    {/* This is the placeholder for the author's image */}
-                    <div className="size-12 bg-white/50 rounded-lg flex-shrink-0" />
+                    <div className="size-28 bg-white/50 rounded-lg flex-shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold truncate">{tweet.author}</h4>
-                      <span className="text-indigo-600 text-sm">{tweet.handle}</span>
+                      <h4 className="text-xl truncate">{tweet.author}</h4>
+                      <span className="text-[#2C00FF] text-xl">{tweet.handle}</span>
                     </div>
                   </div>
-                  <p className="leading-relaxed mt-6 text-lg">&ldquo;{tweet.content}&rdquo;</p>
+                  <p className="leading-relaxed mt-6 text-2xl">&ldquo;{tweet.content}&rdquo;</p>
                 </div>
               </div>
             ))}
