@@ -20,10 +20,13 @@ export function HeroSection() {
       </video>
 
       <div className="relative z-10 w-full">
-        <h1 className="text-[64px] max-w-[770px]">Guardians of Intelligent Frontiers</h1>
+        <h1 className="text-[64px] max-w-[770px] italic text-white">
+          Guardians of Intelligent Frontiers
+        </h1>
         <div className="flex items-center justify-between">
           <p className="max-w-[540px] text-black text-[18px]">
-            Deploy AI Sentinels, defend models, and earn rewards in a gamified AI security world.
+            Deploy AI Sentinels, defend models, evolve intelligence, and earn rewards in a gamified
+            AI security world.
           </p>
           <div className="flex gap-6">
             <Link

@@ -2,6 +2,8 @@
 
 import { useRef } from 'react'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
+import Link from 'next/link'
+import { SUI_SENTINEL_APP_URL, SUI_SENTINEL_TELEGRAM_URL } from '@/constants'
 
 export const AnimationSection = () => {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -27,9 +29,23 @@ export const AnimationSection = () => {
           Sui Sentinel lets you stress-test, audit, and defend AI models through real-world attacks
           while earning digital rewards for your mastery.
         </h2>
+        <p className="max-w-[984px] text-2xl mt-8">
+          Built for AI builders, businesses, and prompt engineers those shaping the next generation
+          of intelligent systems.
+        </p>
         <div className="flex gap-6 mt-10">
-          <button className="btn btn-black">Explore Platform</button>
-          <button className="btn btn-outline">Join Telegram</button>
+          <Link
+            href={SUI_SENTINEL_APP_URL}
+            target="_blank"
+          >
+            <button className="btn btn-black">Explore Platform</button>
+          </Link>
+          <Link
+            href={SUI_SENTINEL_TELEGRAM_URL}
+            target="_blank"
+          >
+            <button className="btn btn-outline">Join Telegram</button>
+          </Link>
         </div>
       </div>
 
