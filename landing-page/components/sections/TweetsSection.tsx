@@ -18,7 +18,7 @@ export function TweetsSection() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-medium mb-6 text-[#70658C]">Community Buzz</h2>
+          <h2 className="text-4xl md:text-6xl font-bold mb-6 text-gray-800">Community Buzz</h2>
         </motion.div>
 
         <div className="relative">
@@ -39,9 +39,9 @@ export function TweetsSection() {
             {EXTENDED_TWEETS.map((tweet, index) => (
               <div
                 key={`${tweet.id}-${index}`}
-                className="flex-shrink-0 w-80 sm-w-96"
+                className="flex-shrink-0 w-80 sm:w-96"
               >
-                <div className="relative bg-white/30 backdrop-blur-lg rounded-2xl p-6 h-full flex flex-col text-gray-800">
+                <div className="relative bg-gradient-to-r from-[#FFFFFF00] to-[#AD90BC33] backdrop-blur-md rounded-md p-6 h-full flex flex-col text-gray-800 border border-[#D2C3FC]">
                   <span className="absolute top-5 right-6 text-sm text-gray-600">{tweet.time}</span>
                   <div className="flex items-center gap-4">
                     {/* This is the placeholder for the author's image */}
