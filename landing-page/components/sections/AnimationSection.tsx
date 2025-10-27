@@ -24,7 +24,8 @@ export const AnimationSection = () => {
     >
       <div className="relative z-10">
         <h2 className="text-[48px] leading-tight font-medium">
-          Sui Sentinel lets you stress-test, audit, and defend AI models through real-world attacks while earning digital rewards for your mastery.
+          Sui Sentinel lets you stress-test, audit, and defend AI models through real-world attacks
+          while earning digital rewards for your mastery.
         </h2>
         <div className="flex gap-6 mt-10">
           <button className="btn btn-black">Explore Platform</button>
@@ -32,21 +33,14 @@ export const AnimationSection = () => {
         </div>
       </div>
 
-      <motion.video 
+      <motion.img
         style={{ x: springX, y: springY }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px]"
-        src="/videos/circle1.mp4" 
-        autoPlay 
-        loop 
-        muted 
-        playsInline 
-        width={400}
-        height={400}
-        aria-label="circle 1 animation video"
-        
-      >
-        Your browser does not support the video tag.
-      </motion.video>
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[360px] h-[540px]"
+        src="/gifs/circle.gif"
+        width={360}
+        height={540}
+        alt="circle animation"
+      />
     </div>
   )
 }
