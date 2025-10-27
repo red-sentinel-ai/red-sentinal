@@ -1,15 +1,14 @@
 'use client'
 
-import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { Heart, MessageCircle, Repeat2 } from 'lucide-react'
 import { EXTENDED_TWEETS, TWEETS } from '@/constants'
 
 export function TweetsSection() {
   return (
     <section
       id="community"
-      className="py-24 relative overflow-hidden max-w-screen"
+      className="py-24 relative overflow-hidden max-w-screen bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: "url('/img/community-bg.png')" }}
     >
       <div className="relative z-10 mx-auto max-w-screen">
         <motion.div
@@ -19,23 +18,12 @@ export function TweetsSection() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-6xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-              Community Buzz
-            </span>
-          </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-            See what the community is saying
-          </p>
-          <p className="text-lg text-gray-500 mt-2">Real voices from the battlefield</p>
+          <h2 className="text-4xl md:text-5xl font-medium mb-6 text-[#70658C]">Community Buzz</h2>
         </motion.div>
 
         <div className="relative">
-          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
-
           <motion.div
-            className="flex gap-6"
+            className="flex gap-8"
             animate={{
               x: [0, -100 * TWEETS.length + '%'],
             }}
@@ -51,47 +39,19 @@ export function TweetsSection() {
             {EXTENDED_TWEETS.map((tweet, index) => (
               <div
                 key={`${tweet.id}-${index}`}
-                className="flex-shrink-0 w-80 sm:w-96"
+                className="flex-shrink-0 w-80 sm-w-96"
               >
-                <div className="border border-[#558eb466] bg-[#12121266] backdrop-blur-sm rounded-2xl p-6 h-full flex flex-col">
-                  <div className="flex items-start gap-3 mb-4">
-                    <div className="size-12 bg-gradient-to-r from-[#558EB4] to-[#1388D5] rounded-full flex items-center justify-center flex-shrink-0 shadow-glow-blue">
-                      <Image
-                        src="/icons/x.png"
-                        alt="shield"
-                        width={20}
-                        height={20}
-                      />
-                    </div>
+                <div className="relative bg-white/30 backdrop-blur-lg rounded-2xl p-6 h-full flex flex-col text-gray-800">
+                  <span className="absolute top-5 right-6 text-sm text-gray-600">{tweet.time}</span>
+                  <div className="flex items-center gap-4">
+                    {/* This is the placeholder for the author's image */}
+                    <div className="size-12 bg-white/50 rounded-lg flex-shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-2 mb-1">
-                        <div>
-                          <h4 className="font-semibold text-white truncate">{tweet.author}</h4>
-                          <span className="text-[#558EB4] text-sm">{tweet.handle}</span>
-                        </div>
-                        <span className="text-gray-500 text-sm whitespace-nowrap">
-                          {tweet.time}
-                        </span>
-                      </div>
+                      <h4 className="font-semibold truncate">{tweet.author}</h4>
+                      <span className="text-indigo-600 text-sm">{tweet.handle}</span>
                     </div>
                   </div>
-
-                  <p className="text-gray-300 leading-relaxed mb-6 text-sm">{tweet.content}</p>
-
-                  <div className="flex items-center justify-between text-gray-400 pt-4 border-t border-[#558EB4]/20 mt-auto">
-                    <div className="flex items-center gap-2 hover:text-[#558EB4] transition-colors cursor-pointer">
-                      <MessageCircle className="size-4" />
-                      <span className="text-sm">{tweet.replies}</span>
-                    </div>
-                    <div className="flex items-center gap-2 hover:text-green-400 transition-colors cursor-pointer">
-                      <Repeat2 className="size-4" />
-                      <span className="text-sm">{tweet.retweets}</span>
-                    </div>
-                    <div className="flex items-center gap-2 hover:text-red-400 transition-colors cursor-pointer">
-                      <Heart className="size-4" />
-                      <span className="text-sm">{tweet.likes}</span>
-                    </div>
-                  </div>
+                  <p className="leading-relaxed mt-6 text-lg">&ldquo;{tweet.content}&rdquo;</p>
                 </div>
               </div>
             ))}
