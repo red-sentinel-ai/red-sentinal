@@ -12,23 +12,6 @@ export const LandingPage = () => {
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.3 }}
       >
-        <div className="hidden lg:block">
-          <Image
-            src="/animations/smoke.gif"
-            alt="smoke"
-            width={800}
-            height={600}
-            className="absolute -z-10 left-[140px] top-8"
-          />
-          <Image
-            src="/animations/smoke.gif"
-            alt="smoke"
-            width={800}
-            height={600}
-            className="absolute -z-10 right-[140px] rotate-y-180"
-          />
-        </div>
-
         <div className="max-w-[933px] mx-auto">
           <motion.div
             className="text-center z-10 "
@@ -36,16 +19,15 @@ export const LandingPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.1 }}
           >
-            <h2 className="text-3xl md:text-[40px] uppercase text-text">#Sui Sentinel</h2>
-            <p className="text-sm md:text-base">
+            <p className="text-[40px] font-medium">
               A trustless coordination layer for AI red-teaming, powered by verifiable compute +
               smart contracts.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 justify-center pt-8 text-center gap-9 overflow-hidden px-4 pb-4 z-10 relative">
+          <div className="grid grid-cols-1 lg:grid-cols-2 justify-center pt-32 text-center gap-9 overflow-hidden px-4 pb-4 z-10 relative">
             <motion.div
-              className="border border-[#558EB4] rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-1 robo-card attacker backdrop-blur-[0.1px] group"
+              className="border border-[#558EB4] rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-1 backdrop-blur-[0.1px] group"
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: 0.2 }}
@@ -54,13 +36,19 @@ export const LandingPage = () => {
               <div className="relative">
                 <Image
                   src="/img/robot_defend.png"
-                  width={300}
-                  height={399}
+                  width={411}
+                  height={546}
                   alt="robo"
-                  className="relative z-10 -mt-10 mx-auto"
+                  className="relative z-10 mx-auto -mt-[130px]"
                 />
 
-                <div className="absolute inset-0 pointer-events-auto robo-img-defender rounded-lg transition-all mt-10"></div>
+                <Image
+                  src="/img/defend_bg.png"
+                  width={411}
+                  height={546}
+                  alt="robo"
+                  className="absolute left-1/2 right-1/2 -translate-x-1/2 top-[128px] -z-10"
+                />
               </div>
 
               <div className="flex items-center justify-center gap-2 my-2">
@@ -75,11 +63,6 @@ export const LandingPage = () => {
                 <div>
                   <p className="text-lg lg:text-[2rem] leading-normal font-medium">DEFEND</p>
                 </div>
-              </div>
-
-              <div className="flex max-w-[394px] mx-auto">
-                <div className="blue gradient-border"></div>
-                <div className="blue gradient-border rotate-180"></div>
               </div>
 
               <div className="my-4">
@@ -101,7 +84,7 @@ export const LandingPage = () => {
             </motion.div>
 
             <motion.div
-              className="border border-primary_pink bg-[#12121266] rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-1 robo-card backdrop-blur-[0.1px] defender group"
+              className="border border-primary_pink rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-1 backdrop-blur-[0.1px] group"
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: 0.3 }}
@@ -110,12 +93,19 @@ export const LandingPage = () => {
               <div className="relative">
                 <Image
                   src="/img/robot_attack.png"
-                  width={300}
-                  height={399}
+                  width={411}
+                  height={546}
                   alt="robo"
-                  className="-mt-10 z-10 relative mx-auto"
+                  className="relative z-10 mx-auto -mt-[136px]"
                 />
-                <div className="absolute inset-0 pointer-events-auto robo-img-attacker rounded-lg transition-all mt-10"></div>
+
+                <Image
+                  src="/img/attack_bg.png"
+                  width={411}
+                  height={546}
+                  alt="robo"
+                  className="absolute left-1/2 right-1/2 -translate-x-1/2 top-[136px] -z-10"
+                />
               </div>
 
               <div className="flex items-center justify-center gap-2 my-2">
@@ -128,11 +118,6 @@ export const LandingPage = () => {
                   />
                 </div>
                 <p className="text-lg lg:text-[2rem] leading-normal font-medium">ATTACK</p>
-              </div>
-
-              <div className="flex max-w-[394px] mx-auto">
-                <div className="gradient-border red"></div>
-                <div className="gradient-border red rotate-180"></div>
               </div>
 
               <div className="my-4">
@@ -154,7 +139,6 @@ export const LandingPage = () => {
             </motion.div>
           </div>
         </div>
-        {/* <Characters /> */}
       </motion.div>
     </AnimatePresence>
   )

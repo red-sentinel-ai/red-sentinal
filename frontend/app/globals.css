@@ -3,8 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --background: #000000;
-  --foreground: #ffffff;
+  --font-satoshi: var(--font-satoshi), sans-serif;
+  font-family: var(--font-satoshi);
+
+  --background: #ffffff;
+  --foreground: #000000;
   --text: #F4EEFF;
   --primary_pink: rgb(252, 81, 133);
   --primary_pink_20: rgb(252, 81, 133, 0.2);
@@ -18,8 +21,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #000000;
-    --foreground: #ffffff;
+    --background: #ffffff;
+    --foreground: #000000;
     --text: #F4EEFF;
     --primary_pink: #FC5185;
     --primary_pink_20: rgb(252, 81, 133, 0.2);
@@ -37,23 +40,9 @@
   body{
     color: var(--text);
   }
-  body,
-  p,
-  button,
-  .header-menu-items {
-    font-family: var(--font-inter);
-  }
 
    html {
     scrollbar-gutter: stable;
-  }
-
-  pre,
-  code,
-  h1,
-  h2,
-  h3 {
-    font-family: var(--font-ibm-plex-mono);
   }
 }
 
