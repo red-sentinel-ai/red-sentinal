@@ -76,7 +76,7 @@ export function Footer() {
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-16 h-10 border-2 border-black rounded-lg flex items-center justify-center hover:bg-black/5 transition-colors"
+                  className="w-[70px] h-[51px] border border-black rounded-[8px] flex items-center justify-center hover:bg-black/5 transition-colors"
                   aria-label={link.alt}
                 >
                   {link.isImage ? (
