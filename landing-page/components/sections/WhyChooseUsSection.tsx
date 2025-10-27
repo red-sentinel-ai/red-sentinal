@@ -27,7 +27,7 @@ export function WhyChooseUsSection() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
-            className="relative border border-[#558eb466] bg-[#12121266] backdrop-blur-sm rounded-2xl p-8 text-center robo-card attacker group h-full"
+            className="relative border border-black p-8 text-center group h-full"
           >
             <div className="size-16 bg-gradient-to-r from-[#558EB4] to-[#1388D5] rounded-full flex items-center justify-center shadow-glow-blue mb-6 mx-auto">
               <ShieldCheck
@@ -35,8 +35,8 @@ export function WhyChooseUsSection() {
                 className="text-white"
               />
             </div>
-            <h3 className="text-2xl font-bold text-white mb-4">Robust AI Security</h3>
-            <p className="text-lg text-gray-300">
+            <h3 className="text-2xl font-bold mb-4">Robust AI Security</h3>
+            <p className="text-lg ">
               Ensure your AI is ready for real-world challenges through continuous, battle-tested
               security audits.
             </p>
@@ -47,7 +47,7 @@ export function WhyChooseUsSection() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true }}
-            className="relative border border-[#8f564e66] bg-[#12121266] backdrop-blur-sm rounded-2xl p-8 text-center robo-card defender group h-full"
+            className="relative border border-black p-8 text-center group h-full"
           >
             <div className="size-16 bg-gradient-to-r from-[#8F564E] to-[#E53922] rounded-full flex items-center justify-center shadow-glow-red mb-6 mx-auto">
               <TrendingUp
@@ -55,8 +55,8 @@ export function WhyChooseUsSection() {
                 className="text-white"
               />
             </div>
-            <h3 className="text-2xl font-bold text-white mb-4">Economic Incentives</h3>
-            <p className="text-lg text-gray-300">
+            <h3 className="text-2xl font-bold mb-4">Economic Incentives</h3>
+            <p className="text-lg ">
               Our gamified economy drives continuous improvement and stress-testing, ensuring your
               AI is always getting stronger.
             </p>
@@ -67,7 +67,7 @@ export function WhyChooseUsSection() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
             viewport={{ once: true }}
-            className="relative border border-[#558eb466] bg-[#12121266] backdrop-blur-sm rounded-2xl p-8 text-center robo-card attacker group h-full"
+            className="relative border border-black p-8 text-center group h-full"
           >
             <div className="size-16 bg-gradient-to-r from-[#558EB4] to-[#1388D5] rounded-full flex items-center justify-center shadow-glow-blue mb-6 mx-auto">
               <Zap
@@ -75,8 +75,8 @@ export function WhyChooseUsSection() {
                 className="text-white"
               />
             </div>
-            <h3 className="text-2xl font-bold text-white mb-4">Dual Benefits</h3>
-            <p className="text-lg text-gray-300">
+            <h3 className="text-2xl font-bold mb-4">Dual Benefits</h3>
+            <p className="text-lg ">
               Sui Sentinel provides robust AI security for businesses and a unique way to earn
               passive income for skilled prompt engineers.
             </p>
