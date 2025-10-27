@@ -1,212 +1,103 @@
 'use client'
 
 import Link from 'next/link'
-import { motion } from 'framer-motion'
-import { Github, BookOpen } from 'lucide-react'
 import Image from 'next/image'
+import { Github, BookOpen } from 'lucide-react'
 import {
-  SUI_SENTINEL_DOCS_URL,
+  SUI_SENTINEL_X_URL,
   SUI_SENTINEL_GITHUB_URL,
   SUI_SENTINEL_TELEGRAM_URL,
-  SUI_SENTINEL_X_URL,
+  SUI_SENTINEL_DOCS_URL,
 } from '@/constants'
+
+const socialLinks = [
+  { href: SUI_SENTINEL_X_URL, icon: '/icons/x_black.png', isImage: true, alt: 'X (Twitter)' },
+  { href: SUI_SENTINEL_GITHUB_URL, icon: Github, isImage: false, alt: 'GitHub' },
+  {
+    href: SUI_SENTINEL_TELEGRAM_URL,
+    icon: '/icons/telegram_black.png',
+    isImage: true,
+    alt: 'Telegram',
+  },
+  { href: SUI_SENTINEL_DOCS_URL, icon: BookOpen, isImage: false, alt: 'Documentation' },
+]
 
 export function Footer() {
   return (
-    <footer className="relative py-16 border-t border-[#383838]">
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/95 to-transparent" />
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid md:grid-cols-12 gap-4 md:gap-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="md:col-span-4"
-          >
-            <div className="flex items-center gap-3 mb-6">
-              <div className="relative w-8 h-11">
-                <Image
-                  src="/icons/shield.png"
-                  alt="shield"
-                  fill
-                  style={{ objectFit: 'contain' }}
-                />
-              </div>
-              <span className="text-2xl font-bold text-white">SUI Sentinel</span>
+    <footer
+      className="relative pt-16 bg-cover bg-bottom bg-no-repeat"
+      style={{ backgroundImage: "url('/img/footer-bg.png')" }}
+    >
+      <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row justify-between items-start gap-12  min-h-[505px]">
+          <div className="max-w-md">
+            <div className="flex items-center gap-3 mb-4">
+              <Image
+                src="/icons/logo_large.png"
+                alt="shield"
+                style={{ objectFit: 'contain' }}
+                height={49}
+                width={198}
+              />
             </div>
-            <p className="text-gray-400 leading-relaxed max-w-md mb-6">
-              Sui Sentinel is a cutting-edge platform designed to audit, stress-test, and red-team
-              AI models, ensuring they’re robust and secure.
+            <p className="text-black leading-relaxed">
+              Sui Sentinel is a decentralized network that audits, red-teams, and evolves AI models
+              through real-world challenges ensuring they grow stronger with every test.
             </p>
-            <div className="flex max-w-[300px]">
-              <div className="blue gradient-border"></div>
-              <div className="blue gradient-border rotate-180"></div>
-            </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            viewport={{ once: true }}
-            className="col-span-4"
-          >
-            <div className="mx-auto w-fit">
-              <h3 className="text-white font-bold mb-6">Quick Links</h3>
-              <ul className="space-y-3">
-                <li>
-                  <a
-                    href="#how-it-works"
-                    className="text-gray-400 hover:text-[#558EB4] transition-colors flex items-center gap-2"
-                  >
-                    How It Works
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#offerings"
-                    className="text-gray-400 hover:text-[#558EB4] transition-colors flex items-center gap-2"
-                  >
-                    Offerings
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#community"
-                    className="text-gray-400 hover:text-[#558EB4] transition-colors flex items-center gap-2"
-                  >
-                    Community
-                  </a>
-                </li>
-                <li>
-                  <Link
-                    href={SUI_SENTINEL_DOCS_URL}
-                    target="_blank"
-                    className="text-gray-400 hover:text-[#558EB4] transition-colors flex items-center gap-2"
-                  >
-                    Documentation
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="col-span-4"
-          >
-            <h3 className="text-white font-bold mb-6">Connect</h3>
-            <div className="flex gap-3 mb-6">
-              <Link
-                href={SUI_SENTINEL_X_URL}
-                target="_blank"
-                className="size-12 border-[3px] border-white/20 bg-black hover:border-white/80 rounded-xl flex items-center justify-center transition-all duration-300 hover:shadow-glow-blue "
-              >
-                <Image
-                  src="/icons/x.png"
-                  alt="shield"
-                  width={20}
-                  height={20}
-                />
-              </Link>
-              <Link
-                href={SUI_SENTINEL_GITHUB_URL}
-                target="_blank"
-                className="size-12 border-[3px] border-white/20 bg-black hover:border-white/80 rounded-xl flex items-center justify-center transition-all duration-300 hover:shadow-glow-blue"
-              >
-                <Github className="size-5 text-white" />
-              </Link>
-
-              <Link
-                href={SUI_SENTINEL_DOCS_URL}
-                target="_blank"
-                className="size-12 border-[3px] border-white/20 bg-black hover:border-white/80 rounded-xl flex items-center justify-center transition-all duration-300 hover:shadow-glow-blue"
-              >
-                <BookOpen className="size-5 text-white" />
-              </Link>
-
-              <Link
-                href={SUI_SENTINEL_TELEGRAM_URL}
-                className="size-12 border-[3px] border-white/20 bg-black hover:border-white/80 rounded-xl flex items-center justify-center transition-all duration-300 hover:shadow-glow-blue "
-                target="_blank"
-              >
-                <Image
-                  src="/icons/telegram.png"
-                  alt="X (Twitter)"
-                  width={20}
-                  height={20}
-                  className="group-hover:scale-110 transition-transform duration-300"
-                />
-              </Link>
+          <div className="mt-auto flex justify-between w-full">
+            <div>
+              <Image
+                src="/img/robot_defend.png"
+                width={260}
+                height={346}
+                alt="robo"
+              />
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link
-                href={SUI_SENTINEL_X_URL}
-                target="_blank"
-                className="flex items-center w-fit gap-3 px-6 py-3 bg-white text-black rounded-full font-medium hover:bg-white/90 transition-all duration-300 shadow-lg hover:shadow-xl transform group"
-              >
-                <Image
-                  src="/icons/x_black.png"
-                  alt="X (Twitter)"
-                  width={20}
-                  height={20}
-                  className="group-hover:scale-110 transition-transform duration-300"
-                />
-                <span className="text-sm font-semibold">Join X (Twitter)</span>
-              </Link>
-              <Link
-                href={SUI_SENTINEL_TELEGRAM_URL}
-                target="_blank"
-                className="flex items-center w-fit gap-3 px-6 py-3 bg-gradient-to-r from-[#0088cc] to-[#0077b5] rounded-full text-white font-medium hover:from-[#0077b5] hover:to-[#006699] transition-all duration-300 shadow-lg hover:shadow-xl transform group"
-              >
-                <Image
-                  src="/icons/telegram.png"
-                  alt="Telegram"
-                  width={20}
-                  height={20}
-                  className="group-hover:scale-110 transition-transform duration-300 filter brightness-0 invert"
-                />
-                <span className="text-sm font-semibold">Join Telegram</span>
-              </Link>
+            <div className="flex">
+              <Image
+                src="/img/robot_attack.png"
+                width={215}
+                height={286}
+                alt="robo"
+                className="mt-auto"
+              />
             </div>
-          </motion.div>
+          </div>
+
+          <div className="flex gap-4">
+            <span className="text-black font-medium whitespace-nowrap">connect with us</span>
+            <div className="flex flex-col gap-2">
+              {socialLinks.map((link, index) => (
+                <Link
+                  key={index}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-16 h-10 border-2 border-black rounded-lg flex items-center justify-center hover:bg-black/5 transition-colors"
+                  aria-label={link.alt}
+                >
+                  {link.isImage ? (
+                    <Image
+                      src={link.icon as string}
+                      alt={link.alt}
+                      width={20}
+                      height={20}
+                    />
+                  ) : (
+                    <link.icon className="size-5 text-black" />
+                  )}
+                </Link>
+              ))}
+              <div
+                className="w-16 h-10 border-2 border-black rounded-lg"
+                aria-hidden="true"
+              />
+            </div>
+          </div>
         </div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          viewport={{ once: true }}
-          className="border-t border-[#383838] mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4"
-        >
-          <p className="text-gray-400 text-sm">All Rights Reserved @Cyphronix Software</p>
-          {/* <div className="flex gap-6 text-sm text-gray-400">
-            <Link
-              href="#"
-              className="hover:text-[#558EB4] transition-colors"
-            >
-              Privacy Policy
-            </Link>
-            <Link
-              href="#"
-              className="hover:text-[#558EB4] transition-colors"
-            >
-              Terms of Service
-            </Link>
-            <Link
-              href="#"
-              className="hover:text-[#558EB4] transition-colors"
-            >
-              Security
-            </Link>
-          </div> */}
-        </motion.div>
       </div>
     </footer>
   )
