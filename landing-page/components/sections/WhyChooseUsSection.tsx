@@ -17,11 +17,7 @@ export function WhyChooseUsSection() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-6xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-              Why Choose Sui Sentinel?
-            </span>
-          </h2>
+          <h2 className="text-4xl md:text-6xl font-bold mb-6">Why Choose Sui Sentinel?</h2>
           <p className="text-xl text-gray-400 max-w-3xl mx-auto">The future of Web3 AI security</p>
         </motion.div>
 
