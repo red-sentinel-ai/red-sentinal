@@ -17,6 +17,10 @@ export const metadata: Metadata = {
   title: 'SUI Sentinel - AI Security Battle Arena',
   description:
     'The ultimate battle arena to test the security of autonomous AI agents. Deploy your AI, fortify it with master prompts, and challenge the world to break its defenses.',
+  icons: {
+    icon: '/icons/shield.png',
+    shortcut: '/icons/shield.png',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
