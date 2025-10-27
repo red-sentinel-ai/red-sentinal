@@ -33,7 +33,7 @@ export function HowItWorksSection() {
           viewport={{ once: true }}
           className="text-center mb-16 flex flex-col items-center"
         >
-          <div className="bg-[#D9D9D9] px-4 py-1 rounded-full mb-4"> • how it works </div>{' '}
+          <div className="bg-[#D9D9D9] px-6 py-1 rounded-full mb-4"> • how it works </div>{' '}
           <h2 className="text-[48px] font-medium mb-4">
             Sui Sentinel&apos;s Gamified AI Security{' '}
           </h2>{' '}
@@ -47,19 +47,22 @@ export function HowItWorksSection() {
           whileInView={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7, delay: 0.2 }}
           viewport={{ once: true }}
-          className="relative grid grid-cols-5 grid-rows-3 gap-8 items-center text-black bg-center bg-no-repeat bg-contain min-h-[760px] px-8"
+          className="relative grid grid-cols-5 grid-rows-3 gap-8 items-center text-black bg-center bg-no-repeat bg-[length:100%] min-h-[760px] px-8"
           style={{ backgroundImage: "url('/img/threeCubes.png')" }}
         >
           {' '}
-          <div className="col-span-1 row-start-2 text-[24px]">
-            <h3 className="mb-1">{features.attack.title}</h3> <p>{features.attack.description}</p>{' '}
+          <div className="col-span-1 row-start-2">
+            <h3 className="mb-1 text-2xl">{features.attack.title}</h3>{' '}
+            <p>{features.attack.description}</p>{' '}
           </div>
           <div className="col-span-3 col-start-2 row-span-3"></div>{' '}
-          <div className="col-span-1 col-start-5 row-start-1 text-[24px]">
-            <h3 className="mb-1">{features.deploy.title}</h3> <p>{features.deploy.description}</p>{' '}
+          <div className="col-span-1 col-start-5 row-start-1">
+            <h3 className="mb-1 text-2xl">{features.deploy.title}</h3>{' '}
+            <p>{features.deploy.description}</p>{' '}
           </div>{' '}
-          <div className="col-span-1 col-start-5 row-start-3 text-[24px]">
-            <h3 className="mb-1">{features.earn.title}</h3> <p>{features.earn.description}</p>{' '}
+          <div className="col-span-1 col-start-5 row-start-3">
+            <h3 className="mb-1 text-2xl">{features.earn.title}</h3>{' '}
+            <p>{features.earn.description}</p>{' '}
           </div>{' '}
         </motion.div>{' '}
       </div>{' '}
