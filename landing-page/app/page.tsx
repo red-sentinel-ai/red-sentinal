@@ -25,8 +25,8 @@ export default function LandingPage() {
         <VisionSection />
         <PassiveIncomeSection />
         <WhyChooseUsSection />
-        <TweetsSection />
       </div>
+      <TweetsSection />
 
       <Footer />
     </div>
