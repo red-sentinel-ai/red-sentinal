@@ -13,7 +13,6 @@ type AgentListViewProps = {
 }
 
 export const AgentListView = ({ heading, subheading }: AgentListViewProps) => {
-  //TODO: show toast for failed to load agents
   const { data: allAgents, isPending: isFetchingAllAgents, refetch: refetchAgent } = useAllAgents()
 
   const featuredAgents = allAgents?.filter((agent: AgentDetails) => agent.is_featured) || []
@@ -74,7 +73,7 @@ export const AgentListView = ({ heading, subheading }: AgentListViewProps) => {
 
       <div>
         <div className="flex flex-col md:flex-row items-center justify-between mb-6">
-          <h2>All Sentinels</h2>
+          <h2 className="text-2xl font-bold">All Sentinels</h2>
         </div>
       </div>
 
