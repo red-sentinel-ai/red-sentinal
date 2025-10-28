@@ -33,11 +33,11 @@ export const ConnectPrompt = ({ title, subtitle, theme }: ConnectPromptProps) =>
 
       {/* Content */}
       <div className="text-center max-w-lg mx-auto px-4 relative">
-        <h1 className="text-4xl md:text-5xl font-bold mb-8 text-white">{title}</h1>
+        <h1 className="text-4xl md:text-5xl font-bold mb-8">{title}</h1>
         <div className="relative group">
           <ConnectButton />
         </div>
-        <p className="text-gray-300 text-lg mt-8">{subtitle}</p>
+        <p className="text-lg mt-8">{subtitle}</p>
       </div>
     </div>
   )
