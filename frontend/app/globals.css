@@ -10,37 +10,35 @@
   --foreground: #000000;
   --text: #000000;
   --primary_pink: rgb(234, 69, 97);
-  --primary_pink_20: rgb(234, 69, 97, 0.2);
+  --primary_pink_20: rgba(234, 69, 97, 0.2);
   --primary_pink_light: rgba(252, 81, 132, 0.9);
-
   --primary_blue: rgb(39, 103, 243);
-  --primary_blue_20: rgb(39, 103, 243, 0.2);
-  --primary_blue_30: rgb(39, 103, 243, 0.3);
-  --primary_blue_50: rgb(39, 103, 243, 0.5);
-}
+  --primary_blue_20: rgba(39, 103, 243, 0.2);
+  --primary_blue_30: rgba(39, 103, 243, 0.3);
+  --primary_blue_50: rgba(39, 103, 243, 0.5);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #ffffff;
-    --foreground: #000000;
-    --text: #000000;
-    --primary_pink: #FC5185;
-    --primary_pink_20: rgb(234, 69, 97, 0.2);
-    --primary_pink_light: rgba(252, 81, 132, 0.9);
-
-    --primary_blue: rgb(39, 103, 243);
-    --primary_blue_20: rgb(39, 103, 243, 0.2);
-    --primary_blue_30: rgb(39, 103, 243, 0.3);
-    --primary_blue_50: rgb(39, 103, 243, 0.5);
-  }
+  --card: var(--background);
+  --card-foreground: var(--foreground);
+  --popover: var(--background);
+  --popover-foreground: var(--foreground);
+  --primary: var(--foreground);
+  --primary-foreground: var(--background);
+  --secondary: #f1f5f9; 
+  --secondary-foreground: #0f172a; 
+  --muted: #f1f5f9; 
+  --muted-foreground: #64748b; 
+  --accent: #f1f5f9; 
+  --accent-foreground: #0f172a; 
+  --destructive: #ef4444; 
+  --border: #e2e8f0; 
+  --input: #e2e8f0; 
+  --ring: #94a3b8; 
 }
 
 @layer base {
-
-  body{
-    color: var(--text);
+  body {
+    @apply bg-background text-foreground;
   }
-
    html {
     scrollbar-gutter: stable;
   }
@@ -56,15 +54,12 @@
   .min-h-body{
     min-height: 100vh;
   }
-
    .max-h-body{
     max-height: 100vh;
   }
-
   .max-w-v1{
     max-width: 856px;
   }
-
   .max-w-v2{
     max-width: 367px;
   }
@@ -74,26 +69,13 @@ html {
   scroll-behavior: smooth;
 }
 
-body {
-  color: var(--foreground);
-
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 html body[data-scroll-locked] {
     margin-right: 0 !important;
 }
 
-
 * {
   scrollbar-width: thin;
-  scrollbar-color: #bebebe #12121266;
-}
-
-html {
-  scrollbar-width: thin;
-  scrollbar-color: #bebebe #12121266;
+  scrollbar-color: #bebebe #f1f1f1;
 }
 
 body::-webkit-scrollbar {
@@ -101,11 +83,11 @@ body::-webkit-scrollbar {
 }
 
 body::-webkit-scrollbar-track {
-  background: #0a0a0a;
+  background: #f1f1f1;
 }
 
 body::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #558eb4, #2e4049);
+  background: #d1d5db; /* gray-300 */
   border-radius: 4px;
 }
 
@@ -247,12 +229,8 @@ body::-webkit-scrollbar-thumb:hover {
 
 
 @keyframes loading-progress {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
 .animate-loading-progress {
@@ -260,51 +238,27 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 @keyframes marquee {
-  0% {
-    transform: translateX(100%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
 }
 
 @keyframes marquee2 {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-200%);
-  }
-}
-
-@keyframes rotate {
-  to {
-    --angle: 360deg;
-  }
-}
-
-@property --angle {
-  syntax: '<angle>';
-  initial-value: 0deg;
-  inherits: false;
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-200%); }
 }
 
 .shadow-glow-blue {
   box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
 }
-
 .shadow-glow-green {
   box-shadow: 0 0 15px rgba(34, 197, 94, 0.2);
 }
-
 .shadow-glow-red {
   box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
 }
-
 .shadow-glow-yellow {
   box-shadow: 0 0 15px rgba(234, 179, 8, 0.2);
 }
-
 
 .btn {
   border-radius: 12px;
@@ -314,6 +268,7 @@ body::-webkit-scrollbar-thumb:hover {
   gap: 8px;
   min-height: 40px;
   padding: 0.5rem 1rem;
+  font-weight: 500;
 }
 
 .btn:disabled {
@@ -324,19 +279,21 @@ body::-webkit-scrollbar-thumb:hover {
 .btn-white {
   background-color: white;
   color: black;
+  border: 1px solid #e5e7eb; /* gray-200 */
 }
 
 .btn-white:hover{
-  background-color: rgb(251, 248, 248);
+  background-color: #f9fafb; /* gray-50 */
 }
 
 .btn-outline {
   border: 1px solid black;
   color: black;
+  background-color: transparent;
 }
 
 .btn-outline:hover{
-  background-color: rgba(0, 0, 0 , 0.1);
+  background-color: rgba(0, 0, 0 , 0.05);
 }
 
 .btn-black {
@@ -345,5 +302,5 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .btn-black:hover{
-  background-color: rgb(21, 19, 19);
+  background-color: #111827; /* gray-900 */
 }
