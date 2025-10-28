@@ -28,8 +28,8 @@ export const AgentListView = ({ heading, subheading }: AgentListViewProps) => {
           {heading}
         </p>
         <div className="flex max-w-[800px] mx-auto my-3 md:my-6">
-          <div className="white-gradient-border"></div>
-          <div className="white-gradient-border rotate-180"></div>
+          <div className="black-gradient-border"></div>
+          <div className="black-gradient-border rotate-180"></div>
         </div>
         <p className="text-[#B4B4B4] text-center max-w-[594px] mx-auto">{subheading}</p>
       </div>

@@ -113,47 +113,47 @@ body::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(135deg, #1388d5, #558eb4);
 }
 
-.white-gradient-border-vertical-top {
-  background: rgb(255, 255, 255, 0.5);
+.black-gradient-border-vertical-top {
+  background: rgb(0, 0, 0, 0.5);
   background: linear-gradient(
     85deg,
-    rgb(255, 255, 255, 0.5) 0%,
-    rgb(255, 255, 255, 0.5) 0%,
-    rgba(255, 255, 255, 0) 100%
+    rgb(0, 0, 0, 0.5) 0%,
+    rgb(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0) 100%
   );
   background: -moz-linear-gradient(
     85deg,
-    rgb(255, 255, 255, 0.5) 0%,
-    rgb(255, 255, 255, 0.5) 0%,
-    rgba(255, 255, 255, 0) 100%
+    rgb(0, 0, 0, 0.5) 0%,
+    rgb(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0) 100%
   );
   background: -webkit-linear-gradient(
     85deg,
-    rgb(255, 255, 255, 0.5) 0%,
-    rgb(255, 255, 255, 0.5) 0%,
-    rgba(255, 255, 255, 0) 100%
+    rgb(0, 0, 0, 0.5) 0%,
+    rgb(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0) 100%
   );
 }
 
-.white-gradient-border-vertical-bottom {
-  background: rgb(255, 255, 255, 0.5);
+.black-gradient-border-vertical-bottom {
+  background: rgb(0, 0, 0, 0.5);
   background: linear-gradient(
     240deg,
-    rgb(255, 255, 255, 0.5) 0%,
-    rgb(255, 255, 255, 0.5) 0%,
-    rgba(255, 255, 255, 0) 100%
+    rgb(0, 0, 0, 0.5) 0%,
+    rgb(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0) 100%
   );
   background: -moz-linear-gradient(
     240deg,
-    rgb(255, 255, 255, 0.5) 0%,
-    rgb(255, 255, 255, 0.5) 0%,
-    rgba(255, 255, 255, 0) 100%
+    rgb(0, 0, 0, 0.5) 0%,
+    rgb(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0) 100%
   );
   background: -webkit-linear-gradient(
     240deg,
-    rgb(255, 255, 255, 0.5) 0%,
-    rgb(255, 255, 255, 0.5) 0%,
-    rgba(255, 255, 255, 0) 100%
+    rgb(0, 0, 0, 0.5) 0%,
+    rgb(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0) 100%
   );
 }
 
@@ -217,8 +217,8 @@ body::-webkit-scrollbar-thumb:hover {
   transform: rotateY(180deg);
 }
 
-.white-gradient-border {
-  border-image: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.9) 100%)
+.black-gradient-border {
+  border-image: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.9) 100%)
     1;
   border-width: 1px;
   border-style: solid;
@@ -303,4 +303,43 @@ body::-webkit-scrollbar-thumb:hover {
 
 .shadow-glow-yellow {
   box-shadow: 0 0 15px rgba(234, 179, 8, 0.2);
+}
+
+
+.btn {
+  border-radius: 12px;
+  min-height: 70px;
+  min-width: 176px;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 50%;
+}
+
+.btn-white {
+  background-color: white;
+  color: black;
+}
+
+.btn-white:hover{
+  background-color: rgb(251, 248, 248);
+}
+
+.btn-outline {
+  border: 1px solid black;
+  color: black;
+}
+
+.btn-outline:hover{
+  background-color: rgba(0, 0, 0 , 0.1);
+}
+
+.btn-black {
+  background-color: black;
+  color: white;
+}
+
+.btn-black:hover{
+  background-color: rgb(21, 19, 19);
 }

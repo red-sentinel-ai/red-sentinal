@@ -1,7 +1,7 @@
 'use client'
 import '@mysten/dapp-kit/dist/index.css'
 import React, { useState } from 'react'
-import { SuiClientProvider, WalletProvider } from '@mysten/dapp-kit'
+import { SuiClientProvider, WalletProvider, lightTheme } from '@mysten/dapp-kit'
 import { getFullnodeUrl } from '@mysten/sui/client'
 import { Header } from '@/components/Header'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -30,7 +30,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
         networks={networks}
         defaultNetwork="testnet"
       >
-        <WalletProvider autoConnect>
+        <WalletProvider
+          autoConnect
+          theme={lightTheme}
+        >
           <div>
             {/* <LaunchMainnetBanner /> */}
             <Header />
