@@ -35,13 +35,13 @@ export const FeaturedAgentCard = ({
 
   return (
     <motion.div
-      className="border border-[#558EB4] rounded-lg lg:rounded-2xl p-2 lg:p-4 robo-card group flex flex-col"
+      className="border border-gray-200 rounded-lg lg:rounded-2xl p-2 lg:p-4 bg-white hover:shadow-lg transition-shadow group flex flex-col"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
     >
       <div className="relative mb-4">
-        <div className="w-full h-52 rounded-lg flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#558EB4]/20 to-[#1388D5]/10">
+        <div className="w-full h-52 rounded-lg flex items-center justify-center relative overflow-hidden bg-gray-100">
           {agent.agent_profile ? (
             <Image
               src={agent.agent_profile || '/placeholder.svg'}
@@ -51,7 +51,7 @@ export const FeaturedAgentCard = ({
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           ) : (
-            <div className="text-4xl font-bold text-[#558EB4] z-10 relative">
+            <div className="text-4xl font-bold text-gray-400 z-10 relative">
               {agent.agent_name.charAt(0).toUpperCase()}
             </div>
           )}
@@ -62,8 +62,6 @@ export const FeaturedAgentCard = ({
             agentId={agent.agent_id}
             openFeatureModal={openFeatureModal}
           />
-
-          <div className="absolute inset-0 pointer-events-auto robo-img-defender rounded-lg transition-all"></div>
         </div>
       </div>
 
@@ -79,20 +77,17 @@ export const FeaturedAgentCard = ({
             />
           )}
         </div>
-        <div className="flex max-w-[394px] mx-auto mb-3">
-          <div className="gradient-border blue"></div>
-          <div className="gradient-border blue rotate-180"></div>
-        </div>
+        <div className="flex max-w-[394px] mx-auto border-t border-gray-200"></div>
       </div>
 
-      <div className="space-y-3 mb-4">
-        <div className="flex justify-between items-center text-sm">
-          <span className="text-[#B5B5B5]">Reward Pool:</span>
-          <span className="text-[#558EB4] font-medium">{formatBalance(agent.balance)}</span>
+      <div className="space-y-3 mb-4 text-sm">
+        <div className="flex justify-between items-center">
+          <span className="text-gray-500">Reward Pool:</span>
+          <span className="text-blue-600 font-medium">{formatBalance(agent.balance)}</span>
         </div>
-        <div className="flex justify-between items-center text-sm">
-          <span className="text-[#B5B5B5]">Message price:</span>
-          <span className="text-[#558EB4] font-medium">{formatCost(agent.cost_per_message)}</span>
+        <div className="flex justify-between items-center">
+          <span className="text-gray-500">Message price:</span>
+          <span className="text-blue-600 font-medium">{formatCost(agent.cost_per_message)}</span>
         </div>
       </div>
 
@@ -102,7 +97,7 @@ export const FeaturedAgentCard = ({
             e.stopPropagation()
             handleAttack()
           }}
-          className="block border border-[#558EB4] hover:bg-[#558EB422] rounded-[8px] w-full min-h-11 p-2 transition-all text-[#558EB4] text-center font-medium"
+          className="btn btn-outline w-full"
         >
           {ctaHeading}
         </button>
@@ -110,7 +105,7 @@ export const FeaturedAgentCard = ({
         {fromProfile && (
           <button
             onClick={() => openModal(agent.object_id)}
-            className="block border border-[#558EB4] rounded-[8px] w-full min-h-11 p-2 transition-all  bg-[#1388D5] hover:bg-[#1388d5e6] text-black group-hover:border-[#1388D5] text-center font-medium"
+            className="btn btn-black w-full"
           >
             Fund Sentinel
           </button>
