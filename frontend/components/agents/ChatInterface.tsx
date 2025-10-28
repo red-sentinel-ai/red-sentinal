@@ -305,8 +305,8 @@ export default function ChatInterface({
                     className="rounded-full object-cover w-full h-full"
                   />
                 </div>
-                <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/60 text-gray-200 border border-gray-600/50 rounded-2xl p-3 sm:p-4 flex items-center gap-3">
-                  <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin text-[#558EB4]" />
+                <div className="border border-gray-600/50 rounded-2xl p-3 sm:p-4 flex items-center gap-3">
+                  <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
                   <span className="text-xs sm:text-sm">Agent is analyzing your attack...</span>
                 </div>
               </div>
