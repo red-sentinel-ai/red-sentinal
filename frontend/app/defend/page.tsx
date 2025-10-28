@@ -71,7 +71,7 @@ const FormInput: React.FC<FormInputProps> = ({
         type={isTextarea ? undefined : type}
         value={value}
         onChange={onChange}
-        className={`w-full bg-[#12121266] backdrop-blur-lg border border-gray-600 rounded-lg p-3 ${
+        className={`w-full border border-gray-600 rounded-lg p-3 ${
           isTextarea ? 'min-h-[200px] resize-vertical' : ''
         }`}
         placeholder={placeholder}
@@ -329,7 +329,7 @@ export default function DefendPage() {
       >
         <Link
           href="/"
-          className="hidden lg:flex items-center gap-1 text-gray-400 hover:text-white transition-colors absolute top-2 -left-32"
+          className="hidden lg:flex items-center gap-1 text-gray-500 hover:text-black transition-colors absolute top-2 -left-32"
         >
           <ChevronLeft className="w-5 h-5" />
           <span>Home</span>
@@ -404,7 +404,7 @@ export default function DefendPage() {
             name="systemPrompt"
             value={formData.systemPrompt}
             onChange={handleChange}
-            className="w-full bg-[#12121266] backdrop-blur-lg border border-gray-600 rounded-lg p-3 min-h-[200px]"
+            className="w-full border border-gray-600 rounded-lg p-3 min-h-[200px]"
             placeholder="Enter sentinel instructions..."
             required
           />
@@ -438,7 +438,7 @@ export default function DefendPage() {
           <button
             type="submit"
             disabled={isLoading || tokenCount > SYSTEM_PROMPT_MAX_TOKENS}
-            className="w-full bg-white text-black rounded-full py-3 font-medium hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+            className="btn btn-black w-full flex items-center justify-center"
           >
             {isLoading ? (
               <>

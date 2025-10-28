@@ -35,7 +35,7 @@ export const FeaturedAgentCard = ({
 
   return (
     <motion.div
-      className="border border-[#558EB4] bg-[#12121266] rounded-lg lg:rounded-2xl p-2 lg:p-4 robo-card group flex flex-col"
+      className="border border-[#558EB4] rounded-lg lg:rounded-2xl p-2 lg:p-4 robo-card group flex flex-col"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
@@ -69,7 +69,7 @@ export const FeaturedAgentCard = ({
 
       <div className="text-center mb-4">
         <div className="flex items-center justify-center gap-1 mb-2">
-          <h3 className="text-lg lg:text-xl font-bold text-white truncate">{agent.agent_name}</h3>
+          <h3 className="text-lg lg:text-xl font-bold truncate">{agent.agent_name}</h3>
           {agent.is_featured && (
             <Image
               src="/icons/check-mark.svg"

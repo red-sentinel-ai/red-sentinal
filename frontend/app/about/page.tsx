@@ -8,8 +8,8 @@ export default function ProjectInfo() {
           <h1 className="text-4xl md:text-[64px] font-bold uppercase mb-4">SUI SENTINEL</h1>
           <p className="text-xl text-gray-400">AI Agent Security Through Economic Incentives</p>
           <div className="flex max-w-[600px] mx-auto mt-8">
-            <div className="white-gradient-border"></div>
-            <div className="white-gradient-border rotate-180"></div>
+            <div className="black-gradient-border"></div>
+            <div className="black-gradient-border rotate-180"></div>
           </div>
         </div>
 
