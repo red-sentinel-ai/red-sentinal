@@ -62,7 +62,7 @@ export default function ProfilePage() {
   if (isLoadingProfile) {
     return (
       <div className="min-h-body flex items-center justify-center">
-        <Loader2 className="h-10 w-10 animate-spin" />
+        <Loader2 className="h-10 w-10 animate-spin text-black" />
       </div>
     )
   }
@@ -74,12 +74,12 @@ export default function ProfilePage() {
           <div className="mb-8">
             <div className="flex flex-col sm:flex-row items-start gap-4 mb-6">
               <div
-                className="relative w-24 h-24 rounded-full border-2 border-gray-600 overflow-hidden cursor-pointer group flex-shrink-0"
+                className="relative w-24 h-24 rounded-full border-2 border-gray-200 overflow-hidden cursor-pointer group flex-shrink-0"
                 onClick={() => setIsImagePickerOpen(true)}
               >
                 {isUpdatingAvatar ? (
-                  <div className="w-full h-full flex items-center justify-center bg-black/70">
-                    <Loader2 className="w-8 h-8 animate-spin" />
+                  <div className="w-full h-full flex items-center justify-center bg-white/70">
+                    <Loader2 className="w-8 h-8 animate-spin text-black" />
                   </div>
                 ) : profile?.avatar_url ? (
                   <Image
@@ -89,12 +89,12 @@ export default function ProfilePage() {
                     className="object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full bg-foreground/20 flex items-center justify-center">
-                    <User className="h-12 w-12" />
+                  <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                    <User className="h-12 w-12 text-gray-500" />
                   </div>
                 )}
-                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <Camera className="w-8 h-8" />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <Camera className="w-8 h-8 text-white" />
                 </div>
               </div>
 
@@ -102,7 +102,7 @@ export default function ProfilePage() {
                 <h1 className="text-2xl sm:text-3xl font-bold truncate">
                   {profile?.display_name || 'Your Profile'}
                 </h1>
-                <p className="text-gray-400 mt-1">@{profile?.username}</p>
+                <p className="text-gray-500 mt-1">@{profile?.username}</p>
               </div>
               <div className="flex items-center gap-4 sm:ml-auto pt-2">
                 {profile?.username && (
