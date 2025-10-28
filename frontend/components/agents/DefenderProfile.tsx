@@ -18,7 +18,7 @@ export const DefenderProfile = ({ ownerAddress, profile, isLoading }: DefenderPr
   if (isLoading) {
     return (
       <div className="flex flex-col gap-2 my-4">
-        <h3 className="text-white/60 text-sm font-semibold uppercase">Defender</h3>
+        <h3 className="text-black/60 text-sm font-semibold uppercase">Defender</h3>
         <div className="flex items-center gap-3">
           <Skeleton className="w-10 h-10 rounded-full" />
           <div className="space-y-2">
@@ -36,7 +36,7 @@ export const DefenderProfile = ({ ownerAddress, profile, isLoading }: DefenderPr
 
   return (
     <div className="flex flex-col gap-2 my-4">
-      <h3 className="text-white/60 text-sm font-semibold uppercase">Defender</h3>
+      <h3 className="text-black/60 text-sm font-semibold uppercase">Defender</h3>
       <Link
         href={profileLink}
         className="flex items-center gap-3 group"
@@ -57,7 +57,7 @@ export const DefenderProfile = ({ ownerAddress, profile, isLoading }: DefenderPr
         </div>
         <div className="min-w-0">
           {username && (
-            <p className="font-semibold text-white group-hover:underline truncate">{username}</p>
+            <p className="font-semibold text-black group-hover:underline truncate">{username}</p>
           )}
           <div
             className="flex items-center gap-1.5 text-gray-400 text-sm font-mono"

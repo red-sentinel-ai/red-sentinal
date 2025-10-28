@@ -8,7 +8,7 @@
 
   --background: #ffffff;
   --foreground: #000000;
-  --text: #F4EEFF;
+  --text: #000000;
   --primary_pink: rgb(234, 69, 97);
   --primary_pink_20: rgb(234, 69, 97, 0.2);
   --primary_pink_light: rgba(252, 81, 132, 0.9);
@@ -23,7 +23,7 @@
   :root {
     --background: #ffffff;
     --foreground: #000000;
-    --text: #F4EEFF;
+    --text: #000000;
     --primary_pink: #FC5185;
     --primary_pink_20: rgb(234, 69, 97, 0.2);
     --primary_pink_light: rgba(252, 81, 132, 0.9);
@@ -308,8 +308,12 @@ body::-webkit-scrollbar-thumb:hover {
 
 .btn {
   border-radius: 12px;
-  min-height: 70px;
-  min-width: 176px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0.5rem 1rem;
 }
 
 .btn:disabled {

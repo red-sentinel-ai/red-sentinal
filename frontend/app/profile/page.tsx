@@ -104,18 +104,18 @@ export default function ProfilePage() {
                 </h1>
                 <p className="text-gray-400 mt-1">@{profile?.username}</p>
               </div>
-              <div className="flex items-center gap-2 sm:ml-auto pt-2">
+              <div className="flex items-center gap-4 sm:ml-auto pt-2">
                 {profile?.username && (
                   <Link
                     href={`/u/${profile.username}`}
-                    className="border border-gray-600 hover:bg-gray-800 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm flex-shrink-0"
+                    className=""
                   >
-                    View Public
+                    <button className="btn btn-outline h-[30px]">View Public</button>
                   </Link>
                 )}
                 <button
                   onClick={() => setIsEditModalOpen(true)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm flex-shrink-0 flex items-center gap-2"
+                  className="btn btn-black"
                 >
                   <Edit className="w-4 h-4" />
                   Edit Profile
