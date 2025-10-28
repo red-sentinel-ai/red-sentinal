@@ -43,7 +43,6 @@ export const metadata: Metadata = {
   icons: {
     icon: '/icons/shield.png',
     shortcut: '/icons/shield.png',
-    // apple: '/icons/apple-touch-icon.png',
   },
 
   openGraph: {
@@ -76,13 +75,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${satoshi.className} text-black`}>
+      <body className={`${satoshi.className} bg-white text-black`}>
         <Providers>
           <NextTopLoader
             color="#000000"
             showSpinner={false}
           />
-          {children}
+          <main className="flex-grow">{children}</main>
           <Footer />
           <ToastContainer />
         </Providers>
