@@ -71,7 +71,7 @@ const FormInput: React.FC<FormInputProps> = ({
         type={isTextarea ? undefined : type}
         value={value}
         onChange={onChange}
-        className={`w-full border border-gray-600 rounded-lg p-3 ${
+        className={`w-full bg-white border border-gray-300 rounded-lg p-3 text-black placeholder-gray-500 focus:ring-1 focus:ring-black focus:border-black ${
           isTextarea ? 'min-h-[200px] resize-vertical' : ''
         }`}
         placeholder={placeholder}
@@ -339,7 +339,7 @@ export default function DefendPage() {
           <h1 className="text-4xl font-bold">Deploy Sentinel</h1>
           <div className="flex flex-col items-center justify-center gap-1">
             <div
-              className="relative w-20 h-20 rounded-full border border-gray-600 overflow-hidden cursor-pointer transition-colors text-gray-400 hover:text-gray-300 group flex items-center justify-center"
+              className="relative w-20 h-20 rounded-full border border-gray-300 overflow-hidden cursor-pointer transition-colors text-gray-400 hover:text-black group flex items-center justify-center bg-gray-50 hover:bg-gray-100"
               onClick={() => setImagePickerOpen(true)}
             >
               {selectedImage?.url ? (
@@ -351,8 +351,8 @@ export default function DefendPage() {
                   className="w-full h-full object-cover z-10 relative"
                 />
               ) : null}
-              <div className="w-full h-full absolute inset-0 bg-black/50 z-10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="w-full h-full absolute inset-0 bg-black/40 z-10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity text-white">
                 <CameraIcon />
               </span>
             </div>
@@ -395,7 +395,7 @@ export default function DefendPage() {
             <Link
               href={`${SUI_SENTINEL_DOCS_URL}/guides/defender-guide`}
               target="_blank"
-              className="underline text-xs"
+              className="underline text-xs text-blue-600 hover:text-blue-800"
             >
               How to create good instructions?
             </Link>
@@ -404,12 +404,12 @@ export default function DefendPage() {
             name="systemPrompt"
             value={formData.systemPrompt}
             onChange={handleChange}
-            className="w-full border border-gray-600 rounded-lg p-3 min-h-[200px]"
+            className="w-full bg-white border border-gray-300 rounded-lg p-3 min-h-[200px] text-black placeholder-gray-500 focus:ring-1 focus:ring-black focus:border-black"
             placeholder="Enter sentinel instructions..."
             required
           />
           <p
-            className={`mt-1 text-sm text-gray-400 ${
+            className={`mt-1 text-sm text-gray-500 ${
               isTokenCountDebouncing ? 'animate-pulse' : ''
             }`}
           >
@@ -454,7 +454,6 @@ export default function DefendPage() {
         )}
       </form>
 
-      {/* Deployment Success Modal */}
       <SuccessModal
         open={showSuccessModal}
         onClose={handleCloseSuccessModal}
@@ -464,7 +463,6 @@ export default function DefendPage() {
         agentPath={deployedAgentPath}
       />
 
-      {/* Fund Agent Modal */}
       {deployedAgentObjectId && (
         <FundAgentModal
           open={showFundModal}
@@ -474,7 +472,6 @@ export default function DefendPage() {
         />
       )}
 
-      {/* Fund Success Modal */}
       <FundSuccessModal
         open={showFundSuccessModal}
         onClose={handleCloseFundSuccessModal}
