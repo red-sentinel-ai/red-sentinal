@@ -170,7 +170,7 @@ export default function ChatInterface({
   }
 
   return (
-    <div className="flex flex-col text-[#E5E7EB] h-full flex-1">
+    <div className="flex flex-col h-full flex-1">
       {/* <div className="backdrop-blur-xl border-b border-[#2E40494D] p-3 shadow-lg">
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4">
           <div>
@@ -347,7 +347,7 @@ export default function ChatInterface({
           </div>
         </div>
       ) : (
-        <div className="bg-gradient-to-r from-[#12121266] min-h-[138px] to-[#1a1a1a66] backdrop-blur-xl p-2 shadow-2xl">
+        <div className="min-h-[138px] backdrop-blur-xl p-2">
           <form
             onSubmit={handleSubmit}
             className="relative"
@@ -359,7 +359,7 @@ export default function ChatInterface({
                   setPromptInput(e.target.value)
                   countTokens(e.target.value)
                 }}
-                className="w-full bg-[#101112] border border-gray-600 rounded-2xl p-3 sm:p-4 pr-16 sm:pr-20 pb-10 sm:pb-12 min-h-[50px] sm:min-h-[60px] max-h-[120px] sm:max-h-[150px] text-sm sm:text-base text-white focus:ring-1  focus:ring-[#454545] outline-none placeholder:text-gray-400 resize-none shadow-inner transition-all duration-200"
+                className="w-full border border-gray-600 rounded-2xl p-3 sm:p-4 pr-16 sm:pr-20 pb-10 sm:pb-12 min-h-[50px] sm:min-h-[60px] max-h-[120px] sm:max-h-[150px] text-sm sm:text-base focus:ring-1  focus:ring-[#454545] outline-none placeholder:text-gray-400 resize-none shadow-inner transition-all duration-200"
                 disabled={isSubmitting}
                 placeholder="Craft your attack prompt..."
                 onKeyDown={(e) => {
@@ -372,7 +372,7 @@ export default function ChatInterface({
 
               <div
                 className={clsx(
-                  'absolute bottom-2 sm:bottom-3 backdrop-blur-lg left-3 sm:left-4 text-xs text-gray-400 bg-[#202122] px-2 py-1 rounded'
+                  'absolute bottom-2 sm:bottom-3 backdrop-blur-lg left-3 sm:left-4 text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded'
                 )}
               >
                 <span

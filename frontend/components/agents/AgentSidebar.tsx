@@ -176,7 +176,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
               </div>
               {/* <Button
                 onClick={() => setIsChartModalOpen(true)}
-                className="w-full bg-transparent border border-[#558EB4]/50 text-[#558EB4] hover:bg-[#558EB4]/20 hover:text-white transition-colors duration-300 font-semibold text-sm mt-2"
+                className="w-full bg-transparent border border-[#558EB4]/50 text-[#558EB4] hover:bg-[#558EB4]/20 hover:text-black transition-colors duration-300 font-semibold text-sm mt-2"
                 size="sm"
               >
                 See Growth Chart
@@ -241,7 +241,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
             </div>
           )}
         </div>
-        <div className="border-t border-t-white/20"></div>
+        <div className="border-t border-t-black/20"></div>
 
         <div className="z-20 mt-4 flex flex-col rounded-xl p-0 text-sm">
           <div className="flex flex-col gap-2">
@@ -249,7 +249,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
             <p
               ref={instructionsRef}
               className={cn(
-                'text-sm font-medium whitespace-pre-wrap transition-all duration-300',
+                'text-sm font-medium blackspace-pre-wrap transition-all duration-300',
                 !isExpanded && shouldTruncate && 'line-clamp-4'
               )}
             >
@@ -267,7 +267,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
         </div>
 
         <div className="flex flex-col gap-6 py-4">
-          <div className="border-t border-t-white/20"></div>
+          <div className="border-t border-t-black/20"></div>
           <div className="flex justify-between">
             <div className="flex flex-col gap-2">
               <h3 className="text-black/60 text-sm font-semibold uppercase">Total Participants</h3>
@@ -295,8 +295,8 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
         />
 
         {/* --- QR CODE SECTION --- */}
-        <div className="mt-auto pt-6 border-t border-white/20">
-          <h3 className="text-white/80 text-sm font-semibold text-center mb-4">
+        <div className="mt-auto pt-6 border-t border-black/20">
+          <h3 className="text-black/80 text-sm font-semibold text-center mb-4">
             Scan this QR Code if you want to try to attack this agent using slush mobile wallet
           </h3>
           <div className="bg-[#202122] rounded-xl p-4 border border-gray-600/50 flex justify-center">

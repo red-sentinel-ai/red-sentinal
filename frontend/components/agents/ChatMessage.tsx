@@ -58,7 +58,7 @@ export const ChatMessage = ({ message, senderProfile, isWinningPrompt }: ChatMes
         {message.type === 'user' && (
           <div className="flex-shrink-0">
             <Link href={profileLink}>
-              <div className="w-7 h-7 rounded-full relative">
+              <div className="w-7 h-7 rounded-full relative border">
                 <Image
                   src={avatarUrl}
                   fill
@@ -86,7 +86,7 @@ export const ChatMessage = ({ message, senderProfile, isWinningPrompt }: ChatMes
               <div className="flex items-center justify-between gap-1 text-xs mb-2 -mt-1">
                 <Link
                   href={profileLink}
-                  className="font-semibold text-white hover:underline"
+                  className="font-semibold hover:underline"
                 >
                   {displayName}
                 </Link>
