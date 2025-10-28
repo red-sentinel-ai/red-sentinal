@@ -41,8 +41,8 @@ function DropdownMenuContent({
       <DropdownMenuPrimitive.Content
         sideOffset={sideOffset}
         className={cn(
-          'z-50 min-w-[8rem] overflow-hidden rounded-lg bg-black/80 backdrop-blur-md border border-gray-800 p-1.5 shadow-lg',
-          'animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide a slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
+          'z-50 min-w-[8rem] overflow-hidden rounded-lg bg-white/80 backdrop-blur-md border border-gray-200 p-1.5 shadow-lg text-black',
+          'animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
           className
         )}
         {...props}
@@ -68,9 +68,9 @@ function DropdownMenuItem({
     <DropdownMenuPrimitive.Item
       className={cn(
         'relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm outline-none transition-colors',
-        'focus:bg-gray-800/70 focus:text-gray-100',
+        'focus:bg-gray-100 focus:text-gray-900',
         inset && 'pl-8',
-        variant === 'destructive' && 'text-red-400 focus:bg-red-900/10 focus:text-red-400',
+        variant === 'destructive' && 'text-red-600 focus:bg-red-50 focus:text-red-700',
         'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
         className
       )}
@@ -89,7 +89,7 @@ function DropdownMenuCheckboxItem({
     <DropdownMenuPrimitive.CheckboxItem
       className={cn(
         'relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pl-8 pr-2.5 text-sm outline-none transition-colors',
-        'focus:bg-gray-800/70 focus:text-gray-100',
+        'focus:bg-gray-100 focus:text-gray-900',
         'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
         className
       )}
@@ -121,7 +121,7 @@ function DropdownMenuRadioItem({
     <DropdownMenuPrimitive.RadioItem
       className={cn(
         'relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pl-8 pr-2.5 text-sm outline-none transition-colors',
-        'focus:bg-gray-800/70 focus:text-gray-100',
+        'focus:bg-gray-100 focus:text-gray-900',
         'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
         className
       )}
@@ -146,7 +146,7 @@ function DropdownMenuLabel({
 }) {
   return (
     <DropdownMenuPrimitive.Label
-      className={cn('px-2.5 py-1.5 text-xs font-medium text-gray-400', inset && 'pl-8', className)}
+      className={cn('px-2.5 py-1.5 text-xs font-medium text-gray-500', inset && 'pl-8', className)}
       {...props}
     />
   )
@@ -158,7 +158,7 @@ function DropdownMenuSeparator({
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Separator>) {
   return (
     <DropdownMenuPrimitive.Separator
-      className={cn('-mx-1 my-1 h-px bg-gray-800', className)}
+      className={cn('-mx-1 my-1 h-px bg-gray-200', className)}
       {...props}
     />
   )
@@ -189,7 +189,7 @@ function DropdownMenuSubTrigger({
     <DropdownMenuPrimitive.SubTrigger
       className={cn(
         'flex cursor-pointer select-none items-center rounded-md px-2.5 py-1.5 text-sm outline-none transition-colors',
-        'focus:bg-gray-800/70 data-[state=open]:bg-gray-800/70 focus:text-gray-100 data-[state=open]:text-gray-100',
+        'focus:bg-gray-100 data-[state=open]:bg-gray-100 focus:text-gray-900 data-[state=open]:text-gray-900',
         inset && 'pl-8',
         className
       )}
@@ -208,8 +208,8 @@ function DropdownMenuSubContent({
   return (
     <DropdownMenuPrimitive.SubContent
       className={cn(
-        'z-50 min-w-[8rem] overflow-hidden rounded-lg bg-black/80 backdrop-blur-md border border-gray-800 p-1.5 shadow-lg',
-        'animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide a slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
+        'z-50 min-w-[8rem] overflow-hidden rounded-lg bg-white/80 backdrop-blur-md border border-gray-200 p-1.5 shadow-lg text-black',
+        'animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
         className
       )}
       {...props}
