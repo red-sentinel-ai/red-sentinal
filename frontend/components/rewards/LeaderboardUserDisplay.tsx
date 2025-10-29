@@ -32,7 +32,7 @@ export const UserDisplay = ({ entry }: UserDisplayProps) => {
         href={entry.username ? `/u/${entry.username}` : '#'}
         className={!entry.username ? 'pointer-events-none' : ''}
       >
-        <div className="relative w-10 h-10 rounded-full flex-shrink-0 bg-gray-800">
+        <div className="relative w-10 h-10 rounded-full flex-shrink-0 bg-gray-100 border border-gray-200">
           {avatar ? (
             <Image
               src={avatar}
@@ -42,7 +42,7 @@ export const UserDisplay = ({ entry }: UserDisplayProps) => {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <User className="h-5 w-5 text-gray-500" />
+              <User className="h-5 w-5 text-gray-400" />
             </div>
           )}
         </div>
@@ -52,21 +52,21 @@ export const UserDisplay = ({ entry }: UserDisplayProps) => {
         {entry.username ? (
           <Link
             href={`/u/${entry.username}`}
-            className="font-semibold text-white truncate hover:underline"
+            className="font-semibold text-black truncate hover:underline"
           >
             {entry.username}
           </Link>
         ) : (
-          <p className="font-medium text-[#B5B5B5] truncate">User #{entry.user_id?.slice(-6)}</p>
+          <p className="font-medium text-gray-600 truncate">User #{entry.user_id?.slice(-6)}</p>
         )}
 
-        <div className="flex items-center gap-3 text-xs text-gray-400">
+        <div className="flex items-center gap-3 text-xs text-gray-500">
           {primaryWallet && (
             <Link
               href={`${EXPLORER_BASE_URL}/address/${primaryWallet}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 hover:text-white transition-colors hover:underline"
+              className="flex items-center gap-1.5 hover:text-black transition-colors hover:underline"
             >
               <Wallet className="w-3 h-3 opacity-70" />
               <span className="font-mono">{formatAddress(primaryWallet)}</span>
@@ -77,10 +77,10 @@ export const UserDisplay = ({ entry }: UserDisplayProps) => {
               href={buildTwitterLink(entry.twitter_username!)}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 hover:text-white transition-colors"
+              className="flex items-center gap-1.5 hover:text-black transition-colors"
             >
               <Image
-                src="/icons/x.png"
+                src="/icons/x_black.png"
                 width={12}
                 height={12}
                 alt="X (Twitter)"
@@ -94,10 +94,10 @@ export const UserDisplay = ({ entry }: UserDisplayProps) => {
               href={buildDiscordLink(entry.discord_user_id!)}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 hover:text-white transition-colors"
+              className="flex items-center gap-1.5 hover:text-black transition-colors"
             >
               <Image
-                src="/icons/discord.svg"
+                src="/icons/discord_black.svg"
                 width={12}
                 height={12}
                 alt="Discord"
