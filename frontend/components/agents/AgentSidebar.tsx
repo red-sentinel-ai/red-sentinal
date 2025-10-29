@@ -294,24 +294,23 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           isLoading={isLoadingProfile}
         />
 
-        {/* --- QR CODE SECTION --- */}
         <div className="mt-auto pt-6 border-t border-black/20">
           <h3 className="text-black/80 text-sm font-semibold text-center mb-4">
             Scan this QR Code if you want to try to attack this agent using slush mobile wallet
           </h3>
-          <div className="bg-[#202122] rounded-xl p-4 border border-gray-600/50 flex justify-center">
+          <div className="bg-white rounded-xl p-4 border border-gray-200 flex justify-center">
             {deepLinkUrl ? (
               <QRCodeSVG
                 value={deepLinkUrl}
                 size={128}
-                bgColor="transparent"
-                fgColor="#FFFFFF"
+                bgColor="#ffffff"
+                fgColor="#000000"
                 level="L"
                 includeMargin={true}
               />
             ) : (
-              <div className="w-32 h-32 bg-gray-700 animate-pulse rounded-lg flex items-center justify-center">
-                <div className="w-8 h-8 border-4 border-gray-500 rounded-full animate-spin border-t-transparent"></div>
+              <div className="w-32 h-32 bg-gray-200 animate-pulse rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 border-4 border-gray-300 rounded-full animate-spin border-t-transparent"></div>
               </div>
             )}
           </div>
