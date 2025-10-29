@@ -1,7 +1,6 @@
 'use client'
 
 import type React from 'react'
-
 import { useState } from 'react'
 import Image from 'next/image'
 import { Upload, ImageIcon } from 'lucide-react'
@@ -81,47 +80,44 @@ export const ImagePickerSheet = ({
     >
       <SheetContent
         side="right"
-        className="w-full sm:w-[480px] bg-[#0A0A0A] border-l border-[#1A1A1A] text-white overflow-y-auto"
+        className="w-full sm:w-[480px] bg-white border-l border-gray-200 text-black overflow-y-auto"
       >
-        <SheetHeader className="pb-6 border-b border-[#1A1A1A]">
-          <SheetTitle className="text-white text-xl font-semibold flex items-center gap-2">
-            <ImageIcon className="w-5 h-5" />
+        <SheetHeader className="pb-6 border-b border-gray-200">
+          <SheetTitle className="text-black text-xl font-semibold flex items-center gap-2">
+            <ImageIcon className="w-5 h-5 text-gray-700" />
             {title}
           </SheetTitle>
-          <p className="text-gray-400 text-sm mt-1">{subtitle}</p>
+          <p className="text-gray-500 text-sm mt-1">{subtitle}</p>
         </SheetHeader>
 
-        <div className="px-4">
+        <div className="p-4">
           <Tabs
             defaultValue="images"
             className="w-full"
           >
-            <TabsList className="w-full grid grid-cols-3 bg-transparent border-0 p-0 h-auto gap-2 mb-6">
+            <TabsList className="w-full grid grid-cols-3 bg-gray-100 p-1 rounded-lg h-auto gap-1 mb-6">
               <TabsTrigger
                 value="gifs"
                 disabled={disableGifs}
-                className="group relative flex flex-col sm:flex-row items-center justify-center gap-2 h-16 sm:h-12 px-4 py-3 bg-[#111111] border border-[#2A2A2A] rounded-xl transition-all duration-300 hover:bg-[#1A1A1A] hover:border-[#3A3A3A] data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#1D9BF0]/20 data-[state=active]:to-[#1D9BF0]/10 data-[state=active]:border-[#1D9BF0] data-[state=active]:shadow-[0_0_20px_rgba(29,155,240,0.2)] text-gray-400 data-[state=active]:text-white font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                className="group relative flex items-center justify-center gap-2 h-10 px-4 py-2 bg-transparent border-0 rounded-md transition-all duration-300 data-[state=active]:bg-white data-[state=active]:shadow-sm text-gray-500 data-[state=active]:text-black font-medium disabled:opacity-50 disabled:cursor-not-allowed text-sm"
               >
-                <span className="text-xs sm:text-sm font-medium">GIFs</span>
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#1D9BF0]/0 to-[#1D9BF0]/0 group-data-[state=active]:from-[#1D9BF0]/5 group-data-[state=active]:to-[#1D9BF0]/0 transition-all duration-300" />
+                <span>GIFs</span>
               </TabsTrigger>
 
               <TabsTrigger
                 value="images"
-                className="group relative flex flex-col sm:flex-row items-center justify-center gap-2 h-16 sm:h-12 px-4 py-3 bg-[#111111] border border-[#2A2A2A] rounded-xl transition-all duration-300 hover:bg-[#1A1A1A] hover:border-[#3A3A3A] data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#1D9BF0]/20 data-[state=active]:to-[#1D9BF0]/10 data-[state=active]:border-[#1D9BF0] data-[state=active]:shadow-[0_0_20px_rgba(29,155,240,0.2)] text-gray-400 data-[state=active]:text-white font-medium"
+                className="group relative flex items-center justify-center gap-2 h-10 px-4 py-2 bg-transparent border-0 rounded-md transition-all duration-300 data-[state=active]:bg-white data-[state=active]:shadow-sm text-gray-500 data-[state=active]:text-black font-medium text-sm"
               >
-                <ImageIcon className="w-5 h-5 transition-all duration-300 data-[state=active]:text-[#1D9BF0]" />
-                <span className="text-xs sm:text-sm font-medium">Images</span>
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#1D9BF0]/0 to-[#1D9BF0]/0 group-data-[state=active]:from-[#1D9BF0]/5 group-data-[state=active]:to-[#1D9BF0]/0 transition-all duration-300" />
+                <ImageIcon className="w-4 h-4" />
+                <span>Images</span>
               </TabsTrigger>
 
               <TabsTrigger
                 value="custom"
-                className="group relative flex flex-col sm:flex-row items-center justify-center gap-2 h-16 sm:h-12 px-4 py-3 bg-[#111111] border border-[#2A2A2A] rounded-xl transition-all duration-300 hover:bg-[#1A1A1A] hover:border-[#3A3A3A] data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#1D9BF0]/20 data-[state=active]:to-[#1D9BF0]/10 data-[state=active]:border-[#1D9BF0] data-[state=active]:shadow-[0_0_20px_rgba(29,155,240,0.2)] text-gray-400 data-[state=active]:text-white font-medium"
+                className="group relative flex items-center justify-center gap-2 h-10 px-4 py-2 bg-transparent border-0 rounded-md transition-all duration-300 data-[state=active]:bg-white data-[state=active]:shadow-sm text-gray-500 data-[state=active]:text-black font-medium text-sm"
               >
-                <Upload className="w-5 h-5 transition-all duration-300 data-[state=active]:text-[#1D9BF0]" />
-                <span className="text-xs sm:text-sm font-medium">Custom</span>
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#1D9BF0]/0 to-[#1D9BF0]/0 group-data-[state=active]:from-[#1D9BF0]/5 group-data-[state=active]:to-[#1D9BF0]/0 transition-all duration-300" />
+                <Upload className="w-4 h-4" />
+                <span>Custom</span>
               </TabsTrigger>
             </TabsList>
 
@@ -130,7 +126,7 @@ export const ImagePickerSheet = ({
               className="space-y-4"
             >
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-medium text-gray-300">Animated GIFs</h3>
+                <h3 className="text-sm font-medium text-gray-700">Animated GIFs</h3>
                 <span className="text-xs text-gray-500">{gifArray.length} available</span>
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -138,10 +134,10 @@ export const ImagePickerSheet = ({
                   <div
                     key={idx}
                     className={cn(
-                      'group relative border-2 rounded-xl overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-lg',
+                      'group relative border-2 rounded-xl overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-md',
                       selectedURL === url
-                        ? 'border-[#1D9BF0] shadow-[0_0_20px_rgba(29,155,240,0.3)]'
-                        : 'border-[#2A2A2A] hover:border-[#3A3A3A]'
+                        ? 'border-black shadow-lg'
+                        : 'border-gray-200 hover:border-gray-300'
                     )}
                     onClick={() => handleImageClick(url)}
                   >
@@ -153,8 +149,8 @@ export const ImagePickerSheet = ({
                       className="w-full h-32 object-cover"
                     />
                     {selectedURL === url && (
-                      <div className="absolute inset-0 bg-[#1D9BF0]/20 flex items-center justify-center">
-                        <div className="w-6 h-6 rounded-full bg-[#1D9BF0] flex items-center justify-center">
+                      <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                        <div className="w-6 h-6 rounded-full bg-black flex items-center justify-center">
                           <div className="w-2 h-2 rounded-full bg-white" />
                         </div>
                       </div>
@@ -169,7 +165,7 @@ export const ImagePickerSheet = ({
               className="space-y-4"
             >
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-medium text-gray-300">Static Images</h3>
+                <h3 className="text-sm font-medium text-gray-700">Static Images</h3>
                 <span className="text-xs text-gray-500">{imageArray.length} available</span>
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -177,10 +173,10 @@ export const ImagePickerSheet = ({
                   <div
                     key={idx}
                     className={cn(
-                      'group relative border-2 rounded-xl overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-lg',
+                      'group relative border-2 rounded-xl overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-md',
                       selectedURL === url
-                        ? 'border-[#1D9BF0] shadow-[0_0_20px_rgba(29,155,240,0.3)]'
-                        : 'border-[#2A2A2A] hover:border-[#3A3A3A]'
+                        ? 'border-black shadow-lg'
+                        : 'border-gray-200 hover:border-gray-300'
                     )}
                     onClick={() => handleImageClick(url)}
                   >
@@ -192,8 +188,8 @@ export const ImagePickerSheet = ({
                       className="w-full h-32 object-cover"
                     />
                     {selectedURL === url && (
-                      <div className="absolute inset-0 bg-[#1D9BF0]/20 flex items-center justify-center">
-                        <div className="w-6 h-6 rounded-full bg-[#1D9BF0] flex items-center justify-center">
+                      <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                        <div className="w-6 h-6 rounded-full bg-black flex items-center justify-center">
                           <div className="w-2 h-2 rounded-full bg-white" />
                         </div>
                       </div>
@@ -208,7 +204,7 @@ export const ImagePickerSheet = ({
               className="space-y-4"
             >
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-medium text-gray-300">Upload Custom Image</h3>
+                <h3 className="text-sm font-medium text-gray-700">Upload Custom Image</h3>
                 <span className="text-xs text-gray-500">JPG, PNG, GIF</span>
               </div>
 
@@ -216,8 +212,8 @@ export const ImagePickerSheet = ({
                 className={cn(
                   'relative border-2 border-dashed rounded-xl p-8 transition-all duration-200',
                   dragActive
-                    ? 'border-[#1D9BF0] bg-[#1D9BF0]/5'
-                    : 'border-[#2A2A2A] hover:border-[#3A3A3A] hover:bg-[#111111]'
+                    ? 'border-black bg-gray-100'
+                    : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
                 )}
                 onDragEnter={handleDrag}
                 onDragLeave={handleDrag}
@@ -232,17 +228,17 @@ export const ImagePickerSheet = ({
                 />
 
                 <div className="text-center space-y-4">
-                  <div className="mx-auto w-12 h-12 rounded-full bg-[#1A1A1A] flex items-center justify-center">
+                  <div className="mx-auto w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center border border-gray-200">
                     <Upload
                       className={cn(
                         'w-6 h-6 transition-colors',
-                        dragActive ? 'text-[#1D9BF0]' : 'text-gray-400'
+                        dragActive ? 'text-black' : 'text-gray-500'
                       )}
                     />
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium text-white mb-1">
+                    <p className="text-sm font-medium text-black mb-1">
                       {dragActive ? 'Drop your image here' : 'Click to upload or drag and drop'}
                     </p>
                     <p className="text-xs text-gray-500">Supports JPG, PNG, GIF up to 10MB</p>
@@ -252,8 +248,8 @@ export const ImagePickerSheet = ({
 
               {customFile && (
                 <div className="space-y-3">
-                  <h4 className="text-sm font-medium text-gray-300">Preview</h4>
-                  <div className="relative border-2 border-[#1D9BF0] rounded-xl overflow-hidden shadow-[0_0_20px_rgba(29,155,240,0.3)]">
+                  <h4 className="text-sm font-medium text-gray-700">Preview</h4>
+                  <div className="relative border-2 border-black rounded-xl overflow-hidden shadow-lg">
                     <Image
                       src={URL.createObjectURL(customFile) || '/placeholder.svg'}
                       alt="custom preview"
@@ -261,13 +257,13 @@ export const ImagePickerSheet = ({
                       height={200}
                       className="w-full h-48 object-cover"
                     />
-                    <div className="absolute inset-0 bg-[#1D9BF0]/20 flex items-center justify-center">
-                      <div className="w-6 h-6 rounded-full bg-[#1D9BF0] flex items-center justify-center">
+                    <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                      <div className="w-6 h-6 rounded-full bg-black flex items-center justify-center">
                         <div className="w-2 h-2 rounded-full bg-white" />
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between text-xs text-gray-400 bg-[#111111] rounded-lg p-3">
+                  <div className="flex items-center justify-between text-xs text-gray-500 bg-gray-100 rounded-lg p-3">
                     <span>{customFile.name}</span>
                     <span>{(customFile.size / 1024 / 1024).toFixed(2)} MB</span>
                   </div>
