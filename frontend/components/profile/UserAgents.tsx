@@ -19,12 +19,12 @@ export const UserAgents = () => {
           {userAgents.length > 0 && (
             <div className="mb-16">
               <div className="mb-8">
-                <h2 className="text-2xl md:text-3xl font-bold text-center text-[#558EB4] mb-2">
+                <h2 className="text-2xl md:text-3xl font-bold text-center text-black mb-2">
                   Your Sentinels
                 </h2>
                 <div className="flex max-w-[400px] mx-auto">
-                  <div className="gradient-border blue"></div>
-                  <div className="gradient-border blue rotate-180"></div>
+                  <div className="black-gradient-border"></div>
+                  <div className="black-gradient-border rotate-180"></div>
                 </div>
               </div>
 
