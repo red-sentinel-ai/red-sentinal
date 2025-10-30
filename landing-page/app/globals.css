@@ -127,6 +127,9 @@
   }
 }
 
+.shadow-v1 {
+  box-shadow: 0 4px 63px 15px rgba(0, 0, 0, 0.25);
+}
 .robo-card {
   animation: 8s rotate linear infinite;
   background-color: black;
@@ -228,7 +231,7 @@
 
 .btn {
   border-radius: 12px;
-  min-height: 70px;
+  min-height: 62px;
   min-width: 176px;
 }
 
@@ -244,6 +247,11 @@
 .btn-outline {
   border: 1px solid black;
   color: black;
+}
+
+.btn-outline-white {
+  border: 1px solid white;
+  color: white;
 }
 
 .btn-outline:hover{
