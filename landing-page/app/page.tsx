@@ -17,7 +17,7 @@ export default function LandingPage() {
     <div className="min-h-screen text-black bg-white overflow-x-hidden">
       <Navbar />
       <HeroSection />
-      <div className="px-10">
+      <div className="px-4 md:px-10">
         <AnimationSection />
         <VulnerabilitySection />
         <HowItWorksSection />
