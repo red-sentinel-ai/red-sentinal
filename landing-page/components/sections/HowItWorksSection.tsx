@@ -32,7 +32,7 @@ export function HowItWorksSection() {
           viewport={{ once: true }}
           className="text-center mb-16 flex flex-col items-center"
         >
-          <div className="bg-gradient-to-r from-[#B9CDFF] to-[#E3EBFF] px-6 py-1 rounded-full mb-4 border border-black">
+          <div className="bg-gradient-to-r from-[#B9CDFF] to-[#E3EBFF] px-6 py-1 rounded-full mb-4">
             {' '}
             • how it works{' '}
           </div>
@@ -40,8 +40,8 @@ export function HowItWorksSection() {
             Sui Sentinel&apos;s Gamified AI Security
           </h2>
           <p className="max-w-3xl mx-auto text-lg md:text-[20px]">
-            We turned defense into a game of intelligence. <br /> Attack, defend, and evolve in an
-            ecosystem where every move strengthens the network.
+            Attack, defend, and evolve in an ecosystem where every move strengthens the network and
+            earns real rewards for mastery
           </p>
         </motion.div>
 
