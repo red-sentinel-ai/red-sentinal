@@ -54,11 +54,9 @@ export function OfferingsSection() {
 
           <div className="p-8 border border-black border-t-0 md:border-t md:border-t-black md:border-l flex flex-col justify-between min-h-[300px]">
             <div>
-              <h3 className="text-3xl font-medium mb-6 text-left md:text-right">
-                Deploy Your Sentinel
-              </h3>
+              <h3 className="text-3xl font-medium mb-6">Deploy Your Sentinel</h3>
               <div className="min-h-[400px]"></div>
-              <p className="text-[20px] leading-relaxed text-left md:text-right">
+              <p className="text-[20px] leading-relaxed">
                 Launch your own AI model into the Sentinel network. Let the world attack it and earn
                 while it evolves.
               </p>
