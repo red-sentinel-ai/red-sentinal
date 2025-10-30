@@ -23,8 +23,8 @@ export function HeroSection() {
         <h1 className="text-[64px] max-w-[770px] italic text-white">
           Guardians of Intelligent Frontiers
         </h1>
-        <div className="flex items-center justify-between">
-          <p className="max-w-[540px] text-black text-[18px]">
+        <div className="flex items-end justify-between">
+          <p className="max-w-[690px] text-black text-[24px] mb-32">
             Deploy AI Sentinels, defend models, evolve intelligence, and earn rewards in a gamified
             AI security world.
           </p>
@@ -33,13 +33,13 @@ export function HeroSection() {
               href={SUI_SENTINEL_APP_URL}
               target="_blank"
             >
-              <button className="btn btn-white">Launch App</button>
+              <button className="btn btn-white shadow-v1">Launch App</button>
             </Link>
             <Link
               href={SUI_SENTINEL_DOCS_URL}
               target="_blank"
             >
-              <button className="btn btn-outline">Docs</button>
+              <button className="btn btn-outline-white backdrop-blur-md">Docs</button>
             </Link>
           </div>
         </div>
