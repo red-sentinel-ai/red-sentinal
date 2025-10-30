@@ -17,8 +17,8 @@ export default function LandingPage() {
       <div className="">
         <div className="px-4 md:px-10">
           <AnimationSection />
-          <VulnerabilitySection />
         </div>
+        <VulnerabilitySection />
         <HowItWorksSection />
         <div className="px-4 md:px-10">
           <OfferingsSection />
