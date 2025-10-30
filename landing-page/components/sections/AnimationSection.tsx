@@ -22,18 +22,18 @@ export const AnimationSection = () => {
   return (
     <div
       ref={containerRef}
-      className="relative flex items-center min-h-[80vh]"
+      className="relative flex items-center min-h-[80vh] py-16 md:py-0"
     >
-      <div className="relative z-10">
-        <h2 className="text-[48px] leading-tight font-medium">
+      <div className="relative z-10 w-full text-center md:text-left">
+        <h2 className="text-3xl md:text-[48px] leading-tight font-medium">
           Sui Sentinel lets you stress-test, audit, and defend AI models through real-world attacks
           while earning digital rewards for your mastery.
         </h2>
-        <p className="max-w-[984px] text-2xl mt-8">
+        <p className="max-w-[984px] text-lg md:text-2xl mt-8 mx-auto md:mx-0">
           Built for AI builders, businesses, and prompt engineers those shaping the next generation
           of intelligent systems.
         </p>
-        <div className="flex gap-6 mt-10">
+        <div className="flex flex-col sm:flex-row gap-6 mt-10 justify-center md:justify-start">
           <Link
             href={SUI_SENTINEL_APP_URL}
             target="_blank"
@@ -51,7 +51,7 @@ export const AnimationSection = () => {
 
       <motion.img
         style={{ x: springX, y: springY }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[360px] h-[540px]"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] h-[360px] md:w-[360px] md:h-[540px] z-0 opacity-40 md:opacity-100"
         src="/gifs/circle.gif"
         width={360}
         height={540}
