@@ -32,12 +32,12 @@ export function OfferingsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
           viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 border-b border-gray-300"
+          className="grid grid-cols-1 md:grid-cols-2"
         >
-          <div className="p-8 flex flex-col justify-between min-h-[300px] border border-black border-r-transparent">
+          <div className="p-8 flex flex-col justify-between min-h-[300px] border border-black md:border-r-0">
             <div>
               <h3 className="text-[32px] font-medium mb-6">Custom AI</h3>
-              <div className='min-h-[400px]'></div>
+              <div className="min-h-[400px]"></div>
               <p className="text-[20px] leading-relaxed">
                 Use battle-tested AI models built by the community. Challenge them, test their
                 strength, and earn rewards for every exploit discovered.
@@ -48,31 +48,29 @@ export function OfferingsSection() {
               target="_blank"
               className="mt-8"
             >
-              <button className="btn btn-outline">
-                Play Now
-              </button>
+              <button className="btn btn-outline">Play Now</button>
             </Link>
           </div>
 
-          <div className="p-8 md:border border-black flex flex-col justify-between min-h-[300px]">
+          <div className="p-8 border border-black border-t-0 md:border-t md:border-t-black md:border-l flex flex-col justify-between min-h-[300px]">
             <div>
-              <h3 className="text-3xl font-medium mb-6">Deploy Your Sentinel</h3>
-              <div className='min-h-[400px]'></div>
-              <p className="text-[20px] leading-relaxed text-right">
+              <h3 className="text-3xl font-medium mb-6 text-left md:text-right">
+                Deploy Your Sentinel
+              </h3>
+              <div className="min-h-[400px]"></div>
+              <p className="text-[20px] leading-relaxed text-left md:text-right">
                 Launch your own AI model into the Sentinel network. Let the world attack it and earn
                 while it evolves.
               </p>
             </div>
-            <div className='flex justify-end'>
-            <Link
-              href={SUI_SENTINEL_APP_URL}
-              target="_blank"
-              className="mt-8"
-            >
-              <button className="border border-black rounded-lg px-8 py-3 w-fit hover:bg-gray-100 transition-colors font-medium">
-                Deploy Now!
-              </button>
-            </Link>
+            <div className="flex justify-start md:justify-end">
+              <Link
+                href={SUI_SENTINEL_APP_URL}
+                target="_blank"
+                className="mt-8"
+              >
+                <button className="btn btn-outline">Deploy Now!</button>
+              </Link>
             </div>
           </div>
         </motion.div>
