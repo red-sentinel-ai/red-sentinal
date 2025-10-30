@@ -2,10 +2,7 @@
 
 import { HeroSection } from '@/components/sections/HeroSection'
 import { HowItWorksSection } from '@/components/sections/HowItWorksSection'
-import { VisionSection } from '@/components/sections/VisionSection'
 import { OfferingsSection } from '@/components/sections/OfferingsSection'
-import { PassiveIncomeSection } from '@/components/sections/PassiveIncomeSection'
-import { WhyChooseUsSection } from '@/components/sections/WhyChooseUsSection'
 import { TweetsSection } from '@/components/sections/TweetsSection'
 import { Footer } from '@/components/sections/Footer'
 import { Navbar } from '@/components/sections/NavBar'
@@ -25,9 +22,9 @@ export default function LandingPage() {
         <HowItWorksSection />
         <div className="px-4 md:px-10">
           <OfferingsSection />
-          <VisionSection />
-          <PassiveIncomeSection />
-          <WhyChooseUsSection />
+          {/* <VisionSection />
+          <PassiveIncomeSection /> */}
+          {/* <WhyChooseUsSection /> */}
         </div>
       </div>
       <TweetsSection />
