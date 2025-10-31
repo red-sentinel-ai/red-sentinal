@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { Github, BookOpen } from 'lucide-react'
+import { Github } from 'lucide-react'
 import {
   SUI_SENTINEL_X_URL,
   SUI_SENTINEL_GITHUB_URL,
@@ -11,17 +11,29 @@ import {
 } from '@/constants'
 
 const socialLinks = [
-  { href: SUI_SENTINEL_X_URL, icon: '/icons/x_black.png', isImage: true, alt: 'X (Twitter)' },
-  { href: SUI_SENTINEL_GITHUB_URL, icon: Github, isImage: false, alt: 'GitHub' },
+  {
+    href: SUI_SENTINEL_X_URL,
+    icon: '/icons/x_black.png',
+    isImage: true,
+    alt: 'X (Twitter)',
+    name: 'Twitter',
+  },
   {
     href: SUI_SENTINEL_TELEGRAM_URL,
-    icon: '/icons/telegram_black.png',
+    icon: '/icons/telegram_outline.png',
     isImage: true,
     alt: 'Telegram',
+    name: 'Telegram',
   },
-  { href: SUI_SENTINEL_DOCS_URL, icon: BookOpen, isImage: false, alt: 'Documentation' },
+  { href: SUI_SENTINEL_GITHUB_URL, icon: Github, isImage: false, alt: 'GitHub', name: 'Github' },
+  {
+    href: SUI_SENTINEL_DOCS_URL,
+    icon: '/icons/docs_outline.png',
+    isImage: true,
+    alt: 'Documentation',
+    name: 'Docs',
+  },
 ]
-
 export function Footer() {
   return (
     <footer
@@ -67,29 +79,33 @@ export function Footer() {
             </div>
           </div>
 
-          <div className="flex gap-4">
-            <span className="text-black font-medium whitespace-nowrap">connect with us</span>
-            <div className="flex flex-col gap-2">
+          <div className="w-full md:w-auto">
+            <div className="flex flex-col gap-4">
               {socialLinks.map((link, index) => (
-                <Link
+                <div
                   key={index}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-[70px] h-[51px] border border-black rounded-[8px] flex items-center justify-center hover:bg-black/5 transition-colors"
-                  aria-label={link.alt}
+                  className="flex items-center justify-between gap-6"
                 >
-                  {link.isImage ? (
-                    <Image
-                      src={link.icon as string}
-                      alt={link.alt}
-                      width={20}
-                      height={20}
-                    />
-                  ) : (
-                    <link.icon className="size-5 text-black" />
-                  )}
-                </Link>
+                  <span className="text-black font-medium whitespace-nowrap">{link.name}</span>
+                  <Link
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-[70px] h-[51px] border border-[#ACACAC] rounded-[8px] flex items-center justify-center hover:bg-black/5 transition-colors"
+                    aria-label={link.alt}
+                  >
+                    {link.isImage ? (
+                      <Image
+                        src={link.icon as string}
+                        alt={link.alt}
+                        width={20}
+                        height={20}
+                      />
+                    ) : (
+                      <link.icon className="size-5 text-black" />
+                    )}
+                  </Link>
+                </div>
               ))}
             </div>
           </div>
