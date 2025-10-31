@@ -147,7 +147,7 @@ export function HowItWorksSection() {
         </div>
       </div>
 
-      <div className="absolute bottom-[-22%] left-1/2 -translate-x-1/2">
+      <div className="absolute bottom-[-9%] md:bottom-[-22%] left-1/2 -translate-x-1/2">
         <Image
           src="/img/fullCircle.png"
           width={535}
