@@ -23,7 +23,7 @@ export function HowItWorksSection() {
   return (
     <section
       id="how-it-works"
-      className="py-24 relative text-black bg-[#F7F9FF]"
+      className="py-24 relative text-black bg-[#F7F9FF] z-10"
     >
       <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
@@ -47,7 +47,7 @@ export function HowItWorksSection() {
         </motion.div>
         <div
           style={{ backgroundImage: 'url("/img/lines.png")' }}
-          className="relative"
+          className="relative z-10"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -143,6 +143,14 @@ export function HowItWorksSection() {
             </motion.div>
           </div>
         </div>
+      </div>
+      <div className="absolute bottom-[-25%] left-1/2 -translate-x-1/2">
+        <Image
+          src="/img/fullCircle.png"
+          width={535}
+          height={802}
+          alt="full circle"
+        />
       </div>
     </section>
   )
