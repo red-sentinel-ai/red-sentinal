@@ -58,7 +58,7 @@ export const AnimationSection = () => {
       /> */}
 
       <Image
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] z-0 opacity-40 md:opacity-100"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[840px] z-0 opacity-40 md:opacity-100"
         src="/gifs/threeCircle.gif"
         width={776}
         height={720}
