@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import { SUI_SENTINEL_APP_URL, SUI_SENTINEL_TELEGRAM_URL } from '@/constants'
-import Image from 'next/image'
 
 export const AnimationSection = () => {
   // const containerRef = useRef<HTMLDivElement>(null)
@@ -48,23 +47,19 @@ export const AnimationSection = () => {
         </div>
       </div>
 
-      {/* <motion.img
-        style={{ x: springX, y: springY }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] h-[360px] md:w-[360px] md:h-[540px] z-0 opacity-40 md:opacity-100"
-        src="/gifs/circle.gif"
-        width={360}
-        height={540}
-        alt="circle animation"
-      /> */}
-
-      <Image
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[840px] z-0 opacity-40 md:opacity-100"
-        src="/gifs/threeCircle.gif"
-        width={776}
-        height={720}
-        alt="circle animation"
-        quality={1}
-      />
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[830px] z-0 opacity-40 md:opacity-100"
+      >
+        <source
+          src="/videos/threeCircles.mp4"
+          type="video/mp4"
+        />
+        Your browser does not support the video tag.
+      </video>
     </div>
   )
 }
