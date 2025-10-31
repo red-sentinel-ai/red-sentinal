@@ -57,15 +57,15 @@ export function HowItWorksSection() {
             className="relative hidden lg:grid grid-cols-5 grid-rows-3 gap-8 items-center text-black min-h-[760px] px-8"
           >
             {/* Text Sections */}
-            <div className="col-span-1 row-start-2 text-right">
+            <div className="col-span-1 row-start-2 text-right flex flex-col h-full justify-end">
               <h3 className="mb-1 text-2xl">{features.attack.title}</h3>
               <p>{features.attack.description}</p>
             </div>
-            <div className="col-span-1 col-start-5 row-start-1 text-left">
+            <div className="col-span-1 col-start-5 row-start-1 text-left h-full justify-end flex flex-col">
               <h3 className="mb-1 text-2xl">{features.deploy.title}</h3>
               <p>{features.deploy.description}</p>
             </div>
-            <div className="col-span-1 col-start-5 row-start-3 text-left">
+            <div className="col-span-1 col-start-5 row-start-3 text-left flex flex-col justify-start h-full">
               <h3 className="mb-1 text-2xl">{features.evolve.title}</h3>
               <p>{features.evolve.description}</p>
             </div>
