@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { Github } from 'lucide-react'
+import { Github, BookOpen } from 'lucide-react'
 import {
   SUI_SENTINEL_X_URL,
   SUI_SENTINEL_GITHUB_URL,
@@ -40,13 +40,13 @@ export function Footer() {
       className="relative pt-16 bg-cover bg-bottom bg-no-repeat"
       style={{ backgroundImage: "url('/img/footer-bg.png')" }}
     >
-      <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-start gap-12  min-h-[505px]">
+      <div className="relative z-10 max-w-[1440px] mx-auto pb-4 md:pb-0 px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-12 text-center md:text-left">
           <div className="max-w-md">
-            <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
               <Image
                 src="/icons/logo_large.png"
-                alt="shield"
+                alt="Sui Sentinel Logo"
                 style={{ objectFit: 'contain' }}
                 height={49}
                 width={198}
@@ -58,32 +58,56 @@ export function Footer() {
             </p>
           </div>
 
-          <div className="mt-auto flex justify-between w-full">
+          <div className="flex w-full max-w-xs md:max-w-lg mx-auto items-end justify-between mt-8 md:mt-auto">
             <div>
               <Image
                 src="/img/robot_defend.png"
                 width={260}
                 height={346}
-                alt="robo"
+                alt="Defender Robot"
+                className="h-auto w-[130px] md:w-[260px]"
               />
             </div>
-
             <div className="flex">
               <Image
                 src="/img/robot_attack.png"
                 width={215}
                 height={286}
-                alt="robo"
-                className="mt-auto"
+                alt="Attacker Robot"
+                className="mt-auto h-auto w-[108px] md:w-[215px]"
               />
             </div>
           </div>
 
           <div className="w-full md:w-auto">
-            <div className="flex flex-col gap-4">
-              {socialLinks.map((link, index) => (
+            <div className="flex flex-row justify-center gap-4 md:hidden">
+              {socialLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-[70px] h-[51px] border border-[#ACACAC] rounded-[8px] flex items-center justify-center hover:bg-black/5 transition-colors"
+                  aria-label={link.alt}
+                >
+                  {link.isImage ? (
+                    <Image
+                      src={link.icon as string}
+                      alt={link.alt}
+                      width={20}
+                      height={20}
+                    />
+                  ) : (
+                    <link.icon className="size-5 text-black" />
+                  )}
+                </Link>
+              ))}
+            </div>
+
+            <div className="hidden md:flex flex-col gap-4">
+              {socialLinks.map((link) => (
                 <div
-                  key={index}
+                  key={link.href}
                   className="flex items-center justify-between gap-6"
                 >
                   <span className="text-black font-medium whitespace-nowrap">{link.name}</span>
