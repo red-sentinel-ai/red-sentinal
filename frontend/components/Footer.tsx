@@ -18,8 +18,18 @@ const Footer = () => {
       className="relative pt-16 bg-cover bg-bottom bg-no-repeat"
       style={{ backgroundImage: "url('/img/footer-bg.png')" }}
     >
+      <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
+        <Image
+          src="/img/fullCircle.png"
+          width={500}
+          height={346}
+          alt="Decorative blend element"
+          className="w-auto h-auto max-w-xs md:max-w-lg mix-blend-difference"
+        />
+      </div>
+
       <div className="relative z-10 max-w-[1440px] mx-auto pb-4 md:pb-0 px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-12 text-center md:text-left">
+        <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-12 text-center md:text-left min-h-[398px]">
           <div className="max-w-md md:self-stretch flex flex-col">
             <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
               <Image
@@ -50,16 +60,6 @@ const Footer = () => {
               <span>© 2025 </span>
               <span>All Rights Reserved @Cyphronix Software</span>
             </p>
-          </div>
-
-          <div className="flex w-full max-w-xs md:max-w-lg mx-auto items-end justify-between mt-8 md:mt-auto">
-            <Image
-              src="/img/fullCircle.png"
-              width={260}
-              height={346}
-              alt="Defender Robot"
-              className="h-auto w-[260px] md:w-[500px] mix-blend-difference"
-            />
           </div>
 
           <div className="w-full md:w-auto">
