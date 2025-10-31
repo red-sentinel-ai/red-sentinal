@@ -18,13 +18,13 @@ const Footer = () => {
       className="relative pt-16 bg-cover bg-bottom bg-no-repeat"
       style={{ backgroundImage: "url('/img/footer-bg.png')" }}
     >
-      <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
+      <div className="absolute inset-0 flex justify-center items-end md:items-center pointer-events-none pb-10 md:pb-0">
         <Image
           src="/img/fullCircle.png"
           width={500}
           height={346}
           alt="Decorative blend element"
-          className="w-auto h-auto max-w-xs md:max-w-lg mix-blend-difference"
+          className="w-[260px] md:w-auto h-auto max-w-xs md:max-w-lg mix-blend-difference"
         />
       </div>
 
