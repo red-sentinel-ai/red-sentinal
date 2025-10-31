@@ -4,17 +4,18 @@ import { motion } from 'framer-motion'
 import Image from 'next/image'
 
 const features = {
-  attack: {
-    title: 'Attack',
-    description: 'Challenge AI models, find their weaknesses.',
-  },
   deploy: {
     title: 'Deploy',
-    description: 'Launch your own Sentinel to withstand incoming threats.',
+    description: 'Launch your AI Sentinel and stake funds to defend against real attacks.',
   },
-  earn: {
-    title: 'Earn',
-    description: 'Gain rewards for successful defenses and valuable insights.',
+  attack: {
+    title: 'Attack & Earn',
+    description: 'Pay a small fee to test others sentinels. Earn rewards for valid exploits.',
+  },
+  evolve: {
+    title: 'Evolve & Profit',
+    description:
+      'Sentinels that survive grow smarter. Creators earn a share of every test, turning AI defense into passive income.',
   },
 }
 
@@ -32,7 +33,7 @@ export function HowItWorksSection() {
           viewport={{ once: true }}
           className="text-center mb-16 flex flex-col items-center"
         >
-          <div className="bg-gradient-to-r from-[#B9CDFF] to-[#E3EBFF] px-6 py-1 rounded-full mb-4">
+          <div className="bg-gradient-to-r from-[#B9CDFF] to-[#E3EBFF] px-6 py-1 rounded-full mb-4 border border-black">
             {' '}
             • how it works{' '}
           </div>
@@ -41,7 +42,7 @@ export function HowItWorksSection() {
           </h2>
           <p className="max-w-3xl mx-auto text-lg md:text-[20px]">
             Attack, defend, and evolve in an ecosystem where every move strengthens the network and
-            earns real rewards for mastery
+            earns real rewards for mastery.
           </p>
         </motion.div>
 
@@ -51,22 +52,54 @@ export function HowItWorksSection() {
           whileInView={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7, delay: 0.2 }}
           viewport={{ once: true }}
-          className="relative hidden lg:grid grid-cols-5 grid-rows-3 gap-8 items-center text-black bg-center bg-no-repeat bg-[length:100%] min-h-[760px] px-8"
-          style={{ backgroundImage: "url('/img/lines.png')" }}
+          className="relative hidden lg:grid grid-cols-5 grid-rows-3 gap-8 items-center text-black min-h-[760px] px-8"
         >
-          <div className="col-span-1 row-start-2">
+          {/* Text Sections */}
+          <div className="col-span-1 row-start-2 text-right">
             <h3 className="mb-1 text-2xl">{features.attack.title}</h3>
             <p>{features.attack.description}</p>
           </div>
-          <div className="col-span-3 col-start-2 row-span-3"></div>
-          <div className="col-span-1 col-start-5 row-start-1">
+          <div className="col-span-1 col-start-5 row-start-1 text-left">
             <h3 className="mb-1 text-2xl">{features.deploy.title}</h3>
             <p>{features.deploy.description}</p>
           </div>
-          <div className="col-span-1 col-start-5 row-start-3">
-            <h3 className="mb-1 text-2xl">{features.earn.title}</h3>
-            <p>{features.earn.description}</p>
+          <div className="col-span-1 col-start-5 row-start-3 text-left">
+            <h3 className="mb-1 text-2xl">{features.evolve.title}</h3>
+            <p>{features.evolve.description}</p>
           </div>
+
+          {/* Central Image */}
+          <div className="col-span-3 col-start-2 row-span-3 flex items-center justify-center">
+            <Image
+              src="/img/threeCubes.png"
+              alt="Deploy, Attack, and Evolve your AI Sentinel"
+              width={288}
+              height={503}
+              className="object-contain"
+            />
+          </div>
+
+          <Image
+            src="/img/arrowLeft.png"
+            alt="Arrow pointing from Deploy text to the top cube"
+            width={258}
+            height={258}
+            className="absolute top-[17%] right-[26%] object-contain"
+          />
+          <Image
+            src="/img/arrowRight.png"
+            alt="Arrow pointing from Attack & Earn text to the middle cube"
+            width={258}
+            height={258}
+            className="absolute top-[56%] -translate-y-1/2 left-[23%] object-contain"
+          />
+          <Image
+            src="/img/arrowRightBottom.png"
+            alt="Arrow pointing from Evolve & Profit text to the bottom cube"
+            width={258}
+            height={258}
+            className="absolute bottom-[12%] right-[28%] object-contain"
+          />
         </motion.div>
 
         {/* Mobile Layout */}
@@ -80,7 +113,7 @@ export function HowItWorksSection() {
           >
             <Image
               src="/img/threeCubes.png"
-              alt="Attack, Deploy, and Earn features illustrated with cubes"
+              alt="Attack, Deploy, and Evolve features illustrated with cubes"
               width={500}
               height={500}
               className="w-full h-auto"
@@ -94,16 +127,16 @@ export function HowItWorksSection() {
             className="flex flex-col gap-8 text-center"
           >
             <div>
-              <h3 className="mb-1 text-2xl">{features.attack.title}</h3>
-              <p>{features.attack.description}</p>
-            </div>
-            <div>
               <h3 className="mb-1 text-2xl">{features.deploy.title}</h3>
               <p>{features.deploy.description}</p>
             </div>
             <div>
-              <h3 className="mb-1 text-2xl">{features.earn.title}</h3>
-              <p>{features.earn.description}</p>
+              <h3 className="mb-1 text-2xl">{features.attack.title}</h3>
+              <p>{features.attack.description}</p>
+            </div>
+            <div>
+              <h3 className="mb-1 text-2xl">{features.evolve.title}</h3>
+              <p>{features.evolve.description}</p>
             </div>
           </motion.div>
         </div>
