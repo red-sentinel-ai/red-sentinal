@@ -25,7 +25,7 @@ export function TweetsSection() {
 
         <div className="relative">
           <motion.div
-            className="flex gap-8"
+            className="flex gap-4 md:gap-8"
             animate={{
               x: [0, -22 * TWEETS.length + 'rem'],
             }}
@@ -43,25 +43,27 @@ export function TweetsSection() {
                 key={`${tweet.id}-${index}`}
                 className="flex-shrink-0 w-80 sm:w-96"
               >
-                <div className="relative bg-gradient-to-r from-[#FFFFFF00] to-[#AD90BC33] backdrop-blur-xs rounded-md p-6 h-full flex flex-col text-gray-800 border border-[#D2C3FC]">
+                <div className="relative bg-gradient-to-r from-[#FFFFFF00] to-[#AD90BC33] backdrop-blur-xs rounded-md p-3 md:p-6 h-full flex flex-col text-gray-800 border border-[#D2C3FC]">
                   <span className="absolute top-5 right-6">{tweet.time}</span>
                   <div className="flex items-center gap-4">
-                    <div className="size-28 bg-white flex items-center justify-center rounded-lg flex-shrink-0">
+                    <div className="size-12 md:size-28 bg-white flex items-center justify-center rounded-lg flex-shrink-0">
                       <Image
                         src="/icons/x_black.png"
                         alt="X (Twitter)"
                         width={46}
                         height={46}
-                        className="group-hover:scale-110 transition-transform duration-300"
+                        className="group-hover:scale-110 transition-transform duration-300 w-5 md:w-[46px]"
                         quality={1}
                       />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="text-xl truncate">{tweet.author}</h4>
-                      <span className="text-[#2C00FF] text-xl">{tweet.handle}</span>
+                    <div className="flex-1 min-w-0 text-md md:text-xl">
+                      <h4 className="truncate">{tweet.author}</h4>
+                      <span className="text-[#2C00FF]">{tweet.handle}</span>
                     </div>
                   </div>
-                  <p className="leading-relaxed mt-6 text-2xl">&ldquo;{tweet.content}&rdquo;</p>
+                  <p className="leading-relaxed mt-6 text-md md:text-2xl">
+                    &ldquo;{tweet.content}&rdquo;
+                  </p>
                 </div>
               </div>
             ))}
@@ -73,10 +75,10 @@ export function TweetsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           viewport={{ once: true }}
-          className="text-right px-8 mt-24"
+          className="text-center md:text-right px-2 md:px-8 mt-24"
         >
           <h3 className="text-xl font-medium mb-6">Join 1000+ Guardians in Telegram & X</h3>
-          <div className="flex items-center justify-end gap-4 mr-16">
+          <div className="flex items-center justify-center md:justify-end gap-4 md:mr-16">
             <Link
               href={SUI_SENTINEL_TELEGRAM_URL}
               target="_blank"

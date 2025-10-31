@@ -111,7 +111,7 @@ export function HowItWorksSection() {
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="relative w-full max-w-md"
+              className="relative md:w-full max-w-xs md:max-w-md"
             >
               <Image
                 src="/img/threeCubes.png"
