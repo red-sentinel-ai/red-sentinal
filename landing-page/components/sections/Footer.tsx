@@ -2,38 +2,8 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { Github } from 'lucide-react'
-import {
-  SUI_SENTINEL_X_URL,
-  SUI_SENTINEL_GITHUB_URL,
-  SUI_SENTINEL_TELEGRAM_URL,
-  SUI_SENTINEL_DOCS_URL,
-} from '@/constants'
+import { socialLinks } from '@/constants'
 
-const socialLinks = [
-  {
-    href: SUI_SENTINEL_X_URL,
-    icon: '/icons/x_black.png',
-    isImage: true,
-    alt: 'X (Twitter)',
-    name: 'Twitter',
-  },
-  {
-    href: SUI_SENTINEL_TELEGRAM_URL,
-    icon: '/icons/telegram_outline.png',
-    isImage: true,
-    alt: 'Telegram',
-    name: 'Telegram',
-  },
-  { href: SUI_SENTINEL_GITHUB_URL, icon: Github, isImage: false, alt: 'GitHub', name: 'Github' },
-  {
-    href: SUI_SENTINEL_DOCS_URL,
-    icon: '/icons/docs_outline.png',
-    isImage: true,
-    alt: 'Documentation',
-    name: 'Docs',
-  },
-]
 export function Footer() {
   return (
     <footer
