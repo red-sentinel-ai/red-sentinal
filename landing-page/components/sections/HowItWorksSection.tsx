@@ -45,100 +45,103 @@ export function HowItWorksSection() {
             earns real rewards for mastery.
           </p>
         </motion.div>
-
-        {/* Desktop Layout */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          viewport={{ once: true }}
-          className="relative hidden lg:grid grid-cols-5 grid-rows-3 gap-8 items-center text-black min-h-[760px] px-8"
+        <div
+          style={{ backgroundImage: 'url("/img/lines.png")' }}
+          className="relative"
         >
-          {/* Text Sections */}
-          <div className="col-span-1 row-start-2 text-right">
-            <h3 className="mb-1 text-2xl">{features.attack.title}</h3>
-            <p>{features.attack.description}</p>
-          </div>
-          <div className="col-span-1 col-start-5 row-start-1 text-left">
-            <h3 className="mb-1 text-2xl">{features.deploy.title}</h3>
-            <p>{features.deploy.description}</p>
-          </div>
-          <div className="col-span-1 col-start-5 row-start-3 text-left">
-            <h3 className="mb-1 text-2xl">{features.evolve.title}</h3>
-            <p>{features.evolve.description}</p>
-          </div>
-
-          {/* Central Image */}
-          <div className="col-span-3 col-start-2 row-span-3 flex items-center justify-center">
-            <Image
-              src="/img/threeCubes.png"
-              alt="Deploy, Attack, and Evolve your AI Sentinel"
-              width={288}
-              height={503}
-              className="object-contain"
-            />
-          </div>
-
-          <Image
-            src="/img/arrowLeft.png"
-            alt="Arrow pointing from Deploy text to the top cube"
-            width={258}
-            height={258}
-            className="absolute top-[17%] right-[26%] object-contain"
-          />
-          <Image
-            src="/img/arrowRight.png"
-            alt="Arrow pointing from Attack & Earn text to the middle cube"
-            width={258}
-            height={258}
-            className="absolute top-[56%] -translate-y-1/2 left-[23%] object-contain"
-          />
-          <Image
-            src="/img/arrowRightBottom.png"
-            alt="Arrow pointing from Evolve & Profit text to the bottom cube"
-            width={258}
-            height={258}
-            className="absolute bottom-[12%] right-[28%] object-contain"
-          />
-        </motion.div>
-
-        {/* Mobile Layout */}
-        <div className="lg:hidden flex flex-col gap-10 items-center">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
             viewport={{ once: true }}
-            className="relative w-full max-w-md"
+            className="relative hidden lg:grid grid-cols-5 grid-rows-3 gap-8 items-center text-black min-h-[760px] px-8"
           >
-            <Image
-              src="/img/threeCubes.png"
-              alt="Attack, Deploy, and Evolve features illustrated with cubes"
-              width={500}
-              height={500}
-              className="w-full h-auto"
-            />
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="flex flex-col gap-8 text-center"
-          >
-            <div>
-              <h3 className="mb-1 text-2xl">{features.deploy.title}</h3>
-              <p>{features.deploy.description}</p>
-            </div>
-            <div>
+            {/* Text Sections */}
+            <div className="col-span-1 row-start-2 text-right">
               <h3 className="mb-1 text-2xl">{features.attack.title}</h3>
               <p>{features.attack.description}</p>
             </div>
-            <div>
+            <div className="col-span-1 col-start-5 row-start-1 text-left">
+              <h3 className="mb-1 text-2xl">{features.deploy.title}</h3>
+              <p>{features.deploy.description}</p>
+            </div>
+            <div className="col-span-1 col-start-5 row-start-3 text-left">
               <h3 className="mb-1 text-2xl">{features.evolve.title}</h3>
               <p>{features.evolve.description}</p>
             </div>
+
+            {/* Central Image */}
+            <div className="col-span-3 col-start-2 row-span-3 flex items-center justify-center">
+              <Image
+                src="/img/threeCubes.png"
+                alt="Deploy, Attack, and Evolve your AI Sentinel"
+                width={288}
+                height={503}
+                className="object-contain"
+              />
+            </div>
+
+            <Image
+              src="/img/arrowLeft.png"
+              alt="Arrow pointing from Deploy text to the top cube"
+              width={258}
+              height={258}
+              className="absolute top-[17%] right-[26%] object-contain"
+            />
+            <Image
+              src="/img/arrowRight.png"
+              alt="Arrow pointing from Attack & Earn text to the middle cube"
+              width={258}
+              height={258}
+              className="absolute top-[56%] -translate-y-1/2 left-[23%] object-contain"
+            />
+            <Image
+              src="/img/arrowRightBottom.png"
+              alt="Arrow pointing from Evolve & Profit text to the bottom cube"
+              width={258}
+              height={258}
+              className="absolute bottom-[12%] right-[28%] object-contain"
+            />
           </motion.div>
+
+          {/* Mobile Layout */}
+          <div className="lg:hidden flex flex-col gap-10 items-center">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="relative w-full max-w-md"
+            >
+              <Image
+                src="/img/threeCubes.png"
+                alt="Attack, Deploy, and Evolve features illustrated with cubes"
+                width={500}
+                height={500}
+                className="w-full h-auto"
+              />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="flex flex-col gap-8 text-center"
+            >
+              <div>
+                <h3 className="mb-1 text-2xl">{features.deploy.title}</h3>
+                <p>{features.deploy.description}</p>
+              </div>
+              <div>
+                <h3 className="mb-1 text-2xl">{features.attack.title}</h3>
+                <p>{features.attack.description}</p>
+              </div>
+              <div>
+                <h3 className="mb-1 text-2xl">{features.evolve.title}</h3>
+                <p>{features.evolve.description}</p>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </div>
     </section>
