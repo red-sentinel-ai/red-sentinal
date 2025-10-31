@@ -12,16 +12,6 @@ export const LandingPage = () => {
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.3 }}
       >
-        <div>
-          <Image
-            src="/img/threeCircles.png"
-            width={813}
-            height={979}
-            alt="three circles"
-            className="absolute left-1/2 -translate-x-1/2 -top-28"
-          />
-        </div>
-
         <div className="max-w-[933px] mx-auto">
           <motion.div
             className="text-center z-10 "
