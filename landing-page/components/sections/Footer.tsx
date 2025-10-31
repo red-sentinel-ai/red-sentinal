@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { Github, BookOpen } from 'lucide-react'
+import { Github } from 'lucide-react'
 import {
   SUI_SENTINEL_X_URL,
   SUI_SENTINEL_GITHUB_URL,
@@ -42,7 +42,7 @@ export function Footer() {
     >
       <div className="relative z-10 max-w-[1440px] mx-auto pb-4 md:pb-0 px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-12 text-center md:text-left">
-          <div className="max-w-md">
+          <div className="max-w-md md:self-stretch flex flex-col">
             <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
               <Image
                 src="/icons/logo_large.png"
@@ -55,6 +55,10 @@ export function Footer() {
             <p className="text-black leading-relaxed">
               Sui Sentinel is a decentralized network that audits, red-teams, and evolves AI models
               through real-world challenges ensuring they grow stronger with every test.
+            </p>
+            <p className="mt-auto py-4 text-white font-medium">
+              <span>© 2025 </span>
+              <span>All Rights Reserved @Cyphronix Software</span>
             </p>
           </div>
 
