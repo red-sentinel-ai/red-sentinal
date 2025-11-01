@@ -26,8 +26,8 @@ export function Footer() {
               Sui Sentinel is a decentralized network that audits, red-teams, and evolves AI models
               through real-world challenges ensuring they grow stronger with every test.
             </p>
-            <p className="mt-auto py-4 text-white font-medium">
-              <span>© 2025 </span>
+            <p className="hidden md:block mt-auto py-4 text-white font-medium">
+              <span>© 2025 </span>
               <span>All Rights Reserved @Cyphronix Software</span>
             </p>
           </div>
@@ -108,6 +108,11 @@ export function Footer() {
             </div>
           </div>
         </div>
+
+        <p className="md:hidden text-center mt-8 pt-4 text-white font-medium">
+          <span>© 2025 </span>
+          <span>All Rights Reserved @Cyphronix Software</span>
+        </p>
       </div>
     </footer>
   )
