@@ -2,23 +2,21 @@ import type { Metadata } from 'next'
 import { Analytics } from '@vercel/analytics/react'
 import NextTopLoader from 'nextjs-toploader'
 import { ToastContainer } from 'react-toastify'
+import localFont from 'next/font/local'
 import 'react-toastify/dist/ReactToastify.css'
-import { IBM_Plex_Mono, Inter } from 'next/font/google'
 
 import './globals.css'
 import { Providers } from './providers'
 import Footer from '@/components/Footer'
 import { SUI_SENTINEL_APP_URL, SUI_SENTINEL_X_USERNAME } from '@/constants'
 
-const ibmPlexMono = IBM_Plex_Mono({
-  variable: '--font-ibm-plex-mono',
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-})
-
-const inter = Inter({
-  variable: '--font-inter',
-  subsets: ['latin'],
+const satoshi = localFont({
+  src: [
+    { path: '../public/fonts/Satoshi-Variable.ttf', style: 'normal' },
+    { path: '../public/fonts/Satoshi-VariableItalic.ttf', style: 'italic' },
+  ],
+  variable: '--font-satoshi',
+  display: 'swap',
 })
 
 export const metadata: Metadata = {
@@ -45,7 +43,6 @@ export const metadata: Metadata = {
   icons: {
     icon: '/icons/shield.png',
     shortcut: '/icons/shield.png',
-    // apple: '/icons/apple-touch-icon.png',
   },
 
   openGraph: {
@@ -78,13 +75,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${ibmPlexMono.variable} ${inter.variable} font-sans antialiased`}>
+      <body className={`${satoshi.className} bg-white text-black`}>
         <Providers>
           <NextTopLoader
-            color="#FFFFFF"
+            color="#000000"
             showSpinner={false}
           />
-          {children}
+          <main className="flex-grow">{children}</main>
           <Footer />
           <ToastContainer />
         </Providers>

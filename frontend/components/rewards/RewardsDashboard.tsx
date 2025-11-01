@@ -45,7 +45,7 @@ export function RewardsDashboard() {
 
   if (!isLoadingMissions && !missionsData?.enabled) {
     return (
-      <div className="min-h-body bg-gradient-to-br from-black via-[#0a0a0a] to-[#1a1a1a]">
+      <div className="min-h-body bg-white flex items-center justify-center">
         <div className="container mx-auto px-4 py-12">
           <AnimatePresence mode="wait">
             <motion.div
@@ -54,22 +54,22 @@ export function RewardsDashboard() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <Card className="bg-[#12121266] backdrop-blur-lg border border-[#383838] rounded-2xl">
+              <Card className="bg-gray-50 border border-gray-200">
                 <CardContent className="text-center py-16">
                   <motion.div
-                    className="w-24 h-24 rounded-full bg-gradient-to-br from-primary_blue_20 to-[#1388D5]/20 flex items-center justify-center mx-auto mb-6"
+                    className="w-24 h-24 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-6"
                     whileHover={{ scale: 1.05 }}
                   >
-                    <Trophy className="h-12 w-12 text-primary_blue" />
+                    <Trophy className="h-12 w-12 text-blue-600" />
                   </motion.div>
-                  <h2 className="text-3xl font-bold mb-4 text-white uppercase">
+                  <h2 className="text-3xl font-bold mb-4 text-black uppercase">
                     Rewards Coming Soon
                   </h2>
-                  <p className="text-[#B5B5B5] text-lg">
+                  <p className="text-gray-600 text-lg">
                     Our rewards program is currently being prepared. Check back soon!
                   </p>
                   {missionsData?.message && (
-                    <p className="text-sm text-[#B5B5B5] mt-4 bg-[#12121266] p-3 rounded-lg border border-[#383838]">
+                    <p className="text-sm text-gray-500 mt-4 bg-white p-3 rounded-lg border border-gray-200">
                       {missionsData.message}
                     </p>
                   )}
@@ -83,7 +83,7 @@ export function RewardsDashboard() {
   }
 
   return (
-    <div className="min-h-body bg-gradient-to-br from-black via-[#0a0a0a] to-[#1a1a1a] pt-20">
+    <div className="min-h-body bg-white pt-20">
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-7xl mx-auto">
           <AnimatePresence mode="wait">
@@ -93,14 +93,14 @@ export function RewardsDashboard() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <motion.div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary_blue_20 to-[#1388D5]/20 px-4 py-2 rounded-full mb-4 border border-primary_blue_30">
-                <Sparkles className="h-4 w-4 text-primary_blue" />
-                <span className="text-sm font-medium text-primary_blue">Sui Sentinel Rewards</span>
+              <motion.div className="inline-flex items-center gap-2 bg-blue-100 px-4 py-2 rounded-full mb-4 border border-blue-200">
+                <Sparkles className="h-4 w-4 text-blue-600" />
+                <span className="text-sm font-medium text-blue-800">Sui Sentinel Rewards</span>
               </motion.div>
-              <h1 className="text-5xl font-bold mb-4 text-white uppercase">
+              <h1 className="text-5xl font-bold mb-4 text-black uppercase">
                 Earn. Compete. Conquer.
               </h1>
-              <p className="text-xl text-[#B5B5B5] max-w-2xl mx-auto mb-6">
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-6">
                 Complete missions, earn points, and unlock exclusive rewards in the Sui Sentinel
                 ecosystem
               </p>
@@ -110,8 +110,8 @@ export function RewardsDashboard() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <motion.button className="border border-primary_blue bg-[#12121266] backdrop-blur-lg rounded-lg px-6 py-3 text-primary_blue hover:bg-[#1388D5] hover:text-black hover:border-[#1388D5] transition-all duration-300 group flex items-center gap-2">
-                    <BookOpen className="h-4 w-4 group-hover:rotate-12 transition-transform duration-300" />
+                  <motion.button className="btn btn-outline flex items-center gap-2">
+                    <BookOpen className="h-4 w-4" />
                     Program Guide
                     <ExternalLink className="h-3 w-3 opacity-60" />
                   </motion.button>
@@ -119,8 +119,8 @@ export function RewardsDashboard() {
               </div>
               {isLoadingMissions && (
                 <div className="flex items-center justify-center gap-2 mt-4">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary_blue"></div>
-                  <span className="text-sm text-primary_blue">Loading latest missions...</span>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-black"></div>
+                  <span className="text-sm text-black">Loading latest missions...</span>
                 </div>
               )}
             </motion.div>
@@ -146,7 +146,7 @@ export function RewardsDashboard() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.2 }}
           >
-            <Card className="bg-[#12121266] backdrop-blur-lg border border-[#383838] rounded-2xl">
+            <Card className="bg-gray-50/50 border border-gray-200 rounded-2xl">
               <CardContent className="p-6">
                 <Tabs defaultValue="missions">
                   <div className="flex items-center justify-between mb-6">
@@ -167,19 +167,8 @@ export function RewardsDashboard() {
                       </TabsTrigger>
                     </TabsList>
                     <div className="flex items-center gap-3">
-                      <Link
-                        href={REWARDS_DOCS_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <motion.button className="border border-primary_blue_30 bg-[#12121266] backdrop-blur-lg rounded-lg px-4 py-2 text-primary_blue hover:bg-primary_blue_20 hover:border-primary_blue_30 transition-all duration-300 group flex items-center gap-2">
-                          <BookOpen className="h-4 w-4 group-hover:rotate-12 transition-transform duration-300" />
-                          <span className="hidden sm:inline">Docs</span>
-                          <ExternalLink className="h-3 w-3 opacity-60" />
-                        </motion.button>
-                      </Link>
                       <Link href="/rewards/leaderboard">
-                        <motion.button className="border border-primary_pink_light bg-[#12121266] backdrop-blur-lg rounded-lg px-4 py-2 text-primary_pink_light hover:bg-primary_pink_light hover:text-black hover:border-primary_pink_light transition-all duration-300 flex items-center gap-2">
+                        <motion.button className="btn btn-black flex items-center gap-2">
                           <Trophy className="h-4 w-4" />
                           Leaderboard
                           <ArrowRight className="h-3 w-3" />

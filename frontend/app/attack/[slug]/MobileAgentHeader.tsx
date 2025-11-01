@@ -9,11 +9,11 @@ interface MobileAgentHeaderProps {
 
 export const MobileAgentHeader = ({ agentName, onInfoClick }: MobileAgentHeaderProps) => {
   return (
-    <div className="flex items-center justify-between px-3 py-2 border-b border-gray-700 bg-[#101112] flex-shrink-0">
-      <h1 className="text-lg font-bold text-white truncate">Target: {agentName}</h1>
+    <div className="flex items-center justify-between px-3 py-2 border-b border-gray-200 bg-white flex-shrink-0">
+      <h1 className="text-lg font-bold text-black truncate">Target: {agentName}</h1>
       <button
         onClick={onInfoClick}
-        className="p-2 text-gray-300 bg-gray-800 rounded-full hover:bg-gray-700 transition-colors"
+        className="p-2 text-gray-600 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
         aria-label="Show agent information"
       >
         <Info className="w-5 h-5" />

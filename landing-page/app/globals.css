@@ -6,6 +6,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --font-satoshi: var(--font-satoshi), sans-serif;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -44,6 +45,7 @@
 }
 
 :root {
+  font-family: var(--font-satoshi);
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -125,6 +127,9 @@
   }
 }
 
+.shadow-v1 {
+  box-shadow: 0 4px 63px 15px rgba(0, 0, 0, 0.25);
+}
 .robo-card {
   animation: 8s rotate linear infinite;
   background-color: black;
@@ -222,4 +227,42 @@
   syntax: '<angle>';
   initial-value: 0deg;
   inherits: false;
+}
+
+.btn {
+  border-radius: 12px;
+  min-height: 62px;
+  min-width: 176px;
+}
+
+.btn-white {
+  background-color: white;
+  color: black;
+}
+
+.btn-white:hover{
+  background-color: rgb(251, 248, 248);
+}
+
+.btn-outline {
+  border: 1px solid black;
+  color: black;
+}
+
+.btn-outline-white {
+  border: 1px solid white;
+  color: white;
+}
+
+.btn-outline:hover{
+  background-color: rgba(0, 0, 0 , 0.1);
+}
+
+.btn-black {
+  background-color: black;
+  color: white;
+}
+
+.btn-black:hover{
+  background-color: rgb(21, 19, 19);
 }

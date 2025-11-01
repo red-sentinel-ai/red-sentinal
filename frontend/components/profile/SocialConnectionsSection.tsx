@@ -64,15 +64,15 @@ export function SocialConnectionsSection() {
 
   if (isLoading) {
     return (
-      <Card className="bg-gradient-to-r from-gray-900/50 to-gray-800/30 border-gray-700/50 p-6">
+      <Card className="bg-gray-50 border-gray-200 p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="animate-pulse bg-gray-700 h-5 w-5 rounded"></div>
-            <div className="animate-pulse bg-gray-700 h-5 w-40 rounded"></div>
+            <div className="animate-pulse bg-gray-200 h-5 w-5 rounded"></div>
+            <div className="animate-pulse bg-gray-200 h-5 w-40 rounded"></div>
           </div>
           <div className="flex gap-3">
-            <div className="animate-pulse bg-gray-700 h-9 w-28 rounded-lg"></div>
-            <div className="animate-pulse bg-gray-700 h-9 w-36 rounded-lg"></div>
+            <div className="animate-pulse bg-gray-200 h-9 w-28 rounded-lg"></div>
+            <div className="animate-pulse bg-gray-200 h-9 w-36 rounded-lg"></div>
           </div>
         </div>
       </Card>
@@ -83,16 +83,16 @@ export function SocialConnectionsSection() {
   const connectionCount = (hasTwitter ? 1 : 0) + (hasDiscord ? 1 : 0)
 
   return (
-    <Card className="bg-gradient-to-r from-gray-900/50 to-gray-800/30 border-gray-700/50 p-6 hover:border-gray-600/50 transition-all duration-200">
+    <Card className="bg-gray-50 border-gray-200 p-6 hover:border-gray-300 transition-all duration-200">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-500/10 rounded-lg border border-blue-500/20">
-              <Users className="h-5 w-5 text-blue-400" />
+            <div className="p-2 bg-blue-100 rounded-lg border border-blue-200">
+              <Users className="h-5 w-5 text-blue-600" />
             </div>
             <div>
-              <h3 className="font-semibold text-white text-lg">Social Connections</h3>
-              <p className="text-sm text-gray-400">
+              <h3 className="font-semibold text-black text-lg">Social Connections</h3>
+              <p className="text-sm text-gray-500">
                 {hasAnyConnection
                   ? `${connectionCount} of 2 platforms connected`
                   : 'Connect your social accounts'}
@@ -103,7 +103,7 @@ export function SocialConnectionsSection() {
           {hasAnyConnection && (
             <Badge
               variant="secondary"
-              className="bg-green-500/10 text-green-400 border-green-500/20 px-3 py-1"
+              className="bg-green-100 text-green-800 border-green-200 px-3 py-1"
             >
               <Check className="h-3 w-3 mr-1" />
               Active
@@ -112,23 +112,23 @@ export function SocialConnectionsSection() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="flex items-center justify-between p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
+          <div className="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-200">
             <div className="flex items-center gap-3">
               <div className="relative">
                 <Image
-                  src="/icons/x.png"
+                  src="/icons/x_black.png"
                   width={20}
                   height={20}
                   alt="X (Twitter)"
                   className="rounded"
                 />
                 {hasTwitter && (
-                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-800"></div>
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
                 )}
               </div>
               <div>
-                <p className="font-medium text-white text-sm">X (Twitter)</p>
-                <p className="text-xs text-gray-400">
+                <p className="font-medium text-black text-sm">X (Twitter)</p>
+                <p className="text-xs text-gray-500">
                   {hasTwitter ? 'Connected' : 'Not connected'}
                 </p>
               </div>
@@ -143,11 +143,11 @@ export function SocialConnectionsSection() {
                 size="sm"
                 variant="outline"
                 disabled={disconnectingPlatform === 'twitter'}
-                className="h-8 px-3 text-xs border-red-500/30 text-red-400 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/50 disabled:opacity-50"
+                className="h-8 px-3 text-xs border-red-200 text-red-600 hover:text-red-700 hover:bg-red-50 hover:border-red-300 disabled:opacity-50"
               >
                 {disconnectingPlatform === 'twitter' ? (
                   <>
-                    <div className="animate-spin h-3 w-3 mr-1 border border-red-400 border-t-transparent rounded-full"></div>
+                    <div className="animate-spin h-3 w-3 mr-1 border border-red-500 border-t-transparent rounded-full"></div>
                     Disconnecting...
                   </>
                 ) : (
@@ -165,11 +165,11 @@ export function SocialConnectionsSection() {
                 }}
                 size="sm"
                 disabled={connectingPlatform === 'twitter'}
-                className="h-8 px-3 text-xs bg-blue-500/10 text-blue-400 border border-blue-500/30 hover:bg-blue-500/20 hover:border-blue-500/50 disabled:opacity-50"
+                className="h-8 px-3 text-xs bg-blue-100 text-blue-700 border border-blue-200 hover:bg-blue-200 hover:border-blue-300 disabled:opacity-50"
               >
                 {connectingPlatform === 'twitter' ? (
                   <>
-                    <div className="animate-spin h-3 w-3 mr-1 border border-blue-400 border-t-transparent rounded-full"></div>
+                    <div className="animate-spin h-3 w-3 mr-1 border border-blue-600 border-t-transparent rounded-full"></div>
                     Connecting...
                   </>
                 ) : (
@@ -179,23 +179,23 @@ export function SocialConnectionsSection() {
             )}
           </div>
 
-          <div className="flex items-center justify-between p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
+          <div className="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-200">
             <div className="flex items-center gap-3">
               <div className="relative">
                 <Image
-                  src="/icons/discord.svg"
+                  src="/icons/discord_black.svg"
                   width={20}
                   height={20}
                   alt="Discord"
                   className="rounded"
                 />
                 {hasDiscord && (
-                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-800"></div>
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
                 )}
               </div>
               <div>
-                <p className="font-medium text-white text-sm">Discord</p>
-                <p className="text-xs text-gray-400">
+                <p className="font-medium text-black text-sm">Discord</p>
+                <p className="text-xs text-gray-500">
                   {hasDiscord ? 'Connected' : 'Not connected'}
                 </p>
               </div>
@@ -210,11 +210,11 @@ export function SocialConnectionsSection() {
                 size="sm"
                 variant="outline"
                 disabled={disconnectingPlatform === 'discord'}
-                className="h-8 px-3 text-xs border-red-500/30 text-red-400 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/50 disabled:opacity-50"
+                className="h-8 px-3 text-xs border-red-200 text-red-600 hover:text-red-700 hover:bg-red-50 hover:border-red-300 disabled:opacity-50"
               >
                 {disconnectingPlatform === 'discord' ? (
                   <>
-                    <div className="animate-spin h-3 w-3 mr-1 border border-red-400 border-t-transparent rounded-full"></div>
+                    <div className="animate-spin h-3 w-3 mr-1 border border-red-500 border-t-transparent rounded-full"></div>
                     Disconnecting...
                   </>
                 ) : (
@@ -232,11 +232,11 @@ export function SocialConnectionsSection() {
                 }}
                 size="sm"
                 disabled={connectingPlatform === 'discord'}
-                className="h-8 px-3 text-xs bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500/20 hover:border-indigo-500/50 disabled:opacity-50"
+                className="h-8 px-3 text-xs bg-indigo-100 text-indigo-700 border border-indigo-200 hover:bg-indigo-200 hover:border-indigo-300 disabled:opacity-50"
               >
                 {connectingPlatform === 'discord' ? (
                   <>
-                    <div className="animate-spin h-3 w-3 mr-1 border border-indigo-400 border-t-transparent rounded-full"></div>
+                    <div className="animate-spin h-3 w-3 mr-1 border border-indigo-600 border-t-transparent rounded-full"></div>
                     Connecting...
                   </>
                 ) : (
@@ -248,12 +248,12 @@ export function SocialConnectionsSection() {
         </div>
 
         {!hasAnyConnection && (
-          <div className="p-4 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+          <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
             <div className="flex items-start gap-3">
-              <ExternalLink className="h-4 w-4 text-blue-400 mt-0.5 flex-shrink-0" />
+              <ExternalLink className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
               <div>
-                <p className="text-sm text-blue-400 font-medium">Connect to unlock rewards</p>
-                <p className="text-xs text-blue-300/70 mt-1">
+                <p className="text-sm text-blue-800 font-medium">Connect to unlock rewards</p>
+                <p className="text-xs text-blue-700/80 mt-1">
                   Connect at least one social account to access the rewards program and exclusive
                   benefits.
                 </p>

@@ -1,3 +1,4 @@
+import { Github } from 'lucide-react'
 import { ChartDataPoint } from '@/components/charts/PrizePoolChartModal'
 
 export const AGENT_REGISTRY_ADDRESS =
@@ -131,3 +132,28 @@ export const TEAM_MEMBER_WALLETS = [
   '0x5a8f695e50fff36c97dd1f7999c85293b811a932db508bbd51ab1fa5f742417f',
   '0xc647dfdb8d8b575809902c9b86a26b6ace9f9271dfe5385468f503833a237177',
 ].map((wallet) => wallet.toLowerCase())
+
+export const socialLinks = [
+  {
+    href: SUI_SENTINEL_X_URL,
+    icon: '/icons/x_black.png',
+    isImage: true,
+    alt: 'X (Twitter)',
+    name: 'Twitter',
+  },
+  {
+    href: SUI_SENTINEL_TELEGRAM_URL,
+    icon: '/icons/telegram_outline.png',
+    isImage: true,
+    alt: 'Telegram',
+    name: 'Telegram',
+  },
+  { href: SUI_SENTINEL_GITHUB_URL, icon: Github, isImage: false, alt: 'GitHub', name: 'Github' },
+  {
+    href: SUI_SENTINEL_DOCS_URL,
+    icon: '/icons/docs_outline.png',
+    isImage: true,
+    alt: 'Documentation',
+    name: 'Docs',
+  },
+]

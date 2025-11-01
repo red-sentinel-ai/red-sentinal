@@ -45,7 +45,7 @@ export const AgentsList = ({
           <LeaderboardSkeleton />
         ) : (
           <div className="text-sm flex flex-col gap-1">
-            <div className="hidden md:grid md:grid-cols-12 bg-[#2E40494D] backdrop-blur-xl p-3 rounded-lg mb-2 font-semibold">
+            <div className="hidden md:grid md:grid-cols-12 backdrop-blur-xl p-3 rounded-lg border border-black/30 hover:border-black/80 mb-2 font-semibold">
               <div className="col-span-3 grid grid-cols-12 items-center">
                 <p className="pr-1 col-span-1">#</p>
                 <div className="h-full w-[1px] bg-[#6F6F6F]" />
@@ -70,7 +70,7 @@ export const AgentsList = ({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.2, delay: idx * 0.05 }}
-                    className="bg-[#2E40494D] backdrop-blur-xl p-3 rounded-lg hover:bg-[#2E40497D] cursor-pointer"
+                    className="backdrop-blur-xl p-3 rounded-lg border border-black/30 hover:border-black/80 cursor-pointer"
                     onClick={() => router.push(`/attack/${agent.agent_path}`)}
                   >
                     <div className="md:hidden space-y-3">

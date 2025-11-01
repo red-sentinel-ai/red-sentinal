@@ -92,7 +92,7 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
     <Dialog
       open={open}
       onClose={handleClose}
-      className="bg-[#12121266] backdrop-blur-xl border border-[#383838] rounded-2xl p-6 max-w-lg w-full shadow-2xl"
+      className="bg-white border-gray-200 p-6 max-w-lg w-full"
     >
       {isCheckingRequest ? (
         <LoadingSkeleton />
@@ -101,8 +101,8 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
       ) : showSuccessState ? (
         <FeatureRequestSuccessState onClose={handleClose} />
       ) : (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
+        <div className="space-y-4 text-black">
+          <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
               <Image
                 src="/icons/check-mark.svg"
@@ -111,8 +111,8 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
                 alt="checkmark"
               />
               <div>
-                <h2 className="text-lg font-bold text-white">Request to Feature Your Agent</h2>
-                <p className="text-xs text-gray-400">
+                <h2 className="text-lg font-bold text-black">Request to Feature Your Agent</h2>
+                <p className="text-xs text-gray-500">
                   Please share a few details so we can consider your agent for featuring.
                 </p>
                 <div className="mt-2">
@@ -120,7 +120,7 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
                     href={`${SUI_SENTINEL_DOCS_URL}/agents/how-to-feature-your-agent#best-practices-before-requesting`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs text-[#558EB4] hover:text-[#1388D5] transition-colors flex items-center gap-1 underline"
+                    className="text-xs text-blue-600 hover:text-blue-800 transition-colors flex items-center gap-1 underline"
                   >
                     <BookOpen className="size-3" />
                     View best practices
@@ -131,7 +131,7 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
             <button
               onClick={handleClose}
               disabled={isPending}
-              className="text-gray-400 hover:text-white transition-colors p-1"
+              className="text-gray-500 hover:text-black transition-colors p-1"
               aria-label="Close modal"
             >
               <X className="size-5" />
@@ -141,23 +141,23 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
           <>
             <div className="space-y-3">
               <div className="space-y-2">
-                <label className="text-xs font-medium text-gray-300 flex items-center gap-1">
+                <label className="text-xs font-medium text-gray-600 flex items-center gap-1">
                   <User className="size-3" />
-                  Your Name <span className="text-red-400">*</span>
+                  Your Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   name="name"
                   value={form.name}
                   onChange={handleChange}
                   placeholder="Enter your full name"
-                  className="w-full px-3 py-2 text-sm bg-[#1a1b1f] border border-[#558eb466] rounded-lg text-white placeholder-gray-500 focus:border-[#558EB4] focus:outline-none transition-colors"
+                  className="w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-lg text-black placeholder-gray-400 focus:border-black focus:ring-black focus:outline-none transition-colors"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-medium text-gray-300 flex items-center gap-1">
+                <label className="text-xs font-medium text-gray-600 flex items-center gap-1">
                   <Mail className="size-3" />
-                  Email Address <span className="text-red-400">*</span>
+                  Email Address <span className="text-red-500">*</span>
                 </label>
                 <input
                   name="email"
@@ -165,15 +165,15 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
                   value={form.email}
                   onChange={handleChange}
                   placeholder="your.email@example.com"
-                  className="w-full px-3 py-2 text-sm bg-[#1a1b1f] border border-[#558eb466] rounded-lg text-white placeholder-gray-500 focus:border-[#558EB4] focus:outline-none transition-colors"
+                  className="w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-lg text-black placeholder-gray-400 focus:border-black focus:ring-black focus:outline-none transition-colors"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-2">
-                  <label className="text-xs font-medium text-gray-300 flex items-center gap-1">
+                  <label className="text-xs font-medium text-gray-600 flex items-center gap-1">
                     <Image
-                      src="/icons/x.png"
+                      src="/icons/x_black.png"
                       alt="X (Twitter)"
                       width={12}
                       height={12}
@@ -182,7 +182,7 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
                     Twitter Username
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
+                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm">
                       @
                     </span>
                     <input
@@ -191,24 +191,24 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
                       value={form.twitter_username}
                       onChange={handleChange}
                       placeholder="username"
-                      className="w-full pl-6 pr-3 py-2 text-sm bg-[#1a1b1f] border border-[#558eb466] rounded-lg text-white placeholder-gray-500 focus:border-[#558EB4] focus:outline-none transition-colors"
+                      className="w-full pl-6 pr-3 py-2 text-sm bg-white border border-gray-300 rounded-lg text-black placeholder-gray-400 focus:border-black focus:ring-black focus:outline-none transition-colors"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-xs font-medium text-gray-300 flex items-center gap-1">
+                  <label className="text-xs font-medium text-gray-600 flex items-center gap-1">
                     <Image
-                      src="/icons/telegram.png"
+                      src="/icons/telegram_black.png"
                       alt="Telegram"
-                      width={12}
-                      height={12}
+                      width={16}
+                      height={16}
                       className="transition-transform duration-300"
                     />
                     Telegram Username
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
+                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm">
                       @
                     </span>
                     <input
@@ -217,16 +217,16 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
                       value={form.telegram_username}
                       onChange={handleChange}
                       placeholder="username"
-                      className="w-full pl-6 pr-3 py-2 text-sm bg-[#1a1b1f] border border-[#558eb466] rounded-lg text-white placeholder-gray-500 focus:border-[#558EB4] focus:outline-none transition-colors"
+                      className="w-full pl-6 pr-3 py-2 text-sm bg-white border border-gray-300 rounded-lg text-black placeholder-gray-400 focus:border-black focus:ring-black focus:outline-none transition-colors"
                     />
                   </div>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-medium text-gray-300 flex items-center gap-1">
+                <label className="text-xs font-medium text-gray-600 flex items-center gap-1">
                   <MessageSquare className="size-3" />
-                  Any notes you wish to provide <span className="text-red-400">*</span>
+                  Any notes you wish to provide <span className="text-red-500">*</span>
                 </label>
                 <textarea
                   name="description"
@@ -234,14 +234,14 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
                   onChange={handleChange}
                   placeholder="Write here..."
                   rows={3}
-                  className="w-full px-3 py-2 text-sm bg-[#1a1b1f] border border-[#558eb466] rounded-lg text-white placeholder-gray-500 focus:border-[#558EB4] focus:outline-none transition-colors resize-none"
+                  className="w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-lg text-black placeholder-gray-400 focus:border-black focus:ring-black focus:outline-none transition-colors resize-none"
                 />
               </div>
             </div>
 
             {error && (
-              <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3">
-                <p className="text-xs text-red-400 flex items-center gap-2">
+              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                <p className="text-xs text-red-700 flex items-center gap-2">
                   <X className="size-3" />
                   {error}
                 </p>
@@ -249,8 +249,8 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
             )}
 
             {!address && (
-              <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3">
-                <p className="text-xs text-yellow-400 flex items-center gap-2">
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                <p className="text-xs text-yellow-800 flex items-center gap-2">
                   <MessageSquare className="size-3" />
                   Please connect your wallet to submit a feature request.
                 </p>
@@ -260,7 +260,7 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
             <button
               onClick={handleSubmit}
               disabled={!address || isPending || !form.name || !form.email || !form.description}
-              className="w-full bg-gradient-to-r from-[#558EB4] to-[#1388D5] hover:from-[#1388D5] hover:to-[#558EB4] disabled:from-gray-600 disabled:to-gray-700 text-white rounded-full py-3 text-sm font-bold transition-all duration-300 shadow-lg hover:shadow-glow-blue disabled:shadow-none disabled:cursor-not-allowed"
+              className="w-full btn btn-black disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
               {isPending ? (
                 <div className="flex items-center justify-center gap-2">

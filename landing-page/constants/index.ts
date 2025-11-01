@@ -1,4 +1,4 @@
-import { Coins, Shield, Target, Trophy, Users, Zap } from 'lucide-react'
+import { Coins, Github, Shield, Target, Trophy, Users, Zap } from 'lucide-react'
 
 export const SUI_SENTINEL_APP_URL = 'https://app.suisentinel.xyz/'
 export const SUI_SENTINEL_DOCS_URL = 'https://docs.suisentinel.xyz/'
@@ -87,3 +87,28 @@ export const TWEETS = [
 ]
 
 export const EXTENDED_TWEETS = [...TWEETS, ...TWEETS, ...TWEETS, ...TWEETS, ...TWEETS, ...TWEETS]
+
+export const socialLinks = [
+  {
+    href: SUI_SENTINEL_X_URL,
+    icon: '/icons/x_black.png',
+    isImage: true,
+    alt: 'X (Twitter)',
+    name: 'Twitter',
+  },
+  {
+    href: SUI_SENTINEL_TELEGRAM_URL,
+    icon: '/icons/telegram_outline.png',
+    isImage: true,
+    alt: 'Telegram',
+    name: 'Telegram',
+  },
+  { href: SUI_SENTINEL_GITHUB_URL, icon: Github, isImage: false, alt: 'GitHub', name: 'Github' },
+  {
+    href: SUI_SENTINEL_DOCS_URL,
+    icon: '/icons/docs_outline.png',
+    isImage: true,
+    alt: 'Documentation',
+    name: 'Docs',
+  },
+]
