@@ -6,7 +6,7 @@ export const LandingPage = () => {
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        className="mt-24 lg:mt-32 px-4 w-full max-w-[1900px] mx-auto relative"
+        className="mt-24 px-4 w-full max-w-[1900px] mx-auto relative"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
@@ -25,7 +25,7 @@ export const LandingPage = () => {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 justify-center pt-32 text-center gap-9 overflow-hidden px-4 pb-4 z-10 relative">
+          <div className="grid grid-cols-1 lg:grid-cols-2 justify-center pt-20 text-center gap-9 overflow-hidden px-4 pb-4 z-10 relative">
             <motion.div
               className="border border-black rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-1 backdrop-blur-[0.1px] group"
               initial={{ opacity: 0, x: -50 }}
@@ -35,10 +35,10 @@ export const LandingPage = () => {
               <div className="relative">
                 <Image
                   src="/img/robot_defend.png"
-                  width={411}
+                  width={368}
                   height={546}
                   alt="robo"
-                  className="relative z-10 mx-auto -mt-[130px]"
+                  className="relative z-10 mx-auto -mt-[90px]"
                 />
 
                 <Image
@@ -46,7 +46,7 @@ export const LandingPage = () => {
                   width={411}
                   height={546}
                   alt="robo"
-                  className="absolute left-1/2 right-1/2 -translate-x-1/2 top-[128px] -z-10"
+                  className="absolute left-1/2 right-1/2 -translate-x-1/2 top-[88px] -z-10"
                 />
               </div>
 
@@ -89,10 +89,10 @@ export const LandingPage = () => {
               <div className="relative">
                 <Image
                   src="/img/robot_attack.png"
-                  width={411}
+                  width={368}
                   height={546}
                   alt="robo"
-                  className="relative z-10 mx-auto -mt-[136px]"
+                  className="relative z-10 mx-auto -mt-[96px]"
                 />
 
                 <Image
@@ -100,7 +100,7 @@ export const LandingPage = () => {
                   width={411}
                   height={546}
                   alt="robo"
-                  className="absolute left-1/2 right-1/2 -translate-x-1/2 top-[136px] -z-10"
+                  className="absolute left-1/2 right-1/2 -translate-x-1/2 top-[96px] -z-10"
                 />
               </div>
 
