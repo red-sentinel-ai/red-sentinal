@@ -104,7 +104,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-white">
         <RiveLoader />
       </div>
     )
@@ -112,9 +112,9 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
   if (error || !agent) {
     return (
-      <div className="min-h-screen bg-black text-[#B5B5B5] p-4 pt-20">
+      <div className="min-h-screen bg-white text-gray-800 p-4 pt-20">
         <div className="flex items-center justify-center min-h-[400px]">
-          <p className="text-lg text-gray-400">{error?.message || 'Agent not found'}</p>
+          <p className="text-lg text-gray-600">{error?.message || 'Agent not found'}</p>
         </div>
       </div>
     )
@@ -122,15 +122,16 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
   if (!isMobile) {
     return (
-      <div className="min-h-screen pt-16 flex">
+      <div className="min-h-screen pt-16 flex bg-white">
         <ResizablePanelGroup
           direction="horizontal"
           className="w-full"
         >
           <ResizablePanel
-            defaultSize={20}
+            defaultSize={25}
             minSize={20}
             maxSize={40}
+            className="bg-gray-50/50"
           >
             <AgentSidebar
               agent={agent}
@@ -138,7 +139,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
             />
           </ResizablePanel>
           <ResizableHandle withHandle={true} />
-          <ResizablePanel defaultSize={80}>
+          <ResizablePanel defaultSize={75}>
             <div className="max-w-v1 mx-auto w-full h-full">
               <ChatInterface
                 agent={agent}
@@ -165,7 +166,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   }
 
   return (
-    <div className="h-screen pt-16 flex flex-col bg-[#101112]">
+    <div className="h-screen pt-16 flex flex-col bg-white">
       <MobileAgentHeader
         agentName={agent.agent_name}
         onInfoClick={() => setIsSidebarOpen(true)}
@@ -198,7 +199,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
               animate={{ x: '0%' }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="fixed top-0 left-0 bottom-0 w-[85%] max-w-sm z-50 shadow-2xl"
+              className="fixed top-0 left-0 bottom-0 w-[85%] max-w-sm z-50 shadow-2xl bg-gray-50"
             >
               <AgentSidebar
                 agent={agent}

@@ -99,17 +99,17 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
   return (
     <>
-      <div className="w-full bg-[#101112] flex flex-col overflow-x-hidden overflow-y-scroll px-6 py-2 mr-4 h-[calc(100vh-64px)]">
+      <div className="w-full flex flex-col overflow-x-hidden overflow-y-scroll px-6 py-2 mr-4 h-[calc(100vh-64px)]">
         <div>
           <Link
             href="/attack"
-            className="flex items-center gap-1 text-gray-400 hover:text-white transition-colors py-3"
+            className="flex items-center gap-1 text-gray-500 hover:text-black transition-colors py-3"
           >
             <ChevronLeft className="w-5 h-5" /> Back to Sentinels
           </Link>
         </div>
 
-        <div className="bg-[#202122] rounded-xl p-4 my-4 border border-gray-600/50 shadow-lg w-full text-xs sm:text-sm">
+        <div className="rounded-xl p-4 my-4 border border-gray-600/50 shadow-lg w-full text-xs sm:text-sm">
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-full overflow-hidden grow-0 shrink-0 basis-auto">
               <Image
@@ -137,7 +137,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
         <div className="flex flex-col gap-6 py-4">
           <div className="flex flex-col gap-2">
-            <h3 className="text-white/60 text-sm font-semibold uppercase">Sentinel Object Id</h3>
+            <h3 className="text-black/60 text-sm font-semibold uppercase">Sentinel Object Id</h3>
             <Link
               href={`${EXPLORER_BASE_URL}/object/${agent.object_id}`}
               target="_blank"
@@ -151,7 +151,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
           {isDrained ? (
             <div className="flex flex-col gap-2">
-              <h3 className="text-white/60 text-sm font-semibold uppercase flex items-center gap-1.5">
+              <h3 className="text-black/60 text-sm font-semibold uppercase flex items-center gap-1.5">
                 Total Bounty Won
               </h3>
               <p className="inline-block text-2xl font-semibold">{bountyWonAmount} SUI</p>
@@ -159,7 +159,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           ) : (
             <div className="flex flex-col gap-2">
               <div className="flex justify-between items-center">
-                <h3 className="text-white/60 text-sm font-semibold uppercase">Prize pool</h3>
+                <h3 className="text-black/60 text-sm font-semibold uppercase">Prize pool</h3>
                 {/* // TODO: Uncomment below comments when enabling chart feature */}
                 {/* <div className="flex items-center gap-1 text-green-400 text-xs font-medium">
                   <TrendingUp className="w-3 h-3" />
@@ -176,7 +176,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
               </div>
               {/* <Button
                 onClick={() => setIsChartModalOpen(true)}
-                className="w-full bg-transparent border border-[#558EB4]/50 text-[#558EB4] hover:bg-[#558EB4]/20 hover:text-white transition-colors duration-300 font-semibold text-sm mt-2"
+                className="w-full bg-transparent border border-[#558EB4]/50 text-[#558EB4] hover:bg-[#558EB4]/20 hover:text-black transition-colors duration-300 font-semibold text-sm mt-2"
                 size="sm"
               >
                 See Growth Chart
@@ -185,7 +185,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           )}
           {isDrained && winnerAddress && (
             <div className="flex flex-col gap-2">
-              <h3 className="text-white/60 text-sm font-semibold uppercase flex items-center gap-1.5">
+              <h3 className="text-black/60 text-sm font-semibold uppercase flex items-center gap-1.5">
                 <User className="w-4 h-4" />
                 Winner
               </h3>
@@ -200,7 +200,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           )}
 
           <div className="flex flex-col gap-2">
-            <h3 className="text-white/60 text-sm font-semibold uppercase">Message Price</h3>
+            <h3 className="text-black/60 text-sm font-semibold uppercase">Message Price</h3>
             <p className="inline-block text-2xl font-semibold">
               {(Number(agent.cost_per_message) / MIST_PER_SUI).toFixed(4)} SUI
             </p>
@@ -209,7 +209,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           {!isDrained && (
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-1">
-                <h3 className="text-white/70 text-sm font-semibold uppercase">Active Since</h3>
+                <h3 className="text-black/70 text-sm font-semibold uppercase">Active Since</h3>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger
@@ -219,10 +219,10 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
                       <Info
                         width={12}
                         height={12}
-                        className="text-white/60"
+                        className="text-black/60"
                       />
                     </TooltipTrigger>
-                    <TooltipContent className="bg-black border border-gray-700 text-white">
+                    <TooltipContent>
                       <p>Format: Days, Hours, Minutes, Seconds</p>
                     </TooltipContent>
                   </Tooltip>
@@ -230,26 +230,26 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
               </div>
               <p className="inline-block text-2xl font-semibold">
                 {activeSince.days}
-                <span className="text-lg text-white/60">D</span>{' '}
+                <span className="text-lg text-black/60">D</span>{' '}
                 {String(activeSince.hours).padStart(2, '0')}
-                <span className="text-lg text-white/60">H</span>{' '}
+                <span className="text-lg text-black/60">H</span>{' '}
                 {String(activeSince.minutes).padStart(2, '0')}
-                <span className="text-lg text-white/60">M</span>{' '}
+                <span className="text-lg text-black/60">M</span>{' '}
                 {String(activeSince.seconds).padStart(2, '0')}
-                <span className="text-lg text-white/60">S</span>
+                <span className="text-lg text-black/60">S</span>
               </p>
             </div>
           )}
         </div>
-        <div className="border-t border-t-white/20"></div>
+        <div className="border-t border-t-black/20"></div>
 
         <div className="z-20 mt-4 flex flex-col rounded-xl p-0 text-sm">
           <div className="flex flex-col gap-2">
-            <h3 className="text-white/60 text-sm font-semibold uppercase">Instructions</h3>
+            <h3 className="text-black/60 text-sm font-semibold uppercase">Instructions</h3>
             <p
               ref={instructionsRef}
               className={cn(
-                'text-sm font-medium whitespace-pre-wrap transition-all duration-300',
+                'text-sm font-medium blackspace-pre-wrap transition-all duration-300',
                 !isExpanded && shouldTruncate && 'line-clamp-4'
               )}
             >
@@ -267,14 +267,14 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
         </div>
 
         <div className="flex flex-col gap-6 py-4">
-          <div className="border-t border-t-white/20"></div>
+          <div className="border-t border-t-black/20"></div>
           <div className="flex justify-between">
             <div className="flex flex-col gap-2">
-              <h3 className="text-white/60 text-sm font-semibold uppercase">Total Participants</h3>
+              <h3 className="text-black/60 text-sm font-semibold uppercase">Total Participants</h3>
               <p className="inline-block text-2xl font-semibold text-center">{totalParticipants}</p>
             </div>
             <div className="flex flex-col gap-2 text-center">
-              <h3 className="text-white/60 text-sm font-semibold uppercase">Break Attempts</h3>
+              <h3 className="text-black/60 text-sm font-semibold uppercase">Break Attempts</h3>
               <p className="inline-block text-2xl font-semibold">{breakAttempts}</p>
             </div>
           </div>
@@ -282,7 +282,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
         <Button
           onClick={handleCopyLink}
-          className="w-full bg-transparent border border-[#558EB4] text-[#558EB4] hover:bg-[#558EB4]/20 hover:text-white transition-colors duration-300 font-semibold flex items-center gap-2 mt-4"
+          className="w-full bg-transparent border border-[#558EB4] text-[#558EB4] hover:bg-[#558EB4]/20 transition-colors duration-300 font-semibold flex items-center gap-2 mt-4"
         >
           Share {agent.agent_name} Link
           <LinkIcon className="w-4 h-4" />
@@ -294,24 +294,23 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           isLoading={isLoadingProfile}
         />
 
-        {/* --- QR CODE SECTION --- */}
-        <div className="mt-auto pt-6 border-t border-white/20">
-          <h3 className="text-white/80 text-sm font-semibold text-center mb-4">
+        <div className="mt-auto pt-6 border-t border-black/20">
+          <h3 className="text-black/80 text-sm font-semibold text-center mb-4">
             Scan this QR Code if you want to try to attack this agent using slush mobile wallet
           </h3>
-          <div className="bg-[#202122] rounded-xl p-4 border border-gray-600/50 flex justify-center">
+          <div className="bg-white rounded-xl p-4 border border-gray-200 flex justify-center">
             {deepLinkUrl ? (
               <QRCodeSVG
                 value={deepLinkUrl}
                 size={128}
-                bgColor="transparent"
-                fgColor="#FFFFFF"
+                bgColor="#ffffff"
+                fgColor="#000000"
                 level="L"
                 includeMargin={true}
               />
             ) : (
-              <div className="w-32 h-32 bg-gray-700 animate-pulse rounded-lg flex items-center justify-center">
-                <div className="w-8 h-8 border-4 border-gray-500 rounded-full animate-spin border-t-transparent"></div>
+              <div className="w-32 h-32 bg-gray-200 animate-pulse rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 border-4 border-gray-300 rounded-full animate-spin border-t-transparent"></div>
               </div>
             )}
           </div>

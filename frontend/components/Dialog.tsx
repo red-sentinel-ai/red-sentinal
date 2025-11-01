@@ -11,14 +11,6 @@ interface DialogProps {
   className?: string
 }
 
-/**
- * A modal dialog component that displays content in a centered overlay
- * Features:
- * - Backdrop blur effect
- * - Click outside to close
- * - Smooth animations
- * - Event isolation from parent elements
- */
 export const Dialog = ({ open, onClose, children, className }: DialogProps) => {
   if (!open) return null
 
@@ -38,7 +30,7 @@ export const Dialog = ({ open, onClose, children, className }: DialogProps) => {
     <div
       className={cn(
         'fixed inset-0 z-50',
-        'bg-background/80 backdrop-blur-sm',
+        'bg-black/20 backdrop-blur-sm',
         'flex items-center justify-center',
         'animate-in fade-in-0 duration-200'
       )}
@@ -49,8 +41,8 @@ export const Dialog = ({ open, onClose, children, className }: DialogProps) => {
       <div
         className={cn(
           'relative',
-          'bg-black text-white',
-          'rounded-lg border shadow-lg',
+          'bg-white text-black',
+          'rounded-lg border border-gray-200 shadow-lg',
           'w-[90vw] max-w-[440px]',
           'p-6',
           'animate-in zoom-in-95 duration-200',

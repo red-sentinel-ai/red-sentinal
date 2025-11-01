@@ -1,15 +1,16 @@
 'use client'
 
-import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { Heart, MessageCircle, Repeat2 } from 'lucide-react'
-import { EXTENDED_TWEETS, TWEETS } from '@/constants'
+import Link from 'next/link'
+import Image from 'next/image'
+import { EXTENDED_TWEETS, TWEETS, SUI_SENTINEL_TELEGRAM_URL, SUI_SENTINEL_X_URL } from '@/constants'
 
 export function TweetsSection() {
   return (
     <section
       id="community"
-      className="py-24 relative overflow-hidden max-w-screen"
+      className="py-24 relative overflow-hidden max-w-screen bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: "url('/img/community-bg.png')" }}
     >
       <div className="relative z-10 mx-auto max-w-screen">
         <motion.div
@@ -19,31 +20,20 @@ export function TweetsSection() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-6xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-              Community Buzz
-            </span>
-          </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-            See what the community is saying
-          </p>
-          <p className="text-lg text-gray-500 mt-2">Real voices from the battlefield</p>
+          <h2 className="text-4xl md:text-[48px] font-medium text-[#70658C]">Community Buzz</h2>
         </motion.div>
 
         <div className="relative">
-          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
-
           <motion.div
-            className="flex gap-6"
+            className="flex gap-4 md:gap-8"
             animate={{
-              x: [0, -100 * TWEETS.length + '%'],
+              x: [0, -22 * TWEETS.length + 'rem'],
             }}
             transition={{
               x: {
                 repeat: Infinity,
                 repeatType: 'loop',
-                duration: 60,
+                duration: 40,
                 ease: 'linear',
               },
             }}
@@ -53,50 +43,60 @@ export function TweetsSection() {
                 key={`${tweet.id}-${index}`}
                 className="flex-shrink-0 w-80 sm:w-96"
               >
-                <div className="border border-[#558eb466] bg-[#12121266] backdrop-blur-sm rounded-2xl p-6 h-full flex flex-col">
-                  <div className="flex items-start gap-3 mb-4">
-                    <div className="size-12 bg-gradient-to-r from-[#558EB4] to-[#1388D5] rounded-full flex items-center justify-center flex-shrink-0 shadow-glow-blue">
+                <div className="relative bg-gradient-to-r from-[#FFFFFF00] to-[#AD90BC33] backdrop-blur-xs rounded-md p-3 md:p-6 h-full flex flex-col text-gray-800 border border-[#D2C3FC]">
+                  <span className="absolute top-5 right-6">{tweet.time}</span>
+                  <div className="flex items-center gap-4">
+                    <div className="size-12 md:size-28 bg-white flex items-center justify-center rounded-lg flex-shrink-0">
                       <Image
-                        src="/icons/x.png"
-                        alt="shield"
-                        width={20}
-                        height={20}
+                        src="/icons/x_black.png"
+                        alt="X (Twitter)"
+                        width={46}
+                        height={46}
+                        className="group-hover:scale-110 transition-transform duration-300 w-5 md:w-[46px]"
+                        quality={1}
                       />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-2 mb-1">
-                        <div>
-                          <h4 className="font-semibold text-white truncate">{tweet.author}</h4>
-                          <span className="text-[#558EB4] text-sm">{tweet.handle}</span>
-                        </div>
-                        <span className="text-gray-500 text-sm whitespace-nowrap">
-                          {tweet.time}
-                        </span>
-                      </div>
+                    <div className="flex-1 min-w-0 text-md md:text-xl">
+                      <h4 className="truncate">{tweet.author}</h4>
+                      <span className="text-[#2C00FF]">{tweet.handle}</span>
                     </div>
                   </div>
-
-                  <p className="text-gray-300 leading-relaxed mb-6 text-sm">{tweet.content}</p>
-
-                  <div className="flex items-center justify-between text-gray-400 pt-4 border-t border-[#558EB4]/20 mt-auto">
-                    <div className="flex items-center gap-2 hover:text-[#558EB4] transition-colors cursor-pointer">
-                      <MessageCircle className="size-4" />
-                      <span className="text-sm">{tweet.replies}</span>
-                    </div>
-                    <div className="flex items-center gap-2 hover:text-green-400 transition-colors cursor-pointer">
-                      <Repeat2 className="size-4" />
-                      <span className="text-sm">{tweet.retweets}</span>
-                    </div>
-                    <div className="flex items-center gap-2 hover:text-red-400 transition-colors cursor-pointer">
-                      <Heart className="size-4" />
-                      <span className="text-sm">{tweet.likes}</span>
-                    </div>
-                  </div>
+                  <p className="leading-relaxed mt-6 text-md md:text-2xl">
+                    &ldquo;{tweet.content}&rdquo;
+                  </p>
                 </div>
               </div>
             ))}
           </motion.div>
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          viewport={{ once: true }}
+          className="text-center md:text-right px-2 md:px-8 mt-24"
+        >
+          <h3 className="text-xl font-medium mb-6">Join 1000+ Guardians in Telegram & X</h3>
+          <div className="flex items-center justify-center md:justify-end gap-4 md:mr-16">
+            <Link
+              href={SUI_SENTINEL_TELEGRAM_URL}
+              target="_blank"
+            >
+              <button className="px-8 py-3 rounded-xl bg-white border border-white text-black font-medium shadow-lg hover:bg-gray-100 transition-colors">
+                Explore Telegram
+              </button>
+            </Link>
+            <Link
+              href={SUI_SENTINEL_X_URL}
+              target="_blank"
+            >
+              <button className="px-8 py-3 rounded-xl bg-white/30 backdrop-blur-md border border-white text-gray-800 font-medium hover:bg-white/40 transition-colors">
+                Support on X
+              </button>
+            </Link>
+          </div>
+        </motion.div>
       </div>
     </section>
   )

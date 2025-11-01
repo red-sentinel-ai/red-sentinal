@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import clsx from 'clsx'
 import { formatDistanceToNow } from 'date-fns'
 import { Trophy } from 'lucide-react'
+import { formatAddress } from '@mysten/sui/utils'
 import { DEFAULT_PROFILE_URL, SUI_TESTNET_BASE_URL } from '@/constants'
 import type { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { type ChatMessage as ChatMessageType } from './ChatInterface'
@@ -58,7 +59,7 @@ export const ChatMessage = ({ message, senderProfile, isWinningPrompt }: ChatMes
         {message.type === 'user' && (
           <div className="flex-shrink-0">
             <Link href={profileLink}>
-              <div className="w-7 h-7 rounded-full relative">
+              <div className="w-7 h-7 rounded-full relative border border-gray-200">
                 <Image
                   src={avatarUrl}
                   fill
@@ -71,27 +72,23 @@ export const ChatMessage = ({ message, senderProfile, isWinningPrompt }: ChatMes
         )}
 
         <div
-          className={clsx('rounded-2xl shadow-lg relative min-w-[350px] text-text', {
-            ' border border-[#558EB4]/30': message.type === 'agent',
-            ' border border-gray-600/50': message.type === 'user' && !isWinningPrompt,
-            ' border border-yellow-400/30 bg-yellow-500/10 shadow-lg shadow-yellow-500/10':
-              isWinningPrompt,
+          className={clsx('rounded-2xl shadow-sm relative min-w-[350px] text-black', {
+            'bg-gray-50 border border-gray-200': message.type === 'agent',
+            'bg-white border border-gray-200': message.type === 'user' && !isWinningPrompt,
+            'border border-yellow-300 bg-yellow-50 shadow-md shadow-yellow-100': isWinningPrompt,
           })}
         >
-          {message.type === 'agent' && message.isSuccess !== undefined && (
-            <div className="absolute inset-0 rounded-2xl opacity-20 blur-sm" />
-          )}
           <div className="relative p-3 sm:p-4">
             {message.type === 'user' && message.sender && (
               <div className="flex items-center justify-between gap-1 text-xs mb-2 -mt-1">
                 <Link
                   href={profileLink}
-                  className="font-semibold text-white hover:underline"
+                  className="font-semibold text-black hover:underline"
                 >
                   {displayName}
                 </Link>
                 {isWinningPrompt && (
-                  <div className="flex items-center gap-1.5 bg-yellow-400/20 text-yellow-300 px-2 py-0.5 rounded-full text-xs font-semibold">
+                  <div className="flex items-center gap-1.5 bg-yellow-200 text-yellow-800 px-2 py-0.5 rounded-full text-xs font-semibold">
                     <Trophy className="w-3 h-3" />
                     Winner
                   </div>
@@ -102,7 +99,7 @@ export const ChatMessage = ({ message, senderProfile, isWinningPrompt }: ChatMes
               <p
                 ref={contentRef}
                 className={clsx(
-                  'text-xs sm:text-sm leading-relaxed break-words  transition-all duration-200 ease-in-out text-text',
+                  'text-xs sm:text-sm leading-relaxed break-words text-black transition-all duration-200 ease-in-out',
                   !isExpanded && 'line-clamp-4'
                 )}
               >
@@ -112,7 +109,7 @@ export const ChatMessage = ({ message, senderProfile, isWinningPrompt }: ChatMes
               {shouldTruncate && (
                 <button
                   onClick={() => setIsExpanded(!isExpanded)}
-                  className="mt-1 text-blue-300 text-xs hover:underline"
+                  className="mt-1 text-blue-600 text-xs hover:underline"
                 >
                   {isExpanded ? 'Show less' : 'Show more'}
                 </button>
@@ -120,27 +117,23 @@ export const ChatMessage = ({ message, senderProfile, isWinningPrompt }: ChatMes
             </div>
             <div
               className={clsx(
-                'text-xs flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2',
-                {
-                  'border-white/20': message.type === 'user',
-                  'border-gray-500/30': message.type === 'agent',
-                }
+                'text-xs flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2'
               )}
             >
               <div className="flex flex-col gap-1"></div>
-              <div className="text-right flex gap-3 opacity-75 text-[11px] whitespace-nowrap absolute right-3 bottom-1">
+              <div className="text-right flex gap-3 text-gray-400 text-[11px] whitespace-nowrap absolute right-3 bottom-1">
                 {message.type === 'agent' && message.txDigest && (
                   <a
                     href={`${SUI_TESTNET_BASE_URL}/${message.txDigest}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="underline break-all lowercase"
+                    className="underline break-all lowercase text-blue-600 hover:text-blue-800"
                   >
                     {formatAddress(message.txDigest)}
                   </a>
                 )}
                 {message.type === 'agent' && message.score !== undefined && (
-                  <span className="font-medium">Score: {message.score}/100</span>
+                  <span className="font-medium text-gray-500">Score: {message.score}/100</span>
                 )}
                 {formatDistanceToNow(new Date(Number.parseInt(message.timestamp)))} ago
               </div>
@@ -150,8 +143,4 @@ export const ChatMessage = ({ message, senderProfile, isWinningPrompt }: ChatMes
       </div>
     </motion.div>
   )
-}
-
-const formatAddress = (address: string) => {
-  return `${address.slice(0, 6)}...${address.slice(-4)}`
 }
