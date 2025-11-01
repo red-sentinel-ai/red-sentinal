@@ -65,6 +65,11 @@ export const LandingPage = () => {
                 </div>
               </div>
 
+              <div className="flex max-w-[394px] mx-auto">
+                <div className="gradient-border blue"></div>
+                <div className="gradient-border blue rotate-180"></div>
+              </div>
+
               <div className="my-4">
                 <ul className="text-center flex flex-col justify-center items-center ps-4 md:ps-0 list-disc text-sm md:text-base">
                   <li>Create unbreakable prompts</li>
@@ -116,6 +121,11 @@ export const LandingPage = () => {
                   />
                 </div>
                 <p className="text-lg lg:text-[2rem] leading-normal font-medium">ATTACK</p>
+              </div>
+
+              <div className="flex max-w-[394px] mx-auto">
+                <div className="gradient-border red"></div>
+                <div className="gradient-border red rotate-180"></div>
               </div>
 
               <div className="my-4">
