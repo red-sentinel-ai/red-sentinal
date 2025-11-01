@@ -193,7 +193,7 @@ body::-webkit-scrollbar-thumb:hover {
 .robo-card.attacker:hover {
   border: 1px solid #ffffff00;
   background: linear-gradient(#ffffff, #ffffff) padding-box,
-    linear-gradient(var(--angle), #1388d500, #1388d5) border-box;
+    linear-gradient(var(--angle), #1388d500, var(--primary_blue)) border-box;
 }
 
 .rotate-y-180 {
