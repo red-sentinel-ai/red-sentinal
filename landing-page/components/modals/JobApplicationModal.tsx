@@ -124,7 +124,7 @@ export function JobApplicationModal({ isOpen, onClose, jobTitle }: JobApplicatio
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black"
                   />
                 </div>
                 <div>
@@ -140,7 +140,7 @@ export function JobApplicationModal({ isOpen, onClose, jobTitle }: JobApplicatio
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black"
                   />
                 </div>
                 <div>
@@ -155,7 +155,7 @@ export function JobApplicationModal({ isOpen, onClose, jobTitle }: JobApplicatio
                     id="portfolio_link"
                     value={portfolioLink}
                     onChange={(e) => setPortfolioLink(e.target.value)}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black"
                   />
                 </div>
                 <div>
@@ -170,7 +170,7 @@ export function JobApplicationModal({ isOpen, onClose, jobTitle }: JobApplicatio
                     rows={4}
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black"
                   />
                 </div>
 
