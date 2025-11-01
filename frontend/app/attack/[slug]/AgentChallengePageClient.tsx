@@ -12,10 +12,10 @@ import { AgentEvents, useAgentEvents } from '@/hooks/useAgentEvents'
 import { useRewardsMissionTracker } from '@/hooks/rewards/useRewardsMissionTracker'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
 import ChatInterface from '@/components/agents/ChatInterface'
-import RiveLoader from '@/components/rive/Loader'
 import { AgentSidebar } from '@/components/agents/AgentSidebar'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { MobileAgentHeader } from './MobileAgentHeader'
+import { Loader2 } from 'lucide-react'
 
 export default function AgentChallengePage({ slug }: { slug: string }) {
   const account = useCurrentAccount()
@@ -105,7 +105,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
-        <RiveLoader />
+        <Loader2 className="w-10 h-10 animate-spin mr-2" />
       </div>
     )
   }
