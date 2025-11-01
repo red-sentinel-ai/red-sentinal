@@ -3,6 +3,8 @@ import type { Metadata } from 'next'
 import { Analytics } from '@vercel/analytics/react'
 import localFont from 'next/font/local'
 import './globals.css'
+import { Navbar } from '@/components/sections/NavBar'
+import { Footer } from '@/components/sections/Footer'
 
 const satoshi = localFont({
   src: [
@@ -30,8 +32,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className="scroll-smooth"
     >
       <body className={satoshi.className}>
-        <div className="bg-[url('/img/abstract_bg.png')] bg-left bg-no-repeat bg-cover">
-          {children}
+        <div className="min-h-screen text-black bg-white overflow-x-hidden">
+          <div className="bg-left bg-no-repeat bg-cover">
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+          </div>
         </div>
         <Analytics />
       </body>
