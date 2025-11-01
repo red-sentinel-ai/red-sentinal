@@ -9,9 +9,9 @@
   --background: #ffffff;
   --foreground: #000000;
   --text: #000000;
-  --primary_pink: rgb(234, 69, 97);
-  --primary_pink_20: rgba(234, 69, 97, 0.2);
-  --primary_pink_light: rgba(252, 81, 132, 0.9);
+  --primary_pink: rgb(60, 5, 43);
+  --primary_pink_20: rgba(60, 5, 43, 0.2);
+  --primary_pink_light: rgba(60, 5, 43, 0.9);
   --primary_blue: rgb(39, 103, 243);
   --primary_blue_20: rgba(39, 103, 243, 0.2);
   --primary_blue_30: rgba(39, 103, 243, 0.3);
