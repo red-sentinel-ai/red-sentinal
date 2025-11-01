@@ -8,7 +8,8 @@ import { Footer } from '@/components/sections/Footer'
 import { Navbar } from '@/components/sections/NavBar'
 import { AnimationSection } from '@/components/sections/AnimationSection'
 import { VulnerabilitySection } from '@/components/sections/VulnerabilitySection'
-import { EarnWhileDefendingSection } from '@/components/sections/EarnWhileDefendingSection' // New Import
+import { EarnWhileDefendingSection } from '@/components/sections/EarnWhileDefendingSection'
+import { WhyChooseUsSection } from '@/components/sections/WhyChooseUsSection' // Un-commented
 
 export default function LandingPage() {
   return (
@@ -25,13 +26,13 @@ export default function LandingPage() {
           <OfferingsSection />
           {/* <VisionSection />
           <PassiveIncomeSection /> */}
-          {/* <WhyChooseUsSection /> */}
         </div>
       </div>
       <TweetsSection />
 
       <div className="px-4 md:px-10">
         <EarnWhileDefendingSection />
+        <WhyChooseUsSection />
       </div>
 
       <Footer />
