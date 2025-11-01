@@ -16,6 +16,7 @@
   --primary_blue_20: rgba(39, 103, 243, 0.2);
   --primary_blue_30: rgba(39, 103, 243, 0.3);
   --primary_blue_50: rgba(39, 103, 243, 0.5);
+  --primary_blue_90: rgba(39, 103, 243, 0.9);
 
   --card: var(--background);
   --card-foreground: var(--foreground);

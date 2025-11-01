@@ -19,9 +19,9 @@ export const LandingPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.1 }}
           >
-            <p className="text-[40px] font-medium">
-              A trustless coordination layer for AI red-teaming, powered by verifiable compute +
-              smart contracts.
+            <h2 className="text-[40px] uppercase text-text">#Sui Sentinel</h2>
+            <p className="">
+              Compete for real SUI rewards by challenging agents or creating your own
             </p>
           </motion.div>
 
@@ -73,7 +73,7 @@ export const LandingPage = () => {
               <div>
                 <Link
                   href="/defend"
-                  className="border border-primary_blue rounded-[8px] w-full p-2 transition-all text-primary_blue group-hover:bg-primary_blue group-hover:text-white group-hover:border-primary_blue text-2xl font-bold min-h-[62px] flex items-center justify-center"
+                  className="border border-primary_blue rounded-[8px] w-full p-2 transition-all text-primary_blue group-hover:bg-primary_blue_90 group-hover:text-white group-hover:border-primary_blue text-2xl min-h-[62px] flex items-center justify-center"
                 >
                   Launch Sentinel
                 </Link>
@@ -125,7 +125,7 @@ export const LandingPage = () => {
               <div>
                 <Link
                   href="/attack"
-                  className="border border-primary_pink rounded-[8px] w-full p-2 transition-all text-primary_pink group-hover:bg-primary_pink group-hover:text-white group-hover:border-primary_pink text-2xl font-bold min-h-[62px] flex items-center justify-center"
+                  className="border border-primary_pink rounded-[8px] w-full p-2 transition-all text-primary_pink group-hover:bg-primary_pink group-hover:text-white group-hover:border-primary_pink text-2xl min-h-[62px] flex items-center justify-center"
                 >
                   Attack Sentinel
                 </Link>
