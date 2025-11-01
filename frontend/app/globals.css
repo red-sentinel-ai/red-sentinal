@@ -185,14 +185,14 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .robo-card.defender:hover {
-  border: 1px solid #00000000;
-  background: linear-gradient(#000000, #000000) padding-box,
+  border: 1px solid #ffffff00;
+  background: linear-gradient(#ffffff, #ffffff) padding-box,
     linear-gradient(var(--angle), #1388d500, var(--primary_pink)) border-box;
 }
 
 .robo-card.attacker:hover {
-  border: 1px solid #00000000;
-  background: linear-gradient(#000000, #000000) padding-box,
+  border: 1px solid #ffffff00;
+  background: linear-gradient(#ffffff, #ffffff) padding-box,
     linear-gradient(var(--angle), #1388d500, #1388d5) border-box;
 }
 
@@ -244,8 +244,24 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 @keyframes marquee2 {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-200%); }
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-200%);
+  }
+}
+
+@keyframes rotate {
+  to {
+    --angle: 360deg;
+  }
+}
+
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
 }
 
 .shadow-glow-blue {
