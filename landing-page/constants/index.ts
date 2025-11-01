@@ -1,5 +1,8 @@
 import { Coins, Github, Shield, Target, Trophy, Users, Zap } from 'lucide-react'
 
+export const supabaseUrl = process.env.SUPABASE_URL || ''
+export const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+
 export const SUI_SENTINEL_APP_URL = 'https://app.suisentinel.xyz/'
 export const SUI_SENTINEL_DOCS_URL = 'https://docs.suisentinel.xyz/'
 export const SUI_SENTINEL_X_URL = 'https://twitter.com/intent/follow?screen_name=suisentinal'
