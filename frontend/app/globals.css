@@ -216,14 +216,14 @@ body::-webkit-scrollbar-thumb:hover {
   border-bottom: none;
 }
 .gradient-border.red {
-  border-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 0%, rgba(229, 57, 34, 0.9) 100%)
+  border-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 0%, var(--primary_pink_light) 100%)
     1;
 }
 .gradient-border.blue {
   border-image: linear-gradient(
       to right,
       rgba(255, 255, 255, 0.05) 0%,
-      rgba(85, 142, 180, 0.9) 100%
+      var(--primary_blue_90) 100%
     )
     1;
 }
