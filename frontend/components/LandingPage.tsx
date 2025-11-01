@@ -21,13 +21,14 @@ export const LandingPage = () => {
           >
             <h2 className="text-[40px] uppercase text-text">#Sui Sentinel</h2>
             <p className="">
-              Compete for real SUI rewards by challenging agents or creating your own
+              Deploy AI Sentinels, defend models, evolve intelligence, and earn rewards in a
+              gamified AI security world.
             </p>
           </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 justify-center pt-20 text-center gap-9 overflow-hidden px-4 pb-4 z-10 relative">
             <motion.div
-              className="border border-black rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-1 backdrop-blur-[0.1px] group"
+              className="border border-black rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-1 robo-card attacker backdrop-blur-[0.1px] group"
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: 0.2 }}
@@ -81,7 +82,7 @@ export const LandingPage = () => {
             </motion.div>
 
             <motion.div
-              className="border border-black rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-1 backdrop-blur-[0.1px] group"
+              className="border border-black rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-1 robo-card defender backdrop-blur-[0.1px] group"
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: 0.3 }}
