@@ -1082,6 +1082,36 @@ export type Database = {
           },
         ]
       }
+      ss_job_applications: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          job_title: string
+          name: string
+          notes: string | null
+          portfolio_link: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          job_title: string
+          name: string
+          notes?: string | null
+          portfolio_link?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          job_title?: string
+          name?: string
+          notes?: string | null
+          portfolio_link?: string | null
+        }
+        Relationships: []
+      }
       ss_rewards_activity: {
         Row: {
           completed_at: string | null
