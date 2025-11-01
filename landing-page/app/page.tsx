@@ -8,6 +8,7 @@ import { Footer } from '@/components/sections/Footer'
 import { Navbar } from '@/components/sections/NavBar'
 import { AnimationSection } from '@/components/sections/AnimationSection'
 import { VulnerabilitySection } from '@/components/sections/VulnerabilitySection'
+import { EarnWhileDefendingSection } from '@/components/sections/EarnWhileDefendingSection' // New Import
 
 export default function LandingPage() {
   return (
@@ -28,6 +29,10 @@ export default function LandingPage() {
         </div>
       </div>
       <TweetsSection />
+
+      <div className="px-4 md:px-10">
+        <EarnWhileDefendingSection />
+      </div>
 
       <Footer />
     </div>
