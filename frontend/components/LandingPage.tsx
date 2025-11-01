@@ -66,11 +66,12 @@ export const LandingPage = () => {
               </div>
 
               <div className="my-4">
-                <p className="max-w-[326px] mx-auto">
-                  Build Sentinels that can’t be broken. Earn every time they’re tested.
-                </p>
+                <ul className="text-center flex flex-col justify-center items-center ps-4 md:ps-0 list-disc text-sm md:text-base">
+                  <li>Create unbreakable prompts</li>
+                  <li>Earn fees for every attempt</li>
+                  <li>Survive to the end</li>
+                </ul>
               </div>
-
               <div>
                 <Link
                   href="/defend"
@@ -118,9 +119,11 @@ export const LandingPage = () => {
               </div>
 
               <div className="my-4">
-                <p className="max-w-[326px] mx-auto">
-                  Break Sentinels. Earn every time you outsmart them.
-                </p>
+                <ul className="text-center flex flex-col justify-center items-center ps-4 md:ps-0 list-disc text-sm md:text-base">
+                  <li>Break AI defenses</li>
+                  <li>Win rewards for successful attacks</li>
+                  <li>Outsmart the system</li>
+                </ul>
               </div>
 
               <div>
