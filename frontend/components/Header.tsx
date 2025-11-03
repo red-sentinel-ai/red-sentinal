@@ -50,7 +50,7 @@ export const Header = () => {
           </div>
         </div>
 
-        <div className="hidden xl:block ms-auto">
+        <div className="hidden xl:block ms-4">
           <ConnectButton />
         </div>
         <button
