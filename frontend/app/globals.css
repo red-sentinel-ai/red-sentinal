@@ -9,14 +9,14 @@
   --background: #ffffff;
   --foreground: #000000;
   --text: #000000;
-  --primary_pink: rgb(60, 5, 43);
-  --primary_pink_20: rgba(60, 5, 43, 0.2);
-  --primary_pink_light: rgba(60, 5, 43, 0.9);
-  --primary_blue: rgb(39, 103, 243);
-  --primary_blue_20: rgba(39, 103, 243, 0.2);
-  --primary_blue_30: rgba(39, 103, 243, 0.3);
-  --primary_blue_50: rgba(39, 103, 243, 0.5);
-  --primary_blue_90: rgba(39, 103, 243, 0.9);
+  --primary_pink: rgb(159, 29, 36);
+  --primary_pink_20: rgba(159, 29, 36, 0.2);
+  --primary_pink_light: rgba(159, 29, 36, 0.9);
+  --primary_blue: rgb(42, 87, 188);
+  --primary_blue_20: rgba(42, 87, 188, 0.2);
+  --primary_blue_30: rgba(42, 87, 188, 0.3);
+  --primary_blue_50: rgba(42, 87, 188, 0.5);
+  --primary_blue_90: rgba(42, 87, 188, 0.9);
 
   --card: var(--background);
   --card-foreground: var(--foreground);
@@ -184,23 +184,27 @@ body::-webkit-scrollbar-thumb:hover {
   backdrop-filter: blur(10px);
 }
 .robo-card.defender{
-  background: linear-gradient(#FFFFFF, #F6EAFF);
+  border: 1px solid #ffffff00;
+  background: linear-gradient(#ffffff, #F6EAFF) padding-box,
+  linear-gradient(180deg, #1388d500, var(--primary_pink)) border-box;
 }
 
 
 .robo-card.defender:hover {
   border: 1px solid #ffffff00;
-  background: linear-gradient(#ffffff, #ffffff) padding-box,
+  background: linear-gradient(#ffffff, #F6EAFF) padding-box,
     linear-gradient(var(--angle), #1388d500, var(--primary_pink)) border-box;
 }
 
 .robo-card.attacker{
-  background: linear-gradient(#FFFFFF, #DBE6FF);
+  border: 1px solid #ffffff00;
+  background: linear-gradient(#ffffff, #DBE6FF) padding-box,
+    linear-gradient(180deg, #1388d500, var(--primary_blue)) border-box;
 }
 
 .robo-card.attacker:hover {
   border: 1px solid #ffffff00;
-  background: linear-gradient(#ffffff, #ffffff) padding-box,
+  background: linear-gradient(#ffffff, #DBE6FF) padding-box,
     linear-gradient(var(--angle), #1388d500, var(--primary_blue)) border-box;
 }
 
