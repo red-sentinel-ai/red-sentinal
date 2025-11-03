@@ -47,6 +47,7 @@ export function HowItWorksSection() {
               and earns real rewards for mastery.
             </p>
           </motion.div>
+
           <div
             style={{ backgroundImage: 'url("/img/lines.png")' }}
             className="relative z-10"
@@ -58,7 +59,6 @@ export function HowItWorksSection() {
               viewport={{ once: true }}
               className="relative hidden lg:grid grid-cols-5 grid-rows-3 gap-8 items-center text-black min-h-[760px] px-8"
             >
-              {/* Text Sections */}
               <div className="col-span-1 row-start-2 text-right flex flex-col h-full justify-end">
                 <h3 className="mb-1 text-2xl">{features.attack.title}</h3>
                 <p>{features.attack.description}</p>
@@ -72,7 +72,7 @@ export function HowItWorksSection() {
                 <p>{features.evolve.description}</p>
               </div>
 
-              <div className="col-span-3 col-start-2 row-span-3 flex items-center justify-center">
+              <div className="col-span-3 col-start-2 row-span-3 flex items-center justify-center h-full">
                 <ThreeCubes />
               </div>
 
@@ -99,7 +99,6 @@ export function HowItWorksSection() {
               />
             </motion.div>
 
-            {/* Mobile Layout */}
             <div className="lg:hidden flex flex-col gap-10 items-center">
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -125,7 +124,7 @@ export function HowItWorksSection() {
                 </div>
                 <div>
                   <h3 className="mb-1 text-2xl">{features.attack.title}</h3>
-                  <p>{features.attack.description}</p>D{' '}
+                  <p>{features.attack.description}</p>
                 </div>
                 <div>
                   <h3 className="mb-1 text-2xl">{features.evolve.title}</h3>
