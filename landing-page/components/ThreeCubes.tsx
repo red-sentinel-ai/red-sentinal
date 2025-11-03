@@ -1,15 +1,4 @@
-'use client'
-
-import dynamic from 'next/dynamic'
-
-const Spline = dynamic(() => import('@splinetool/react-spline'), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-[400px] lg:h-[700px] flex items-center justify-center">
-      Loading 3D model...
-    </div>
-  ),
-})
+import Spline from '@splinetool/react-spline'
 
 export function ThreeCubes() {
   return (

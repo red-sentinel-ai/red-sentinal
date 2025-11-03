@@ -2,7 +2,16 @@
 
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { ThreeCubes } from '../ThreeCubes'
+import dynamic from 'next/dynamic'
+
+const ThreeCubes = dynamic(() => import('@/components/ThreeCubes').then((mod) => mod.ThreeCubes), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[400px] lg:h-[700px] flex items-center justify-center">
+      Loading 3D model...
+    </div>
+  ),
+})
 
 const features = {
   deploy: {
