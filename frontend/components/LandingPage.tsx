@@ -39,7 +39,7 @@ export const LandingPage = () => {
                   width={368}
                   height={546}
                   alt="robo"
-                  className="relative z-10 mx-auto -mt-[90px]"
+                  className="relative z-10 mx-auto w-[330px] md:w-[368px] -mt-[90px]"
                 />
 
                 <Image
@@ -99,7 +99,7 @@ export const LandingPage = () => {
                   width={368}
                   height={546}
                   alt="robo"
-                  className="relative z-10 mx-auto -mt-[96px]"
+                  className="relative z-10 mx-auto w-[330px] md:w-[368px] -mt-[96px]"
                 />
 
                 <Image
