@@ -147,6 +147,7 @@ export const LandingPage = () => {
             </motion.div>
           </div>
         </div>
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#00000036] blur-3xl w-[1000px] h-[600px] rounded-full"></div>
       </motion.div>
     </AnimatePresence>
   )
