@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import { ThreeCubes } from '../ThreeCubes'
 
 const features = {
   deploy: {
@@ -71,15 +72,8 @@ export function HowItWorksSection() {
                 <p>{features.evolve.description}</p>
               </div>
 
-              {/* Central Image */}
               <div className="col-span-3 col-start-2 row-span-3 flex items-center justify-center">
-                <Image
-                  src="/img/threeCubes.png"
-                  alt="Deploy, Attack, and Evolve your AI Sentinel"
-                  width={288}
-                  height={503}
-                  className="object-contain"
-                />
+                <ThreeCubes />
               </div>
 
               <Image
@@ -114,13 +108,9 @@ export function HowItWorksSection() {
                 viewport={{ once: true }}
                 className="relative md:w-full max-w-xs md:max-w-md"
               >
-                <Image
-                  src="/img/threeCubes.png"
-                  alt="Attack, Deploy, and Evolve features illustrated with cubes"
-                  width={500}
-                  height={500}
-                  className="w-full h-auto"
-                />
+                <div className="w-full aspect-square">
+                  <ThreeCubes />
+                </div>
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -135,7 +125,7 @@ export function HowItWorksSection() {
                 </div>
                 <div>
                   <h3 className="mb-1 text-2xl">{features.attack.title}</h3>
-                  <p>{features.attack.description}</p>
+                  <p>{features.attack.description}</p>D{' '}
                 </div>
                 <div>
                   <h3 className="mb-1 text-2xl">{features.evolve.title}</h3>
