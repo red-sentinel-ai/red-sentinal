@@ -28,7 +28,7 @@ export const LandingPage = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 justify-center pt-20 text-center gap-20 md:gap-9 overflow-hidden px-4 pb-4 z-10 relative">
             <motion.div
-              className="border border-black rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-1 robo-card attacker backdrop-blur-[0.1px] group"
+              className="rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-1 robo-card attacker backdrop-blur-[0.1px] group"
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: 0.2 }}
@@ -88,7 +88,7 @@ export const LandingPage = () => {
             </motion.div>
 
             <motion.div
-              className="border border-black rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-1 robo-card defender backdrop-blur-[0.1px] group"
+              className="rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-1 robo-card defender backdrop-blur-[0.1px] group"
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: 0.3 }}
