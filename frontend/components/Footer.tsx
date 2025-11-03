@@ -20,11 +20,11 @@ const Footer = () => {
     >
       <div className="absolute inset-0 flex justify-center items-end md:items-center pointer-events-none pb-10 md:pb-0">
         <Image
-          src="/img/fullCircle.png"
+          src="/gifs/fullCircleRed.gif"
           width={500}
           height={346}
           alt="Decorative blend element"
-          className="w-[260px] md:w-auto h-auto max-w-xs md:max-w-lg mix-blend-difference"
+          className="w-[260px] md:w-auto h-auto max-w-xs md:max-w-lg"
         />
       </div>
 
