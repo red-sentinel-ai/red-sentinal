@@ -29,7 +29,7 @@ const Footer = () => {
       </div>
 
       <div className="relative z-10 max-w-[1440px] mx-auto pb-4 md:pb-0 px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-12 text-center md:text-left min-h-[398px]">
+        <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-12 text-center md:text-left min-h-[440px] md:min-h-[398px]">
           <div className="max-w-md md:self-stretch flex flex-col flex-grow">
             <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
               <Image
@@ -87,8 +87,8 @@ const Footer = () => {
             </p>
           </div>
 
-          <div className="w-full md:w-auto">
-            <div className="hidden md:flex flex-col gap-4">
+          <div className="w-full md:w-auto hidden md:block">
+            <div className="flex flex-col gap-4">
               {socialLinks.map((link) => (
                 <div
                   key={link.href}

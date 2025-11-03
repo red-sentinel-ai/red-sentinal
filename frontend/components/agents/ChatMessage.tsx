@@ -127,7 +127,7 @@ export const ChatMessage = ({ message, senderProfile, isWinningPrompt }: ChatMes
                     href={`${SUI_TESTNET_BASE_URL}/${message.txDigest}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="underline break-all lowercase text-blue-600 hover:text-blue-800"
+                    className="underline break-all lowercase "
                   >
                     {formatAddress(message.txDigest)}
                   </a>
