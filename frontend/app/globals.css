@@ -18,6 +18,12 @@
   --primary_blue_50: rgba(42, 87, 188, 0.5);
   --primary_blue_90: rgba(42, 87, 188, 0.9);
 
+  --secondary_blue: rgb(21, 34, 74);
+  --secondary_blue_60: rgba(21, 34, 74 , 0.6);
+
+  --secondary_pink: rgb(53, 21, 74);
+  --secondary_pink_60: rgba(53, 21, 74 , 0.6);
+
   --card: var(--background);
   --card-foreground: var(--foreground);
   --popover: var(--background);

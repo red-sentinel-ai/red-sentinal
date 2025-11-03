@@ -80,7 +80,7 @@ export const LandingPage = () => {
               <div>
                 <Link
                   href="/defend"
-                  className="border border-primary_blue rounded-[8px] w-full p-2 transition-all text-primary_blue group-hover:bg-primary_blue_90 group-hover:text-white group-hover:border-primary_blue text-2xl min-h-[62px] flex items-center justify-center"
+                  className="border border-secondary_blue_60 rounded-[8px] w-full p-2 transition-all text-primary_blue text-white text-2xl min-h-[62px] flex items-center justify-center bg-secondary_blue_60"
                 >
                   Launch Sentinel
                 </Link>
@@ -139,7 +139,7 @@ export const LandingPage = () => {
               <div>
                 <Link
                   href="/attack"
-                  className="border border-primary_pink rounded-[8px] w-full p-2 transition-all text-primary_pink group-hover:bg-primary_pink group-hover:text-white group-hover:border-primary_pink text-2xl min-h-[62px] flex items-center justify-center"
+                  className="border border-secondary_blue_60 rounded-[8px] w-full p-2 transition-all text-white bg-secondary_pink_60 text-2xl min-h-[62px] flex items-center justify-center"
                 >
                   Attack Sentinel
                 </Link>
@@ -147,7 +147,7 @@ export const LandingPage = () => {
             </motion.div>
           </div>
         </div>
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#00000036] blur-3xl w-[1000px] h-[600px] rounded-full"></div>
+        <div className="absolute left-1/2 top-[23%] -translate-x-1/2 bg-[#00000036] blur-3xl w-[1000px] h-[600px] rounded-full"></div>
       </motion.div>
     </AnimatePresence>
   )
