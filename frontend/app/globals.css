@@ -183,11 +183,19 @@ body::-webkit-scrollbar-thumb:hover {
   );
   backdrop-filter: blur(10px);
 }
+.robo-card.defender{
+  background: linear-gradient(#FFFFFF, #F6EAFF);
+}
+
 
 .robo-card.defender:hover {
   border: 1px solid #ffffff00;
   background: linear-gradient(#ffffff, #ffffff) padding-box,
     linear-gradient(var(--angle), #1388d500, var(--primary_pink)) border-box;
+}
+
+.robo-card.attacker{
+  background: linear-gradient(#FFFFFF, #DBE6FF);
 }
 
 .robo-card.attacker:hover {
