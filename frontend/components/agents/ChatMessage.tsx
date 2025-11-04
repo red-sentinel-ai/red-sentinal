@@ -125,19 +125,19 @@ export const ChatMessage = ({ message, senderProfile, isWinningPrompt }: ChatMes
               )}
             >
               <div className="flex flex-col gap-1"></div>
-              <div className="text-right flex gap-3 text-gray-400 text-[11px] whitespace-nowrap absolute right-3 bottom-1">
+              <div className="text-right flex gap-3 text-[#666666] text-[11px] whitespace-nowrap absolute right-3 bottom-1">
                 {message.type === 'agent' && message.txDigest && (
                   <a
                     href={`${SUI_TESTNET_BASE_URL}/${message.txDigest}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="underline break-all lowercase "
+                    className="underline break-all lowercase text-[#0F23A7]"
                   >
                     {formatAddress(message.txDigest)}
                   </a>
                 )}
                 {message.type === 'agent' && message.score !== undefined && (
-                  <span className="font-medium text-gray-500">Score: {message.score}/100</span>
+                  <span className="font-medium text-black">Score: {message.score}/100</span>
                 )}
                 {formatDistanceToNow(new Date(Number.parseInt(message.timestamp)))} ago
               </div>
