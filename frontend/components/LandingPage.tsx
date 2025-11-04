@@ -80,7 +80,7 @@ export const LandingPage = () => {
               <div>
                 <Link
                   href="/defend"
-                  className="border border-secondary_blue_60 rounded-[8px] w-full p-2 transition-all text-primary_blue text-white text-2xl min-h-[62px] flex items-center justify-center bg-secondary_blue_60"
+                  className="border border-secondary_blue_60 rounded-[8px] w-full p-2 transition-all text-primary_blue text-white text-2xl min-h-[62px] flex items-center justify-center bg-secondary_blue hover:bg-secondary_blue_60"
                 >
                   Launch Sentinel
                 </Link>
@@ -139,7 +139,7 @@ export const LandingPage = () => {
               <div>
                 <Link
                   href="/attack"
-                  className="border border-secondary_blue_60 rounded-[8px] w-full p-2 transition-all text-white bg-secondary_pink_60 text-2xl min-h-[62px] flex items-center justify-center"
+                  className="border border-secondary_blue_60 rounded-[8px] w-full p-2 transition-all text-white bg-secondary_pink hover:bg-secondary_pink_60 text-2xl min-h-[62px] flex items-center justify-center"
                 >
                   Attack Sentinel
                 </Link>
