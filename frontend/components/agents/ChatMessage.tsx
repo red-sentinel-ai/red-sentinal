@@ -72,11 +72,15 @@ export const ChatMessage = ({ message, senderProfile, isWinningPrompt }: ChatMes
         )}
 
         <div
-          className={clsx('rounded-2xl shadow-sm relative min-w-[350px] text-black', {
-            'bg-gray-50 border border-gray-200': message.type === 'agent',
-            'bg-white border border-gray-200': message.type === 'user' && !isWinningPrompt,
-            'border border-yellow-300 bg-yellow-50 shadow-md shadow-yellow-100': isWinningPrompt,
-          })}
+          className={clsx(
+            'rounded-2xl shadow-sm relative min-w-[350px] text-black backdrop-blur-sm',
+            {
+              'bg-[#A3BCF2]/20 border border-[#5E5E5E]': message.type === 'agent',
+              'bg-gradient-to-tr from-[#C4A7FF]/25 to-[#FD6ADD]/25 border border-[#5E5E5E]':
+                message.type === 'user' && !isWinningPrompt,
+              'border border-yellow-300 bg-yellow-50 shadow-md shadow-yellow-100': isWinningPrompt,
+            }
+          )}
         >
           <div className="relative p-3 sm:p-4">
             {message.type === 'user' && message.sender && (
