@@ -298,12 +298,12 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           <h3 className="text-black/80 text-sm font-semibold text-center mb-4">
             Scan this QR Code if you want to try to attack this agent using slush mobile wallet
           </h3>
-          <div className="bg-white rounded-xl p-4 border border-gray-200 flex justify-center">
+          <div className="rounded-xl p-4 border border-gray-200 flex justify-center">
             {deepLinkUrl ? (
               <QRCodeSVG
                 value={deepLinkUrl}
                 size={128}
-                bgColor="#ffffff"
+                bgColor="#ffffff00"
                 fgColor="#000000"
                 level="L"
                 includeMargin={true}
