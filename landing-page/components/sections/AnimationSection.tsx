@@ -20,7 +20,7 @@ export const AnimationSection = () => {
   return (
     <div
       // ref={containerRef}
-      className="relative flex items-center min-h-[80vh] py-16 md:py-0"
+      className="relative flex items-center max-w-[1340px] mx-auto py-24 overflow-hidden"
     >
       <div className="relative z-10 w-full text-center md:text-left">
         <h2 className="text-3xl md:text-[48px] leading-tight font-medium">
@@ -52,7 +52,7 @@ export const AnimationSection = () => {
         loop
         muted
         playsInline
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[830px] z-0 opacity-40 md:opacity-100"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] z-0 opacity-40 md:opacity-100"
       >
         <source
           src="/videos/threeCircles.mp4"
