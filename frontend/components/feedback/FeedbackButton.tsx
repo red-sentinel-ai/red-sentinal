@@ -29,9 +29,11 @@ export const FeedbackButton = () => {
           <SheetHeader className="pb-4 border-b border-gray-200">
             <SheetTitle className="text-black text-xl font-semibold flex items-center gap-2">
               <MessageSquare className="w-5 h-5 text-gray-700" />
-              Submit Your Feedback
+              Help us make Sui Sentinel better!
             </SheetTitle>
-            <p className="text-gray-500 text-sm mt-1">We&apos;d love to hear what you think.</p>
+            <p className="text-gray-500 text-sm mt-1">
+              Share genuine feedback or report bugs and earn Sentinel Points as a thank you.
+            </p>
           </SheetHeader>
           <div className="p-4">
             <FeedbackForm onSuccess={() => setIsOpen(false)} />
