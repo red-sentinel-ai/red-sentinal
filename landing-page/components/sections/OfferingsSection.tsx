@@ -34,7 +34,7 @@ export function OfferingsSection() {
           viewport={{ once: true }}
           className="grid grid-cols-1 md:grid-cols-2"
         >
-          <div className="p-3 md:p-8 flex flex-col justify-between min-h-[300px] border border-black md:border-r-0">
+          <div className="relative p-3 md:p-8 flex flex-col justify-between min-h-[300px] border border-black md:border-r-0">
             <div>
               <h3 className="text-xl md:text-[32px] font-medium mb-6">Custom AI</h3>
 
@@ -50,7 +50,7 @@ export function OfferingsSection() {
                   width={500}
                   height={500}
                   className="relative w-full max-w-xs h-auto mx-auto my-6 
-                             md:absolute md:top-[35%] md:w-[500px] md:h-[500px] md:max-w-none md:my-0"
+                             md:absolute md:top-[5%] md:w-[500px] md:h-[500px] md:max-w-none md:my-0"
                 />
               </div>
             </div>
@@ -63,7 +63,7 @@ export function OfferingsSection() {
             </Link>
           </div>
 
-          <div className="p-3 md:p-8 border border-black border-t-0 md:border-t md:border-t-black md:border-l flex flex-col justify-between min-h-[300px]">
+          <div className="relative p-3 md:p-8 border border-black border-t-0 md:border-t md:border-t-black md:border-l flex flex-col justify-between min-h-[300px]">
             <div>
               <h3 className="text-xl md:text-[32px] font-medium mb-6">Deploy Your Sentinel</h3>
               <p className="text-sm md:text-[20px] leading-relaxed">
