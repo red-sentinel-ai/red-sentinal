@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 
 export function WhyChooseUsSection() {
@@ -36,6 +37,14 @@ export function WhyChooseUsSection() {
             className="p-6 md:p-8 flex flex-col border-x border-black lg:border-x-0 lg:border-l min-h-[350px]"
           >
             <h3 className="text-xl md:text-2xl font-medium mb-4">Evolving Security</h3>
+            <div className="flex items-center justify-center h-full">
+              <Image
+                width={400}
+                height={400}
+                src="/img/evolvingSecurityArt.png"
+                alt="evolving security art"
+              />
+            </div>
             <p className="mt-auto text-sm md:text-base">
               Every attack strengthens the network. Every defense makes AI smarter. Sui Sentinel
               turns testing into evolution creating intelligence that learns from every battle.
@@ -50,6 +59,14 @@ export function WhyChooseUsSection() {
             className="p-6 md:p-8 flex flex-col border-x border-t border-black lg:border-t-0 lg:border-x-0 lg:border-l min-h-[350px]"
           >
             <h3 className="text-xl md:text-2xl font-medium mb-4">Incentivized Intelligence</h3>
+            <div className="flex items-center justify-center h-full">
+              <Image
+                width={367}
+                height={243}
+                src="/img/incentivizedIntelligence.png"
+                alt="evolving security art"
+              />
+            </div>
             <p className="mt-auto text-sm md:text-base">
               Earn for every move that matters. Guardians don&apos;t just protect they profit from
               progress. Our gamified rewards ensure constant testing and growth.
@@ -64,6 +81,14 @@ export function WhyChooseUsSection() {
             className="p-6 md:p-8 flex flex-col border-x  border-t border-black lg:border-t-0 lg:border-x-0 lg:border-l lg:border-r min-h-[350px]"
           >
             <h3 className="text-xl md:text-2xl font-medium mb-4">Dual Power</h3>
+            <div className="flex items-center justify-center h-full">
+              <Image
+                width={220}
+                height={400}
+                src="/img/dualPower.png"
+                alt="evolving security art"
+              />
+            </div>
             <div className="mt-auto text-sm md:text-base">
               <ul className="list-disc list-inside space-y-2">
                 <li>For builders — unmatched AI resilience.</li>
