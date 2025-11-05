@@ -11,7 +11,7 @@ export function OfferingsSection() {
       id="offerings"
       className="py-24 relative text-black"
     >
-      <div className="relative z-10 max-w-7xl mx-auto">
+      <div className="relative z-10 max-w-7xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -27,7 +27,6 @@ export function OfferingsSection() {
             shapes the future of Sui Sentinel security.
           </h2>
         </motion.div>
-
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -44,13 +43,14 @@ export function OfferingsSection() {
                 strength, and earn rewards for every exploit discovered.
               </p>
 
-              <div className="min-h-[200px] md:min-h-[300px]">
+              <div className="min-h-0 md:min-h-[300px]">
                 <Image
                   src="/img/customAIArt.png"
                   alt="custom ai"
                   width={500}
                   height={500}
-                  className="absolute top-[35%]"
+                  className="relative w-full max-w-xs h-auto mx-auto my-6 
+                             md:absolute md:top-[35%] md:w-[500px] md:h-[500px] md:max-w-none md:my-0"
                 />
               </div>
             </div>
@@ -70,13 +70,15 @@ export function OfferingsSection() {
                 Launch your own AI model into the Sentinel network. Let the world attack it and earn
                 while it evolves.
               </p>
-              <div className="min-h-[200px] md:min-h-[300px]">
+
+              <div className="min-h-0 md:min-h-[300px]">
                 <Image
                   src="/img/deploySentinelArt.png"
-                  alt="custom ai"
+                  alt="deploy sentinel"
                   width={400}
                   height={400}
-                  className="absolute bottom-[2%]"
+                  className="relative w-full max-w-xs h-auto mx-auto my-6
+                             md:absolute md:bottom-[2%] md:w-[400px] md:h-[400px] md:max-w-none md:my-0"
                 />
               </div>
             </div>
