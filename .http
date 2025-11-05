@@ -54,3 +54,15 @@ content-type: application/json
 {
   "agentObjectId": "1"
 }
+
+
+### Check feedback api that sends message to telegram using bot
+POST http://localhost:3000/api/feedback HTTP/1.1
+
+{
+ "name": "Yash Mittal test",
+ "email": "test@gmail.com",
+ "wallet_address": "0xkjaewhf9adfasjdfjsdf",
+ "feedback_type": "example",
+ "message" : "this is the example feedback, sending to the team. this is the example feedback, sending to the team. this is the example feedback, sending to the team. this is the example feedback, sending to the team. this is the example feedback, sending to the team. this is the example feedback, sending to the team."
+}
