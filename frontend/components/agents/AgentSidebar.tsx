@@ -40,7 +40,6 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
   const [isChartModalOpen, setIsChartModalOpen] = useState(false)
 
   const { data: userProfilesMap, isLoading: isLoadingProfile } = useUserProfiles([agent.owner])
-  console.log({ userProfilesMap })
   const defenderProfile = userProfilesMap?.[agent.owner]
 
   useEffect(() => {
@@ -214,8 +213,15 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
                 <h3 className="text-black/70 text-sm font-semibold uppercase">Active Since</h3>
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger asChild className="cursor-help">
-                      <Info width={12} height={12} className="text-black/60" />
+                    <TooltipTrigger
+                      asChild
+                      className="cursor-help"
+                    >
+                      <Info
+                        width={12}
+                        height={12}
+                        className="text-black/60"
+                      />
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>Format: Days, Hours, Minutes, Seconds</p>
