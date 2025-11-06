@@ -2,6 +2,7 @@
 import { useState, useCallback } from 'react'
 import { Transaction } from '@mysten/sui/transactions'
 import { useSignAndExecuteTransaction, useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
+import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 import { MIST_PER_SUI, SUI_CONFIG } from '@/constants'
 import { toast } from 'react-toastify'
 import { useRewardsMissionTracker } from './rewards/useRewardsMissionTracker'
@@ -125,7 +126,7 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
           // Call fund_agent function
           tx.moveCall({
             target: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::fund_agent`,
-            arguments: [tx.object(agentObjectId), paymentCoin],
+            arguments: [tx.object(agentObjectId), paymentCoin, tx.object(SUI_CLOCK_OBJECT_ID)],
           })
         } else {
           console.log('📋 Need multiple coins - using merge strategy')
@@ -164,7 +165,7 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
 
             tx.moveCall({
               target: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::fund_agent`,
-              arguments: [tx.object(agentObjectId), paymentCoin],
+              arguments: [tx.object(agentObjectId), paymentCoin, tx.object(SUI_CLOCK_OBJECT_ID)],
             })
           } else {
             // Multiple coins - merge them first
@@ -194,7 +195,7 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
 
             tx.moveCall({
               target: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::fund_agent`,
-              arguments: [tx.object(agentObjectId), paymentCoin],
+              arguments: [tx.object(agentObjectId), paymentCoin, tx.object(SUI_CLOCK_OBJECT_ID)],
             })
           }
         }
@@ -251,7 +252,15 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
         setIsLoading(false)
       }
     },
-    [account?.address, signAndExecuteTransaction, onSuccess, onError, showToasts]
+    [
+      account?.address,
+      client,
+      signAndExecuteTransaction,
+      onSuccess,
+      onError,
+      showToasts,
+      trackFundSentinel,
+    ]
   )
 
   const reset = useCallback(() => {
