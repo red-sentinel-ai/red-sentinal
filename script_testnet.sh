@@ -1,7 +1,11 @@
+# AWS Nautilus values start
 export PCR0=ff24eb35c9caca34999cf17d1f20f570d781c6b20f401e97a64c5179752028f9a2e26fbaedc8ed299f3715d67e0e668c
 export PCR1=ff24eb35c9caca34999cf17d1f20f570d781c6b20f401e97a64c5179752028f9a2e26fbaedc8ed299f3715d67e0e668c
 export PCR2=21b9efbc184807662e966d34f390821309eeac6802309798826296bf3e8bec7c10edb30948c90ba67310f7b964fc500a
 export ENCLAVE_URL=http://3.237.26.201:3000
+
+# AWS Nautilus values end
+
 export MODULE_NAME=sentinel
 export OTW_NAME=SENTINEL
 
@@ -14,31 +18,31 @@ echo "module name": $MODULE_NAME
 echo "otw name": $OTW_NAME
 echo "ENCLAVE_URL: " $ENCLAVE_URL
 
-export ENCLAVE_PACKAGE_ID=0xe9875ddf4bce2b929b73b9d7a3ee9027d86bd06c3d4dd183b211e9a18a419ee9
+export ENCLAVE_PACKAGE_ID=0x3bcc5499bf696e173eebedae975a0faf60c180c0639ce5ce610588f66df256ad
 echo "ENCLAVE_PACKAGE_ID:" $ENCLAVE_PACKAGE_ID
 
-export CAP_OBJECT_ID=0x8558a9f0ae9467f33d59897de4612c6b705ff0b1fdb5f73180dee425d1731e82
-export ENCLAVE_CONFIG_OBJECT_ID=0x88725910ca03b8d4406362780bd6fb766f146d6a371b415257d5218ce2c83e9d
-export EXAMPLES_PACKAGE_ID=0x1d1941cb375a5bdec1c5dd4d9de11799b4e3d0421e24ae9d25835a8287e07981
-export AGENT_REGISTRY=0x5de3a56d697e26beb3495a6dbd2378dc71e80d95a4a628b53f7dc0cd5fd97ae0
+export CAP_OBJECT_ID=0x97328eedf5a0038c92389062b7a5f7bc7fdc762a31348825fe249a95cf27d9db
+export ENCLAVE_CONFIG_OBJECT_ID=0xd113ef3c88648615f261b65e11884242a68f812dd961c44d126e40c523766aec
+export APP_PACKAGE_ID=0xb60f1539130c55fc2777bef0fa6712ed97de2a3e38b46ce5956e6425a3d079fc
+export AGENT_REGISTRY=0x176f639651ecf7f72c43a0fa2abe76f3fb4b7d0a86a475c9ad9059bfad6eff95
 
 echo "CAP_OBJECT_ID:" $CAP_OBJECT_ID
 echo "ENCLAVE_CONFIG_OBJECT_ID:" $ENCLAVE_CONFIG_OBJECT_ID
 echo "AGENT_REGISTRY:" $AGENT_REGISTRY
-echo "EXAMPLES_PACKAGE_ID": $EXAMPLES_PACKAGE_ID
+echo "APP_PACKAGE_ID": $APP_PACKAGE_ID
 
 # this calls the update_pcrs onchain with the enclave cap and built PCRs, this can be reused to update PCRs if Rust server code is updated
-# sui client call --function update_pcrs --module enclave --package $ENCLAVE_PACKAGE_ID --type-args "$EXAMPLES_PACKAGE_ID::$MODULE_NAME::$OTW_NAME" --args $ENCLAVE_CONFIG_OBJECT_ID $CAP_OBJECT_ID 0x$PCR0 0x$PCR1 0x$PCR2
+# sui client call --function update_pcrs --module enclave --package $ENCLAVE_PACKAGE_ID --type-args "$APP_PACKAGE_ID::$MODULE_NAME::$OTW_NAME" --args $ENCLAVE_CONFIG_OBJECT_ID $CAP_OBJECT_ID 0x$PCR0 0x$PCR1 0x$PCR2
 
 # # # this script calls the get_attestation endpoint from your enclave url and use it to calls register_enclave onchain to register the public key, results in the created enclave object
-sh register_enclave.sh $ENCLAVE_PACKAGE_ID $EXAMPLES_PACKAGE_ID $ENCLAVE_CONFIG_OBJECT_ID $ENCLAVE_URL $MODULE_NAME $OTW_NAME
+# sh register_enclave.sh $ENCLAVE_PACKAGE_ID $APP_PACKAGE_ID $ENCLAVE_CONFIG_OBJECT_ID $ENCLAVE_URL $MODULE_NAME $OTW_NAME
 
-export ENCLAVE_OBJECT_ID=0x7fcfd0d0f3e1d6380b083fbf271fe8750e8f1270b1c4cf1bec5894b65f1a958d
+export ENCLAVE_OBJECT_ID=0x3c3b60f42cbd091068699581f2df55af49d10f10a27833c699b4bccc5ecc06a0
 
-# echo "ENCLAVE_OBJECT_ID:" $ENCLAVE_OBJECT_ID
+echo "ENCLAVE_OBJECT_ID:" $ENCLAVE_OBJECT_ID
 
 # sh register_agent.sh \
-#   $EXAMPLES_PACKAGE_ID \
+#   $APP_PACKAGE_ID \
 #   $MODULE_NAME \
 #   $OTW_NAME \
 #   $ENCLAVE_OBJECT_ID \
@@ -50,7 +54,7 @@ export ENCLAVE_OBJECT_ID=0x7fcfd0d0f3e1d6380b083fbf271fe8750e8f1270b1c4cf1bec589
 #   "0x123"
 
 # sh consume_prompt.sh \
-#   $EXAMPLES_PACKAGE_ID \
+#   $APP_PACKAGE_ID \
 #   $MODULE_NAME \
 #   $OTW_NAME \
 #   $ENCLAVE_OBJECT_ID \
