@@ -29,6 +29,7 @@ export const useAgentBySlug = (slug?: string) => {
       return {
         ...baseAgent,
         ...onchain,
+        agent_id: String(baseAgent.agent_id),
       }
     },
   })
