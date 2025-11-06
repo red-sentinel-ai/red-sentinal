@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ChevronLeft, Info, LinkIcon, User } from 'lucide-react'
+import { ChevronLeft, Info, LinkIcon, TrendingUp, User } from 'lucide-react'
 import { formatAddress } from '@mysten/sui/utils'
 import { QRCodeSVG } from 'qrcode.react'
 import { toast } from 'react-toastify'
@@ -14,6 +14,7 @@ import {
   EXPLORER_BASE_URL,
   SLUSH_BASE_URL,
   mockPrizePoolHistory,
+  mockPrizePool7dChange,
 } from '@/constants'
 import { type AgentDetails } from '@/hooks/agents/useAllAgents'
 import { type AgentEvents } from '@/hooks/useAgentEvents'
@@ -22,6 +23,7 @@ import { DefenderProfile } from './DefenderProfile'
 import { formatDuration, cn } from '@/lib/utils'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, Button } from '@/components/ui'
 import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
+import { SparklineChart } from '../ui/common/SparklineChart'
 
 interface AgentSidebarProps {
   agent: AgentDetails
@@ -161,26 +163,26 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
               <div className="flex justify-between items-center">
                 <h3 className="text-[#5E5E5E]  font-medium uppercase">Prize pool</h3>
                 {/* // TODO: Uncomment below comments when enabling chart feature */}
-                {/* <div className="flex items-center gap-1 text-green-400 text-xs font-medium">
+                <div className="flex items-center gap-1 text-green-400 text-xs font-medium">
                   <TrendingUp className="w-3 h-3" />
                   <span>+{mockPrizePool7dChange.percentage.toFixed(1)}% (In last 7 days)</span>
-                </div> */}
+                </div>
               </div>
               <div className="flex items-end justify-between gap-4">
                 <p className="inline-block text-2xl font-semibold">
                   {(Number(agent.balance) / MIST_PER_SUI).toFixed(2)} SUI
                 </p>
-                {/* <div>
+                <div>
                   <SparklineChart data={mockPrizePoolHistory.map((p) => p.value)} />
-                </div> */}
+                </div>
               </div>
-              {/* <Button
+              <Button
                 onClick={() => setIsChartModalOpen(true)}
                 className="w-full bg-transparent border border-[#558EB4]/50 text-[#558EB4] hover:bg-[#558EB4]/20 hover:text-black transition-colors duration-300 font-semibold text-sm mt-2"
                 size="sm"
               >
                 See Growth Chart
-              </Button> */}
+              </Button>
             </div>
           )}
           {isDrained && winnerAddress && (
@@ -212,15 +214,8 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
                 <h3 className="text-black/70 text-sm font-semibold uppercase">Active Since</h3>
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger
-                      asChild
-                      className="cursor-help"
-                    >
-                      <Info
-                        width={12}
-                        height={12}
-                        className="text-black/60"
-                      />
+                    <TooltipTrigger asChild className="cursor-help">
+                      <Info width={12} height={12} className="text-black/60" />
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>Format: Days, Hours, Minutes, Seconds</p>
