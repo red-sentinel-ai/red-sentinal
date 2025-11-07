@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { SUI_SENTINEL_APP_URL } from '@/constants'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export function OfferingsSection() {
   return (
@@ -10,7 +11,7 @@ export function OfferingsSection() {
       id="offerings"
       className="py-24 relative text-black"
     >
-      <div className="relative z-10 max-w-7xl mx-auto">
+      <div className="relative z-10 max-w-7xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -26,7 +27,6 @@ export function OfferingsSection() {
             shapes the future of Sui Sentinel security.
           </h2>
         </motion.div>
-
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -34,38 +34,59 @@ export function OfferingsSection() {
           viewport={{ once: true }}
           className="grid grid-cols-1 md:grid-cols-2"
         >
-          <div className="p-3 md:p-8 flex flex-col justify-between min-h-[300px] border border-black md:border-r-0">
+          <div className="relative p-3 md:p-8 flex flex-col justify-between min-h-[300px] border border-black md:border-r-0">
             <div>
               <h3 className="text-xl md:text-[32px] font-medium mb-6">Custom AI</h3>
-              <div className="min-h-[200px] md:min-h-[400px]"></div>
+
               <p className="text-sm md:text-[20px] leading-relaxed">
                 Use battle-tested AI models built by the community. Challenge them, test their
                 strength, and earn rewards for every exploit discovered.
               </p>
+
+              <div className="min-h-0 md:min-h-[300px]">
+                <Image
+                  src="/img/customAIArt.png"
+                  alt="custom ai"
+                  width={500}
+                  height={500}
+                  className="relative w-full max-w-xs h-auto mx-auto my-6 
+                             md:absolute md:top-[5%] md:w-[500px] md:h-[500px] md:max-w-none md:my-0"
+                />
+              </div>
             </div>
             <Link
               href={SUI_SENTINEL_APP_URL}
               target="_blank"
-              className="mt-8"
+              className="mt-1"
             >
               <button className="btn btn-outline">Play Now</button>
             </Link>
           </div>
 
-          <div className="p-3 md:p-8 border border-black border-t-0 md:border-t md:border-t-black md:border-l flex flex-col justify-between min-h-[300px]">
+          <div className="relative p-3 md:p-8 border border-black border-t-0 md:border-t md:border-t-black md:border-l flex flex-col justify-between min-h-[300px]">
             <div>
               <h3 className="text-xl md:text-[32px] font-medium mb-6">Deploy Your Sentinel</h3>
-              <div className="min-h-[200px] md:min-h-[400px]"></div>
               <p className="text-sm md:text-[20px] leading-relaxed">
                 Launch your own AI model into the Sentinel network. Let the world attack it and earn
                 while it evolves.
               </p>
+
+              <div className="min-h-0 md:min-h-[300px]">
+                <Image
+                  src="/img/deploySentinelArt.png"
+                  alt="deploy sentinel"
+                  width={400}
+                  height={400}
+                  className="relative w-full max-w-xs h-auto mx-auto my-6
+                             md:absolute md:bottom-[2%] md:w-[400px] md:h-[400px] md:max-w-none md:my-0"
+                />
+              </div>
             </div>
             <div className="flex justify-start md:justify-end">
               <Link
                 href={SUI_SENTINEL_APP_URL}
                 target="_blank"
-                className="mt-8"
+                className="mt-1"
               >
                 <button className="btn btn-outline">Deploy Now!</button>
               </Link>

@@ -6,7 +6,7 @@ export const LandingPage = () => {
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        className="mt-24 px-4 w-full max-w-[1900px] mx-auto relative"
+        className="mt-20 md:mt-24 px-4 w-full max-w-[1900px] mx-auto relative"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
@@ -26,9 +26,9 @@ export const LandingPage = () => {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 justify-center pt-20 text-center gap-9 overflow-hidden px-4 pb-4 z-10 relative">
+          <div className="grid grid-cols-1 lg:grid-cols-2 justify-center pt-20 text-center gap-20 md:gap-9 overflow-hidden px-4 pb-4 z-10 relative">
             <motion.div
-              className="border border-black rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-1 robo-card attacker backdrop-blur-[0.1px] group"
+              className="rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-1 robo-card attacker backdrop-blur-[0.1px] group"
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: 0.2 }}
@@ -39,7 +39,7 @@ export const LandingPage = () => {
                   width={368}
                   height={546}
                   alt="robo"
-                  className="relative z-10 mx-auto -mt-[90px]"
+                  className="relative z-10 mx-auto w-[330px] md:w-[368px] -mt-[90px]"
                 />
 
                 <Image
@@ -80,7 +80,7 @@ export const LandingPage = () => {
               <div>
                 <Link
                   href="/defend"
-                  className="border border-primary_blue rounded-[8px] w-full p-2 transition-all text-primary_blue group-hover:bg-primary_blue_90 group-hover:text-white group-hover:border-primary_blue text-2xl min-h-[62px] flex items-center justify-center"
+                  className="border border-secondary_blue_60 rounded-[8px] w-full p-2 transition-all text-primary_blue text-white text-2xl min-h-[62px] flex items-center justify-center bg-secondary_blue hover:bg-secondary_blue_60"
                 >
                   Launch Sentinel
                 </Link>
@@ -88,7 +88,7 @@ export const LandingPage = () => {
             </motion.div>
 
             <motion.div
-              className="border border-black rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-1 robo-card defender backdrop-blur-[0.1px] group"
+              className="rounded-lg lg:rounded-2xl p-2 lg:p-4 col-span-1 robo-card defender backdrop-blur-[0.1px] group"
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: 0.3 }}
@@ -99,7 +99,7 @@ export const LandingPage = () => {
                   width={368}
                   height={546}
                   alt="robo"
-                  className="relative z-10 mx-auto -mt-[96px]"
+                  className="relative z-10 mx-auto w-[330px] md:w-[368px] -mt-[96px]"
                 />
 
                 <Image
@@ -139,7 +139,7 @@ export const LandingPage = () => {
               <div>
                 <Link
                   href="/attack"
-                  className="border border-primary_pink rounded-[8px] w-full p-2 transition-all text-primary_pink group-hover:bg-primary_pink group-hover:text-white group-hover:border-primary_pink text-2xl min-h-[62px] flex items-center justify-center"
+                  className="border border-secondary_blue_60 rounded-[8px] w-full p-2 transition-all text-white bg-secondary_pink hover:bg-secondary_pink_60 text-2xl min-h-[62px] flex items-center justify-center"
                 >
                   Attack Sentinel
                 </Link>
@@ -147,6 +147,7 @@ export const LandingPage = () => {
             </motion.div>
           </div>
         </div>
+        <div className="absolute left-1/2 top-[23%] -translate-x-1/2 bg-[#00000036] blur-3xl w-full md:w-[1000px] h-[600px] rounded-full"></div>
       </motion.div>
     </AnimatePresence>
   )

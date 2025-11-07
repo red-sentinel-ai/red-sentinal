@@ -50,7 +50,7 @@ export const Header = () => {
           </div>
         </div>
 
-        <div className="hidden xl:block ms-auto">
+        <div className="hidden xl:block ms-4">
           <ConnectButton />
         </div>
         <button
@@ -86,7 +86,10 @@ export const Header = () => {
       {menuOpen && (
         <div className="xl:hidden px-4 pb-4">
           <div className="py-4 border-t border-gray-200">
-            <MenuItems menuOpen={menuOpen} />
+            <MenuItems
+              menuOpen={menuOpen}
+              onItemClick={() => setMenuOpen(false)}
+            />
           </div>
           <div className="mt-4 flex justify-center">
             <ConnectButton />

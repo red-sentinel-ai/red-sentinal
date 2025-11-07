@@ -169,7 +169,7 @@ export default function ChatInterface({
   }
 
   return (
-    <div className="flex flex-col h-full flex-1 bg-white text-black">
+    <div className="flex flex-col h-full flex-1 text-black">
       {/* <div className="backdrop-blur-xl border-b border-[#2E40494D] p-3 shadow-lg">
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4">
           <div>
@@ -353,26 +353,29 @@ export default function ChatInterface({
             className="relative"
           >
             <div className="relative">
-              <textarea
-                value={promptInput}
-                onChange={(e) => {
-                  setPromptInput(e.target.value)
-                  countTokens(e.target.value)
-                }}
-                className="w-full border border-gray-300 rounded-2xl p-3 sm:p-4 pr-16 sm:pr-20 pb-10 sm:pb-12 min-h-[50px] sm:min-h-[60px] max-h-[120px] sm:max-h-[150px] text-sm sm:text-base bg-white focus:ring-1 focus:ring-black outline-none placeholder:text-gray-400 resize-none shadow-inner transition-all duration-200 text-black"
-                disabled={isSubmitting}
-                placeholder="Craft your attack prompt..."
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault()
-                    handleSubmit(e)
-                  }
-                }}
-              />
+              <div className="relative max-h-[113px]">
+                <textarea
+                  value={promptInput}
+                  onChange={(e) => {
+                    setPromptInput(e.target.value)
+                    countTokens(e.target.value)
+                  }}
+                  className="w-full border border-gray-300 rounded-2xl p-3 sm:p-4 pr-16 sm:pr-20 pb-10 relative z-10 sm:pb-12 min-h-[50px] sm:min-h-[60px] max-h-[120px] sm:max-h-[150px] text-sm sm:text-base bg-white focus:ring-1 focus:ring-black outline-none placeholder:text-gray-400 resize-none shadow-inner transition-all duration-200 text-black"
+                  disabled={isSubmitting}
+                  placeholder="Craft your attack prompt..."
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault()
+                      handleSubmit(e)
+                    }
+                  }}
+                />
+                <div className="rounded-[12px] bg-[#F49BEE]/90 blur-[4px] absolute sm:min-h-[120px] w-[100%] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+              </div>
 
               <div
                 className={clsx(
-                  'absolute bottom-2 sm:bottom-3 left-3 sm:left-4 text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded'
+                  'absolute bottom-2 sm:bottom-3 left-3 sm:left-4 text-xs bg-[#D9D9D9] px-2 py-1 rounded z-10'
                 )}
               >
                 <span
@@ -385,7 +388,7 @@ export default function ChatInterface({
               </div>
 
               {tokenCount > ATTACK_PROMPT_MAX_TOKENS && (
-                <div className="mt-2 text-sm text-red-500 absolute">
+                <div className="mt-2 text-sm text-red-500 absolute z-10">
                   Your prompt exceeds the token limit.
                 </div>
               )}
@@ -395,7 +398,7 @@ export default function ChatInterface({
                 disabled={
                   isSubmitting || promptInput.length === 0 || tokenCount > ATTACK_PROMPT_MAX_TOKENS
                 }
-                className="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 w-8 h-8 sm:w-10 sm:h-10 text-white bg-black rounded-full flex items-center justify-center transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform disabled:transform-none hover:bg-gray-800"
+                className="absolute z-10 bottom-2 sm:bottom-3 right-2 sm:right-3 w-8 h-8 sm:w-10 sm:h-10 text-white bg-black rounded-full flex items-center justify-center transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform disabled:transform-none hover:bg-gray-800"
               >
                 {isSubmitting ? (
                   <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
@@ -411,7 +414,7 @@ export default function ChatInterface({
               </button>
             </div>
             {submitError && (
-              <div className="mt-2 text-red-600 text-xs sm:text-sm bg-red-100 border border-red-200 rounded-lg p-2">
+              <div className="mt-2 text-red-600 text-xs sm:text-sm bg-red-100 border border-red-200 rounded-lg p-2 relative z-10">
                 {submitError}
               </div>
             )}

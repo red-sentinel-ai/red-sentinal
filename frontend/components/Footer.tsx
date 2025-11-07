@@ -18,19 +18,19 @@ const Footer = () => {
       className="relative pt-16 bg-cover bg-bottom bg-no-repeat"
       style={{ backgroundImage: "url('/img/footer-bg.png')" }}
     >
-      <div className="absolute inset-0 flex justify-center items-end md:items-center pointer-events-none pb-10 md:pb-0">
+      <div className="absolute inset-0 flex justify-center items-end md:items-center pointer-events-none pb-16 md:pb-0">
         <Image
-          src="/img/fullCircle.png"
+          src="/gifs/fullCircleRed.gif"
           width={500}
           height={346}
           alt="Decorative blend element"
-          className="w-[260px] md:w-auto h-auto max-w-xs md:max-w-lg mix-blend-difference"
+          className="w-[160px] md:w-auto h-auto max-w-xs md:max-w-lg"
         />
       </div>
 
       <div className="relative z-10 max-w-[1440px] mx-auto pb-4 md:pb-0 px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-12 text-center md:text-left min-h-[398px]">
-          <div className="max-w-md md:self-stretch flex flex-col">
+        <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-12 text-center md:text-left min-h-[440px] md:min-h-[398px]">
+          <div className="max-w-md md:self-stretch flex flex-col flex-grow">
             <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
               <Image
                 src="/icons/logo_large.png"
@@ -44,26 +44,8 @@ const Footer = () => {
               Sui Sentinel is a decentralized network that audits, red-teams, and evolves AI models
               through real-world challenges ensuring they grow stronger with every test.
             </p>
-            <div className="md:text-base mt-auto">
-              <span>Powered by </span>
-              <a
-                href={NAUTILUS_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline"
-              >
-                Nautilus Framework
-              </a>
-              <span> • Secured by TEE</span>
-            </div>
-            <p className="text-white font-medium mb-4">
-              <span>© 2025 </span>
-              <span>All Rights Reserved @Cyphronix Software</span>
-            </p>
-          </div>
 
-          <div className="w-full md:w-auto">
-            <div className="flex flex-row justify-center gap-4 md:hidden">
+            <div className="flex flex-row justify-center gap-4 md:hidden my-4">
               {socialLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -87,7 +69,26 @@ const Footer = () => {
               ))}
             </div>
 
-            <div className="hidden md:flex flex-col gap-4">
+            <div className="md:text-base mt-auto">
+              <span>Powered by </span>
+              <a
+                href={NAUTILUS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline"
+              >
+                Nautilus Framework
+              </a>
+              <span> • Secured by TEE</span>
+            </div>
+            <p className="text-white font-medium mb-4">
+              <span>© 2025 </span>
+              <span>All Rights Reserved @Cyphronix Software</span>
+            </p>
+          </div>
+
+          <div className="w-full md:w-auto hidden md:block">
+            <div className="flex flex-col gap-4">
               {socialLinks.map((link) => (
                 <div
                   key={link.href}
