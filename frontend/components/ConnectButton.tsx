@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Wallet, Copy, CheckCircle, LogOut, ChevronDown, User, Loader2 } from 'lucide-react'
+import { Copy, CheckCircle, LogOut, ChevronDown, User, Loader2 } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -19,6 +19,7 @@ import {
 import { formatAddress } from '@mysten/sui/utils'
 import { SuiClient, getFullnodeUrl } from '@mysten/sui/client'
 import { SUI_FAUCET_URL } from '@/constants'
+import Image from 'next/image'
 
 export const client = new SuiClient({ url: getFullnodeUrl('testnet') })
 
@@ -64,13 +65,18 @@ export const ConnectButton = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-2 px-4 py-2 rounded-full border border-black/20 text-black hover:bg-gray-100 transition-colors group">
-          <Wallet className="h-4 w-4 text-primary_blue group-hover:text-blue-800 transition-colors" />
-          <span className=" text-sm font-medium">
+        <button className="flex items-center gap-2 px-4 py-2 rounded-full border border-black text-black hover:bg-gray-100 transition-colors group">
+          <Image
+            width={31}
+            height={31}
+            src="/icons/wallet.png"
+            alt="wallet icon"
+          />
+          <span className="text-sm font-medium">
             <span className="hidden sm:inline">{formatAddress(account.address)}</span>
             <span className="sm:hidden">{formatAddress(account.address)}</span>
           </span>
-          <ChevronDown className="h-4 w-4 text-gray-400 transition-colors" />
+          <ChevronDown className="h-4 w-4 transition-colors" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
