@@ -41,14 +41,14 @@ export function Navbar() {
               />
             </Link>
           </motion.div>
-          <div>
+          {/* <div>
             <Link
               href="/careers"
               className="underline  hover:no-underline"
             >
               Careers
             </Link>
-          </div>
+          </div> */}
 
           {/* <div className="hidden md:flex items-center gap-8">
             <a
