@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 const jobOpenings = [
   {
     title: 'Frontend Developer',
+    department: 'Engineering',
     location: 'Remote',
     type: 'Internship',
     slug: 'frontend-developer',
@@ -23,6 +24,7 @@ const jobOpenings = [
   },
   {
     title: 'Web Designer',
+    department: 'Engineering',
     location: 'Remote',
     type: 'Internship',
     slug: 'web-designer',
@@ -72,7 +74,7 @@ export function CareersContent() {
                     <div>
                       <h3 className="text-2xl font-semibold">{job.title}</h3>
                       <p className="text-gray-600 mt-1">
-                        {job.location} • {job.type}
+                        {job.department} • {job.location} • {job.type}
                       </p>
                     </div>
                     <Link
