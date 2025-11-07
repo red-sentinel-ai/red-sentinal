@@ -46,10 +46,9 @@ export function CareersContent() {
       <section className="py-24 pt-48 relative text-black min-h-screen">
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
             className="text-center mb-16"
           >
             <h1 className="text-4xl md:text-6xl font-bold mb-6">Work With Us</h1>
@@ -64,10 +63,9 @@ export function CareersContent() {
               {jobOpenings.map((job, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.7, delay: index * 0.1 }}
-                  viewport={{ once: true }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
                   className="border border-black p-6 rounded-lg flex flex-col"
                 >
                   <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
