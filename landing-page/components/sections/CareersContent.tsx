@@ -8,7 +8,7 @@ const jobOpenings = [
     title: 'Frontend Developer',
     department: 'Engineering',
     location: 'Remote',
-    type: 'Internship',
+    type: 'Full Time',
     slug: 'frontend-developer',
     responsibilities: [
       'Develop and maintain scalable, robust, and performant frontend applications using React, TypeScript, and CSS',
@@ -26,7 +26,7 @@ const jobOpenings = [
     title: 'Web Designer',
     department: 'Engineering',
     location: 'Remote',
-    type: 'Internship',
+    type: 'Full Time',
     slug: 'web-designer',
     responsibilities: [
       'Create wireframes, mockups, and prototypes for website and application interfaces',
