@@ -110,9 +110,9 @@ export default function JobApplicationPage() {
     <section className="py-24 pt-48 relative text-black min-h-screen">
       <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.5 }}
           viewport={{ once: true }}
         >
           <h1 className="text-3xl md:text-5xl font-bold mb-2">Apply for</h1>
@@ -135,7 +135,7 @@ export default function JobApplicationPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black"
+                className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black"
                 disabled={formState === 'submitting'}
               />
             </div>
@@ -153,7 +153,7 @@ export default function JobApplicationPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black"
+                className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black"
                 disabled={formState === 'submitting'}
               />
             </div>
@@ -170,7 +170,7 @@ export default function JobApplicationPage() {
                 id="github_link"
                 value={githubLink}
                 onChange={(e) => setGithubLink(e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black"
+                className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black"
                 disabled={formState === 'submitting'}
               />
             </div>
@@ -205,7 +205,7 @@ export default function JobApplicationPage() {
                 rows={4}
                 value={interestNotes}
                 onChange={(e) => setInterestNotes(e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black"
+                className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black"
                 disabled={formState === 'submitting'}
               />
             </div>
@@ -222,7 +222,7 @@ export default function JobApplicationPage() {
                 rows={2}
                 value={availabilityNotes}
                 onChange={(e) => setAvailabilityNotes(e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black"
+                className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black"
                 disabled={formState === 'submitting'}
               />
             </div>
