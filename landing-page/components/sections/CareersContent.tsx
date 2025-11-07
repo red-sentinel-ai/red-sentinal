@@ -1,26 +1,46 @@
 'use client'
 
-import { useState } from 'react' // Import useState
+import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { JobApplicationModal } from '@/components/modals/JobApplicationModal' // Import the new modal
 
 const jobOpenings = [
+  {
+    title: 'Frontend Developer',
+    location: 'Remote',
+    type: 'Internship',
+    slug: 'frontend-developer',
+    responsibilities: [
+      'Develop and maintain scalable, robust, and performant frontend applications using React, TypeScript, and CSS',
+      'Translate designs from Figma into complex layouts and animations',
+    ],
+    about: [
+      'Strong general engineering ability: writing modular, maintainable code within a complex codebase',
+      'Deep understanding of modern React and TypeScript concepts',
+      'Expertise in responsive and adaptive design principles',
+      'Excellent problem-solving skills and attention to detail',
+      'Have Decent understanding of blockchain technology and portfolio of Web3 apps.',
+    ],
+  },
   {
     title: 'Web Designer',
     location: 'Remote',
     type: 'Internship',
+    slug: 'web-designer',
+    responsibilities: [
+      'Create wireframes, mockups, and prototypes for website and application interfaces',
+      'Collaborate with developers to ensure faithful translation of designs into code',
+      'Maintain and evolve the brand’s visual identity across all digital platforms',
+    ],
+    about: [
+      'Proficiency in design tools like Figma, Sketch, or Adobe XD',
+      'Strong portfolio showcasing visual design skills and user-centric design thinking',
+      'Understanding of HTML, CSS, and responsive design principles',
+      'Creative mindset with a keen eye for detail and aesthetics',
+    ],
   },
 ]
 
 export function CareersContent() {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedJobTitle, setSelectedJobTitle] = useState('')
-
-  const handleApplyClick = (jobTitle: string) => {
-    setSelectedJobTitle(jobTitle)
-    setIsModalOpen(true)
-  }
-
   return (
     <>
       <section className="py-24 pt-48 relative text-black min-h-screen">
@@ -40,7 +60,7 @@ export function CareersContent() {
 
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl font-bold mb-8">Open Positions</h2>
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-8">
               {jobOpenings.map((job, index) => (
                 <motion.div
                   key={index}
@@ -48,20 +68,38 @@ export function CareersContent() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.7, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="border border-black p-6 rounded-lg flex flex-col md:flex-row justify-between items-start md:items-center"
+                  className="border border-black p-6 rounded-lg flex flex-col"
                 >
-                  <div>
-                    <h3 className="text-2xl font-semibold">{job.title}</h3>
-                    <p className="text-gray-600 mt-1">
-                      {job.location} • {job.type}
-                    </p>
+                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                    <div>
+                      <h3 className="text-2xl font-semibold">{job.title}</h3>
+                      <p className="text-gray-600 mt-1">
+                        {job.location} • {job.type}
+                      </p>
+                    </div>
+                    <Link
+                      href={`/careers/apply/${job.slug}`}
+                      className="btn btn-outline mt-4 md:mt-0 flex items-center justify-center"
+                    >
+                      Apply Now
+                    </Link>
                   </div>
-                  <button
-                    className="btn btn-outline mt-4 md:mt-0"
-                    onClick={() => handleApplyClick(job.title)}
-                  >
-                    Apply Now
-                  </button>
+
+                  <div className="border-t border-gray-200 pt-6">
+                    <h4 className="text-lg font-semibold mb-3">Key Responsibilities</h4>
+                    <ul className="list-disc list-inside space-y-1 text-gray-700">
+                      {job.responsibilities.map((resp, i) => (
+                        <li key={i}>{resp}</li>
+                      ))}
+                    </ul>
+
+                    <h4 className="text-lg font-semibold mt-6 mb-3">About You</h4>
+                    <ul className="list-disc list-inside space-y-1 text-gray-700">
+                      {job.about.map((item, i) => (
+                        <li key={i}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
                 </motion.div>
               ))}
             </div>
@@ -75,12 +113,6 @@ export function CareersContent() {
           </div>
         </div>
       </section>
-
-      <JobApplicationModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        jobTitle={selectedJobTitle}
-      />
     </>
   )
 }
