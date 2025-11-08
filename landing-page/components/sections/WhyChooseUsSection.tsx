@@ -17,9 +17,7 @@ export function WhyChooseUsSection() {
           viewport={{ once: true }}
           className="text-center mb-12 md:mb-16 flex flex-col items-center"
         >
-          <div className="bg-[#D9D9D9] px-4 py-1 rounded-full mb-4 w-fit md:w-[120px] text-sm md:text-base">
-            • why us
-          </div>
+          <div className="badge-pink">• why us</div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium mb-6">
             Built by Guardians, for Guardians
           </h2>

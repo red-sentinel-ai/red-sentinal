@@ -19,9 +19,7 @@ export function OfferingsSection() {
           viewport={{ once: true }}
           className="mb-16"
         >
-          <div className="bg-[#D9D9D9] px-4 py-1 rounded-full text-sm font-medium mb-4 w-fit">
-            • Offerings
-          </div>
+          <div className="badge-pink w-fit">• Offerings</div>
           <h2 className="text-2xl md:text-[48px] font-medium leading-tight">
             Whether you’re deploying your own Sentinel or testing one built for battle, every move
             shapes the future of Sui Sentinel security.
