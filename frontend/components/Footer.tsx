@@ -18,7 +18,7 @@ const Footer = () => {
       className="relative pt-16 bg-cover bg-bottom bg-no-repeat"
       style={{ backgroundImage: "url('/img/footer-bg.png')" }}
     >
-      <div className="absolute inset-0 flex justify-center items-end md:items-center pointer-events-none pb-16 md:pb-0">
+      <div className="absolute inset-0 flex justify-center items-end md:items-center pointer-events-none pb-16 md:pb-0 flex-col">
         <Image
           src="/gifs/fullCircleRed.gif"
           width={500}
@@ -26,6 +26,14 @@ const Footer = () => {
           alt="Decorative blend element"
           className="w-[160px] md:w-auto h-auto max-w-xs md:max-w-lg"
         />
+        <div>
+          <Image
+            width={310}
+            height={29}
+            src="/img/shadowEllipse.png"
+            alt="shadow ellipse"
+          />
+        </div>
       </div>
 
       <div className="relative z-10 max-w-[1440px] mx-auto pb-4 md:pb-0 px-4 sm:px-6 lg:px-8">
