@@ -129,7 +129,8 @@ pub async fn consume_prompt(
         .and_then(|data| data.get("content"))
         .and_then(|content| content.get("fields"))
         .and_then(|fields| fields.get("nonce"))
-        .and_then(|nonce| nonce.as_u64())
+        .and_then(|nonce| nonce.as_str())
+        .and_then(|nonce_str| nonce_str.parse::<u64>().ok())
         .ok_or_else(|| EnclaveError::GenericError("Could not retrieve nonce from attack object".to_string()))?;
 
         if !is_not_used {
