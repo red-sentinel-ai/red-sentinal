@@ -3,3 +3,5 @@ endpoints:
   - api.anthropic.com # replace with your own endpoints
   - oauth2.googleapis.com
   - us-central1-aiplatform.googleapis.com
+  - fullnode.testnet.sui.io
+  - fullnode.mainnet.sui.io

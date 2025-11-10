@@ -126,6 +126,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
 
             const attackObjectId = attackObjectChange.objectId
 
+
             // Wait 1 second (1000ms) for the RPC node to index the new object's content
             await new Promise((resolve) => setTimeout(resolve, 1000))
 
@@ -135,6 +136,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
                 id: attackObjectId,
                 options: { showContent: true },
               })
+              console.log({ objectResponse, attackObjectId })
             } catch (error) {
               console.error('Error fetching object after sleep', error)
               return reject(new Error('Failed to fetch Attack ticket after 1s delay.'))
