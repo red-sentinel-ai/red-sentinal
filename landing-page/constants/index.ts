@@ -1,4 +1,4 @@
-import { Coins, Github, Shield, Target, Trophy, Users, Zap } from 'lucide-react'
+import { Briefcase, Coins, Github, Shield, Target, Trophy, Users, Zap } from 'lucide-react'
 
 export const supabaseUrl = process.env.SUPABASE_URL || ''
 export const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
@@ -98,6 +98,7 @@ export const socialLinks = [
     isImage: true,
     alt: 'X (Twitter)',
     name: 'Twitter',
+    isOutside: true,
   },
   {
     href: SUI_SENTINEL_TELEGRAM_URL,
@@ -105,14 +106,31 @@ export const socialLinks = [
     isImage: true,
     alt: 'Telegram',
     name: 'Telegram',
+    isOutside: true,
   },
-  { href: SUI_SENTINEL_GITHUB_URL, icon: Github, isImage: false, alt: 'GitHub', name: 'Github' },
+  {
+    href: SUI_SENTINEL_GITHUB_URL,
+    icon: Github,
+    isImage: false,
+    alt: 'GitHub',
+    name: 'Github',
+    isOutside: true,
+  },
   {
     href: SUI_SENTINEL_DOCS_URL,
     icon: '/icons/docs_outline.png',
     isImage: true,
     alt: 'Documentation',
     name: 'Docs',
+    isOutside: true,
+  },
+  {
+    href: '/careers',
+    icon: Briefcase,
+    isImage: false,
+    alt: 'careers',
+    name: 'Careers',
+    isOutside: false,
   },
 ]
 

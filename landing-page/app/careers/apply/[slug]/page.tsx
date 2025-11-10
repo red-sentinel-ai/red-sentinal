@@ -90,7 +90,13 @@ export default function JobApplicationPage() {
 
   if (formState === 'success') {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen text-center py-24 pt-48 px-4">
+      <div
+        className="flex flex-col items-center justify-center min-h-screen text-center py-24 pt-48 px-4 bg-no-repeat"
+        style={{
+          backgroundImage: "url('/img/hero_bg.png')",
+          backgroundSize: '100% auto',
+        }}
+      >
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -107,7 +113,13 @@ export default function JobApplicationPage() {
   }
 
   return (
-    <section className="py-24 pt-48 relative text-black min-h-screen">
+    <section
+      className="py-24 pt-48 relative text-black min-h-screen bg-no-repeat"
+      style={{
+        backgroundImage: "url('/img/hero_bg.png')",
+        backgroundSize: '100% auto',
+      }}
+    >
       <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
