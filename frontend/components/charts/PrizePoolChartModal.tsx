@@ -38,9 +38,9 @@ interface CustomTooltipProps {
 const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-black/80 backdrop-blur-md border border-gray-700 rounded-lg p-3 shadow-lg">
-        <p className="text-xs text-gray-400">{format(new Date(label || 0), 'MMM d, yyyy p')}</p>
-        <p className="text-base font-bold text-white">{`${payload[0].value.toFixed(2)} SUI`}</p>
+      <div className="bg-white/80 backdrop-blur-md border border-gray-300 rounded-lg p-3 shadow-lg">
+        <p className="text-xs text-gray-500">{format(new Date(label || 0), 'MMM d, yyyy p')}</p>
+        <p className="text-base font-bold text-black">{`${payload[0].value.toFixed(2)} SUI`}</p>
       </div>
     )
   }
@@ -57,19 +57,19 @@ export const PrizePoolChartModal = ({
     <Dialog
       open={open}
       onClose={onClose}
-      className="max-w-3xl bg-[#101112] border-gray-800 p-6"
+      className="max-w-3xl bg-white border-gray-200 p-6"
     >
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h2 className="text-xl font-bold text-white flex items-center gap-2">
-            <TrendingUp className="text-blue-400" />
+          <h2 className="text-xl font-bold text-black flex items-center gap-2">
+            <TrendingUp className="text-blue-500" />
             Prize Pool History
           </h2>
-          <p className="text-gray-400">For Sentinel: {agentName}</p>
+          <p className="text-gray-600">For Sentinel: {agentName}</p>
         </div>
         <button
           onClick={onClose}
-          className="text-gray-500 hover:text-white transition-colors"
+          className="text-gray-500 hover:text-black transition-colors"
         >
           <X className="w-6 h-6" />
         </button>
@@ -106,11 +106,11 @@ export const PrizePoolChartModal = ({
             </defs>
             <CartesianGrid
               strokeDasharray="3 3"
-              stroke="rgba(255, 255, 255, 0.1)"
+              stroke="#e5e7eb"
             />
             <XAxis
               dataKey="time"
-              stroke="rgba(255, 255, 255, 0.4)"
+              stroke="#6b7280"
               fontSize={12}
               tickLine={false}
               axisLine={false}
@@ -118,7 +118,7 @@ export const PrizePoolChartModal = ({
               dy={10}
             />
             <YAxis
-              stroke="rgba(255, 255, 255, 0.4)"
+              stroke="#6b7280"
               fontSize={12}
               tickLine={false}
               axisLine={false}
