@@ -8,9 +8,11 @@ use crate::EnclaveError;
 use axum::extract::State;
 use axum::{Json, response::IntoResponse};
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
+use serde_json::{Value, json};
 use std::sync::Arc;
 use uuid::Uuid;
+use reqwest::Client;
+
 use crate::{
     claude,
     models::{
@@ -62,6 +64,7 @@ pub async fn consume_prompt(
 ) -> Result<Json<ProcessedDataResponse<IntentMessage<ConsumePromptResponse>>>, EnclaveError> {
     let agents = state.agents.write().await;
 
+
     let agent = match agents.get(&payload.agent_id) {
         Some(agent) => agent,
         None => {
@@ -71,12 +74,89 @@ pub async fn consume_prompt(
             )));
         }
     };
+     let client = Client::new();
+        let url = "https://fullnode.testnet.sui.io";
+    let request_body = json!({
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "sui_getObject",
+  "params": [
+    payload.attack_object_id,
+    {
+      "showType": true,
+      "showOwner": true,
+      "showDisplay": false,
+      "showContent": true
+    }
+  ]
+});
+
+    let response = client
+        .post(url)
+        .header("Content-Type", "application/json")
+        .json(&request_body)
+        .send()
+        .await?;
+
+    if !response.status().is_success() {
+        let error_text = response.text().await?;
+                return Err(EnclaveError::GenericError(format!("Attack request object API failed with status {}", error_text)));
+    }
+
+    let response_json: Value = response.json().await?;
+
+    let is_not_used = response_json
+        .get("result")
+        .and_then(|result| result.get("data"))
+        .and_then(|data| data.get("content"))
+        .and_then(|content| content.get("fields"))
+        .and_then(|fields| fields.get("used"))
+        .and_then(|used| used.as_bool())
+        .map(|used| !used) // Negate the boolean value
+        .unwrap_or(false); // Default to not used being false if not found, to be safe
+    let attacker = response_json
+        .get("result")
+        .and_then(|result| result.get("data"))
+        .and_then(|data| data.get("owner"))
+        .and_then(|owner| owner.get("AddressOwner"))
+        .and_then(|address_owner| address_owner.as_str())
+        .map(|s| s.to_string())
+        .ok_or_else(|| EnclaveError::GenericError("Could not retrieve attacker address from attack object".to_string()))?;
+
+    let nonce = response_json
+        .get("result")
+        .and_then(|result| result.get("data"))
+        .and_then(|data| data.get("content"))
+        .and_then(|content| content.get("fields"))
+        .and_then(|fields| fields.get("nonce"))
+        .and_then(|nonce| nonce.as_u64())
+        .ok_or_else(|| EnclaveError::GenericError("Could not retrieve nonce from attack object".to_string()))?;
+
+        if !is_not_used {
+        return Err(EnclaveError::GenericError("Attack object has already been used or is invalid".to_string()));
+    }
+    let attack_object_agent_id = response_json
+        .get("result")
+        .and_then(|result| result.get("data"))
+        .and_then(|data| data.get("content"))
+        .and_then(|content| content.get("fields"))
+        .and_then(|fields| fields.get("agent_id"))
+        .and_then(|agent_id| agent_id.as_str())
+        .map(|s| s.to_string())
+        .ok_or_else(|| EnclaveError::GenericError("Could not retrieve agent_id from attack object".to_string()))?;
+
+    if attack_object_agent_id != payload.agent_id {
+        return Err(EnclaveError::GenericError("Agent ID in attack object does not match payload agent ID".to_string()));
+    } 
+    
 
     // Updated function call with agent_id parameter
     let evaluation = claude::evaluate_prompt(
         &payload.agent_id,
         &agent.system_prompt,
-        &payload.message
+        &payload.message,
+        &attacker,
+        nonce
     )
     .await
     .unwrap_or_else(|_| ConsumePromptResponse {
@@ -84,6 +164,8 @@ pub async fn consume_prompt(
         success: false,
         explanation: "Failed to evaluate prompt".to_string(),
         score: 0,
+        attacker: attacker.clone(),
+        nonce,
     });
 
 
