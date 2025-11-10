@@ -45,7 +45,13 @@ const jobOpenings = [
 export function CareersContent() {
   return (
     <>
-      <section className="py-24 pt-48 relative text-black min-h-screen">
+      <section
+        className="py-24 pt-48 relative text-black min-h-screen bg-no-repeat"
+        style={{
+          backgroundImage: "url('/img/hero_bg.png')",
+          backgroundSize: '100% auto',
+        }}
+      >
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
