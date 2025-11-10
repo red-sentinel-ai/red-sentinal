@@ -45,7 +45,7 @@ export function RewardsDashboard() {
 
   if (!isLoadingMissions && !missionsData?.enabled) {
     return (
-      <div className="min-h-body bg-white flex items-center justify-center">
+      <div className="min-h-body flex items-center justify-center">
         <div className="container mx-auto px-4 py-12">
           <AnimatePresence mode="wait">
             <motion.div
@@ -83,7 +83,7 @@ export function RewardsDashboard() {
   }
 
   return (
-    <div className="min-h-body bg-white pt-20">
+    <div className="min-h-body  pt-20">
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-7xl mx-auto">
           <AnimatePresence mode="wait">
