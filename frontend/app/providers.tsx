@@ -6,6 +6,7 @@ import { getFullnodeUrl } from '@mysten/sui/client'
 import { Header } from '@/components/Header'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ProfileInitializer } from '@/components/profile/ProfileInitializer'
+import { FeedbackButton } from '@/components/feedback/FeedbackButton' // <-- 1. IMPORT IT
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -39,6 +40,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
             <Header />
             <ProfileInitializer />
             {children}
+            <FeedbackButton />
           </div>
         </WalletProvider>
       </SuiClientProvider>
