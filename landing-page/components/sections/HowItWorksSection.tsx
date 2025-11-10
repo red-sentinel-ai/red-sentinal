@@ -34,10 +34,7 @@ export function HowItWorksSection() {
             viewport={{ once: true }}
             className="text-center mb-16 flex flex-col items-center"
           >
-            <div className="bg-gradient-to-r from-[#B9CDFF] to-[#E3EBFF] px-6 py-1 rounded-full mb-4 border border-black">
-              {' '}
-              • how it works{' '}
-            </div>
+            <div className="badge-pink"> • how it works </div>
             <h2 className="text-3xl md:text-[48px] font-medium mb-4">
               Sui Sentinel&apos;s Gamified AI Security
             </h2>
