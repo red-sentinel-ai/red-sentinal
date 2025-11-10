@@ -1,6 +1,6 @@
 import type React from 'react'
 import type { Metadata } from 'next'
-import { Analytics } from '@vercel/analytics/react'
+import { Analytics } from '@vercel/analytics/next'
 import localFont from 'next/font/local'
 import './globals.css'
 import { Navbar } from '@/components/sections/NavBar'

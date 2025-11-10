@@ -65,7 +65,7 @@ export function RewardsLeaderboard({ pointsSymbol }: RewardsLeaderboardProps) {
 
   return (
     <div className="min-h-body pb-12 pt-20">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto md:px-4">
         <AnimatePresence mode="wait">
           <motion.div
             className="max-w-4xl mx-auto"
@@ -74,7 +74,7 @@ export function RewardsLeaderboard({ pointsSymbol }: RewardsLeaderboardProps) {
             transition={{ duration: 0.3 }}
           >
             <Card className="bg-gray-50/50 backdrop-blur-lg border border-gray-200 rounded-2xl">
-              <CardHeader className="flex-row justify-between items-start">
+              <CardHeader className="flex-col sm:flex-row justify-between items-start gap-4">
                 <div className="flex items-center gap-3">
                   <motion.div
                     className="w-12 h-12 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center"
@@ -83,13 +83,13 @@ export function RewardsLeaderboard({ pointsSymbol }: RewardsLeaderboardProps) {
                     <Trophy className="h-6 w-6 text-black" />
                   </motion.div>
                   <div>
-                    <CardTitle className="text-2xl text-black uppercase">
+                    <CardTitle className="text-lg sm:text-2xl text-black uppercase">
                       SNTL Points Leaderboard
                     </CardTitle>
                     <p className="text-gray-500">Top performers in the Sui Sentinel</p>
                   </div>
                 </div>
-                <div className="mt-4 w-full max-w-md">
+                <div className="mt-4 sm:mt-0 w-full max-w-md">
                   <Input
                     type="text"
                     placeholder="Search by Discord or X username..."
@@ -156,7 +156,7 @@ export function RewardsLeaderboard({ pointsSymbol }: RewardsLeaderboardProps) {
                             }`}
                           >
                             <div
-                              className={`relative flex items-center gap-4 p-5 rounded-xl transition-all duration-300 border ${
+                              className={`relative flex flex-col sm:flex-row sm:items-center justify-between gap-1 md:gap-4 p-3 md:p-4 rounded-xl transition-all duration-300 border ${
                                 isCurrentUser
                                   ? 'bg-blue-50 border-blue-200'
                                   : isTopThree
@@ -164,33 +164,36 @@ export function RewardsLeaderboard({ pointsSymbol }: RewardsLeaderboardProps) {
                                   : 'bg-white border-gray-200 hover:bg-gray-50/50 hover:border-gray-300'
                               }`}
                             >
-                              <div className="flex-shrink-0 w-12 flex justify-center">
-                                {getRankIcon(index)}
+                              <div className="flex items-center gap-4 flex-1 min-w-0">
+                                <div className="flex-shrink-0 w-10 sm:w-12 flex justify-center">
+                                  {getRankIcon(index)}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <UserDisplay entry={entry} />
+                                  {isCurrentUser && (
+                                    <span className="mt-2 bg-blue-100 text-blue-800 border border-blue-200 px-2 py-1 rounded-full text-xs flex items-center gap-1 w-fit">
+                                      <Crown className="h-3 w-3" />
+                                      You
+                                    </span>
+                                  )}
+                                </div>
                               </div>
-                              <div className="flex-1 min-w-0">
-                                <UserDisplay entry={entry} />
-                                {isCurrentUser && (
-                                  <span className="mt-2 bg-blue-100 text-blue-800 border border-blue-200 px-2 py-1 rounded-full text-xs flex items-center gap-1 w-fit">
-                                    <Crown className="h-3 w-3" />
-                                    You
-                                  </span>
-                                )}
-                              </div>
-                              <div className="flex items-center gap-4 flex-shrink-0">
-                                <div className="text-right">
-                                  <div className="flex items-center gap-1 justify-end mb-1">
+
+                              <div className="flex items-center justify-between sm:justify-normal sm:flex-col md:flex-row gap-3 sm:gap-2 md:gap-4 flex-shrink-0 w-full sm:w-auto sm:pl-14 md:pl-0">
+                                <div className="text-left sm:text-right">
+                                  <div className="flex items-center gap-1 justify-start sm:justify-end mb-0 sm:mb-1">
                                     <Zap className="h-4 w-4 text-black" />
-                                    <span className="text-xl font-bold text-black">
+                                    <span className="text-lg sm:text-xl font-bold text-black">
                                       {entry.total_points?.toLocaleString()}
                                     </span>
-                                    <span className="text-sm text-gray-500 font-medium">
+                                    <span className="text-xs sm:text-sm text-gray-500 font-medium">
                                       {pointsSymbol}
                                     </span>
                                   </div>
                                 </div>
                                 <div className="relative">
                                   <div
-                                    className={`px-4 py-2 rounded-full text-sm font-bold min-w-20 text-center border ${tierConfig.bgClass} ${tierConfig.textClass} ${tierConfig.borderClass}`}
+                                    className={`px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-bold min-w-20 text-center border ${tierConfig.bgClass} ${tierConfig.textClass} ${tierConfig.borderClass}`}
                                   >
                                     {(entry.tier || 'Bronze').charAt(0).toUpperCase() +
                                       (entry.tier || 'bronze').slice(1)}
@@ -241,34 +244,34 @@ const getRankIcon = (index: number) => {
     case 0:
       return (
         <div className="relative">
-          <Crown className="h-8 w-8 text-yellow-500" />
+          <Crown className="h-7 w-7 sm:h-8 sm:w-8 text-yellow-500" />
           <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-yellow-500 flex items-center justify-center border-2 border-white">
-            <span className="text-xs font-bold text-white">1</span>
+            <span className="text-[10px] sm:text-xs font-bold text-white">1</span>
           </div>
         </div>
       )
     case 1:
       return (
         <div className="relative">
-          <Trophy className="h-7 w-7 text-gray-500" />
+          <Trophy className="h-6 w-6 sm:h-7 sm:w-7 text-gray-500" />
           <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-gray-500 flex items-center justify-center border-2 border-white">
-            <span className="text-xs font-bold text-white">2</span>
+            <span className="text-[10px] sm:text-xs font-bold text-white">2</span>
           </div>
         </div>
       )
     case 2:
       return (
         <div className="relative">
-          <Medal className="h-7 w-7 text-yellow-700" />
+          <Medal className="h-6 w-6 sm:h-7 sm:w-7 text-yellow-700" />
           <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-yellow-700 flex items-center justify-center border-2 border-white">
-            <span className="text-xs font-bold text-white">3</span>
+            <span className="text-[10px] sm:text-xs font-bold text-white">3</span>
           </div>
         </div>
       )
     default:
       return (
-        <div className="w-10 h-10 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center">
-          <span className="text-sm font-bold text-gray-600">#{index + 1}</span>
+        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center">
+          <span className="text-xs sm:text-sm font-bold text-gray-600">#{index + 1}</span>
         </div>
       )
   }

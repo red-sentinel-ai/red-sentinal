@@ -115,3 +115,5 @@ export const socialLinks = [
     name: 'Docs',
   },
 ]
+
+export const JOB_APPLICATIONS_BUCKET_NAME = 'job-applications'
