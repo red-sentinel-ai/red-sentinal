@@ -32,7 +32,8 @@ export function EarnWhileDefendingSection() {
         className="relative z-10 px-4"
       >
         <h2 className="text-3xl md:text-5xl font-medium leading-tight text-black">
-          Earn While Defending Sentinels. Turn your Prompt engineering skills into digital rewards.
+          Earn While Defending Sentinels. Turn your{' '}
+          <span className="text-[#C871FF]">Prompt engineering skills into digital rewards. </span>
           Every successful defense strengthens AI and your wallet.
         </h2>
         <div className="mt-10">

@@ -22,7 +22,7 @@ export function OfferingsSection() {
           <div className="badge-pink w-fit">• Offerings</div>
           <h2 className="text-2xl md:text-[48px] font-medium leading-tight">
             Whether you’re deploying your own Sentinel or testing one built for battle, every move
-            shapes the future of Sui Sentinel security.
+            shapes the future of <span className="text-[#C871FF]">Sui Sentinel security.</span>
           </h2>
         </motion.div>
         <motion.div
@@ -36,7 +36,7 @@ export function OfferingsSection() {
             <div>
               <h3 className="text-xl md:text-[32px] font-medium mb-6">Custom AI</h3>
 
-              <p className="text-sm md:text-[20px] leading-relaxed">
+              <p className="text-sm md:text-[20px] leading-relaxed text-[#939393]">
                 Use battle-tested AI models built by the community. Challenge them, test their
                 strength, and earn rewards for every exploit discovered.
               </p>
@@ -64,7 +64,7 @@ export function OfferingsSection() {
           <div className="relative p-3 md:p-8 border border-black border-t-0 md:border-t md:border-t-black md:border-l flex flex-col justify-between min-h-[300px]">
             <div>
               <h3 className="text-xl md:text-[32px] font-medium mb-6">Deploy Your Sentinel</h3>
-              <p className="text-sm md:text-[20px] leading-relaxed">
+              <p className="text-sm md:text-[20px] leading-relaxed text-[#939393]">
                 Launch your own AI model into the Sentinel network. Let the world attack it and earn
                 while it evolves.
               </p>
