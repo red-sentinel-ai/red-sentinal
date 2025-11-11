@@ -33,7 +33,6 @@ export const FeaturedAgentCard = ({
   const { Modal: FeatureModal, openModal: openFeatureModal } = useFeatureAgentModal()
   const isOwner = account?.address === agent.owner
 
-  // --- NEW LOGIC ---
   const [isWithdrawalLocked, setIsWithdrawalLocked] = useState(true)
   const [timeRemaining, setTimeRemaining] = useState('')
 
@@ -65,7 +64,11 @@ export const FeaturedAgentCard = ({
 
       setIsWithdrawalLocked(true)
       const formatted = formatDuration(diff)
-      setTimeRemaining(`Locked: ${formatted.days}d ${formatted.hours}h ${formatted.minutes}m`)
+      const days = formatted.days > 0 ? `${formatted.days}d ` : ''
+      const hours = formatted.hours > 0 || formatted.days > 0 ? `${formatted.hours}h ` : ''
+      const mins = `${formatted.minutes}m`
+
+      setTimeRemaining(`Locked: ${days}${hours}${mins}`)
       return true // Continue interval
     }
 
@@ -82,7 +85,6 @@ export const FeaturedAgentCard = ({
 
     return () => clearInterval(interval)
   }, [agent.last_funded_timestamp, agent.status, agent.balance])
-  // --- END NEW LOGIC ---
 
   const handleAttack = () => {
     router.push(`/attack/${agent.agent_path}`)
@@ -146,9 +148,28 @@ export const FeaturedAgentCard = ({
         </div>
       </div>
 
-      <div className="mt-auto flex gap-2">
-        {fromProfile ? (
-          <>
+      {fromProfile && (
+        <div className="text-xs text-center mb-4">
+          {isWithdrawalLocked ? (
+            <span className="font-medium text-yellow-700">{timeRemaining}</span>
+          ) : (
+            <span className="font-medium text-green-600">Withdrawal Unlocked</span>
+          )}
+        </div>
+      )}
+
+      <div className="mt-auto flex flex-col gap-2">
+        <button
+          onClick={(e) => {
+            e.stopPropagation()
+            handleAttack()
+          }}
+          className="btn btn-outline w-full"
+        >
+          {fromProfile ? 'View Sentinel' : ctaHeading}
+        </button>
+        {fromProfile && (
+          <div className="flex gap-2">
             <button
               onClick={() => openModal(agent.object_id)}
               className="btn btn-black w-1/2"
@@ -169,17 +190,7 @@ export const FeaturedAgentCard = ({
             >
               Withdraw
             </button>
-          </>
-        ) : (
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              handleAttack()
-            }}
-            className="btn btn-outline w-full"
-          >
-            {ctaHeading}
-          </button>
+          </div>
         )}
       </div>
 
