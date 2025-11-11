@@ -7,7 +7,7 @@ import { ChevronLeft, Info, LinkIcon, TrendingUp, User, TrendingDown, Loader2 } 
 import { formatAddress } from '@mysten/sui/utils'
 import { QRCodeSVG } from 'qrcode.react'
 import { toast } from 'react-toastify'
-
+import { useCurrentAccount } from '@mysten/dapp-kit'
 import {
   DEFAULT_PROFILE_URL,
   MIST_PER_SUI,
@@ -44,6 +44,9 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
   const [deepLinkUrl, setDeepLinkUrl] = useState('')
   const [timeRemaining, setTimeRemaining] = useState<string | null>(null)
   const [isChartModalOpen, setIsChartModalOpen] = useState(false)
+
+  const account = useCurrentAccount()
+  const isOwner = account?.address === agent.owner
 
   const { data: prizePoolData, isLoading: isLoadingChart } = useAgentPrizePoolHistory(
     agent.agent_id
@@ -89,6 +92,10 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
       setTimeRemaining('Funds Withdrawn')
       return
     }
+    if (!isOwner) {
+      setTimeRemaining(null)
+      return
+    }
 
     const lastFunded = Number(agent.last_funded_timestamp)
     if (lastFunded === 0) {
@@ -125,7 +132,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [agent.last_funded_timestamp, isDrained])
+  }, [agent.last_funded_timestamp, isDrained, isOwner])
 
   useEffect(() => {
     if (instructionsRef.current) {
@@ -288,56 +295,56 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           </div>
 
           {!isDrained && (
-            <>
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-1">
-                  <h3 className="text-black/70 text-sm font-semibold uppercase">Active Since</h3>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger
-                        asChild
-                        className="cursor-help"
-                      >
-                        <Info
-                          width={12}
-                          height={12}
-                          className="text-black/60"
-                        />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Format: Days, Hours, Minutes, Seconds</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
-                <p className="inline-block text-2xl font-semibold">
-                  {activeSince.days}
-                  <span className="text-lg text-black/60">D</span>{' '}
-                  {String(activeSince.hours).padStart(2, '0')}
-                  <span className="text-lg text-black/60">H</span>{' '}
-                  {String(activeSince.minutes).padStart(2, '0')}
-                  <span className="text-lg text-black/60">M</span>{' '}
-                  {String(activeSince.seconds).padStart(2, '0')}
-                  <span className="text-lg text-black/60">S</span>
-                </p>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-1">
+                <h3 className="text-black/70 text-sm font-semibold uppercase">Active Since</h3>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger
+                      asChild
+                      className="cursor-help"
+                    >
+                      <Info
+                        width={12}
+                        height={12}
+                        className="text-black/60"
+                      />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Format: Days, Hours, Minutes, Seconds</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
+              <p className="inline-block text-2xl font-semibold">
+                {activeSince.days}
+                <span className="text-lg text-black/60">D</span>{' '}
+                {String(activeSince.hours).padStart(2, '0')}
+                <span className="text-lg text-black/60">H</span>{' '}
+                {String(activeSince.minutes).padStart(2, '0')}
+                <span className="text-lg text-black/60">M</span>{' '}
+                {String(activeSince.seconds).padStart(2, '0')}
+                <span className="text-lg text-black/60">S</span>
+              </p>
+            </div>
+          )}
 
-              <div className="flex flex-col gap-2">
-                <h3 className="text-[#5E5E5E] font-medium uppercase">Withdrawal Lock</h3>
-                {timeRemaining ? (
-                  <p
-                    className={cn(
-                      'inline-block text-xl font-semibold',
-                      timeRemaining === 'Withdrawal Unlocked' ? 'text-green-600' : 'text-yellow-700'
-                    )}
-                  >
-                    {timeRemaining}
-                  </p>
-                ) : (
-                  <div className="h-7 bg-gray-200 rounded w-40 animate-pulse"></div>
-                )}
-              </div>
-            </>
+          {isOwner && !isDrained && (
+            <div className="flex flex-col gap-2">
+              <h3 className="text-[#5E5E5E] font-medium uppercase">Withdrawal Lock</h3>
+              {timeRemaining ? (
+                <p
+                  className={cn(
+                    'inline-block text-xl font-semibold',
+                    timeRemaining === 'Withdrawal Unlocked' ? 'text-green-600' : 'text-yellow-700'
+                  )}
+                >
+                  {timeRemaining}
+                </p>
+              ) : (
+                <div className="h-7 bg-gray-200 rounded w-40 animate-pulse"></div>
+              )}
+            </div>
           )}
         </div>
         <div className="border-t border-t-black/20"></div>
