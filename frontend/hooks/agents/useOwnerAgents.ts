@@ -12,8 +12,10 @@ export const useAgentsByOwner = (owner: string | undefined) => {
       const res = await fetch(`/api/agents/owner?owner=${owner}`)
       if (!res.ok) throw new Error('Failed to fetch agents')
 
-      const basicAgents: Omit<AgentDetails, 'cost_per_message' | 'system_prompt' | 'balance'>[] =
-        await res.json()
+      const basicAgents: Omit<
+        AgentDetails,
+        'cost_per_message' | 'system_prompt' | 'balance' | 'last_funded_timestamp'
+      >[] = await res.json()
 
       const enrichedAgents = await Promise.all(
         basicAgents.map(async (agent) => {
