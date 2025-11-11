@@ -3,12 +3,15 @@
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react'
 import { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { useFundAgentModal } from '@/hooks/useFundAgentModal'
 import { useFeatureAgentModal } from '@/hooks/useFeatureAgentModal'
 import { useCurrentAccount } from '@mysten/dapp-kit'
-import { MIST_PER_SUI } from '@/constants'
+import { MIST_PER_SUI, WITHDRAWAL_LOCK_MS } from '@/constants'
 import { AgentDropdown } from './agents/AgentCardDropdown'
+import { useWithdrawAgentModal } from '@/hooks/agents/useWithdrawAgentModal'
+import { formatDuration } from '@/lib/utils'
 
 type FeaturedAgentCardProps = {
   agent: AgentDetails
@@ -24,10 +27,62 @@ export const FeaturedAgentCard = ({
   fromProfile = false,
 }: FeaturedAgentCardProps) => {
   const { Modal, openModal } = useFundAgentModal()
+  const { Modal: WithdrawModal, openModal: openWithdrawModal } = useWithdrawAgentModal()
   const router = useRouter()
   const account = useCurrentAccount()
   const { Modal: FeatureModal, openModal: openFeatureModal } = useFeatureAgentModal()
   const isOwner = account?.address === agent.owner
+
+  // --- NEW LOGIC ---
+  const [isWithdrawalLocked, setIsWithdrawalLocked] = useState(true)
+  const [timeRemaining, setTimeRemaining] = useState('')
+
+  useEffect(() => {
+    if (!agent.last_funded_timestamp || agent.status === 'Defeated' || agent.balance === 0) {
+      setIsWithdrawalLocked(false)
+      setTimeRemaining('Unlocked')
+      return
+    }
+
+    const lastFunded = Number(agent.last_funded_timestamp)
+    if (lastFunded === 0) {
+      setIsWithdrawalLocked(false)
+      setTimeRemaining('Unlocked')
+      return
+    }
+
+    const unlockTimestamp = lastFunded + WITHDRAWAL_LOCK_MS
+
+    const updateTimer = () => {
+      const now = Date.now()
+      const diff = unlockTimestamp - now
+
+      if (diff <= 0) {
+        setIsWithdrawalLocked(false)
+        setTimeRemaining('Unlocked')
+        return null // Stop interval
+      }
+
+      setIsWithdrawalLocked(true)
+      const formatted = formatDuration(diff)
+      setTimeRemaining(`Locked: ${formatted.days}d ${formatted.hours}h ${formatted.minutes}m`)
+      return true // Continue interval
+    }
+
+    if (!updateTimer()) {
+      return // Already unlocked
+    }
+
+    // Update timer every minute
+    const interval = setInterval(() => {
+      if (!updateTimer()) {
+        clearInterval(interval)
+      }
+    }, 60000)
+
+    return () => clearInterval(interval)
+  }, [agent.last_funded_timestamp, agent.status, agent.balance])
+  // --- END NEW LOGIC ---
 
   const handleAttack = () => {
     router.push(`/attack/${agent.agent_path}`)
@@ -92,27 +147,44 @@ export const FeaturedAgentCard = ({
       </div>
 
       <div className="mt-auto flex gap-2">
-        <button
-          onClick={(e) => {
-            e.stopPropagation()
-            handleAttack()
-          }}
-          className="btn btn-outline w-full"
-        >
-          {ctaHeading}
-        </button>
-
-        {fromProfile && (
+        {fromProfile ? (
+          <>
+            <button
+              onClick={() => openModal(agent.object_id)}
+              className="btn btn-black w-1/2"
+            >
+              Fund
+            </button>
+            <button
+              onClick={() => openWithdrawModal(agent.object_id, agent.balance)}
+              className="btn btn-outline w-1/2"
+              disabled={isWithdrawalLocked || agent.balance === 0}
+              title={
+                isWithdrawalLocked
+                  ? timeRemaining
+                  : agent.balance === 0
+                  ? 'Balance is zero'
+                  : 'Withdraw funds'
+              }
+            >
+              Withdraw
+            </button>
+          </>
+        ) : (
           <button
-            onClick={() => openModal(agent.object_id)}
-            className="btn btn-black w-full"
+            onClick={(e) => {
+              e.stopPropagation()
+              handleAttack()
+            }}
+            className="btn btn-outline w-full"
           >
-            Fund Sentinel
+            {ctaHeading}
           </button>
         )}
       </div>
 
       <Modal onSuccess={() => console.log('Funded successfully!')} />
+      <WithdrawModal onSuccess={() => console.log('Withdrew successfully!')} />
       <FeatureModal />
     </motion.div>
   )
