@@ -29,9 +29,9 @@ export function EarnWhileDefendingSection() {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
-        className="relative z-10 px-4"
+        className="relative z-10"
       >
-        <h2 className="text-3xl md:text-5xl font-medium leading-tight text-black">
+        <h2 className="text-[28px] md:text-5xl font-medium leading-tight text-black">
           Earn While Defending Sentinels. Turn your{' '}
           <span className="text-[#C871FF]">Prompt engineering skills into digital rewards. </span>
           Every successful defense strengthens AI and your wallet.
@@ -41,7 +41,7 @@ export function EarnWhileDefendingSection() {
             href={SUI_SENTINEL_APP_URL}
             target="_blank"
           >
-            <button className="btn btn-black md:w-[260px]">Start Earning Now</button>
+            <button className="btn btn-black md:w-[260px] px-6">Start Earning Now</button>
           </Link>
         </div>
       </motion.div>

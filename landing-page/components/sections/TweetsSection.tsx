@@ -75,15 +75,17 @@ export function TweetsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           viewport={{ once: true }}
-          className="text-center md:text-right px-2 md:px-8 mt-24"
+          className="md:text-right px-2 md:px-8 mt-24"
         >
-          <h3 className="text-xl font-medium mb-6">Join 1000+ Guardians in Telegram & X</h3>
+          <h3 className="text-xl font-medium mb-6 max-w-[309px] md:max-w-none">
+            Join 1000+ Guardians in Telegram & X
+          </h3>
           <div className="flex items-center justify-center md:justify-end gap-4 md:mr-16">
             <Link
               href={SUI_SENTINEL_TELEGRAM_URL}
               target="_blank"
             >
-              <button className="px-8 py-3 rounded-xl bg-white border border-white text-black font-medium shadow-lg hover:bg-gray-100 transition-colors">
+              <button className="px-4 md:px-8 py-3 rounded-xl bg-white border border-white text-black font-medium shadow-lg hover:bg-gray-100 transition-colors">
                 Explore Telegram
               </button>
             </Link>
