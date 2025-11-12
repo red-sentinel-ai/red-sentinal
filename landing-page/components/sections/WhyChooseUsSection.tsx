@@ -34,8 +34,13 @@ export function WhyChooseUsSection() {
             viewport={{ once: true }}
             className="p-6 md:p-8 bg-[#F5F5F5] flex flex-col border-x border-black lg:border-x-0 lg:border-l min-h-[350px]"
           >
-            <h3 className="text-xl md:text-2xl font-medium mb-4 order-1">Evolving Security</h3>
-            <div className="flex items-center justify-center h-full order-3 md:order-2">
+            <h3 className="text-xl md:text-2xl font-medium mb-4">Evolving Security</h3>
+
+            <p className="mt-auto text-sm md:text-base text-[#939393]">
+              Every attack strengthens the network. Every defense makes AI smarter. Sui Sentinel
+              turns testing into evolution creating intelligence that learns from every battle.
+            </p>
+            <div className="flex items-center justify-center h-full">
               <Image
                 width={400}
                 height={400}
@@ -43,10 +48,6 @@ export function WhyChooseUsSection() {
                 alt="evolving security art"
               />
             </div>
-            <p className="mt-auto text-sm md:text-base text-[#939393] order-2 md:order-3">
-              Every attack strengthens the network. Every defense makes AI smarter. Sui Sentinel
-              turns testing into evolution creating intelligence that learns from every battle.
-            </p>
           </motion.div>
 
           <motion.div
@@ -56,10 +57,14 @@ export function WhyChooseUsSection() {
             viewport={{ once: true }}
             className="p-6 md:p-8 bg-[#F5F5F5] flex flex-col border-x border-t border-black lg:border-t-0 lg:border-x-0 lg:border-l min-h-[350px]"
           >
-            <h3 className="text-xl md:text-2xl font-medium mb-4 order-1">
-              Incentivized Intelligence
-            </h3>
-            <div className="flex items-center justify-center h-full order-3 md:order-2">
+            <h3 className="text-xl md:text-2xl font-medium mb-4">Incentivized Intelligence</h3>
+
+            <p className="mt-auto text-sm md:text-base text-[#939393]">
+              Earn for every move that matters. Guardians don&apos;t just protect they profit from
+              progress. Our gamified rewards ensure constant testing and growth.
+            </p>
+
+            <div className="flex items-center justify-center h-full">
               <Image
                 width={367}
                 height={243}
@@ -67,10 +72,6 @@ export function WhyChooseUsSection() {
                 alt="evolving security art"
               />
             </div>
-            <p className="mt-auto text-sm md:text-base text-[#939393] order-2 md:order-3">
-              Earn for every move that matters. Guardians don&apos;t just protect they profit from
-              progress. Our gamified rewards ensure constant testing and growth.
-            </p>
           </motion.div>
 
           <motion.div
@@ -80,21 +81,23 @@ export function WhyChooseUsSection() {
             viewport={{ once: true }}
             className="p-6 md:p-8 bg-[#F5F5F5] flex flex-col border-x  border-t border-black lg:border-t-0 lg:border-x-0 lg:border-l lg:border-r min-h-[350px]"
           >
-            <h3 className="text-xl md:text-2xl font-medium mb-4 order-1">Dual Power</h3>
-            <div className="flex items-center justify-center h-full order-3 md:order-2">
+            <h3 className="text-xl md:text-2xl font-medium mb-4">Dual Power</h3>
+
+            <div className="mt-auto text-sm md:text-base text-[#939393]">
+              <ul className="list-disc list-inside space-y-2">
+                <li>For builders — unmatched AI resilience.</li>
+                <li>For prompt engineers — endless earning through skill and precision.</li>
+                <li>Together, we secure the future of intelligent systems.</li>
+              </ul>
+            </div>
+
+            <div className="flex items-center justify-center h-full">
               <Image
                 width={220}
                 height={400}
                 src="/img/dualPower.png"
                 alt="evolving security art"
               />
-            </div>
-            <div className="mt-auto text-sm md:text-base text-[#939393] order-2 md:order-3">
-              <ul className="list-disc list-inside space-y-2">
-                <li>For builders — unmatched AI resilience.</li>
-                <li>For prompt engineers — endless earning through skill and precision.</li>
-                <li>Together, we secure the future of intelligent systems.</li>
-              </ul>
             </div>
           </motion.div>
         </div>
