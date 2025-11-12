@@ -19,18 +19,14 @@ export default function LandingPage() {
         </div>
         <VulnerabilitySection />
         <HowItWorksSection />
-        <div className="px-4 md:px-10">
-          <OfferingsSection />
-          {/* <VisionSection />
-          <PassiveIncomeSection /> */}
-        </div>
+        <OfferingsSection />
       </div>
       <TweetsSection />
 
       <div className="px-4 md:px-10">
         <EarnWhileDefendingSection />
-        <WhyChooseUsSection />
       </div>
+      <WhyChooseUsSection />
     </>
   )
 }
