@@ -38,6 +38,7 @@ export function Navbar() {
                 style={{ objectFit: 'contain' }}
                 height={49}
                 width={198}
+                quality={100}
               />
             </Link>
           </motion.div>
