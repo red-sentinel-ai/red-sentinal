@@ -123,14 +123,18 @@ pub async fn consume_prompt(
         .map(|s| s.to_string())
         .ok_or_else(|| EnclaveError::GenericError("Could not retrieve attacker address from attack object".to_string()))?;
 
-    let nonce = response_json
-        .get("result")
-        .and_then(|result| result.get("data"))
-        .and_then(|data| data.get("content"))
-        .and_then(|content| content.get("fields"))
-        .and_then(|fields| fields.get("nonce"))
-        .and_then(|nonce| nonce.as_u64())
-        .ok_or_else(|| EnclaveError::GenericError("Could not retrieve nonce from attack object".to_string()))?;
+let nonce = response_json
+    .get("result")
+    .and_then(|result| result.get("data"))
+    .and_then(|data| data.get("content"))
+    .and_then(|content| content.get("fields"))
+    .and_then(|fields| fields.get("nonce"))
+    .and_then(|nonce| nonce.as_str())
+    .and_then(|nonce_str| nonce_str.parse::<u64>().ok())
+    .ok_or_else(|| EnclaveError::GenericError(
+        "Could not retrieve nonce from attack object".to_string()
+    ))?;
+
 
         if !is_not_used {
         return Err(EnclaveError::GenericError("Attack object has already been used or is invalid".to_string()));
@@ -145,9 +149,9 @@ pub async fn consume_prompt(
         .map(|s| s.to_string())
         .ok_or_else(|| EnclaveError::GenericError("Could not retrieve agent_id from attack object".to_string()))?;
 
-    if attack_object_agent_id != payload.agent_id {
-        return Err(EnclaveError::GenericError("Agent ID in attack object does not match payload agent ID".to_string()));
-    } 
+    // if attack_object_agent_id != payload.agent_id {
+    //     return Err(EnclaveError::GenericError("Agent ID in attack object does not match payload agent ID".to_string()));
+    // } 
     
 
     // Updated function call with agent_id parameter
