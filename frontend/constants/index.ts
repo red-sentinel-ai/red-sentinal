@@ -128,6 +128,7 @@ export const mockPrizePool7dChange = {
   percentage: 18.2,
 }
 
+//NOTE: Add Ankita's wallet here and keep this thing in our internal documentation as well.
 export const TEAM_MEMBER_WALLETS = [
   '0xe4e8af19c2943fc2e3cbefa2fca9149985fc3b3c3d9dd312902b2c26dc600d95',
   '0x5a8f695e50fff36c97dd1f7999c85293b811a932db508bbd51ab1fa5f742417f',
@@ -169,3 +170,5 @@ export const TELEGRAM_NOTIFICATION_API =
 export const SUI_SENTINEL_ALERTS_TELEGRAM_GROUP_ID =
   process.env.SUI_SENTINEL_ALERTS_TELEGRAM_GROUP_ID
 export const ADMIN_API_TOKEN = process.env.ADMIN_API_TOKEN
+
+export const WITHDRAWAL_LOCK_MS = 1_209_600_000 // 14 days in milliseconds
