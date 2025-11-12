@@ -85,7 +85,13 @@ export function Footer() {
                   key={link.href}
                   className="flex items-center justify-between gap-6"
                 >
-                  <span className="text-black font-medium whitespace-nowrap">{link.name}</span>
+                  <Link
+                    className="text-black font-medium whitespace-nowrap hover:underline"
+                    href={link.href}
+                    target={link.isOutside ? '_blank' : '_self'}
+                  >
+                    {link.name}
+                  </Link>
                   <Link
                     href={link.href}
                     target={link.isOutside ? '_blank' : '_self'}
