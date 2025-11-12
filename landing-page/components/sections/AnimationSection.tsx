@@ -26,11 +26,10 @@ export const AnimationSection = () => {
         <h2 className="text-[28px] md:text-[48px] leading-tight font-medium">
           Sui Sentinel lets you
           <span className="text-[#C871FF]"> red-team, audit, and defend AI </span> models through
-          real-world attacks while earning digital rewards for your mastery
+          real-world attacks while earning SUI/USDC rewards for your mastery
         </h2>
         <p className="max-w-[984px] text-base md:text-2xl mt-8 mx-auto md:mx-0 text-[#5F5C5C]">
-          Built for AI builders, businesses, and prompt engineers those shaping the next generation
-          of intelligent systems.
+          Built for AI builders, businesses, and prompt engineers shaping resilient intelligence.
         </p>
         <div className="flex flex-row gap-6 mt-10 justify-start">
           <Link

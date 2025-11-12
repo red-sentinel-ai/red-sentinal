@@ -48,8 +48,9 @@ const Footer = () => {
               />
             </div>
             <p className="text-black leading-relaxed py-4 ">
-              Sui Sentinel is a decentralized network that audits, red-teams, and evolves AI models
-              through real-world challenges ensuring they grow stronger with every test.
+              Sui Sentinel is a gamified AI red-teaming and auditing platform built on Sui. Test,
+              defend, and harden AI models through real-world adversarial challenges. Every attack
+              and defense is verified on-chain, every action has real stakes
             </p>
 
             <div className="flex flex-row justify-center gap-4 md:hidden my-4">
