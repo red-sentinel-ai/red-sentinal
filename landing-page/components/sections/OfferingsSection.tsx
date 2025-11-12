@@ -56,7 +56,7 @@ export function OfferingsSection() {
               target="_blank"
               className="mt-1"
             >
-              <button className="btn btn-outline px-8 mt-12 md:mt-0">Play Now</button>
+              <button className="btn btn-outline px-8 mt-12 md:mt-0">Attack Now</button>
             </Link>
           </div>
 
