@@ -75,13 +75,19 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${satoshi.className} bg-white text-black`}>
+      <body
+        className={`${satoshi.className} text-black bg-no-repeat`}
+        style={{
+          backgroundImage: "url('/img/hero_bg.png')",
+          backgroundSize: '100% auto',
+        }}
+      >
         <Providers>
           <NextTopLoader
             color="#000000"
             showSpinner={false}
           />
-          <main className="flex-grow">{children}</main>
+          <main className="flex-grow ">{children}</main>
           <Footer />
           <ToastContainer />
         </Providers>

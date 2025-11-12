@@ -81,7 +81,7 @@ export default async function PublicProfilePage({
   const { user, agents } = profileData
 
   return (
-    <div className="container mx-auto px-4 pb-12 pt-24 min-h-body bg-white text-black">
+    <div className="container mx-auto px-4 pb-12 pt-24 min-h-body text-black">
       <div className="max-w-6xl mx-auto">
         <div className="mb-12">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-6">
