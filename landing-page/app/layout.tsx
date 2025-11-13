@@ -20,8 +20,8 @@ export const metadata: Metadata = {
   description:
     'The ultimate battle arena to test the security of autonomous AI agents. Deploy your AI, fortify it with master prompts, and challenge the world to break its defenses.',
   icons: {
-    icon: '/icons/shield.png',
-    shortcut: '/icons/shield.png',
+    icon: '/icons/logo-sm.svg',
+    shortcut: '/icons/logo-sm.svg',
   },
 }
 

@@ -12,7 +12,7 @@ export function Footer() {
           <div className="max-w-md md:self-stretch flex flex-col order-1 md:order-1">
             <div className="flex items-center text-sm md:text-base md:justify-start gap-3 mb-4">
               <Image
-                src="/icons/logo_large.png"
+                src="/icons/logo_large.svg"
                 alt="Sui Sentinel Logo"
                 style={{ objectFit: 'contain' }}
                 height={49}
