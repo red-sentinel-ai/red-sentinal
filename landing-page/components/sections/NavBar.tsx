@@ -29,15 +29,16 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16">
           <motion.div whileHover={{ scale: 1.05 }}>
             <Link
-              className="mr-1 xl:mr-4 flex-shrink-0 flex items-center gap-2"
+              className="mr-1 xl:mr-4 shrink-0 flex items-center gap-2"
               href="/"
             >
               <Image
-                src="/icons/logo_large.png"
+                src="/icons/logo_large.svg"
                 alt="shield"
                 style={{ objectFit: 'contain' }}
                 height={49}
                 width={198}
+                quality={100}
               />
             </Link>
           </motion.div>

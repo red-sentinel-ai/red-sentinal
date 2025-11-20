@@ -41,8 +41,8 @@ export const metadata: Metadata = {
   ],
 
   icons: {
-    icon: '/icons/shield.png',
-    shortcut: '/icons/shield.png',
+    icon: '/icons/logo-sm.svg',
+    shortcut: '/icons/logo-sm.svg',
   },
 
   openGraph: {

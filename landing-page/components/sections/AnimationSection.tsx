@@ -20,29 +20,29 @@ export const AnimationSection = () => {
   return (
     <div
       // ref={containerRef}
-      className="relative flex items-center max-w-[1340px] mx-auto py-24 overflow-hidden"
+      className="relative flex items-center max-w-[1340px] mx-auto pt-12 md:py-24 overflow-hidden"
     >
-      <div className="relative z-10 w-full text-center md:text-left">
-        <h2 className="text-3xl md:text-[48px] leading-tight font-medium">
-          Sui Sentinel lets you stress-test, audit, and defend AI models through real-world attacks
-          while earning digital rewards for your mastery.
+      <div className="relative z-10 w-full text-left">
+        <h2 className="text-[28px] md:text-[48px] leading-tight font-medium">
+          Sui Sentinel lets you
+          <span className="text-[#C871FF]"> red-team, audit, and defend AI </span> models through
+          real-world attacks while earning SUI/USDC rewards for your mastery
         </h2>
-        <p className="max-w-[984px] text-lg md:text-2xl mt-8 mx-auto md:mx-0">
-          Built for AI builders, businesses, and prompt engineers those shaping the next generation
-          of intelligent systems.
+        <p className="max-w-[984px] text-base md:text-2xl mt-8 mx-auto md:mx-0 text-[#5F5C5C]">
+          Built for AI builders, businesses, and prompt engineers shaping resilient intelligence.
         </p>
-        <div className="flex flex-col sm:flex-row gap-6 mt-10 justify-center md:justify-start">
+        <div className="flex flex-row gap-6 mt-10 justify-start">
           <Link
             href={SUI_SENTINEL_APP_URL}
             target="_blank"
           >
-            <button className="btn btn-black">Explore Platform</button>
+            <button className="btn btn-black px-6">Explore Platform</button>
           </Link>
           <Link
             href={SUI_SENTINEL_TELEGRAM_URL}
             target="_blank"
           >
-            <button className="btn btn-outline">Join Telegram</button>
+            <button className="btn btn-outline px-6">Join Telegram</button>
           </Link>
         </div>
       </div>

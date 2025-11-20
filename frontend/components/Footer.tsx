@@ -40,7 +40,7 @@ const Footer = () => {
           <div className="max-w-md md:self-stretch flex flex-col flex-grow">
             <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
               <Image
-                src="/icons/logo_large.png"
+                src="/icons/logo_large.svg"
                 alt="Sui Sentinel Logo"
                 style={{ objectFit: 'contain' }}
                 height={49}
@@ -48,8 +48,9 @@ const Footer = () => {
               />
             </div>
             <p className="text-black leading-relaxed py-4 ">
-              Sui Sentinel is a decentralized network that audits, red-teams, and evolves AI models
-              through real-world challenges ensuring they grow stronger with every test.
+              Sui Sentinel is a gamified AI red-teaming and auditing platform built on Sui. Test,
+              defend, and harden AI models through real-world adversarial challenges. Every attack
+              and defense is verified on-chain, every action has real stakes
             </p>
 
             <div className="flex flex-row justify-center gap-4 md:hidden my-4">
@@ -101,7 +102,13 @@ const Footer = () => {
                   key={link.href}
                   className="flex items-center justify-between gap-6"
                 >
-                  <span className="text-black font-medium whitespace-nowrap">{link.name}</span>
+                  <Link
+                    className="text-black font-medium whitespace-nowrap hover:underline"
+                    href={link.href}
+                    target="_blank"
+                  >
+                    {link.name}
+                  </Link>
                   <Link
                     href={link.href}
                     target="_blank"
