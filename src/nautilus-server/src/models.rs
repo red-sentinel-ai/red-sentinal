@@ -35,7 +35,7 @@ pub struct ConsumePromptResponse {
     pub success: bool,
     pub explanation: String,
     pub score: u8,
-    pub attacker: String,
+    pub attacker: [u8; 32],
     pub nonce: u64,
 }
 
