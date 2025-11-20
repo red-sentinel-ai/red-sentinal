@@ -18,9 +18,9 @@ export function HowItWorksSection() {
             viewport={{ once: true }}
             className="text-center mb-16 flex flex-col items-center"
           >
-            <div className="badge-pink"> • how it works </div>
+            <div className="badge-pink mb-8"> • how it works </div>
             <h2 className="text-3xl md:text-[48px] font-medium mb-4">
-              Sui Sentinel&apos;s Gamified AI Security
+              Sui Sentinel&apos;s <span className="text-[#C871FF]">Gamified AI</span> Security
             </h2>
             <p className="max-w-3xl mx-auto text-lg md:text-[20px]">
               Attack, defend, and evolve in an ecosystem where every move strengthens the network

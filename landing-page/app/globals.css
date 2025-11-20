@@ -277,3 +277,10 @@
   .bg-gradient-pink {
     background: linear-gradient(to right, #FEB9FF 0%, #FDE3FF 100%);
   }
+
+@media (width <= 40rem) { 
+  .btn{
+    min-height: 47px;
+    min-width: auto;
+  }
+}
