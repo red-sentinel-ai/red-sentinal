@@ -5,10 +5,7 @@ import { motion } from 'framer-motion'
 
 export function WhyChooseUsSection() {
   return (
-    <section
-      id="why-choose-us"
-      className="py-16 md:py-24 relative text-black"
-    >
+    <section id="why-choose-us" className="py-16 md:py-24 relative text-black mt-40">
       <div className="relative z-10 max-w-7xl mx-auto lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 50 }}

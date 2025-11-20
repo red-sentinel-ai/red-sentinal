@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { SUI_SENTINEL_APP_URL, SUI_SENTINEL_TELEGRAM_URL } from '@/constants'
+import Image from 'next/image'
 
 export const AnimationSection = () => {
   // const containerRef = useRef<HTMLDivElement>(null)
@@ -20,10 +21,10 @@ export const AnimationSection = () => {
   return (
     <div
       // ref={containerRef}
-      className="relative flex items-center max-w-[1340px] mx-auto pt-12 md:py-24 overflow-hidden"
+      className="relative flex items-center max-w-[1340px] mx-auto pt-12 md:py-24 overflow-visible"
     >
       <div className="relative z-10 w-full text-left">
-        <h2 className="text-[64px] leading-tight font-medium">
+        <h2 className="text-[48px] leading-snug font-medium">
           Sui Sentinel lets you
           <span className="text-[#C871FF]"> red-team, audit, and defend AI </span> models through
           real-world attacks while earning SUI/USDC rewards for your mastery
@@ -40,17 +41,31 @@ export const AnimationSection = () => {
           </Link>
         </div>
       </div>
+      <Image
+        src="/img/rings_v2.png"
+        alt="animation section art"
+        width={1700}
+        height={1700}
+        className="
+    absolute
+    top-[-250px]
+    right-[-50px]  
+    pointer-events-none
+    select-none
 
-      <video
+  "
+      />
+
+      {/* <video
         autoPlay
         loop
         muted
         playsInline
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] z-0 opacity-40 md:opacity-100"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] z-0 opacity-40 md:opacity-100"
       >
         <source src="/videos/threeCircles.mp4" type="video/mp4" />
         Your browser does not support the video tag.
-      </video>
+      </video> */}
     </div>
   )
 }
