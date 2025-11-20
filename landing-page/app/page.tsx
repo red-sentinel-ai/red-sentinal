@@ -3,7 +3,7 @@
 import { HeroSection } from '@/components/sections/HeroSection'
 import { HowItWorksSection } from '@/components/sections/HowItWorksSection'
 import { OfferingsSection } from '@/components/sections/OfferingsSection'
-import { TweetsSection } from '@/components/sections/TweetsSection'
+// import { TweetsSection } from '@/components/sections/TweetsSection'
 import { AnimationSection } from '@/components/sections/AnimationSection'
 import { VulnerabilitySection } from '@/components/sections/VulnerabilitySection'
 import { EarnWhileDefendingSection } from '@/components/sections/EarnWhileDefendingSection'
@@ -21,7 +21,7 @@ export default function LandingPage() {
         <HowItWorksSection />
         <OfferingsSection />
       </div>
-      <TweetsSection />
+      {/* <TweetsSection /> */}
 
       <div className="px-4 md:px-10">
         <EarnWhileDefendingSection />
