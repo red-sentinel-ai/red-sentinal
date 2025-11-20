@@ -94,7 +94,10 @@ export default function DefendPage() {
     url: string
     isCustom: boolean
     file?: File | null
-  } | null>(null)
+  } | null>({
+    url: SENTINEL_IMAGES[0],
+    isCustom: false,
+  })
 
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction({
     execute: async ({ bytes, signature }) =>
@@ -145,7 +148,10 @@ export default function DefendPage() {
     setTransactionDigest('')
     setFormData({ agentName: '', systemPrompt: '', feePerMessage: '' })
     setFundedAmount('')
-    setSelectedImage(null)
+    setSelectedImage({
+      url: SENTINEL_IMAGES[0],
+      isCustom: false,
+    })
     setAgentImage(null)
   }
 
