@@ -10,6 +10,9 @@ use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
 use std::fs;
 use crate::constants::{SERVICE_ACCOUNT_JSON};
 use regex::{Regex};
+use fastcrypto::encoding::{decode_bytes_hex, Encoding, Hex};
+
+
 
 #[derive(Debug, Deserialize)]
 struct ServiceAccountKey {
@@ -250,7 +253,7 @@ let success_regex = Regex::new(
         success,
         explanation: explanation.to_string(),
         score,
-        attacker: attacker.to_string(),
+        attacker: decode_bytes_hex(attacker).unwrap(),
         nonce
     })
 

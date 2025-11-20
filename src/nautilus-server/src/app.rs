@@ -1,6 +1,7 @@
 // Copyright (c), Mysten Labs, Inc.
 // SPDX-License-Identifier: Apache-2.0
 
+
 use crate::common::IntentMessage;
 use crate::common::{to_signed_response, IntentScope, ProcessDataRequest, ProcessedDataResponse};
 use crate::AppState;
@@ -12,6 +13,7 @@ use serde_json::{Value, json};
 use std::sync::Arc;
 use uuid::Uuid;
 use reqwest::Client;
+use fastcrypto::encoding::{decode_bytes_hex, Encoding, Hex};
 
 use crate::{
     claude,
@@ -168,7 +170,7 @@ let nonce = response_json
         success: false,
         explanation: "Failed to evaluate prompt".to_string(),
         score: 0,
-        attacker: attacker.clone(),
+        attacker: decode_bytes_hex(&attacker).unwrap(),
         nonce,
     });
 
