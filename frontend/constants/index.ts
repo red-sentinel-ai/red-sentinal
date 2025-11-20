@@ -172,3 +172,5 @@ export const SUI_SENTINEL_ALERTS_TELEGRAM_GROUP_ID =
 export const ADMIN_API_TOKEN = process.env.ADMIN_API_TOKEN
 
 export const WITHDRAWAL_LOCK_MS = 1_209_600_000 // 14 days in milliseconds
+
+export const AGENT_PRIZE_POOL_HISTORY_QUERY_KEY = 'agentPrizePoolHistory'
