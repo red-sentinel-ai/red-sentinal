@@ -79,12 +79,8 @@ content-type: application/json
 
 
 ### Add Agent Id
-GET http://localhost:3000/api/agent-object-id HTTP/1.1
+GET http://18.213.79.225:3000/get_attestation HTTP/1.1
 content-type: application/json
-
-{
-  "agentObjectId": "1"
-}
 
 
 ### Check feedback api that sends message to telegram using bot
@@ -97,3 +93,5 @@ POST http://localhost:3000/api/feedback HTTP/1.1
  "feedback_type": "example",
  "message" : "this is the example feedback, sending to the team. this is the example feedback, sending to the team. this is the example feedback, sending to the team. this is the example feedback, sending to the team. this is the example feedback, sending to the team. this is the example feedback, sending to the team."
 }
+
+
