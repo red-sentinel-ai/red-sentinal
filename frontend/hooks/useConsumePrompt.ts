@@ -169,7 +169,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
   const callConsumePromptApi = async (
     agentId: string,
     message: string,
-    nonce: string
+    attack_object_id: string
   ): Promise<ConsumePromptApiResponse> => {
     if (!account?.address) {
       throw new Error('Wallet not connected')
@@ -183,8 +183,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
       body: JSON.stringify({
         agent_id: `${agentId}`,
         message: message,
-        nonce: nonce,
-        attacker: account.address,
+        attack_object_id
       }),
     })
 
@@ -282,7 +281,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         // Step 3: Call consume prompt API
         setCurrentStep('Processing prompt...')
         if (showToasts) toast.info('Processing prompt...')
-        const apiResponse = await callConsumePromptApi(agentDetails.agent_id, message, nonce)
+        const apiResponse = await callConsumePromptApi(agentDetails.agent_id, message, attackObjectId)
         console.log('API response:', apiResponse)
         onApiSuccess?.(apiResponse)
 
