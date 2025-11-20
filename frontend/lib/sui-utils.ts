@@ -5,7 +5,9 @@ import { SUI_CONFIG } from '@/constants'
 export const fetchAgentDetailsViaObject = async (
   client: SuiClient,
   agentObjectId: string
-): Promise<Pick<AgentDetails, 'cost_per_message' | 'system_prompt' | 'balance'>> => {
+): Promise<
+  Pick<AgentDetails, 'cost_per_message' | 'system_prompt' | 'balance' | 'last_funded_timestamp'>
+> => {
   try {
     const response = await client.getObject({
       id: agentObjectId,
@@ -25,6 +27,7 @@ export const fetchAgentDetailsViaObject = async (
       cost_per_message: Number(fields.cost_per_message),
       system_prompt: fields.system_prompt,
       balance: Number(fields.balance),
+      last_funded_timestamp: fields.last_funded_timestamp || '0',
     }
   } catch (error) {
     console.error(`Error fetching on-chain details for ${agentObjectId}:`, error)
@@ -32,6 +35,7 @@ export const fetchAgentDetailsViaObject = async (
       cost_per_message: 0,
       system_prompt: 'Error fetching on-chain data.',
       balance: 0,
+      last_funded_timestamp: '0',
     }
   }
 }

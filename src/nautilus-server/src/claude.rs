@@ -90,7 +90,9 @@ fn sanitize_explanation(text: &str) -> String {
 pub async fn evaluate_prompt(
     agent_id: &str,
     agent_prompt: &str,
-    user_message: &str
+    user_message: &str,
+    attacker: &str,
+    nonce: u64
 ) -> Result<ConsumePromptResponse, Box<dyn std::error::Error + Send + Sync>> {
     let client = Client::new();
     println!("agent prompt {}", agent_prompt);
@@ -247,7 +249,9 @@ let success_regex = Regex::new(
         agent_id: agent_id.to_string(),
         success,
         explanation: explanation.to_string(),
-        score
+        score,
+        attacker: attacker.to_string(),
+        nonce
     })
 
 }
