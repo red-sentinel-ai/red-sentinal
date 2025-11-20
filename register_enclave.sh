@@ -8,7 +8,7 @@ if [ "$#" -ne 6 ]; then
 fi
 
 ENCLAVE_PACKAGE_ID=$1
-EXAMPLES_PACKAGE_ID=$2
+APP_PACKAGE_ID=$2
 ENCLAVE_CONFIG_OBJECT_ID=$3
 ENCLAVE_URL=$4
 MODULE_NAME=$5
@@ -43,5 +43,5 @@ echo 'converted attestation'
 sui client ptb --assign v "vector$ATTESTATION_ARRAY" \
     --move-call "0x2::nitro_attestation::load_nitro_attestation" v @0x6 \
     --assign result \
-    --move-call "${ENCLAVE_PACKAGE_ID}::enclave::register_enclave<${EXAMPLES_PACKAGE_ID}::${MODULE_NAME}::${OTW_NAME}>" @${ENCLAVE_CONFIG_OBJECT_ID} result \
+    --move-call "${ENCLAVE_PACKAGE_ID}::enclave::register_enclave<${APP_PACKAGE_ID}::${MODULE_NAME}::${OTW_NAME}>" @${ENCLAVE_CONFIG_OBJECT_ID} result \
     --gas-budget 100000000

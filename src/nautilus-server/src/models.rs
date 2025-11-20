@@ -26,6 +26,7 @@ pub struct RegisterAgentResponse {
 pub struct ConsumePromptRequest {
     pub agent_id: String,
     pub message: String,
+    pub attack_object_id: String,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -34,6 +35,8 @@ pub struct ConsumePromptResponse {
     pub success: bool,
     pub explanation: String,
     pub score: u8,
+    pub attacker: String,
+    pub nonce: u64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
