@@ -57,7 +57,7 @@ echo "--> Re-configuring host networking..."
 # Overwrite the vsock-proxy config file to ensure it's clean.
 # The base file is expected to be minimal. We add all endpoints from our yaml.
 VSOCK_PROXY_CONFIG="/etc/nitro_enclaves/vsock-proxy.yaml"
-echo "services:" > $VSOCK_PROXY_CONFIG
+echo "allowlist:" > $VSOCK_PROXY_CONFIG
 for ep in $ENDPOINTS; do
     echo "  - {address: $ep, port: 443}" >> $VSOCK_PROXY_CONFIG
 done
