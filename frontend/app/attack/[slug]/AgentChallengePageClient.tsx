@@ -2,8 +2,9 @@
 import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useCurrentAccount } from '@mysten/dapp-kit'
+import { useQueryClient } from '@tanstack/react-query'
 
-import { MIST_PER_SUI } from '@/constants'
+import { AGENT_PRIZE_POOL_HISTORY_QUERY_KEY, MIST_PER_SUI } from '@/constants'
 import type { ConsumePromptApiResponse } from '@/types'
 import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from '@/components/ui'
 import { useConsumePrompt } from '@/hooks/useConsumePrompt'
@@ -19,7 +20,8 @@ import { Loader2 } from 'lucide-react'
 
 export default function AgentChallengePage({ slug }: { slug: string }) {
   const account = useCurrentAccount()
-  const { events: allEvents } = useAgentEvents()
+  const queryClient = useQueryClient()
+  const { events: allEvents, refetch: refetchEvents } = useAgentEvents()
   const { trackAttackSentinel } = useRewardsMissionTracker()
 
   const { data: agent, isLoading, error, refetch } = useAgentBySlug(slug)
@@ -34,6 +36,16 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
       setTxnHash(transactionResult.digest)
       setShowResultModal(true)
       refetch()
+
+      setTimeout(() => {
+        refetchEvents()
+
+        if (agent) {
+          queryClient.invalidateQueries({
+            queryKey: [AGENT_PRIZE_POOL_HISTORY_QUERY_KEY, agent.agent_id],
+          })
+        }
+      }, 1000)
 
       if (account?.address && agent) {
         const attackFeeInSui = agent.cost_per_message / MIST_PER_SUI

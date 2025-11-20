@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { useSuiClient } from '@mysten/dapp-kit'
 import { SuiClient, SuiEvent } from '@mysten/sui/client'
-import { SUI_CONFIG, MIST_PER_SUI } from '@/constants'
+import { SUI_CONFIG, MIST_PER_SUI, AGENT_PRIZE_POOL_HISTORY_QUERY_KEY } from '@/constants'
 import { ChartDataPoint } from '@/components/charts/PrizePoolChartModal'
 
 type AgentEvent = SuiEvent & {
@@ -129,7 +129,7 @@ export const useAgentPrizePoolHistory = (agentId: string) => {
   const client = useSuiClient()
 
   return useQuery<PrizePoolHistoryData, Error>({
-    queryKey: ['agentPrizePoolHistory', agentId],
+    queryKey: [AGENT_PRIZE_POOL_HISTORY_QUERY_KEY, agentId],
     enabled: !!agentId,
     queryFn: async () => {
       const [fundedEvents, feeEvents, defeatedEvents, withdrawnEvents] = await Promise.all([
