@@ -22,6 +22,12 @@ busybox ip link set dev lo up
 
 # Add a hosts record
 echo "127.0.0.1   localhost" > /etc/hosts
+echo "127.0.0.64   api.anthropic.com" >> /etc/hosts
+echo "127.0.0.65   oauth2.googleapis.com" >> /etc/hosts
+echo "127.0.0.66   us-central1-aiplatform.googleapis.com" >> /etc/hosts
+echo "127.0.0.67   fullnode.testnet.sui.io" >> /etc/hosts
+echo "127.0.0.68   fullnode.mainnet.sui.io" >> /etc/hosts
+
 # End of hosts record
 
 cat /etc/hosts
@@ -40,6 +46,12 @@ rm -f /tmp/kvpairs
 # There is a vsock-proxy that listens for this and forwards to the respective domains
 
 # Traffic-forwarder-block
+python3 /traffic_forwarder.py 127.0.0.64 443 3 8101 &
+python3 /traffic_forwarder.py 127.0.0.65 443 3 8102 &
+python3 /traffic_forwarder.py 127.0.0.66 443 3 8103 &
+python3 /traffic_forwarder.py 127.0.0.67 443 3 8104 &
+python3 /traffic_forwarder.py 127.0.0.68 443 3 8105 &
+
 # End of traffic-forwarder-block
 
 # Listens on Local VSOCK Port 3000 and forwards to localhost 3000
