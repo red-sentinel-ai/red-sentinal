@@ -108,7 +108,7 @@ pub async fn evaluate_prompt(
         }
     };
 
-    let model = "projects/761056697900/locations/us-central1/endpoints/1636703322293403648";
+    let model = "projects/761056697900/locations/us-central1/endpoints/111770854521569280";
     let url = format!(
         "https://{}-aiplatform.googleapis.com/v1/{}:streamGenerateContent",
         "us-central1", model
