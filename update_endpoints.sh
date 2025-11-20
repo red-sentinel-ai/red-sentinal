@@ -81,7 +81,7 @@ sudo -u $REPO_OWNER bash -c "
     ip=64
     endpoints_config=\"\"
     for ep in \$ENDPOINTS; do
-        endpoints_config=\"\${endpoints_config}echo \\\"127.0.0.\\\$ip   \\\" \\" \\" \$ep\\\" >> /etc/hosts\\\"\\n\\\""
+        endpoints_config=\"\${endpoints_config}echo \\\"127.0.0.\\\$ip   \$ep\\\" >> /etc/hosts\\n\"
         ip=\$((ip+1))
     done
 
