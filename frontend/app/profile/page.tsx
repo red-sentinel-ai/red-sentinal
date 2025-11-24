@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { User, Folder, Activity, Loader2, Edit, Camera } from 'lucide-react'
+import { User, Folder, Activity, Loader2, Camera } from 'lucide-react'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
@@ -69,12 +69,17 @@ export default function ProfilePage() {
 
   return (
     <>
-      <div className="container mx-auto px-4 pb-12 pt-24 min-h-body">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-8">
-            <div className="flex flex-col sm:flex-row items-start gap-4 mb-6">
+      <div className="relative">
+        <div className="vertical-line left-4"></div>
+        <div className="vertical-line right-4"></div>
+        <div className="max-w-[1400px] mx-auto px-4 pb-12 pt-24 min-h-body relative">
+          <div className="mb-8 w-full">
+            <div
+              className="flex flex-col sm:flex-row items-end gap-4 mb-6 min-h-[376px] bg-cover bg-bottom bg-no-repeat px-4 pt-4 pb-20"
+              style={{ backgroundImage: 'url("/img/footer-bg.png")' }}
+            >
               <div
-                className="relative w-24 h-24 rounded-full border-2 border-gray-200 overflow-hidden cursor-pointer group flex-shrink-0"
+                className="relative w-20 h-20 md:w-44 md:h-44 rounded-full overflow-hidden cursor-pointer group flex-shrink-0"
                 onClick={() => setIsImagePickerOpen(true)}
               >
                 {isUpdatingAvatar ? (
@@ -99,10 +104,17 @@ export default function ProfilePage() {
               </div>
 
               <div className="flex-1 min-w-0 pt-2">
-                <h1 className="text-2xl sm:text-3xl font-bold truncate">
+                <h1 className="text-2xl sm:text-[32px] truncate font-medium leading-snug">
                   {profile?.display_name || 'Your Profile'}
                 </h1>
-                <p className="text-gray-500 mt-1">@{profile?.username}</p>
+                <p className="text-[#5E5E5E] mt-1 font-medium mb-6">@{profile?.username}</p>
+
+                <button
+                  onClick={() => setIsEditModalOpen(true)}
+                  className="btn btn-outline h-[50px] font-medium"
+                >
+                  Edit Profile
+                </button>
               </div>
               <div className="flex items-center gap-4 sm:ml-auto pt-2">
                 {profile?.username && (
@@ -113,13 +125,6 @@ export default function ProfilePage() {
                     <button className="btn btn-outline h-[30px]">View Public</button>
                   </Link>
                 )}
-                <button
-                  onClick={() => setIsEditModalOpen(true)}
-                  className="btn btn-black"
-                >
-                  <Edit className="w-4 h-4" />
-                  Edit Profile
-                </button>
               </div>
             </div>
           </div>
