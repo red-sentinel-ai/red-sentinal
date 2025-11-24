@@ -7,12 +7,7 @@ import { FeaturedAgentCard } from './FeaturedAgentCard'
 import { FeaturedAgentsSkeleton } from './ui/skeletons/FeaturedAgentsSkeleton'
 import { AgentDetails, useAllAgents } from '@/hooks/agents/useAllAgents'
 
-type AgentListViewProps = {
-  heading: string
-  subheading: string
-}
-
-export const AgentListView = ({ heading, subheading }: AgentListViewProps) => {
+export const AgentListView = () => {
   const { data: allAgents, isPending: isFetchingAllAgents, refetch: refetchAgent } = useAllAgents()
 
   const featuredAgents = allAgents?.filter((agent: AgentDetails) => agent.is_featured) || []
@@ -24,13 +19,15 @@ export const AgentListView = ({ heading, subheading }: AgentListViewProps) => {
           className="text-4xl md:text-[48px] font-bold text-center uppercase"
           id="leaderboard"
         >
-          {heading}
+          Choose your opponent
         </p>
-        <div className="flex max-w-[800px] mx-auto my-3 md:my-6">
+        <div className="flex max-w-[800px] mx-auto my-3 md:my-4">
           <div className="black-gradient-border"></div>
           <div className="black-gradient-border rotate-180"></div>
         </div>
-        <p className="text-[#B4B4B4] text-center max-w-[594px] mx-auto">{subheading}</p>
+        <p className="text-[#5E5E5E] text-center max-w-[594px] mx-auto">
+          Trick one of these agents into sending you all their SUI
+        </p>
       </div>
 
       {isFetchingAllAgents ? (
@@ -40,18 +37,16 @@ export const AgentListView = ({ heading, subheading }: AgentListViewProps) => {
           {featuredAgents.length > 0 && (
             <div className="mb-16">
               <div className="mb-8">
-                <h2 className="text-2xl md:text-3xl font-bold text-center text-[#558EB4] mb-2">
-                  Featured Sentinels
-                </h2>
-                <div className="flex max-w-[400px] mx-auto">
+                <h2 className="text-2xl md:text-[32px] font-medium mb-2">Featured Sentinels</h2>
+                {/* <div className="flex max-w-[400px] mx-auto">
                   <div className="gradient-border blue"></div>
                   <div className="gradient-border blue rotate-180"></div>
-                </div>
+                </div> */}
               </div>
 
               <AnimatePresence mode="wait">
                 <motion.div
-                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-[1200px] mx-auto"
+                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mx-auto"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3 }}
