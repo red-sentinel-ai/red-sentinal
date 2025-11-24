@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center md:items-end md:justify-start p-6 md:p-20 overflow-hidden text-left">
+    <section className="relative min-h-screen flex items-center justify-center md:items-end md:justify-start p-6 md:p-20 overflow-hidden text-left border-b border-b-black">
       <div className="vertical-line left-4"></div>
       <div className="vertical-line right-4"></div>
       <video
