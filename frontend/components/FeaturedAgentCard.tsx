@@ -99,7 +99,7 @@ export const FeaturedAgentCard = ({
     >
       <div className="bg-white overflow-hidden w-full h-full p-2 lg:p-4 rounded-lg lg:rounded-xl">
         <div className="relative mb-4">
-          <div className="w-full h-52 rounded-lg flex items-center justify-center relative overflow-hidden bg-gray-100">
+          <div className="w-full h-80 rounded-lg flex items-center justify-center relative overflow-hidden bg-gray-100">
             {agent.agent_profile ? (
               <Image
                 src={agent.agent_profile || '/placeholder.svg'}
@@ -109,7 +109,7 @@ export const FeaturedAgentCard = ({
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
             ) : (
-              <div className="text-4xl font-bold text-gray-400 z-10 relative">
+              <div className="text-2xl font-medium z-10 relative">
                 {agent.agent_name.charAt(0).toUpperCase()}
               </div>
             )}
@@ -125,7 +125,7 @@ export const FeaturedAgentCard = ({
 
         <div className="text-center mb-4">
           <div className="flex items-center justify-center gap-1 mb-2">
-            <h3 className="text-lg lg:text-xl font-bold truncate">{agent.agent_name}</h3>
+            <h3 className="text-lg lg:text-2xl font-medium  truncate">{agent.agent_name}</h3>
             {agent.is_featured && (
               <Image
                 src="/icons/check-mark.svg"
@@ -138,14 +138,14 @@ export const FeaturedAgentCard = ({
           <div className="flex max-w-[394px] mx-auto border-t border-gray-200"></div>
         </div>
 
-        <div className="space-y-3 mb-4 text-sm">
+        <div className="space-y-3 mb-4 text-xl font-medium">
           <div className="flex justify-between items-center">
-            <span className="text-gray-500">Reward Pool:</span>
-            <span className="text-blue-600 font-medium">{formatBalance(agent.balance)}</span>
+            <span className="text-[#5E5E5E]">Reward Pool:</span>
+            <span>{formatBalance(agent.balance)}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-gray-500">Message price:</span>
-            <span className="text-blue-600 font-medium">{formatCost(agent.cost_per_message)}</span>
+            <span className="text-[#5E5E5E]">Message price:</span>
+            <span>{formatCost(agent.cost_per_message)}</span>
           </div>
         </div>
 
@@ -165,7 +165,7 @@ export const FeaturedAgentCard = ({
               e.stopPropagation()
               handleAttack()
             }}
-            className="btn btn-outline w-full"
+            className="btn btn-black h-[62px] w-full"
           >
             {fromProfile ? 'View Sentinel' : ctaHeading}
           </button>
