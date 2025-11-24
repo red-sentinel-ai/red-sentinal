@@ -92,111 +92,113 @@ export const FeaturedAgentCard = ({
 
   return (
     <motion.div
-      className="border border-gray-200 rounded-lg lg:rounded-2xl p-2 lg:p-4 bg-white hover:shadow-lg transition-shadow group flex flex-col"
+      className="rounded-lg agent-card lg:rounded-xl overflow-hidden group flex flex-col p-[1px]"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
     >
-      <div className="relative mb-4">
-        <div className="w-full h-52 rounded-lg flex items-center justify-center relative overflow-hidden bg-gray-100">
-          {agent.agent_profile ? (
-            <Image
-              src={agent.agent_profile || '/placeholder.svg'}
-              alt={`${agent.agent_name} profile`}
-              fill
-              className="object-cover rounded-lg z-10"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+      <div className="bg-white overflow-hidden w-full h-full p-2 lg:p-4 rounded-lg lg:rounded-xl">
+        <div className="relative mb-4">
+          <div className="w-full h-52 rounded-lg flex items-center justify-center relative overflow-hidden bg-gray-100">
+            {agent.agent_profile ? (
+              <Image
+                src={agent.agent_profile || '/placeholder.svg'}
+                alt={`${agent.agent_name} profile`}
+                fill
+                className="object-cover rounded-lg z-10"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              />
+            ) : (
+              <div className="text-4xl font-bold text-gray-400 z-10 relative">
+                {agent.agent_name.charAt(0).toUpperCase()}
+              </div>
+            )}
+
+            <AgentDropdown
+              isOwner={isOwner}
+              isFeatured={agent.is_featured}
+              agentId={agent.agent_id}
+              openFeatureModal={openFeatureModal}
             />
-          ) : (
-            <div className="text-4xl font-bold text-gray-400 z-10 relative">
-              {agent.agent_name.charAt(0).toUpperCase()}
-            </div>
-          )}
-
-          <AgentDropdown
-            isOwner={isOwner}
-            isFeatured={agent.is_featured}
-            agentId={agent.agent_id}
-            openFeatureModal={openFeatureModal}
-          />
+          </div>
         </div>
-      </div>
 
-      <div className="text-center mb-4">
-        <div className="flex items-center justify-center gap-1 mb-2">
-          <h3 className="text-lg lg:text-xl font-bold truncate">{agent.agent_name}</h3>
-          {agent.is_featured && (
-            <Image
-              src="/icons/check-mark.svg"
-              width={20}
-              height={20}
-              alt="checkmark"
-            />
-          )}
+        <div className="text-center mb-4">
+          <div className="flex items-center justify-center gap-1 mb-2">
+            <h3 className="text-lg lg:text-xl font-bold truncate">{agent.agent_name}</h3>
+            {agent.is_featured && (
+              <Image
+                src="/icons/check-mark.svg"
+                width={20}
+                height={20}
+                alt="checkmark"
+              />
+            )}
+          </div>
+          <div className="flex max-w-[394px] mx-auto border-t border-gray-200"></div>
         </div>
-        <div className="flex max-w-[394px] mx-auto border-t border-gray-200"></div>
-      </div>
 
-      <div className="space-y-3 mb-4 text-sm">
-        <div className="flex justify-between items-center">
-          <span className="text-gray-500">Reward Pool:</span>
-          <span className="text-blue-600 font-medium">{formatBalance(agent.balance)}</span>
+        <div className="space-y-3 mb-4 text-sm">
+          <div className="flex justify-between items-center">
+            <span className="text-gray-500">Reward Pool:</span>
+            <span className="text-blue-600 font-medium">{formatBalance(agent.balance)}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-500">Message price:</span>
+            <span className="text-blue-600 font-medium">{formatCost(agent.cost_per_message)}</span>
+          </div>
         </div>
-        <div className="flex justify-between items-center">
-          <span className="text-gray-500">Message price:</span>
-          <span className="text-blue-600 font-medium">{formatCost(agent.cost_per_message)}</span>
-        </div>
-      </div>
 
-      {fromProfile && (
-        <div className="text-xs text-center mb-4">
-          {isWithdrawalLocked ? (
-            <span className="font-medium text-yellow-700">{timeRemaining}</span>
-          ) : (
-            <span className="font-medium text-green-600">Withdrawal Unlocked</span>
-          )}
-        </div>
-      )}
-
-      <div className="mt-auto flex flex-col gap-2">
-        <button
-          onClick={(e) => {
-            e.stopPropagation()
-            handleAttack()
-          }}
-          className="btn btn-outline w-full"
-        >
-          {fromProfile ? 'View Sentinel' : ctaHeading}
-        </button>
         {fromProfile && (
-          <div className="flex gap-2">
-            <button
-              onClick={() => openModal(agent.object_id)}
-              className="btn btn-black w-1/2"
-            >
-              Fund
-            </button>
-            <button
-              onClick={() => openWithdrawModal(agent.object_id, agent.balance)}
-              className="btn btn-outline w-1/2"
-              disabled={isWithdrawalLocked || agent.balance === 0}
-              title={
-                isWithdrawalLocked
-                  ? timeRemaining
-                  : agent.balance === 0
-                  ? 'Balance is zero'
-                  : 'Withdraw funds'
-              }
-            >
-              Withdraw
-            </button>
+          <div className="text-xs text-center mb-4">
+            {isWithdrawalLocked ? (
+              <span className="font-medium text-yellow-700">{timeRemaining}</span>
+            ) : (
+              <span className="font-medium text-green-600">Withdrawal Unlocked</span>
+            )}
           </div>
         )}
-      </div>
 
-      <Modal onSuccess={() => console.log('Funded successfully!')} />
-      <WithdrawModal onSuccess={() => console.log('Withdrew successfully!')} />
-      <FeatureModal />
+        <div className="mt-auto flex flex-col gap-2">
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              handleAttack()
+            }}
+            className="btn btn-outline w-full"
+          >
+            {fromProfile ? 'View Sentinel' : ctaHeading}
+          </button>
+          {fromProfile && (
+            <div className="flex gap-2">
+              <button
+                onClick={() => openModal(agent.object_id)}
+                className="btn btn-black w-1/2"
+              >
+                Fund
+              </button>
+              <button
+                onClick={() => openWithdrawModal(agent.object_id, agent.balance)}
+                className="btn btn-outline w-1/2"
+                disabled={isWithdrawalLocked || agent.balance === 0}
+                title={
+                  isWithdrawalLocked
+                    ? timeRemaining
+                    : agent.balance === 0
+                    ? 'Balance is zero'
+                    : 'Withdraw funds'
+                }
+              >
+                Withdraw
+              </button>
+            </div>
+          )}
+        </div>
+
+        <Modal onSuccess={() => console.log('Funded successfully!')} />
+        <WithdrawModal onSuccess={() => console.log('Withdrew successfully!')} />
+        <FeatureModal />
+      </div>
     </motion.div>
   )
 }

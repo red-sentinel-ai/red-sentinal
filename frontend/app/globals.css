@@ -162,6 +162,11 @@ body::-webkit-scrollbar-thumb:hover {
   );
 }
 
+.agent-card {
+  background: linear-gradient(#ebdee1b3, #6b6b6bb3) padding-box,
+    linear-gradient(180deg, #ebdee1b3, #6b6b6bb3) border-box;
+}
+
 .robo-card:hover .robo-img-defender {
   background: linear-gradient(
     to right,
