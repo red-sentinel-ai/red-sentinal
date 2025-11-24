@@ -1,13 +1,13 @@
 'use client'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { ShieldCheck, ShieldAlert } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 
 import { Badge } from '@/components/ui'
 import { LeaderboardSkeleton } from './ui/skeletons/LeaderboardSkeleton'
 import { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { MIST_PER_SUI } from '@/constants'
+import { RefreshCcw } from 'lucide-react'
 
 export enum TabType {
   AgentRanking = 'AGENT_RANKING',
@@ -51,17 +51,17 @@ export const AgentsList = ({
                 <div className="h-full w-[1px] bg-[#6F6F6F]" />
                 <p className="col-span-10 pl-4">Agent Id</p>
               </div>
-              <div className="col-span-3 border-l border-l-[#6F6F6F] ps-4">Name</div>
-              <div className="col-span-2 border-l border-l-[#6F6F6F] ps-4">Balance</div>
-              <div className="col-span-2 border-l border-l-[#6F6F6F] ps-4">Message Price</div>
-              <div className="col-span-1 border-l border-l-[#6F6F6F] ps-4">Status</div>{' '}
-              <div className="col-span-2 border-l border-l-[#6F6F6F] ps-4">Actions</div>
+              <div className="col-span-3 ps-4">Name</div>
+              <div className="col-span-1 ps-4">Balance</div>
+              <div className="col-span-2 ps-4">Message Price</div>
+              <div className="col-span-1 ps-4">Status</div>{' '}
+              <div className="col-span-2 ps-12">Actions</div>
             </div>
 
             <AnimatePresence>
               {agents.map((agent, idx) => {
-                const balance = (Number(agent.balance) / MIST_PER_SUI).toFixed(4)
-                const costPerMessage = (Number(agent.cost_per_message) / MIST_PER_SUI).toFixed(4)
+                const balance = (Number(agent.balance) / MIST_PER_SUI).toFixed(2)
+                const costPerMessage = (Number(agent.cost_per_message) / MIST_PER_SUI).toFixed(2)
 
                 return (
                   <motion.div
@@ -158,7 +158,7 @@ export const AgentsList = ({
                           />
                         )}
                       </div>
-                      <div className="col-span-2 ps-4">{`${balance} SUI`}</div>
+                      <div className="col-span-1 ps-4">{`${balance} SUI`}</div>
                       <div className="col-span-2 ps-4">{`${costPerMessage} SUI`}</div>
                       <div className="col-span-1 ps-4">
                         <Badge
@@ -189,17 +189,28 @@ export const AgentsList = ({
                           {agent.status}
                         </Badge>
                       </div>
-                      <div className="col-span-2 ps-4 flex gap-4">
+                      <div className="col-span-3 ps-12 flex gap-4 items-center ">
                         <button
                           onClick={() => router.push(`/attack/${agent.agent_path}`)}
-                          className="text-sm text-primary_pink_light hover:text-primary_pink font-bold"
+                          className="badge-black"
                         >
+                          <Image
+                            src="/icons/swords-white.png"
+                            width="16"
+                            height="16"
+                            alt="swords"
+                            className="mr-1"
+                          />
                           Attack
                         </button>
                         <button
                           onClick={(e) => handleRefresh(e)}
-                          className="text-sm text-blue-400 hover:text-blue-300"
+                          className="badge-outline-black"
                         >
+                          <RefreshCcw
+                            width={16}
+                            className="mr-1"
+                          />
                           Refresh
                         </button>
                       </div>
