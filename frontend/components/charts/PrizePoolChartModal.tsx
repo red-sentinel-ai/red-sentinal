@@ -62,7 +62,7 @@ export const PrizePoolChartModal = ({
       <div className="flex items-start justify-between mb-4">
         <div>
           <h2 className="text-xl font-bold text-black flex items-center gap-2">
-            <TrendingUp className="text-blue-500" />
+            <TrendingUp className="text-[#1FAD57]" />
             Prize Pool History
           </h2>
           <p className="text-gray-600">For Sentinel: {agentName}</p>
@@ -94,12 +94,12 @@ export const PrizePoolChartModal = ({
               >
                 <stop
                   offset="5%"
-                  stopColor="#1388D5"
+                  stopColor="#1FAD57"
                   stopOpacity={0.4}
                 />
                 <stop
                   offset="95%"
-                  stopColor="#1388D5"
+                  stopColor="#1FAD57"
                   stopOpacity={0}
                 />
               </linearGradient>
@@ -128,7 +128,7 @@ export const PrizePoolChartModal = ({
             <Area
               type="monotone"
               dataKey="value"
-              stroke="#558EB4"
+              stroke="#1FAD57"
               strokeWidth={2}
               fillOpacity={1}
               fill="url(#colorValue)"
