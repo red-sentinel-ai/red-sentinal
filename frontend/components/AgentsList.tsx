@@ -46,12 +46,12 @@ export const AgentsList = ({
         ) : (
           <div className="flex flex-col gap-1">
             <div className="hidden md:grid md:grid-cols-12 backdrop-blur-xl p-3 rounded-lg border border-[#5E5E5E] hover:border-black/80 mb-2 font-medium text-2xl">
-              <div className="col-span-3 grid grid-cols-12 items-center">
+              <div className="col-span-2 grid grid-cols-12 items-center">
                 <p className="pr-1 col-span-1">#</p>
                 <div className="h-full w-[1px] bg-[#6F6F6F]" />
                 <p className="col-span-10 pl-4">Agent Id</p>
               </div>
-              <div className="col-span-2 border-l border-l-[#6F6F6F] ps-4">Name</div>
+              <div className="col-span-3 border-l border-l-[#6F6F6F] ps-4">Name</div>
               <div className="col-span-2 border-l border-l-[#6F6F6F] ps-4">Balance</div>
               <div className="col-span-2 border-l border-l-[#6F6F6F] ps-4">Message Price</div>
               <div className="col-span-1 border-l border-l-[#6F6F6F] ps-4">Status</div>{' '}
@@ -70,7 +70,7 @@ export const AgentsList = ({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.2, delay: idx * 0.05 }}
-                    className="backdrop-blur-xl p-3 rounded-lg border border-black/30 hover:border-black/80 cursor-pointer"
+                    className="backdrop-blur-xl p-3 rounded-lg border border-black/30 hover:border-black/80 cursor-pointer text-xl"
                     onClick={() => router.push(`/attack/${agent.agent_path}`)}
                   >
                     <div className="md:hidden space-y-3">
@@ -130,12 +130,12 @@ export const AgentsList = ({
                     </div>
 
                     <div className="hidden md:grid md:grid-cols-12 items-center">
-                      <div className="col-span-3 grid grid-cols-12 items-center">
+                      <div className="col-span-2 grid grid-cols-12 items-center">
                         <p className="pr-1 col-span-1">{idx + 1}</p>
                         <div className="h-full w-[1px] bg-[#6F6F6F]" />
                         <div className="col-span-10 pl-4">{agent.agent_id}</div>
                       </div>
-                      <div className="flex items-center gap-1 col-span-2 ps-4">
+                      <div className="flex items-center gap-1 col-span-3 ps-4">
                         <p>{agent.agent_name}</p>
                         {agent.is_featured && (
                           <Image
