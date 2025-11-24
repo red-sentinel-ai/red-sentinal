@@ -27,7 +27,7 @@ export function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <motion.div whileHover={{ scale: 1.05 }}>
+          <div>
             <Link
               className="shrink-0 flex items-center gap-2 absolute top-4 left-2 md:top-3 md:left-16 xl:top-3 xl:left-20"
               href="/"
@@ -41,7 +41,7 @@ export function Navbar() {
                 quality={100}
               />
             </Link>
-          </motion.div>
+          </div>
           {/* <div>
             <Link
               href="/careers"
