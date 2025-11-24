@@ -117,12 +117,26 @@ export default function ProfilePage() {
                 </button>
               </div>
               <div className="flex items-center gap-4 sm:ml-auto pt-2">
+                <Link
+                  className="btn btn-black"
+                  href="/defend"
+                >
+                  Launch Sentinel
+                </Link>
+
+                <Link
+                  className="btn btn-outline"
+                  href="/attack"
+                >
+                  Attack Sentinel
+                </Link>
+
                 {profile?.username && (
                   <Link
                     href={`/u/${profile.username}`}
                     className=""
                   >
-                    <button className="btn btn-outline h-[30px]">View Public</button>
+                    <button className="btn btn-outline h-[30px]">View Profile as Public</button>
                   </Link>
                 )}
               </div>
