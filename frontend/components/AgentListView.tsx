@@ -25,7 +25,7 @@ export const AgentListView = () => {
           <div className="black-gradient-border"></div>
           <div className="black-gradient-border rotate-180"></div>
         </div>
-        <p className="text-[#5E5E5E] text-center max-w-[594px] mx-auto">
+        <p className="text-[#5E5E5E] text-center text-xl max-w-[594px] mx-auto">
           Trick one of these agents into sending you all their SUI
         </p>
       </div>
@@ -68,7 +68,7 @@ export const AgentListView = () => {
 
       <div>
         <div className="flex flex-col md:flex-row items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">All Sentinels</h2>
+          <h2 className="text-xl md:text-[32px] font-medium">All Sentinels</h2>
         </div>
       </div>
 

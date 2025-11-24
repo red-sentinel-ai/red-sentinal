@@ -97,7 +97,7 @@ export const FeaturedAgentCard = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
     >
-      <div className="bg-white overflow-hidden w-full h-full p-2 lg:p-4 rounded-lg lg:rounded-xl">
+      <div className="bg-white overflow-hidden w-full h-full p-2 lg:p-6 rounded-lg lg:rounded-xl">
         <div className="relative mb-4">
           <div className="w-full h-80 rounded-lg flex items-center justify-center relative overflow-hidden bg-gray-100">
             {agent.agent_profile ? (
@@ -165,7 +165,7 @@ export const FeaturedAgentCard = ({
               e.stopPropagation()
               handleAttack()
             }}
-            className="btn btn-black h-[62px] w-full"
+            className="btn btn-black h-[62px] w-full text-xl"
           >
             {fromProfile ? 'View Sentinel' : ctaHeading}
           </button>
