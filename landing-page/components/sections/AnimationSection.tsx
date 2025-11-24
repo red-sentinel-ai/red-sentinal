@@ -19,34 +19,43 @@ export const AnimationSection = () => {
   // const springY = useSpring(y, springConfig)
 
   return (
-    <div
-      // ref={containerRef}
-      className="relative flex items-center max-w-[1340px] mx-auto pt-12 md:py-24 overflow-visible"
-    >
-      <div className="relative z-10 w-full text-left">
-        <h2 className="text-[48px] leading-snug font-medium">
-          Sui Sentinel lets you
-          <span className="text-[#C871FF]"> red-team, audit, and defend AI </span> models through
-          real-world attacks while earning SUI/USDC rewards for your mastery
-        </h2>
-        <p className="max-w-[984px] text-base md:text-2xl mt-8 mx-auto md:mx-0 text-[#5F5C5C]">
-          Built for AI builders, businesses, and prompt engineers shaping resilient intelligence.
-        </p>
-        <div className="flex flex-row gap-6 mt-10 justify-start">
-          <Link href={SUI_SENTINEL_APP_URL} target="_blank">
-            <button className="btn btn-black px-6">Explore Platform</button>
-          </Link>
-          <Link href={SUI_SENTINEL_TELEGRAM_URL} target="_blank">
-            <button className="btn btn-outline px-6">Join Telegram</button>
-          </Link>
+    <div className="relative px-4 md:px-10">
+      <div className="vertical-line left-4"></div>
+      <div className="vertical-line right-4"></div>
+      <div
+        // ref={containerRef}
+        className="relative flex items-center max-w-[1340px] mx-auto pt-12 md:py-24 overflow-visible"
+      >
+        <div className="relative z-10 w-full text-left">
+          <h2 className="text-[48px] leading-snug font-medium">
+            Sui Sentinel lets you
+            <span className="text-[#C871FF]"> red-team, audit, and defend AI </span> models through
+            real-world attacks while earning SUI/USDC rewards for your mastery
+          </h2>
+          <p className="max-w-[984px] text-base md:text-2xl mt-8 mx-auto md:mx-0 text-[#5F5C5C]">
+            Built for AI builders, businesses, and prompt engineers shaping resilient intelligence.
+          </p>
+          <div className="flex flex-row gap-6 mt-10 justify-start">
+            <Link
+              href={SUI_SENTINEL_APP_URL}
+              target="_blank"
+            >
+              <button className="btn btn-black px-6">Explore Platform</button>
+            </Link>
+            <Link
+              href={SUI_SENTINEL_TELEGRAM_URL}
+              target="_blank"
+            >
+              <button className="btn btn-outline px-6">Join Telegram</button>
+            </Link>
+          </div>
         </div>
-      </div>
-      <Image
-        src="/img/rings_v2.png"
-        alt="animation section art"
-        width={1700}
-        height={1700}
-        className="
+        <Image
+          src="/img/rings_v2.png"
+          alt="animation section art"
+          width={1700}
+          height={1700}
+          className="
     absolute
     top-[-250px]
     right-[-50px]  
@@ -54,9 +63,9 @@ export const AnimationSection = () => {
     select-none
 
   "
-      />
+        />
 
-      {/* <video
+        {/* <video
         autoPlay
         loop
         muted
@@ -66,6 +75,7 @@ export const AnimationSection = () => {
         <source src="/videos/threeCircles.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video> */}
+      </div>
     </div>
   )
 }

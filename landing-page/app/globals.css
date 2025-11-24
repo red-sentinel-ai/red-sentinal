@@ -134,7 +134,7 @@
   }
 
    .vertical-line {
-    @apply absolute top-0 bottom-0 border-l border-l-black z-10;
+    @apply absolute top-0 bottom-0 border-l border-l-black z-50 hidden md:block;
   }
 }
 
