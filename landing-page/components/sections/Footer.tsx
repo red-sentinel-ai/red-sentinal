@@ -7,6 +7,9 @@ import { socialLinks } from '@/constants'
 export function Footer() {
   return (
     <footer className="relative pt-16 bg-cover bg-bottom bg-no-repeat bg-[url('/img/footer-bg-sm.png')] md:bg-[url('/img/footer-bg.png')]">
+      <div className="vertical-line left-4 -top-40"></div>
+      <div className="vertical-line right-4 -top-40"></div>
+
       <div className="relative z-10 max-w-[1440px] mx-auto pb-0 px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row justify-between md:items-start gap-12 md:text-left">
           <div className="max-w-md md:self-stretch flex flex-col order-1 md:order-1">

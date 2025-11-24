@@ -11,6 +11,8 @@ export function OfferingsSection() {
       id="offerings"
       className="py-24 relative text-black"
     >
+      <div className="vertical-line left-4"></div>
+      <div className="vertical-line right-4"></div>
       <div className="relative z-10 max-w-7xl mx-auto md:px-4">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

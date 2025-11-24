@@ -7,7 +7,12 @@ import Image from 'next/image'
 
 export function EarnWhileDefendingSection() {
   return (
-    <section id="earn" className="relative flex justify-center py-24 overflow-visible">
+    <section
+      id="earn"
+      className="relative flex justify-center py-24 overflow-visible px-4 md:px-10"
+    >
+      <div className="vertical-line left-4"></div>
+      <div className="vertical-line right-4"></div>
       {/* <video
         autoPlay
         loop
@@ -49,7 +54,10 @@ export function EarnWhileDefendingSection() {
           Every successful defense strengthens AI and your wallet.
         </h2>
         <div className="mt-10">
-          <Link href={SUI_SENTINEL_APP_URL} target="_blank">
+          <Link
+            href={SUI_SENTINEL_APP_URL}
+            target="_blank"
+          >
             <button className="btn btn-black md:w-[260px] px-6">Start Earning Now</button>
           </Link>
         </div>

@@ -9,6 +9,8 @@ export function HowItWorksSection() {
       id="how-it-works"
       className="relative"
     >
+      <div className="vertical-line left-4"></div>
+      <div className="vertical-line right-4"></div>
       <div className="py-24 relative text-black bg-[#F7F9FF] z-10">
         <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div

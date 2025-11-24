@@ -13,19 +13,11 @@ export default function LandingPage() {
   return (
     <>
       <HeroSection />
-      <div className="">
-        <div className="px-4 md:px-10">
-          <AnimationSection />
-        </div>
-        <VulnerabilitySection />
-        <HowItWorksSection />
-        <OfferingsSection />
-      </div>
-      {/* <TweetsSection /> */}
-
-      <div className="px-4 md:px-10">
-        <EarnWhileDefendingSection />
-      </div>
+      <AnimationSection />
+      <VulnerabilitySection />
+      <HowItWorksSection />
+      <OfferingsSection />
+      <EarnWhileDefendingSection />
       <WhyChooseUsSection />
     </>
   )
