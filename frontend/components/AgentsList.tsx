@@ -89,16 +89,28 @@ export const AgentsList = ({
                         </div>
                         <Badge
                           variant={agent.status === 'Active' ? 'secondary' : 'destructive'}
-                          className={
+                          className={`${
                             agent.status === 'Active'
-                              ? 'bg-green-500/10 text-green-400 border-green-500/20'
+                              ? 'bg-[#D1E6DB] text-[#1FAD57] border-[#1FAD57]'
                               : 'bg-red-500/10 text-red-400 border-red-500/20'
-                          }
+                          } text-xs rounded-xl`}
                         >
                           {agent.status === 'Active' ? (
-                            <ShieldCheck className="h-3 w-3 mr-1" />
+                            <Image
+                              src="/icons/shield-green.png"
+                              width={14}
+                              height={14}
+                              alt="shield green"
+                              className="mr-1"
+                            />
                           ) : (
-                            <ShieldAlert className="h-3 w-3 mr-1" />
+                            <Image
+                              src="/icons/shield-red.png"
+                              width={14}
+                              height={14}
+                              alt="shield red"
+                              className="mr-1"
+                            />
                           )}
                           {agent.status}
                         </Badge>
@@ -151,16 +163,28 @@ export const AgentsList = ({
                       <div className="col-span-1 ps-4">
                         <Badge
                           variant={agent.status === 'Active' ? 'secondary' : 'destructive'}
-                          className={
+                          className={`${
                             agent.status === 'Active'
-                              ? 'bg-green-500/10 text-green-400 border-green-500/20'
+                              ? 'bg-[#D1E6DB] text-[#1FAD57] border-[#1FAD57]'
                               : 'bg-red-500/10 text-red-400 border-red-500/20'
-                          }
+                          } text-base rounded-xl`}
                         >
                           {agent.status === 'Active' ? (
-                            <ShieldCheck className="h-3 w-3 mr-1" />
+                            <Image
+                              src="/icons/shield-green.png"
+                              width={16}
+                              height={16}
+                              alt="shield green"
+                              className="mr-1"
+                            />
                           ) : (
-                            <ShieldAlert className="h-3 w-3 mr-1" />
+                            <Image
+                              src="/icons/shield-red.png"
+                              width={16}
+                              height={16}
+                              alt="shield red"
+                              className="mr-1"
+                            />
                           )}
                           {agent.status}
                         </Badge>
