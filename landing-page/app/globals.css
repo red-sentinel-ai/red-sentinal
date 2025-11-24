@@ -132,6 +132,10 @@
   .badge-pink {
     @apply  bg-[linear-gradient(to_right,#FEB9FF_0%,#FDE3FF_100%)] text-black px-3 py-1 rounded-full;
   }
+
+   .vertical-line {
+    @apply absolute top-0 bottom-0 border-l border-l-black z-10;
+  }
 }
 
 .shadow-v1 {
