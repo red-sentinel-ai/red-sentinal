@@ -266,14 +266,15 @@ aws sts get-session-token \
 **Note:** If above command gives error, run `unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_PROFILE` and then again run `aws configure` with admin_user credentials
 
 3. Once you get value for above keys, set
-{
-    "Credentials": {
-        "AccessKeyId": "*STS_KEY_REMOVED*",
-        "SecretAccessKey": "KSkSZznN7QQOSS1ruNBaQUrpPNizCA+dto2gpmHm",
-        "SessionToken": "IQoJb3JpZ2luX2VjECYaCXVzLWVhc3QtMSJIMEYCIQD4y4KUBHDIHtwiXRXCEREwnPkXyDge2XKX0VA5Du/mXgIhAKdLgwp1bTN+kUHecpRVXdNp6xUtmexzs4OXvPQFLo8ZKvgBCO///////////wEQABoMNDAyMDU0ODAzMTEzIgxsnOE8i8cS12olLWwqzAH4rgHBDZ3DqLjv/xOuFSwLgi5twyLl4zT8aZ2mgjTmnTVLG2UnoFk34rz3AOOErGQah6WdtSBynZI2IqHCW58pHMf6M5IS5XhrnxmZU479qkK3gOkGOjeuHSoyB/DUtclMKgRh3A7UEN+xUmKTMrHs2gRx8ZedyURWSNH/FU35HZqS+x06F97GL0c5e1DGXdf23rTKBtSXNVlo4VU+vqAayLpI9mbipXMzPQEo1QyV4KiNqBU19QZeMCvjYP/wF5xBxEYdl8BLEFXLCMowgtT6yAY6lwHgH2+SZ87DlDZqkOhTMpphfFNJD/tGgMhDmRm4D2y1oDX2kzQO9xDoR2SKt4NbxiIPtrWXwbVvsensHflzOD2k6NOfhQGnjZ2toveFRcJNdewWS+LVVOsRu8J3luWNJu08D7Bc8+aTWtvEvFd/u8HsvmQiyqEVLxDwlw1fxKw2A4C6aw1iV4JAvNdHXuGEfRm9frtlA2Lz",
-        "Expiration": "2025-11-20T17:41:22+00:00"
-    }
-}
+   {
+   "Credentials": {
+   "AccessKeyId": "*STS_KEY_REMOVED*",
+   "SecretAccessKey": "KSkSZznN7QQOSS1ruNBaQUrpPNizCA+dto2gpmHm",
+   "SessionToken": "IQoJb3JpZ2luX2VjECYaCXVzLWVhc3QtMSJIMEYCIQD4y4KUBHDIHtwiXRXCEREwnPkXyDge2XKX0VA5Du/mXgIhAKdLgwp1bTN+kUHecpRVXdNp6xUtmexzs4OXvPQFLo8ZKvgBCO///////////wEQABoMNDAyMDU0ODAzMTEzIgxsnOE8i8cS12olLWwqzAH4rgHBDZ3DqLjv/xOuFSwLgi5twyLl4zT8aZ2mgjTmnTVLG2UnoFk34rz3AOOErGQah6WdtSBynZI2IqHCW58pHMf6M5IS5XhrnxmZU479qkK3gOkGOjeuHSoyB/DUtclMKgRh3A7UEN+xUmKTMrHs2gRx8ZedyURWSNH/FU35HZqS+x06F97GL0c5e1DGXdf23rTKBtSXNVlo4VU+vqAayLpI9mbipXMzPQEo1QyV4KiNqBU19QZeMCvjYP/wF5xBxEYdl8BLEFXLCMowgtT6yAY6lwHgH2+SZ87DlDZqkOhTMpphfFNJD/tGgMhDmRm4D2y1oDX2kzQO9xDoR2SKt4NbxiIPtrWXwbVvsensHflzOD2k6NOfhQGnjZ2toveFRcJNdewWS+LVVOsRu8J3luWNJu08D7Bc8+aTWtvEvFd/u8HsvmQiyqEVLxDwlw1fxKw2A4C6aw1iV4JAvNdHXuGEfRm9frtlA2Lz",
+   "Expiration": "2025-11-20T17:41:22+00:00"
+   }
+   }
+
 ```
 export KEY_PAIR=MyEC2KeyPair
 export AWS_ACCESS_KEY_ID=*STS_KEY_REMOVED*
@@ -331,4 +332,3 @@ kill -9 <PID>
 This project is licensed under the APACHE License - see the LICENSE file for details.
 
 1636703322293403648
-
