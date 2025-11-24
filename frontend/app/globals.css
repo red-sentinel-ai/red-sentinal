@@ -72,6 +72,17 @@
   }
 }
 
+@layer components {
+  .badge-black {
+    @apply  bg-black text-white text-base font-bold rounded-full min-h-[31px] px-4 py-1 flex items-center justify-center gap-1 border border-black;
+  }
+
+  .badge-outline-black {
+    @apply  text-black text-base font-bold rounded-full min-h-[31px] px-4 py-1 flex items-center justify-center gap-1 border border-black;
+  }
+
+}
+
 html {
   scroll-behavior: smooth;
 }
