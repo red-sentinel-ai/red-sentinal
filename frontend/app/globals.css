@@ -81,6 +81,10 @@
     @apply  text-black text-base font-bold rounded-full min-h-[31px] px-4 py-1 flex items-center justify-center gap-1 border border-black;
   }
 
+   .vertical-line {
+    @apply absolute top-0 bottom-0 border-l border-l-black z-50 hidden md:block;
+  }
+
 }
 
 html {

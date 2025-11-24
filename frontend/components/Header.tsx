@@ -29,7 +29,7 @@ export const Header = () => {
         'bg-transparent': !scrolled && !menuOpen,
       })}
     >
-      <div className="max-w-full mx-auto flex items-center p-3 lg:p-4 justify-between">
+      <div className="max-w-full mx-auto flex items-center p-3 lg:px-8 py-4 justify-between">
         <div className="flex items-center flex-1">
           <Link
             className="block mr-1 xl:mr-4 flex-shrink-0"
@@ -37,7 +37,12 @@ export const Header = () => {
             target="_blank"
           >
             <div className="relative w-8 h-11">
-              <Image src="/icons/logo-sm.svg" alt="shield" fill style={{ objectFit: 'contain' }} />
+              <Image
+                src="/icons/logo-sm.svg"
+                alt="shield"
+                fill
+                style={{ objectFit: 'contain' }}
+              />
             </div>
           </Link>
 
@@ -82,7 +87,10 @@ export const Header = () => {
       {menuOpen && (
         <div className="xl:hidden px-4 pb-4">
           <div className="py-4 border-t border-gray-200">
-            <MenuItems menuOpen={menuOpen} onItemClick={() => setMenuOpen(false)} />
+            <MenuItems
+              menuOpen={menuOpen}
+              onItemClick={() => setMenuOpen(false)}
+            />
           </div>
           <div className="mt-4 flex justify-center">
             <ConnectButton />
