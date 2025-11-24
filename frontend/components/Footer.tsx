@@ -18,6 +18,8 @@ const Footer = () => {
       className="relative pt-16 bg-cover bg-bottom bg-no-repeat"
       style={{ backgroundImage: "url('/img/footer-bg.png')" }}
     >
+      <div className="vertical-line left-4"></div>
+      <div className="vertical-line right-4"></div>
       <div className="absolute inset-0 flex items-center pointer-events-none justify-end md:justify-center pb-[24px] md:pb-0 flex-col">
         <Image
           src="/gifs/fullCircleRed.gif"
