@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Copy, CheckCircle, LogOut, ChevronDown, User, Loader2 } from 'lucide-react'
+import posthog from 'posthog-js'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -37,6 +38,20 @@ export const ConnectButton = () => {
       setTimeout(() => setCopied(false), 2000)
     }
   }
+
+  useEffect(() => {
+    if (account?.address) {
+      posthog.identify(account.address)
+
+      posthog.capture('wallet_connected', {
+        address: account.address,
+        //TODO: make this testnet dynamic when integrate mainnet
+        chain: 'sui:testnet',
+      })
+    } else {
+      posthog.reset()
+    }
+  }, [account?.address])
 
   useEffect(() => {
     const fetchBalance = async () => {
