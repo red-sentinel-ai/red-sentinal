@@ -145,7 +145,7 @@ export function SocialConnectionsSection() {
                   )}
                 </div>
                 <div>
-                  <p className="font-medium text-black text-2xl">X (Twitter)</p>
+                  <p className="font-medium text-2xl">X (Twitter)</p>
                   <p className="text-base text-[#5E5E5E]">
                     {hasTwitter ? 'Connected' : 'Not connected'}
                   </p>
@@ -161,16 +161,16 @@ export function SocialConnectionsSection() {
                   size="sm"
                   variant="outline"
                   disabled={disconnectingPlatform === 'twitter'}
-                  className="h-8 px-3 text-xs border-red-200 text-red-600 hover:text-red-700 hover:bg-red-50 hover:border-red-300 disabled:opacity-50"
+                  className="px-3 border-red-200 text-red-600 hover:text-red-700 hover:bg-red-50 hover:border-red-300 disabled:opacity-50 h-[50px] min-w-[145px] text-base flex items-center gap-1"
                 >
                   {disconnectingPlatform === 'twitter' ? (
                     <>
-                      <div className="animate-spin h-3 w-3 mr-1 border border-red-500 border-t-transparent rounded-full"></div>
+                      <div className="animate-spin h-4 w-4 mr-1 border border-black border-t-transparent rounded-full flex-shrink-0"></div>
                       Disconnecting...
                     </>
                   ) : (
                     <>
-                      <X className="h-3 w-3 mr-1" />
+                      <X className="h-6 w-6 mr-1" />
                       Disconnect
                     </>
                   )}
@@ -183,12 +183,12 @@ export function SocialConnectionsSection() {
                   }}
                   size="sm"
                   disabled={connectingPlatform === 'twitter'}
-                  className="h-8 px-3 text-xs bg-blue-100 text-blue-700 border border-blue-200 hover:bg-blue-200 hover:border-blue-300 disabled:opacity-50"
+                  className="btn btn-outline h-[50px] w-[145px] text-base flex items-center gap-1"
                 >
                   {connectingPlatform === 'twitter' ? (
                     <>
-                      <div className="animate-spin h-3 w-3 mr-1 border border-blue-600 border-t-transparent rounded-full"></div>
-                      Connecting...
+                      <div className="animate-spin h-4 w-4 mr-1 border border-black border-t-transparent rounded-full flex-shrink-0"></div>
+                      <span>Connecting...</span>
                     </>
                   ) : (
                     'Connect'
@@ -212,8 +212,8 @@ export function SocialConnectionsSection() {
                   )}
                 </div>
                 <div>
-                  <p className="font-medium text-black text-sm">Discord</p>
-                  <p className="text-xs text-gray-500">
+                  <p className="font-medium text-2xl">Discord</p>
+                  <p className="text-base text-[#5E5E5E]">
                     {hasDiscord ? 'Connected' : 'Not connected'}
                   </p>
                 </div>
@@ -228,16 +228,16 @@ export function SocialConnectionsSection() {
                   size="sm"
                   variant="outline"
                   disabled={disconnectingPlatform === 'discord'}
-                  className="h-8 px-3 text-xs border-red-200 text-red-600 hover:text-red-700 hover:bg-red-50 hover:border-red-300 disabled:opacity-50"
+                  className="px-3 border-red-200 text-red-600 hover:text-red-700 hover:bg-red-50 hover:border-red-300 disabled:opacity-50 h-[50px] min-w-[145px] text-base flex items-center gap-1"
                 >
                   {disconnectingPlatform === 'discord' ? (
                     <>
-                      <div className="animate-spin h-3 w-3 mr-1 border border-red-500 border-t-transparent rounded-full"></div>
+                      <div className="animate-spin h-4 w-4 mr-1 border border-black border-t-transparent rounded-full flex-shrink-0"></div>
                       Disconnecting...
                     </>
                   ) : (
                     <>
-                      <X className="h-3 w-3 mr-1" />
+                      <X className="h-6 w-6 mr-1" />
                       Disconnect
                     </>
                   )}
@@ -250,11 +250,11 @@ export function SocialConnectionsSection() {
                   }}
                   size="sm"
                   disabled={connectingPlatform === 'discord'}
-                  className="h-8 px-3 text-xs bg-indigo-100 text-indigo-700 border border-indigo-200 hover:bg-indigo-200 hover:border-indigo-300 disabled:opacity-50"
+                  className="btn btn-outline h-[50px] w-[145px] text-base"
                 >
                   {connectingPlatform === 'discord' ? (
                     <>
-                      <div className="animate-spin h-3 w-3 mr-1 border border-indigo-600 border-t-transparent rounded-full"></div>
+                      <div className="animate-spin h-4 w-4 mr-1 border border-black border-t-transparent rounded-full flex-shrink-0"></div>
                       Connecting...
                     </>
                   ) : (
