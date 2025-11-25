@@ -96,6 +96,70 @@ export const BrandKitContent = () => {
               </Link>
             </div>
           </div>
+
+          <div className="flex items-center justify-between gap-8 mt-8">
+            <div className="flex items-center justify-center gap-2">
+              <div className="border border-[#5E5E5E] w-40 h-40 md:w-[407px] md:h-[291px] bg-white flex items-center justify-center rounded-2xl mr-2">
+                <Image
+                  src="/icons/logo/logo_pink_without_bg.png"
+                  alt="shield"
+                  style={{ objectFit: 'contain' }}
+                  height={90}
+                  width={300}
+                  quality={100}
+                />
+              </div>
+
+              <Link
+                href="/icons/logo/logo_pink_without_bg.svg"
+                download="logo_pink_without_bg.svg"
+                className="btn btn-black flex items-center justify-center min-h-[54px]! min-w-[111px]! gap-2"
+              >
+                <Download width={20} />
+                PNG
+              </Link>
+
+              <Link
+                href="/icons/logo/logo_pink_without_bg.png"
+                download="logo_pink_without_bg.png"
+                className="btn btn-black flex items-center justify-center min-h-[54px]! min-w-[111px]! gap-2"
+              >
+                <Download width={20} />
+                SVG
+              </Link>
+            </div>
+
+            <div className="flex items-center justify-center gap-2">
+              <div className="border border-[#5E5E5E] w-40 h-40 md:w-[407px] md:h-[291px] bg-white flex items-center justify-center rounded-2xl mr-2">
+                <Image
+                  src="/icons/logo/logo_pink_with_bg.png"
+                  alt="shield"
+                  style={{ objectFit: 'contain' }}
+                  height={90}
+                  width={300}
+                  quality={100}
+                />
+              </div>
+
+              <Link
+                href="/icons/logo/logo_pink_with_bg.png"
+                download="logo_pink_with_bg.png"
+                className="btn btn-black flex items-center justify-center min-h-[54px]! min-w-[111px]! gap-2"
+              >
+                <Download width={20} />
+                PNG
+              </Link>
+
+              <Link
+                href="/icons/logo/logo_pink_with_bg.svg"
+                download="logo_pink_with_bg.svg"
+                className="btn btn-black flex items-center justify-center min-h-[54px]! min-w-[111px]! gap-2"
+              >
+                <Download width={20} />
+                SVG
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </section>
