@@ -190,18 +190,46 @@ export const BrandKitContent = () => {
               logo:
             </p>
 
-            <div className="flex items-center gap-8">
-              <div>
-                <div className="mb-2">
+            <div className="grid grid-cols-3 gap-8">
+              <div className="h-full flex flex-col">
+                <div className="mb-2 bg-white rounded-xl border border-[#5E5E5E] overflow-hidden">
                   <Image
                     src="/icons/logo/logo_distorted_pink.png"
-                    width={208}
-                    height={123}
+                    width={200}
+                    height={109}
                     alt="logo clearspace demonstration"
                   />
                 </div>
                 <p className="text-sm text-[#5F5C5C]">
                   Do not stretch or deform the logo, modify spacing or elements.
+                </p>
+              </div>
+
+              <div className="h-full flex flex-col">
+                <div className="mb-2 bg-white rounded-xl border border-[#5E5E5E] overflow-hidden">
+                  <Image
+                    src="/icons/logo/logo_distorted_black.png"
+                    width={200}
+                    height={109}
+                    alt="logo clearspace demonstration"
+                  />
+                </div>
+                <p className="text-sm text-[#5F5C5C]">
+                  Do not rotate or change the logo orientation.
+                </p>
+              </div>
+
+              <div className="h-full flex flex-col">
+                <div className="mb-2 bg-white rounded-xl border border-[#5E5E5E] overflow-hidden">
+                  <Image
+                    src="/icons/logo/logo_distorted_blue.png"
+                    width={200}
+                    height={109}
+                    alt="logo clearspace demonstration"
+                  />
+                </div>
+                <p className="text-sm text-[#5F5C5C]">
+                  Do not use unapproved colors or add drop shadows.
                 </p>
               </div>
             </div>
