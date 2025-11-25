@@ -132,6 +132,14 @@ export const socialLinks = [
     name: 'Careers',
     isOutside: false,
   },
+  {
+    href: '/brand-kit',
+    icon: '/icons/brief_case.png',
+    isImage: true,
+    alt: 'Brand Kit',
+    name: 'Brand Kit',
+    isOutside: false,
+  },
 ]
 
 export const JOB_APPLICATIONS_BUCKET_NAME = 'job-applications'
