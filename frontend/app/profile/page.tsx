@@ -72,74 +72,72 @@ export default function ProfilePage() {
       <div className="relative">
         <div className="vertical-line left-4"></div>
         <div className="vertical-line right-4"></div>
-        <div className="max-w-[1400px] mx-auto px-4 pb-12 pt-24 min-h-body relative">
-          <div className="mb-8 w-full">
+        <div className="max-w-[1440px] mx-auto px-4 pb-12 pt-24 min-h-body relative">
+          <div
+            className="flex flex-col sm:flex-row items-end gap-4 min-h-[376px] bg-cover bg-bottom bg-no-repeat px-4 pt-4 pb-20 mb-6 w-full"
+            style={{ backgroundImage: 'url("/img/footer-bg.png")' }}
+          >
             <div
-              className="flex flex-col sm:flex-row items-end gap-4 mb-6 min-h-[376px] bg-cover bg-bottom bg-no-repeat px-4 pt-4 pb-20"
-              style={{ backgroundImage: 'url("/img/footer-bg.png")' }}
+              className="relative w-20 h-20 md:w-44 md:h-44 rounded-full overflow-hidden cursor-pointer group flex-shrink-0"
+              onClick={() => setIsImagePickerOpen(true)}
             >
-              <div
-                className="relative w-20 h-20 md:w-44 md:h-44 rounded-full overflow-hidden cursor-pointer group flex-shrink-0"
-                onClick={() => setIsImagePickerOpen(true)}
-              >
-                {isUpdatingAvatar ? (
-                  <div className="w-full h-full flex items-center justify-center bg-white/70">
-                    <Loader2 className="w-8 h-8 animate-spin text-black" />
-                  </div>
-                ) : profile?.avatar_url ? (
-                  <Image
-                    src={profile.avatar_url}
-                    alt="User Avatar"
-                    fill
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                    <User className="h-12 w-12 text-gray-500" />
-                  </div>
-                )}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <Camera className="w-8 h-8 text-white" />
+              {isUpdatingAvatar ? (
+                <div className="w-full h-full flex items-center justify-center bg-white/70">
+                  <Loader2 className="w-8 h-8 animate-spin text-black" />
                 </div>
+              ) : profile?.avatar_url ? (
+                <Image
+                  src={profile.avatar_url}
+                  alt="User Avatar"
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                  <User className="h-12 w-12 text-gray-500" />
+                </div>
+              )}
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <Camera className="w-8 h-8 text-white" />
               </div>
+            </div>
 
-              <div className="flex-1 min-w-0 pt-2">
-                <h1 className="text-2xl sm:text-[32px] truncate font-medium leading-snug">
-                  {profile?.display_name || 'Your Profile'}
-                </h1>
-                <p className="text-[#5E5E5E] mt-1 font-medium mb-6">@{profile?.username}</p>
+            <div className="flex-1 min-w-0 pt-2">
+              <h1 className="text-2xl sm:text-[32px] truncate font-medium leading-snug">
+                {profile?.display_name || 'Your Profile'}
+              </h1>
+              <p className="text-[#5E5E5E] mt-1 font-medium mb-6">@{profile?.username}</p>
 
-                <button
-                  onClick={() => setIsEditModalOpen(true)}
-                  className="btn btn-outline h-[50px] font-medium"
-                >
-                  Edit Profile
-                </button>
-              </div>
-              <div className="flex items-center gap-4 sm:ml-auto pt-2">
+              <button
+                onClick={() => setIsEditModalOpen(true)}
+                className="btn btn-outline h-[50px] font-medium"
+              >
+                Edit Profile
+              </button>
+            </div>
+            <div className="flex items-center gap-2 sm:ml-auto pt-2">
+              <Link
+                className="btn btn-black"
+                href="/defend"
+              >
+                Launch Sentinel
+              </Link>
+
+              <Link
+                className="btn btn-outline"
+                href="/attack"
+              >
+                Attack Sentinel
+              </Link>
+
+              {profile?.username && (
                 <Link
-                  className="btn btn-black"
-                  href="/defend"
+                  href={`/u/${profile.username}`}
+                  className=""
                 >
-                  Launch Sentinel
+                  <button className="btn btn-outline h-[30px]">View Profile as Public</button>
                 </Link>
-
-                <Link
-                  className="btn btn-outline"
-                  href="/attack"
-                >
-                  Attack Sentinel
-                </Link>
-
-                {profile?.username && (
-                  <Link
-                    href={`/u/${profile.username}`}
-                    className=""
-                  >
-                    <button className="btn btn-outline h-[30px]">View Profile as Public</button>
-                  </Link>
-                )}
-              </div>
+              )}
             </div>
           </div>
           <div className="mb-12">

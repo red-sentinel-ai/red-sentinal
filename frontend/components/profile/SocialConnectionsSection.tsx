@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
-import { ExternalLink, Check, X, Users } from 'lucide-react'
+import { Check, X } from 'lucide-react'
 import { Button, Badge, Card } from '@/components/ui'
 import { toast } from 'react-toastify'
 import { useCurrentAccount } from '@mysten/dapp-kit'
@@ -83,185 +83,189 @@ export function SocialConnectionsSection() {
   const connectionCount = (hasTwitter ? 1 : 0) + (hasDiscord ? 1 : 0)
 
   return (
-    <Card className="bg-gray-50 border-gray-200 p-6 hover:border-gray-300 transition-all duration-200">
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-100 rounded-lg border border-blue-200">
-              <Users className="h-5 w-5 text-blue-600" />
-            </div>
+    <div className="px-6">
+      {!hasAnyConnection && (
+        <div className="p-4 rounded-lg mb-10 bg-gradient-to-r from-white/45 to-[rgba(255,158,244,0.46)] border border-[#5E5E5E]">
+          <div className="flex items-start gap-3">
+            <Image
+              src="/icons/star-badge-black.png"
+              width={35}
+              height={35}
+              alt="star badge"
+            />
             <div>
-              <h3 className="font-semibold text-black text-lg">Social Connections</h3>
-              <p className="text-sm text-gray-500">
-                {hasAnyConnection
-                  ? `${connectionCount} of 2 platforms connected`
-                  : 'Connect your social accounts'}
+              <p className="text-2xl font-medium">Connect your socials to unlock rewards</p>
+              <p className="text-base mt-1 text-[#5E5E5E]">
+                Connect at least one social account to access the rewards program and exclusive
+                benefits.
               </p>
             </div>
           </div>
-
-          {hasAnyConnection && (
-            <Badge
-              variant="secondary"
-              className="bg-green-100 text-green-800 border-green-200 px-3 py-1"
-            >
-              <Check className="h-3 w-3 mr-1" />
-              Active
-            </Badge>
-          )}
         </div>
+      )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-200">
+      <Card className="bg-transparent border-[#5E5E5E] p-6 bg-gradient-to-r from-white/45 to-[rgba(249,241,248,0.45)]">
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="relative">
-                <Image
-                  src="/icons/x_black.png"
-                  width={20}
-                  height={20}
-                  alt="X (Twitter)"
-                  className="rounded"
-                />
-                {hasTwitter && (
-                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-                )}
-              </div>
               <div>
-                <p className="font-medium text-black text-sm">X (Twitter)</p>
-                <p className="text-xs text-gray-500">
-                  {hasTwitter ? 'Connected' : 'Not connected'}
+                <h3 className="font-medium text-black tex-lg md:text-[32px]">Social Connections</h3>
+                <p className="text-2xl text-gray-500">
+                  {hasAnyConnection
+                    ? `${connectionCount} of 2 platforms connected`
+                    : 'Connect your social accounts'}
                 </p>
               </div>
             </div>
 
-            {hasTwitter ? (
-              <Button
-                onClick={() => {
-                  setDisconnectingPlatform('twitter')
-                  disconnect({ provider: 'twitter', walletAddress: address! })
-                }}
-                size="sm"
-                variant="outline"
-                disabled={disconnectingPlatform === 'twitter'}
-                className="h-8 px-3 text-xs border-red-200 text-red-600 hover:text-red-700 hover:bg-red-50 hover:border-red-300 disabled:opacity-50"
+            {hasAnyConnection && (
+              <Badge
+                variant="secondary"
+                className="bg-green-100 text-green-800 border-green-200 px-3 py-1"
               >
-                {disconnectingPlatform === 'twitter' ? (
-                  <>
-                    <div className="animate-spin h-3 w-3 mr-1 border border-red-500 border-t-transparent rounded-full"></div>
-                    Disconnecting...
-                  </>
-                ) : (
-                  <>
-                    <X className="h-3 w-3 mr-1" />
-                    Disconnect
-                  </>
-                )}
-              </Button>
-            ) : (
-              <Button
-                onClick={() => {
-                  setConnectingPlatform('twitter')
-                  handleConnectTwitter(address || undefined)
-                }}
-                size="sm"
-                disabled={connectingPlatform === 'twitter'}
-                className="h-8 px-3 text-xs bg-blue-100 text-blue-700 border border-blue-200 hover:bg-blue-200 hover:border-blue-300 disabled:opacity-50"
-              >
-                {connectingPlatform === 'twitter' ? (
-                  <>
-                    <div className="animate-spin h-3 w-3 mr-1 border border-blue-600 border-t-transparent rounded-full"></div>
-                    Connecting...
-                  </>
-                ) : (
-                  'Connect'
-                )}
-              </Button>
+                <Check className="h-3 w-3 mr-1" />
+                Active
+              </Badge>
             )}
           </div>
 
-          <div className="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-200">
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <Image
-                  src="/icons/discord_black.svg"
-                  width={20}
-                  height={20}
-                  alt="Discord"
-                  className="rounded"
-                />
-                {hasDiscord && (
-                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-                )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-white/45 to-[rgba(249,240,249,0.46)] rounded-lg border border-[#5E5E5E]">
+              <div className="flex items-center gap-3">
+                <div className="relative border border-[#5E5E5E] w-10 h-10 md:w-[70px] md:h-[70px] flex items-center justify-center rounded-lg">
+                  <Image
+                    src="/icons/x_black.png"
+                    width={42}
+                    height={42}
+                    alt="X (Twitter)"
+                    className="rounded"
+                  />
+                  {hasTwitter && (
+                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                  )}
+                </div>
+                <div>
+                  <p className="font-medium text-black text-2xl">X (Twitter)</p>
+                  <p className="text-base text-[#5E5E5E]">
+                    {hasTwitter ? 'Connected' : 'Not connected'}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="font-medium text-black text-sm">Discord</p>
-                <p className="text-xs text-gray-500">
-                  {hasDiscord ? 'Connected' : 'Not connected'}
-                </p>
-              </div>
+
+              {hasTwitter ? (
+                <Button
+                  onClick={() => {
+                    setDisconnectingPlatform('twitter')
+                    disconnect({ provider: 'twitter', walletAddress: address! })
+                  }}
+                  size="sm"
+                  variant="outline"
+                  disabled={disconnectingPlatform === 'twitter'}
+                  className="h-8 px-3 text-xs border-red-200 text-red-600 hover:text-red-700 hover:bg-red-50 hover:border-red-300 disabled:opacity-50"
+                >
+                  {disconnectingPlatform === 'twitter' ? (
+                    <>
+                      <div className="animate-spin h-3 w-3 mr-1 border border-red-500 border-t-transparent rounded-full"></div>
+                      Disconnecting...
+                    </>
+                  ) : (
+                    <>
+                      <X className="h-3 w-3 mr-1" />
+                      Disconnect
+                    </>
+                  )}
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => {
+                    setConnectingPlatform('twitter')
+                    handleConnectTwitter(address || undefined)
+                  }}
+                  size="sm"
+                  disabled={connectingPlatform === 'twitter'}
+                  className="h-8 px-3 text-xs bg-blue-100 text-blue-700 border border-blue-200 hover:bg-blue-200 hover:border-blue-300 disabled:opacity-50"
+                >
+                  {connectingPlatform === 'twitter' ? (
+                    <>
+                      <div className="animate-spin h-3 w-3 mr-1 border border-blue-600 border-t-transparent rounded-full"></div>
+                      Connecting...
+                    </>
+                  ) : (
+                    'Connect'
+                  )}
+                </Button>
+              )}
             </div>
 
-            {hasDiscord ? (
-              <Button
-                onClick={() => {
-                  setDisconnectingPlatform('discord')
-                  disconnect({ provider: 'discord', walletAddress: address! })
-                }}
-                size="sm"
-                variant="outline"
-                disabled={disconnectingPlatform === 'discord'}
-                className="h-8 px-3 text-xs border-red-200 text-red-600 hover:text-red-700 hover:bg-red-50 hover:border-red-300 disabled:opacity-50"
-              >
-                {disconnectingPlatform === 'discord' ? (
-                  <>
-                    <div className="animate-spin h-3 w-3 mr-1 border border-red-500 border-t-transparent rounded-full"></div>
-                    Disconnecting...
-                  </>
-                ) : (
-                  <>
-                    <X className="h-3 w-3 mr-1" />
-                    Disconnect
-                  </>
-                )}
-              </Button>
-            ) : (
-              <Button
-                onClick={() => {
-                  setConnectingPlatform('discord')
-                  handleConnectDiscord(address || undefined)
-                }}
-                size="sm"
-                disabled={connectingPlatform === 'discord'}
-                className="h-8 px-3 text-xs bg-indigo-100 text-indigo-700 border border-indigo-200 hover:bg-indigo-200 hover:border-indigo-300 disabled:opacity-50"
-              >
-                {connectingPlatform === 'discord' ? (
-                  <>
-                    <div className="animate-spin h-3 w-3 mr-1 border border-indigo-600 border-t-transparent rounded-full"></div>
-                    Connecting...
-                  </>
-                ) : (
-                  'Connect'
-                )}
-              </Button>
-            )}
+            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-white/45 to-[rgba(249,240,249,0.46)] rounded-lg border border-[#5E5E5E]">
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <Image
+                    src="/icons/discord_black.svg"
+                    width={20}
+                    height={20}
+                    alt="Discord"
+                    className="rounded"
+                  />
+                  {hasDiscord && (
+                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                  )}
+                </div>
+                <div>
+                  <p className="font-medium text-black text-sm">Discord</p>
+                  <p className="text-xs text-gray-500">
+                    {hasDiscord ? 'Connected' : 'Not connected'}
+                  </p>
+                </div>
+              </div>
+
+              {hasDiscord ? (
+                <Button
+                  onClick={() => {
+                    setDisconnectingPlatform('discord')
+                    disconnect({ provider: 'discord', walletAddress: address! })
+                  }}
+                  size="sm"
+                  variant="outline"
+                  disabled={disconnectingPlatform === 'discord'}
+                  className="h-8 px-3 text-xs border-red-200 text-red-600 hover:text-red-700 hover:bg-red-50 hover:border-red-300 disabled:opacity-50"
+                >
+                  {disconnectingPlatform === 'discord' ? (
+                    <>
+                      <div className="animate-spin h-3 w-3 mr-1 border border-red-500 border-t-transparent rounded-full"></div>
+                      Disconnecting...
+                    </>
+                  ) : (
+                    <>
+                      <X className="h-3 w-3 mr-1" />
+                      Disconnect
+                    </>
+                  )}
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => {
+                    setConnectingPlatform('discord')
+                    handleConnectDiscord(address || undefined)
+                  }}
+                  size="sm"
+                  disabled={connectingPlatform === 'discord'}
+                  className="h-8 px-3 text-xs bg-indigo-100 text-indigo-700 border border-indigo-200 hover:bg-indigo-200 hover:border-indigo-300 disabled:opacity-50"
+                >
+                  {connectingPlatform === 'discord' ? (
+                    <>
+                      <div className="animate-spin h-3 w-3 mr-1 border border-indigo-600 border-t-transparent rounded-full"></div>
+                      Connecting...
+                    </>
+                  ) : (
+                    'Connect'
+                  )}
+                </Button>
+              )}
+            </div>
           </div>
         </div>
-
-        {!hasAnyConnection && (
-          <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <div className="flex items-start gap-3">
-              <ExternalLink className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
-              <div>
-                <p className="text-sm text-blue-800 font-medium">Connect to unlock rewards</p>
-                <p className="text-xs text-blue-700/80 mt-1">
-                  Connect at least one social account to access the rewards program and exclusive
-                  benefits.
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    </Card>
+      </Card>
+    </div>
   )
 }
