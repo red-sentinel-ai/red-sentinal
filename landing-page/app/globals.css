@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -122,18 +122,57 @@
     @apply bg-background text-foreground;
   }
 
-  button{
+  button {
     @apply cursor-pointer;
   }
 
+  .prose-invert h1 {
+    @apply text-white text-4xl md:text-5xl font-bold mt-12 mb-4;
+  }
+
+  .prose-invert h2 {
+    @apply text-white text-3xl md:text-4xl font-bold mt-10 mb-4;
+  }
+
+  .prose-invert h3 {
+    @apply text-white text-2xl md:text-3xl font-bold mt-8 mb-3;
+  }
+
+  .prose-invert p {
+    @apply text-gray-300 leading-relaxed mb-6;
+  }
+
+  .prose-invert a {
+    @apply text-blue-400 hover:text-blue-500 transition-colors;
+  }
+
+  .prose-invert ul {
+    @apply list-disc list-inside space-y-2 text-gray-300 mb-6;
+  }
+
+  .prose-invert li {
+    @apply pl-2;
+  }
+
+  .prose-invert blockquote {
+    @apply border-l-4 border-gray-600 pl-4 text-gray-400 italic my-6;
+  }
+
+  .prose-invert pre {
+    @apply bg-gray-900 text-gray-200 rounded-lg p-4 overflow-x-auto my-6;
+  }
+
+  .prose-invert code {
+    @apply bg-gray-800 text-gray-200 px-1 py-0.5 rounded-md;
+  }
 }
 
 @layer components {
   .badge-pink {
-    @apply  bg-[linear-gradient(to_right,#FEB9FF_0%,#FDE3FF_100%)] text-black px-3 py-1 rounded-full;
+    @apply bg-[linear-gradient(to_right,#FEB9FF_0%,#FDE3FF_100%)] text-black px-3 py-1 rounded-full;
   }
 
-   .vertical-line {
+  .vertical-line {
     @apply absolute top-0 bottom-0 border-l border-l-black z-50 hidden md:block;
   }
 }
@@ -251,7 +290,7 @@
   color: black;
 }
 
-.btn-white:hover{
+.btn-white:hover {
   background-color: rgb(251, 248, 248);
 }
 
@@ -265,8 +304,8 @@
   color: white;
 }
 
-.btn-outline:hover{
-  background-color: rgba(0, 0, 0 , 0.1);
+.btn-outline:hover {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .btn-black {
@@ -274,16 +313,16 @@
   color: white;
 }
 
-.btn-black:hover{
+.btn-black:hover {
   background-color: rgb(21, 19, 19);
 }
 
-  .bg-gradient-pink {
-    background: linear-gradient(to right, #FEB9FF 0%, #FDE3FF 100%);
-  }
+.bg-gradient-pink {
+  background: linear-gradient(to right, #feb9ff 0%, #fde3ff 100%);
+}
 
-@media (width <= 40rem) { 
-  .btn{
+@media (width <= 40rem) {
+  .btn {
     min-height: 47px;
     min-width: auto;
   }
