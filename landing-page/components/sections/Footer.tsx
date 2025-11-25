@@ -55,7 +55,7 @@ export function Footer() {
             </div>
           </div>
 
-          <div className="w-full md:w-auto order-2 md:order-3">
+          <div className="w-full md:w-auto order-2 md:order-3 pb-4 overflow-auto">
             <div className="flex flex-row justify-center gap-4 md:hidden">
               {socialLinks.map((link) => (
                 <div
