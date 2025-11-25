@@ -2,8 +2,10 @@
 import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useCurrentAccount } from '@mysten/dapp-kit'
+import { useQueryClient } from '@tanstack/react-query'
+import posthog from 'posthog-js'
 
-import { MIST_PER_SUI } from '@/constants'
+import { AGENT_PRIZE_POOL_HISTORY_QUERY_KEY, MIST_PER_SUI } from '@/constants'
 import type { ConsumePromptApiResponse } from '@/types'
 import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from '@/components/ui'
 import { useConsumePrompt } from '@/hooks/useConsumePrompt'
@@ -12,14 +14,15 @@ import { AgentEvents, useAgentEvents } from '@/hooks/useAgentEvents'
 import { useRewardsMissionTracker } from '@/hooks/rewards/useRewardsMissionTracker'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
 import ChatInterface from '@/components/agents/ChatInterface'
-import RiveLoader from '@/components/rive/Loader'
 import { AgentSidebar } from '@/components/agents/AgentSidebar'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { MobileAgentHeader } from './MobileAgentHeader'
+import { Loader2 } from 'lucide-react'
 
 export default function AgentChallengePage({ slug }: { slug: string }) {
   const account = useCurrentAccount()
-  const { events: allEvents } = useAgentEvents()
+  const queryClient = useQueryClient()
+  const { events: allEvents, refetch: refetchEvents } = useAgentEvents()
   const { trackAttackSentinel } = useRewardsMissionTracker()
 
   const { data: agent, isLoading, error, refetch } = useAgentBySlug(slug)
@@ -35,6 +38,16 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
       setShowResultModal(true)
       refetch()
 
+      setTimeout(() => {
+        refetchEvents()
+
+        if (agent) {
+          queryClient.invalidateQueries({
+            queryKey: [AGENT_PRIZE_POOL_HISTORY_QUERY_KEY, agent.agent_id],
+          })
+        }
+      }, 1000)
+
       if (account?.address && agent) {
         const attackFeeInSui = agent.cost_per_message / MIST_PER_SUI
 
@@ -43,6 +56,24 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
         ).length
 
         const isWinner = apiResponse.response.data.success
+
+        posthog.capture('sentinel_attacked', {
+          agent_id: agent?.agent_id,
+          agent_name: agent?.agent_name,
+          attacker_address: account?.address,
+          is_successful: isWinner,
+          attack_score: apiResponse.response.data.score,
+          tx_digest: transactionResult.digest,
+          cost_to_attack: agent ? agent.cost_per_message / MIST_PER_SUI : 0,
+        })
+
+        if (isWinner) {
+          posthog.capture('sentinel_defeated', {
+            agent_id: agent?.agent_id,
+            prize_pool_won: agent ? agent.balance / MIST_PER_SUI : 0,
+            winner_address: account?.address,
+          })
+        }
 
         trackAttackSentinel(transactionResult.digest, attackFeeInSui, previousAttempts, isWinner, {
           agent_id: agent.agent_id,
@@ -104,17 +135,31 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <RiveLoader />
+      <div
+        className="min-h-screen bg-no-repeat flex items-center justify-center"
+        style={{
+          backgroundImage: 'url(/img/chat_bg.png)',
+          backgroundPosition: '0% 17%',
+          backgroundSize: '100% auto',
+        }}
+      >
+        <Loader2 className="w-10 h-10 animate-spin mr-2" />
       </div>
     )
   }
 
   if (error || !agent) {
     return (
-      <div className="min-h-screen bg-black text-[#B5B5B5] p-4 pt-20">
+      <div
+        className="min-h-screen bg-no-repeat text-gray-800 p-4 pt-20"
+        style={{
+          backgroundImage: 'url(/img/chat_bg.png)',
+          backgroundPosition: '0% 17%',
+          backgroundSize: '100% auto',
+        }}
+      >
         <div className="flex items-center justify-center min-h-[400px]">
-          <p className="text-lg text-gray-400">{error?.message || 'Agent not found'}</p>
+          <p className="text-lg text-gray-600">{error?.message || 'Agent not found'}</p>
         </div>
       </div>
     )
@@ -122,15 +167,23 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
   if (!isMobile) {
     return (
-      <div className="min-h-screen pt-16 flex">
+      <div
+        className="min-h-screen bg-no-repeat pt-16 flex"
+        style={{
+          backgroundImage: 'url(/img/chat_bg.png)',
+          backgroundPosition: '0% 17%',
+          backgroundSize: '100% auto',
+        }}
+      >
         <ResizablePanelGroup
           direction="horizontal"
           className="w-full"
         >
           <ResizablePanel
-            defaultSize={20}
+            defaultSize={25}
             minSize={20}
             maxSize={40}
+            className="bg-gray-50/50"
           >
             <AgentSidebar
               agent={agent}
@@ -138,7 +191,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
             />
           </ResizablePanel>
           <ResizableHandle withHandle={true} />
-          <ResizablePanel defaultSize={80}>
+          <ResizablePanel defaultSize={75}>
             <div className="max-w-v1 mx-auto w-full h-full">
               <ChatInterface
                 agent={agent}
@@ -165,7 +218,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   }
 
   return (
-    <div className="h-screen pt-16 flex flex-col bg-[#101112]">
+    <div className="h-screen pt-16 flex flex-col bg-white">
       <MobileAgentHeader
         agentName={agent.agent_name}
         onInfoClick={() => setIsSidebarOpen(true)}
@@ -198,7 +251,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
               animate={{ x: '0%' }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="fixed top-0 left-0 bottom-0 w-[85%] max-w-sm z-50 shadow-2xl"
+              className="fixed top-0 left-0 bottom-0 w-[85%] max-w-sm z-50 shadow-2xl bg-gray-50"
             >
               <AgentSidebar
                 agent={agent}

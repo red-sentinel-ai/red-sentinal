@@ -7,7 +7,7 @@ import { toast } from 'react-toastify'
 import { ConsumePromptApiResponse } from '@/types'
 import { hexToVector } from '@/lib/utils'
 import { type AgentDetails } from './agents/useAllAgents'
-import { SuiTransactionBlockResponse } from '@mysten/sui/client'
+import { SuiTransactionBlockResponse, SuiObjectResponse } from '@mysten/sui/client'
 
 const GAS_BUDGET = 50_000_000
 
@@ -16,7 +16,7 @@ const GAS_BUDGET = 50_000_000
 interface UseConsumePromptOptions {
   onSuccess?: (result: any) => void
   onError?: (error: Error) => void
-  onPaymentSuccess?: (result: any) => void
+  onAttackRequestSuccess?: (result: any) => void
   onApiSuccess?: (response: ConsumePromptApiResponse) => void
   onComplete?: (args: {
     apiResponse: ConsumePromptApiResponse
@@ -30,12 +30,17 @@ interface ConsumePromptParams {
   message: string
 }
 
+interface AttackTicket {
+  objectId: string
+  nonce: string
+}
+
 export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
   const client = useSuiClient()
   const {
     onSuccess,
     onError,
-    onPaymentSuccess,
+    onAttackRequestSuccess,
     onApiSuccess,
     onComplete,
     showToasts = true,
@@ -59,10 +64,13 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
       }),
   })
 
-  // Step 2: Transfer payment to agent creator
-  const transferPayment = async (agentDetails: AgentDetails): Promise<any> => {
+  // Step 2: Request an Attack Ticket
+  const requestAttackTicket = async (agentDetails: AgentDetails): Promise<AttackTicket> => {
     if (!account?.address) {
       throw new Error('Wallet not connected')
+    }
+    if (!SUI_CONFIG.PROTOCOL_CONFIG_OBJECT_ID) {
+      throw new Error('ProtocolConfig Object ID is not set in constants.')
     }
 
     const costInMist = BigInt(agentDetails.cost_per_message)
@@ -86,8 +94,18 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
     // Split payment amount from gas coin
     const [paymentCoin] = tx.splitCoins(tx.gas, [tx.pure.u64(costInMist)])
 
-    // Transfer to agent creator
-    tx.transferObjects([paymentCoin], tx.pure.address(agentDetails.owner))
+    const [attackTicket] = tx.moveCall({
+      target: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::request_attack`,
+      arguments: [
+        tx.object(SUI_CONFIG.AGENT_REGISTRY),
+        tx.object(agentDetails.object_id),
+        tx.object(SUI_CONFIG.PROTOCOL_CONFIG_OBJECT_ID),
+        tx.pure.string(agentDetails.agent_id),
+        paymentCoin,
+      ],
+    })
+
+    tx.transferObjects([attackTicket], tx.pure.address(account.address))
 
     tx.setGasBudget(GAS_BUDGET)
 
@@ -95,13 +113,52 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
       signAndExecuteTransaction(
         { transaction: tx },
         {
-          onSuccess: (result) => {
-            onPaymentSuccess?.(result)
-            resolve(result)
+          onSuccess: async (result) => {
+            onAttackRequestSuccess?.(result)
+
+            const attackObjectChange = result.objectChanges?.find(
+              (obj: any) => obj.type === 'created' && obj.objectType.endsWith('::sentinel::Attack')
+            ) as { objectId: string } | undefined
+
+            if (!attackObjectChange) {
+              return reject(new Error('Failed to create Attack ticket object.'))
+            }
+
+            const attackObjectId = attackObjectChange.objectId
+
+
+            // Wait 1 second (1000ms) for the RPC node to index the new object's content
+            await new Promise((resolve) => setTimeout(resolve, 1000))
+
+            let objectResponse: SuiObjectResponse | null = null
+            try {
+              objectResponse = await client.getObject({
+                id: attackObjectId,
+                options: { showContent: true },
+              })
+              console.log({ objectResponse, attackObjectId })
+            } catch (error) {
+              console.error('Error fetching object after sleep', error)
+              return reject(new Error('Failed to fetch Attack ticket after 1s delay.'))
+            }
+
+            if (objectResponse?.data?.content?.dataType !== 'moveObject') {
+              console.error('Failed to fetch object content after 1s delay.', objectResponse)
+              return reject(new Error('Failed to fetch Attack ticket content after 1s delay.'))
+            }
+
+            const fields = (objectResponse.data.content as any).fields
+            const nonce = fields.nonce
+
+            if (!nonce) {
+              return reject(new Error('Failed to retrieve nonce from Attack ticket.'))
+            }
+
+            resolve({ objectId: attackObjectId, nonce: nonce as string })
           },
           onError: (txError) => {
-            console.error('Payment transaction failed:', txError)
-            reject(new Error(txError?.message || 'Payment failed'))
+            console.error('Attack request transaction failed:', txError)
+            reject(new Error(txError?.message || 'Failed to request attack ticket'))
           },
         }
       )
@@ -111,8 +168,13 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
   // Step 3: Call consume prompt API
   const callConsumePromptApi = async (
     agentId: string,
-    message: string
+    message: string,
+    attack_object_id: string
   ): Promise<ConsumePromptApiResponse> => {
+    if (!account?.address) {
+      throw new Error('Wallet not connected')
+    }
+
     const response = await fetch('/api/consume-prompt', {
       method: 'POST',
       headers: {
@@ -121,6 +183,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
       body: JSON.stringify({
         agent_id: `${agentId}`,
         message: message,
+        attack_object_id
       }),
     })
 
@@ -138,7 +201,8 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
     agentObjectId: string,
     agentDetails: AgentDetails,
     apiResponse: ConsumePromptApiResponse,
-    prompt: string
+    prompt: string,
+    attackObjectId: string
   ): Promise<any> => {
     const tx = new Transaction()
     const sigVector = hexToVector(apiResponse.signature)
@@ -162,6 +226,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         tx.pure.u64(apiData.timestamp_ms), // timestamp_ms: u64
         tx.pure.vector('u8', sigVector), // sig: &vector<u8>
         tx.object(SUI_CONFIG.ENCLAVE_OBJECT_ID), // enclave: &Enclave<T>
+        tx.object(attackObjectId), // attack: &mut Attack
       ],
     })
 
@@ -208,15 +273,15 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
       setCurrentStep('Fetching agent details...')
 
       try {
-        // Step 2: Transfer payment to creator
-        setCurrentStep('Processing payment...')
+        // Step 2: Request Attack Ticket
+        setCurrentStep('Requesting attack ticket...')
         if (showToasts) toast.info('Processing payment...')
-        await transferPayment(agentDetails)
+        const { objectId: attackObjectId, nonce } = await requestAttackTicket(agentDetails)
 
         // Step 3: Call consume prompt API
         setCurrentStep('Processing prompt...')
         if (showToasts) toast.info('Processing prompt...')
-        const apiResponse = await callConsumePromptApi(agentDetails.agent_id, message)
+        const apiResponse = await callConsumePromptApi(agentDetails.agent_id, message, attackObjectId)
         console.log('API response:', apiResponse)
         onApiSuccess?.(apiResponse)
 
@@ -227,7 +292,8 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
           agentDetails.object_id,
           agentDetails,
           apiResponse,
-          message
+          message,
+          attackObjectId
         )
 
         if (showToasts) {
@@ -264,9 +330,10 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
       signAndExecuteTransaction,
       onSuccess,
       onError,
-      onPaymentSuccess,
+      onAttackRequestSuccess,
       onApiSuccess,
       showToasts,
+      client,
     ]
   )
 

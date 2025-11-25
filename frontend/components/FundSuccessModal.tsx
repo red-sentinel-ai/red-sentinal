@@ -20,7 +20,7 @@ export const FundSuccessModal = ({
   prizePoolAmount,
   sentinelId,
 }: FundSuccessModalProps) => {
-  const sentinelUrl = sentinelId ? `${window.location.origin}/sentinel/${sentinelId}` : ''
+  const sentinelUrl = sentinelId ? `${window.location.origin}/attack/${sentinelId}` : ''
 
   const handleCopyLink = () => {
     if (!sentinelUrl) return
@@ -40,7 +40,7 @@ export const FundSuccessModal = ({
     <Dialog
       open={open}
       onClose={onClose}
-      className="max-w-[600px] border-white/30"
+      className="max-w-[600px] bg-white border-gray-200 text-black"
     >
       <div className="space-y-6 text-center">
         <div className="flex items-center justify-between">
@@ -50,23 +50,23 @@ export const FundSuccessModal = ({
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors"
+            className="text-gray-500 hover:text-black transition-colors"
           >
             <X className="w-6 h-6" />
           </button>
         </div>
 
-        <p className="text-gray-300">
-          <span className="font-bold">{agentName}</span> is now guarding{' '}
-          <span className="font-bold">{prizePoolAmount} SUI</span>. Share your Sentinel to attract
-          attackers and start earning attack fees!
+        <p className="text-gray-600">
+          <span className="font-bold text-black">{agentName}</span> is now guarding{' '}
+          <span className="font-bold text-black">{prizePoolAmount} SUI</span>. Share your Sentinel
+          to attract attackers and start earning attack fees!
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4">
           <button
             onClick={handleCopyLink}
             disabled={!sentinelUrl}
-            className="w-full bg-gray-700/50 text-white rounded-full py-3 font-medium hover:bg-gray-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+            className="w-full btn btn-outline disabled:opacity-50 flex items-center justify-center gap-2"
           >
             <Copy className="w-4 h-4" />
             Copy Link
@@ -74,25 +74,25 @@ export const FundSuccessModal = ({
           <button
             onClick={handleShareOnX}
             disabled={!sentinelUrl}
-            className="w-full bg-[#1DA1F2] text-white rounded-full py-3 font-medium hover:bg-[#1a91da] transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+            className="w-full bg-[#1DA1F2] text-white rounded-lg py-3 font-medium hover:bg-[#1a91da] transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
           >
             <Twitter className="w-4 h-4" />
             Share on X
           </button>
         </div>
 
-        <div className="text-center p-4 bg-[#12121266] rounded-lg">
-          <p className="text-sm text-gray-400 mb-3">
-            You can manage <span className="font-bold">{agentName}</span> from your Profile,
-            including adding more funds or updating instructions.
+        <div className="text-center p-4 bg-gray-50 rounded-lg border border-gray-200">
+          <p className="text-sm text-gray-500 mb-3">
+            You can manage <span className="font-bold text-black">{agentName}</span> from your
+            Profile, including adding more funds or updating instructions.
           </p>
           <Link
             href="/profile"
             passHref
           >
             <button
-              onClick={onClose} // Close modal on navigation
-              className="w-full sm:w-auto px-6 bg-white text-black rounded-full py-2 font-medium hover:bg-white/90"
+              onClick={onClose}
+              className="w-full sm:w-auto px-6 btn btn-black"
             >
               Go to Profile
             </button>

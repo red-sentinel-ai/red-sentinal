@@ -20,21 +20,15 @@ echo "Script completed."
 busybox ip addr add 127.0.0.1/32 dev lo
 busybox ip link set dev lo up
 
-# Add a hosts record, pointing target site calls to local loopback
-echo "127.0.0.1   localhost" > /etc/hostsecho "127.0.0.1   localhost" >/etc/hosts
+# Add a hosts record
+echo "127.0.0.1   localhost" > /etc/hosts
 echo "127.0.0.64   api.anthropic.com" >> /etc/hosts
 echo "127.0.0.65   oauth2.googleapis.com" >> /etc/hosts
 echo "127.0.0.66   us-central1-aiplatform.googleapis.com" >> /etc/hosts
+echo "127.0.0.67   fullnode.testnet.sui.io" >> /etc/hosts
+echo "127.0.0.68   fullnode.mainnet.sui.io" >> /etc/hosts
 
-
-
-
-
-
-
-echo "127.0.0.64   api.anthropic.com" >>/etc/hosts
-
-# == ATTENTION: code should be generated here that parses allowed_endpoints.yaml and populate domains here ===
+# End of hosts record
 
 cat /etc/hosts
 
@@ -51,18 +45,14 @@ rm -f /tmp/kvpairs
 # Forwards traffic from 127.0.0.x -> Port 443 at CID 3 Listening on port 800x
 # There is a vsock-proxy that listens for this and forwards to the respective domains
 
-# == ATTENTION: code should be generated here that added all hosts to forward traffic ===
 # Traffic-forwarder-block
 python3 /traffic_forwarder.py 127.0.0.64 443 3 8101 &
 python3 /traffic_forwarder.py 127.0.0.65 443 3 8102 &
 python3 /traffic_forwarder.py 127.0.0.66 443 3 8103 &
+python3 /traffic_forwarder.py 127.0.0.67 443 3 8104 &
+python3 /traffic_forwarder.py 127.0.0.68 443 3 8105 &
 
-
-
-
-
-
-
+# End of traffic-forwarder-block
 
 # Listens on Local VSOCK Port 3000 and forwards to localhost 3000
 socat VSOCK-LISTEN:3000,reuseaddr,fork TCP:localhost:3000 &

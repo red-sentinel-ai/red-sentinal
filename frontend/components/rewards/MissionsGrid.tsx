@@ -28,12 +28,12 @@ export function MissionsGrid({
     return (
       <div className="space-y-8">
         <div>
-          <Skeleton className="h-8 w-48 mb-6 bg-[#383838]/30" />
+          <Skeleton className="h-8 w-48 mb-6 bg-gray-200" />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map((i) => (
               <Skeleton
                 key={i}
-                className="h-64 rounded-xl bg-[#383838]/30"
+                className="h-64 rounded-xl bg-gray-200"
               />
             ))}
           </div>
@@ -55,14 +55,14 @@ export function MissionsGrid({
         >
           <div className="flex items-center gap-3 mb-8">
             <motion.div
-              className="w-10 h-10 rounded-full bg-gradient-to-br from-primary_blue_20 to-[#1388D5]/20 flex items-center justify-center"
+              className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center border border-gray-200"
               whileHover={{ scale: 1.1, rotate: 5 }}
             >
-              <Zap className="h-5 w-5 text-primary_blue" />
+              <Zap className="h-5 w-5 text-black" />
             </motion.div>
             <div>
-              <h3 className="text-2xl font-bold text-white uppercase">On-Chain Missions</h3>
-              <p className="text-[#B5B5B5]">Complete transactions and earn rewards</p>
+              <h3 className="text-2xl font-bold text-black uppercase">On-Chain Missions</h3>
+              <p className="text-gray-500">Complete transactions and earn rewards</p>
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -97,14 +97,14 @@ export function MissionsGrid({
         >
           <div className="flex items-center gap-3 mb-8">
             <motion.div
-              className="w-10 h-10 rounded-full bg-gradient-to-br from-primary_pink_20 to-[#E53922]/20 flex items-center justify-center"
+              className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center border border-gray-200"
               whileHover={{ scale: 1.1, rotate: 5 }}
             >
-              <Users className="h-5 w-5 text-primary_pink" />
+              <Users className="h-5 w-5 text-black" />
             </motion.div>
             <div>
-              <h3 className="text-2xl font-bold text-white uppercase">Social Media Missions</h3>
-              <p className="text-[#B5B5B5]">Engage with our community and spread the word</p>
+              <h3 className="text-2xl font-bold text-black uppercase">Social Media Missions</h3>
+              <p className="text-gray-500">Engage with our community and spread the word</p>
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -137,11 +137,11 @@ export function MissionsGrid({
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#383838]/20 to-[#383838]/30 flex items-center justify-center mx-auto mb-6">
-            <Zap className="h-12 w-12 text-[#B5B5B5]" />
+          <div className="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-6 border border-gray-200">
+            <Zap className="h-12 w-12 text-gray-400" />
           </div>
-          <h3 className="text-xl font-semibold text-white mb-2 uppercase">No Missions Available</h3>
-          <p className="text-[#B5B5B5]">Check back later for new missions to complete!</p>
+          <h3 className="text-xl font-semibold text-black mb-2 uppercase">No Missions Available</h3>
+          <p className="text-gray-500">Check back later for new missions to complete!</p>
         </motion.div>
       )}
     </div>

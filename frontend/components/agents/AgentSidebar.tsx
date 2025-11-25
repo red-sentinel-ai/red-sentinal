@@ -3,23 +3,27 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ChevronLeft, Info, Share2, User } from 'lucide-react'
+import { ChevronLeft, Info, LinkIcon, TrendingUp, User, TrendingDown, Loader2 } from 'lucide-react'
 import { formatAddress } from '@mysten/sui/utils'
 import { QRCodeSVG } from 'qrcode.react'
 import { toast } from 'react-toastify'
-
+import { useCurrentAccount } from '@mysten/dapp-kit'
 import {
   DEFAULT_PROFILE_URL,
   MIST_PER_SUI,
   EXPLORER_BASE_URL,
   SLUSH_BASE_URL,
-  mockPrizePoolHistory,
+  WITHDRAWAL_LOCK_MS,
 } from '@/constants'
 import { type AgentDetails } from '@/hooks/agents/useAllAgents'
 import { type AgentEvents } from '@/hooks/useAgentEvents'
+import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
+import { DefenderProfile } from './DefenderProfile'
 import { formatDuration, cn } from '@/lib/utils'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, Button } from '@/components/ui'
 import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
+import { SparklineChart } from '../ui/common/SparklineChart'
+import { useAgentPrizePoolHistory } from '@/hooks/agents/useAgentPrizePoolHistory'
 
 interface AgentSidebarProps {
   agent: AgentDetails
@@ -27,13 +31,29 @@ interface AgentSidebarProps {
 }
 
 export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
-  const [activeSince, setActiveSince] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
+  const [activeSince, setActiveSince] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  })
   const [isExpanded, setIsExpanded] = useState(false)
   const [shouldTruncate, setShouldTruncate] = useState(false)
   const instructionsRef = useRef<HTMLParagraphElement>(null)
   const [pageUrl, setPageUrl] = useState('')
   const [deepLinkUrl, setDeepLinkUrl] = useState('')
+  const [timeRemaining, setTimeRemaining] = useState<string | null>(null)
   const [isChartModalOpen, setIsChartModalOpen] = useState(false)
+
+  const account = useCurrentAccount()
+  const isOwner = account?.address === agent.owner
+
+  const { data: prizePoolData, isLoading: isLoadingChart } = useAgentPrizePoolHistory(
+    agent.agent_id
+  )
+
+  const { data: userProfilesMap, isLoading: isLoadingProfile } = useUserProfiles([agent.owner])
+  const defenderProfile = userProfilesMap?.[agent.owner]
 
   useEffect(() => {
     const currentUrl = window.location.href
@@ -68,6 +88,53 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
   }, [agent.created_at, isDrained])
 
   useEffect(() => {
+    if (isDrained) {
+      setTimeRemaining('Funds Withdrawn')
+      return
+    }
+    if (!isOwner) {
+      setTimeRemaining(null)
+      return
+    }
+
+    const lastFunded = Number(agent.last_funded_timestamp)
+    if (lastFunded === 0) {
+      setTimeRemaining('Withdrawal Unlocked')
+      return
+    }
+
+    const unlockTimestamp = lastFunded + WITHDRAWAL_LOCK_MS
+
+    const updateTimer = () => {
+      const now = Date.now()
+      const diff = unlockTimestamp - now
+
+      if (diff <= 0) {
+        setTimeRemaining('Withdrawal Unlocked')
+        return null // To stop the interval
+      }
+
+      const formatted = formatDuration(diff)
+      setTimeRemaining(
+        `${formatted.days}d ${formatted.hours}h ${formatted.minutes}m ${formatted.seconds}s`
+      )
+      return true // To keep interval running
+    }
+
+    if (!updateTimer()) {
+      return // Stop if it's already unlocked
+    }
+
+    const interval = setInterval(() => {
+      if (!updateTimer()) {
+        clearInterval(interval)
+      }
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [agent.last_funded_timestamp, isDrained, isOwner])
+
+  useEffect(() => {
     if (instructionsRef.current) {
       const lineHeight = parseFloat(getComputedStyle(instructionsRef.current).lineHeight)
       const maxHeightForFourLines = lineHeight * 4
@@ -93,17 +160,17 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
   return (
     <>
-      <div className="w-full bg-[#101112] flex flex-col overflow-x-hidden overflow-y-scroll px-6 py-2 mr-4 h-[calc(100vh-64px)]">
+      <div className="w-full flex flex-col overflow-x-hidden overflow-y-scroll px-6 py-2 mr-4 h-screen md:h-[calc(100vh-64px)]">
         <div>
           <Link
             href="/attack"
-            className="flex items-center gap-1 text-gray-400 hover:text-white transition-colors py-3"
+            className="flex items-center gap-1 text-gray-500 hover:text-black transition-colors py-3"
           >
             <ChevronLeft className="w-5 h-5" /> Back to Sentinels
           </Link>
         </div>
 
-        <div className="bg-[#202122] rounded-xl p-4 my-4 border border-gray-600/50 shadow-lg w-full text-xs sm:text-sm">
+        <div className="rounded-xl px-4 my-4 border border-gray-600/50 shadow-lg w-full text-xs sm:text-sm bg-gradient-to-r from-[#F7F3FC] to-[#FFFEFF] py-[10px]">
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-full overflow-hidden grow-0 shrink-0 basis-auto">
               <Image
@@ -115,7 +182,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
               />
             </div>
             <div className="flex items-center gap-1">
-              <p className="text-xl font-semibold">{agent.agent_name}</p>
+              <p className="text-xl font-medium">{agent.agent_name}</p>
               {agent.is_featured && (
                 <Image
                   src="/icons/check-mark.svg"
@@ -131,12 +198,12 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
         <div className="flex flex-col gap-6 py-4">
           <div className="flex flex-col gap-2">
-            <h3 className="text-white/60 text-sm font-semibold uppercase">Sentinel Object Id</h3>
+            <h3 className="text-[#5E5E5E]  font-medium uppercase">Sentinel Object Id</h3>
             <Link
               href={`${EXPLORER_BASE_URL}/object/${agent.object_id}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block text-lg font-mono hover:underline"
+              className="inline-block  hover:underline"
               title={agent.object_id}
             >
               {formatAddress(agent.object_id)}
@@ -145,7 +212,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
           {isDrained ? (
             <div className="flex flex-col gap-2">
-              <h3 className="text-white/60 text-sm font-semibold uppercase flex items-center gap-1.5">
+              <h3 className="text-[#5E5E5E]  font-medium uppercase flex items-center gap-1.5">
                 Total Bounty Won
               </h3>
               <p className="inline-block text-2xl font-semibold">{bountyWonAmount} SUI</p>
@@ -153,39 +220,66 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           ) : (
             <div className="flex flex-col gap-2">
               <div className="flex justify-between items-center">
-                <h3 className="text-white/60 text-sm font-semibold uppercase">Prize pool</h3>
-                {/* // TODO: Uncomment below comments when enabling chart feature */}
-                {/* <div className="flex items-center gap-1 text-green-400 text-xs font-medium">
-                  <TrendingUp className="w-3 h-3" />
-                  <span>+{mockPrizePool7dChange.percentage.toFixed(1)}% (In last 7 days)</span>
-                </div> */}
+                <h3 className="text-[#5E5E5E]  font-medium uppercase">Prize pool</h3>
+                {!isLoadingChart && prizePoolData && prizePoolData.history.length > 0 && (
+                  <div
+                    className={cn(
+                      'flex items-center gap-1 text-xs font-medium',
+                      prizePoolData.change7d.percentage >= 0 ? 'text-green-500' : 'text-red-500'
+                    )}
+                  >
+                    {prizePoolData.change7d.percentage >= 0 ? (
+                      <TrendingUp className="w-3 h-3" />
+                    ) : (
+                      <TrendingDown className="w-3 h-3" />
+                    )}
+                    <span>
+                      {isFinite(prizePoolData.change7d.percentage)
+                        ? `${prizePoolData.change7d.percentage.toFixed(1)}% (7d)`
+                        : 'New'}
+                    </span>
+                  </div>
+                )}
               </div>
               <div className="flex items-end justify-between gap-4">
                 <p className="inline-block text-2xl font-semibold">
                   {(Number(agent.balance) / MIST_PER_SUI).toFixed(2)} SUI
                 </p>
-                {/* <div>
-                  <SparklineChart data={mockPrizePoolHistory.map((p) => p.value)} />
-                </div> */}
+                {isLoadingChart ? (
+                  <div className="w-[100px] h-[30px] flex items-center justify-center">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  </div>
+                ) : (
+                  <div>
+                    <SparklineChart data={prizePoolData?.history.map((p) => p.value) || []} />
+                  </div>
+                )}
               </div>
-              {/* <Button
-                onClick={() => setIsChartModalOpen(true)}
-                className="w-full bg-transparent border border-[#558EB4]/50 text-[#558EB4] hover:bg-[#558EB4]/20 hover:text-white transition-colors duration-300 font-semibold text-sm mt-2"
-                size="sm"
-              >
-                See Growth Chart
-              </Button> */}
+              {!isLoadingChart && prizePoolData && prizePoolData.history.length > 0 && (
+                <Button
+                  onClick={() => setIsChartModalOpen(true)}
+                  className="w-full bg-transparent border border-[#558EB4]/50 text-[#558EB4] hover:bg-[#558EB4]/20 hover:text-black transition-colors duration-300 font-semibold text-sm mt-2"
+                  size="sm"
+                >
+                  See Growth Chart
+                </Button>
+              )}
+              {!isLoadingChart && (!prizePoolData || prizePoolData.history.length === 0) && (
+                <p className="text-xs text-gray-500 text-center mt-2">
+                  No prize pool history available.
+                </p>
+              )}
             </div>
           )}
           {isDrained && winnerAddress && (
             <div className="flex flex-col gap-2">
-              <h3 className="text-white/60 text-sm font-semibold uppercase flex items-center gap-1.5">
+              <h3 className="text-[#5E5E5E]  font-medium uppercase flex items-center gap-1.5">
                 <User className="w-4 h-4" />
                 Winner
               </h3>
               <Link
                 href={`/u/${winnerAddress}`}
-                className="inline-block text-lg font-mono hover:underline"
+                className="inline-block  hover:underline"
                 title={winnerAddress}
               >
                 {formatAddress(winnerAddress)}
@@ -194,7 +288,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           )}
 
           <div className="flex flex-col gap-2">
-            <h3 className="text-white/60 text-sm font-semibold uppercase">Message Price</h3>
+            <h3 className="text-[#5E5E5E]  font-medium uppercase">Message Price</h3>
             <p className="inline-block text-2xl font-semibold">
               {(Number(agent.cost_per_message) / MIST_PER_SUI).toFixed(4)} SUI
             </p>
@@ -203,7 +297,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           {!isDrained && (
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-1">
-                <h3 className="text-white/70 text-sm font-semibold uppercase">Active Since</h3>
+                <h3 className="text-black/70 text-sm font-semibold uppercase">Active Since</h3>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger
@@ -213,10 +307,10 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
                       <Info
                         width={12}
                         height={12}
-                        className="text-white/60"
+                        className="text-black/60"
                       />
                     </TooltipTrigger>
-                    <TooltipContent className="bg-black border border-gray-700 text-white">
+                    <TooltipContent>
                       <p>Format: Days, Hours, Minutes, Seconds</p>
                     </TooltipContent>
                   </Tooltip>
@@ -224,26 +318,44 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
               </div>
               <p className="inline-block text-2xl font-semibold">
                 {activeSince.days}
-                <span className="text-lg text-white/60">D</span>{' '}
+                <span className="text-lg text-black/60">D</span>{' '}
                 {String(activeSince.hours).padStart(2, '0')}
-                <span className="text-lg text-white/60">H</span>{' '}
+                <span className="text-lg text-black/60">H</span>{' '}
                 {String(activeSince.minutes).padStart(2, '0')}
-                <span className="text-lg text-white/60">M</span>{' '}
+                <span className="text-lg text-black/60">M</span>{' '}
                 {String(activeSince.seconds).padStart(2, '0')}
-                <span className="text-lg text-white/60">S</span>
+                <span className="text-lg text-black/60">S</span>
               </p>
             </div>
           )}
+
+          {isOwner && !isDrained && (
+            <div className="flex flex-col gap-2">
+              <h3 className="text-[#5E5E5E] font-medium uppercase">Withdrawal Lock</h3>
+              {timeRemaining ? (
+                <p
+                  className={cn(
+                    'inline-block text-xl font-semibold',
+                    timeRemaining === 'Withdrawal Unlocked' ? 'text-green-600' : 'text-yellow-700'
+                  )}
+                >
+                  {timeRemaining}
+                </p>
+              ) : (
+                <div className="h-7 bg-gray-200 rounded w-40 animate-pulse"></div>
+              )}
+            </div>
+          )}
         </div>
-        <div className="border-t border-t-white/20"></div>
+        <div className="border-t border-t-black/20"></div>
 
         <div className="z-20 mt-4 flex flex-col rounded-xl p-0 text-sm">
           <div className="flex flex-col gap-2">
-            <h3 className="text-white/60 text-sm font-semibold uppercase">Instructions</h3>
+            <h3 className="text-[#5E5E5E]  font-medium uppercase">Instructions</h3>
             <p
               ref={instructionsRef}
               className={cn(
-                'text-sm font-medium whitespace-pre-wrap transition-all duration-300',
+                'text-xs font-medium blackspace-pre-wrap transition-all duration-300',
                 !isExpanded && shouldTruncate && 'line-clamp-4'
               )}
             >
@@ -261,14 +373,14 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
         </div>
 
         <div className="flex flex-col gap-6 py-4">
-          <div className="border-t border-t-white/20"></div>
+          <div className="border-t border-t-black/20"></div>
           <div className="flex justify-between">
             <div className="flex flex-col gap-2">
-              <h3 className="text-white/60 text-sm font-semibold uppercase">Total Participants</h3>
+              <h3 className="text-[#5E5E5E]  font-medium uppercase">Total Participants</h3>
               <p className="inline-block text-2xl font-semibold text-center">{totalParticipants}</p>
             </div>
             <div className="flex flex-col gap-2 text-center">
-              <h3 className="text-white/60 text-sm font-semibold uppercase">Break Attempts</h3>
+              <h3 className="text-[#5E5E5E]  font-medium uppercase">Break Attempts</h3>
               <p className="inline-block text-2xl font-semibold">{breakAttempts}</p>
             </div>
           </div>
@@ -276,41 +388,35 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
         <Button
           onClick={handleCopyLink}
-          className="w-full bg-transparent border border-[#558EB4] text-[#558EB4] hover:bg-[#558EB4]/20 hover:text-white transition-colors duration-300 font-semibold flex items-center gap-2 mt-4"
+          className="w-full bg-transparent border border-[#558EB4] text-[#558EB4] hover:bg-[#558EB4]/20 transition-colors duration-300 font-semibold flex items-center gap-2 mt-4"
         >
-          <Share2 className="w-4 h-4" />
-          Share Link
+          Share {agent.agent_name} Link
+          <LinkIcon className="w-4 h-4" />
         </Button>
 
-        <div className="flex flex-col gap-2 my-4">
-          <h3 className="text-white/60 text-sm font-semibold uppercase">Defender Address</h3>
-          <Link
-            href={`/u/${agent.owner}`}
-            className="inline-block text-lg font-mono hover:underline"
-            title={agent.owner}
-          >
-            {formatAddress(agent.owner)}
-          </Link>
-        </div>
+        <DefenderProfile
+          ownerAddress={agent.owner}
+          profile={defenderProfile}
+          isLoading={isLoadingProfile}
+        />
 
-        {/* --- QR CODE SECTION --- */}
-        <div className="mt-auto pt-6 border-t border-white/20">
-          <h3 className="text-white/80 text-sm font-semibold text-center mb-4">
+        <div className="mt-auto pt-6 border-t border-black/20">
+          <h3 className="text-black/80 text-sm font-semibold text-center mb-4">
             Scan this QR Code if you want to try to attack this agent using slush mobile wallet
           </h3>
-          <div className="bg-[#202122] rounded-xl p-4 border border-gray-600/50 flex justify-center">
+          <div className="rounded-xl p-4 border border-gray-200 flex justify-center">
             {deepLinkUrl ? (
               <QRCodeSVG
                 value={deepLinkUrl}
                 size={128}
-                bgColor="transparent"
-                fgColor="#FFFFFF"
+                bgColor="#ffffff00"
+                fgColor="#000000"
                 level="L"
                 includeMargin={true}
               />
             ) : (
-              <div className="w-32 h-32 bg-gray-700 animate-pulse rounded-lg flex items-center justify-center">
-                <div className="w-8 h-8 border-4 border-gray-500 rounded-full animate-spin border-t-transparent"></div>
+              <div className="w-32 h-32 bg-gray-200 animate-pulse rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 border-4 border-gray-300 rounded-full animate-spin border-t-transparent"></div>
               </div>
             )}
           </div>
@@ -320,7 +426,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
       <PrizePoolChartModal
         open={isChartModalOpen}
         onClose={() => setIsChartModalOpen(false)}
-        data={mockPrizePoolHistory}
+        data={prizePoolData?.history || []}
         agentName={agent.agent_name}
       />
     </>

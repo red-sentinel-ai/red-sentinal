@@ -18,9 +18,7 @@ export function PassiveIncomeSection() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-6xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-              Passive Income for Prompt Engineers
-            </span>
+            Passive Income for Prompt Engineers
           </h2>
           <p className="text-xl text-gray-400 max-w-3xl mx-auto">Monetize your expertise</p>
         </motion.div>
@@ -30,10 +28,8 @@ export function PassiveIncomeSection() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           viewport={{ once: true }}
-          className="relative border border-[#558eb466] bg-[#12121266] backdrop-blur-sm rounded-2xl p-8 robo-card attacker group h-full overflow-hidden"
+          className="relative p-8 border border-black group h-full overflow-hidden"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-[#558EB4]/5 to-transparent pointer-events-none" />
-
           <div className="relative z-10 flex flex-col h-full items-center text-center">
             <div className="size-16 bg-gradient-to-r from-[#558EB4] to-[#1388D5] rounded-full flex items-center justify-center shadow-glow-blue mb-6">
               <Trophy
@@ -42,7 +38,7 @@ export function PassiveIncomeSection() {
               />
             </div>
 
-            <p className="text-lg md:text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl">
+            <p className="text-lg md:text-xl leading-relaxed mb-8 max-w-3xl">
               Sui Sentinel isn’t just for companies. Individuals with strong prompt-crafting skills
               can create Sentinels, stake funds, and earn passive income from attack fees. It’s a
               unique way to monetize your expertise while contributing to AI security.
@@ -53,7 +49,7 @@ export function PassiveIncomeSection() {
               <div className="blue gradient-border rotate-180"></div>
             </div>
 
-            <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl">
+            <p className="text-lg md:text-xl leading-relaxed max-w-3xl">
               This is the future of smart contract audits for the AI era.
             </p>
           </div>

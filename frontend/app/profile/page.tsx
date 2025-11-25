@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { User, Folder, Activity, Loader2, Edit, Camera } from 'lucide-react'
+import { User, Folder, Activity, Loader2, Camera } from 'lucide-react'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
@@ -62,105 +62,124 @@ export default function ProfilePage() {
   if (isLoadingProfile) {
     return (
       <div className="min-h-body flex items-center justify-center">
-        <Loader2 className="h-10 w-10 animate-spin" />
+        <Loader2 className="h-10 w-10 animate-spin text-black" />
       </div>
     )
   }
 
   return (
     <>
-      <div className="container mx-auto px-4 pb-12 pt-24 min-h-body">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-8">
-            <div className="flex flex-col sm:flex-row items-start gap-4 mb-6">
-              <div
-                className="relative w-24 h-24 rounded-full border-2 border-gray-600 overflow-hidden cursor-pointer group flex-shrink-0"
-                onClick={() => setIsImagePickerOpen(true)}
-              >
-                {isUpdatingAvatar ? (
-                  <div className="w-full h-full flex items-center justify-center bg-black/70">
-                    <Loader2 className="w-8 h-8 animate-spin" />
-                  </div>
-                ) : profile?.avatar_url ? (
-                  <Image
-                    src={profile.avatar_url}
-                    alt="User Avatar"
-                    fill
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-foreground/20 flex items-center justify-center">
-                    <User className="h-12 w-12" />
-                  </div>
-                )}
-                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <Camera className="w-8 h-8" />
+      <div className="relative">
+        <div className="vertical-line left-4"></div>
+        <div className="vertical-line right-4"></div>
+        <div className="max-w-[1440px] mx-auto pb-12 pt-24 min-h-body relative">
+          <div
+            className="flex flex-col sm:flex-row items-end gap-4 min-h-[376px] bg-cover bg-bottom bg-no-repeat px-4 md:px-12 pt-4 pb-20 mb-6 w-full"
+            style={{ backgroundImage: 'url("/img/footer-bg.png")' }}
+          >
+            <div
+              className="relative w-20 h-20 md:w-44 md:h-44 rounded-full overflow-hidden cursor-pointer group flex-shrink-0"
+              onClick={() => setIsImagePickerOpen(true)}
+            >
+              {isUpdatingAvatar ? (
+                <div className="w-full h-full flex items-center justify-center bg-white/70">
+                  <Loader2 className="w-8 h-8 animate-spin text-black" />
                 </div>
+              ) : profile?.avatar_url ? (
+                <Image
+                  src={profile.avatar_url}
+                  alt="User Avatar"
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                  <User className="h-12 w-12 text-gray-500" />
+                </div>
+              )}
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <Camera className="w-8 h-8 text-white" />
               </div>
+            </div>
 
-              <div className="flex-1 min-w-0 pt-2">
-                <h1 className="text-2xl sm:text-3xl font-bold truncate">
-                  {profile?.display_name || 'Your Profile'}
-                </h1>
-                <p className="text-gray-400 mt-1">@{profile?.username}</p>
-              </div>
-              <div className="flex items-center gap-2 sm:ml-auto pt-2">
-                {profile?.username && (
-                  <Link
-                    href={`/u/${profile.username}`}
-                    className="border border-gray-600 hover:bg-gray-800 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm flex-shrink-0"
-                  >
-                    View Public
-                  </Link>
-                )}
-                <button
-                  onClick={() => setIsEditModalOpen(true)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm flex-shrink-0 flex items-center gap-2"
+            <div className="flex-1 min-w-0 pt-2">
+              <h1 className="text-2xl sm:text-[32px] truncate font-medium leading-snug">
+                {profile?.display_name || 'Your Profile'}
+              </h1>
+              <p className="text-[#5E5E5E] mt-1 font-medium mb-6">@{profile?.username}</p>
+
+              <button
+                onClick={() => setIsEditModalOpen(true)}
+                className="btn btn-outline h-[50px] font-medium"
+              >
+                Edit Profile
+              </button>
+            </div>
+            <div className="flex items-center gap-2 sm:ml-auto pt-2">
+              <Link
+                className="btn btn-black"
+                href="/defend"
+              >
+                Launch Sentinel
+              </Link>
+
+              <Link
+                className="btn btn-outline"
+                href="/attack"
+              >
+                Attack Sentinel
+              </Link>
+
+              {profile?.username && (
+                <Link
+                  href={`/u/${profile.username}`}
+                  className=""
                 >
-                  <Edit className="w-4 h-4" />
-                  Edit Profile
-                </button>
-              </div>
+                  <button className="btn btn-outline h-[30px]">View Profile as Public</button>
+                </Link>
+              )}
             </div>
           </div>
           <div className="mb-12">
             <SocialConnectionsSectionWrapper />
           </div>
 
-          <Tabs
-            value={activeTab}
-            onValueChange={handleTabChange}
-            className="w-full"
-          >
-            <TabsList className="grid w-full grid-cols-2 lg:w-auto lg:flex lg:justify-start">
-              <TabsTrigger
+          <div className="px-4 md:px-8">
+            <Tabs
+              value={activeTab}
+              onValueChange={handleTabChange}
+              className="w-full"
+            >
+              <TabsList className="grid w-full grid-cols-2 lg:w-auto lg:flex lg:justify-start">
+                <TabsTrigger
+                  value={PROFILE_TABS.AGENTS}
+                  className="flex items-center gap-2 text-lg md:text-xl"
+                >
+                  <Folder className="h-6 w-6" />
+                  <span>Your Sentinels</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value={PROFILE_TABS.ACTIVITY}
+                  className="flex items-center gap-2 text-lg md:text-xl"
+                >
+                  <Activity className="h-6 w-6" />
+                  <span>Activity</span>
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent
                 value={PROFILE_TABS.AGENTS}
-                className="flex items-center gap-2"
+                className="mt-6"
               >
-                <Folder className="h-4 w-4" />
-                <span>Your Sentinels</span>
-              </TabsTrigger>
-              <TabsTrigger
+                <UserAgents />
+              </TabsContent>
+              <TabsContent
                 value={PROFILE_TABS.ACTIVITY}
-                className="flex items-center gap-2"
+                className="mt-6"
               >
-                <Activity className="h-4 w-4" />
-                <span>Activity</span>
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent
-              value={PROFILE_TABS.AGENTS}
-              className="mt-6"
-            >
-              <UserAgents />
-            </TabsContent>
-            <TabsContent
-              value={PROFILE_TABS.ACTIVITY}
-              className="mt-6"
-            >
-              <UserActivity />
-            </TabsContent>
-          </Tabs>
+                <UserActivity />
+              </TabsContent>
+            </Tabs>
+          </div>
         </div>
       </div>
 

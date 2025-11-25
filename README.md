@@ -91,6 +91,10 @@ Sui Sentinel leverages the [Nautilus](https://github.com/MystenLabs/nautilus) fo
 
 ### **TEE Server**: `http://54.81.11.64:3000`
 
+```
+ssh -i "MyEC2KeyPair.pem" ec2-user@ec2-3-237-26-201.compute-1.amazonaws.com
+```
+
 #### **Register Agent**
 
 ```http
@@ -262,12 +266,20 @@ aws sts get-session-token \
 **Note:** If above command gives error, run `unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_PROFILE` and then again run `aws configure` with admin_user credentials
 
 3. Once you get value for above keys, set
+   {
+   "Credentials": {
+   "AccessKeyId": "ASIAV3HCVN2UYHSZNNNL",
+   "SecretAccessKey": "KSkSZznN7QQOSS1ruNBaQUrpPNizCA+dto2gpmHm",
+   "SessionToken": "IQoJb3JpZ2luX2VjECYaCXVzLWVhc3QtMSJIMEYCIQD4y4KUBHDIHtwiXRXCEREwnPkXyDge2XKX0VA5Du/mXgIhAKdLgwp1bTN+kUHecpRVXdNp6xUtmexzs4OXvPQFLo8ZKvgBCO///////////wEQABoMNDAyMDU0ODAzMTEzIgxsnOE8i8cS12olLWwqzAH4rgHBDZ3DqLjv/xOuFSwLgi5twyLl4zT8aZ2mgjTmnTVLG2UnoFk34rz3AOOErGQah6WdtSBynZI2IqHCW58pHMf6M5IS5XhrnxmZU479qkK3gOkGOjeuHSoyB/DUtclMKgRh3A7UEN+xUmKTMrHs2gRx8ZedyURWSNH/FU35HZqS+x06F97GL0c5e1DGXdf23rTKBtSXNVlo4VU+vqAayLpI9mbipXMzPQEo1QyV4KiNqBU19QZeMCvjYP/wF5xBxEYdl8BLEFXLCMowgtT6yAY6lwHgH2+SZ87DlDZqkOhTMpphfFNJD/tGgMhDmRm4D2y1oDX2kzQO9xDoR2SKt4NbxiIPtrWXwbVvsensHflzOD2k6NOfhQGnjZ2toveFRcJNdewWS+LVVOsRu8J3luWNJu08D7Bc8+aTWtvEvFd/u8HsvmQiyqEVLxDwlw1fxKw2A4C6aw1iV4JAvNdHXuGEfRm9frtlA2Lz",
+   "Expiration": "2025-11-20T17:41:22+00:00"
+   }
+   }
 
 ```
 export KEY_PAIR=MyEC2KeyPair
-export AWS_ACCESS_KEY_ID=ASIAV3HCVN2UUEQZJJIL
-export AWS_SECRET_ACCESS_KEY=8Z4DkEXgVY0eCWY2o+3hk3b2+oF16lvB0UOcTySc
-export AWS_SESSION_TOKEN="IQoJb3JpZ2luX2VjELv//////////wEaCXVzLWVhc3QtMSJHMEUCIDPvMFouaVkQK3VTR5uJpfX7HRp/EZmT3Wse9RcIYbfmAiEA1fLr7MlpR6nrVdyucbXOlQb6ZE4BkgayhEzXwuRpEV4q+AEI1P//////////ARAAGgw0MDIwNTQ4MDMxMTMiDIfHcUbT3bpMbbzk9CrMAQft8l2JKPsgtUr3XKY42BIPKvrwn/PL8GrwCinTmMq7cOwygRKjNhVndVgp0dmEhgUosvSiGM89YEW9qqOH2FPInVuxg4mQfLlzQD2sYm0JXclAZTs4nyCioXEQMUOiVdKKk+NTzUQNilKrREPo4nNNStx9J6znd7yrqr1qrG/oQfYt7uyaB7LZBo7L2/TerWvi4gWSvkZGsPDFk3dxlvc+QWniZ5BSbQP3hFN1yc9038NRbrFwAgLR4vrXFDVhiu6MjK0qrxJFwQnczTCDrfjDBjqYAY+Hs3KUnq+1BGie/00uGsirvh9CyV9K0YFYSphTjhxAZqIFQbqccN6nHZgDPyzjmbcZNagJKOve632dXmsugiortWIl6F3vuYUfS6y5d0uxwFILPVg0n7MmlpUfGpLa62LZgr/Nyr/iYtr7SD1NxuArdrPGwJRCX0mL9MukLL+4NteEy+Sq1ImWc3K9PWbFnYdt9pHhUY2v"
+export AWS_ACCESS_KEY_ID=ASIAV3HCVN2UYHSZNNNL
+export AWS_SECRET_ACCESS_KEY=KSkSZznN7QQOSS1ruNBaQUrpPNizCA+dto2gpmHm
+export AWS_SESSION_TOKEN="IQoJb3JpZ2luX2VjECYaCXVzLWVhc3QtMSJIMEYCIQD4y4KUBHDIHtwiXRXCEREwnPkXyDge2XKX0VA5Du/mXgIhAKdLgwp1bTN+kUHecpRVXdNp6xUtmexzs4OXvPQFLo8ZKvgBCO///////////wEQABoMNDAyMDU0ODAzMTEzIgxsnOE8i8cS12olLWwqzAH4rgHBDZ3DqLjv/xOuFSwLgi5twyLl4zT8aZ2mgjTmnTVLG2UnoFk34rz3AOOErGQah6WdtSBynZI2IqHCW58pHMf6M5IS5XhrnxmZU479qkK3gOkGOjeuHSoyB/DUtclMKgRh3A7UEN+xUmKTMrHs2gRx8ZedyURWSNH/FU35HZqS+x06F97GL0c5e1DGXdf23rTKBtSXNVlo4VU+vqAayLpI9mbipXMzPQEo1QyV4KiNqBU19QZeMCvjYP/wF5xBxEYdl8BLEFXLCMowgtT6yAY6lwHgH2+SZ87DlDZqkOhTMpphfFNJD/tGgMhDmRm4D2y1oDX2kzQO9xDoR2SKt4NbxiIPtrWXwbVvsensHflzOD2k6NOfhQGnjZ2toveFRcJNdewWS+LVVOsRu8J3luWNJu08D7Bc8+aTWtvEvFd/u8HsvmQiyqEVLxDwlw1fxKw2A4C6aw1iV4JAvNdHXuGEfRm9frtlA2Lz"
 ```
 
 4. Now run `sh configure_enclave.sh`. here for secrets, select existing ARN

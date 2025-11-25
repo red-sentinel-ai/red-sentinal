@@ -21,14 +21,17 @@ export const useAgentBySlug = (slug?: string) => {
         throw new Error(errorData.error || 'Failed to fetch agent')
       }
 
-      const baseAgent: Omit<AgentDetails, 'cost_per_message' | 'system_prompt' | 'balance'> =
-        await res.json()
+      const baseAgent: Omit<
+        AgentDetails,
+        'cost_per_message' | 'system_prompt' | 'balance' | 'last_funded_timestamp'
+      > = await res.json()
 
       const onchain = await fetchAgentDetailsViaObject(client, baseAgent.object_id)
 
       return {
         ...baseAgent,
         ...onchain,
+        agent_id: String(baseAgent.agent_id),
       }
     },
   })

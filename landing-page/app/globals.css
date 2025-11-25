@@ -1,11 +1,12 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --font-satoshi: var(--font-satoshi), sans-serif;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -44,6 +45,7 @@
 }
 
 :root {
+  font-family: var(--font-satoshi);
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -120,7 +122,7 @@
     @apply bg-background text-foreground;
   }
 
-  button{
+  button {
     @apply cursor-pointer;
   }
 
@@ -155,7 +157,7 @@
   .prose-invert blockquote {
     @apply border-l-4 border-gray-600 pl-4 text-gray-400 italic my-6;
   }
-  
+
   .prose-invert pre {
     @apply bg-gray-900 text-gray-200 rounded-lg p-4 overflow-x-auto my-6;
   }
@@ -165,6 +167,19 @@
   }
 }
 
+@layer components {
+  .badge-pink {
+    @apply bg-[linear-gradient(to_right,#FEB9FF_0%,#FDE3FF_100%)] text-black px-3 py-1 rounded-full;
+  }
+
+  .vertical-line {
+    @apply absolute top-0 bottom-0 border-l border-l-black z-50 hidden md:block;
+  }
+}
+
+.shadow-v1 {
+  box-shadow: 0 4px 63px 15px rgba(0, 0, 0, 0.25);
+}
 .robo-card {
   animation: 8s rotate linear infinite;
   background-color: black;
@@ -262,4 +277,53 @@
   syntax: '<angle>';
   initial-value: 0deg;
   inherits: false;
+}
+
+.btn {
+  border-radius: 12px;
+  min-height: 62px;
+  min-width: 176px;
+}
+
+.btn-white {
+  background-color: white;
+  color: black;
+}
+
+.btn-white:hover {
+  background-color: rgb(251, 248, 248);
+}
+
+.btn-outline {
+  border: 1px solid black;
+  color: black;
+}
+
+.btn-outline-white {
+  border: 1px solid white;
+  color: white;
+}
+
+.btn-outline:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.btn-black {
+  background-color: black;
+  color: white;
+}
+
+.btn-black:hover {
+  background-color: rgb(21, 19, 19);
+}
+
+.bg-gradient-pink {
+  background: linear-gradient(to right, #feb9ff 0%, #fde3ff 100%);
+}
+
+@media (width <= 40rem) {
+  .btn {
+    min-height: 47px;
+    min-width: auto;
+  }
 }

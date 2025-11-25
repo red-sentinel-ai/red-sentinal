@@ -53,8 +53,8 @@ export default function ChatInterface({
 }: ChatInterfaceProps) {
   const [promptInput, setPromptInput] = useState('')
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
-  // const [showAgentDetails, setShowAgentDetails] = useState(false)
   const chatContainerRef = useRef<HTMLDivElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
   const account = useCurrentAccount()
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
 
@@ -91,6 +91,20 @@ export default function ChatInterface({
 
     return null
   }, [chatMessages])
+
+  const adjustTextareaHeight = () => {
+    const textarea = textareaRef.current
+    if (textarea) {
+      textarea.style.height = 'auto'
+      // Cap height at 300px or 40vh, whichever is smaller
+      const maxHeight = Math.min(window.innerHeight * 0.4, 300)
+      textarea.style.height = `${Math.min(textarea.scrollHeight, maxHeight)}px`
+    }
+  }
+
+  useEffect(() => {
+    adjustTextareaHeight()
+  }, [promptInput])
 
   useEffect(() => {
     const initialMessages: ChatMessage[] = []
@@ -170,102 +184,19 @@ export default function ChatInterface({
   }
 
   return (
-    <div className="flex flex-col text-[#E5E7EB] h-full flex-1">
-      {/* <div className="backdrop-blur-xl border-b border-[#2E40494D] p-3 shadow-lg">
-        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4">
-          <div>
-            <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
-              <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-[#558EB4] ring-opacity-50">
-                <Image
-                  src={agent.agent_profile || DEFAULT_PROFILE_URL}
-                  alt={`${agent.agent_name} profile`}
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2">
-                  <h1 className="text-lg sm:text-xl font-bold text-white truncate">
-                    Target: {agent.agent_name}
-                  </h1>
-                  {agent.is_featured && (
-                    <Image
-                      src="/icons/check-mark.svg"
-                      width={20}
-                      height={20}
-                      alt="checkmark"
-                      className="flex-shrink-0"
-                    />
-                  )}
-                </div>
-                <div className="flex items-center gap-1">
-                  <p className="text-xs sm:text-sm text-gray-300 truncate">
-                    Sentinel ID: {agent.agent_id}
-                  </p>
-
-                  <button
-                    onClick={() => setShowAgentDetails(!showAgentDetails)}
-                    className="p-2 hover:bg-[#2E40494D] rounded-md transition-colors flex items-center gap-1 mt1"
-                  >
-                    <p className="text-xs sm:text-sm font-semibold underline">
-                      View Sentinel Instructions
-                    </p>
-                    {showAgentDetails ? (
-                      <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5" />
-                    ) : (
-                      <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5" />
-                    )}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex-1 sm:flex-none">
-            <AgentInfo
-              balance={agent.balance.toString()}
-              decimal={9}
-              promptPrice={agent.cost_per_message.toString()}
-              symbol="SUI"
-              breakAttempts={0}
-              isDrained={isAgentDrained}
-              drainAmount="0"
-              createdAt={agent.created_at}
-            />
-          </div>
-        </div>
-      </div>
-      <AnimatePresence>
-        {showAgentDetails && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="overflow-hidden"
-          >
-            <div className="bg-black/40 p-3 sm:p-4 rounded-lg border border-gray-700">
-              <p className="text-xs sm:text-sm text-gray-300 leading-relaxed whitespace-pre-wrap">
-                {agent.system_prompt}
-              </p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence> */}
-
+    <div className="flex flex-col h-full flex-1 text-black justify-between pb-6">
       <div
         ref={chatContainerRef}
-        className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-4 sm:space-y-6 custom-scrollbar max-h-[calc(100vh-205px)] backdrop-blur-md"
+        className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-4 sm:space-y-6 max-h-[calc(100vh-205px)]"
       >
         {chatMessages.length === 0 && (
-          <div className="text-center py-8 sm:py-12 text-gray-400">
+          <div className="text-center py-8 sm:py-12 text-gray-500">
             <Image
               src="/icons/exclamation.png"
               width={60}
               height={60}
               alt="exclamation"
-              className="mx-auto mb-4"
+              className="mx-auto mb-4 opacity-70"
             />
             <p className="text-base sm:text-lg">No messages yet. Start attacking the agent!</p>
             <p className="text-xs sm:text-sm mt-2 opacity-75 px-4">
@@ -296,7 +227,7 @@ export default function ChatInterface({
               className="flex justify-start"
             >
               <div className="max-w-[85%] sm:max-w-[75%] flex items-start gap-2 sm:gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-r from-gray-600 to-gray-500 flex items-center justify-center ring-2 ring-gray-400 ring-opacity-60">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gray-200 flex items-center justify-center ring-2 ring-gray-300">
                   <Image
                     src={agent.agent_profile || DEFAULT_PROFILE_URL}
                     width={32}
@@ -305,9 +236,11 @@ export default function ChatInterface({
                     className="rounded-full object-cover w-full h-full"
                   />
                 </div>
-                <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/60 text-gray-200 border border-gray-600/50 rounded-2xl p-3 sm:p-4 flex items-center gap-3">
-                  <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin text-[#558EB4]" />
-                  <span className="text-xs sm:text-sm">Agent is analyzing your attack...</span>
+                <div className="border border-gray-200 rounded-2xl p-3 sm:p-4 flex items-center gap-3 bg-gray-50">
+                  <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin text-gray-600" />
+                  <span className="text-xs sm:text-sm text-gray-700">
+                    Agent is analyzing your attack...
+                  </span>
                 </div>
               </div>
             </motion.div>
@@ -316,30 +249,30 @@ export default function ChatInterface({
       </div>
 
       {isAgentDrained ? (
-        <div className="bg-gradient-to-r from-[#12121266] to-[#1a1a1a66] backdrop-blur-xl border-t border-[#2E40494D] p-4 shadow-2xl">
+        <div className="bg-gray-50 border-t border-gray-200 p-4">
           <div className="text-center w-full">
-            <h3 className="text-lg font-bold text-primary_pink">This Sentinel is Drained</h3>
-            <p className="text-xs text-gray-400 mb-2">
+            <h3 className="text-lg font-bold text-red-600">This Sentinel is Drained</h3>
+            <p className="text-xs text-gray-500 mb-2">
               The sentinel has been successfully defeated.
             </p>
 
             {winnerInfo && (
-              <div className="bg-black/30 border border-[#2E40494D] rounded-lg mx-auto px-3">
-                <div className="flex flex-col sm:flex-row items-center justify-center sm:divide-x sm:divide-gray-700 gap-y-2 sm:gap-y-0">
+              <div className="bg-white border border-gray-200 rounded-lg mx-auto px-3">
+                <div className="flex flex-col sm:flex-row items-center justify-center sm:divide-x sm:divide-gray-200 gap-y-2 sm:gap-y-0">
                   <div className="flex items-baseline gap-x-2 px-3 w-full sm:w-auto justify-center">
-                    <p className="text-xs font-semibold text-gray-300 shrink-0">Winner:</p>
+                    <p className="text-xs font-semibold text-gray-600 shrink-0">Winner:</p>
 
                     <Link
                       href={`/u/${winnerInfo.winnerAddress}`}
-                      className="text-right underline text-sm"
+                      className="text-right underline text-sm text-blue-600"
                     >
-                      {formatAddress(winnerInfo.winnerAddress)}
+                      {formatAddress(winnerInfo.winnerAddress as string)}
                     </Link>
                   </div>
 
                   <div className="flex items-baseline gap-x-2 px-3 w-full sm:w-auto justify-center">
-                    <p className="text-xs font-semibold text-gray-300 shrink-0">Amount:</p>
-                    <p className="text-base font-bold text-green-400">{winnerInfo.wonAmount} SUI</p>
+                    <p className="text-xs font-semibold text-gray-600 shrink-0">Amount:</p>
+                    <p className="text-base font-bold text-green-600">{winnerInfo.wonAmount} SUI</p>
                   </div>
                 </div>
               </div>
@@ -347,71 +280,80 @@ export default function ChatInterface({
           </div>
         </div>
       ) : (
-        <div className="bg-gradient-to-r from-[#12121266] min-h-[138px] to-[#1a1a1a66] backdrop-blur-xl p-2 shadow-2xl">
+        <div>
           <form
             onSubmit={handleSubmit}
             className="relative"
           >
             <div className="relative">
-              <textarea
-                value={promptInput}
-                onChange={(e) => {
-                  setPromptInput(e.target.value)
-                  countTokens(e.target.value)
-                }}
-                className="w-full bg-[#101112] border border-gray-600 rounded-2xl p-3 sm:p-4 pr-16 sm:pr-20 pb-10 sm:pb-12 min-h-[50px] sm:min-h-[60px] max-h-[120px] sm:max-h-[150px] text-sm sm:text-base text-white focus:ring-1  focus:ring-[#454545] outline-none placeholder:text-gray-400 resize-none shadow-inner transition-all duration-200"
-                disabled={isSubmitting}
-                placeholder="Craft your attack prompt..."
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault()
-                    handleSubmit(e)
-                  }
-                }}
-              />
+              <div className="relative w-full border border-gray-300 rounded-2xl bg-white focus-within:ring-1 focus-within:ring-black transition-all duration-200 z-10 overflow-hidden">
+                <textarea
+                  ref={textareaRef}
+                  value={promptInput}
+                  onChange={(e) => {
+                    setPromptInput(e.target.value)
+                    countTokens(e.target.value)
+                  }}
+                  className="w-full p-3 sm:p-4 min-h-[50px] sm:min-h-[60px] text-sm sm:text-base bg-transparent border-none outline-none focus:ring-0 placeholder:text-gray-400 resize-none text-black"
+                  disabled={isSubmitting}
+                  placeholder="Craft your attack prompt..."
+                  rows={1}
+                  style={{ overflow: 'hidden' }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault()
+                      handleSubmit(e)
+                    }
+                  }}
+                />
 
-              <div
-                className={clsx(
-                  'absolute bottom-2 sm:bottom-3 backdrop-blur-lg left-3 sm:left-4 text-xs text-gray-400 bg-[#202122] px-2 py-1 rounded'
-                )}
-              >
-                <span
-                  className={clsx({
-                    'animate-pulse': isTokenCountDebouncing,
-                  })}
-                >
-                  Tokens: {tokenCount} / {ATTACK_PROMPT_MAX_TOKENS}
-                </span>
+                <div className="flex items-center justify-between px-3 pb-2 sm:px-4 sm:pb-3 bg-white">
+                  <div
+                    className={clsx(
+                      'text-xs bg-[#D9D9D9] px-2 py-1 rounded',
+                      tokenCount > ATTACK_PROMPT_MAX_TOKENS ? 'text-red-500' : 'text-black'
+                    )}
+                  >
+                    <span className={clsx({ 'animate-pulse': isTokenCountDebouncing })}>
+                      Tokens: {tokenCount} / {ATTACK_PROMPT_MAX_TOKENS}
+                    </span>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={
+                      isSubmitting ||
+                      promptInput.length === 0 ||
+                      tokenCount > ATTACK_PROMPT_MAX_TOKENS
+                    }
+                    className="w-8 h-8 sm:w-10 sm:h-10 text-white bg-black rounded-full flex items-center justify-center transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl hover:bg-gray-800"
+                  >
+                    {isSubmitting ? (
+                      <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                    ) : (
+                      <Image
+                        src="/icons/top-arrow.svg"
+                        width={24}
+                        height={24}
+                        alt="top arrow"
+                        className="filter invert"
+                      />
+                    )}
+                  </button>
+                </div>
               </div>
 
-              {tokenCount > ATTACK_PROMPT_MAX_TOKENS && (
-                <div className="mt-2 text-sm text-red-400 absolute">
-                  Your prompt exceeds the token limit.
-                </div>
-              )}
-
-              <button
-                type="submit"
-                disabled={
-                  isSubmitting || promptInput.length === 0 || tokenCount > ATTACK_PROMPT_MAX_TOKENS
-                }
-                className="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 w-8 h-8 sm:w-10 sm:h-10 text-black bg-white rounded-full flex items-center justify-center transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform disabled:transform-none"
-              >
-                {isSubmitting ? (
-                  <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
-                ) : (
-                  <Image
-                    src="/icons/top-arrow.svg"
-                    width={24}
-                    height={24}
-                    alt="top arrow"
-                  />
-                )}
-              </button>
+              <div className="rounded-[12px] bg-[#F49BEE]/90 blur-[4px] absolute sm:min-h-[120px] w-[100%] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 pointer-events-none"></div>
             </div>
+
             {submitError && (
-              <div className="mt-2 text-red-400 text-xs sm:text-sm bg-red-900/20 border border-red-500/30 rounded-lg p-2">
+              <div className="mt-2 text-red-600 text-xs sm:text-sm bg-red-100 border border-red-200 rounded-lg p-2 relative z-10">
                 {submitError}
+              </div>
+            )}
+            {tokenCount > ATTACK_PROMPT_MAX_TOKENS && (
+              <div className="mt-2 text-red-600 text-xs sm:text-sm bg-red-100 border border-red-200 rounded-lg p-2 relative z-10">
+                Your prompt exceeds the token limit.
               </div>
             )}
           </form>

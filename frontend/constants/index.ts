@@ -1,3 +1,4 @@
+import { Github } from 'lucide-react'
 import { ChartDataPoint } from '@/components/charts/PrizePoolChartModal'
 
 export const AGENT_REGISTRY_ADDRESS =
@@ -34,14 +35,15 @@ export const TEXT_COPIES = {
 
 export const SUI_FAUCET_URL = 'https://faucet.sui.io/'
 
-export const LOCAL_API_PATH = 'http://3.237.26.201:3000'
+export const LOCAL_API_PATH = 'http://18.213.79.225:3000'
 
 export const SUI_CONFIG = {
-  EXAMPLES_PACKAGE_ID: '0x1d1941cb375a5bdec1c5dd4d9de11799b4e3d0421e24ae9d25835a8287e07981',
+  EXAMPLES_PACKAGE_ID: '0x3ce3bff0685a242b835274fdf22212527f6a0146b08b68d70eb9b1e5a15eaee2',
   MODULE_NAME: 'sentinel',
   OTW_NAME: 'SENTINEL',
-  AGENT_REGISTRY: '0x5de3a56d697e26beb3495a6dbd2378dc71e80d95a4a628b53f7dc0cd5fd97ae0',
-  ENCLAVE_OBJECT_ID: '0x7fcfd0d0f3e1d6380b083fbf271fe8750e8f1270b1c4cf1bec5894b65f1a958d',
+  AGENT_REGISTRY: '0x698bf28a40170db37e3a0e2e4e16697cd2eb244837dabb03e8207c5e5899fe37',
+  ENCLAVE_OBJECT_ID: '0x721c33d181c88910fb2da99665e1e19ea80dfb371ad0d145628ea00fbde6ab47',
+  PROTOCOL_CONFIG_OBJECT_ID: '0x5e6e4e16af40834a9dff1510b52e3e38e6b23a737e331b617135743c2a4e9be5',
   AGENT_OBJECT_IDS: [''],
 }
 
@@ -125,3 +127,50 @@ export const mockPrizePool7dChange = {
   amount: 30.0,
   percentage: 18.2,
 }
+
+//NOTE: Add Ankita's wallet here and keep this thing in our internal documentation as well.
+export const TEAM_MEMBER_WALLETS = [
+  '0xe4e8af19c2943fc2e3cbefa2fca9149985fc3b3c3d9dd312902b2c26dc600d95',
+  '0x5a8f695e50fff36c97dd1f7999c85293b811a932db508bbd51ab1fa5f742417f',
+  '0xc647dfdb8d8b575809902c9b86a26b6ace9f9271dfe5385468f503833a237177',
+].map((wallet) => wallet.toLowerCase())
+
+export const socialLinks = [
+  {
+    href: SUI_SENTINEL_X_URL,
+    icon: '/icons/x_black.png',
+    isImage: true,
+    alt: 'X (Twitter)',
+    name: 'Twitter',
+  },
+  {
+    href: SUI_SENTINEL_TELEGRAM_URL,
+    icon: '/icons/telegram_outline.png',
+    isImage: true,
+    alt: 'Telegram',
+    name: 'Telegram',
+  },
+  { href: SUI_SENTINEL_GITHUB_URL, icon: Github, isImage: false, alt: 'GitHub', name: 'Github' },
+  {
+    href: SUI_SENTINEL_DOCS_URL,
+    icon: '/icons/docs_outline.png',
+    isImage: true,
+    alt: 'Documentation',
+    name: 'Docs',
+  },
+]
+
+const ADMIN_API_URL = process.env.ADMIN_API_URL || 'https://tileville-admin.vercel.app'
+
+export const TELEGRAM_NOTIFICATION_API =
+  process.env.TELEGRAM_NOTIFICATION_API ||
+  `${ADMIN_API_URL}/api/telegram/private-group-message-from-group-id`
+
+//TODO: Change this group id for sui sentinel as it's old group id
+export const SUI_SENTINEL_ALERTS_TELEGRAM_GROUP_ID =
+  process.env.SUI_SENTINEL_ALERTS_TELEGRAM_GROUP_ID
+export const ADMIN_API_TOKEN = process.env.ADMIN_API_TOKEN
+
+export const WITHDRAWAL_LOCK_MS = 1_209_600_000 // 14 days in milliseconds
+
+export const AGENT_PRIZE_POOL_HISTORY_QUERY_KEY = 'agentPrizePoolHistory'

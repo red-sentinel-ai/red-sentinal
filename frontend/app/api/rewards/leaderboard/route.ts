@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { supabaseServiceClient } from '@/db/config/server'
 import { LeaderboardEntry } from '@/types/Rewards'
+import { TEAM_MEMBER_WALLETS } from '@/constants'
 
 interface LeaderboardResponse {
   leaderboard: LeaderboardEntry[]
@@ -18,6 +19,10 @@ export async function GET(
     const search = url.searchParams.get('search') || ''
 
     let query = supabaseServiceClient.from('ss_rewards_leaderboard').select('*')
+
+    if (TEAM_MEMBER_WALLETS.length > 0) {
+      query = query.not('wallet_addresses', 'cs', `{${TEAM_MEMBER_WALLETS.join(',')}}`)
+    }
 
     if (search) {
       query = query.or(`discord_username.ilike.%${search}%,twitter_username.ilike.%${search}%`)
