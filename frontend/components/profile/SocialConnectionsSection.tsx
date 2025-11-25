@@ -83,7 +83,7 @@ export function SocialConnectionsSection() {
   const connectionCount = (hasTwitter ? 1 : 0) + (hasDiscord ? 1 : 0)
 
   return (
-    <div className="px-6">
+    <div className="px-4 md:px-8">
       {!hasAnyConnection && (
         <div className="p-4 rounded-lg mb-10 bg-gradient-to-r from-white/45 to-[rgba(255,158,244,0.46)] border border-[#5E5E5E]">
           <div className="flex items-start gap-3">

@@ -72,9 +72,9 @@ export default function ProfilePage() {
       <div className="relative">
         <div className="vertical-line left-4"></div>
         <div className="vertical-line right-4"></div>
-        <div className="max-w-[1440px] mx-auto px-4 pb-12 pt-24 min-h-body relative">
+        <div className="max-w-[1440px] mx-auto pb-12 pt-24 min-h-body relative">
           <div
-            className="flex flex-col sm:flex-row items-end gap-4 min-h-[376px] bg-cover bg-bottom bg-no-repeat px-4 pt-4 pb-20 mb-6 w-full"
+            className="flex flex-col sm:flex-row items-end gap-4 min-h-[376px] bg-cover bg-bottom bg-no-repeat px-4 md:px-12 pt-4 pb-20 mb-6 w-full"
             style={{ backgroundImage: 'url("/img/footer-bg.png")' }}
           >
             <div
@@ -144,40 +144,42 @@ export default function ProfilePage() {
             <SocialConnectionsSectionWrapper />
           </div>
 
-          <Tabs
-            value={activeTab}
-            onValueChange={handleTabChange}
-            className="w-full"
-          >
-            <TabsList className="grid w-full grid-cols-2 lg:w-auto lg:flex lg:justify-start">
-              <TabsTrigger
+          <div className="px-4 md:px-8">
+            <Tabs
+              value={activeTab}
+              onValueChange={handleTabChange}
+              className="w-full"
+            >
+              <TabsList className="grid w-full grid-cols-2 lg:w-auto lg:flex lg:justify-start">
+                <TabsTrigger
+                  value={PROFILE_TABS.AGENTS}
+                  className="flex items-center gap-2 text-lg md:text-xl"
+                >
+                  <Folder className="h-6 w-6" />
+                  <span>Your Sentinels</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value={PROFILE_TABS.ACTIVITY}
+                  className="flex items-center gap-2 text-lg md:text-xl"
+                >
+                  <Activity className="h-6 w-6" />
+                  <span>Activity</span>
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent
                 value={PROFILE_TABS.AGENTS}
-                className="flex items-center gap-2"
+                className="mt-6"
               >
-                <Folder className="h-4 w-4" />
-                <span>Your Sentinels</span>
-              </TabsTrigger>
-              <TabsTrigger
+                <UserAgents />
+              </TabsContent>
+              <TabsContent
                 value={PROFILE_TABS.ACTIVITY}
-                className="flex items-center gap-2"
+                className="mt-6"
               >
-                <Activity className="h-4 w-4" />
-                <span>Activity</span>
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent
-              value={PROFILE_TABS.AGENTS}
-              className="mt-6"
-            >
-              <UserAgents />
-            </TabsContent>
-            <TabsContent
-              value={PROFILE_TABS.ACTIVITY}
-              className="mt-6"
-            >
-              <UserActivity />
-            </TabsContent>
-          </Tabs>
+                <UserActivity />
+              </TabsContent>
+            </Tabs>
+          </div>
         </div>
       </div>
 
