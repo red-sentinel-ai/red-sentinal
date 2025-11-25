@@ -24,7 +24,7 @@ export const BrandKitContent = () => {
         <h1 className="text-white text-xl md:text-5xl font-bold">Brand Kit</h1>
       </div>
 
-      <div className="py-12 px-12">
+      <div className="py-12 px-12 max-w-[1440px] mx-auto">
         <div>
           <div className="flex items-center justify-between">
             <h2 className="text-lg md:text-[28px] font-medium mb-6">Logo</h2>
@@ -66,9 +66,9 @@ export const BrandKitContent = () => {
             </div>
 
             <div className="flex items-center justify-center gap-2">
-              <div className="border border-[#5E5E5E] w-40 h-40 md:w-[407px] md:h-[291px] bg-white flex items-center justify-center rounded-2xl mr-2">
+              <div className="border border-[#5E5E5E] w-40 h-40 md:w-[407px] md:h-[291px] bg-black flex items-center justify-center rounded-2xl mr-2">
                 <Image
-                  src="/icons/logo/logo_dark.svg"
+                  src="/icons/logo/logo_light.svg"
                   alt="shield"
                   style={{ objectFit: 'contain' }}
                   height={90}
@@ -78,8 +78,8 @@ export const BrandKitContent = () => {
               </div>
 
               <Link
-                href="/icons/logo/logo_dark.png"
-                download="logo_dark.png"
+                href="/icons/logo/logo_light.png"
+                download="logo_light.png"
                 className="btn btn-black flex items-center justify-center min-h-[54px]! min-w-[111px]! gap-2"
               >
                 <Download width={20} />
@@ -87,8 +87,8 @@ export const BrandKitContent = () => {
               </Link>
 
               <Link
-                href="/icons/logo/logo_dark.svg"
-                download="logo_dark.svg"
+                href="/icons/logo/logo_light.svg"
+                download="logo_light.svg"
                 className="btn btn-black flex items-center justify-center min-h-[54px]! min-w-[111px]! gap-2"
               >
                 <Download width={20} />
