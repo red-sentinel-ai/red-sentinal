@@ -30,6 +30,7 @@ impl IntoResponse for EnclaveError {
     fn into_response(self) -> Response {
         let (status, error_message) = match self {
             EnclaveError::GenericError(e) => (StatusCode::BAD_REQUEST, e),
+            EnclaveError::ReqwestError(e) => (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()),
         };
         let body = Json(json!({
             "error": error_message,
@@ -42,4 +43,11 @@ impl IntoResponse for EnclaveError {
 #[derive(Debug)]
 pub enum EnclaveError {
     GenericError(String),
+    ReqwestError(reqwest::Error),
+}
+
+impl From<reqwest::Error> for EnclaveError {
+    fn from(err: reqwest::Error) -> Self {
+        EnclaveError::ReqwestError(err)
+    }
 }

@@ -1,8 +1,10 @@
 'use client'
 import React, { useState } from 'react'
 import { Loader2, X } from 'lucide-react'
+import posthog from 'posthog-js'
+import { useCurrentAccount } from '@mysten/dapp-kit'
 import { Dialog } from '@/components/Dialog'
-import { useFundAgent } from '@/hooks/useFundAgent' // Adjust import path as needed
+import { useFundAgent } from '@/hooks/useFundAgent'
 
 export interface FundAgentModalProps {
   /** Whether the modal is open */
@@ -15,14 +17,6 @@ export interface FundAgentModalProps {
   onSuccess?: (amount: string) => void
 }
 
-/**
- * Modal component for funding an agent
- * Features:
- * - Amount input with validation
- * - Fund button with loading state
- * - Error handling
- * - Success callback
- */
 export const FundAgentModal = ({
   open,
   onClose,
@@ -31,6 +25,7 @@ export const FundAgentModal = ({
 }: FundAgentModalProps) => {
   const [amount, setAmount] = useState('')
   const [error, setError] = useState('')
+  const account = useCurrentAccount()
 
   const { fundAgent, isLoading } = useFundAgent()
 
@@ -70,6 +65,12 @@ export const FundAgentModal = ({
     try {
       await fundAgent({ agentObjectId, amount: +amount })
 
+      posthog.capture('sentinel_funded', {
+        agent_object_id: agentObjectId,
+        amount_sui: parseFloat(amount),
+        funder_address: account?.address, // You might need to grab this via useCurrentAccount inside this component
+      })
+
       onSuccess?.(amount)
 
       setAmount('')
@@ -93,26 +94,24 @@ export const FundAgentModal = ({
       onClose={handleClose}
     >
       <div className="space-y-6">
-        {/* Header */}
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold">Add Funds</h2>
           <button
             onClick={handleClose}
-            className="text-gray-400 hover:text-white transition-colors"
+            className="text-gray-400 hover:text-black transition-colors"
             disabled={isLoading}
           >
             <X className="w-6 h-6" />
           </button>
         </div>
 
-        {/* Amount Input */}
         <div>
           <label className="block text-sm font-medium mb-2">Amount (SUI)</label>
           <input
             type="number"
             value={amount}
             onChange={handleAmountChange}
-            className="w-full bg-[#12121266] backdrop-blur-lg border border-gray-600 rounded-lg p-3"
+            className="w-full bg-white border border-gray-300 rounded-lg p-3 placeholder:text-gray-400 focus:ring-1 focus:ring-black"
             placeholder="0.00"
             min="0"
             step="0.001"
@@ -121,11 +120,10 @@ export const FundAgentModal = ({
           {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
         </div>
 
-        {/* Fund Button */}
         <button
           onClick={handleFundAgent}
           disabled={isLoading || !amount.trim()}
-          className="w-full bg-white text-black rounded-full py-3 font-medium hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+          className="w-full btn btn-black disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
         >
           {isLoading ? (
             <>

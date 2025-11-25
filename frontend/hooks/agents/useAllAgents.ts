@@ -16,6 +16,7 @@ export interface AgentDetails {
   status: AgentStatus
   agent_path: string
   created_at: string
+  last_funded_timestamp: string
 }
 
 export const useAllAgents = () => {
@@ -36,7 +37,7 @@ export const useAllAgents = () => {
 
       const basicAgents: Omit<
         AgentDetails,
-        'cost_per_message' | 'system_prompt' | 'balance' | 'status'
+        'cost_per_message' | 'system_prompt' | 'balance' | 'status' | 'last_funded_timestamp'
       >[] = await basicAgentsRes.json()
 
       const enrichedAgents = await Promise.all(

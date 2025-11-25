@@ -8,6 +8,7 @@ import {
   MissionCompletionCounts,
 } from '@/types/Rewards'
 import { GlobalConfigValues } from '@/types/globalConfig'
+import { TEAM_MEMBER_WALLETS } from '@/constants'
 
 const getMissionCompletionCounts = (
   activities: RHRewardsActivity[],
@@ -61,6 +62,13 @@ export async function GET(
     // -     { status: 403 }
     // -   )
     // - }
+
+    if (TEAM_MEMBER_WALLETS.includes(address.toLowerCase())) {
+      return NextResponse.json(
+        { error: 'Team members are not eligible for rewards program.' },
+        { status: 403 }
+      )
+    }
 
     const userData = await supabaseServiceClient
       .from('ss_users')

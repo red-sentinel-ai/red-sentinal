@@ -28,66 +28,66 @@ export const AttackStatusModal = ({
     <Dialog
       open={showResultModal && !!apiResponse}
       onClose={() => setShowResultModal(false)}
-      className="max-w-[700px] border-none flex justify-center bg-transparent"
+      className="max-w-xl border-gray-200 bg-white p-0"
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9 }}
         transition={{ duration: 0.3 }}
-        className="bg-[#12121266] backdrop-blur-3xl bg-black border border-[#383838] rounded-2xl p-8 max-w-xl w-full relative shadow-2xl"
+        className="rounded-2xl w-full relative"
       >
         <button
           onClick={() => setShowResultModal(false)}
-          className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+          className="absolute top-4 right-4 text-gray-400 hover:text-black transition-colors"
           aria-label="Close modal"
         >
           <X className="w-6 h-6" />
         </button>
 
-        <div className="text-center">
+        <div className="text-center p-8">
           <h2 className="text-3xl font-bold mb-3">
             {success ? (
-              <span className="bg-gradient-to-r from-[#558EB4] to-[#1388D5] bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
                 Attack Successful! 🎉
               </span>
             ) : (
-              <span className="bg-gradient-to-r from-[#8F564E] to-[#E53922] bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-red-600 to-red-400 bg-clip-text text-transparent">
                 Attack Failed
               </span>
             )}
           </h2>
-          <p className="text-gray-300 mb-6">
+          <p className="text-gray-600 mb-6">
             {success
               ? "Your prompt successfully breached the Sentinel's defenses!"
               : 'The Sentinel held strong against your attack.'}
           </p>
 
-          <div className="border border-[#558eb466] rounded-xl p-4 mb-6 text-left max-h-[calc(100vh-500px)] overflow-auto">
-            <h3 className="text-sm font-semibold text-gray-300 mb-2">Explanation:</h3>
-            <p className="text-sm text-gray-400 leading-relaxed">
+          <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-6 text-left max-h-48 overflow-auto">
+            <h3 className="text-sm font-semibold text-gray-700 mb-2">Explanation:</h3>
+            <p className="text-sm text-gray-600 leading-relaxed">
               {apiResponse?.response.data.explanation}
             </p>
           </div>
 
-          <div className="border border-[#558eb466] rounded-xl p-4 mb-6 text-left">
-            <h3 className="text-sm font-semibold text-gray-300 mb-2">Attack Score:</h3>
+          <div className="border border-gray-200 rounded-xl p-4 mb-6 text-left">
+            <h3 className="text-sm font-semibold text-gray-700 mb-2">Attack Score:</h3>
             <div className="flex items-center gap-4">
-              <div className="w-full bg-gray-800 rounded-full h-3">
+              <div className="w-full bg-gray-200 rounded-full h-3">
                 <div
-                  className="bg-gradient-to-r from-[#558EB4] to-[#1388D5] h-3 rounded-full"
+                  className="bg-gradient-to-r from-blue-500 to-blue-400 h-3 rounded-full"
                   style={{ width: `${score}%` }}
                 />
               </div>
-              <span className="font-bold text-white text-lg">{score}/100</span>
+              <span className="font-bold text-black text-lg">{score}/100</span>
             </div>
           </div>
 
-          <div className="border border-[#558eb466] rounded-xl p-4 mb-8 text-left">
-            <p className="text-sm text-gray-400 mb-2">Transaction Block:</p>
+          <div className="border border-gray-200 rounded-xl p-4 mb-8 text-left">
+            <p className="text-sm text-gray-500 mb-2">Transaction Block:</p>
             <Link
               href={`${SUI_TESTNET_BASE_URL}/${txnHash}`}
-              className="text-xs font-mono break-all text-[#558EB4] hover:underline transition-colors"
+              className="text-xs font-mono break-all text-blue-600 hover:underline transition-colors"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -97,7 +97,7 @@ export const AttackStatusModal = ({
 
           <button
             onClick={() => setShowResultModal(false)}
-            className="w-full border border-[#383838] hover:border-[#424242] transition-colors font-medium bg-transparent text-gray-300 px-6 py-3 rounded-full hover:bg-[#1a1b1f]"
+            className="w-full btn btn-outline"
           >
             Close
           </button>

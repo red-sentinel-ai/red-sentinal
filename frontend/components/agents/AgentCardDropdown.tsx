@@ -28,14 +28,14 @@ export const AgentDropdown = ({
     <div className="absolute top-2 right-2 z-20">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="bg-[#12121266] backdrop-blur-sm border border-[#383838] hover:border-[#558EB4] p-2 rounded-xl transition-all duration-300 hover:shadow-glow-blue group">
-            <MoreVertical className="text-gray-400 group-hover:text-[#558EB4] w-5 h-5 transition-colors" />
+          <button className="bg-white/70 backdrop-blur-sm border border-gray-200 hover:border-gray-300 hover:bg-white p-2 rounded-xl transition-all duration-300 group">
+            <MoreVertical className="text-gray-600 group-hover:text-black w-5 h-5 transition-colors" />
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="bg-[#12121266] backdrop-blur-xl border border-[#383838] rounded-2xl p-2 text-white min-w-[200px]">
+        <DropdownMenuContent className="bg-white/80 backdrop-blur-xl border border-gray-200 rounded-2xl p-2 text-black min-w-[200px]">
           <DropdownMenuItem
             onClick={() => openFeatureModal(+agentId)}
-            className="cursor-pointer flex items-center gap-3 text-gray-300 hover:text-[#558EB4] focus:text-[#558EB4] hover:bg-[#1a1b1f] focus:bg-[#1a1b1f] rounded-xl px-4 py-3 transition-colors"
+            className="cursor-pointer flex items-center gap-3 text-gray-700 hover:text-blue-600 focus:text-blue-600 hover:bg-gray-100 focus:bg-gray-100 rounded-xl px-4 py-3 transition-colors"
           >
             <Image
               src="/icons/check-mark.svg"

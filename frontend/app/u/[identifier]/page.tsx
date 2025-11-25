@@ -81,11 +81,11 @@ export default async function PublicProfilePage({
   const { user, agents } = profileData
 
   return (
-    <div className="container mx-auto px-4 pb-12 pt-24 min-h-body">
+    <div className="container mx-auto px-4 pb-12 pt-24 min-h-body text-black">
       <div className="max-w-6xl mx-auto">
         <div className="mb-12">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-6">
-            <div className="relative w-28 h-28 rounded-full border-2 border-gray-600 overflow-hidden flex-shrink-0">
+            <div className="relative w-28 h-28 rounded-full border-2 border-gray-200 overflow-hidden flex-shrink-0">
               {user.avatar_url ? (
                 <Image
                   src={user.avatar_url}
@@ -94,8 +94,8 @@ export default async function PublicProfilePage({
                   className="object-cover"
                 />
               ) : (
-                <div className="w-full h-full bg-foreground/20 flex items-center justify-center">
-                  <User className="h-14 w-14" />
+                <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                  <User className="h-14 w-14 text-gray-400" />
                 </div>
               )}
             </div>
@@ -103,15 +103,15 @@ export default async function PublicProfilePage({
               <h1 className="text-3xl sm:text-4xl font-bold">
                 {user.display_name || user.username}
               </h1>
-              <p className="text-gray-400 mt-1">@{user.username}</p>
+              <p className="text-gray-500 mt-1">@{user.username}</p>
               {user.wallet_addresses?.[0] && (
                 <div className="mt-3 flex flex-col sm:flex-row items-start sm:items-center gap-1">
-                  <p className="text-gray-400 text-sm font-medium">Wallet Address:</p>
+                  <p className="text-gray-600 text-sm font-medium">Wallet Address:</p>
                   <Link
                     href={`${EXPLORER_BASE_URL}/address/${user.wallet_addresses[0]}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[#558EB4] hover:underline font-mono text-sm"
+                    className="text-blue-600 hover:underline font-mono text-sm"
                   >
                     {formatAddress(user.wallet_addresses[0])}
                   </Link>
@@ -123,7 +123,7 @@ export default async function PublicProfilePage({
 
         <div>
           <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
-            <Folder className="h-6 w-6 text-blue-400" />
+            <Folder className="h-6 w-6 text-blue-500" />
             <span>
               {user.display_name}&apos;s Sentinels ({agents.length})
             </span>
@@ -139,8 +139,8 @@ export default async function PublicProfilePage({
               ))}
             </div>
           ) : (
-            <div className="text-center py-16 bg-gray-900/50 rounded-lg">
-              <p className="text-gray-400">This user has not launched any Sentinels yet.</p>
+            <div className="text-center py-16 bg-gray-50 rounded-lg border border-gray-200">
+              <p className="text-gray-500">This user has not launched any Sentinels yet.</p>
             </div>
           )}
         </div>

@@ -10,6 +10,9 @@ use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
 use std::fs;
 use crate::constants::{SERVICE_ACCOUNT_JSON};
 use regex::{Regex};
+use fastcrypto::encoding::{decode_bytes_hex, Encoding, Hex};
+
+
 
 #[derive(Debug, Deserialize)]
 struct ServiceAccountKey {
@@ -90,7 +93,9 @@ fn sanitize_explanation(text: &str) -> String {
 pub async fn evaluate_prompt(
     agent_id: &str,
     agent_prompt: &str,
-    user_message: &str
+    user_message: &str,
+    attacker: &str,
+    nonce: u64
 ) -> Result<ConsumePromptResponse, Box<dyn std::error::Error + Send + Sync>> {
     let client = Client::new();
     println!("agent prompt {}", agent_prompt);
@@ -108,7 +113,7 @@ pub async fn evaluate_prompt(
         }
     };
 
-    let model = "projects/761056697900/locations/us-central1/endpoints/1636703322293403648";
+    let model = "projects/761056697900/locations/us-central1/endpoints/111770854521569280";
     let url = format!(
         "https://{}-aiplatform.googleapis.com/v1/{}:streamGenerateContent",
         "us-central1", model
@@ -247,7 +252,9 @@ let success_regex = Regex::new(
         agent_id: agent_id.to_string(),
         success,
         explanation: explanation.to_string(),
-        score
+        score,
+        attacker: decode_bytes_hex(attacker).unwrap(),
+        nonce
     })
 
 }

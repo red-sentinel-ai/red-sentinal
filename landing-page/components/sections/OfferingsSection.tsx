@@ -1,90 +1,96 @@
 'use client'
 
-import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { Brain, Code } from 'lucide-react'
+import { SUI_SENTINEL_APP_URL } from '@/constants'
+import Link from 'next/link'
+import Image from 'next/image'
 
 export function OfferingsSection() {
   return (
     <section
       id="offerings"
-      className="py-24 relative"
+      className="py-24 relative text-black"
     >
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="vertical-line left-4"></div>
+      <div className="vertical-line right-4"></div>
+      <div className="relative z-10 max-w-7xl mx-auto md:px-4">
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.7 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="mb-16 px-4 md:px-10"
         >
-          <h2 className="text-4xl md:text-6xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-              Our Two Powerful Offerings
-            </span>
+          <div className="badge-pink w-fit mb-6">• Offerings</div>
+          <h2 className="text-2xl md:text-[48px] font-medium leading-tight">
+            Whether you’re deploying your own Sentinel or testing one built for battle, every move
+            shapes the future of <span className="text-[#C871FF]">Sui Sentinel security.</span>
           </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-            Choose the right path for your AI
-          </p>
         </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          viewport={{ once: true }}
+          className="grid grid-cols-1 md:grid-cols-2 md:px-10"
+        >
+          <div className="relative p-3 md:p-8 flex flex-col justify-between min-h-[300px] border border-black md:border-r-0">
+            <div>
+              <h3 className="text-xl md:text-[32px] font-medium mb-6">Custom AI</h3>
 
-        <div className="grid lg:grid-cols-2 gap-12">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            <div className="relative border border-[#558eb466] bg-[#12121266] backdrop-blur-sm rounded-2xl p-8 robo-card attacker group h-full overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#558EB4]/5 to-transparent pointer-events-none" />
+              <p className="text-base md:text-[20px] leading-relaxed text-[#939393]">
+                Use battle-tested AI models built by the community. Challenge them, test their
+                strength, and earn rewards for every exploit discovered.
+              </p>
 
-              <div className="relative z-10 flex flex-col h-full">
-                <div className="flex items-center gap-4 mb-8">
-                  <div className="size-14 bg-gradient-to-r from-[#558EB4] to-[#1388D5] rounded-2xl flex items-center justify-center shadow-glow-blue">
-                    <Brain className="size-7 text-white" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-white">Custom-Trained AI Model</h3>
-                  <div className="flex-1 h-px bg-gradient-to-r from-[#558EB4]/50 to-transparent" />
-                </div>
-
-                <p className="text-lg text-gray-300 leading-relaxed flex-1">
-                  Forget relying on third-party APIs like OpenAI or Anthropic. Sui Sentinel offers a
-                  proprietary, battle-tested AI model, continuously refined through our platform’s
-                  stress-testing ecosystem. Companies integrating AI into their Web3 projects can
-                  leverage our model, saving time and resources without building their own.
-                </p>
+              <div className="min-h-[280px] md:min-h-[300px]">
+                <Image
+                  src="/img/customAIArt.png"
+                  alt="custom ai"
+                  width={500}
+                  height={500}
+                  className="w-full max-w-md h-auto mx-auto absolute top-[5%] md:w-[500px] md:h-[500px] md:max-w-none left-1/2 -translate-x-1/2"
+                />
               </div>
             </div>
-          </motion.div>
+            <Link
+              href={SUI_SENTINEL_APP_URL}
+              target="_blank"
+              className="mt-1"
+            >
+              <button className="btn btn-outline px-8 mt-12 md:mt-0">Attack Now</button>
+            </Link>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            viewport={{ once: true }}
-          >
-            <div className="relative border border-[#8f564e66] bg-[#12121266] backdrop-blur-sm rounded-2xl p-8 robo-card defender group h-full overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#8F564E]/5 to-transparent pointer-events-none" />
+          <div className="relative p-3 md:p-8 border border-black border-t-0 md:border-t md:border-t-black md:border-l flex flex-col justify-between min-h-[300px]">
+            <div>
+              <h3 className="text-xl md:text-[32px] font-medium mb-6">Deploy Your Sentinel</h3>
+              <p className="text-base md:text-[20px] leading-relaxed text-[#939393]">
+                Launch your own AI model into the Sentinel network. Let the world attack it and earn
+                while it evolves.
+              </p>
 
-              <div className="relative z-10 flex flex-col h-full">
-                <div className="flex items-center gap-4 mb-8">
-                  <div className="size-14 bg-gradient-to-r from-[#8F564E] to-[#E53922] rounded-2xl flex items-center justify-center shadow-glow-red">
-                    <Code className="size-7 text-white" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-white">Test Your Own Model</h3>
-                  <div className="flex-1 h-px bg-gradient-to-r from-[#8F564E]/50 to-transparent" />
-                </div>
-
-                <p className="text-lg text-gray-300 leading-relaxed flex-1">
-                  Already have an AI model? Deploy a Sentinel using your model’s endpoint and API
-                  key. Our community of attackers, motivated by economic incentives, will rigorously
-                  test its defenses. If they break through, it’s a clear signal to strengthen your
-                  model—or consider switching to our custom-trained solution.
-                </p>
+              <div className="min-h-0 md:min-h-[300px]">
+                <Image
+                  src="/img/deploySentinelArt.png"
+                  alt="deploy sentinel"
+                  width={400}
+                  height={400}
+                  className="relative w-full max-w-xs h-auto mx-auto my-6 md:absolute md:bottom-[2%] md:w-[400px] md:h-[400px] md:max-w-none md:my-0"
+                />
               </div>
             </div>
-          </motion.div>
-        </div>
+            <div className="flex justify-start md:justify-end">
+              <Link
+                href={SUI_SENTINEL_APP_URL}
+                target="_blank"
+                className="mt-1"
+              >
+                <button className="btn btn-outline px-7">Deploy Now!</button>
+              </Link>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   )

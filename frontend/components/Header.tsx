@@ -5,47 +5,40 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 
 import { MenuItems } from './MenuItems'
-import { MenuIcon, Plus } from 'lucide-react'
+import { MenuIcon, X } from 'lucide-react'
 import Link from 'next/link'
 import { ConnectButton } from './ConnectButton'
 
 export const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const [bannerVisible, setBannerVisible] = useState(true)
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 0)
+      setScrolled(window.scrollY > 10)
     }
 
     window.addEventListener('scroll', handleScroll)
-    const dismissed = localStorage.getItem('betaBannerDismissed')
-    setBannerVisible(dismissed !== 'true')
-
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   return (
     <header
-      className={clsx('fixed left-0 right-0 top-0 w-full z-50 transition-all duration-200', {
-        'bg-[#12121266] backdrop-blur-xl': menuOpen || scrolled,
+      className={clsx('fixed left-0 right-0 top-0 w-full z-50 transition-all duration-300', {
+        'bg-white/80 backdrop-blur-xl border-b border-gray-200': menuOpen || scrolled,
         'bg-transparent': !scrolled && !menuOpen,
       })}
     >
-      <div
-        className={clsx('max-w-full mx-auto flex items-center p-[11px] xl:p-4 justify-between', {
-          'pt-[10px]': !bannerVisible,
-        })}
-      >
+      <div className="max-w-full mx-auto flex items-center p-3 lg:px-8 py-4 justify-between">
         <div className="flex items-center flex-1">
           <Link
             className="block mr-1 xl:mr-4 flex-shrink-0"
-            href="/"
+            href="https://suisentinel.xyz"
+            target="_blank"
           >
             <div className="relative w-8 h-11">
               <Image
-                src="/icons/shield.png"
+                src="/icons/logo-sm.svg"
                 alt="shield"
                 fill
                 style={{ objectFit: 'contain' }}
@@ -58,15 +51,15 @@ export const Header = () => {
           </div>
         </div>
 
-        <div className="hidden xl:block ms-auto">
+        <div className="hidden xl:block ms-4">
           <ConnectButton />
         </div>
         <button
-          className="xl:hidden flex-shrink-0 ml-2"
+          className="xl:hidden flex-shrink-0 ml-2 p-2"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
         >
-          {menuOpen ? <Plus className="rotate-45 block" /> : <MenuIcon />}
+          {menuOpen ? <X className="block" /> : <MenuIcon />}
         </button>
 
         {/* <Link
@@ -92,9 +85,12 @@ export const Header = () => {
         </Link> */}
       </div>
       {menuOpen && (
-        <div className="xl:hidden px-[11px] pb-4">
-          <div className="py-4">
-            <MenuItems menuOpen={menuOpen} />
+        <div className="xl:hidden px-4 pb-4">
+          <div className="py-4 border-t border-gray-200">
+            <MenuItems
+              menuOpen={menuOpen}
+              onItemClick={() => setMenuOpen(false)}
+            />
           </div>
           <div className="mt-4 flex justify-center">
             <ConnectButton />

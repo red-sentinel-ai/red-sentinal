@@ -14,7 +14,7 @@ export const SparklineChart = ({
   width = 100,
   height = 30,
   strokeWidth = 2,
-  strokeColor = '#3b82f6',
+  strokeColor = '#1FAD57',
   gradientId = 'sparkline-gradient',
   ...props
 }: SparklineChartProps) => {
@@ -67,12 +67,12 @@ export const SparklineChart = ({
         >
           <stop
             offset="0%"
-            stopColor="#558EB4"
+            stopColor="#1FAD57"
             stopOpacity={0.5}
           />
           <stop
             offset="100%"
-            stopColor="#1388D5"
+            stopColor="#1FAD57"
           />
         </linearGradient>
       </defs>

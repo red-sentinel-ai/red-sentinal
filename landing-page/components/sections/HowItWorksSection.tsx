@@ -1,75 +1,71 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Shield, Trophy, Zap } from 'lucide-react'
-
-const steps = [
-  {
-    icon: Shield,
-    title: 'Deploy a Sentinel',
-    description: 'Users deploy a protective AI entity backed by funds and custom instructions.',
-  },
-  {
-    icon: Zap,
-    title: 'Attack and Earn',
-    description:
-      'Attackers attempt to breach the Sentinel’s defenses to steal its funds. Every attack costs a fee, which is split to incentivize testing.',
-  },
-  {
-    icon: Trophy,
-    title: 'Rewards & Growth',
-    description:
-      'A part of the attack fee boosts the prize pool, another part rewards the Sentinel’s creator, and 10% supports platform maintenance. This gamified economy drives relentless stress-testing, making AI models stronger.',
-  },
-]
+import Image from 'next/image'
 
 export function HowItWorksSection() {
   return (
     <section
       id="how-it-works"
-      className="py-24 relative"
+      className="relative"
     >
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-4xl md:text-6xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-              How Sui Sentinel Works
-            </span>
-          </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-            A gamified economy for AI security
-          </p>
-        </motion.div>
-
-        <div className="grid lg:grid-cols-3 gap-12">
-          {steps.map((step, index) => (
+      <div className="vertical-line left-4"></div>
+      <div className="vertical-line right-4"></div>
+      <div className="py-24 relative text-black bg-[#F7F9FF] z-10">
+        <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            viewport={{ once: true }}
+            className="text-center mb-16 flex flex-col items-center"
+          >
+            <div className="badge-pink mb-8"> • how it works </div>
+            <h2 className="text-3xl md:text-[48px] font-medium mb-4">
+              Sui Sentinel&apos;s <span className="text-[#C871FF]">Gamified AI</span> Security
+            </h2>
+            <p className="max-w-3xl mx-auto text-lg md:text-[20px]">
+              Attack, defend, and evolve in an ecosystem where every move strengthens the network
+              and earns real rewards for mastery.
+            </p>
+          </motion.div>
+          <div className="relative z-10">
             <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.2 }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
               viewport={{ once: true }}
-              className="border border-[#558eb466] bg-[#12121266] rounded-lg lg:rounded-2xl px-4 py-8 lg:p-6 text-center robo-card attacker group"
+              className="relative z-10"
             >
-              <div className="flex flex-col items-center gap-4 py-4 px-2">
-                <div className="size-16 bg-gradient-to-r from-[#558EB4] to-[#1388D5] rounded-full flex items-center justify-center shadow-glow-blue mb-4">
-                  <step.icon
-                    size={32}
-                    className="text-white"
-                  />
-                </div>
-                <h4 className="font-semibold text-white mb-2 text-xl">{step.title}</h4>
-                <p className="text-gray-400 leading-relaxed text-sm">{step.description}</p>
-              </div>
+              <Image
+                src="/img/howItWorksLG.png"
+                alt="How Sui Sentinel Works: Deploy, Attack & Earn, Evolve & Profit (Desktop)"
+                width={1120}
+                height={600}
+                className="hidden lg:block w-full h-auto object-contain"
+                quality={100}
+              />
+              <Image
+                src="/img/howItWorksSM.png"
+                alt="How Sui Sentinel Works: Deploy, Attack & Earn, Evolve & Profit (Mobile)"
+                width={500}
+                height={800}
+                className="block lg:hidden w-full h-auto max-w-md mx-auto object-contain"
+                quality={100}
+              />
             </motion.div>
-          ))}
+          </div>
         </div>
+      </div>
+
+      <div className="absolute bottom-[-9%] md:bottom-[-22%] left-1/2 -translate-x-1/2">
+        <Image
+          src="/img/fullCircle.png"
+          width={535}
+          height={802}
+          alt="full circle"
+          quality={100}
+        />
       </div>
     </section>
   )

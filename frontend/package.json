@@ -35,6 +35,8 @@
     "next": "15.1.3",
     "next-auth": "^4.24.11",
     "nextjs-toploader": "^3.7.15",
+    "posthog-js": "^1.298.0",
+    "posthog-node": "^5.14.0",
     "qrcode.react": "^4.2.0",
     "random-word-slugs": "^0.1.7",
     "react": "18.2.0",

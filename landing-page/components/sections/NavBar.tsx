@@ -2,14 +2,12 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Menu, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { SUI_SENTINEL_APP_URL, SUI_SENTINEL_DOCS_URL, SUI_SENTINEL_TELEGRAM_URL } from '@/constants'
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  // const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,29 +22,36 @@ export function Navbar() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-black/80 backdrop-blur-xl' : 'bg-transparent'
+        isScrolled ? 'backdrop-blur-xl' : 'bg-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <motion.div whileHover={{ scale: 1.05 }}>
+          <div>
             <Link
-              className="mr-1 xl:mr-4 flex-shrink-0 flex items-center gap-2"
+              className="shrink-0 flex items-center gap-2 absolute top-4 left-2 md:top-3 md:left-16 xl:top-3 xl:left-20"
               href="/"
             >
-              <div className="relative w-8 h-11">
-                <Image
-                  src="/icons/shield.png"
-                  alt="shield"
-                  fill
-                  style={{ objectFit: 'contain' }}
-                />
-              </div>
-              <span className="text-xl font-bold text-white">SUI Sentinel</span>
+              <Image
+                src="/icons/logo_large.svg"
+                alt="shield"
+                style={{ objectFit: 'contain' }}
+                height={49}
+                width={198}
+                quality={100}
+              />
             </Link>
-          </motion.div>
+          </div>
+          {/* <div>
+            <Link
+              href="/careers"
+              className="underline  hover:no-underline"
+            >
+              Careers
+            </Link>
+          </div> */}
 
-          <div className="hidden md:flex items-center gap-8">
+          {/* <div className="hidden md:flex items-center gap-8">
             <a
               href="#how-it-works"
               className="text-gray-300 hover:text-white transition-colors"
@@ -96,10 +101,10 @@ export function Navbar() {
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X className="size-6" /> : <Menu className="size-6" />}
-          </button>
+          </button> */}
         </div>
 
-        {isMobileMenuOpen && (
+        {/* {isMobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -137,7 +142,7 @@ export function Navbar() {
               </Link>
             </div>
           </motion.div>
-        )}
+        )} */}
       </div>
     </motion.nav>
   )

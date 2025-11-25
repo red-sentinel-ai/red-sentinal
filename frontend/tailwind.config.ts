@@ -21,6 +21,11 @@ export default {
         primary_blue_20: 'var(--primary_blue_20)',
         primary_blue_30: 'var(--primary_blue_30)',
         primary_blue_50: 'var(--primary_blue_50)',
+        primary_blue_90: 'var(--primary_blue_90)',
+        secondary_blue: 'var(--secondary_blue)',
+        secondary_blue_60: 'var(--secondary_blue_60)',
+        secondary_pink: 'var(--secondary_pink)',
+        secondary_pink_60: 'var(--secondary_pink_60)',
       },
       animation: {
         marquee: 'marquee 25s linear infinite',

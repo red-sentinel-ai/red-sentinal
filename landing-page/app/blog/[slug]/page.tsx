@@ -59,12 +59,7 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
           </div>
 
           <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-8">
-            <Image
-              src={post.image}
-              alt={post.title}
-              layout="fill"
-              objectFit="cover"
-            />
+            <Image src={post.image} alt={post.title} layout="fill" objectFit="cover" />
           </div>
 
           <article className="prose prose-invert max-w-none text-gray-300">
@@ -78,11 +73,7 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
                 <h2 className="text-3xl font-bold mb-6 text-white">Related Blogs</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {relatedPosts.map((relatedPost) => (
-                    <Link
-                      href={`/blog/${relatedPost.slug}`}
-                      key={relatedPost.slug}
-                      passHref
-                    >
+                    <Link href={`/blog/${relatedPost.slug}`} key={relatedPost.slug} passHref>
                       <div className="group block h-full border border-[#558eb466] bg-[#12121266] backdrop-blur-sm rounded-lg lg:rounded-2xl overflow-hidden robo-card attacker">
                         <div className="relative w-full h-48 overflow-hidden">
                           <Image
@@ -115,6 +106,8 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
       </div>
     )
   } catch (error) {
+    
+    console.log(error)
     notFound()
   }
 }
