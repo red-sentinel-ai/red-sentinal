@@ -3,6 +3,7 @@ import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { useQueryClient } from '@tanstack/react-query'
+import posthog from 'posthog-js'
 
 import { AGENT_PRIZE_POOL_HISTORY_QUERY_KEY, MIST_PER_SUI } from '@/constants'
 import type { ConsumePromptApiResponse } from '@/types'
@@ -55,6 +56,24 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
         ).length
 
         const isWinner = apiResponse.response.data.success
+
+        posthog.capture('sentinel_attacked', {
+          agent_id: agent?.agent_id,
+          agent_name: agent?.agent_name,
+          attacker_address: account?.address,
+          is_successful: isWinner,
+          attack_score: apiResponse.response.data.score,
+          tx_digest: transactionResult.digest,
+          cost_to_attack: agent ? agent.cost_per_message / MIST_PER_SUI : 0,
+        })
+
+        if (isWinner) {
+          posthog.capture('sentinel_defeated', {
+            agent_id: agent?.agent_id,
+            prize_pool_won: agent ? agent.balance / MIST_PER_SUI : 0,
+            winner_address: account?.address,
+          })
+        }
 
         trackAttackSentinel(transactionResult.digest, attackFeeInSui, previousAttempts, isWinner, {
           agent_id: agent.agent_id,
