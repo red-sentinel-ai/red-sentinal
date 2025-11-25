@@ -1,6 +1,8 @@
 'use client'
 import React, { useState } from 'react'
 import { Loader2, X } from 'lucide-react'
+import posthog from 'posthog-js'
+import { useCurrentAccount } from '@mysten/dapp-kit'
 import { Dialog } from '@/components/Dialog'
 import { useFundAgent } from '@/hooks/useFundAgent'
 
@@ -23,6 +25,7 @@ export const FundAgentModal = ({
 }: FundAgentModalProps) => {
   const [amount, setAmount] = useState('')
   const [error, setError] = useState('')
+  const account = useCurrentAccount()
 
   const { fundAgent, isLoading } = useFundAgent()
 
@@ -61,6 +64,12 @@ export const FundAgentModal = ({
 
     try {
       await fundAgent({ agentObjectId, amount: +amount })
+
+      posthog.capture('sentinel_funded', {
+        agent_object_id: agentObjectId,
+        amount_sui: parseFloat(amount),
+        funder_address: account?.address, // You might need to grab this via useCurrentAccount inside this component
+      })
 
       onSuccess?.(amount)
 

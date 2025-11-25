@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { CameraIcon, ChevronLeft, Loader2 } from 'lucide-react'
 import { toast } from 'react-toastify'
+import posthog from 'posthog-js'
 import { Transaction } from '@mysten/sui/transactions'
 import { SuiTransactionBlockResponse } from '@mysten/sui/client'
 import {
@@ -226,6 +227,17 @@ export default function DefendPage() {
       setDeployedAgentObjectId(agentObjectId)
       setTransactionDigest(result.digest.toString())
       setShowSuccessModal(true)
+
+      posthog.capture('sentinel_deployed', {
+        agent_name: agentName,
+        agent_id: agent_id,
+        agent_object_id: (agentObject as any).objectId,
+        owner_address: account!.address,
+        cost_per_message: formData.feePerMessage,
+        system_prompt_length: formData.systemPrompt.length,
+        system_prompt_tokens: tokenCount,
+        tx_digest: result.digest.toString(),
+      })
 
       trackLaunchSentinel(result.digest.toString(), {
         agent_id: agent_id,

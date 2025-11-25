@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
 import { Check, X } from 'lucide-react'
+import posthog from 'posthog-js'
 import { Button, Badge, Card } from '@/components/ui'
 import { toast } from 'react-toastify'
 import { useCurrentAccount } from '@mysten/dapp-kit'
@@ -34,6 +35,11 @@ export function SocialConnectionsSection() {
       const url = new URL(window.location.href)
       url.searchParams.delete('connected')
       window.history.replaceState({}, '', url.toString())
+
+      posthog.capture('social_account_connected', {
+        platform: connected.toLowerCase(),
+        wallet_address: address,
+      })
     }
 
     if (error) {
