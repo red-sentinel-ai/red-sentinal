@@ -1,4 +1,14 @@
-import { Briefcase, Coins, Github, Shield, Target, Trophy, Users, Zap } from 'lucide-react'
+import {
+  Briefcase,
+  Coins,
+  FileText,
+  Github,
+  Shield,
+  Target,
+  Trophy,
+  Users,
+  Zap,
+} from 'lucide-react'
 
 export const supabaseUrl = process.env.SUPABASE_URL || ''
 export const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
@@ -123,6 +133,14 @@ export const socialLinks = [
     alt: 'Documentation',
     name: 'Docs',
     isOutside: true,
+  },
+  {
+    href: '/blog',
+    icon: FileText,
+    isImage: false,
+    alt: 'blog',
+    name: 'Blog',
+    isOutside: false,
   },
   {
     href: '/careers',
