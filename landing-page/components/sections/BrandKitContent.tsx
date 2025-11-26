@@ -315,6 +315,38 @@ export const BrandKitContent = () => {
             </div>
           </div>
         </div>
+
+        <div className="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-12 items-start">
+          <div>
+            <h3 className="text-[#5F5C5C] text-lg md:text-xl mb-2">Font family</h3>
+            <p className="text-2xl md:text-[36px] font-medium">Satoshi</p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-12 pl-8 md:pl-16 py-2">
+            <div className="grid grid-cols-3 gap-8">
+              <div>
+                <p className="text-2xl md:text-[36px] mb-2">Aa</p>
+                <p className="text-base md:text-xl">Medium</p>
+              </div>
+              <div>
+                <p className="text-2xl md:text-[36px] mb-2 italic font-medium">Aa</p>
+                <p className="text-base md:text-xl">Medium Italic</p>
+              </div>
+              <div>
+                <p className="text-2xl md:text-[36px] mb-2 font-normal">Aa</p>
+                <p className="text-base md:text-xl">Regular</p>
+              </div>
+            </div>
+
+            <div className="flex justify-end">
+              <div className="text-lg md:text-xl space-y-1 font-medium break-all">
+                <p>ABCDEFGHIJKLMNOPQRSTUVWXYZ</p>
+                <p>abcdefghijklmnopqrstuvwxyz</p>
+                <p>0123456789 !@#$%^&*()</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   )
