@@ -14,13 +14,23 @@ export default function BlogIndex() {
         backgroundSize: '100% auto',
       }}
     >
-      <div className="vertical-line left-4"></div>
-      <div className="vertical-line right-4"></div>
+      <div className="vertical-line left-4 -top-40"></div>
+      <div className="vertical-line right-4 -top-40"></div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 py-12 pt-20">
-        <div className="mb-16 md:pl-4">
-          <h1 className="text-4xl md:text-6xl font-medium mb-6 leading-tight">Sui Sentinel</h1>
-          <p className="text-xl text-[#5F5C5C] max-w-2xl leading-relaxed">
+      <div
+        style={{
+          backgroundImage: "url('/img/bannerImage.png')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+        className="w-full h-[300px] md:h-[500px] flex items-end justify-center pb-16 mb-12"
+      >
+        <h1 className="text-4xl md:text-6xl font-bold text-white tracking-wide">Sui Sentinel</h1>
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 pb-24">
+        <div className="mb-16 md:pl-4 text-center md:text-left">
+          <p className="text-xl text-[#5F5C5C] max-w-2xl leading-relaxed mx-auto md:mx-0">
             Deep dives into AI security, platform updates, and strategies from the battlefield. Real
             voices from the guardians protecting the network.
           </p>
