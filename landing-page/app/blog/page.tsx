@@ -19,7 +19,6 @@ export default function BlogIndex() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 py-12 pt-20">
         <div className="mb-16 md:pl-4">
-          <div className="badge-pink w-fit mb-6">• Updates</div>
           <h1 className="text-4xl md:text-6xl font-medium mb-6 leading-tight">Sui Sentinel</h1>
           <p className="text-xl text-[#5F5C5C] max-w-2xl leading-relaxed">
             Deep dives into AI security, platform updates, and strategies from the battlefield. Real
@@ -39,7 +38,7 @@ export default function BlogIndex() {
                   src={post.image}
                   alt={post.title}
                   fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="object-cover transition-transform duration-500"
                 />
               </div>
 
@@ -55,7 +54,7 @@ export default function BlogIndex() {
                   ))}
                 </div>
 
-                <h2 className="text-2xl font-medium mb-3 leading-snug group-hover:text-[#C871FF] transition-colors">
+                <h2 className="text-2xl font-medium mb-3 leading-snug transition-colors">
                   {post.title}
                 </h2>
 
@@ -70,7 +69,7 @@ export default function BlogIndex() {
                       {new Date(post.date).toLocaleDateString()}
                     </span>
                   </div>
-                  <div className="size-8 rounded-full border border-black flex items-center justify-center group-hover:bg-black group-hover:text-white transition-colors">
+                  <div className="size-8 rounded-full border border-black flex items-center justify-center transition-colors">
                     <ArrowRight size={14} />
                   </div>
                 </div>

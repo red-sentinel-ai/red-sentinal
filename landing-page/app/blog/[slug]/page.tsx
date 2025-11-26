@@ -38,7 +38,7 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
         <div className="vertical-line left-4"></div>
         <div className="vertical-line right-4"></div>
 
-        <div className="relative z-10 container mx-auto px-4 md:px-8 py-24 pt-40">
+        <div className="relative z-10 container mx-auto px-4 md:px-8 pb-12 pt-20">
           <div className="max-w-4xl mx-auto">
             <Link
               href="/blog"
