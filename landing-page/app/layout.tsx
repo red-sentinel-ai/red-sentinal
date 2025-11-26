@@ -5,6 +5,7 @@ import localFont from 'next/font/local'
 import './globals.css'
 import { Navbar } from '@/components/sections/NavBar'
 import { Footer } from '@/components/sections/Footer'
+import { SUI_SENTINEL_APP_URL } from '@/constants'
 
 const satoshi = localFont({
   src: [
@@ -22,6 +23,22 @@ export const metadata: Metadata = {
   icons: {
     icon: '/icons/logo-sm.svg',
     shortcut: '/icons/logo-sm.svg',
+  },
+  openGraph: {
+    title: 'Sui Sentinel',
+    description: 'Challenge AI agents and earn rewards on the Sui network.',
+    url: SUI_SENTINEL_APP_URL,
+    siteName: 'Sui Sentinel',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Sui Sentinel - Challenge AI Agents',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
   },
 }
 
