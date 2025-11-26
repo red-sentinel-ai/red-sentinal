@@ -235,6 +235,41 @@ export const BrandKitContent = () => {
             </div>
           </div>
         </div>
+
+        <div className="mt-8 md:mt-32">
+          <h3 className="font-medium text-lg md:text-[28px] mb-4">Base Colors</h3>
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
+            <div>
+              <div className="rounded-xl h-full overflow-hidden shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
+                <div className="bg-black min-h-40"></div>
+                <div className="px-4 py-2">
+                  <h4 className="text-md md:text-xl">Black</h4>
+                  <p className="text-sm md:text-base text-[#5F5C5C]">#000000</p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div className="rounded-xl h-full overflow-hidden shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
+                <div className="bg-white min-h-40"></div>
+                <div className="px-4 py-2">
+                  <h4 className="text-md md:text-xl">White</h4>
+                  <p className="text-sm md:text-base text-[#5F5C5C]">#FFFFFF</p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div className="rounded-xl h-full overflow-hidden shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
+                <div className="bg-[#EAEAEA] min-h-40"></div>
+                <div className="px-4 py-2">
+                  <h4 className="text-md md:text-xl">Grey</h4>
+                  <p className="text-sm md:text-base text-[#5F5C5C]">#EAEAEA</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   )
