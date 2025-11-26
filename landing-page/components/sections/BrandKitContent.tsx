@@ -270,6 +270,51 @@ export const BrandKitContent = () => {
             </div>
           </div>
         </div>
+
+        <div className="mt-8 md:mt-12">
+          <h3 className="font-medium text-lg md:text-[28px] mb-4">Primary Brand Colors</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div>
+              <div className="rounded-xl h-full overflow-hidden shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
+                <div className="bg-[#F445AB] min-h-40"></div>
+                <div className="px-4 py-2">
+                  <h4 className="text-md md:text-xl">Sentinel Pink</h4>
+                  <p className="text-sm md:text-base text-[#5F5C5C]">#F445AB</p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div className="rounded-xl h-full overflow-hidden shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
+                <div className="bg-[#A06BFF] min-h-40"></div>
+                <div className="px-4 py-2">
+                  <h4 className="text-md md:text-xl">Sentinel Pulse</h4>
+                  <p className="text-sm md:text-base text-[#5F5C5C]">#A06BFF</p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div className="rounded-xl h-full overflow-hidden shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
+                <div className="bg-[#A5DBFD] min-h-40"></div>
+                <div className="px-4 py-2">
+                  <h4 className="text-md md:text-xl">Sentinel Blue</h4>
+                  <p className="text-sm md:text-base text-[#5F5C5C]">#A5DBFD</p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div className="rounded-xl h-full overflow-hidden shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
+                <div className="bg-[#9AFFC0] min-h-40"></div>
+                <div className="px-4 py-2">
+                  <h4 className="text-md md:text-xl">Sentinel Mint</h4>
+                  <p className="text-sm md:text-base text-[#5F5C5C]">#9AFFC0</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   )
