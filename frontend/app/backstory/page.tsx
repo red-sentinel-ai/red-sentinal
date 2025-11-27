@@ -1,9 +1,10 @@
-'use client'
+import { Metadata } from 'next'
+import { BackstoryGridWrapper } from '@/components/backstory/BackstoryGridWrapper'
 
-import { useState, useEffect } from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { cn } from '@/lib/utils'
+export const metadata: Metadata = {
+  title: 'Backstory | Sui Sentinel',
+  description: 'Explore the lore and origins of the Sui Sentinel AI agents.',
+}
 
 const STORIES = [
   {
@@ -56,25 +57,7 @@ const STORIES = [
   },
 ]
 
-export default function BackStory() {
-  const [visitedArcs, setVisitedArcs] = useState<string[]>([])
-  const [hoveredArc, setHoveredArc] = useState<string | null>(null)
-
-  useEffect(() => {
-    const stored = localStorage.getItem('visited_backstory_arcs')
-    if (stored) {
-      setVisitedArcs(JSON.parse(stored))
-    }
-  }, [])
-
-  const handleCardClick = (id: string) => {
-    if (!visitedArcs.includes(id)) {
-      const updated = [...visitedArcs, id]
-      setVisitedArcs(updated)
-      localStorage.setItem('visited_backstory_arcs', JSON.stringify(updated))
-    }
-  }
-
+export default function BackStoryPage() {
   return (
     <div className="max-w-[1440px] mx-auto px-4 md:px-12 py-4 pt-24 min-h-body leading-loose">
       <h1 className="text-2xl md:text-[48px] font-bold mb-20">
@@ -84,86 +67,7 @@ export default function BackStory() {
         <span className="text-[#C871FF]">BACKSTORY</span>
       </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {STORIES.map((story, index) => {
-          const isFirstCard = index === 0
-          const isVisited = visitedArcs.includes(story.id)
-          const isHovered = hoveredArc === story.id
-          const isActive = isVisited || isHovered
-
-          let backgroundClass = ''
-          let grayscaleClass = ''
-          let textColorClass = ''
-
-          if (isActive) {
-            backgroundClass = story.activeGradient
-            grayscaleClass = 'grayscale-0'
-            textColorClass = 'text-black'
-          } else {
-            textColorClass = 'text-[#5F5C5C]'
-
-            if (isFirstCard) {
-              backgroundClass = 'special-gray-gradient'
-              grayscaleClass = 'grayscale-0'
-            } else {
-              backgroundClass = story.activeGradient
-              grayscaleClass = 'grayscale'
-            }
-          }
-
-          return (
-            <Link
-              key={story.id}
-              href={story.link}
-              onClick={() => handleCardClick(story.id)}
-              onMouseEnter={() => setHoveredArc(story.id)}
-              onMouseLeave={() => setHoveredArc(null)}
-              className={cn(
-                'relative rounded-lg min-h-[480px] flex items-end border transition-all duration-500 ease-in-out overflow-hidden group cursor-pointer',
-                story.borderColor,
-                backgroundClass,
-                grayscaleClass,
-                !isFirstCard && !isActive && 'grayscale'
-              )}
-            >
-              <div className={cn('absolute min-w-[276px] transition-opacity', story.imgClass)}>
-                <Image
-                  src={story.image}
-                  width={story.imgWidth}
-                  height={story.imgHeight}
-                  alt={`${story.title} illustration`}
-                  className="object-contain"
-                />
-              </div>
-
-              <div
-                className={cn(
-                  'flex justify-between w-full items-end px-4 py-6 relative z-10 transition-colors duration-300',
-                  textColorClass
-                )}
-              >
-                <div>
-                  <h2 className="text-base font-medium">{story.arcLabel}</h2>
-                  <h3 className="font-bold text-2xl">{story.title}</h3>
-                </div>
-
-                <div className="transition-transform duration-300 group-hover:translate-x-1">
-                  <Image
-                    src="/icons/arrow_right.png"
-                    width={45}
-                    height={24}
-                    alt="arrow right"
-                    className={cn(
-                      'transition-all duration-300',
-                      !isActive ? 'opacity-60 contrast-50' : 'opacity-100 contrast-100'
-                    )}
-                  />
-                </div>
-              </div>
-            </Link>
-          )
-        })}
-      </div>
+      <BackstoryGridWrapper stories={STORIES} />
     </div>
   )
 }
