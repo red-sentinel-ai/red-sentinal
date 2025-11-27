@@ -85,6 +85,10 @@
     @apply absolute top-0 bottom-0 border-l border-l-black z-50 hidden md:block;
   }
 
+  .special-gray-gradient{
+    @apply bg-gradient-to-b from-[#F8F9F9] via-[#F8FDFD] to-[#A3A5A4]
+  }
+
 }
 
 html {
