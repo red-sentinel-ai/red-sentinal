@@ -44,7 +44,7 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-8 text-xl md:text-2xl py-12 font-normal max-w-4xl">
+      <div className="flex flex-col gap-8 text-xl md:text-2xl py-12 font-normal max-w-[1030px]">
         <p>
           When <span className="font-medium italic">Alan Turing</span> created the concept of a{' '}
           <span className="font-medium italic">thinking machine</span>, humans{' '}
