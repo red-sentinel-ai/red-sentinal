@@ -44,7 +44,7 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-8 text-xl md:text-2xl py-12 font-normal max-w-4xl">
+      <div className="flex flex-col gap-8 text-xl md:text-2xl py-12 font-normal max-w-[1030px]">
         <p>
           <span className="italic">When Deep Blue defeated Kasparov, humans were shocked.</span>
         </p>
