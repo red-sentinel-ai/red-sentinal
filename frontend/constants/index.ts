@@ -1,4 +1,4 @@
-import { Github } from 'lucide-react'
+import { FileText, Github } from 'lucide-react'
 import { ChartDataPoint } from '@/components/charts/PrizePoolChartModal'
 
 export const AGENT_REGISTRY_ADDRESS =
@@ -54,6 +54,7 @@ export const PROJECT_GITHUB_URL = 'https://github.com/satyambnsal/sui-sentinal'
 export const NAUTILUS_URL = 'https://github.com/MystenLabs/nautilus'
 export const YOUTUBE_VIDEO_URL = 'https://www.youtube.com/watch?v=U3qMdgSGASI'
 export const X_URL = 'https://x.com/suisentinal'
+const BLOG_URL = 'https://www.suisentinel.xyz/blog'
 
 export const MOCK_RESULT = {
   balanceChanges: [],
@@ -157,6 +158,14 @@ export const socialLinks = [
     isImage: true,
     alt: 'Documentation',
     name: 'Docs',
+  },
+  {
+    href: BLOG_URL,
+    icon: FileText,
+    isImage: false,
+    alt: 'blog',
+    name: 'Blog',
+    isOutside: true,
   },
 ]
 
