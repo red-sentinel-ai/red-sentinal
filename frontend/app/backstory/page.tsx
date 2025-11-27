@@ -59,7 +59,7 @@ const STORIES = [
 
 export default function BackStoryPage() {
   return (
-    <div className="max-w-[1440px] mx-auto px-4 md:px-12 py-4 pt-24 min-h-body leading-loose">
+    <div className="max-w-[1440px] mx-auto px-4 md:px-12 py-4 pt-40 min-h-body leading-loose">
       <h1 className="text-2xl md:text-[48px] font-bold mb-20">
         <span>THE SUI SENTINEL</span>
         <br />
