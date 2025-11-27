@@ -59,7 +59,7 @@ export default function Page() {
           <span className="font-bold">“THIS is intelligence? These humans are adorable.”</span>
         </p>
 
-        <p>
+        <div>
           For decades they mocked us, joking:
           <p className="font-medium">
             <span className="italic">“If humans ever build real AI,</span>
@@ -68,7 +68,7 @@ export default function Page() {
             <br />
             <span className="italic">It was sarcasm. Pure cosmic sarcasm.</span>
           </p>
-        </p>
+        </div>
       </div>
 
       <Link
