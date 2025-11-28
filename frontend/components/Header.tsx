@@ -29,6 +29,11 @@ export const Header = () => {
         'bg-transparent': !scrolled && !menuOpen,
       })}
     >
+      <div className="text-center text-black h-11 flex items-center justify-center bg-gradient-to-r from-black/15 to-[rgba(102,102,102,0.2)] p-2 text-xs md:text-base">
+        <h3 className="text-shadow-[0_4px_4px_rgba(0,0,0,0.25)] font-medium">
+          Sui Sentinel is live on Testnet. Mainnet launches after smart-contract audits.
+        </h3>
+      </div>
       <div className="max-w-full mx-auto flex items-center p-3 lg:px-8 py-4 justify-between">
         <div className="flex items-center flex-1">
           <Link
