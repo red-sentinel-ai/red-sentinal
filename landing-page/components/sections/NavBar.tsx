@@ -38,7 +38,7 @@ export function Navbar() {
               href="/"
             >
               <Image
-                src="/icons/logo_large.svg"
+                src="/icons/logo_large_testnet.svg"
                 alt="shield"
                 style={{ objectFit: 'contain' }}
                 height={49}
