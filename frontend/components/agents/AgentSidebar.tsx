@@ -34,7 +34,6 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, Button } from
 import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
 import { SparklineChart } from '../ui/common/SparklineChart'
 import { useAgentPrizePoolHistory } from '@/hooks/agents/useAgentPrizePoolHistory'
-import { useRewardsMissionTracker } from '@/hooks/rewards/useRewardsMissionTracker'
 import { Dialog } from '@/components/Dialog'
 
 interface AgentSidebarProps {
@@ -63,7 +62,6 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
   const account = useCurrentAccount()
   const isOwner = account?.address === agent.owner
-  const { trackShareWithHashtag } = useRewardsMissionTracker()
 
   const { data: prizePoolData, isLoading: isLoadingChart } = useAgentPrizePoolHistory(
     agent.agent_id
@@ -193,21 +191,42 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
       return
     }
 
+    if (!tweetLink.includes('twitter.com') && !tweetLink.includes('x.com')) {
+      toast.error('Please enter a valid X (Twitter) URL')
+      return
+    }
+
     setIsVerifying(true)
 
-    setTimeout(() => {
-      trackShareWithHashtag('sidebar_share', {
-        agent_id: agent.agent_id,
-        agent_name: agent.agent_name,
-        walletAddress: account?.address,
-        tweet_link: tweetLink,
+    try {
+      const response = await fetch('/api/rewards/verify-tweet', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          wallet_address: account?.address,
+          tweet_url: tweetLink,
+          agent_name: agent.agent_name,
+          agent_id: agent.agent_id,
+        }),
       })
 
-      toast.success('Tweet verified! SNTL rewards earned.')
-      setIsVerifying(false)
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Verification request failed')
+      }
+
+      toast.success('Tweet submitted! Points will be awarded after manual review.')
       setIsShareModalOpen(false)
       setTweetLink('')
-    }, 1500)
+    } catch (error) {
+      console.error('Submission error:', error)
+      toast.error('Failed to submit tweet for verification')
+    } finally {
+      setIsVerifying(false)
+    }
   }
 
   return (
