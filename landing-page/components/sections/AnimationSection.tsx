@@ -51,18 +51,11 @@ export const AnimationSection = () => {
           </div>
         </div>
         <Image
-          src="/img/rings_v2.png"
+          src="/img/3rings.webp"
           alt="animation section art"
           width={1700}
           height={1700}
-          className="
-    absolute
-    top-[-250px]
-    right-[-50px]  
-    pointer-events-none
-    select-none
-
-  "
+          className="absolute top-[-250px] right-[-50px] pointer-events-none select-none opacity-40"
         />
 
         {/* <video

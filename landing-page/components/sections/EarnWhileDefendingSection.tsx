@@ -27,18 +27,11 @@ export function EarnWhileDefendingSection() {
         Your browser does not support the video tag.
       </video> */}
       <Image
-        src="/img/bottom_ring.png"
+        src="/img/bottom_ring.webp"
         alt="animation section art"
         width={1066.5}
         height={1005}
-        className="
-          absolute
-          -top-20
-          pointer-events-none
-          select-none
-          opacity-48
-      
-        "
+        className="absolute -top-20 pointer-events-none select-none opacity-48"
       />
 
       <motion.div
