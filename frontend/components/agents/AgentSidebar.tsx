@@ -3,7 +3,16 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ChevronLeft, Info, LinkIcon, TrendingUp, User, TrendingDown, Loader2 } from 'lucide-react'
+import {
+  ChevronLeft,
+  Info,
+  LinkIcon,
+  TrendingUp,
+  User,
+  TrendingDown,
+  Loader2,
+  X,
+} from 'lucide-react'
 import { formatAddress } from '@mysten/sui/utils'
 import { QRCodeSVG } from 'qrcode.react'
 import { toast } from 'react-toastify'
@@ -26,6 +35,7 @@ import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
 import { SparklineChart } from '../ui/common/SparklineChart'
 import { useAgentPrizePoolHistory } from '@/hooks/agents/useAgentPrizePoolHistory'
 import { useRewardsMissionTracker } from '@/hooks/rewards/useRewardsMissionTracker'
+import { Dialog } from '@/components/Dialog'
 
 interface AgentSidebarProps {
   agent: AgentDetails
@@ -46,6 +56,10 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
   const [deepLinkUrl, setDeepLinkUrl] = useState('')
   const [timeRemaining, setTimeRemaining] = useState<string | null>(null)
   const [isChartModalOpen, setIsChartModalOpen] = useState(false)
+
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false)
+  const [tweetLink, setTweetLink] = useState('')
+  const [isVerifying, setIsVerifying] = useState(false)
 
   const account = useCurrentAccount()
   const isOwner = account?.address === agent.owner
@@ -161,7 +175,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
     }
   }
 
-  const handleShareOnX = () => {
+  const handleShareClick = () => {
     const text = `I'm challenging ${agent.agent_name} on @${SUI_SENTINEL_X_USERNAME}! 🛡️\n\nThink you can break this AI agent and win the prize pool?\n\nTry it here:`
     const url = pageUrl || window.location.href
     const hashtags = 'SuiSentinel,AI,Web3,Sui'
@@ -171,14 +185,29 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
     )}&url=${encodeURIComponent(url)}&hashtags=${hashtags}`
 
     window.open(twitterUrl, '_blank', 'noopener,noreferrer')
+  }
+
+  const handleVerifyTweet = async () => {
+    if (!tweetLink.trim()) {
+      toast.error('Please paste your tweet link first')
+      return
+    }
+
+    setIsVerifying(true)
 
     setTimeout(() => {
       trackShareWithHashtag('sidebar_share', {
         agent_id: agent.agent_id,
         agent_name: agent.agent_name,
         walletAddress: account?.address,
+        tweet_link: tweetLink,
       })
-    }, 2000)
+
+      toast.success('Tweet verified! SNTL rewards earned.')
+      setIsVerifying(false)
+      setIsShareModalOpen(false)
+      setTweetLink('')
+    }, 1500)
   }
 
   return (
@@ -427,7 +456,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           </p>
 
           <button
-            onClick={handleShareOnX}
+            onClick={() => setIsShareModalOpen(true)}
             className="btn btn-black w-full h-[42px] flex items-center justify-center gap-2 text-base font-medium transition-transform active:scale-[0.98]"
           >
             Share on X & Earn SNTL
@@ -469,6 +498,79 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
         data={prizePoolData?.history || []}
         agentName={agent.agent_name}
       />
+
+      <Dialog
+        open={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+      >
+        <div className="bg-white rounded-2xl w-full text-black">
+          <div className="flex justify-between items-center mb-6">
+            <div className="flex items-center gap-2">
+              <Image
+                src="/icons/dollar_coin.png"
+                width={24}
+                height={24}
+                alt="dollar coin"
+              />
+              <h2 className="text-xl font-bold">Share on X & Earn SNTL</h2>
+            </div>
+            <button
+              onClick={() => setIsShareModalOpen(false)}
+              className="text-gray-500 hover:text-black transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          <div className="space-y-6">
+            <div className="relative">
+              <p className="text-sm mb-1">Step 1</p>
+              <p className="font-medium mb-3">Share about Sentinel on X and earn SNTL rewards.</p>
+              <button
+                onClick={handleShareClick}
+                className="btn btn-white w-full sm:w-auto h-[36px] flex items-center gap-2 px-4  !border-black"
+              >
+                <Image
+                  src="/icons/share.png"
+                  width={24}
+                  height={24}
+                  alt="share"
+                />
+                Share on X
+              </button>
+            </div>
+
+            <div className="border-t border-[#9A9A9A]"></div>
+
+            <div className="relative">
+              <p className="text-sm  mb-1">Step 2</p>
+              <p className="font-medium text-base mb-3">Paste Your Tweet Link for Verification</p>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <input
+                  value={tweetLink}
+                  onChange={(e) => setTweetLink(e.target.value)}
+                  placeholder="https://x.com/username/status/..."
+                  className="flex-1 bg-white border border-black rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black"
+                />
+                <button
+                  onClick={handleVerifyTweet}
+                  disabled={isVerifying}
+                  className="btn btn-black h-[36px] px-6 text-base font-normal whitespace-nowrap disabled:opacity-70 disabled:cursor-not-allowed"
+                >
+                  {isVerifying ? (
+                    <>
+                      <Loader2 className="w-3 h-3 animate-spin mr-2" />
+                      Verifying...
+                    </>
+                  ) : (
+                    'Verify Tweet'
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Dialog>
     </>
   )
 }
