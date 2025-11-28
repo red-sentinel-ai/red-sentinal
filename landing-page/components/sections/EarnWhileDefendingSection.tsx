@@ -31,7 +31,7 @@ export function EarnWhileDefendingSection() {
         alt="animation section art"
         width={1066.5}
         height={1005}
-        className="absolute -top-20 pointer-events-none select-none opacity-48"
+        className="absolute -top-60 pointer-events-none select-none opacity-48"
       />
 
       <motion.div
