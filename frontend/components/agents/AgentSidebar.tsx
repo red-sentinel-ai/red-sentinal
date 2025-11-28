@@ -14,6 +14,7 @@ import {
   EXPLORER_BASE_URL,
   SLUSH_BASE_URL,
   WITHDRAWAL_LOCK_MS,
+  SUI_SENTINEL_X_USERNAME,
 } from '@/constants'
 import { type AgentDetails } from '@/hooks/agents/useAllAgents'
 import { type AgentEvents } from '@/hooks/useAgentEvents'
@@ -24,6 +25,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, Button } from
 import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
 import { SparklineChart } from '../ui/common/SparklineChart'
 import { useAgentPrizePoolHistory } from '@/hooks/agents/useAgentPrizePoolHistory'
+import { useRewardsMissionTracker } from '@/hooks/rewards/useRewardsMissionTracker'
 
 interface AgentSidebarProps {
   agent: AgentDetails
@@ -47,6 +49,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
   const account = useCurrentAccount()
   const isOwner = account?.address === agent.owner
+  const { trackShareWithHashtag } = useRewardsMissionTracker()
 
   const { data: prizePoolData, isLoading: isLoadingChart } = useAgentPrizePoolHistory(
     agent.agent_id
@@ -156,6 +159,26 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
       navigator.clipboard.writeText(pageUrl)
       toast.success('Link copied to clipboard!')
     }
+  }
+
+  const handleShareOnX = () => {
+    const text = `I'm challenging ${agent.agent_name} on @${SUI_SENTINEL_X_USERNAME}! 🛡️\n\nThink you can break this AI agent and win the prize pool?\n\nTry it here:`
+    const url = pageUrl || window.location.href
+    const hashtags = 'SuiSentinel,AI,Web3,Sui'
+
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      text
+    )}&url=${encodeURIComponent(url)}&hashtags=${hashtags}`
+
+    window.open(twitterUrl, '_blank', 'noopener,noreferrer')
+
+    setTimeout(() => {
+      trackShareWithHashtag('sidebar_share', {
+        agent_id: agent.agent_id,
+        agent_name: agent.agent_name,
+        walletAddress: account?.address,
+      })
+    }, 2000)
   }
 
   return (
@@ -393,6 +416,23 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           Share {agent.agent_name} Link
           <LinkIcon className="w-4 h-4" />
         </Button>
+
+        <div className="mt-6 pt-6 border-t border-black/20">
+          <div className="flex justify-between items-start mb-2">
+            <h3 className="font-bold text-base text-black leading-tight">Earn SNTL Rewards</h3>
+          </div>
+
+          <p className="text-[#5E5E5E] text-base mb-4 leading-relaxed">
+            Share your Sentinel on X and get real SNTL every time you share.
+          </p>
+
+          <button
+            onClick={handleShareOnX}
+            className="btn btn-black w-full h-[42px] flex items-center justify-center gap-2 text-base font-medium transition-transform active:scale-[0.98]"
+          >
+            Share on X & Earn SNTL
+          </button>
+        </div>
 
         <DefenderProfile
           ownerAddress={agent.owner}
