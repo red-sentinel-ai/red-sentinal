@@ -12,6 +12,7 @@ import {
   TrendingDown,
   Loader2,
   X,
+  CheckCircle,
 } from 'lucide-react'
 import { formatAddress } from '@mysten/sui/utils'
 import { QRCodeSVG } from 'qrcode.react'
@@ -59,6 +60,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
   const [tweetLink, setTweetLink] = useState('')
   const [isVerifying, setIsVerifying] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
 
   const account = useCurrentAccount()
   const isOwner = account?.address === agent.owner
@@ -185,6 +187,12 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
     window.open(twitterUrl, '_blank', 'noopener,noreferrer')
   }
 
+  const handleCloseShareModal = () => {
+    setIsShareModalOpen(false)
+    setIsSubmitted(false)
+    setTweetLink('')
+  }
+
   const handleVerifyTweet = async () => {
     if (!tweetLink.trim()) {
       toast.error('Please paste your tweet link first')
@@ -218,8 +226,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
         throw new Error(data.error || 'Verification request failed')
       }
 
-      toast.success('Tweet submitted! Points will be awarded after manual review.')
-      setIsShareModalOpen(false)
+      setIsSubmitted(true)
       setTweetLink('')
     } catch (error) {
       console.error('Submission error:', error)
@@ -520,7 +527,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
       <Dialog
         open={isShareModalOpen}
-        onClose={() => setIsShareModalOpen(false)}
+        onClose={handleCloseShareModal}
       >
         <div className="bg-white rounded-2xl w-full text-black">
           <div className="flex justify-between items-center mb-6">
@@ -534,60 +541,80 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
               <h2 className="text-xl font-bold">Share on X & Earn SNTL</h2>
             </div>
             <button
-              onClick={() => setIsShareModalOpen(false)}
+              onClick={handleCloseShareModal}
               className="text-gray-500 hover:text-black transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
-          <div className="space-y-6">
-            <div className="relative">
-              <p className="text-sm mb-1">Step 1</p>
-              <p className="font-medium mb-3">Share about Sentinel on X and earn SNTL rewards.</p>
+          {isSubmitted ? (
+            <div className="flex flex-col items-center justify-center py-6 text-center space-y-4 animate-in fade-in zoom-in duration-300">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                <CheckCircle className="w-8 h-8 text-green-600" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-black mb-2">Submission Received!</h3>
+                <p className="text-gray-600 max-w-xs mx-auto">
+                  Once verified RP will be reflected in your profile.
+                </p>
+              </div>
               <button
-                onClick={handleShareClick}
-                className="btn btn-white w-full sm:w-auto h-[36px] flex items-center gap-2 px-4  !border-black"
+                onClick={handleCloseShareModal}
+                className="btn btn-black w-full mt-4"
               >
-                <Image
-                  src="/icons/share.png"
-                  width={24}
-                  height={24}
-                  alt="share"
-                />
-                Share on X
+                Close
               </button>
             </div>
-
-            <div className="border-t border-[#9A9A9A]"></div>
-
-            <div className="relative">
-              <p className="text-sm  mb-1">Step 2</p>
-              <p className="font-medium text-base mb-3">Paste Your Tweet Link for Verification</p>
-              <div className="flex flex-col sm:flex-row gap-2">
-                <input
-                  value={tweetLink}
-                  onChange={(e) => setTweetLink(e.target.value)}
-                  placeholder="https://x.com/username/status/..."
-                  className="flex-1 bg-white border border-black rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black"
-                />
+          ) : (
+            <div className="space-y-6">
+              <div className="relative">
+                <p className="text-sm mb-1">Step 1</p>
+                <p className="font-medium mb-3">Share about Sentinel on X and earn SNTL rewards.</p>
                 <button
-                  onClick={handleVerifyTweet}
-                  disabled={isVerifying}
-                  className="btn btn-black h-[36px] px-6 text-base font-normal whitespace-nowrap disabled:opacity-70 disabled:cursor-not-allowed"
+                  onClick={handleShareClick}
+                  className="btn btn-white w-full sm:w-auto h-[36px] flex items-center gap-2 px-4 !border-black"
                 >
-                  {isVerifying ? (
-                    <>
-                      <Loader2 className="w-3 h-3 animate-spin mr-2" />
-                      Verifying...
-                    </>
-                  ) : (
-                    'Verify Tweet'
-                  )}
+                  <Image
+                    src="/icons/share.png"
+                    width={24}
+                    height={24}
+                    alt="share"
+                  />
+                  Share on X
                 </button>
               </div>
+
+              <div className="border-t border-[#9A9A9A]"></div>
+
+              <div className="relative">
+                <p className="text-sm mb-1">Step 2</p>
+                <p className="font-medium text-base mb-3">Paste Your Tweet Link for Verification</p>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <input
+                    value={tweetLink}
+                    onChange={(e) => setTweetLink(e.target.value)}
+                    placeholder="https://x.com/username/status/..."
+                    className="flex-1 bg-white border border-black rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black"
+                  />
+                  <button
+                    onClick={handleVerifyTweet}
+                    disabled={isVerifying}
+                    className="btn btn-black h-[36px] px-6 text-base font-normal whitespace-nowrap disabled:opacity-70 disabled:cursor-not-allowed"
+                  >
+                    {isVerifying ? (
+                      <>
+                        <Loader2 className="w-3 h-3 animate-spin mr-2" />
+                        Verifying...
+                      </>
+                    ) : (
+                      'Verify Tweet'
+                    )}
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </Dialog>
     </>
