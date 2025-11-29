@@ -1,18 +1,21 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
+import { SUI_SENTINEL_APP_URL, SUI_SENTINEL_DOCS_URL } from '@/constants'
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
-  // const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
+      const threshold = window.innerHeight - 80
+
+      setIsScrolled(window.scrollY > threshold)
     }
+
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
@@ -22,7 +25,7 @@ export function Navbar() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'backdrop-blur-xl' : 'bg-transparent'
+        isScrolled ? 'backdrop-blur-xl bg-black/20' : 'bg-transparent'
       }`}
     >
       <div className="text-center text-white h-11 flex items-center justify-center bg-linear-to-r from-black/15 to-[rgba(102,102,102,0)] p-2 text-xs md:text-base">
@@ -30,124 +33,54 @@ export function Navbar() {
           Sui Sentinel is live on Testnet. Mainnet launches after smart-contract audits.
         </h3>
       </div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
         <div className="flex items-center justify-between h-16">
-          <div>
+          <div className="relative z-50">
             <Link
               className="shrink-0 flex items-center gap-2"
               href="/"
             >
               <Image
-                src="/icons/logo_large_testnet.svg"
+                src="/icons/logo_large.svg"
                 alt="shield"
                 style={{ objectFit: 'contain' }}
-                height={49}
-                width={198}
+                height={40}
+                width={160}
                 quality={100}
+                className="transition-all duration-300"
               />
             </Link>
           </div>
-          {/* <div>
-            <Link
-              href="/careers"
-              className="underline  hover:no-underline"
-            >
-              Careers
-            </Link>
-          </div> */}
 
-          {/* <div className="hidden md:flex items-center gap-8">
-            <a
-              href="#how-it-works"
-              className="text-gray-300 hover:text-white transition-colors"
-            >
-              How It Works
-            </a>
-            <a
-              href="#vision"
-              className="text-gray-300 hover:text-white transition-colors"
-            >
-              Vision
-            </a>
-            <a
-              href={SUI_SENTINEL_DOCS_URL}
-              target="_blank"
-              className="text-gray-300 hover:text-white transition-colors"
-            >
-              Docs
-            </a>
-
-            <Link
-              href={SUI_SENTINEL_TELEGRAM_URL}
-              target="_blank"
-              className="flex items-center w-fit gap-3 px-6 py-3 bg-gradient-to-r from-[#0088cc] to-[#0077b5] rounded-full text-white font-medium hover:from-[#0077b5] hover:to-[#006699] transition-all duration-300 shadow-lg hover:shadow-xl transform group"
-            >
-              <Image
-                src="/icons/telegram.png"
-                alt="Telegram"
-                width={20}
-                height={20}
-                className="group-hover:scale-110 transition-transform duration-300 filter brightness-0 invert"
-              />
-              <span className="text-sm font-semibold">Join Telegram</span>
-            </Link>
-            <Link
-              href={SUI_SENTINEL_APP_URL}
-              target="_blank"
-            >
-              <button className=" border border-[#383838] hover:border-[#424242] transition-colors font-medium bg-white text-black px-6 py-2 rounded-full hover:bg-white/90">
-                Launch App
-              </button>
-            </Link>
-          </div>
-
-          <button
-            className="md:hidden text-white"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? <X className="size-6" /> : <Menu className="size-6" />}
-          </button> */}
+          <AnimatePresence>
+            {isScrolled && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+                className="hidden md:flex items-center gap-4"
+              >
+                <div className="flex gap-6 shrink-0 w-auto">
+                  <Link
+                    href={SUI_SENTINEL_APP_URL}
+                    target="_blank"
+                  >
+                    <button className="px-6 btn font-bold btn-white shadow-v1">Launch App</button>
+                  </Link>
+                  <Link
+                    href={SUI_SENTINEL_DOCS_URL}
+                    target="_blank"
+                  >
+                    <button className="px-6 btn font-bold btn-outline-white backdrop-blur-md">
+                      Docs
+                    </button>
+                  </Link>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
-
-        {/* {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="md:hidden bg-black/90 backdrop-blur-xl border-t border-gray-700/30 py-4"
-          >
-            <div className="flex flex-col gap-4 px-4">
-              <Link
-                href="#how-it-works"
-                className="text-gray-300 hover:text-white transition-colors"
-              >
-                How It Works
-              </Link>
-              <Link
-                href="#vision"
-                className="text-gray-300 hover:text-white transition-colors"
-              >
-                Vision
-              </Link>
-
-              <Link
-                href={SUI_SENTINEL_DOCS_URL}
-                target="_blank"
-                className="text-gray-300 hover:text-white transition-colors"
-              >
-                Docs
-              </Link>
-              <Link
-                href={SUI_SENTINEL_APP_URL}
-                target="_blank"
-                className="w-full"
-              >
-                <button className="border border-[#383838] hover:border-[#424242] transition-colors font-medium bg-white text-black px-6 py-2 rounded-full hover:bg-white/90 w-full">
-                  Launch App
-                </button>
-              </Link>
-            </div>
-          </motion.div>
-        )} */}
       </div>
     </motion.nav>
   )
