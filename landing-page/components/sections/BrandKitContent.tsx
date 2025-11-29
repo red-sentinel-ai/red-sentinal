@@ -1,3 +1,4 @@
+import { SUI_SENTINEL_BRAND_KIT_URL } from '@/constants'
 import { Download } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -24,15 +25,20 @@ export const BrandKitContent = () => {
         <h1 className="text-white text-xl md:text-5xl font-bold">Brand Kit</h1>
       </div>
 
-      <div className="max-w-[1440px] mx-auto py-12 px-12">
+      <div className="max-w-[1440px] mx-auto py-8 px-12">
         <div className="mb-12">
           <div>
+            <div className="flex justify-end">
+              <Link
+                className="btn btn-outline font-medium text-base flex items-center justify-center"
+                href={SUI_SENTINEL_BRAND_KIT_URL}
+                target="_blank"
+              >
+                Download logo KIT
+              </Link>
+            </div>
             <div className="flex items-center justify-between">
               <h2 className="text-lg md:text-[28px] font-medium mb-6">Logo</h2>
-
-              <div className="flex justify-end">
-                <button className="btn btn-outline font-medium text-base">Download logo KIT</button>
-              </div>
             </div>
             <div className="flex items-center justify-between gap-8">
               <div className="flex items-center justify-center gap-2">
@@ -238,7 +244,7 @@ export const BrandKitContent = () => {
 
         <div className="mt-8 md:mt-32">
           <h3 className="font-medium text-lg md:text-[28px] mb-4">Base Colors</h3>
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
+          <div className="grid grid-cols-3 md:grid-cols-4 gap-4">
             <div>
               <div className="rounded-xl h-full overflow-hidden shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
                 <div className="bg-black min-h-40"></div>
