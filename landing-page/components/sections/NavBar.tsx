@@ -52,34 +52,44 @@ export function Navbar() {
             </Link>
           </div>
 
-          <AnimatePresence>
-            {isScrolled && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-                className="hidden md:flex items-center gap-4"
+          <div className="flex items-center gap-6">
+            <AnimatePresence>
+              {isScrolled && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                  className="hidden md:flex items-center gap-4"
+                >
+                  <div className="flex gap-6 shrink-0 w-auto">
+                    <Link
+                      href={SUI_SENTINEL_APP_URL}
+                      target="_blank"
+                    >
+                      <button className="px-6 btn font-bold btn-white shadow-v1">Launch App</button>
+                    </Link>
+                    <Link
+                      href={SUI_SENTINEL_DOCS_URL}
+                      target="_blank"
+                    >
+                      <button className="px-6 btn font-bold btn-outline-white backdrop-blur-md">
+                        Docs
+                      </button>
+                    </Link>
+                  </div>
+                </motion.div>
+              )}
+
+              <Link
+                href={SUI_SENTINEL_DOCS_URL}
+                target="_blank"
+                className="px-6 btn font-medium text-sm btn-outline rounded-[25px]! flex items-center justify-center h-[50px] min-h-[50px]!"
               >
-                <div className="flex gap-6 shrink-0 w-auto">
-                  <Link
-                    href={SUI_SENTINEL_APP_URL}
-                    target="_blank"
-                  >
-                    <button className="px-6 btn font-bold btn-white shadow-v1">Launch App</button>
-                  </Link>
-                  <Link
-                    href={SUI_SENTINEL_DOCS_URL}
-                    target="_blank"
-                  >
-                    <button className="px-6 btn font-bold btn-outline-white backdrop-blur-md">
-                      Docs
-                    </button>
-                  </Link>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                Support on X
+              </Link>
+            </AnimatePresence>
+          </div>
         </div>
       </div>
     </motion.nav>
