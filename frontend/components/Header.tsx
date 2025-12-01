@@ -41,11 +41,13 @@ export const Header = () => {
             href="https://suisentinel.xyz"
             target="_blank"
           >
-            <div className="relative w-8 h-11">
+            <div className="relative">
               <Image
-                src="/icons/logo-sm.svg"
-                alt="shield"
-                fill
+                src="/icons/logo_large_testnet.svg"
+                alt="logo"
+                 height={49}
+                width={198}
+                quality={100}
                 style={{ objectFit: 'contain' }}
               />
             </div>
