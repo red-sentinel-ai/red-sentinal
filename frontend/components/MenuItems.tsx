@@ -66,11 +66,21 @@ export const MenuItems = ({
           Testnet
         </Badge>
       </li>
+
+      <li>
+        <Link
+          href={SUI_SENTINEL_DOCS_URL}
+          target="_blank"
+          className="!px-6 btn font-medium text-sm btn-outline !rounded-[25px] flex items-center justify-center h-[50px] min-h-[50px]!"
+        >
+          Support on X
+        </Link>
+      </li>
       <li>
         <Link
           href={SUI_SENTINEL_TELEGRAM_URL}
           target="_blank"
-          className="flex items-center w-fit gap-3 px-6 py-2 bg-[#0088cc] rounded-full text-white font-medium hover:bg-[#0077b5] transition-colors"
+          className="flex items-center w-fit gap-3 px-6 py-2 bg-[#0088cc] rounded-full text-white font-medium hover:bg-[#0077b5] transition-colors h-[50px] min-h-[50px]!"
           onClick={onItemClick}
         >
           <Image
@@ -79,7 +89,6 @@ export const MenuItems = ({
             width={20}
             height={20}
           />
-          <span className="text-sm">Join Telegram</span>
         </Link>
       </li>
     </ul>
