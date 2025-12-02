@@ -19,6 +19,8 @@ export const SUI_SENTINEL_X_URL = 'https://twitter.com/intent/follow?screen_name
 export const SUI_SENTINEL_GITHUB_URL = 'https://github.com/sui-sentinel/contracts'
 export const SUI_SENTINEL_TELEGRAM_URL = 'https://t.me/suisentinel'
 export const SUI_SENTINEL_X_USERNAME = 'suisentinal'
+export const SUI_SENTINEL_BRAND_KIT_URL =
+  'https://drive.google.com/drive/u/0/folders/1WrratyBwcJRus9SL3_gz447D-V0DtyKO'
 
 export const defenderSteps = [
   {
