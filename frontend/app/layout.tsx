@@ -78,8 +78,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body
         className={`${satoshi.className} text-black bg-no-repeat`}
         style={{
-          backgroundImage: "url('/img/hero_bg.png')",
-          backgroundSize: '100% auto',
+          backgroundImage: `
+      url('/img/hero_bg.png'),
+      linear-gradient(
+        to right,
+        rgba(233,239,255,0.55),
+        rgba(245,245,245,0.55),
+        rgba(255,235,253,0.55)
+      )
+    `,
+          backgroundSize: '100% auto, 100% auto',
+          backgroundRepeat: 'no-repeat, no-repeat',
+          backgroundPosition: 'center top, center top',
         }}
       >
         <Providers>
