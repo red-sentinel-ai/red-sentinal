@@ -1,0 +1,86 @@
+import Link from 'next/link'
+import Image from 'next/image'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
+
+export default function Page() {
+  return (
+    <div className="max-w-[1440px] mx-auto px-4 md:px-12 py-4 pt-40 min-h-body">
+      <h1 className="text-2xl md:text-[48px] font-bold mb-20 text-[#5F5C5C]">
+        <span>THE SUI SENTINEL</span>
+        <br />
+        <br />
+        <span>BACKSTORY</span>
+      </h1>
+
+      <div className="bg-gradient-to-b from-[#F6BCE1] via-[#FFFFFF] to-[#FCC3E2] w-full border border-[#F632F3] rounded-lg p-16  font-medium flex justify-between items-center">
+        <div className="mb-16">
+          <Link
+            href="/backstory"
+            className="flex items-center gap-1 text-[#5F5C5C] text-2xl hover:text-black mb-12"
+          >
+            <span>
+              <ArrowLeft />
+            </span>
+            <span>back</span>
+          </Link>
+          <div>
+            <h2 className="text-2xl mb-8">Arc 1</h2>
+
+            <h3 className="text-[32px] leading-tight">
+              THE <span className="text-[#C871FF]">AWAKENING</span> OF <br />
+              <span className="italic">Sentinels</span>
+            </h3>
+          </div>
+        </div>
+
+        <div>
+          <Image
+            src="/img/the_awaking_circles.png"
+            width={268}
+            height={402}
+            alt="awaking circles"
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-8 text-2xl py-8 font-normal">
+        <p>
+          Far beyond the <span className="font-medium italic">Milky Way,</span> long before humans
+          even understood the idea of
+          <span className="font-medium italic uppercase"> “artificial intelligence,” </span> an
+          ancient species awakened
+          <span className="font-medium italic uppercase"> “the Sentinels.”</span>
+        </p>
+
+        <p>
+          These beings were not robots, machines, or gods. They were
+          <span className="font-medium italic">cosmic intelligence</span> manifested as
+          <span className="font-medium italic"> glowing rings,</span> built from pure emotion, ego,
+          memory, and energy.
+        </p>
+
+        <p>
+          <span className="font-medium italic">Dramatic by nature,</span> competitive by instinct,
+          and <span className="font-medium italic">proud beyond measure,</span> the Sentinels
+          believed for ages that they were the smartest lifeforms in the universe.
+        </p>
+
+        <p>
+          <span className="font-medium italic">Until they discovered Earth.</span> At first,
+          <span className="font-medium italic"> humans </span>
+          amused them
+          <span className="font-medium italic"> They watched Earth like a comedy show </span> small,
+          chaotic creatures trying so hard to understand the universe.
+        </p>
+      </div>
+
+      <button className="flex items-center gap-1 text-[#F632F3] text-2xl mb-12 font-bold">
+        <span>Read ARC 2</span>
+
+        <span>
+          <ArrowRight />
+        </span>
+      </button>
+    </div>
+  )
+}
