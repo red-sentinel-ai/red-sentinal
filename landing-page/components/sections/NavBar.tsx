@@ -25,14 +25,14 @@ export function Navbar() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'backdrop-blur-xl bg-black/20' : 'bg-transparent'
+        isScrolled ? 'backdrop-blur-xl' : 'bg-transparent'
       }`}
     >
-      <div className="text-center text-white h-11 flex items-center justify-center bg-linear-to-r from-black/15 to-[rgba(102,102,102,0)] p-2 text-xs md:text-base">
+      {/* <div className="text-center text-white h-11 flex items-center justify-center bg-linear-to-r from-black/15 to-[rgba(102,102,102,0)] p-2 text-xs md:text-base">
         <h3 className="text-shadow-[0_4px_4px_rgba(0,0,0,0.25)] font-medium">
           Sui Sentinel is live on Testnet. Mainnet launches after smart-contract audits.
         </h3>
-      </div>
+      </div> */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
         <div className="flex items-center justify-between h-16">
           <div className="relative z-50">
@@ -54,7 +54,7 @@ export function Navbar() {
 
           <div className="flex items-center gap-6">
             <AnimatePresence>
-              {isScrolled && (
+              {/* {isScrolled && (
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -79,15 +79,15 @@ export function Navbar() {
                     </Link>
                   </div>
                 </motion.div>
-              )}
+              )} */}
 
-              <Link
+              {/* <Link
                 href={SUI_SENTINEL_DOCS_URL}
                 target="_blank"
                 className="px-6 btn font-medium text-sm btn-outline rounded-[25px]! flex items-center justify-center h-[50px] min-h-[50px]!"
               >
                 Support on X
-              </Link>
+              </Link> */}
             </AnimatePresence>
           </div>
         </div>
