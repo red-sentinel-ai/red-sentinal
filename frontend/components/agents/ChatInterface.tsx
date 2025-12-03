@@ -187,7 +187,7 @@ export default function ChatInterface({
     <div className="flex flex-col h-full flex-1 text-black justify-between pb-6">
       <div
         ref={chatContainerRef}
-        className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-4 sm:space-y-6 max-h-[calc(100vh-205px)]"
+        className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-4 sm:space-y-6 max-h-[calc(100vh-210px)]"
       >
         {chatMessages.length === 0 && (
           <div className="text-center py-8 sm:py-12 text-gray-500">
