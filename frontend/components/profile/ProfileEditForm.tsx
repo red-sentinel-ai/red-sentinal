@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { useDebounce } from 'use-debounce'
-import { CheckCircle, XCircle, Loader2 } from 'lucide-react'
+import { CheckCircle, XCircle, Loader2, ArrowDownToLine } from 'lucide-react'
 import { useUpdateProfile } from '@/hooks/profile/useUserProfile'
 import type { Tables } from '@/lib/database.types'
 
@@ -80,23 +80,23 @@ export function ProfileEditForm({ onSuccess, profile, selectedImage }: ProfileEd
       className="space-y-6"
     >
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">Display Name</label>
+        <label className="block text-base font-medium mb-2">Display Name</label>
         <input
           type="text"
           value={displayName}
           onChange={(e) => setDisplayName(e.target.value)}
-          className="w-full bg-gray-800 border border-gray-600 rounded-lg p-3 text-white"
+          className="w-full bg-white border border-[#5E5E5E] p-3 rounded-xl"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">Username</label>
+        <label className="block text-base font-medium mb-2">Username</label>
         <div className="relative">
           <input
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
-            className="w-full bg-gray-800 border border-gray-600 rounded-lg p-3 text-white pr-10"
+            className="w-full bg-white border border-[#5E5E5E] p-3 rounded-xl pr-10"
           />
           <div className="absolute inset-y-0 right-0 flex items-center pr-3">
             {isChecking && <Loader2 className="h-5 w-5 text-gray-400 animate-spin" />}
@@ -104,7 +104,7 @@ export function ProfileEditForm({ onSuccess, profile, selectedImage }: ProfileEd
             {isAvailable === false && <XCircle className="h-5 w-5 text-red-500" />}
           </div>
         </div>
-        <p className="mt-2 text-xs text-gray-500">
+        <p className="mt-2 text-sm text-[#5E5E5E]">
           URL-friendly, lowercase letters, numbers, and underscores only.
         </p>
       </div>
@@ -112,9 +112,10 @@ export function ProfileEditForm({ onSuccess, profile, selectedImage }: ProfileEd
       <button
         type="submit"
         disabled={isUpdating || isChecking || isAvailable === false}
-        className="w-full bg-white text-black rounded-full py-3 font-medium hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+        className="btn btn-black w-full !min-h-[50px]"
       >
-        {isUpdating ? <Loader2 className="animate-spin" /> : 'Save Changes'}
+        {isUpdating ? <Loader2 className="animate-spin" />  :  <ArrowDownToLine />}
+        <span className='ms-2'>Save Changes</span>
       </button>
     </form>
   )

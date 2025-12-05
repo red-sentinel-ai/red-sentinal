@@ -48,14 +48,14 @@ export function EditProfileModal({ open, onClose, profile }: EditProfileModalPro
       <Dialog
         open={open}
         onClose={handleClose}
-        className="max-w-md"
+        className="max-w-md bg-white/75"
       >
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold">Edit Profile</h2>
             <button
               onClick={handleClose}
-              className="text-gray-400 hover:text-white"
+              className="text-black"
             >
               <X className="w-5 h-5" />
             </button>
