@@ -23,10 +23,10 @@ export default function BlogIndex() {
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
-        className="w-full h-[300px] md:h-[500px] pb-14 mb-12 text-white"
+        className="w-full h-[300px] md:h-[500px] pb-10 mb-12 text-white"
       >
         <div className="max-w-7xl mx-auto flex items-end justify-between h-full">
-          <h1 className="text-4xl md:text-6xl font-bold tracking-wide">
+          <h1 className="text-4xl md:text-5xl font-bold tracking-wide leading-tight">
             The SuiSentinel <br /> Blogs
           </h1>
 
