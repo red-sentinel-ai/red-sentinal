@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { SUI_SENTINEL_APP_URL } from '@/constants'
+import { SUI_SENTINEL_APP_URL, SUI_SENTINEL_X_URL } from '@/constants'
 import Image from 'next/image'
 
 export function EarnWhileDefendingSection() {
@@ -46,12 +46,19 @@ export function EarnWhileDefendingSection() {
           <span className="text-[#C871FF]">Prompt engineering skills into SUI/USDC rewards. </span>
           Every successful defense strengthens AI and your wallet.
         </h2>
-        <div className="mt-10">
+        <div className="mt-10 flex gap-4">
           <Link
             href={SUI_SENTINEL_APP_URL}
             target="_blank"
           >
             <button className="btn btn-black md:w-[260px] px-6">Start Earning Now</button>
+          </Link>
+
+           <Link
+            href={SUI_SENTINEL_X_URL}
+            target="_blank"
+          >
+            <button className="btn btn-outline px-6 font-medium">Support on X</button>
           </Link>
         </div>
       </motion.div>
