@@ -2,7 +2,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import clsx from 'clsx'
 
-import { Badge } from './ui'
 import { SUI_SENTINEL_DOCS_URL } from '@/constants'
 
 export const MenuItems = ({
