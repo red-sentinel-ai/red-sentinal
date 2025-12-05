@@ -35,9 +35,9 @@ export const Header = () => {
         </h3>
       </div> */}
       <div className="max-w-full mx-auto flex items-center p-3 lg:px-8 py-4 justify-between">
-        <div className="flex items-center flex-1">
+        <div className="flex items-end flex-1 gap-2 md:gap-8">
           <Link
-            className="block mr-1 xl:mr-4 flex-shrink-0"
+            className="block flex-shrink-0"
             href="https://suisentinel.xyz"
             target="_blank"
           >
