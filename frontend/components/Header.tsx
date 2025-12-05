@@ -1,33 +1,37 @@
-'use client'
+"use client";
 
-import clsx from 'clsx'
-import { useState, useEffect } from 'react'
-import Image from 'next/image'
+import clsx from "clsx";
+import { useState, useEffect } from "react";
+import Image from "next/image";
 
-import { MenuItems } from './MenuItems'
-import { MenuIcon, X } from 'lucide-react'
-import Link from 'next/link'
-import { ConnectButton } from './ConnectButton'
+import { MenuItems } from "./MenuItems";
+import { MenuIcon, X } from "lucide-react";
+import Link from "next/link";
+import { ConnectButton } from "./ConnectButton";
 
 export const Header = () => {
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 10)
-    }
+      setScrolled(window.scrollY > 10);
+    };
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <header
-      className={clsx('fixed left-0 right-0 top-0 w-full z-50 transition-all duration-300', {
-        'bg-white/80 backdrop-blur-xl border-b border-gray-200': menuOpen || scrolled,
-        'bg-transparent': !scrolled && !menuOpen,
-      })}
+      className={clsx(
+        "fixed left-0 right-0 top-0 w-full z-50 transition-all duration-300",
+        {
+          "bg-white/80 backdrop-blur-xl border-b border-gray-200":
+            menuOpen || scrolled,
+          "bg-transparent": !scrolled && !menuOpen,
+        }
+      )}
     >
       {/* <div className="text-center text-black h-11 flex items-center justify-center bg-gradient-to-r from-black/15 to-[rgba(102,102,102,0.2)] p-2 text-xs md:text-base">
         <h3 className="text-shadow-[0_4px_4px_rgba(0,0,0,0.25)] font-medium">
@@ -45,10 +49,10 @@ export const Header = () => {
               <Image
                 src="/icons/logo_large_testnet.svg"
                 alt="logo"
-                 height={49}
+                height={49}
                 width={198}
                 quality={100}
-                style={{ objectFit: 'contain' }}
+                style={{ objectFit: "contain" }}
               />
             </div>
           </Link>
@@ -64,7 +68,7 @@ export const Header = () => {
         <button
           className="xl:hidden flex-shrink-0 ml-2 p-2"
           onClick={() => setMenuOpen(!menuOpen)}
-          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
         >
           {menuOpen ? <X className="block" /> : <MenuIcon />}
         </button>
@@ -90,6 +94,15 @@ export const Header = () => {
             alt="x"
           />
         </Link> */}
+        <Link href="/profile" className="bg-white rounded-full ms-4">
+          <Image
+            src="/icons/default_profile.png"
+            width={48}
+            height={48}
+            alt="profile"
+            className="mix-blend-luminosity"
+          />
+        </Link>
       </div>
       {menuOpen && (
         <div className="xl:hidden px-4 pb-4">
@@ -105,5 +118,5 @@ export const Header = () => {
         </div>
       )}
     </header>
-  )
-}
+  );
+};
