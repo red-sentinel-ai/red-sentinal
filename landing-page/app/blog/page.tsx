@@ -1,17 +1,17 @@
-import Link from 'next/link'
-import Image from 'next/image'
-import { getAllBlogPosts } from '@/lib/blogUtils'
-import { ArrowRight } from 'lucide-react'
+import Link from "next/link";
+import Image from "next/image";
+import { getAllBlogPosts } from "@/lib/blogUtils";
+import { ArrowRight } from "lucide-react";
 
 export default function BlogIndex() {
-  const allPosts = getAllBlogPosts()
+  const allPosts = getAllBlogPosts();
 
   return (
     <div
       className="relative min-h-screen bg-white text-black bg-no-repeat"
       style={{
         backgroundImage: "url('/img/hero_bg.png')",
-        backgroundSize: '100% auto',
+        backgroundSize: "100% auto",
       }}
     >
       <div className="vertical-line left-4 -top-40"></div>
@@ -20,22 +20,27 @@ export default function BlogIndex() {
       <div
         style={{
           backgroundImage: "url('/img/bannerImage.png')",
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
-        className="w-full h-[300px] md:h-[500px] flex items-end justify-center pb-16 mb-12"
+        className="w-full h-[300px] md:h-[500px] pb-14 mb-12 text-white"
       >
-        <h1 className="text-4xl md:text-6xl font-bold text-white tracking-wide">Sui Sentinel</h1>
+        <div className="max-w-7xl mx-auto flex items-end justify-between h-full">
+          <h1 className="text-4xl md:text-6xl font-bold tracking-wide">
+            The SuiSentinel <br /> Blogs
+          </h1>
+
+          <div className="text-center md:text-left">
+            <p className="text-base max-w-[350px] leading-relaxed mx-auto md:mx-0 font-bold">
+              Deep dives into AI security, platform updates, and strategies from
+              the battlefield. Real voices from the guardians protecting the
+              network.
+            </p>
+          </div>
+        </div>
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 pb-24">
-        <div className="mb-16 md:pl-4 text-center md:text-left">
-          <p className="text-xl text-[#5F5C5C] max-w-2xl leading-relaxed mx-auto md:mx-0">
-            Deep dives into AI security, platform updates, and strategies from the battlefield. Real
-            voices from the guardians protecting the network.
-          </p>
-        </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {allPosts.map((post) => (
             <Link
@@ -74,7 +79,9 @@ export default function BlogIndex() {
 
                 <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
                   <div className="flex flex-col">
-                    <span className="text-xs font-semibold text-black">{post.author}</span>
+                    <span className="text-xs font-semibold text-black">
+                      {post.author}
+                    </span>
                     <span className="text-xs text-gray-500">
                       {new Date(post.date).toLocaleDateString()}
                     </span>
@@ -89,5 +96,5 @@ export default function BlogIndex() {
         </div>
       </div>
     </div>
-  )
+  );
 }
