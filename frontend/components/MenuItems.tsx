@@ -1,10 +1,9 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import clsx from 'clsx'
-import { BookOpen } from 'lucide-react'
 
 import { Badge } from './ui'
-import { SUI_SENTINEL_TELEGRAM_URL, SUI_SENTINEL_DOCS_URL } from '@/constants'
+import { SUI_SENTINEL_DOCS_URL } from '@/constants'
 
 export const MenuItems = ({
   menuOpen,
@@ -15,7 +14,7 @@ export const MenuItems = ({
 }) => {
   return (
     <ul
-      className={clsx('flex flex-col xl:flex-row items-center gap-6 text-black font-medium mr-4', {
+       className={clsx('flex flex-col xl:flex-row  items-center md:items-end gap-4 md:gap-8 text-black font-medium mr-4', {
         'w-full': menuOpen,
       })}
     >
@@ -28,15 +27,7 @@ export const MenuItems = ({
           Home
         </Link>
       </li>
-      <li>
-        <Link
-          className="block"
-          href="/rewards"
-          onClick={onItemClick}
-        >
-          Rewards
-        </Link>
-      </li>
+    
       <li>
         <Link
           className="block"
@@ -46,7 +37,17 @@ export const MenuItems = ({
           Leaderboard
         </Link>
       </li>
-      <li>
+
+        <li>
+        <Link
+          className="block"
+          href="/rewards"
+          onClick={onItemClick}
+        >
+          Rewards
+        </Link>
+      </li>
+      {/* <li>
         <Link
           className="flex items-center gap-2"
           target="_blank"
@@ -56,8 +57,8 @@ export const MenuItems = ({
           <BookOpen width={16} />
           <span>Documentation</span>
         </Link>
-      </li>
-      <li className="xl:ms-auto">
+      </li> */}
+      {/* <li className="xl:ms-auto my-auto">
         <Badge
           variant="secondary"
           className="bg-green-100 text-green-800 border-green-200"
@@ -65,18 +66,24 @@ export const MenuItems = ({
         >
           Testnet
         </Badge>
-      </li>
+      </li> */}
 
-      <li>
+      <li className='xl:ms-auto'>
         <Link
           href={SUI_SENTINEL_DOCS_URL}
           target="_blank"
-          className="!px-6 btn font-medium text-sm btn-outline !rounded-[25px] flex items-center justify-center h-[50px] min-h-[50px]!"
+          className="!px-6 btn font-medium text-base btn-outline !rounded-[25px] flex items-center justify-center h-[50px] min-h-[50px]!"
         >
+           <Image
+            src="/icons/x_black.png"
+            width={20}
+            height={20}
+            alt="x"
+          />
           Support on X
         </Link>
       </li>
-      <li>
+      {/* <li>
         <Link
           href={SUI_SENTINEL_TELEGRAM_URL}
           target="_blank"
@@ -90,7 +97,7 @@ export const MenuItems = ({
             height={20}
           />
         </Link>
-      </li>
+      </li> */}
     </ul>
   )
 }
