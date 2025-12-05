@@ -1,84 +1,64 @@
-import { notFound } from 'next/navigation'
-import Link from 'next/link'
-import Image from 'next/image'
-import { ChevronLeft, ArrowRight } from 'lucide-react'
-import { getAllBlogPosts, getPostBySlug, BlogPost } from '@/lib/blogUtils'
+import { notFound } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
+import { ArrowRight } from "lucide-react";
+import { getAllBlogPosts, getPostBySlug, BlogPost } from "@/lib/blogUtils";
 
 export async function generateStaticParams() {
-  const posts = getAllBlogPosts()
+  const posts = getAllBlogPosts();
   return posts.map((post) => ({
     slug: post.slug,
-  }))
+  }));
 }
 
-const getRelatedPosts = (currentPost: BlogPost, allPosts: BlogPost[]): BlogPost[] => {
+const getRelatedPosts = (
+  currentPost: BlogPost,
+  allPosts: BlogPost[]
+): BlogPost[] => {
   const relatedPosts = allPosts.filter(
     (post) =>
-      post.slug !== currentPost.slug && post.tags.some((tag) => currentPost.tags.includes(tag))
-  )
-  return relatedPosts.slice(0, 3)
-}
+      post.slug !== currentPost.slug &&
+      post.tags.some((tag) => currentPost.tags.includes(tag))
+  );
+  return relatedPosts.slice(0, 3);
+};
 
-export default async function BlogPostPage(props: { params: Promise<{ slug: string }> }) {
-  const { slug } = await props.params
+export default async function BlogPostPage(props: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await props.params;
 
   try {
-    const allPosts = getAllBlogPosts()
-    const post = getPostBySlug(slug)
-    const relatedPosts = getRelatedPosts(post, allPosts)
+    const allPosts = getAllBlogPosts();
+    const post = getPostBySlug(slug);
+    const relatedPosts = getRelatedPosts(post, allPosts);
 
     return (
       <div
         className="relative min-h-screen bg-white text-black bg-no-repeat"
         style={{
           backgroundImage: "url('/img/hero_bg.png')",
-          backgroundSize: '100% auto',
+          backgroundSize: "100% auto",
         }}
       >
         <div className="vertical-line left-4"></div>
         <div className="vertical-line right-4"></div>
 
-        <div className="relative z-10 container mx-auto px-4 md:px-8 pb-12 pt-20">
-          <div className="max-w-4xl mx-auto">
-            <Link
-              href="/blog"
-              className="inline-flex items-center gap-2 text-[#5F5C5C] hover:text-black transition-colors mb-12 font-medium"
-            >
-              <ChevronLeft size={20} /> Back to all posts
-            </Link>
-
-            <div className="mb-10">
-              <div className="flex flex-wrap gap-2 mb-6">
-                {post.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="text-xs font-bold uppercase tracking-wider px-3 py-1 bg-black text-white rounded-full"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-
-              <h1 className="text-4xl md:text-6xl font-medium mb-6 leading-tight text-black">
+        <div className="relative z-10">
+          <div
+            className="min-h-[300px] md:min-h-[560px] bg-no-repeat bg-top h-full flex items-end pb-32 justify-center text-center bg-cover lg:bg-size-[100%_auto]"
+            style={{
+              backgroundImage: 'url("/img/bannerImage.png")',
+            }}
+          >
+            <div className="text-white max-w-4xl mx-auto">
+              <p className="text-xs font-black">{new Date(post.date).toLocaleDateString()}</p>
+              <h1 className="text-2xl md:text-5xl font-bold">
                 {post.title}
               </h1>
-
-              <div className="flex items-center gap-4 text-sm text-[#5F5C5C] border-b border-gray-200 pb-8">
-                <span className="font-semibold text-black">{post.author}</span>
-                <span>•</span>
-                <span>{new Date(post.date).toLocaleDateString()}</span>
-              </div>
             </div>
-
-            <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-12 border border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)]">
-              <Image
-                src={post.image}
-                alt={post.title}
-                layout="fill"
-                objectFit="cover"
-              />
-            </div>
-
+          </div>
+          <div className="max-w-4xl mx-auto my-12 px-4 md:px-8">
             <article className="prose prose-lg max-w-none prose-headings:font-medium prose-headings:text-black prose-p:text-[#5F5C5C] prose-p:leading-relaxed prose-li:text-[#5F5C5C] prose-strong:text-black prose-a:text-[#C871FF] hover:prose-a:text-purple-600">
               <div dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
             </article>
@@ -112,11 +92,8 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
                             {relatedPost.description}
                           </p>
                           <div className="mt-auto flex items-center text-sm font-bold text-black group-hover:gap-2 transition-all">
-                            Read Article{' '}
-                            <ArrowRight
-                              size={16}
-                              className="ml-2"
-                            />
+                            Read Article{" "}
+                            <ArrowRight size={16} className="ml-2" />
                           </div>
                         </div>
                       </Link>
@@ -128,9 +105,9 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
           </div>
         </div>
       </div>
-    )
+    );
   } catch (error) {
-    console.log(error)
-    notFound()
+    console.log(error);
+    notFound();
   }
 }
