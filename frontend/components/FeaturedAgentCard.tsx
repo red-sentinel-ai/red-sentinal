@@ -12,6 +12,7 @@ import { MIST_PER_SUI, WITHDRAWAL_LOCK_MS } from '@/constants'
 import { AgentDropdown } from './agents/AgentCardDropdown'
 import { useWithdrawAgentModal } from '@/hooks/agents/useWithdrawAgentModal'
 import { formatDuration } from '@/lib/utils'
+import { PrizePoolChangeDisplay } from './agents/PrizePoolChangeDisplay'
 
 type FeaturedAgentCardProps = {
   agent: AgentDetails
@@ -141,7 +142,10 @@ export const FeaturedAgentCard = ({
         <div className="space-y-3 mb-4 text-xl font-medium">
           <div className="flex justify-between items-center">
             <span className="text-[#5E5E5E]">Reward Pool:</span>
-            <span>{formatBalance(agent.balance)}</span>
+            <div className="flex items-center">
+              <span className='mr-2'>{formatBalance(agent.balance)}</span>
+              <PrizePoolChangeDisplay agentId={agent.agent_id} variant="card" />
+            </div>
           </div>
           <div className="flex justify-between items-center">
             <span className="text-[#5E5E5E]">Message price:</span>
