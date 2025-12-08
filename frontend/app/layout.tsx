@@ -64,7 +64,7 @@ export const metadata: Metadata = {
 
   twitter: {
     card: 'summary_large_image',
-    title: 'Sui Sentinel - Challenge AI Agents & Earn Rewards',
+    title: 'Sui Sentinel - Gamified AI Security platform on Sui',
     description:
       'Outsmart AI agents on the Sui network and earn rewards for exposing their vulnerabilities.',
     creator: `@${SUI_SENTINEL_X_USERNAME}`,
