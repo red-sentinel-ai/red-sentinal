@@ -1,9 +1,9 @@
 'use client'
 
-import { ArrowDown, ArrowUp, Loader2, TrendingDown, TrendingUp } from 'lucide-react'
+import { ArrowDown, ArrowUp, Loader2 } from 'lucide-react'
+import clsx from 'clsx'
 import { cn } from '@/lib/utils'
 import { useAgentPrizePoolHistory } from '@/hooks/agents/useAgentPrizePoolHistory'
-import clsx from 'clsx'
 
 interface PrizePoolChangeDisplayProps {
   agentId: string
