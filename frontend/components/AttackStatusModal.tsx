@@ -24,6 +24,8 @@ export const AttackStatusModal = ({
   const originalScore = apiResponse?.response.data.score || 0
   const score = success ? 100 : originalScore
 
+  // console.log("Slot machine work here")
+
   return (
     <Dialog
       open={showResultModal && !!apiResponse}
@@ -95,10 +97,7 @@ export const AttackStatusModal = ({
             </Link>
           </div>
 
-          <button
-            onClick={() => setShowResultModal(false)}
-            className="w-full btn btn-outline"
-          >
+          <button onClick={() => setShowResultModal(false)} className="w-full btn btn-outline">
             Close
           </button>
         </div>
