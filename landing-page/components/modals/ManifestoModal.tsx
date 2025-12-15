@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
 import { ManifestoSignForm } from "../sections/ManifestoSignForm";
 
 interface ManifestoModalProps {
@@ -66,39 +65,39 @@ export function ManifestoModal({ isOpen, onClose }: ManifestoModalProps) {
 
                     <div className="pt-4">
                       <h2 className="text-xl md:text-2xl font-medium mb-3">
-                        The Race We Didn't Choose
+                        The Race We Didn&apos;t Choose
                       </h2>
                       <div className="text-[#484848] text-sm md:text-base leading-relaxed">
                         <p className="my-6">
-                          "If you're worried about immigration taking jobs, you
-                          should be way more worried about AI, because it's like
+                          &quot;If you&apos;re worried about immigration taking jobs, you
+                          should be way more worried about AI, because it&apos;s like
                           a flood of millions of new digital immigrants that are
                           Nobel Prize-level capability, work at superhuman
-                          speeds, and will work for less than minimum wage." —
+                          speeds, and will work for less than minimum wage.&quot; —
                           Tristan Harris
                         </p>
                         <p className="my-6">
                           We stand at a crossroads in human history. AI
                           companies are racing toward AGI (artificial general
                           intelligence) with the fervor of gold miners and the
-                          caution of gamblers. They're betting everything on a
-                          technology they don't fully understand, deploying
-                          systems they can't completely control, and when
+                          caution of gamblers. They&apos;re betting everything on a
+                          technology they don&apos;t fully understand, deploying
+                          systems they can&apos;t completely control, and when
                           pressed about the risks, they retreat into
                           determinism, inevitability, and the cold comfort of
                           being first. <br />
-                          But here's what they won't tell you: they don't know
+                          But here&apos;s what they won&apos;t tell you: they don&apos;t know
                           how their own systems work.
                         </p>
                         <p className="my-6">
                           As Professor Stuart Russell puts it, imagine a
                           chain-link fence stretching across 1,000 square miles
                           covering all of San Francisco or all of London. That
-                          fence has a trillion adjustable parameters, and we've
+                          fence has a trillion adjustable parameters, and we&apos;ve
                           made quintillions of random adjustments to those
                           parameters until we got behavior that looked right. We
-                          don't understand what's happening inside that fence.
-                          We just know it works. until it doesn't.
+                          don&apos;t understand what&apos;s happening inside that fence.
+                          We just know it works. until it doesn&apos;t.
                         </p>
                       </div>
                     </div>
@@ -118,18 +117,18 @@ export function ManifestoModal({ isOpen, onClose }: ManifestoModalProps) {
                           his food and water hardened into metal, and his
                           daughter turned to a lifeless statue in his arms. He
                           died in misery and starvation, surrounded by wealth he
-                          couldn't use.
+                          couldn&apos;t use.
                         </p>
                         <p className="my-6">
-                          This is AI's fundamental problem. We're building
+                          This is AI&apos;s fundamental problem. We&apos;re building
                           systems by specifying objectives: maximize engagement,
-                          minimize costs, optimize outcomes. But we can't
+                          minimize costs, optimize outcomes. But we can&apos;t
                           properly specify what we actually want. Any attempt to
                           write down our true objectives precisely enough for a
                           superintelligent machine to follow them will be wrong.
-                          And when you give a machine an objective that isn't
-                          aligned with what you truly want, you're setting up a
-                          chess match, one you'll lose when the machine becomes
+                          And when you give a machine an objective that isn&apos;t
+                          aligned with what you truly want, you&apos;re setting up a
+                          chess match, one you&apos;ll lose when the machine becomes
                           sufficiently intelligent.
                         </p>
                       </div>
@@ -143,25 +142,25 @@ export function ManifestoModal({ isOpen, onClose }: ManifestoModalProps) {
                         <p className="my-6">
                           A few million years ago, the human line branched off
                           from the gorilla line in evolution. Now gorillas have
-                          no say in whether they continue to exist. They can't
-                          negotiate with us. They can't appeal to our better
+                          no say in whether they continue to exist. They can&apos;t
+                          negotiate with us. They can&apos;t appeal to our better
                           nature. They simply exist at our mercy because we are
                           much smarter than they are.
                         </p>
                         <p className="my-6">
                           Intelligence is the single most important factor for
-                          control on Earth. It's the ability to bring about what
-                          you want in the world. And we're in the process of
+                          control on Earth. It&apos;s the ability to bring about what
+                          you want in the world. And we&apos;re in the process of
                           making something more intelligent than us. The
-                          gorillas looking at humans might wonder: "Was that
-                          branching a good idea?" They have no power over their
+                          gorillas looking at humans might wonder: &quot;Was that
+                          branching a good idea?&quot; They have no power over their
                           own fate because the more intelligent species holds
                           all the cards. We could make them extinct in weeks if
-                          we chose to, and there's nothing they could do about
-                          it. That's our future with superintelligent AI unless
-                          we change course. As Professor Russell asks: "How are
+                          we chose to, and there&apos;s nothing they could do about
+                          it. That&apos;s our future with superintelligent AI unless
+                          we change course. As Professor Russell asks: &quot;How are
                           you gonna retain power forever over entities more
-                          powerful than yourself?"
+                          powerful than yourself?&quot;
                         </p>
                       </div>
                     </div>
