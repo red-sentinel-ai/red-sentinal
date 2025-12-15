@@ -32,7 +32,8 @@ export function ManifestoSection() {
         </motion.div>
 
         <div className="max-w-[436px] mx-auto">
-          <div className="border border-[#F632F3] rounded-xl bg-white py-6 px-6">
+          <div className="border border-[#F632F3] rounded-xl bg-white py-6 px-6 relative">
+            <div className="absolute inset-0 bottom-[72px] bg-linear-to-b from-white/0 to-white/90"></div>
             <div className="flex items-center gap-2">
               <div>
                 <Image
