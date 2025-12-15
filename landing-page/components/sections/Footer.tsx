@@ -6,7 +6,7 @@ import { socialLinks } from '@/constants'
 
 export function Footer() {
   return (
-    <footer className="relative bg-cover bg-bottom bg-no-repeat bg-[url('/img/footer-bg-sm.png')] md:bg-[url('/img/footer-bg.png')]">
+    <footer className="relative mt-20 bg-cover bg-bottom bg-no-repeat bg-[url('/img/footer-bg-sm.png')] md:bg-[url('/img/footer-bg.png')]">
       <div className="vertical-line left-4 -top-40"></div>
       <div className="vertical-line right-4 -top-40"></div>
 
