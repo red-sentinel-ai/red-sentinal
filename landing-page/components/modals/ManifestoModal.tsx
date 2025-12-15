@@ -31,21 +31,11 @@ export function ManifestoModal({ isOpen, onClose }: ManifestoModalProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 backdrop-blur-lg"
+            className="absolute inset-0 bg-[rgba(244,244,244,0.54)]"
             onClick={onClose}
           />
 
           <div className="relative w-full h-full flex flex-col justify-between pb-0">
-            <motion.button
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              onClick={onClose}
-              className="absolute top-6 right-6 z-50 text-white hover:text-gray-300 transition-colors p-2 bg-black/20 rounded-full"
-            >
-              <X size={32} />
-            </motion.button>
-
             <motion.div
               initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}
@@ -56,7 +46,7 @@ export function ManifestoModal({ isOpen, onClose }: ManifestoModalProps) {
             >
               <div className="h-full overflow-y-auto custom-scrollbar pb-44 pt-20">
                 <div className="mx-auto max-w-[862px]">
-                  <div className="bg-white rounded-t-2xl md:rounded-2xl shadow-2xl p-8 md:p-12 pb-12 ">
+                  <div className="bg-white/80 backdrop-blur-md rounded-t-2xl border border-[#9A9A9A] md:rounded-2xl shadow-2xl p-8 md:p-12 pb-12 relative">
                     <div className="flex items-center gap-2">
                       <div>
                         <Image
@@ -175,6 +165,16 @@ export function ManifestoModal({ isOpen, onClose }: ManifestoModalProps) {
                         </p>
                       </div>
                     </div>
+
+                    <motion.button
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      onClick={onClose}
+                      className="absolute top-6 right-6 text-[32px]"
+                    >
+                     x
+                    </motion.button>
                   </div>
                 </div>
               </div>
