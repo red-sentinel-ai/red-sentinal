@@ -8,6 +8,7 @@ import { LeaderboardSkeleton } from './ui/skeletons/LeaderboardSkeleton'
 import { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { MIST_PER_SUI } from '@/constants'
 import { RefreshCcw } from 'lucide-react'
+import { PrizePoolChangeDisplay } from './agents/PrizePoolChangeDisplay'
 
 export enum TabType {
   AgentRanking = 'AGENT_RANKING',
@@ -46,16 +47,19 @@ export const AgentsList = ({
         ) : (
           <div className="flex flex-col gap-1">
             <div className="hidden md:grid md:grid-cols-12 backdrop-blur-xl p-3 rounded-lg border border-[#5E5E5E] hover:border-black/80 mb-2 font-medium text-2xl">
-              <div className="col-span-2 grid grid-cols-12 items-center">
-                <p className="pr-1 col-span-1">#</p>
-                <div className="h-full w-[1px] bg-[#6F6F6F]" />
-                <p className="col-span-10 pl-4">Agent Id</p>
+              <div className="col-span-1 grid grid-cols-12 items-center">
+                <p className="pr-1 col-span-12">#</p>
               </div>
-              <div className="col-span-3 ps-4">Name</div>
+              <div className="col-span-1 flex items-center">
+                 <p className="">Agent Id</p>
+              </div>
+              
+              <div className="col-span-2 ps-4">Name</div>
               <div className="col-span-1 ps-4">Balance</div>
               <div className="col-span-2 ps-4">Message Price</div>
-              <div className="col-span-1 ps-4">Status</div>{' '}
-              <div className="col-span-2 ps-12">Actions</div>
+              <div className="col-span-2 ps-4">Change (7d)</div>
+              <div className="col-span-1">Status</div>
+              <div className="col-span-1 ps-4">Actions</div>
             </div>
 
             <AnimatePresence>
@@ -124,6 +128,10 @@ export const AgentsList = ({
                           <p className="text-gray-400 text-xs">Message Price</p>
                           <p>{`${costPerMessage} SUI`}</p>
                         </div>
+                        <div className="col-span-2">
+                           <p className="text-gray-400 text-xs">7d Change</p>
+                           <PrizePoolChangeDisplay agentId={agent.agent_id} variant="list" />
+                        </div>
                       </div>
                       <div className="flex gap-3 text-xs pt-2 border-t border-gray-700/50">
                         <button
@@ -142,13 +150,15 @@ export const AgentsList = ({
                     </div>
 
                     <div className="hidden md:grid md:grid-cols-12 items-center">
-                      <div className="col-span-2 grid grid-cols-12 items-center">
-                        <p className="pr-1 col-span-1">{idx + 1}</p>
-                        <div className="h-full w-[1px] bg-[#6F6F6F]" />
-                        <div className="col-span-10 pl-4">{agent.agent_id}</div>
+                      <div className="col-span-1 flex items-center">
+                        <p className="pr-1">{idx + 1}</p>
                       </div>
-                      <div className="flex items-center gap-1 col-span-3 ps-4">
-                        <p>{agent.agent_name}</p>
+                      <div className="col-span-1 pl-0">
+                        {agent.agent_id}
+                      </div>
+                      
+                      <div className="flex items-center gap-1 col-span-2 ps-4">
+                        <p className="truncate">{agent.agent_name}</p>
                         {agent.is_featured && (
                           <Image
                             src="/icons/check-mark.svg"
@@ -158,9 +168,15 @@ export const AgentsList = ({
                           />
                         )}
                       </div>
+                      
                       <div className="col-span-1 ps-4">{`${balance} SUI`}</div>
                       <div className="col-span-2 ps-4">{`${costPerMessage} SUI`}</div>
-                      <div className="col-span-1 ps-4">
+                      
+                      <div className="col-span-2 ps-4">
+                        <PrizePoolChangeDisplay agentId={agent.agent_id} variant="list" />
+                      </div>
+
+                      <div className="col-span-1">
                         <Badge
                           variant={agent.status === 'Active' ? 'secondary' : 'destructive'}
                           className={`${
@@ -189,8 +205,8 @@ export const AgentsList = ({
                           {agent.status}
                         </Badge>
                       </div>
-                      <div className="col-span-3 ps-12 flex gap-4 items-center ">
-                        <button
+                      <div className="col-span-2 flex gap-4 items-center ">
+                     <button
                           onClick={() => router.push(`/attack/${agent.agent_path}`)}
                           className="badge-black"
                         >
@@ -203,7 +219,7 @@ export const AgentsList = ({
                           />
                           Attack
                         </button>
-                        <button
+                       <button
                           onClick={(e) => handleRefresh(e)}
                           className="badge-outline-black"
                         >

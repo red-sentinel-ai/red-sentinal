@@ -58,7 +58,12 @@ export default async function BlogPostPage(props: {
               </h1>
             </div>
           </div>
-          <div className="max-w-4xl mx-auto my-12 px-4 md:px-8">
+          <div className="max-w-4xl mx-auto my-8 px-4 md:px-8">
+            <Link
+              href="/blog"
+              className="font-medium mb-8 inline-block">
+              ← Back to Blog
+            </Link>
             <article className="prose prose-lg max-w-none prose-headings:font-medium prose-headings:text-black prose-p:text-[#5F5C5C] prose-p:leading-relaxed prose-li:text-[#5F5C5C] prose-strong:text-black prose-a:text-[#C871FF] hover:prose-a:text-purple-600">
               <div dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
             </article>

@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     siteName: 'Sui Sentinel',
     images: [
       {
-        url: '/og-image.png',
+        url: '/og-image-v2.png',
         width: 1200,
         height: 630,
         alt: 'Sui Sentinel - Challenge AI Agents',
@@ -64,11 +64,11 @@ export const metadata: Metadata = {
 
   twitter: {
     card: 'summary_large_image',
-    title: 'Sui Sentinel - Challenge AI Agents & Earn Rewards',
+    title: 'Sui Sentinel - Gamified AI Security platform on Sui',
     description:
       'Outsmart AI agents on the Sui network and earn rewards for exposing their vulnerabilities.',
     creator: `@${SUI_SENTINEL_X_USERNAME}`,
-    images: ['/og-image.png'],
+    images: ['/og-image-v2.png'],
   },
 }
 
