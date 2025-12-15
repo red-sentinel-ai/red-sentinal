@@ -90,7 +90,7 @@ export function ManifestoSignForm() {
         <button 
           onClick={handleSubmit}
           disabled={status === 'loading' || !isChecked}
-          className="btn btn-black focus-visible:border-black text-[18px] font-medium rounded-xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] min-h-[45px]! min-w-[207px]! flex items-center justify-center gap-1 absolute right-1 top-1/2 -translate-y-1/2 hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 cursor-pointer"
+          className="btn btn-black focus-visible:border-black text-[18px] font-medium rounded-xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] min-h-[45px]! min-w-[207px]! flex items-center justify-center gap-1 absolute right-1 top-1/2 -translate-y-1/2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {status === 'loading' ? (
              <Loader2 className="animate-spin w-6 h-6" />
