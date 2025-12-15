@@ -1,11 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { ManifestoModal } from "../modals/ManifestoModal";
-import { ManifestoSignForm } from "./ManifestoSignForm";
 
 export function ManifestoSection() {
+  const [isManifestoOpen, setIsManifestoOpen] = useState(false);
+
   return (
     <section
       id="manifesto"
@@ -125,7 +127,10 @@ export function ManifestoSection() {
             </div>
 
             <div className="flex justify-center">
-              <button className="btn btn-black text-[18px] font-medium rounded-xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] min-h-12! min-w-[253px]! flex items-center justify-center gap-1">
+              <button
+                onClick={() => setIsManifestoOpen(true)}
+                className="btn btn-black text-[18px] font-medium rounded-xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] min-h-12! min-w-[253px]! flex items-center justify-center gap-1 cursor-pointer hover:scale-105 transition-transform"
+              >
                 <Image
                   src="/icons/signature.png"
                   width={24}
@@ -142,8 +147,10 @@ export function ManifestoSection() {
         </div>
       </div>
 
-      <ManifestoModal />
-      <ManifestoSignForm />
+      <ManifestoModal
+        isOpen={isManifestoOpen}
+        onClose={() => setIsManifestoOpen(false)}
+      />
     </section>
   );
 }
