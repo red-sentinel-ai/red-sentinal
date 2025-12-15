@@ -56,15 +56,15 @@ export function ManifestoSection() {
 
             <div className="px-2">
               <h5 className="text-xs font-medium mb-1">
-                The Race We Didn't Choose
+                The Race We Didn&apos;t Choose
               </h5>
               <div className="text-[#484848] text-[8px]">
                 <p className="opacity-80">
-                  "If you're worried about immigration taking jobs, you should
-                  be way more worried about AI, because it's like a flood of
+                  &quot;If you&apos;re worried about immigration taking jobs, you should
+                  be way more worried about AI, because it&apos;s like a flood of
                   millions of new digital immigrants that are Nobel Prize-level
                   capability, work at superhuman speeds, and will work for less
-                  than minimum wage." —{" "}
+                  than minimum wage.&quot; —{" "}
                   <span className="underline">Tristan Harris</span>
                 </p>
 
@@ -72,12 +72,12 @@ export function ManifestoSection() {
                   <p className="my-2">
                     We stand at a crossroads in human history. AI companies are
                     racing toward AGI (artificial general intelligence) with the
-                    fervor of gold miners and the caution of gamblers. They're
-                    betting everything on a technology they don't fully
-                    understand, deploying systems they can't completely control,
+                    fervor of gold miners and the caution of gamblers. They&apos;re
+                    betting everything on a technology they don&apos;t fully
+                    understand, deploying systems they can&apos;t completely control,
                     and when pressed about the risks, they retreat into
                     determinism, inevitability, and the cold comfort of being
-                    first. But here's what they won't tell you: they don't know
+                    first. But here&apos;s what they won&apos;t tell you: they don&apos;t know
                     how their own systems work.
                   </p>
 
@@ -86,11 +86,11 @@ export function ManifestoSection() {
                     <span className="underline">Stuart Russell</span> puts it,
                     imagine a chain-link fence stretching across 1,000 square
                     miles covering all of San Francisco or all of London. That
-                    fence has a trillion adjustable parameters, and we've made
+                    fence has a trillion adjustable parameters, and we&apos;ve made
                     quintillions of random adjustments to those parameters until
-                    we got behavior that looked right. We don't understand
-                    what's happening inside that fence. We just know it works.
-                    until it doesn't.
+                    we got behavior that looked right. We don&apos;t understand
+                    what&apos;s happening inside that fence. We just know it works.
+                    until it doesn&apos;t.
                   </p>
                 </div>
               </div>
@@ -109,17 +109,17 @@ export function ManifestoSection() {
                     miracle became a curse when his food and water hardened into
                     metal, and his daughter turned to a lifeless statue in his
                     arms. He died in misery and starvation, surrounded by wealth
-                    he couldn't use.
+                    he couldn&apos;t use.
                   </p>
                   <p>
-                    This is AI's fundamental problem. We're building systems by
+                    This is AI&apos;s fundamental problem. We&apos;re building systems by
                     specifying objectives: maximize engagement, minimize costs,
-                    optimize outcomes. But we can't properly specify what we
+                    optimize outcomes. But we can&apos;t properly specify what we
                     actually want. Any attempt to write down our true objectives
                     precisely enough for a superintelligent machine to follow
                     them will be wrong. And when you give a machine an objective
-                    that isn't aligned with what you truly want, you're setting
-                    up a chess match, one you'll lose when the machine becomes
+                    that isn&apos;t aligned with what you truly want, you&apos;re setting
+                    up a chess match, one you&apos;ll lose when the machine becomes
                     sufficiently intelligent.
                   </p>
                 </div>
