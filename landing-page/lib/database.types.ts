@@ -874,9 +874,16 @@ export type Database = {
       rh_users: {
         Row: {
           avatar_url: string | null
+          banner_url: string | null
           created_at: string | null
+          current_streak: number | null
+          display_name: string | null
+          email: string | null
           id: string
+          is_public: boolean | null
+          last_activity_date: string | null
           lifetime_points: number | null
+          longest_streak: number | null
           rewards_tier: string | null
           rewards_updated_at: string | null
           total_points: number | null
@@ -885,9 +892,16 @@ export type Database = {
         }
         Insert: {
           avatar_url?: string | null
+          banner_url?: string | null
           created_at?: string | null
+          current_streak?: number | null
+          display_name?: string | null
+          email?: string | null
           id?: string
+          is_public?: boolean | null
+          last_activity_date?: string | null
           lifetime_points?: number | null
+          longest_streak?: number | null
           rewards_tier?: string | null
           rewards_updated_at?: string | null
           total_points?: number | null
@@ -896,9 +910,16 @@ export type Database = {
         }
         Update: {
           avatar_url?: string | null
+          banner_url?: string | null
           created_at?: string | null
+          current_streak?: number | null
+          display_name?: string | null
+          email?: string | null
           id?: string
+          is_public?: boolean | null
+          last_activity_date?: string | null
           lifetime_points?: number | null
+          longest_streak?: number | null
           rewards_tier?: string | null
           rewards_updated_at?: string | null
           total_points?: number | null
