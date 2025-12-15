@@ -7,10 +7,16 @@ import { motion } from "framer-motion";
 
 export function ManifestoSignForm() {
   const [email, setEmail] = useState("");
+  const [isChecked, setIsChecked] = useState(false);
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async () => {
+    if (!isChecked) {
+        setErrorMessage("Please accept the oath.");
+        return;
+    }
+
     if (!email || !email.includes('@')) {
       setErrorMessage("Please enter a valid email.");
       return;
@@ -78,13 +84,13 @@ export function ManifestoSignForm() {
           placeholder="Your Email Address"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
+          onKeyDown={(e) => e.key === 'Enter' && isChecked && handleSubmit()}
           disabled={status === 'loading'}
         />
         <button 
           onClick={handleSubmit}
-          disabled={status === 'loading'}
-          className="btn btn-black focus-visible:border-black text-[18px] font-medium rounded-xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] min-h-[45px]! min-w-[207px]! flex items-center justify-center gap-1 absolute right-1 top-1/2 -translate-y-1/2 hover:scale-105 active:scale-95 transition-all disabled:opacity-70 disabled:hover:scale-100 cursor-pointer"
+          disabled={status === 'loading' || !isChecked}
+          className="btn btn-black focus-visible:border-black text-[18px] font-medium rounded-xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] min-h-[45px]! min-w-[207px]! flex items-center justify-center gap-1 absolute right-1 top-1/2 -translate-y-1/2 hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 cursor-pointer"
         >
           {status === 'loading' ? (
              <Loader2 className="animate-spin w-6 h-6" />
@@ -103,8 +109,14 @@ export function ManifestoSignForm() {
       </div>
 
       <div className="flex flex-col items-center gap-2">
-        <div className="flex items-center justify-center gap-2">
-          <input type="checkbox" id="oath-check" className="w-4 h-4 accent-black cursor-pointer" />
+        <div className="flex items-center justify-center gap-2" onClick={() => setIsChecked(!isChecked)}>
+          <input 
+            type="checkbox" 
+            id="oath-check" 
+            className="w-4 h-4 accent-black cursor-pointer"
+            checked={isChecked}
+            onChange={(e) => setIsChecked(e.target.checked)}
+          />
           <label htmlFor="oath-check" className="cursor-pointer select-none">
             I understand this is a visible, irreversible Sentinel oath.
           </label>
