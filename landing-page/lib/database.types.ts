@@ -1139,6 +1139,24 @@ export type Database = {
         }
         Relationships: []
       }
+      ss_manifesto_signatures: {
+        Row: {
+          created_at: string
+          email: string
+          id: number
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: never
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: never
+        }
+        Relationships: []
+      }
       ss_rewards_activity: {
         Row: {
           completed_at: string | null
