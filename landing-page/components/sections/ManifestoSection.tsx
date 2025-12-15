@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { ManifestoModal } from "../modals/ManifestoModal";
+import { ManifestoSignForm } from "./ManifestoSignForm";
 
 export function ManifestoSection() {
   return (
@@ -139,6 +141,9 @@ export function ManifestoSection() {
           </p>
         </div>
       </div>
+
+      <ManifestoModal />
+      <ManifestoSignForm />
     </section>
   );
 }
