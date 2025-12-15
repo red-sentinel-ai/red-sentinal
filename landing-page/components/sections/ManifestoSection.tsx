@@ -129,7 +129,7 @@ export function ManifestoSection() {
             <div className="flex justify-center">
               <button
                 onClick={() => setIsManifestoOpen(true)}
-                className="btn btn-black text-[18px] font-medium rounded-xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] min-h-12! min-w-[253px]! flex items-center justify-center gap-1 cursor-pointer hover:scale-105 transition-transform"
+                className="btn btn-black text-[18px] font-medium rounded-xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] min-h-12! min-w-[253px]! flex items-center justify-center gap-1"
               >
                 <Image
                   src="/icons/signature.png"
