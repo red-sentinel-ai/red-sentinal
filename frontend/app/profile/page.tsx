@@ -3,12 +3,13 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { User, Folder, Activity, Loader2, Camera } from 'lucide-react'
+import { User, Folder, Activity, Loader2, Camera, Gift } from 'lucide-react'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { UserActivity } from '@/components/profile/UserActivity'
 import { UserAgents } from '@/components/profile/UserAgents'
+import { RewardsHistory } from '@/components/profile/RewardsHistory' 
 import { ConnectPrompt } from '@/components/ConnectPrompt'
 import { EditProfileModal } from '@/components/profile/EditProfileModal'
 import { SocialConnectionsSectionWrapper } from '@/components/profile/SocialConnectionsSectionWrapper'
@@ -19,6 +20,7 @@ import { SENTINEL_GIFS, USER_IMAGES } from '@/constants'
 const PROFILE_TABS = {
   AGENTS: 'agents',
   ACTIVITY: 'activity',
+  REWARDS: 'rewards', 
 } as const
 
 type ProfileTabValue = (typeof PROFILE_TABS)[keyof typeof PROFILE_TABS]
@@ -106,8 +108,20 @@ export default function ProfilePage() {
               <h1 className="text-2xl sm:text-[32px] truncate font-medium leading-snug">
                 {profile?.display_name || 'Your Profile'}
               </h1>
-              <p className="text-[#5E5E5E] mt-1 font-medium mb-6">@{profile?.username}</p>
-
+              <p className="text-[#5E5E5E] mt-1 font-medium mb-3">@{profile?.username}</p>
+              
+              <div className='bg-white rounded-xl min-h-10 flex items-center justify-center w-fit px-2 gap-2 mb-5'>
+                  <Image 
+                    src="/icons/dollar_coin.png"
+                    width={24}
+                    height={24}
+                    alt='coin'
+                  />
+                  <span className='font-medium'>
+                    Sentinel Balance: <span className='text-[#F632F3]'>12,450 SENTINEL</span>
+                  </span>
+              </div>
+              
               <button
                 onClick={() => setIsEditModalOpen(true)}
                 className="btn btn-outline h-[50px] font-medium"
@@ -150,34 +164,47 @@ export default function ProfilePage() {
               onValueChange={handleTabChange}
               className="w-full"
             >
-              <TabsList className="grid w-full grid-cols-2 lg:w-auto lg:flex lg:justify-start">
+              <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:flex lg:justify-start gap-2">
                 <TabsTrigger
                   value={PROFILE_TABS.AGENTS}
-                  className="flex items-center gap-2 text-lg md:text-xl"
+                  className="flex items-center gap-2 text-sm sm:text-lg md:text-xl"
                 >
-                  <Folder className="h-6 w-6" />
-                  <span>Your Sentinels</span>
+                  <Folder className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span className="truncate">Sentinels</span>
                 </TabsTrigger>
+                
                 <TabsTrigger
                   value={PROFILE_TABS.ACTIVITY}
-                  className="flex items-center gap-2 text-lg md:text-xl"
+                  className="flex items-center gap-2 text-sm sm:text-lg md:text-xl"
                 >
-                  <Activity className="h-6 w-6" />
-                  <span>Activity</span>
+                  <Activity className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span className="truncate">Activity</span>
+                </TabsTrigger>
+
+                <TabsTrigger
+                  value={PROFILE_TABS.REWARDS}
+                  className="flex items-center gap-2 text-sm sm:text-lg md:text-xl"
+                >
+                  <Gift className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span className="truncate">Rewards</span>
                 </TabsTrigger>
               </TabsList>
-              <TabsContent
-                value={PROFILE_TABS.AGENTS}
-                className="mt-6"
-              >
-                <UserAgents />
-              </TabsContent>
-              <TabsContent
-                value={PROFILE_TABS.ACTIVITY}
-                className="mt-6"
-              >
-                <UserActivity />
-              </TabsContent>
+
+              <div className="mt-6">
+                <TabsContent value={PROFILE_TABS.AGENTS}>
+                  <UserAgents />
+                </TabsContent>
+                
+                <TabsContent value={PROFILE_TABS.ACTIVITY}>
+                  <UserActivity />
+                </TabsContent>
+
+                <TabsContent value={PROFILE_TABS.REWARDS}>
+                  <div className="max-w-5xl">
+                    <RewardsHistory />
+                  </div>
+                </TabsContent>
+              </div>
             </Tabs>
           </div>
         </div>
