@@ -115,3 +115,42 @@ export interface LeaderboardEntry {
   discord_user_id: string | null
   discord_avatar: string | null
 }
+
+export interface RewardEventMetadata {
+  agent_id?: string
+  amount?: string
+  funded_timestamp?: string
+  unlock_timestamp?: string
+  txDigest?: string
+  eventSeq?: string
+  sender?: string
+  timestampMs?: string
+  agent_object_id?: string
+  cost_per_message?: string
+  creator?: string
+  initial_balance?: string
+  prompt?: string
+}
+
+export interface RewardActivity {
+  recipient: string
+  description: string
+  eventSeq: string
+  txDigest: string
+  createdAt: string
+  eventType: string
+  metadata: {
+    event: RewardEventMetadata
+  }
+  rewardAmount: number
+  timestampMs: string
+  transferDigest?: string
+  transferError?: string | null
+  transferSuccess?: boolean
+  transferUpdatedAt?: string
+}
+
+export interface RewardsHistoryResponse {
+  result: RewardActivity[]
+  total: number
+}

@@ -155,7 +155,7 @@ export async function GET(request: Request) {
                 position: 'relative',
               }}
             >
-              🏆 SNTL Points Leaderboard
+              🏆 SENTINEL Points Leaderboard
             </h1>
           </div>
 
@@ -280,7 +280,7 @@ export async function GET(request: Request) {
                         alignItems: 'center',
                       }}
                     >
-                      {entry.total_points?.toLocaleString()} SNTL
+                      {entry.total_points?.toLocaleString()} SENTINEL
                     </div>
                   </div>
                 )
@@ -362,7 +362,7 @@ export async function GET(request: Request) {
               WebkitTextFillColor: 'transparent',
             }}
           >
-            🏆 SNTL Points Leaderboard
+            🏆 SENTINEL Points Leaderboard
           </h1>
           <p
             style={{
