@@ -140,7 +140,7 @@ export const AttackStatusModal = ({
             <p className="text-lg text-black">Try your luck!</p>
           </div>
 
-          <div className="relative w-full max-w-[320px] aspect-square flex items-center justify-center">
+          <div className="relative w-full max-w-[320px] aspect-square flex items-center justify-center mt-8">
             <div className="absolute inset-0 bg-pink-400/20 blur-[60px] rounded-full pointer-events-none transform translate-y-4 scale-90" />
 
             <Image
