@@ -105,7 +105,7 @@ export const FundSuccessModal = ({
             more you earn!
           </p>
           <p>
-            Coming soon: Add NFTs or USDC to your prize pool and earn $SNTL rewards for active
+            Coming soon: Add NFTs or USDC to your prize pool and earn $SENTINEL rewards for active
             Sentinels!
           </p>
         </div>

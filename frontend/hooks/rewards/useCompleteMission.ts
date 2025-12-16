@@ -44,7 +44,7 @@ export function useCompleteMission() {
       queryClient.invalidateQueries({ queryKey: ['user-rewards', variables.wallet_address] })
 
       queryClient.invalidateQueries({ queryKey: [AGENT_EVENTS_QUERY_KEY] })
-      toast.success(`Mission completed! +${data.points_earned} SNTL`)
+      toast.success(`Mission completed! +${data.points_earned} SENTINEL`)
     },
     onError: (error: Error) => {
       toast.error(error.message)

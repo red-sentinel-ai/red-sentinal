@@ -136,7 +136,7 @@ export function RewardsDashboard() {
               totalPoints={userRewards?.user?.total_points || 0}
               tier={userRewards?.user.rewards_tier || 'bronze'}
               isLoading={isLoadingUser}
-              pointsSymbol={effectiveMissionsData?.points_symbol || 'SNTL'}
+              pointsSymbol={effectiveMissionsData?.points_symbol || 'SENTINEL'}
             />
           </motion.div>
 
@@ -185,7 +185,7 @@ export function RewardsDashboard() {
                         missions={effectiveMissionsData?.missions || []}
                         completedMissions={userRewards?.completed_missions || {}}
                         isLoading={isLoadingMissions}
-                        pointsSymbol={effectiveMissionsData?.points_symbol || 'SNTL'}
+                        pointsSymbol={effectiveMissionsData?.points_symbol || 'SENTINEL'}
                       />
                     </TabsContent>
                     <TabsContent
@@ -195,7 +195,7 @@ export function RewardsDashboard() {
                       <RecentActivity
                         activities={userRewards?.recent_activity || []}
                         isLoading={isLoadingUser}
-                        pointsSymbol={effectiveMissionsData?.points_symbol || 'SNTL'}
+                        pointsSymbol={effectiveMissionsData?.points_symbol || 'SENTINEL'}
                       />
                     </TabsContent>
                   </div>
