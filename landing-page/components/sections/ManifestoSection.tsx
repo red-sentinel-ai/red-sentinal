@@ -35,7 +35,7 @@ export function ManifestoSection() {
           </p>
         </motion.div>
 
-        <div className="max-w-[436px] mx-auto">
+        <div className="max-w-[530px] mx-auto">
           <div className="border border-[#F632F3] rounded-xl bg-white py-6 px-6 relative">
             <div className="absolute inset-0 bottom-[72px] bg-linear-to-b from-white/0 to-white/90"></div>
             <div className="flex items-center gap-2">
@@ -47,7 +47,7 @@ export function ManifestoSection() {
                   alt="logo smalll"
                 />
               </div>
-              <h4 className="font-bold">
+              <h4 className="font-bold text-lg">
                 The Sentinel <span className="text-[#C871FF]"> Oath</span>
               </h4>
             </div>
@@ -55,10 +55,10 @@ export function ManifestoSection() {
             <div className="border-t border-[#D9D9D9] my-3"></div>
 
             <div className="px-2">
-              <h5 className="text-xs font-medium mb-1">
+              <h5 className="text-sm font-medium mb-1">
                 The Race We Didn&apos;t Choose
               </h5>
-              <div className="text-[#484848] text-[8px]">
+              <div className="text-[#484848] text-[10px]">
                 <p className="opacity-80">
                   &quot;If you&apos;re worried about immigration taking jobs, you should
                   be way more worried about AI, because it&apos;s like a flood of
@@ -97,8 +97,8 @@ export function ManifestoSection() {
             </div>
 
             <div className="px-2 pt-4">
-              <h5 className="text-xs font-medium mb-1">Saga of King Midas</h5>
-              <div className="text-[#484848] text-[8px]">
+              <h5 className="text-sm font-medium mb-1">Saga of King Midas</h5>
+              <div className="text-[#484848] text-[10px]">
                 <div>
                   <p className="mb-2">
                     King Midas ruled Phrygia in great luxury, but despite all he
@@ -141,7 +141,7 @@ export function ManifestoSection() {
               </button>
             </div>
           </div>
-          <p className="text-xs text-center mt-3">
+          <p className="text-sm text-center mt-3">
             12,483 Sentinels have already taken the oath.
           </p>
         </div>
