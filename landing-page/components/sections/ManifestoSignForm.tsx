@@ -109,18 +109,17 @@ export function ManifestoSignForm() {
       </div>
 
       <div className="flex flex-col items-center gap-2">
-        <div className="flex items-center justify-center gap-2" onClick={() => setIsChecked(!isChecked)}>
+        <label className="flex items-center justify-center gap-2 cursor-pointer select-none">
           <input 
             type="checkbox" 
-            id="oath-check" 
             className="w-4 h-4 accent-black cursor-pointer"
             checked={isChecked}
             onChange={(e) => setIsChecked(e.target.checked)}
           />
-          <label htmlFor="oath-check" className="cursor-pointer select-none">
+          <span className="cursor-pointer">
             I understand this is a visible, irreversible Sentinel oath.
-          </label>
-        </div>
+          </span>
+        </label>
         {errorMessage && (
           <p className="text-red-500 text-sm font-medium animate-pulse">
             {errorMessage}
