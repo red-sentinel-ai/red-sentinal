@@ -26,7 +26,7 @@ export const metadata = {
 export default function Leaderboard() {
   return (
     <div className="p-3 md:p-6 container mx-auto">
-      <RewardsLeaderboard pointsSymbol={'SNTL'} />
+      <RewardsLeaderboard pointsSymbol={'SENTINEL'} />
     </div>
   )
 }

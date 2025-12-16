@@ -474,18 +474,18 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
         <div className="mt-6 pt-6 border-t border-black/20">
           <div className="flex justify-between items-start mb-2">
-            <h3 className="font-bold text-base text-black leading-tight">Earn SNTL Rewards</h3>
+            <h3 className="font-bold text-base text-black leading-tight">Earn SENTINEL Rewards</h3>
           </div>
 
           <p className="text-[#5E5E5E] text-base mb-4 leading-relaxed">
-            Share your Sentinel on X and get real SNTL every time you share.
+            Share your Sentinel on X and get real SENTINEL every time you share.
           </p>
 
           <button
             onClick={() => setIsShareModalOpen(true)}
             className="btn btn-black w-full h-[42px] flex items-center justify-center gap-2 text-base font-medium transition-transform active:scale-[0.98]"
           >
-            Share on X & Earn SNTL
+            Share on X & Earn SENTINEL
           </button>
         </div>
 
@@ -538,7 +538,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
                 height={24}
                 alt="dollar coin"
               />
-              <h2 className="text-xl font-bold">Share on X & Earn SNTL</h2>
+              <h2 className="text-xl font-bold">Share on X & Earn SENTINEL</h2>
             </div>
             <button
               onClick={handleCloseShareModal}
@@ -570,7 +570,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
             <div className="space-y-6">
               <div className="relative">
                 <p className="text-sm mb-1">Step 1</p>
-                <p className="font-medium mb-3">Share about Sentinel on X and earn SNTL rewards.</p>
+                <p className="font-medium mb-3">Share about Sentinel on X and earn SENTINEL rewards.</p>
                 <button
                   onClick={handleShareClick}
                   className="btn btn-white w-full sm:w-auto h-[36px] flex items-center gap-2 px-4 !border-black"

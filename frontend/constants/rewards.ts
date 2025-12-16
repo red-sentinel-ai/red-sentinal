@@ -156,6 +156,6 @@ export const REWARDS_CONSTANTS = {
     enabled: true,
     missions: DEFAULT_MISSIONS,
     points_name: 'Sentinel Tokens',
-    points_symbol: 'SNTL',
+    points_symbol: 'SENTINEL',
   },
 } as const

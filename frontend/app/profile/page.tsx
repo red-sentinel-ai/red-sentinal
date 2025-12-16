@@ -108,8 +108,20 @@ export default function ProfilePage() {
               <h1 className="text-2xl sm:text-[32px] truncate font-medium leading-snug">
                 {profile?.display_name || 'Your Profile'}
               </h1>
-              <p className="text-[#5E5E5E] mt-1 font-medium mb-6">@{profile?.username}</p>
-
+              <p className="text-[#5E5E5E] mt-1 font-medium mb-3">@{profile?.username}</p>
+              
+              <div className='bg-white rounded-xl min-h-10 flex items-center justify-center w-fit px-2 gap-2 mb-5'>
+                  <Image 
+                    src="/icons/dollar_coin.png"
+                    width={24}
+                    height={24}
+                    alt='coin'
+                  />
+                  <span className='font-medium'>
+                    Sentinel Balance: <span className='text-[#F632F3]'>12,450 SENTINEL</span>
+                  </span>
+              </div>
+              
               <button
                 onClick={() => setIsEditModalOpen(true)}
                 className="btn btn-outline h-[50px] font-medium"
