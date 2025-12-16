@@ -44,7 +44,7 @@ export const RewardsHistory = () => {
             <h3 className="text-3xl font-bold tracking-tight">
               {totalRewards.toLocaleString()}
             </h3>
-            <span className="text-sm font-bold text-green-500">SENTINEL</span>
+            <span className="text-sm font-bold text-[#F632F3]">SENTINEL</span>
           </div>
         </div>
         <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center">
@@ -90,8 +90,8 @@ export const RewardsHistory = () => {
                     className="grid grid-cols-1 md:grid-cols-12 px-4 md:px-6 py-4 items-center hover:bg-gray-50 transition-colors gap-y-2 md:gap-y-0"
                   >
                     <div className="col-span-6 md:col-span-3 order-1 md:order-1">
-                      <span className="font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full text-sm inline-block">
-                        +{item.rewardAmount} SNTL
+                      <span className="font-bold text-[#F632F3] text-sm inline-block">
+                        +{item.rewardAmount} SENTINEL
                       </span>
                     </div>
 

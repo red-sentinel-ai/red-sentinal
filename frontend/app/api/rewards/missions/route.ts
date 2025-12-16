@@ -26,7 +26,7 @@ export async function GET(): Promise<NextResponse<MissionsResponse>> {
         enabled: false,
         missions: [],
         points_name: 'Sentinel Tokens',
-        points_symbol: 'SNTL',
+        points_symbol: 'SENTINEL',
         message: 'Failed to fetch configuration',
       })
     }
@@ -40,7 +40,7 @@ export async function GET(): Promise<NextResponse<MissionsResponse>> {
         enabled: false,
         missions: [],
         points_name: 'Sentinel Tokens',
-        points_symbol: 'SNTL',
+        points_symbol: 'SENTINEL',
         message: 'Rewards program is currently disabled',
       })
     }
@@ -51,7 +51,7 @@ export async function GET(): Promise<NextResponse<MissionsResponse>> {
       enabled: true,
       missions: missions.filter((m: RewardsMission) => m.enabled),
       points_name: rewards.points_name || 'Sentinel Tokens',
-      points_symbol: rewards.points_symbol || 'SNTL',
+      points_symbol: rewards.points_symbol || 'SENTINEL',
     })
   } catch (error) {
     console.error('Error fetching missions:', error)
@@ -60,7 +60,7 @@ export async function GET(): Promise<NextResponse<MissionsResponse>> {
         enabled: false,
         missions: [],
         points_name: 'Sentinel Tokens',
-        points_symbol: 'SNTL',
+        points_symbol: 'SENTINEL',
         message: 'Failed to fetch missions',
       },
       { status: 500 }
