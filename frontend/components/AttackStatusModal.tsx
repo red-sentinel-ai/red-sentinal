@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { X, Check, ChevronDown, ChevronUp, Swords } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Dialog } from "@/components/Dialog";
 import { ConsumePromptApiResponse } from "@/types";
 import { SUI_TESTNET_BASE_URL } from "@/constants";
 import { cn } from "@/lib/utils";
+import { SlotMachine } from "./slot-machine/SlotMachine";
 
 type AttackStatusModalProps = {
   apiResponse: ConsumePromptApiResponse;
@@ -140,18 +140,7 @@ export const AttackStatusModal = ({
             <p className="text-lg text-black">Try your luck!</p>
           </div>
 
-          <div className="relative w-full max-w-[320px] aspect-square flex items-center justify-center mt-8">
-            <div className="absolute inset-0 bg-pink-400/20 blur-[60px] rounded-full pointer-events-none transform translate-y-4 scale-90" />
-
-            <Image
-              src="/img/slot-machine.png"
-              alt="Bonus Spin Slot Machine"
-              width={290}
-              height={381}
-              className="relative z-10 object-contain drop-shadow-xl"
-              priority
-            />
-          </div>
+          <SlotMachine />
         </div>
       </motion.div>
     </Dialog>
