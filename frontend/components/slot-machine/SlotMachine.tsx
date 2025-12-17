@@ -77,7 +77,7 @@ export const SlotMachine = ({ onWin, onError }: SlotMachineProps) => {
         />
       </div>
 
-      <div className="absolute top-[68px] left-[48px] z-10 flex gap-1 rounded-[20px] overflow-hidden">
+      <div className="absolute top-[72px] left-[48px] z-10 flex gap-1 rounded-[20px] overflow-hidden">
         <SlotReel value={result[0]} isSpinning={isSpinning} delay={0} />
         <SlotReel value={result[1]} isSpinning={isSpinning} delay={0.2} />
         <SlotReel value={result[2]} isSpinning={isSpinning} delay={0.4} />
