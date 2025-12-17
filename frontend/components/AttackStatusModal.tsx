@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { X, Check, ChevronDown, ChevronUp, Swords } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Confetti from "react-confetti";
+import { useWindowSize } from "react-use";
 import { Dialog } from "@/components/Dialog";
 import { ConsumePromptApiResponse } from "@/types";
 import { SUI_TESTNET_BASE_URL } from "@/constants";
@@ -23,12 +25,27 @@ export const AttackStatusModal = ({
   setShowResultModal,
   txnHash,
 }: AttackStatusModalProps) => {
+  const { width, height } = useWindowSize();
   const [isExplanationOpen, setIsExplanationOpen] = useState(true);
+  const [rewardAmount, setRewardAmount] = useState<number | null>(null);
+  const [isSlotAvailable, setIsSlotAvailable] = useState(true);
 
   const success = apiResponse?.response.data.success;
   const originalScore = apiResponse?.response.data.score || 0;
   const score = success ? 100 : originalScore;
   const explanation = apiResponse?.response.data.explanation;
+
+  const handleSlotWin = (amount: number) => {
+    setRewardAmount(amount);
+  };
+
+  const handleSlotError = (errorMsg: string) => {
+    if (errorMsg.includes("No unclaimed rewards")) {
+      setIsSlotAvailable(false);
+    } else {
+      console.error("Slot Machine Error:", errorMsg);
+    }
+  };
 
   return (
     <Dialog
@@ -82,7 +99,8 @@ export const AttackStatusModal = ({
             <div className="flex items-center mb-4">
               <Swords className="w-5 h-5 text-black fill-black" />
               <span className="font-medium text-black text-[15px]">
-                Your Attack Score: <span className="text-sm font-bold">{score}/100</span>
+                Your Attack Score:{" "}
+                <span className="text-sm font-bold">{score}/100</span>
               </span>
               <Link
                 href={`${SUI_TESTNET_BASE_URL}/${txnHash}`}
@@ -131,16 +149,61 @@ export const AttackStatusModal = ({
 
         <div className="h-[1px] w-full bg-[#E5E5E5] mb-6" />
 
-        <div className="flex flex-col items-center justify-center pb-8 px-6 bg-gradient-to-b from-white to-pink-50/30">
-          <div className="text-center mb-6 text-xl font-medium">
-            <p className=" ">
-              The SENTINEL grants you a{" "}
-              <span className="text-[#F632F3]">bonus spin</span>.
-            </p>
-            <p>Try your luck!</p>
-          </div>
-
-          <SlotMachine />
+        <div className="flex flex-col items-center justify-center pb-8 px-6 bg-gradient-to-b from-white to-pink-50/30 min-h-[300px]">
+          <AnimatePresence mode="wait">
+            {rewardAmount !== null ? (
+              <motion.div
+                key="congrats"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex flex-col items-center text-center"
+              >
+                <Confetti
+                  width={width}
+                  height={height}
+                  recycle={false}
+                  numberOfPieces={500}
+                  gravity={0.2}
+                />
+                <h3 className="text-3xl font-bold text-black mb-2">
+                  Congratulations!
+                </h3>
+                <p className="text-lg text-[#5E5E5E]">
+                  You won{" "}
+                  <span className="text-[#F046D6] font-bold">
+                    {rewardAmount} SENTINEL
+                  </span>{" "}
+                  points as the reward
+                </p>
+              </motion.div>
+            ) : isSlotAvailable ? (
+              <motion.div
+                key="slot"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex flex-col items-center w-full"
+              >
+                <div className="text-center mb-6 text-xl font-medium">
+                  <p className=" ">
+                    The SENTINEL grants you a{" "}
+                    <span className="text-[#F632F3] font-bold">bonus spin</span>
+                    .
+                  </p>
+                  <p className="text-lg text-black">Try your luck!</p>
+                </div>
+                <SlotMachine onWin={handleSlotWin} onError={handleSlotError} />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="empty"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-gray-400 text-sm italic"
+              >
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </motion.div>
     </Dialog>

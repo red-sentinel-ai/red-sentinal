@@ -5,7 +5,12 @@ import { useCurrentAccount } from "@mysten/dapp-kit";
 import { SlotReel } from "./SlotReel";
 import { useClaimReward } from "@/hooks/rewards/useClaimReward";
 
-export const SlotMachine = () => {
+interface SlotMachineProps {
+  onWin?: (amount: number) => void;
+  onError?: (error: string) => void;
+}
+
+export const SlotMachine = ({ onWin, onError }: SlotMachineProps) => {
   const account = useCurrentAccount();
   const [isSpinning, setIsSpinning] = useState(false);
   const [result, setResult] = useState<number[]>([7, 7, 7]);
@@ -33,15 +38,30 @@ export const SlotMachine = () => {
           .map(Number);
 
         setResult(digits);
-        toast.success(`You won ${data.rewardAmount} tokens!`);
+        setIsSpinning(false);
+
+        setTimeout(() => {
+          if (onWin) {
+            onWin(data.rewardAmount);
+          }
+        }, 1500);
       } else {
         toast.error("Spin failed. No rewards available or transfer failed.");
+        setIsSpinning(false);
       }
     } catch (error) {
       console.error("Spin failed", error);
-      toast.error(error instanceof Error ? error.message : "Failed to spin");
-    } finally {
       setIsSpinning(false);
+
+      const errorMessage = error?.message || "Failed to spin";
+
+      if (errorMessage.includes("No unclaimed rewards")) {
+        if (onError) {
+          onError(errorMessage);
+        }
+      } else {
+        toast.error(errorMessage);
+      }
     }
   };
 
