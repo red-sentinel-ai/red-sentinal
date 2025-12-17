@@ -1,5 +1,11 @@
 import { useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
+import { Skranji } from "next/font/google"; //
+
+const skranji = Skranji({
+  weight: ["400", "700"],
+  subsets: ["latin"],
+});
 
 const REEL_HEIGHT = 130;
 const TILE_HEIGHT = 46;
@@ -50,7 +56,7 @@ export const SlotReel = ({ value, isSpinning, delay }: SlotReelProps) => {
           -(targetIndex * TILE_HEIGHT) + REEL_HEIGHT / 2 - TILE_HEIGHT / 2;
 
         await new Promise((resolve) => setTimeout(resolve, delay * 1000));
-        
+
         await controls.start({
           y: finalY,
           transition: {
@@ -82,7 +88,7 @@ export const SlotReel = ({ value, isSpinning, delay }: SlotReelProps) => {
             key={i}
             className={` w-[40px] h-[40px] m-[5px] flex items-center justify-center rounded-md text-white font-black text-2xl border-b-4 shadow-sm select-none ${getTileColor(
               num
-            )} `}
+            )} ${skranji.className}`}
             style={{ height: `${TILE_HEIGHT - 10}px` }}
           >
             {num}
