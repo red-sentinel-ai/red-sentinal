@@ -97,7 +97,7 @@ export const AttackStatusModal = ({
           <div className="h-[1px] w-full bg-[#E5E5E5] my-5" />
           <div className="px-8">
             <div className="flex items-center mb-4">
-              <Swords className="w-5 h-5 text-black fill-black" />
+              <Swords className="w-5 h-5 mr-2 text-black fill-black" />
               <span className="font-medium text-black text-[15px]">
                 Your Attack Score:{" "}
                 <span className="text-sm font-bold">{score}/100</span>
@@ -168,13 +168,20 @@ export const AttackStatusModal = ({
                 <h3 className="text-3xl font-bold text-black mb-2">
                   Congratulations!
                 </h3>
-                <p className="text-lg text-[#5E5E5E]">
+                <p className="text-lg text-[#5E5E5E] mb-8">
                   You won{" "}
                   <span className="text-[#F046D6] font-bold">
                     {rewardAmount} SENTINEL
                   </span>{" "}
                   points as the reward
                 </p>
+
+                <button
+                  onClick={() => setShowResultModal(false)}
+                  className="btn btn-black w-full"
+                >
+                  Close
+                </button>
               </motion.div>
             ) : isSlotAvailable ? (
               <motion.div
