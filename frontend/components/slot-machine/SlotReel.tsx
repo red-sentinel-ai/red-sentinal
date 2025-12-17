@@ -18,7 +18,7 @@ const numbers = [
   ...Array(10).keys(),
   ...Array(10).keys(),
   ...Array(10).keys(),
-  ...Array(10).keys(), 
+  ...Array(10).keys(),
 ];
 
 type SlotReelProps = {
@@ -29,6 +29,9 @@ type SlotReelProps = {
 
 export const SlotReel = ({ value, isSpinning, delay }: SlotReelProps) => {
   const controls = useAnimation();
+
+  const safeValue =
+    typeof value === "number" && !isNaN(value) ? Math.abs(value % 10) : 7;
 
   useEffect(() => {
     const handleAnimation = async () => {
@@ -42,12 +45,12 @@ export const SlotReel = ({ value, isSpinning, delay }: SlotReelProps) => {
           },
         });
       } else {
-        const targetIndex = 20 + value; 
+        const targetIndex = 20 + safeValue;
         const finalY =
           -(targetIndex * TILE_HEIGHT) + REEL_HEIGHT / 2 - TILE_HEIGHT / 2;
 
         await new Promise((resolve) => setTimeout(resolve, delay * 1000));
-
+        
         await controls.start({
           y: finalY,
           transition: {
@@ -55,14 +58,14 @@ export const SlotReel = ({ value, isSpinning, delay }: SlotReelProps) => {
             ease: [0.2, 0.8, 0.2, 1],
             type: "spring",
             stiffness: 60,
-            damping: 15, 
+            damping: 15,
           },
         });
       }
     };
 
     handleAnimation();
-  }, [isSpinning, value, delay, controls]);
+  }, [isSpinning, safeValue, delay, controls]);
 
   return (
     <div
@@ -77,12 +80,9 @@ export const SlotReel = ({ value, isSpinning, delay }: SlotReelProps) => {
         {numbers.map((num, i) => (
           <div
             key={i}
-            className={`
-              w-[40px] h-[40px] m-[5px] flex items-center justify-center 
-              rounded-md text-white font-black text-2xl 
-              border-b-4 shadow-sm select-none
-              ${getTileColor(num)}
-            `}
+            className={` w-[40px] h-[40px] m-[5px] flex items-center justify-center rounded-md text-white font-black text-2xl border-b-4 shadow-sm select-none ${getTileColor(
+              num
+            )} `}
             style={{ height: `${TILE_HEIGHT - 10}px` }}
           >
             {num}
