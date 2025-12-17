@@ -22,7 +22,12 @@ type SlotReelProps = {
 
 export const SlotReel = ({ value, isSpinning, delay }: SlotReelProps) => {
   const controls = useAnimation();
-  const numbers = [...Array(10).keys(), ...Array(10).keys()];
+  
+  const numbers = [
+    ...Array(10).keys(), 
+    ...Array(10).keys(), 
+    ...Array(10).keys()
+  ];
 
   useEffect(() => {
     const handleAnimation = async () => {
