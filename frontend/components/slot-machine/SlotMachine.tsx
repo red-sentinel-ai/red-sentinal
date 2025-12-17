@@ -13,7 +13,7 @@ interface SlotMachineProps {
 export const SlotMachine = ({ onWin, onError }: SlotMachineProps) => {
   const account = useCurrentAccount();
   const [isSpinning, setIsSpinning] = useState(false);
-  const [result, setResult] = useState<number[]>([7, 7, 7]);
+  const [result, setResult] = useState<number[]>([4, 5, 4]);
 
   const { mutateAsync: claimTokens, isPending } = useClaimReward();
 
