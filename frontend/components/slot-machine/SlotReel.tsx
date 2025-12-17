@@ -14,6 +14,13 @@ const NUMBER_COLORS = [
 
 const getTileColor = (num: number) => NUMBER_COLORS[num % NUMBER_COLORS.length];
 
+const numbers = [
+  ...Array(10).keys(),
+  ...Array(10).keys(),
+  ...Array(10).keys(),
+  ...Array(10).keys(), 
+];
+
 type SlotReelProps = {
   value: number;
   isSpinning: boolean;
@@ -22,12 +29,6 @@ type SlotReelProps = {
 
 export const SlotReel = ({ value, isSpinning, delay }: SlotReelProps) => {
   const controls = useAnimation();
-  
-  const numbers = [
-    ...Array(10).keys(), 
-    ...Array(10).keys(), 
-    ...Array(10).keys()
-  ];
 
   useEffect(() => {
     const handleAnimation = async () => {
@@ -41,7 +42,7 @@ export const SlotReel = ({ value, isSpinning, delay }: SlotReelProps) => {
           },
         });
       } else {
-        const targetIndex = 10 + value;
+        const targetIndex = 20 + value; 
         const finalY =
           -(targetIndex * TILE_HEIGHT) + REEL_HEIGHT / 2 - TILE_HEIGHT / 2;
 
@@ -54,7 +55,7 @@ export const SlotReel = ({ value, isSpinning, delay }: SlotReelProps) => {
             ease: [0.2, 0.8, 0.2, 1],
             type: "spring",
             stiffness: 60,
-            damping: 15,
+            damping: 15, 
           },
         });
       }
