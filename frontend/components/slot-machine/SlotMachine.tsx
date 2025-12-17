@@ -13,12 +13,13 @@ interface SlotMachineProps {
 export const SlotMachine = ({ onWin, onError }: SlotMachineProps) => {
   const account = useCurrentAccount();
   const [isSpinning, setIsSpinning] = useState(false);
+  const [hasWon, setHasWon] = useState(false); 
   const [result, setResult] = useState<number[]>([4, 5, 4]);
 
   const { mutateAsync: claimTokens, isPending } = useClaimReward();
 
   const handleSpin = async () => {
-    if (isSpinning || isPending) return;
+    if (isSpinning || isPending || hasWon) return;
 
     if (!account?.address) {
       toast.error("Please connect your wallet first");
@@ -39,10 +40,11 @@ export const SlotMachine = ({ onWin, onError }: SlotMachineProps) => {
 
         setResult(digits);
         setIsSpinning(false);
+        setHasWon(true); 
 
         setTimeout(() => {
           if (onWin) {
-            onWin(data.rewardAmount);
+            onWin(data.rewardAmount); 
           }
         }, 1500);
       } else {
@@ -86,7 +88,7 @@ export const SlotMachine = ({ onWin, onError }: SlotMachineProps) => {
       <div className="overflow-hidden absolute bottom-[90px] left-[31px] w-[150px] h-[51px] z-20">
         <button
           onClick={handleSpin}
-          disabled={isSpinning || isPending}
+          disabled={isSpinning || isPending || hasWon}
           className="transition-transform duration-100 active:translate-y-[14px] disabled:opacity-80 disabled:cursor-not-allowed group"
         >
           <Image
@@ -94,7 +96,7 @@ export const SlotMachine = ({ onWin, onError }: SlotMachineProps) => {
             width={150}
             height={51}
             alt="Spin!"
-            className="group-hover:brightness-110 transition-all"
+            className={`${!(isSpinning || isPending || hasWon) ? "group-hover:brightness-110" : ""} transition-all`}
           />
           {/* {isPending && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-[14px]">

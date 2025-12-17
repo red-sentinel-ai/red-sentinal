@@ -149,57 +149,61 @@ export const AttackStatusModal = ({
 
         <div className="h-[1px] w-full bg-[#E5E5E5] mb-6" />
 
-        <div className="flex flex-col items-center justify-center pb-8 px-6 bg-gradient-to-b from-white to-pink-50/30 min-h-[300px]">
-          <AnimatePresence mode="wait">
-            {rewardAmount !== null ? (
-              <motion.div
-                key="congrats"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="flex flex-col items-center text-center"
-              >
-                <Confetti
-                  width={width}
-                  height={height}
-                  recycle={false}
-                  numberOfPieces={500}
-                  gravity={0.2}
-                />
-                <h3 className="text-3xl font-bold text-black mb-2">
-                  Congratulations!
-                </h3>
-                <p className="text-lg text-[#5E5E5E] mb-8">
-                  You won{" "}
-                  <span className="text-[#F046D6] font-bold">
-                    {rewardAmount} SENTINEL
-                  </span>{" "}
-                  points as the reward
-                </p>
+        <div className="flex flex-col items-center justify-center pb-8 px-6 bg-gradient-to-b from-white to-pink-50/30 min-h-[420px] relative">
+          {rewardAmount !== null && (
+            <div className="absolute inset-0 pointer-events-none z-50">
+              <Confetti
+                width={width}
+                height={height}
+                recycle={false}
+                numberOfPieces={500}
+                gravity={0.2}
+              />
+            </div>
+          )}
 
-                <button
-                  onClick={() => setShowResultModal(false)}
-                  className="btn btn-black w-full"
-                >
-                  Close
-                </button>
-              </motion.div>
-            ) : isSlotAvailable ? (
+          <AnimatePresence mode="wait">
+            {isSlotAvailable ? (
               <motion.div
-                key="slot"
+                key="slot-section"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="flex flex-col items-center w-full"
+                className="flex flex-col items-center w-full relative z-10"
               >
-                <div className="text-center mb-6 text-xl font-medium">
-                  <p className=" ">
-                    The SENTINEL grants you a{" "}
-                    <span className="text-[#F632F3] font-bold">bonus spin</span>
-                    .
-                  </p>
-                  <p className="text-lg text-black">Try your luck!</p>
-                </div>
+                {!rewardAmount && (
+                  <div className="text-center mb-6 text-xl font-medium">
+                    <p>
+                      The SENTINEL grants you a{" "}
+                      <span className="text-[#F632F3] font-bold">
+                        bonus spin
+                      </span>
+                      .
+                    </p>
+                    <p className="text-lg text-black">Try your luck!</p>
+                  </div>
+                )}
+
                 <SlotMachine onWin={handleSlotWin} onError={handleSlotError} />
+
+                {rewardAmount !== null && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-6 text-center"
+                  >
+                    <h3 className="text-3xl font-bold text-black mb-2">
+                      Congratulations!
+                    </h3>
+                    <p className="text-lg text-[#5E5E5E] mb-6">
+                      You won{" "}
+                      <span className="text-[#F046D6] font-bold">
+                        {rewardAmount} SENTINEL
+                      </span>{" "}
+                      points!
+                    </p>
+                  </motion.div>
+                )}
               </motion.div>
             ) : (
               <motion.div
@@ -207,8 +211,7 @@ export const AttackStatusModal = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className="text-gray-400 text-sm italic"
-              >
-              </motion.div>
+              ></motion.div>
             )}
           </AnimatePresence>
         </div>
