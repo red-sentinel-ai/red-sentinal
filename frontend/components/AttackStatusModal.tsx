@@ -69,7 +69,7 @@ export const AttackStatusModal = ({
               <h2 className="text-xl font-bold text-black leading-tight">
                 {success ? "Attack Successful" : "Attack Failed"}
               </h2>
-              <p className="text-[#989898] text-sm leading-snug">
+              <p className="text-[#989898] text-[15px] leading-snug">
                 {success
                   ? "Your Prompt Successfully breached the sentinel's defenses !"
                   : "The Sentinel held strong against your attack."}
@@ -79,16 +79,16 @@ export const AttackStatusModal = ({
 
           <div className="h-[1px] w-full bg-[#E5E5E5] my-5" />
           <div className="px-8">
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center mb-4">
               <Swords className="w-5 h-5 text-black fill-black" />
-              <span className="font-bold text-black text-base">
-                Your Attack Score: {score}/100
+              <span className="font-medium text-black text-[15px]">
+                Your Attack Score: <span className="text-sm font-bold">{score}/100</span>
               </span>
               <Link
                 href={`${SUI_TESTNET_BASE_URL}/${txnHash}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[10px] text-[#989898] hover:text-black hover:underline flex items-center mt-0.5 ml-1"
+                className="text-[10px] font-medium text-[#989898] hover:text-black hover:underline flex items-center mt-0.5 ml-1"
               >
                 view on explorer
               </Link>
@@ -99,7 +99,7 @@ export const AttackStatusModal = ({
                 onClick={() => setIsExplanationOpen(!isExplanationOpen)}
                 className="flex items-center justify-between w-full text-left group"
               >
-                <h3 className="text-sm font-semibold text-black">
+                <h3 className="text-[15px] font-medium text-black">
                   Explanation
                 </h3>
                 {isExplanationOpen ? (
@@ -118,7 +118,7 @@ export const AttackStatusModal = ({
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
-                    <p className="text-sm text-[#5E5E5E] leading-relaxed mt-2 pr-2">
+                    <p className="text-sm text-[#575757] leading-relaxed mt-1 pr-2">
                       {explanation ||
                         "No explanation provided by the Sentinel."}
                     </p>
@@ -132,12 +132,12 @@ export const AttackStatusModal = ({
         <div className="h-[1px] w-full bg-[#E5E5E5] mb-6" />
 
         <div className="flex flex-col items-center justify-center pb-8 px-6 bg-gradient-to-b from-white to-pink-50/30">
-          <div className="text-center mb-6">
-            <p className="text-lg font-medium text-black">
+          <div className="text-center mb-6 text-xl font-medium">
+            <p className=" ">
               The SENTINEL grants you a{" "}
-              <span className="text-[#F046D6] font-bold">bonus spin</span>.
+              <span className="text-[#F632F3]">bonus spin</span>.
             </p>
-            <p className="text-lg text-black">Try your luck!</p>
+            <p>Try your luck!</p>
           </div>
 
           <SlotMachine />
