@@ -27,11 +27,11 @@ export function Navbar() {
         isScrolled ? 'backdrop-blur-xl' : 'bg-transparent'
       }`}
     >
-      {/* <div className="text-center text-white h-11 flex items-center justify-center bg-linear-to-r from-black/15 to-[rgba(102,102,102,0)] p-2 text-xs md:text-base">
+      <div className="text-center text-white h-11 flex items-center justify-center bg-linear-to-r from-black/15 to-[rgba(102,102,102,0)] p-2 text-xs md:text-base">
         <h3 className="text-shadow-[0_4px_4px_rgba(0,0,0,0.25)] font-medium">
           Sui Sentinel is live on Testnet. Mainnet launches after smart-contract audits.
         </h3>
-      </div> */}
+      </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
         <div className="flex items-center justify-between h-16">
           <div className="relative z-50">
