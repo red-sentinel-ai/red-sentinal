@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
-import { Skranji } from "next/font/google"; //
+import { Skranji } from "next/font/google";
 
 const skranji = Skranji({
   weight: ["400", "700"],
@@ -10,15 +10,21 @@ const skranji = Skranji({
 const REEL_HEIGHT = 130;
 const TILE_HEIGHT = 46;
 
-const NUMBER_COLORS = [
-  "bg-[#FF47BC] border-[#FF85D3]", // Pink
-  "bg-[#9D4EDD] border-[#C77DFF]", // Purple
-  "bg-[#00CC66] border-[#33FF99]", // Green
-  "bg-[#00A8E8] border-[#4CC9F0]", // Blue
-  "bg-[#FFC107] border-[#FFE082]", // Yellow
-];
-
-const getTileColor = (num: number) => NUMBER_COLORS[num % NUMBER_COLORS.length];
+const getNumberColor = (num: number) => {
+  const colors: { [key: number]: string } = {
+    0: "#3BF0FF",
+    1: "#F2A4FF",
+    2: "#A06BFF",
+    3: "#F2A4FF",
+    4: "#A06BFF",
+    5: "#3BF0FF",
+    6: "#A06BFF",
+    7: "#3BF0FF",
+    8: "#F2A4FF",
+    9: "#3BF0FF",
+  };
+  return colors[num] || "#3BF0FF";
+};
 
 const numbers = [
   ...Array(10).keys(),
@@ -86,10 +92,11 @@ export const SlotReel = ({ value, isSpinning, delay }: SlotReelProps) => {
         {numbers.map((num, i) => (
           <div
             key={i}
-            className={` w-[40px] h-[40px] m-[5px] flex items-center justify-center rounded-md text-white font-black text-2xl border-b-4 shadow-sm select-none ${getTileColor(
-              num
-            )} ${skranji.className}`}
-            style={{ height: `${TILE_HEIGHT - 10}px` }}
+            className={`w-[40px] m-[5px] flex items-center justify-center font-bold text-4xl select-none ${skranji.className}`}
+            style={{
+              height: `${TILE_HEIGHT - 10}px`,
+              color: getNumberColor(num),
+            }}
           >
             {num}
           </div>
