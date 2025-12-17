@@ -1,4 +1,6 @@
-import { useEffect } from "react";
+"use client";
+
+import { useEffect, useRef } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { Skranji } from "next/font/google";
 
@@ -41,13 +43,20 @@ type SlotReelProps = {
 
 export const SlotReel = ({ value, isSpinning, delay }: SlotReelProps) => {
   const controls = useAnimation();
+  const hasSpun = useRef(false);
 
   const safeValue =
-    typeof value === "number" && !isNaN(value) ? Math.abs(value % 10) : 7;
+    typeof value === "number" && !isNaN(value) ? Math.abs(value % 10) : 0;
+
+  const getPositionForValue = (val: number) => {
+    const targetIndex = 20 + val;
+    return -(targetIndex * TILE_HEIGHT) + REEL_HEIGHT / 2 - TILE_HEIGHT / 2;
+  };
 
   useEffect(() => {
     const handleAnimation = async () => {
       if (isSpinning) {
+        hasSpun.current = true;
         await controls.start({
           y: [0, -10 * TILE_HEIGHT],
           transition: {
@@ -57,9 +66,12 @@ export const SlotReel = ({ value, isSpinning, delay }: SlotReelProps) => {
           },
         });
       } else {
-        const targetIndex = 20 + safeValue;
-        const finalY =
-          -(targetIndex * TILE_HEIGHT) + REEL_HEIGHT / 2 - TILE_HEIGHT / 2;
+        const finalY = getPositionForValue(safeValue);
+
+        if (!hasSpun.current) {
+          controls.set({ y: finalY });
+          return;
+        }
 
         await new Promise((resolve) => setTimeout(resolve, delay * 1000));
 
@@ -86,13 +98,13 @@ export const SlotReel = ({ value, isSpinning, delay }: SlotReelProps) => {
     >
       <motion.div
         animate={controls}
-        initial={{ y: 0 }}
+        initial={{ y: getPositionForValue(safeValue) }}
         className="flex flex-col items-center"
       >
         {numbers.map((num, i) => (
           <div
             key={i}
-            className={`w-[40px] m-[5px] flex items-center justify-center font-bold text-4xl select-none ${skranji.className}`}
+            className={`w-[40px] m-[5px] flex items-center justify-center font-bold text-[32px] select-none ${skranji.className}`}
             style={{
               height: `${TILE_HEIGHT - 10}px`,
               color: getNumberColor(num),
