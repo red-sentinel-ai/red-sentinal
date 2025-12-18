@@ -6,12 +6,14 @@ pub struct Agent {
     pub system_prompt: String,
     pub cost_per_message: u64,
     pub is_defeated: bool,
+    pub creator: String
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RegisterAgentRequest {
     pub system_prompt: String,
     pub cost_per_message: u64,
+    pub creator: String,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -20,6 +22,7 @@ pub struct RegisterAgentResponse {
     pub cost_per_message: u64,
     pub system_prompt: String,
     pub is_defeated: bool,
+    pub creator: [u8; 32],
 }
 
 #[derive(Debug, Serialize, Deserialize)]

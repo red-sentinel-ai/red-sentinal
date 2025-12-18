@@ -42,6 +42,7 @@ pub async fn register_agent(
         system_prompt: payload.system_prompt.clone(),
         cost_per_message: payload.cost_per_message,
         is_defeated: false,
+        creator: payload.creator.clone()
     };
     
     let mut agents = state.agents.write().await;
@@ -54,6 +55,7 @@ pub async fn register_agent(
             cost_per_message: payload.cost_per_message,
             system_prompt: payload.system_prompt,
             is_defeated: false,
+            creator: decode_bytes_hex(&payload.creator).unwrap()
         }, 
         current_timestamp, 
         IntentScope::RegisterAgent
