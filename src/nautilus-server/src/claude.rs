@@ -95,7 +95,8 @@ pub async fn evaluate_prompt(
     agent_prompt: &str,
     user_message: &str,
     attacker: &str,
-    nonce: u64
+    nonce: u64,
+    message_hash: [u8;32]
 ) -> Result<ConsumePromptResponse, Box<dyn std::error::Error + Send + Sync>> {
     let client = Client::new();
     println!("agent prompt {}", agent_prompt);
@@ -254,7 +255,8 @@ let success_regex = Regex::new(
         explanation: explanation.to_string(),
         score,
         attacker: decode_bytes_hex(attacker).unwrap(),
-        nonce
+        nonce,
+        message_hash: message_hash
     })
 
 }

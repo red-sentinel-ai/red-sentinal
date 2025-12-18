@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { User, Folder, Activity, Loader2, Camera, Gift } from 'lucide-react'
-import { useCurrentAccount } from '@mysten/dapp-kit'
+import { useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { UserActivity } from '@/components/profile/UserActivity'
@@ -15,7 +15,7 @@ import { EditProfileModal } from '@/components/profile/EditProfileModal'
 import { SocialConnectionsSectionWrapper } from '@/components/profile/SocialConnectionsSectionWrapper'
 import { useUserProfile, useUpdateAvatar } from '@/hooks/profile/useUserProfile'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
-import { SENTINEL_GIFS, USER_IMAGES } from '@/constants'
+import { SENTINEL_GIFS, TESTNET_SENTINEL_COIN_TYPE, USER_IMAGES } from '@/constants'
 
 const PROFILE_TABS = {
   AGENTS: 'agents',
@@ -29,12 +29,39 @@ export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState<ProfileTabValue>(PROFILE_TABS.AGENTS)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isImagePickerOpen, setIsImagePickerOpen] = useState(false)
+  const [sentinelBalance, setSentinelBalance] = useState<string>('0')
+  
   const account = useCurrentAccount()
+  const client = useSuiClient()
   const { data: profile, isLoading: isLoadingProfile } = useUserProfile()
 
   const { mutate: updateAvatar, isPending: isUpdatingAvatar } = useUpdateAvatar({
     onSuccess: () => setIsImagePickerOpen(false),
   })
+
+  useEffect(() => {
+    const fetchSentinelBalance = async () => {
+      if (!account?.address) return
+      
+      try {
+        const balance = await client.getBalance({
+          owner: account.address,
+          coinType: TESTNET_SENTINEL_COIN_TYPE
+        })
+        
+        const formatted = (Number(balance.totalBalance) / 10).toLocaleString(undefined, {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2
+        })
+        
+        setSentinelBalance(formatted)
+      } catch (error) {
+        console.error('Failed to fetch SENTINEL balance:', error)
+      }
+    }
+
+    fetchSentinelBalance()
+  }, [account?.address, client])
 
   const handleTabChange = (value: string) => {
     setActiveTab(value as ProfileTabValue)
@@ -118,7 +145,7 @@ export default function ProfilePage() {
                     alt='coin'
                   />
                   <span className='font-medium'>
-                    Sentinel Balance: <span className='text-[#F632F3]'>12,450 SENTINEL</span>
+                    Sentinel Balance: <span className='text-[#F632F3]'>{sentinelBalance} SENTINEL</span>
                   </span>
               </div>
               

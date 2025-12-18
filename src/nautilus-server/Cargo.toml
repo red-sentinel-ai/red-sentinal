@@ -35,3 +35,4 @@ async-trait = "0.1.73"
 chrono = { version = "0.4", features = ["serde"] }
 base64 = "0.21"
 jsonwebtoken = "8.0"
+blake2 = "0.10.6"
