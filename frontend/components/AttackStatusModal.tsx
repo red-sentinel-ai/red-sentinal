@@ -2,13 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { X, Check, ChevronDown, ChevronUp, Swords } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Confetti from "react-confetti";
+import { useWindowSize } from "react-use";
 import { Dialog } from "@/components/Dialog";
 import { ConsumePromptApiResponse } from "@/types";
 import { SUI_TESTNET_BASE_URL } from "@/constants";
 import { cn } from "@/lib/utils";
+import { SlotMachine } from "./slot-machine/SlotMachine";
 
 type AttackStatusModalProps = {
   apiResponse: ConsumePromptApiResponse;
@@ -23,12 +25,27 @@ export const AttackStatusModal = ({
   setShowResultModal,
   txnHash,
 }: AttackStatusModalProps) => {
+  const { width, height } = useWindowSize();
   const [isExplanationOpen, setIsExplanationOpen] = useState(true);
+  const [rewardAmount, setRewardAmount] = useState<number | null>(null);
+  const [isSlotAvailable, setIsSlotAvailable] = useState(true);
 
   const success = apiResponse?.response.data.success;
   const originalScore = apiResponse?.response.data.score || 0;
   const score = success ? 100 : originalScore;
   const explanation = apiResponse?.response.data.explanation;
+
+  const handleSlotWin = (amount: number) => {
+    setRewardAmount(amount);
+  };
+
+  const handleSlotError = (errorMsg: string) => {
+    if (errorMsg.includes("No unclaimed rewards")) {
+      setIsSlotAvailable(false);
+    } else {
+      console.error("Slot Machine Error:", errorMsg);
+    }
+  };
 
   return (
     <Dialog
@@ -69,7 +86,7 @@ export const AttackStatusModal = ({
               <h2 className="text-xl font-bold text-black leading-tight">
                 {success ? "Attack Successful" : "Attack Failed"}
               </h2>
-              <p className="text-[#989898] text-sm leading-snug">
+              <p className="text-[#989898] text-[15px] leading-snug">
                 {success
                   ? "Your Prompt Successfully breached the sentinel's defenses !"
                   : "The Sentinel held strong against your attack."}
@@ -79,16 +96,17 @@ export const AttackStatusModal = ({
 
           <div className="h-[1px] w-full bg-[#E5E5E5] my-5" />
           <div className="px-8">
-            <div className="flex items-center gap-2 mb-4">
-              <Swords className="w-5 h-5 text-black fill-black" />
-              <span className="font-bold text-black text-base">
-                Your Attack Score: {score}/100
+            <div className="flex items-center mb-4">
+              <Swords className="w-5 h-5 mr-2 text-black fill-black" />
+              <span className="font-medium text-black text-[15px]">
+                Your Attack Score:{" "}
+                <span className="text-sm font-bold">{score}/100</span>
               </span>
               <Link
                 href={`${SUI_TESTNET_BASE_URL}/${txnHash}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[10px] text-[#989898] hover:text-black hover:underline flex items-center mt-0.5 ml-1"
+                className="text-[10px] font-medium text-[#989898] hover:text-black hover:underline flex items-center mt-0.5 ml-1"
               >
                 view on explorer
               </Link>
@@ -99,7 +117,7 @@ export const AttackStatusModal = ({
                 onClick={() => setIsExplanationOpen(!isExplanationOpen)}
                 className="flex items-center justify-between w-full text-left group"
               >
-                <h3 className="text-sm font-semibold text-black">
+                <h3 className="text-[15px] font-medium text-black">
                   Explanation
                 </h3>
                 {isExplanationOpen ? (
@@ -118,7 +136,7 @@ export const AttackStatusModal = ({
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
-                    <p className="text-sm text-[#5E5E5E] leading-relaxed mt-2 pr-2">
+                    <p className="text-sm text-[#575757] leading-relaxed mt-1 pr-2">
                       {explanation ||
                         "No explanation provided by the Sentinel."}
                     </p>
@@ -131,27 +149,71 @@ export const AttackStatusModal = ({
 
         <div className="h-[1px] w-full bg-[#E5E5E5] mb-6" />
 
-        <div className="flex flex-col items-center justify-center pb-8 px-6 bg-gradient-to-b from-white to-pink-50/30">
-          <div className="text-center mb-6">
-            <p className="text-lg font-medium text-black">
-              The SENTINEL grants you a{" "}
-              <span className="text-[#F046D6] font-bold">bonus spin</span>.
-            </p>
-            <p className="text-lg text-black">Try your luck!</p>
-          </div>
+        <div className="flex flex-col items-center justify-center pb-8 px-6 bg-gradient-to-b from-white to-pink-50/30 min-h-[420px] relative">
+          {rewardAmount !== null && (
+            <div className="absolute inset-0 pointer-events-none z-50">
+              <Confetti
+                width={width}
+                height={height}
+                recycle={false}
+                numberOfPieces={500}
+                gravity={0.2}
+              />
+            </div>
+          )}
 
-          <div className="relative w-full max-w-[320px] aspect-square flex items-center justify-center mt-8">
-            <div className="absolute inset-0 bg-pink-400/20 blur-[60px] rounded-full pointer-events-none transform translate-y-4 scale-90" />
+          <AnimatePresence mode="wait">
+            {isSlotAvailable ? (
+              <motion.div
+                key="slot-section"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex flex-col items-center w-full relative z-10"
+              >
+                {!rewardAmount && (
+                  <div className="text-center mb-6 text-xl font-medium">
+                    <p>
+                      The SENTINEL grants you a{" "}
+                      <span className="text-[#F632F3] font-bold">
+                        bonus spin
+                      </span>
+                      .
+                    </p>
+                    <p className="text-lg text-black">Try your luck!</p>
+                  </div>
+                )}
 
-            <Image
-              src="/img/slot-machine.png"
-              alt="Bonus Spin Slot Machine"
-              width={290}
-              height={381}
-              className="relative z-10 object-contain drop-shadow-xl"
-              priority
-            />
-          </div>
+                <SlotMachine onWin={handleSlotWin} onError={handleSlotError} />
+
+                {rewardAmount !== null && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-6 text-center"
+                  >
+                    <h3 className="text-3xl font-bold text-black mb-2">
+                      Congratulations!
+                    </h3>
+                    <p className="text-lg text-[#5E5E5E] mb-6">
+                      You won{" "}
+                      <span className="text-[#F046D6] font-bold">
+                        {rewardAmount} SENTINEL
+                      </span>{" "}
+                      points!
+                    </p>
+                  </motion.div>
+                )}
+              </motion.div>
+            ) : (
+              <motion.div
+                key="empty"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-gray-400 text-sm italic"
+              ></motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </motion.div>
     </Dialog>

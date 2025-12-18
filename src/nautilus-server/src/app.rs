@@ -13,7 +13,9 @@ use serde_json::{Value, json};
 use std::sync::Arc;
 use uuid::Uuid;
 use reqwest::Client;
+use bcs;
 use fastcrypto::encoding::{decode_bytes_hex, Encoding, Hex};
+use blake2::{Blake2bVar, digest::{Update, VariableOutput}};
 
 use crate::{
     claude,
@@ -42,6 +44,7 @@ pub async fn register_agent(
         system_prompt: payload.system_prompt.clone(),
         cost_per_message: payload.cost_per_message,
         is_defeated: false,
+        creator: payload.creator.clone()
     };
     
     let mut agents = state.agents.write().await;
@@ -54,6 +57,7 @@ pub async fn register_agent(
             cost_per_message: payload.cost_per_message,
             system_prompt: payload.system_prompt,
             is_defeated: false,
+            creator: decode_bytes_hex(&payload.creator).unwrap()
         }, 
         current_timestamp, 
         IntentScope::RegisterAgent
@@ -65,6 +69,9 @@ pub async fn consume_prompt(
     Json(payload): Json<ConsumePromptRequest>,
 ) -> Result<Json<ProcessedDataResponse<IntentMessage<ConsumePromptResponse>>>, EnclaveError> {
     let agents = state.agents.write().await;
+let mut hasher = Blake2bVar::new(32)
+    .map_err(|e| EnclaveError::GenericError(format!("Failed to initialize hasher: {}", e)))?;
+
 
 
     let agent = match agents.get(&payload.agent_id) {
@@ -155,14 +162,20 @@ let nonce = response_json
     //     return Err(EnclaveError::GenericError("Agent ID in attack object does not match payload agent ID".to_string()));
     // } 
     
-
+    let message_bytes = bcs::to_bytes(&payload.message).expect("Serialization failed");
+    hasher.update(&message_bytes);
+    let mut message_hash = [0u8; 32];
+    hasher
+    .finalize_variable(&mut message_hash)
+    .map_err(|e| EnclaveError::GenericError(format!("Hashing failed: {}", e)))?;
     // Updated function call with agent_id parameter
     let evaluation = claude::evaluate_prompt(
         &payload.agent_id,
         &agent.system_prompt,
         &payload.message,
         &attacker,
-        nonce
+        nonce,
+        message_hash
     )
     .await
     .unwrap_or_else(|_| ConsumePromptResponse {
@@ -172,6 +185,7 @@ let nonce = response_json
         score: 0,
         attacker: decode_bytes_hex(&attacker).unwrap(),
         nonce,
+        message_hash
     });
 
 
