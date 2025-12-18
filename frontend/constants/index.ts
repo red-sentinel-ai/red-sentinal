@@ -47,6 +47,8 @@ export const SUI_CONFIG = {
   AGENT_OBJECT_IDS: [''],
 }
 
+export const TESTNET_SENTINEL_COIN_TYPE = "0x0a4f205fc5191939e652ae68c8318528f4f01901f1f6776aba8d26c268fede4e::sentinel::SENTINEL"
+
 export const EXPLORER_BASE_URL = 'https://testnet.suivision.xyz'
 export const MIST_PER_SUI = 1_000_000_000
 export const SUI_TESTNET_BASE_URL = 'https://testnet.suivision.xyz/txblock/'
