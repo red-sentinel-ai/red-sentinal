@@ -8,6 +8,7 @@ import { ConsumePromptApiResponse } from '@/types'
 import { hexToVector } from '@/lib/utils'
 import { type AgentDetails } from './agents/useAllAgents'
 import { SuiTransactionBlockResponse, SuiObjectResponse } from '@mysten/sui/client'
+import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 
 const GAS_BUDGET = 50_000_000
 
@@ -100,8 +101,8 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         tx.object(SUI_CONFIG.AGENT_REGISTRY),
         tx.object(agentDetails.object_id),
         tx.object(SUI_CONFIG.PROTOCOL_CONFIG_OBJECT_ID),
-        tx.pure.string(agentDetails.agent_id),
         paymentCoin,
+        tx.object('0x8')
       ],
     })
 
@@ -212,13 +213,9 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
 
     tx.moveCall({
       target: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::consume_prompt`,
-      typeArguments: [
-        `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::${SUI_CONFIG.OTW_NAME}`,
-      ],
       arguments: [
         tx.object(SUI_CONFIG.AGENT_REGISTRY), // registry: &AgentRegistry
         tx.object(agentObjectId), // agent: &mut Agent
-        tx.pure.string(apiData.data.agent_id), // agent_id: String
         tx.pure.bool(apiData.data.success), // success: bool
         tx.pure.string(apiData.data.explanation), // explanation: String,
         tx.pure.string(prompt),
@@ -226,7 +223,8 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         tx.pure.u64(apiData.timestamp_ms), // timestamp_ms: u64
         tx.pure.vector('u8', sigVector), // sig: &vector<u8>
         tx.object(SUI_CONFIG.ENCLAVE_OBJECT_ID), // enclave: &Enclave<T>
-        tx.object(attackObjectId), // attack: &mut Attack
+        tx.object(attackObjectId), // attack: &mut Attack,
+        tx.object(SUI_CLOCK_OBJECT_ID)
       ],
     })
 
