@@ -69,7 +69,7 @@ const FormInput: React.FC<FormInputProps> = ({
 
   return (
     <div>
-      <label className="block text-sm font-medium mb-2">{label}</label>
+      <label className="block text-xl font-medium mb-2">{label}</label>
       <InputComponent
         name={name}
         type={isTextarea ? undefined : type}
@@ -361,7 +361,7 @@ export default function DefendPage() {
     <div className="container mx-auto px-4 py-4 pt-24 min-h-body">
       <form
         onSubmit={handleSubmit}
-        className="max-w-2xl mx-auto space-y-6 relative"
+        className="max-w-[969px] px-4 mx-auto space-y-6 relative"
       >
         <Link
           href="/"
@@ -372,10 +372,15 @@ export default function DefendPage() {
         </Link>
 
         <div className="flex items-center gap-4 justify-between">
-          <h1 className="text-4xl font-bold">Deploy Sentinel</h1>
+          <div>
+            <h1 className="text-5xl font-medium mb-3">Deploy Sentinel</h1>
+            <p className="text-[#5E5E5E] text-xl font-medium">
+              Create, configure, and deploy your AI Sentinel
+            </p>
+          </div>
           <div className="flex flex-col items-center justify-center gap-1">
             <div
-              className="relative w-20 h-20 rounded-full border border-gray-300 overflow-hidden cursor-pointer transition-colors text-gray-400 hover:text-black group flex items-center justify-center bg-gray-50 hover:bg-gray-100"
+              className="relative w-[90px] h-[90px] rounded-full border border-black overflow-hidden cursor-pointer transition-colors text-gray-400 hover:text-black group flex items-center justify-center bg-gray-50 hover:bg-gray-100"
               onClick={() => setImagePickerOpen(true)}
             >
               {selectedImage?.url ? (
@@ -392,7 +397,7 @@ export default function DefendPage() {
                 <CameraIcon />
               </span>
             </div>
-            <p className="text-xs text-gray-500 text-center">
+            <p className="text-xs text-[#5E5E5E] text-center font-medium mt-2">
               Choose Sentinel Image
             </p>
           </div>
