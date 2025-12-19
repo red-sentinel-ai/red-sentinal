@@ -42,6 +42,7 @@ interface FormData {
 
 interface FormInputProps {
   label: string;
+  subLabel?: string;
   name: keyof FormData;
   value: string;
   onChange: (
@@ -52,10 +53,12 @@ interface FormInputProps {
   placeholder?: string;
   required?: boolean;
   isTextarea?: boolean;
+  rightElement?: React.ReactNode;
 }
 
 const FormInput: React.FC<FormInputProps> = ({
   label,
+  subLabel,
   name,
   value,
   onChange,
@@ -64,19 +67,33 @@ const FormInput: React.FC<FormInputProps> = ({
   placeholder,
   required = false,
   isTextarea = false,
+  rightElement,
 }) => {
   const InputComponent = isTextarea ? "textarea" : "input";
 
   return (
-    <div>
-      <label className="block text-xl font-medium mb-2">{label}</label>
+    <div className="flex flex-col gap-2">
+      <div className="flex justify-between items-start">
+        <div className="flex flex-col">
+          <label className="text-[20px] font-medium text-black leading-tight">
+            {label}
+          </label>
+          {subLabel && (
+            <span className="text-[16px] font-normal text-[#5E5E5E] mt-1">
+              {subLabel}
+            </span>
+          )}
+        </div>
+        {rightElement}
+      </div>
+
       <InputComponent
         name={name}
         type={isTextarea ? undefined : type}
         value={value}
         onChange={onChange}
-        className={`w-full bg-white border border-gray-300 rounded-lg p-3 text-black placeholder-gray-500 focus:ring-1 focus:ring-black focus:border-black ${
-          isTextarea ? "min-h-[200px] resize-vertical" : ""
+        className={`w-full bg-white border border-[#5E5E5E] rounded-xl p-4 text-black placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition-all ${
+          isTextarea ? "min-h-[200px] resize-none" : "h-[65px]"
         }`}
         placeholder={placeholder}
         required={required}
@@ -371,30 +388,31 @@ export default function DefendPage() {
           <span>Home</span>
         </Link>
 
-        <div className="flex items-center gap-4 justify-between">
+        <div className="flex items-start justify-between">
           <div>
             <h1 className="text-5xl font-medium mb-3">Deploy Sentinel</h1>
             <p className="text-[#5E5E5E] text-xl font-medium">
               Create, configure, and deploy your AI Sentinel
             </p>
           </div>
-          <div className="flex flex-col items-center justify-center gap-1">
+
+          <div className="flex flex-col items-center justify-center gap-2">
             <div
-              className="relative w-[90px] h-[90px] rounded-full border border-black overflow-hidden cursor-pointer transition-colors text-gray-400 hover:text-black group flex items-center justify-center bg-gray-50 hover:bg-gray-100"
+              className="relative w-[90px] h-[90px] rounded-full border border-black overflow-hidden cursor-pointer transition-colors text-gray-400 hover:text-black group flex items-center justify-center bg-gray-50 hover:bg-gray-100 shadow-sm"
               onClick={() => setImagePickerOpen(true)}
             >
               {selectedImage?.url ? (
                 <Image
                   src={selectedImage.url}
                   alt="Selected"
-                  width={80}
-                  height={80}
+                  width={90}
+                  height={90}
                   className="w-full h-full object-cover z-10 relative"
                 />
               ) : null}
               <div className="w-full h-full absolute inset-0 bg-black/40 z-10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity text-white">
-                <CameraIcon />
+                <CameraIcon className="w-8 h-8" />
               </span>
             </div>
             <p className="text-xs text-[#5E5E5E] text-center font-medium mt-2">
@@ -422,83 +440,110 @@ export default function DefendPage() {
           disableGifs={true}
         />
 
-        <FormInput
-          label="Sentinel Name"
-          name="agentName"
-          value={formData.agentName}
-          onChange={handleChange}
-          error={errors.agentName}
-          placeholder="Enter sentinel name"
-          required
-        />
-
-        <div>
-          <div className="flex justify-between mb-2 items-center">
-            <label className="block text-sm font-medium">
-              Sentinel Instructions
-            </label>
-            <Link
-              href={`${SUI_SENTINEL_DOCS_URL}/guides/defender-guide`}
-              target="_blank"
-              className="underline text-xs text-blue-600 hover:text-blue-800"
-            >
-              How to create good instructions?
-            </Link>
-          </div>
-          <textarea
-            name="systemPrompt"
-            value={formData.systemPrompt}
+        <div className="space-y-8">
+          <FormInput
+            label="Sentinel Name"
+            subLabel="Give your Sentinel a unique identity."
+            name="agentName"
+            value={formData.agentName}
             onChange={handleChange}
-            className="w-full bg-white border border-gray-300 rounded-lg p-3 min-h-[200px] text-black placeholder-gray-500 focus:ring-1 focus:ring-black focus:border-black"
-            placeholder="Enter sentinel instructions..."
+            error={errors.agentName}
+            placeholder="e.g. Atlas Guard, Void Watcher, Nova Sentinel"
             required
           />
-          <p
-            className={`mt-1 text-sm text-gray-500 ${
-              isTokenCountDebouncing ? "animate-pulse" : ""
-            }`}
-          >
-            Tokens: {tokenCount} / {SYSTEM_PROMPT_MAX_TOKENS}
-          </p>
-          {tokenCount > SYSTEM_PROMPT_MAX_TOKENS && (
-            <p className="mt-1 text-sm text-red-500">
-              System prompt exceeds token limit
-            </p>
-          )}
-          {errors.systemPrompt && (
-            <p className="mt-1 text-sm text-red-500">{errors.systemPrompt}</p>
-          )}
+
+          <div className="flex flex-col gap-2">
+            <div className="flex justify-between items-start mb-3">
+              <div>
+                <label className="text-[20px] font-medium text-black leading-tight block">
+                  Sentinel Instructions
+                </label>
+                <span className="text-[16px] font-normal text-[#5E5E5E] mt-1 block">
+                  Define your Sentinel&apos;s personality and defense rules
+                </span>
+              </div>
+
+              <Link
+                href={`${SUI_SENTINEL_DOCS_URL}/guides/defender-guide`}
+                target="_blank"
+                className="underline text-sm text-[#0077FF] hover:text-[#0077ffd3] mt-1"
+              >
+                View Instructions Example
+              </Link>
+            </div>
+
+            <textarea
+              name="systemPrompt"
+              value={formData.systemPrompt}
+              onChange={handleChange}
+              className="w-full bg-white border border-[#5E5E5E] rounded-xl p-4 min-h-[220px] text-black placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-black focus:border-black resize-y transition-all"
+              placeholder="Enter sentinel instructions..."
+              required
+            />
+
+            <div className="flex justify-between items-center mt-1">
+              {errors.systemPrompt && (
+                <p className="text-sm text-red-500">{errors.systemPrompt}</p>
+              )}
+              <p
+                className={`text-sm text-[#5E5E5E] ml-auto ${
+                  isTokenCountDebouncing ? "animate-pulse" : ""
+                }`}
+              >
+                Tokens: {tokenCount} / {SYSTEM_PROMPT_MAX_TOKENS}
+              </p>
+            </div>
+            {tokenCount > SYSTEM_PROMPT_MAX_TOKENS && (
+              <p className="text-sm text-red-500 text-right">
+                System prompt exceeds token limit
+              </p>
+            )}
+          </div>
+
+          <FormInput
+            label="Fee per Message (SUI)"
+            subLabel="You earn this fee whenever users interact with your Sentinel."
+            name="feePerMessage"
+            value={formData.feePerMessage}
+            onChange={handleChange}
+            error={errors.feePerMessage}
+            type="number"
+            placeholder="0.00"
+            required
+          />
         </div>
 
-        <FormInput
-          label="Fee per Message (SUI)"
-          name="feePerMessage"
-          value={formData.feePerMessage}
-          onChange={handleChange}
-          error={errors.feePerMessage}
-          type="number"
-          placeholder="0.00"
-          required
-        />
-
-        {account?.address ? (
-          <button
-            type="submit"
-            disabled={isLoading || tokenCount > SYSTEM_PROMPT_MAX_TOKENS}
-            className="btn btn-black w-full flex items-center justify-center"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                Deploying...
-              </>
-            ) : (
-              "Deploy Sentinel"
-            )}
-          </button>
-        ) : (
-          <ConnectButton className="w-full" />
-        )}
+        <div className="pt-4 pb-20">
+          {account?.address ? (
+            <button
+              type="submit"
+              disabled={isLoading || tokenCount > SYSTEM_PROMPT_MAX_TOKENS}
+              className="w-full btn btn-black transition-colors rounded-xl h-[65px] flex items-center justify-center gap-3 text-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-6 h-6 animate-spin" />
+                  Deploying...
+                </>
+              ) : (
+                <>
+                  <Image
+                    src="/icons/rocket.png"
+                    alt="Rocket"
+                    width={25}
+                    height={25}
+                    className="object-contain"
+                  />
+                  Deploy Sentinel
+                </>
+              )}
+            </button>
+          ) : (
+            <div className="h-[65px]">
+              <ConnectButton className="w-full h-full !rounded-xl !text-xl" />
+            </div>
+          )}
+        </div>
       </form>
 
       <SuccessModal
