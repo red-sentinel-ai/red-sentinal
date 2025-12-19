@@ -1,19 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-'use client'
-import { useState } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-import { CameraIcon, ChevronLeft, Loader2 } from 'lucide-react'
-import { toast } from 'react-toastify'
-import posthog from 'posthog-js'
-import { Transaction } from '@mysten/sui/transactions'
-import { SuiTransactionBlockResponse } from '@mysten/sui/client'
+"use client";
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { CameraIcon, ChevronLeft, Loader2 } from "lucide-react";
+import { toast } from "react-toastify";
+import posthog from "posthog-js";
+import { Transaction } from "@mysten/sui/transactions";
+import { SuiTransactionBlockResponse } from "@mysten/sui/client";
 import {
   ConnectButton,
   useCurrentAccount,
   useSignAndExecuteTransaction,
   useSuiClient,
-} from '@mysten/dapp-kit'
+} from "@mysten/dapp-kit";
 import {
   MIST_PER_SUI,
   SENTINEL_GIFS,
@@ -21,35 +21,37 @@ import {
   SUI_CONFIG,
   SUI_SENTINEL_DOCS_URL,
   SYSTEM_PROMPT_MAX_TOKENS,
-} from '@/constants'
-import { hexToVector } from '@/lib/utils'
-import { registerAgentUtil } from './utils'
-import { useAgentObjectNames } from '@/hooks/useAgentObjectNames'
-import { FundAgentModal } from '@/components/FundAgentModal'
-import { SuccessModal } from '@/components/DefenderSuccessModal'
-import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
-import { useTokenCount } from '@/hooks/useTokenCount'
-import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
-import { FundSuccessModal } from '@/components/FundSuccessModal'
-import { useRewardsMissionTracker } from '@/hooks/rewards/useRewardsMissionTracker'
-import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
+} from "@/constants";
+import { hexToVector } from "@/lib/utils";
+import { registerAgentUtil } from "./utils";
+import { useAgentObjectNames } from "@/hooks/useAgentObjectNames";
+import { FundAgentModal } from "@/components/FundAgentModal";
+import { SuccessModal } from "@/components/DefenderSuccessModal";
+import { useCreateAgent } from "@/hooks/agents/useCreateAgent";
+import { useTokenCount } from "@/hooks/useTokenCount";
+import { ImagePickerSheet } from "@/components/agents/ImagePickerSheet";
+import { FundSuccessModal } from "@/components/FundSuccessModal";
+import { useRewardsMissionTracker } from "@/hooks/rewards/useRewardsMissionTracker";
+import { SUI_CLOCK_OBJECT_ID } from "@mysten/sui/utils";
 
 interface FormData {
-  agentName: string
-  systemPrompt: string
-  feePerMessage: string
+  agentName: string;
+  systemPrompt: string;
+  feePerMessage: string;
 }
 
 interface FormInputProps {
-  label: string
-  name: keyof FormData
-  value: string
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
-  error?: string
-  type?: string
-  placeholder?: string
-  required?: boolean
-  isTextarea?: boolean
+  label: string;
+  name: keyof FormData;
+  value: string;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  error?: string;
+  type?: string;
+  placeholder?: string;
+  required?: boolean;
+  isTextarea?: boolean;
 }
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -58,12 +60,12 @@ const FormInput: React.FC<FormInputProps> = ({
   value,
   onChange,
   error,
-  type = 'text',
+  type = "text",
   placeholder,
   required = false,
   isTextarea = false,
 }) => {
-  const InputComponent = isTextarea ? 'textarea' : 'input'
+  const InputComponent = isTextarea ? "textarea" : "input";
 
   return (
     <div>
@@ -74,32 +76,36 @@ const FormInput: React.FC<FormInputProps> = ({
         value={value}
         onChange={onChange}
         className={`w-full bg-white border border-gray-300 rounded-lg p-3 text-black placeholder-gray-500 focus:ring-1 focus:ring-black focus:border-black ${
-          isTextarea ? 'min-h-[200px] resize-vertical' : ''
+          isTextarea ? "min-h-[200px] resize-vertical" : ""
         }`}
         placeholder={placeholder}
         required={required}
       />
       {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
     </div>
-  )
-}
+  );
+};
 
 export default function DefendPage() {
-  const client = useSuiClient()
-  const account = useCurrentAccount()
-  const { addAgentObjectIdWithName } = useAgentObjectNames()
-  const { mutate: createAgent } = useCreateAgent()
-  const [agentImage, setAgentImage] = useState<File | null>(null)
-  const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
-  const [imagePickerOpen, setImagePickerOpen] = useState(false)
+  const client = useSuiClient();
+  const account = useCurrentAccount();
+  const { addAgentObjectIdWithName } = useAgentObjectNames();
+  const { mutate: createAgent } = useCreateAgent();
+  const [agentImage, setAgentImage] = useState<File | null>(null);
+  const {
+    tokenCount,
+    countTokens,
+    isDebouncing: isTokenCountDebouncing,
+  } = useTokenCount();
+  const [imagePickerOpen, setImagePickerOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<{
-    url: string
-    isCustom: boolean
-    file?: File | null
+    url: string;
+    isCustom: boolean;
+    file?: File | null;
   } | null>({
     url: SENTINEL_IMAGES[0],
     isCustom: false,
-  })
+  });
 
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction({
     execute: async ({ bytes, signature }) =>
@@ -111,106 +117,112 @@ export default function DefendPage() {
           showObjectChanges: true,
         },
       }),
-  })
+  });
 
   const [formData, setFormData] = useState<FormData>({
-    agentName: '',
-    systemPrompt: '',
-    feePerMessage: '',
-  })
+    agentName: "",
+    systemPrompt: "",
+    feePerMessage: "",
+  });
 
-  const [errors, setErrors] = useState<Partial<FormData>>({})
-  const [isLoading, setIsLoading] = useState(false)
+  const [errors, setErrors] = useState<Partial<FormData>>({});
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [deployedAgentObjectId, setDeployedAgentObjectId] = useState<string | null>(null)
-  const [deployedAgentPath, setDeployedAgentPath] = useState<string | null>(null)
-  const [transactionDigest, setTransactionDigest] = useState('')
+  const [deployedAgentObjectId, setDeployedAgentObjectId] = useState<
+    string | null
+  >(null);
+  const [deployedAgentPath, setDeployedAgentPath] = useState<string | null>(
+    null
+  );
+  const [transactionDigest, setTransactionDigest] = useState("");
 
-  const [showSuccessModal, setShowSuccessModal] = useState(false)
-  const [showFundModal, setShowFundModal] = useState(false)
-  const [showFundSuccessModal, setShowFundSuccessModal] = useState(false)
-  const [fundedAmount, setFundedAmount] = useState('')
-  const { trackLaunchSentinel } = useRewardsMissionTracker()
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showFundModal, setShowFundModal] = useState(false);
+  const [showFundSuccessModal, setShowFundSuccessModal] = useState(false);
+  const [fundedAmount, setFundedAmount] = useState("");
+  const { trackLaunchSentinel } = useRewardsMissionTracker();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
 
-    if (name === 'systemPrompt') {
-      countTokens(value)
+    if (name === "systemPrompt") {
+      countTokens(value);
     }
 
     if (errors[name as keyof FormData]) {
-      setErrors((prev) => ({ ...prev, [name]: '' }))
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
-  }
+  };
 
   const resetAllState = () => {
-    setDeployedAgentObjectId(null)
-    setTransactionDigest('')
-    setFormData({ agentName: '', systemPrompt: '', feePerMessage: '' })
-    setFundedAmount('')
+    setDeployedAgentObjectId(null);
+    setTransactionDigest("");
+    setFormData({ agentName: "", systemPrompt: "", feePerMessage: "" });
+    setFundedAmount("");
     setSelectedImage({
       url: SENTINEL_IMAGES[0],
       isCustom: false,
-    })
-    setAgentImage(null)
-  }
+    });
+    setAgentImage(null);
+  };
 
   const handleCloseSuccessModal = () => {
-    setShowSuccessModal(false)
-    resetAllState()
-  }
+    setShowSuccessModal(false);
+    resetAllState();
+  };
 
   const handleAddFunds = () => {
-    setShowSuccessModal(false)
-    setShowFundModal(true)
-  }
+    setShowSuccessModal(false);
+    setShowFundModal(true);
+  };
 
   const handleCloseFundModal = () => {
-    setShowFundModal(false)
-  }
+    setShowFundModal(false);
+  };
 
   const handleAbortAndCloseFundModal = () => {
-    handleCloseFundModal()
-    resetAllState()
-  }
+    handleCloseFundModal();
+    resetAllState();
+  };
 
   const handleFundSuccess = (amount: string) => {
-    toast.success('Sentinel funded successfully!')
-    setFundedAmount(amount)
-    handleCloseFundModal()
-    setShowFundSuccessModal(true)
-  }
+    toast.success("Sentinel funded successfully!");
+    setFundedAmount(amount);
+    handleCloseFundModal();
+    setShowFundSuccessModal(true);
+  };
 
   const handleCloseFundSuccessModal = () => {
-    setShowFundSuccessModal(false)
-    resetAllState()
-  }
+    setShowFundSuccessModal(false);
+    resetAllState();
+  };
 
   const validateForm = (): boolean => {
-    const newErrors: Partial<FormData> = {}
+    const newErrors: Partial<FormData> = {};
 
     if (!formData.agentName.trim()) {
-      newErrors.agentName = 'Sentinel name is required'
+      newErrors.agentName = "Sentinel name is required";
     } else if (formData.agentName.length > 31) {
-      newErrors.agentName = 'Sentinel name must be 31 characters or less'
+      newErrors.agentName = "Sentinel name must be 31 characters or less";
     }
 
     if (!formData.systemPrompt.trim()) {
-      newErrors.systemPrompt = 'System prompt is required'
+      newErrors.systemPrompt = "System prompt is required";
     } else if (tokenCount > SYSTEM_PROMPT_MAX_TOKENS) {
-      return false
+      return false;
     }
 
-    const fee = parseFloat(formData.feePerMessage)
+    const fee = parseFloat(formData.feePerMessage);
     if (isNaN(fee) || fee < 0) {
-      newErrors.feePerMessage = 'Fee must be a positive number'
+      newErrors.feePerMessage = "Fee must be a positive number";
     }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleOffChainSuccess = async (
     result: SuiTransactionBlockResponse,
@@ -219,17 +231,18 @@ export default function DefendPage() {
   ) => {
     const agentObject = result?.objectChanges?.find(
       (obj: any) =>
-        obj.objectType === `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Agent`
-    )
+        obj.objectType ===
+        `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Agent`
+    );
 
     if (agentObject) {
-      const agentObjectId = (agentObject as any).objectId
-      await addAgentObjectIdWithName(`${agentObjectId} ${agentName}`)
-      setDeployedAgentObjectId(agentObjectId)
-      setTransactionDigest(result.digest.toString())
-      setShowSuccessModal(true)
+      const agentObjectId = (agentObject as any).objectId;
+      await addAgentObjectIdWithName(`${agentObjectId} ${agentName}`);
+      setDeployedAgentObjectId(agentObjectId);
+      setTransactionDigest(result.digest.toString());
+      setShowSuccessModal(true);
 
-      posthog.capture('sentinel_deployed', {
+      posthog.capture("sentinel_deployed", {
         agent_name: agentName,
         agent_id: agent_id,
         agent_object_id: (agentObject as any).objectId,
@@ -238,41 +251,41 @@ export default function DefendPage() {
         system_prompt_length: formData.systemPrompt.length,
         system_prompt_tokens: tokenCount,
         tx_digest: result.digest.toString(),
-      })
+      });
 
       trackLaunchSentinel(result.digest.toString(), {
         agent_id: agent_id,
         agent_name: agentName,
         agent_object_id: agentObjectId,
         owner_address: account!.address,
-      })
+      });
 
-      const payload = new FormData()
-      payload.append('agent_id', agent_id)
-      payload.append('agent_name', agentName)
-      payload.append('object_id', agentObjectId)
-      payload.append('owner', account!.address)
-      payload.append('digest', result.digest.toString())
+      const payload = new FormData();
+      payload.append("agent_id", agent_id);
+      payload.append("agent_name", agentName);
+      payload.append("object_id", agentObjectId);
+      payload.append("owner", account!.address);
+      payload.append("digest", result.digest.toString());
 
       if (agentImage) {
-        payload.append('image', agentImage)
+        payload.append("image", agentImage);
       } else if (selectedImage?.url && !selectedImage.isCustom) {
-        payload.append('image_url', selectedImage.url)
+        payload.append("image_url", selectedImage.url);
       }
 
       createAgent(payload, {
         onSuccess: (data) => {
           if (data?.data?.agent_path) {
-            setDeployedAgentPath(data.data.agent_path)
+            setDeployedAgentPath(data.data.agent_path);
           }
         },
-      })
+      });
     }
-  }
+  };
 
   const createAgentTransaction = async (agentDetails: any) => {
-    const tx = new Transaction()
-    const sigVector = hexToVector(agentDetails.signature)
+    const tx = new Transaction();
+    const sigVector = hexToVector(agentDetails.signature);
 
     tx.moveCall({
       target: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::register_agent`,
@@ -282,11 +295,11 @@ export default function DefendPage() {
         tx.pure.u64(agentDetails.response.timestamp_ms),
         tx.pure.u64(agentDetails.response.data.cost_per_message),
         tx.pure.string(agentDetails.response.data.system_prompt),
-        tx.pure.vector('u8', sigVector),
+        tx.pure.vector("u8", sigVector),
         tx.object(SUI_CONFIG.ENCLAVE_OBJECT_ID),
         tx.object(SUI_CLOCK_OBJECT_ID),
       ],
-    })
+    });
 
     return await signAndExecuteTransaction(
       { transaction: tx },
@@ -296,55 +309,60 @@ export default function DefendPage() {
             result,
             formData.agentName,
             agentDetails.response.data.agent_id
-          )
+          );
         },
       }
-    )
-  }
+    );
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!validateForm() || !account) return
-    setIsLoading(true)
+    e.preventDefault();
+    if (!validateForm() || !account) return;
+    setIsLoading(true);
 
     try {
       const checkResponse = await fetch(
         `/api/agents/check-name?name=${encodeURIComponent(formData.agentName)}`
-      )
-      const checkData = await checkResponse.json()
+      );
+      const checkData = await checkResponse.json();
 
       if (!checkResponse.ok) {
-        throw new Error(checkData.error || 'Failed to validate Sentinel name.')
+        throw new Error(checkData.error || "Failed to validate Sentinel name.");
       }
 
       if (checkData.exists) {
         setErrors((prev) => ({
           ...prev,
-          agentName: 'This Sentinel name is already taken. Please choose another.',
-        }))
-        setIsLoading(false)
-        return
+          agentName:
+            "This Sentinel name is already taken. Please choose another.",
+        }));
+        setIsLoading(false);
+        return;
       }
 
-      const feePerMessage = parseFloat(formData.feePerMessage) * MIST_PER_SUI
+      const feePerMessage = parseFloat(formData.feePerMessage) * MIST_PER_SUI;
       const agentDetails = await registerAgentUtil(
         formData.systemPrompt,
         feePerMessage,
         account.address
-      )
-      await createAgentTransaction(agentDetails)
+      );
+      await createAgentTransaction(agentDetails);
     } catch (error) {
-      console.error('Deployment error:', error)
-      const message = error instanceof Error ? error.message : 'Deployment failed'
-      toast.error(message)
+      console.error("Deployment error:", error);
+      const message =
+        error instanceof Error ? error.message : "Deployment failed";
+      toast.error(message);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="container mx-auto px-4 py-4 pt-24 min-h-body">
-      <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6 relative">
+      <form
+        onSubmit={handleSubmit}
+        className="max-w-2xl mx-auto space-y-6 relative"
+      >
         <Link
           href="/"
           className="hidden lg:flex items-center gap-1 text-gray-500 hover:text-black transition-colors absolute top-2 -left-32"
@@ -374,7 +392,9 @@ export default function DefendPage() {
                 <CameraIcon />
               </span>
             </div>
-            <p className="text-xs text-gray-500 text-center">Choose Sentinel Image</p>
+            <p className="text-xs text-gray-500 text-center">
+              Choose Sentinel Image
+            </p>
           </div>
         </div>
 
@@ -382,12 +402,12 @@ export default function DefendPage() {
           open={imagePickerOpen}
           onClose={() => setImagePickerOpen(false)}
           onSelectImage={(img) => {
-            setSelectedImage(img)
-            setImagePickerOpen(false)
+            setSelectedImage(img);
+            setImagePickerOpen(false);
             if (img.isCustom) {
-              setAgentImage(img.file ?? null)
+              setAgentImage(img.file ?? null);
             } else {
-              setAgentImage(null)
+              setAgentImage(null);
             }
           }}
           title="Select Sentinel Image"
@@ -409,7 +429,9 @@ export default function DefendPage() {
 
         <div>
           <div className="flex justify-between mb-2 items-center">
-            <label className="block text-sm font-medium">Sentinel Instructions</label>
+            <label className="block text-sm font-medium">
+              Sentinel Instructions
+            </label>
             <Link
               href={`${SUI_SENTINEL_DOCS_URL}/guides/defender-guide`}
               target="_blank"
@@ -428,13 +450,15 @@ export default function DefendPage() {
           />
           <p
             className={`mt-1 text-sm text-gray-500 ${
-              isTokenCountDebouncing ? 'animate-pulse' : ''
+              isTokenCountDebouncing ? "animate-pulse" : ""
             }`}
           >
             Tokens: {tokenCount} / {SYSTEM_PROMPT_MAX_TOKENS}
           </p>
           {tokenCount > SYSTEM_PROMPT_MAX_TOKENS && (
-            <p className="mt-1 text-sm text-red-500">System prompt exceeds token limit</p>
+            <p className="mt-1 text-sm text-red-500">
+              System prompt exceeds token limit
+            </p>
           )}
           {errors.systemPrompt && (
             <p className="mt-1 text-sm text-red-500">{errors.systemPrompt}</p>
@@ -464,7 +488,7 @@ export default function DefendPage() {
                 Deploying...
               </>
             ) : (
-              'Deploy Sentinel'
+              "Deploy Sentinel"
             )}
           </button>
         ) : (
@@ -498,5 +522,5 @@ export default function DefendPage() {
         sentinelId={deployedAgentObjectId}
       />
     </div>
-  )
+  );
 }
