@@ -100,7 +100,6 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         tx.object(SUI_CONFIG.AGENT_REGISTRY),
         tx.object(agentDetails.object_id),
         tx.object(SUI_CONFIG.PROTOCOL_CONFIG_OBJECT_ID),
-        tx.pure.string(agentDetails.agent_id),
         paymentCoin,
       ],
     })
@@ -218,7 +217,6 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
       arguments: [
         tx.object(SUI_CONFIG.AGENT_REGISTRY), // registry: &AgentRegistry
         tx.object(agentObjectId), // agent: &mut Agent
-        tx.pure.string(apiData.data.agent_id), // agent_id: String
         tx.pure.bool(apiData.data.success), // success: bool
         tx.pure.string(apiData.data.explanation), // explanation: String,
         tx.pure.string(prompt),

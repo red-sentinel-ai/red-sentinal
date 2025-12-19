@@ -328,7 +328,11 @@ export default function DefendPage() {
       }
 
       const feePerMessage = parseFloat(formData.feePerMessage) * MIST_PER_SUI
-      const agentDetails = await registerAgentUtil(formData.systemPrompt, feePerMessage)
+      const agentDetails = await registerAgentUtil(
+        formData.systemPrompt,
+        feePerMessage,
+        account.address
+      )
       await createAgentTransaction(agentDetails)
     } catch (error) {
       console.error('Deployment error:', error)
@@ -341,10 +345,7 @@ export default function DefendPage() {
 
   return (
     <div className="container mx-auto px-4 py-4 pt-24 min-h-body">
-      <form
-        onSubmit={handleSubmit}
-        className="max-w-2xl mx-auto space-y-6 relative"
-      >
+      <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6 relative">
         <Link
           href="/"
           className="hidden lg:flex items-center gap-1 text-gray-500 hover:text-black transition-colors absolute top-2 -left-32"
