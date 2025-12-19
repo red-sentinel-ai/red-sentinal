@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react"; 
 import Image from "next/image";
 import { toast } from "react-toastify";
 import { useCurrentAccount } from "@mysten/dapp-kit";
@@ -13,19 +13,44 @@ interface SlotMachineProps {
 export const SlotMachine = ({ onWin, onError }: SlotMachineProps) => {
   const account = useCurrentAccount();
   const [isSpinning, setIsSpinning] = useState(false);
-  const [hasWon, setHasWon] = useState(false); 
+  const [hasWon, setHasWon] = useState(false);
   const [result, setResult] = useState<number[]>([4, 5, 4]);
 
   const { mutateAsync: claimTokens, isPending } = useClaimReward();
 
+  const spinAudioRef = useRef<HTMLAudioElement | null>(null);
+  const clickAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    spinAudioRef.current = new Audio("/sounds/slot-machine.mp3");
+    spinAudioRef.current.loop = true;
+
+    clickAudioRef.current = new Audio("/sounds/click.mp4");
+
+    return () => {
+      stopSpinSound();
+    };
+  }, []);
+
+  const stopSpinSound = () => {
+    if (spinAudioRef.current) {
+      spinAudioRef.current.pause();
+      spinAudioRef.current.currentTime = 0;
+    }
+  };
+
   const handleSpin = async () => {
     if (isSpinning || isPending || hasWon) return;
+
+    clickAudioRef.current?.play().catch((e) => console.error("Audio play failed", e));
 
     if (!account?.address) {
       toast.error("Please connect your wallet first");
       return;
     }
 
+    spinAudioRef.current?.play().catch((e) => console.error("Audio play failed", e));
+    
     setIsSpinning(true);
 
     try {
@@ -40,20 +65,23 @@ export const SlotMachine = ({ onWin, onError }: SlotMachineProps) => {
 
         setResult(digits);
         setIsSpinning(false);
-        setHasWon(true); 
+        stopSpinSound(); 
+        setHasWon(true);
 
         setTimeout(() => {
           if (onWin) {
-            onWin(data.rewardAmount); 
+            onWin(data.rewardAmount);
           }
         }, 1500);
       } else {
         toast.error("Spin failed. No rewards available or transfer failed.");
         setIsSpinning(false);
+        stopSpinSound(); 
       }
     } catch (error) {
       console.error("Spin failed", error);
       setIsSpinning(false);
+      stopSpinSound(); 
 
       const errorMessage = error?.message || "Failed to spin";
 
