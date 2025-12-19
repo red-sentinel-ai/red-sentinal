@@ -32,6 +32,7 @@ import { useTokenCount } from '@/hooks/useTokenCount'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 import { FundSuccessModal } from '@/components/FundSuccessModal'
 import { useRewardsMissionTracker } from '@/hooks/rewards/useRewardsMissionTracker'
+import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 
 interface FormData {
   agentName: string
@@ -275,9 +276,6 @@ export default function DefendPage() {
 
     tx.moveCall({
       target: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::register_agent`,
-      typeArguments: [
-        `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::${SUI_CONFIG.OTW_NAME}`,
-      ],
       arguments: [
         tx.object(SUI_CONFIG.AGENT_REGISTRY),
         tx.pure.string(agentDetails.response.data.agent_id),
@@ -286,6 +284,7 @@ export default function DefendPage() {
         tx.pure.string(agentDetails.response.data.system_prompt),
         tx.pure.vector('u8', sigVector),
         tx.object(SUI_CONFIG.ENCLAVE_OBJECT_ID),
+        tx.object(SUI_CLOCK_OBJECT_ID),
       ],
     })
 
