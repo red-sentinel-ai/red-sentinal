@@ -185,3 +185,11 @@ export const ADMIN_API_TOKEN = process.env.ADMIN_API_TOKEN
 export const WITHDRAWAL_LOCK_MS = 1_209_600_000 // 14 days in milliseconds
 
 export const AGENT_PRIZE_POOL_HISTORY_QUERY_KEY = 'agentPrizePoolHistory'
+
+
+export const PROVIDER_MODELS: Record<string, string[]> = {
+  "Open AI": ["GPT-4o", "GPT-4 Turbo", "GPT-3.5 Turbo"],
+  "Anthropic": ["Claude 3.5 Sonnet", "Claude 3 Opus", "Claude 3 Haiku"],
+  "DeepSeek": ["DeepSeek V3", "DeepSeek R1"],
+  "Bedrock": ["Llama 3 70B", "Titan Text G1", "Mistral Large"],
+};

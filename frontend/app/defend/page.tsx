@@ -16,6 +16,7 @@ import {
 } from "@mysten/dapp-kit";
 import {
   MIST_PER_SUI,
+  PROVIDER_MODELS,
   SENTINEL_GIFS,
   SENTINEL_IMAGES,
   SUI_CONFIG,
@@ -93,7 +94,6 @@ const FormInput: React.FC<FormInputProps> = ({
             </span>
           )}
         </div>
-        
       </div>
 
       <InputComponent
@@ -151,7 +151,7 @@ export default function DefendPage() {
     feePerMessage: "",
     rewardPool: "",
     llmProvider: "Open AI",
-    llmModel: "GPT-5.2",
+    llmModel: PROVIDER_MODELS["Open AI"][0],
   });
 
   const [errors, setErrors] = useState<Partial<FormData>>({});
@@ -170,6 +170,16 @@ export default function DefendPage() {
   const [showFundSuccessModal, setShowFundSuccessModal] = useState(false);
   const [fundedAmount, setFundedAmount] = useState("");
   const { trackLaunchSentinel } = useRewardsMissionTracker();
+
+  const handleProviderChange = (provider: string) => {
+    const defaultModelForProvider = PROVIDER_MODELS[provider][0];
+    
+    setFormData((prev) => ({
+      ...prev,
+      llmProvider: provider,
+      llmModel: defaultModelForProvider,
+    }));
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -195,7 +205,7 @@ export default function DefendPage() {
       feePerMessage: "",
       rewardPool: "",
       llmProvider: "Open AI",
-      llmModel: "GPT-5.2",
+      llmModel: PROVIDER_MODELS["Open AI"][0],
     });
     setFundedAmount("");
     setSelectedImage({
@@ -478,16 +488,14 @@ export default function DefendPage() {
             <CustomDropdown
               label="Select service"
               subLabel="Select the service that hosts and serves the LLM."
-              options={["Open AI", "Anthropic", "Meta", "Qwen"]}
+              options={Object.keys(PROVIDER_MODELS)}
               selected={formData.llmProvider}
-              onSelect={(val) =>
-                setFormData((prev) => ({ ...prev, llmProvider: val }))
-              }
+              onSelect={handleProviderChange}
             />
             <CustomDropdown
               label="Select Model"
               subLabel="Select the model version for the chosen LLM."
-              options={["GPT-5.2", "GPT-4o", "GPT-3.5 Turbo"]}
+              options={PROVIDER_MODELS[formData.llmProvider] || []}
               selected={formData.llmModel}
               onSelect={(val) =>
                 setFormData((prev) => ({ ...prev, llmModel: val }))
