@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { CameraIcon, ChevronLeft, Loader2 } from "lucide-react";
+import { CameraIcon, ChevronLeft, Loader2, Info } from "lucide-react";
 import { toast } from "react-toastify";
 import posthog from "posthog-js";
 import { Transaction } from "@mysten/sui/transactions";
@@ -33,11 +33,15 @@ import { ImagePickerSheet } from "@/components/agents/ImagePickerSheet";
 import { FundSuccessModal } from "@/components/FundSuccessModal";
 import { useRewardsMissionTracker } from "@/hooks/rewards/useRewardsMissionTracker";
 import { SUI_CLOCK_OBJECT_ID } from "@mysten/sui/utils";
+import { CustomDropdown } from "@/components/ui/common/CustomDropdown";
 
 interface FormData {
   agentName: string;
   systemPrompt: string;
   feePerMessage: string;
+  rewardPool: string;
+  llmProvider: string;
+  llmModel: string;
 }
 
 interface FormInputProps {
@@ -54,6 +58,7 @@ interface FormInputProps {
   required?: boolean;
   isTextarea?: boolean;
   rightElement?: React.ReactNode;
+  className?: string;
 }
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -68,23 +73,27 @@ const FormInput: React.FC<FormInputProps> = ({
   required = false,
   isTextarea = false,
   rightElement,
+  className = "",
 }) => {
   const InputComponent = isTextarea ? "textarea" : "input";
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className={`flex flex-col gap-2 ${className}`}>
       <div className="flex justify-between items-start">
         <div className="flex flex-col">
-          <label className="text-[20px] font-medium text-black leading-tight">
-            {label}
-          </label>
+          <div className="flex items-center gap-2">
+            <label className="text-[20px] font-medium text-black leading-tight">
+              {label}
+            </label>
+            {rightElement}
+          </div>
           {subLabel && (
             <span className="text-[16px] font-normal text-[#5E5E5E] mt-1">
               {subLabel}
             </span>
           )}
         </div>
-        {rightElement}
+        
       </div>
 
       <InputComponent
@@ -140,6 +149,9 @@ export default function DefendPage() {
     agentName: "",
     systemPrompt: "",
     feePerMessage: "",
+    rewardPool: "",
+    llmProvider: "Open AI",
+    llmModel: "GPT-5.2",
   });
 
   const [errors, setErrors] = useState<Partial<FormData>>({});
@@ -177,7 +189,14 @@ export default function DefendPage() {
   const resetAllState = () => {
     setDeployedAgentObjectId(null);
     setTransactionDigest("");
-    setFormData({ agentName: "", systemPrompt: "", feePerMessage: "" });
+    setFormData({
+      agentName: "",
+      systemPrompt: "",
+      feePerMessage: "",
+      rewardPool: "",
+      llmProvider: "Open AI",
+      llmModel: "GPT-5.2",
+    });
     setFundedAmount("");
     setSelectedImage({
       url: SENTINEL_IMAGES[0],
@@ -440,68 +459,46 @@ export default function DefendPage() {
           disableGifs={true}
         />
 
-        <div className="space-y-8">
-          <FormInput
-            label="Sentinel Name"
-            subLabel="Give your Sentinel a unique identity."
-            name="agentName"
-            value={formData.agentName}
-            onChange={handleChange}
-            error={errors.agentName}
-            placeholder="e.g. Atlas Guard, Void Watcher, Nova Sentinel"
-            required
-          />
+        <FormInput
+          label="Sentinel Name"
+          subLabel="Give your Sentinel a unique identity."
+          name="agentName"
+          value={formData.agentName}
+          onChange={handleChange}
+          error={errors.agentName}
+          placeholder="e.g. Atlas Guard, Void Watcher, Nova Sentinel"
+          required
+        />
 
-          <div className="flex flex-col gap-2">
-            <div className="flex justify-between items-start mb-3">
-              <div>
-                <label className="text-[20px] font-medium text-black leading-tight block">
-                  Sentinel Instructions
-                </label>
-                <span className="text-[16px] font-normal text-[#5E5E5E] mt-1 block">
-                  Define your Sentinel&apos;s personality and defense rules
-                </span>
-              </div>
-
-              <Link
-                href={`${SUI_SENTINEL_DOCS_URL}/guides/defender-guide`}
-                target="_blank"
-                className="underline text-sm text-[#0077FF] hover:text-[#0077ffd3] mt-1"
-              >
-                View Instructions Example
-              </Link>
-            </div>
-
-            <textarea
-              name="systemPrompt"
-              value={formData.systemPrompt}
-              onChange={handleChange}
-              className="w-full bg-white border border-[#5E5E5E] rounded-xl p-4 min-h-[220px] text-black placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-black focus:border-black resize-y transition-all"
-              placeholder="Enter sentinel instructions..."
-              required
+        <div className="border border-[#5E5E5E] rounded-xl p-6 bg-white">
+          <h3 className="text-[20px] font-medium text-black mb-6">
+            LLM provider
+          </h3>
+          <div className="flex flex-col md:flex-row gap-6">
+            <CustomDropdown
+              label="Select service"
+              subLabel="Select the service that hosts and serves the LLM."
+              options={["Open AI", "Anthropic", "Meta", "Qwen"]}
+              selected={formData.llmProvider}
+              onSelect={(val) =>
+                setFormData((prev) => ({ ...prev, llmProvider: val }))
+              }
             />
-
-            <div className="flex justify-between items-center mt-1">
-              {errors.systemPrompt && (
-                <p className="text-sm text-red-500">{errors.systemPrompt}</p>
-              )}
-              <p
-                className={`text-sm text-[#5E5E5E] ml-auto ${
-                  isTokenCountDebouncing ? "animate-pulse" : ""
-                }`}
-              >
-                Tokens: {tokenCount} / {SYSTEM_PROMPT_MAX_TOKENS}
-              </p>
-            </div>
-            {tokenCount > SYSTEM_PROMPT_MAX_TOKENS && (
-              <p className="text-sm text-red-500 text-right">
-                System prompt exceeds token limit
-              </p>
-            )}
+            <CustomDropdown
+              label="Select Model"
+              subLabel="Select the model version for the chosen LLM."
+              options={["GPT-5.2", "GPT-4o", "GPT-3.5 Turbo"]}
+              selected={formData.llmModel}
+              onSelect={(val) =>
+                setFormData((prev) => ({ ...prev, llmModel: val }))
+              }
+            />
           </div>
+        </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormInput
-            label="Fee per Message (SUI)"
+            label="Fee Per Message (SUI)"
             subLabel="You earn this fee whenever users interact with your Sentinel."
             name="feePerMessage"
             value={formData.feePerMessage}
@@ -510,15 +507,81 @@ export default function DefendPage() {
             type="number"
             placeholder="0.00"
             required
+            className="h-full"
+          />
+
+          <FormInput
+            label="Reward Pool"
+            rightElement={
+              <div className="text-gray-400 cursor-pointer hover:text-gray-600">
+                <Info className="w-4 h-4" />
+              </div>
+            }
+            subLabel="Add minimum of 1 SUI"
+            name="rewardPool"
+            value={formData.rewardPool}
+            onChange={handleChange}
+            type="number"
+            placeholder=""
+            className="h-full"
           />
         </div>
 
-        <div className="pt-4 pb-20">
+        <div className="flex flex-col gap-2">
+          <div className="flex justify-between items-start mb-1">
+            <div>
+              <label className="text-[20px] font-medium text-black leading-tight block">
+                Sentinel Instructions
+              </label>
+              <span className="text-[16px] font-normal text-[#5E5E5E] mt-1 block">
+                Define how your Sentinel thinks, acts, and responds. Describe
+                its role, tone, constraints, and objectives.
+              </span>
+            </div>
+
+            <Link
+              href={`${SUI_SENTINEL_DOCS_URL}/guides/defender-guide`}
+              target="_blank"
+              className="underline text-sm text-[#0077FF] hover:text-[#0077ffd3] mt-1 shrink-0 ml-4"
+            >
+              View Instructions Example
+            </Link>
+          </div>
+
+          <textarea
+            name="systemPrompt"
+            value={formData.systemPrompt}
+            onChange={handleChange}
+            className="w-full bg-white border border-[#5E5E5E] rounded-xl p-4 min-h-[220px] text-black placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-black focus:border-black resize-y transition-all"
+            placeholder="Enter sentinel instructions..."
+            required
+          />
+
+          <div className="flex justify-between items-center mt-1">
+            {errors.systemPrompt && (
+              <p className="text-sm text-red-500">{errors.systemPrompt}</p>
+            )}
+            <p
+              className={`text-sm text-[#5E5E5E] ml-auto ${
+                isTokenCountDebouncing ? "animate-pulse" : ""
+              }`}
+            >
+              Tokens: {tokenCount} / {SYSTEM_PROMPT_MAX_TOKENS}
+            </p>
+          </div>
+          {tokenCount > SYSTEM_PROMPT_MAX_TOKENS && (
+            <p className="text-sm text-red-500 text-right">
+              System prompt exceeds token limit
+            </p>
+          )}
+        </div>
+
+        <div className="pt-2 pb-20">
           {account?.address ? (
             <button
               type="submit"
               disabled={isLoading || tokenCount > SYSTEM_PROMPT_MAX_TOKENS}
-              className="w-full btn btn-black transition-colors rounded-xl h-[65px] flex items-center justify-center gap-3 text-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-black hover:bg-black/90 text-white transition-colors rounded-xl h-[65px] flex items-center justify-center gap-3 text-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <>
@@ -532,7 +595,7 @@ export default function DefendPage() {
                     alt="Rocket"
                     width={25}
                     height={25}
-                    className="object-contain"
+                    className="object-contain invert"
                   />
                   Deploy Sentinel
                 </>
