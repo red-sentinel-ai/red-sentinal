@@ -1,28 +1,26 @@
-// Copyright (c), Mysten Labs, Inc.
+// Copyright (c), Cyphronix Software
 // SPDX-License-Identifier: Apache-2.0
 #![allow(warnings)]
 
 use anyhow::Result;
-use dotenvy::dotenv;
-use std::env;
 use axum::{routing::get, routing::post, Router};
+use dotenvy::dotenv;
 use fastcrypto::{ed25519::Ed25519KeyPair, traits::KeyPair};
-use nautilus_server::app::{register_agent, consume_prompt};
+use nautilus_server::app::{consume_prompt, register_agent};
 use nautilus_server::common::{get_attestation, health_check};
 use nautilus_server::AppState;
+use std::collections::HashMap;
+use std::env;
 use std::sync::Arc;
+use tokio::sync::RwLock;
 use tower_http::cors::{Any, CorsLayer};
 use tracing::info;
-use std::collections::HashMap;
-use tokio::sync::RwLock;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
-
 
 #[tokio::main]
 async fn main() -> Result<()> {
-
     dotenv().ok();
-        tracing_subscriber::registry()
+    tracing_subscriber::registry()
         .with(tracing_subscriber::EnvFilter::new(
             std::env::var("RUST_LOG").unwrap_or_else(|_| "info".into()),
         ))
@@ -30,13 +28,16 @@ async fn main() -> Result<()> {
         .init();
     let eph_kp = Ed25519KeyPair::generate(&mut rand::thread_rng());
 
-    let state = Arc::new(AppState { eph_kp, agents: RwLock::new(HashMap::new()), agent_counter: RwLock::new(0) });
+    let state = Arc::new(AppState {
+        eph_kp,
+        agents: RwLock::new(HashMap::new()),
+        agent_counter: RwLock::new(0),
+    });
 
     // Define your own restricted CORS policy here if needed.
     let cors = CorsLayer::new().allow_methods(Any).allow_headers(Any);
 
     let app = Router::new()
-        .route("/", get(ping))
         .route("/get_attestation", get(get_attestation))
         .route("/register-agent", post(register_agent))
         .route("/consume-prompt", post(consume_prompt))
@@ -49,8 +50,4 @@ async fn main() -> Result<()> {
     axum::serve(listener, app.into_make_service())
         .await
         .map_err(|e| anyhow::anyhow!("Server error: {}", e))
-}
-
-async fn ping() -> &'static str {
-    "Pong!"
 }

@@ -17,7 +17,7 @@ const satoshi = localFont({
 })
 
 export const metadata: Metadata = {
-  title: 'SUI Sentinel - AI Security Battle Arena',
+  title: 'Sui Sentinel | Gamified AI security platform on Sui',
   description:
     'The ultimate battle arena to test the security of autonomous AI agents. Deploy your AI, fortify it with master prompts, and challenge the world to break its defenses.',
   icons: {
@@ -31,10 +31,10 @@ export const metadata: Metadata = {
     siteName: 'Sui Sentinel',
     images: [
       {
-        url: '/og-image-v2.png',
+        url: '/og-image-v3.png',
         width: 1200,
         height: 630,
-        alt: 'Sui Sentinel - Challenge AI Agents',
+        alt: 'Sui Sentinel | Gamified AI security platform on Sui',
       },
     ],
     locale: 'en_US',
@@ -52,10 +52,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className="scroll-smooth"
-    >
+    <html lang="en" className="scroll-smooth">
       <body className={satoshi.className}>
         <div className="min-h-screen text-black bg-white overflow-x-hidden">
           <div className="bg-left bg-no-repeat bg-cover">
