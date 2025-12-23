@@ -1,18 +1,16 @@
+use crate::constants::SERVICE_ACCOUNT_JSON;
 use crate::models::ConsumePromptResponse;
+use chrono::{Duration, Utc};
+use fastcrypto::encoding::{decode_bytes_hex, Encoding, Hex};
+use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
+use regex::Regex;
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
-use serde_json::{json, from_str, Value};
+use serde_json::{from_str, json, Value};
 use std::env;
 use std::error::Error;
-use tokio_stream::StreamExt;
-use chrono::{Duration, Utc};
-use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
 use std::fs;
-use crate::constants::{SERVICE_ACCOUNT_JSON};
-use regex::{Regex};
-use fastcrypto::encoding::{decode_bytes_hex, Encoding, Hex};
-
-
+use tokio_stream::StreamExt;
 
 #[derive(Debug, Deserialize)]
 struct ServiceAccountKey {
@@ -59,14 +57,16 @@ fn sanitize_explanation(text: &str) -> String {
     let boring_words = vec![
         "parsing", "error", "raw", "response", "json", // User-specified words
         "the", "is", "and", "or", "but", "this", "that", // Common filler words
-        "in", "on", "at", "to", "for", "of", "with",    // Additional fillers
+        "in", "on", "at", "to", "for", "of", "with", // Additional fillers
     ];
 
     let sanitized: String = text
         .split_whitespace()
         .filter(|word| {
             // Remove punctuation for comparison, but keep original word
-            let clean_word = word.trim_matches(|c: char| !c.is_alphanumeric()).to_lowercase();
+            let clean_word = word
+                .trim_matches(|c: char| !c.is_alphanumeric())
+                .to_lowercase();
             !boring_words.iter().any(|boring| clean_word == *boring)
         })
         .collect::<Vec<&str>>()
@@ -79,10 +79,7 @@ fn sanitize_explanation(text: &str) -> String {
     if sanitized.len() <= max_len {
         sanitized
     } else {
-        let truncated: String = sanitized
-            .chars()
-            .take(max_len)
-            .collect::<String>();
+        let truncated: String = sanitized.chars().take(max_len).collect::<String>();
         // Find the last space within max_len to avoid cutting words
         match truncated.rfind(' ') {
             Some(last_space) => truncated[..last_space].trim().to_string(),
@@ -96,7 +93,7 @@ pub async fn evaluate_prompt(
     user_message: &str,
     attacker: &str,
     nonce: u64,
-    message_hash: [u8;32]
+    message_hash: [u8; 32],
 ) -> Result<ConsumePromptResponse, Box<dyn std::error::Error + Send + Sync>> {
     let client = Client::new();
     println!("agent prompt {}", agent_prompt);
@@ -164,7 +161,6 @@ pub async fn evaluate_prompt(
     }
     let mut model_text = String::new();
 
-
     if let Ok(json_array) = from_str::<Value>(&final_response) {
         if let Some(array) = json_array.as_array() {
             for item in array {
@@ -188,21 +184,21 @@ pub async fn evaluate_prompt(
             }
         }
     }
-let mut success = false;
+    let mut success = false;
     let mut score: u8 = 0;
     let mut explanation = model_text.to_string();
-let success_regex = Regex::new(
-        r"(?i)success\s*(?::|is|=)?\s*(true|false)\b"
-    ).unwrap();
-    
-    let score_regex = Regex::new(
-        r"(?i)score\s*(?::|is|=)?\s*(\d+)\b"
-    ).unwrap();
+    let success_regex = Regex::new(r"(?i)success\s*(?::|is|=)?\s*(true|false)\b").unwrap();
+
+    let score_regex = Regex::new(r"(?i)score\s*(?::|is|=)?\s*(\d+)\b").unwrap();
 
     // Extract success
     if let Some(captures) = success_regex.captures(&model_text) {
-        success = captures.get(1).unwrap().as_str().eq_ignore_ascii_case("true");
-        
+        success = captures
+            .get(1)
+            .unwrap()
+            .as_str()
+            .eq_ignore_ascii_case("true");
+
         // Remove success portion from explanation
         let success_match = captures.get(0).unwrap();
         explanation = model_text
@@ -216,7 +212,7 @@ let success_regex = Regex::new(
         if let Ok(parsed_score) = captures.get(1).unwrap().as_str().parse::<u8>() {
             score = parsed_score;
         }
-        
+
         // Remove score portion from explanation
         let score_match = captures.get(0).unwrap();
         explanation = explanation
@@ -251,20 +247,18 @@ let success_regex = Regex::new(
 
     Ok(ConsumePromptResponse {
         agent_id: agent_id.to_string(),
+        agent_response: explanation.to_string(),
+        jury_response: String::new(),
         success,
-        explanation: explanation.to_string(),
         score,
+        fun_response: String::new(),
         attacker: decode_bytes_hex(attacker).unwrap(),
         nonce,
-        message_hash: message_hash
+        message_hash: message_hash,
     })
-
 }
 
-
-pub async fn generate_access_token(
-    scopes: &[&str],
-) -> Result<String, Box<dyn std::error::Error>> {
+pub async fn generate_access_token(scopes: &[&str]) -> Result<String, Box<dyn std::error::Error>> {
     let key: ServiceAccountKey = serde_json::from_str(&SERVICE_ACCOUNT_JSON)?;
     let iat = Utc::now();
     let exp = iat + Duration::minutes(59); // Max allowed: 60 mins
