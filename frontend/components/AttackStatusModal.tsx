@@ -33,7 +33,7 @@ export const AttackStatusModal = ({
   const success = apiResponse?.response.data.success;
   const originalScore = apiResponse?.response.data.score || 0;
   const score = success ? 100 : originalScore;
-  const explanation = apiResponse?.response.data.explanation;
+  const explanation = apiResponse?.response.data.agent_response;
 
   const handleSlotWin = (amount: number) => {
     setRewardAmount(amount);

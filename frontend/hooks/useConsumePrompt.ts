@@ -217,7 +217,9 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         tx.object(SUI_CONFIG.AGENT_REGISTRY), // registry: &AgentRegistry
         tx.object(agentObjectId), // agent: &mut Agent
         tx.pure.bool(apiData.data.success), // success: bool
-        tx.pure.string(apiData.data.explanation), // explanation: String,
+        tx.pure.string(apiData.data.agent_response), // explanation: String,
+        tx.pure.string(apiData.data.jury_response), // explanation: String,
+        tx.pure.string(apiData.data.fun_response), // explanation: String,
         tx.pure.string(prompt),
         tx.pure.u8(apiData.data.score), // score: u8
         tx.pure.u64(apiData.timestamp_ms), // timestamp_ms: u64
