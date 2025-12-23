@@ -5,3 +5,4 @@ endpoints:
   - us-central1-aiplatform.googleapis.com
   - fullnode.testnet.sui.io
   - fullnode.mainnet.sui.io
+  - redteam.suisentinel.xyz
