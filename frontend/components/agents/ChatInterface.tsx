@@ -140,7 +140,7 @@ export default function ChatInterface({
       const newAgentMessage: ChatMessage = {
         id: `agent-new-${Date.now()}`,
         type: 'agent',
-        content: apiResponse.response.data.explanation,
+        content: apiResponse.response.data.agent_response,
         timestamp: Date.now().toString(),
         isSuccess: apiResponse.response.data.success,
         score: apiResponse.response.data.score,
@@ -281,10 +281,7 @@ export default function ChatInterface({
         </div>
       ) : (
         <div>
-          <form
-            onSubmit={handleSubmit}
-            className="relative"
-          >
+          <form onSubmit={handleSubmit} className="relative">
             <div className="relative">
               <div className="relative w-full border border-gray-300 rounded-2xl bg-white focus-within:ring-1 focus-within:ring-black transition-all duration-200 z-10 overflow-hidden">
                 <textarea

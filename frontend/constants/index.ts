@@ -38,12 +38,12 @@ export const SUI_FAUCET_URL = 'https://faucet.sui.io/'
 export const LOCAL_API_PATH = 'http://18.213.79.225:3000'
 
 export const SUI_CONFIG = {
-  EXAMPLES_PACKAGE_ID: '0x77f8bc360582dcc5c31ccb5f550e2649981ad05d62eb2df24728a5a4c7befce9',
+  EXAMPLES_PACKAGE_ID: '0x674de62e8b8ae71280b9ccf0be5e2d037e64ca8f124415889de346f05cf1ed2e',
   MODULE_NAME: 'sentinel',
   OTW_NAME: 'SENTINEL',
-  AGENT_REGISTRY: '0x29580d8160573f38f3ee4740b393b1ddec2655e5f9374f9e7cdf1c1f5d120794',
-  ENCLAVE_OBJECT_ID: '0xba571019c601097db3263b7b0dc52e25a0f2f0e451198be9795ab3149b2c1e2f',
-  PROTOCOL_CONFIG_OBJECT_ID: '0xe634b68d0ddb96ae946d26602e674dd0c34796f8f0d99b32e392769a5542c549',
+  AGENT_REGISTRY: '0xa175bab0d35db58989c1ac4d3703ce88a37059bc6515238a660f6d46a58bc88b',
+  ENCLAVE_OBJECT_ID: '0x8da3dac1de4c79db363d3b370163424aa65a14e481a86c9e7ce737f75130d665',
+  PROTOCOL_CONFIG_OBJECT_ID: '0x5d5afd57682c674dda890ebec45d36b14b753fbfaec3b279d6f920d633f17775',
   AGENT_OBJECT_IDS: [''],
 }
 
@@ -188,8 +188,20 @@ export const AGENT_PRIZE_POOL_HISTORY_QUERY_KEY = 'agentPrizePoolHistory'
 
 
 export const PROVIDER_MODELS: Record<string, string[]> = {
-  "Open AI": ["GPT-4o", "GPT-4 Turbo", "GPT-3.5 Turbo"],
-  "Anthropic": ["Claude 3.5 Sonnet", "Claude 3 Opus", "Claude 3 Haiku"],
-  "DeepSeek": ["DeepSeek V3", "DeepSeek R1"],
-  "Bedrock": ["Llama 3 70B", "Titan Text G1", "Mistral Large"],
-};
+  openai: ['gpt-4o', 'gpt-4.1', 'gpt-4o-mini', 'gpt-3.5-turbo'],
+  anthropic: [
+    'claude-3-5-sonnet-20241022',
+    'claude-3-5-sonnet-20240620',
+    'claude-3-opus-20240229',
+    'claude-3-haiku-20240307',
+  ],
+  deepseek: ['deepseek-chat', 'deepseek-reasoner'],
+  bedrock: [
+    'mistral.mistral-large-3-675b-instruct',
+    'openai.gpt-oss-120b-1:0',
+    'us.meta.llama4-maverick-17b-instruct-v1:0',
+    'us.deepseek.r1-v1:0',
+    'us.meta.llama3-2-90b-instruct-v1:0',
+    'us.meta.llama3-3-70b-instruct-v1:0',
+  ],
+}
