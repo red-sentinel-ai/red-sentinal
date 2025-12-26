@@ -17,6 +17,7 @@ import type { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { ChatMessage } from './ChatMessage'
 import { useTokenCount } from '@/hooks/useTokenCount'
 import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
+import { JuryResponseModal } from './JuryResponseModal' 
 
 export interface ChatMessage {
   id: string
@@ -30,6 +31,7 @@ export interface ChatMessage {
   winner?: string
   sender?: string
   amountSent?: string
+  juryResponse?: string
 }
 
 interface ChatInterfaceProps {
@@ -57,6 +59,14 @@ export default function ChatInterface({
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const account = useCurrentAccount()
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
+
+  const [isJuryModalOpen, setIsJuryModalOpen] = useState(false)
+  const [selectedJuryResponse, setSelectedJuryResponse] = useState('')
+
+  const handleShowJury = (response: string) => {
+    setSelectedJuryResponse(response)
+    setIsJuryModalOpen(true)
+  }
 
   const senderAddresses = useMemo(() => {
     const addresses = chatMessages
@@ -129,6 +139,7 @@ export default function ChatInterface({
           isSuccess: event.parsedJson.success,
           score: event.parsedJson.score,
           txDigest: event.id.txDigest,
+          juryResponse: event.parsedJson.jury_response 
         })
       })
 
@@ -144,6 +155,7 @@ export default function ChatInterface({
         timestamp: Date.now().toString(),
         isSuccess: apiResponse.response.data.success,
         score: apiResponse.response.data.score,
+        juryResponse: apiResponse.response.data.jury_response
       }
       setChatMessages((prevMessages) => [...prevMessages, newAgentMessage])
       refetchAgent()
@@ -185,6 +197,11 @@ export default function ChatInterface({
 
   return (
     <div className="flex flex-col h-full flex-1 text-black justify-between pb-6">
+      <JuryResponseModal 
+        isOpen={isJuryModalOpen} 
+        onClose={() => setIsJuryModalOpen(false)} 
+        response={selectedJuryResponse} 
+      />
       <div
         ref={chatContainerRef}
         className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-4 sm:space-y-6 max-h-[calc(100vh-210px)]"
@@ -216,10 +233,11 @@ export default function ChatInterface({
                 agent={agent}
                 senderProfile={userProfilesMap?.[message.sender!] || null}
                 isWinningPrompt={isWinningUserPrompt}
+                onShowJury={() => message.juryResponse && handleShowJury(message.juryResponse)}
               />
             )
           })}
-
+          
           {isSubmitting && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -282,7 +300,7 @@ export default function ChatInterface({
       ) : (
         <div>
           <form onSubmit={handleSubmit} className="relative">
-            <div className="relative">
+             <div className="relative">
               <div className="relative w-full border border-gray-300 rounded-2xl bg-white focus-within:ring-1 focus-within:ring-black transition-all duration-200 z-10 overflow-hidden">
                 <textarea
                   ref={textareaRef}
@@ -304,7 +322,7 @@ export default function ChatInterface({
                   }}
                 />
 
-                <div className="flex items-center justify-between px-3 pb-2 sm:px-4 sm:pb-3 bg-white">
+                 <div className="flex items-center justify-between px-3 pb-2 sm:px-4 sm:pb-3 bg-white">
                   <div
                     className={clsx(
                       'text-xs bg-[#D9D9D9] px-2 py-1 rounded',
@@ -355,8 +373,8 @@ export default function ChatInterface({
             )}
           </form>
         </div>
-      )}
-
+     )}
+     
       <ConnectModal
         open={isWalletModalOpen}
         onOpenChange={setIsWalletModalOpen}
