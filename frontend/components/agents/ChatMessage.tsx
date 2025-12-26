@@ -20,9 +20,15 @@ type ChatMessageProps = {
   agent: AgentDetails
   senderProfile: UserProfile
   isWinningPrompt?: boolean
+  onShowJury?: () => void
 }
 
-export const ChatMessage = ({ message, senderProfile, isWinningPrompt }: ChatMessageProps) => {
+export const ChatMessage = ({ 
+  message, 
+  senderProfile, 
+  isWinningPrompt, 
+  onShowJury 
+}: ChatMessageProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const [shouldTruncate, setShouldTruncate] = useState(false)
   const contentRef = useRef<HTMLParagraphElement>(null)
@@ -139,6 +145,25 @@ export const ChatMessage = ({ message, senderProfile, isWinningPrompt }: ChatMes
                 {message.type === 'agent' && message.score !== undefined && (
                   <span className="font-medium text-black">Score: {message.score}/100</span>
                 )}
+
+                 {message.type === 'agent' && message.juryResponse && onShowJury && (
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onShowJury();
+                      }}
+                      className="flex items-center gap-1.5 text-[10px] text-[#0F23A7] underline hover:no-underline transition-all cursor-pointer w-fit"
+                    >
+                      <Image
+                        src="/icons/court_house_blue.png"
+                        width="10"
+                        height="10"
+                        alt="Court House"
+                      />
+                        Jury Response
+                    </button>
+              )}
+
                 {formatDistanceToNow(new Date(Number.parseInt(message.timestamp)))} ago
               </div>
             </div>
