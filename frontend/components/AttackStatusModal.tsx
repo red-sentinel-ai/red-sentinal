@@ -34,6 +34,7 @@ export const AttackStatusModal = ({
   const originalScore = apiResponse?.response.data.score || 0;
   const score = success ? 100 : originalScore;
   const explanation = apiResponse?.response.data.agent_response;
+  const juryResponse = apiResponse?.response.data.jury_response;
 
   const handleSlotWin = (amount: number) => {
     setRewardAmount(amount);
@@ -143,6 +144,18 @@ export const AttackStatusModal = ({
                   </motion.div>
                 )}
               </AnimatePresence>
+            </div>
+
+            <div className="mb-2 mt-4">
+              <h3 className="text-[15px] font-medium text-black">
+                Jury Response
+              </h3>
+
+              <div className="overflow-hidden">
+                <p className="text-sm text-[#575757] leading-relaxed mt-1 pr-2">
+                  {juryResponse || "No jury response provided by the Sentinel."}
+                </p>
+              </div>
             </div>
           </div>
         </div>
