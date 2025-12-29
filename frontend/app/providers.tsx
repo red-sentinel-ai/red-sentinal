@@ -52,6 +52,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
             <div>
               {/* <LaunchMainnetBanner /> */}
               <Header />
+              <div className='mt-11'></div>
               <ProfileInitializer />
               {children}
               <FeedbackButton />
