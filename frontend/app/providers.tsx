@@ -52,7 +52,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
             <div>
               {/* <LaunchMainnetBanner /> */}
               <Header />
-              <div className='mt-11'></div>
+              <div className='mt-[128px]'></div>
               <ProfileInitializer />
               {children}
               <FeedbackButton />
