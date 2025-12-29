@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { Transaction } from '@mysten/sui/transactions'
 import { useSignAndExecuteTransaction, useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
@@ -18,7 +17,13 @@ interface UseFundAgentOptions {
 
 interface FundAgentParams {
   agentObjectId: string
+  agentId: string// The agent_id string to match with AgentCap
   amount: number // Amount in SUI
+}
+
+interface AgentCap {
+  id: string
+  agentId: string
 }
 
 export const useFundAgent = (options: UseFundAgentOptions = {}) => {
@@ -28,6 +33,7 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [lastResult, setLastResult] = useState<any>(null)
+  const [agentCaps, setAgentCaps] = useState<AgentCap[]>([])
   const { trackFundSentinel } = useRewardsMissionTracker()
 
   const account = useCurrentAccount()
@@ -37,17 +43,57 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
         transactionBlock: bytes,
         signature,
         options: {
-          // Raw effects are required so the effects can be reported back to the wallet
           showRawEffects: true,
-          // Select additional data to return
           showObjectChanges: true,
         },
       }),
   })
 
+  // Fetch user's AgentCaps
+  const fetchAgentCaps = useCallback(async () => {
+    if (!account?.address) {
+      setAgentCaps([])
+      return
+    }
+
+    try {
+      const objects = await client.getOwnedObjects({
+        owner: account.address,
+        filter: {
+          StructType: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::AgentCap`,
+        },
+        options: {
+          showContent: true,
+          showType: true,
+        },
+      })
+
+      const caps: AgentCap[] = objects.data
+        .filter((obj) => obj.data?.content?.dataType === 'moveObject')
+        .map((obj) => {
+          const fields = (obj.data?.content as any)?.fields
+          return {
+            id: obj.data?.objectId || '',
+            agentId: fields?.agent_id || '',
+          }
+        })
+        .filter((cap) => cap.id && cap.agentId)
+
+      setAgentCaps(caps)
+      console.log('Fetched AgentCaps:', caps)
+    } catch (error) {
+      console.error('Error fetching AgentCaps:', error)
+    }
+  }, [account?.address, client])
+
+  // Fetch AgentCaps when account changes
+  useEffect(() => {
+    fetchAgentCaps()
+  }, [fetchAgentCaps])
+
   const fundAgent = useCallback(
-    async ({ agentObjectId, amount }: FundAgentParams) => {
-      console.log({ agentObjectId, amount })
+    async ({ agentObjectId, agentId, amount }: FundAgentParams) => {
+      console.log({ agentObjectId, agentId, amount })
       if (!account?.address) {
         const errorMsg = 'Wallet not connected'
         setError(errorMsg)
@@ -55,8 +101,17 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
         return
       }
 
-      if (!agentObjectId || !amount || amount <= 0) {
+      if (!agentObjectId || !agentId || !amount || amount <= 0) {
         const errorMsg = 'Invalid agent ID or amount'
+        setError(errorMsg)
+        if (showToasts) toast.error(errorMsg)
+        return
+      }
+
+      // Find the matching AgentCap
+      const agentCap = agentCaps.find((cap) => cap.agentId === agentId)
+      if (!agentCap) {
+        const errorMsg = `You don't own the AgentCap for agent "${agentId}". Only the agent creator can fund it.`
         setError(errorMsg)
         if (showToasts) toast.error(errorMsg)
         return
@@ -94,10 +149,8 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
         console.log('Total available (SUI):', Number(totalAvailable) / MIST_PER_SUI)
 
         if (totalAvailable < totalNeeded) {
-          console.log({ totalAvailable, totalNeeded })
           throw new Error(
-            `Insufficient SUI balance. Need ${amount} SUI + gas fees, have ${
-              Number(totalAvailable) / MIST_PER_SUI
+            `Insufficient SUI balance. Need ${amount} SUI + gas fees, have ${Number(totalAvailable) / MIST_PER_SUI
             } SUI`
           )
         }
@@ -111,10 +164,8 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
         if (largestBalance >= totalNeeded) {
           console.log('✅ Using single coin for both payment and gas')
 
-          // Split exact payment amount from largest coin
           const [paymentCoin] = tx.splitCoins(tx.gas, [tx.pure.u64(amountInMist)])
 
-          // Use remaining balance in original coin for gas
           tx.setGasPayment([
             {
               objectId: largestCoin.coinObjectId,
@@ -123,19 +174,22 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
             },
           ])
 
-          // Call fund_agent function
+          // Call fund_agent with AgentCap
           tx.moveCall({
             target: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::fund_agent`,
-            arguments: [tx.object(agentObjectId), paymentCoin, tx.object(SUI_CLOCK_OBJECT_ID)],
+            arguments: [
+              tx.object(agentObjectId),
+              tx.object(agentCap.id), // AgentCap reference
+              paymentCoin,
+              tx.object(SUI_CLOCK_OBJECT_ID),
+            ],
           })
         } else {
           console.log('📋 Need multiple coins - using merge strategy')
 
-          // Merge coins to create a single large coin
           const selectedCoins = []
           let runningTotal = BigInt(0)
 
-          // Select minimum coins needed for total amount
           for (const coin of sortedCoins) {
             selectedCoins.push(coin)
             runningTotal += BigInt(coin.balance)
@@ -143,13 +197,11 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
           }
 
           console.log(
-            `Merging ${selectedCoins.length} coins with total: ${
-              Number(runningTotal) / MIST_PER_SUI
+            `Merging ${selectedCoins.length} coins with total: ${Number(runningTotal) / MIST_PER_SUI
             } SUI`
           )
 
           if (selectedCoins.length === 1) {
-            // Single coin, use it directly
             const singleCoin = selectedCoins[0]
             const [paymentCoin] = tx.splitCoins(singleCoin.coinObjectId, [
               tx.pure.u64(amountInMist),
@@ -165,26 +217,26 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
 
             tx.moveCall({
               target: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::fund_agent`,
-              arguments: [tx.object(agentObjectId), paymentCoin, tx.object(SUI_CLOCK_OBJECT_ID)],
+              arguments: [
+                tx.object(agentObjectId),
+                tx.object(agentCap.id), // AgentCap reference
+                paymentCoin,
+                tx.object(SUI_CLOCK_OBJECT_ID),
+              ],
             })
           } else {
-            // Multiple coins - merge them first
             const primaryCoin = selectedCoins[0]
             const coinsToMerge = selectedCoins.slice(1)
 
-            // Merge all selected coins into the primary coin
             tx.mergeCoins(
               primaryCoin.coinObjectId,
               coinsToMerge.map((coin) => coin.coinObjectId)
             )
 
-            // Now the primary coin has the merged balance
-            // Split payment amount from the merged coin
             const [paymentCoin] = tx.splitCoins(primaryCoin.coinObjectId, [
               tx.pure.u64(amountInMist),
             ])
 
-            // Use remaining merged balance for gas
             tx.setGasPayment([
               {
                 objectId: primaryCoin.coinObjectId,
@@ -195,12 +247,17 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
 
             tx.moveCall({
               target: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::fund_agent`,
-              arguments: [tx.object(agentObjectId), paymentCoin, tx.object(SUI_CLOCK_OBJECT_ID)],
+              arguments: [
+                tx.object(agentObjectId),
+                tx.object(agentCap.id), // AgentCap reference
+                paymentCoin,
+                tx.object(SUI_CLOCK_OBJECT_ID),
+              ],
             })
           }
         }
 
-        // Execute transaction with promise-based approach
+        // Execute transaction
         return new Promise((resolve, reject) => {
           signAndExecuteTransaction(
             { transaction: tx },
@@ -260,6 +317,7 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
       onError,
       showToasts,
       trackFundSentinel,
+      agentCaps,
     ]
   )
 
@@ -275,8 +333,9 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
     lastResult,
     reset,
     isConnected: !!account?.address,
+    agentCaps, // Expose fetched caps
+    refetchAgentCaps: fetchAgentCaps, // Allow manual refresh
   }
 }
 
-// Export types for convenience
-export type { FundAgentParams, UseFundAgentOptions }
+export type { FundAgentParams, UseFundAgentOptions, AgentCap }

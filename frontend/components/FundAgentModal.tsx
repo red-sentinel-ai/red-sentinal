@@ -15,6 +15,7 @@ export interface FundAgentModalProps {
   agentObjectId: string
   /** Optional callback when funding is successful, receives the amount */
   onSuccess?: (amount: string) => void
+  agentId: string | null
 }
 
 export const FundAgentModal = ({
@@ -22,6 +23,7 @@ export const FundAgentModal = ({
   onClose,
   agentObjectId,
   onSuccess,
+  agentId,
 }: FundAgentModalProps) => {
   const [amount, setAmount] = useState('')
   const [error, setError] = useState('')
@@ -63,7 +65,7 @@ export const FundAgentModal = ({
     if (!validateAmount()) return
 
     try {
-      await fundAgent({ agentObjectId, amount: +amount })
+      await fundAgent({ agentObjectId, amount: +amount, agentId })
 
       posthog.capture('sentinel_funded', {
         agent_object_id: agentObjectId,
@@ -89,10 +91,7 @@ export const FundAgentModal = ({
   }
 
   return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-    >
+    <Dialog open={open} onClose={handleClose}>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold">Add Funds</h2>
