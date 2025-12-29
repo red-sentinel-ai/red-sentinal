@@ -556,7 +556,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
               <div>
                 <h3 className="text-xl font-bold text-black mb-2">Submission Received!</h3>
                 <p className="text-gray-600 max-w-xs mx-auto">
-                  Once verified RP will be reflected in your profile.
+                  Once verified SENTINEL Points will be reflected in your profile.
                 </p>
               </div>
               <button
