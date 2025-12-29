@@ -215,6 +215,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
       target: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::consume_prompt`,
       arguments: [
         tx.object(SUI_CONFIG.AGENT_REGISTRY), // registry: &AgentRegistry
+        tx.object(SUI_CONFIG.PROTOCOL_CONFIG_OBJECT_ID),
         tx.object(agentObjectId), // agent: &mut Agent
         tx.pure.bool(apiData.data.success), // success: bool
         tx.pure.string(apiData.data.agent_response), // explanation: String,

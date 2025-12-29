@@ -117,6 +117,7 @@ export default function DefendPage() {
   const [agentImage, setAgentImage] = useState<File | null>(null)
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
   const [imagePickerOpen, setImagePickerOpen] = useState(false)
+  const [agentId, setAgentId] = useState<string | null>(null)
   const [selectedImage, setSelectedImage] = useState<{
     url: string
     isCustom: boolean
@@ -323,6 +324,7 @@ export default function DefendPage() {
       target: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::register_agent`,
       arguments: [
         tx.object(SUI_CONFIG.AGENT_REGISTRY),
+        tx.object(SUI_CONFIG.PROTOCOL_CONFIG_OBJECT_ID),
         tx.pure.string(agentDetails.response.data.agent_id),
         tx.pure.u64(agentDetails.response.timestamp_ms),
         tx.pure.u64(agentDetails.response.data.cost_per_message),
@@ -379,6 +381,7 @@ export default function DefendPage() {
         formData.llmProvider,
         formData.llmModel
       )
+      setAgentId(agentDetails.response.data.agent_id)
       await createAgentTransaction(agentDetails)
     } catch (error) {
       console.error('Deployment error:', error)
@@ -606,6 +609,7 @@ export default function DefendPage() {
           open={showFundModal}
           onClose={handleAbortAndCloseFundModal}
           agentObjectId={deployedAgentObjectId}
+          agentId={agentId}
           onSuccess={handleFundSuccess}
         />
       )}
