@@ -13,7 +13,7 @@ export const AgentListView = () => {
   const featuredAgents = allAgents?.filter((agent: AgentDetails) => agent.is_featured) || []
 
   return (
-    <div className="px-2 md:px-8 py-12 md:py-20 max-w-[1560px] mx-auto md:pt-36">
+    <div className="px-2 md:px-8 py-4 max-w-[1560px] mx-auto md:py-16">
       <div className="mb-20">
         <p
           className="text-4xl md:text-[48px] font-bold text-center uppercase"

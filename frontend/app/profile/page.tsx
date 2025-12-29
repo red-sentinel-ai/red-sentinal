@@ -101,7 +101,7 @@ export default function ProfilePage() {
       <div className="relative">
         <div className="vertical-line left-4"></div>
         <div className="vertical-line right-4"></div>
-        <div className="max-w-[1440px] mx-auto pb-12 pt-24 min-h-body relative">
+        <div className="max-w-[1440px] mx-auto pb-12 min-h-body relative">
           <div
             className="flex flex-col sm:flex-row items-end gap-4 min-h-[376px] bg-cover bg-bottom bg-no-repeat px-4 md:px-12 pt-4 pb-20 mb-6 w-full"
             style={{ backgroundImage: 'url("/img/footer-bg.png")' }}
