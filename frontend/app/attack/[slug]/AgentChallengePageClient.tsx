@@ -136,7 +136,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   if (isLoading) {
     return (
       <div
-        className="min-h-screen bg-no-repeat flex items-center justify-center"
+        className="min-h-[calc(100vh-44px)] bg-no-repeat flex items-end justify-center"
         style={{
           backgroundImage: 'url(/img/chat_bg.png)',
           backgroundPosition: '0% 17%',
@@ -151,7 +151,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   if (error || !agent) {
     return (
       <div
-        className="min-h-screen bg-no-repeat text-gray-800 p-4 pt-20"
+        className="min-h-[calc(100vh-44px)] bg-no-repeat text-gray-800 p-4 pt-20"
         style={{
           backgroundImage: 'url(/img/chat_bg.png)',
           backgroundPosition: '0% 17%',
@@ -168,7 +168,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   if (!isMobile) {
     return (
       <div
-        className="min-h-screen bg-no-repeat pt-16 flex"
+        className="min-h-[calc(100vh-44px)] bg-no-repeat flex items-end"
         style={{
           backgroundImage: 'url(/img/chat_bg.png)',
           backgroundPosition: '0% 17%',
