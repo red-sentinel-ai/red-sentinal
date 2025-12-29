@@ -32,6 +32,7 @@ async fn main() -> Result<()> {
         eph_kp,
         agents: RwLock::new(HashMap::new()),
         agent_counter: RwLock::new(0),
+        attack_object_usage: RwLock::new(HashMap::new()),
     });
 
     // Define your own restricted CORS policy here if needed.

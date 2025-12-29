@@ -102,6 +102,16 @@ pub async fn consume_prompt(
     Json(payload): Json<ConsumePromptRequest>,
 ) -> Result<Json<ProcessedDataResponse<IntentMessage<ConsumePromptResponse>>>, EnclaveError> {
     let agents = state.agents.write().await;
+    let attack_object_id = payload.attack_object_id.clone();
+    {
+        let mut attack_object_usage = state.attack_object_usage.write().await;
+        if attack_object_usage.contains_key(&attack_object_id) {
+            return Err(EnclaveError::GenericError(
+                "Attack object has already been used".to_string(),
+            ));
+        }
+        attack_object_usage.insert(attack_object_id.clone(), false);
+    }
     let mut hasher = Blake2bVar::new(32)
         .map_err(|e| EnclaveError::GenericError(format!("Failed to initialize hasher: {}", e)))?;
     let client = Client::new();
@@ -280,6 +290,11 @@ pub async fn consume_prompt(
         current_timestamp,
         IntentScope::ConsumePrompt,
     );
+
+    {
+        let mut attack_object_usage = state.attack_object_usage.write().await;
+        attack_object_usage.insert(attack_object_id, true);
+    }
 
     Ok(Json(response))
 }
