@@ -159,9 +159,27 @@ export const useUpdateAgent = () => {
     [executeUpdate]
   );
 
+  const claimFees = useCallback(
+    (agentId: string, agentObjectId: string, onSuccess?: () => void) => {
+      executeUpdate(
+        agentId,
+        (tx, capId) => {
+          tx.moveCall({
+            target: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::claim_fees`,
+            arguments: [tx.object(agentObjectId), tx.object(capId)],
+          });
+        },
+        "Fees claimed successfully!",
+        onSuccess
+      );
+    },
+    [executeUpdate]
+  );
+
   return {
     updatePrompt,
     updateCost,
+    claimFees,
     isLoading,
   };
 };
