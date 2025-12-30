@@ -20,6 +20,7 @@ export interface AgentDetails {
   agent_path: string;
   created_at: string;
   last_funded_timestamp: string;
+  accumulated_fees: number;
 }
 
 export const useAllAgents = () => {
@@ -45,6 +46,7 @@ export const useAllAgents = () => {
         | "balance"
         | "status"
         | "last_funded_timestamp"
+        | "accumulated_fees"
       >[] = await basicAgentsRes.json();
 
       const enrichedAgents = await Promise.all(

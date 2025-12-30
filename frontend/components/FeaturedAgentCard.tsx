@@ -130,6 +130,7 @@ export const FeaturedAgentCard = ({
               currentPrompt={agent.system_prompt}
               currentCost={agent.cost_per_message}
               openFeatureModal={openFeatureModal}
+              accumulatedFees={agent.accumulated_fees}
             />
           </div>
         </div>
