@@ -1,15 +1,20 @@
-'use client'
-import { FundAgentModal, FundAgentModalProps } from '@/components/FundAgentModal'
-import React, { useState } from 'react'
+"use client";
+import {
+  FundAgentModal,
+  FundAgentModalProps,
+} from "@/components/FundAgentModal";
+import React, { useState } from "react";
 
 interface UseFundAgentModalReturn {
   modalProps: {
-    open: boolean
-    onClose: () => void
-    agentObjectId: string
-  }
-  openModal: (agentObjectId: string) => void
-  Modal: React.FC<Omit<FundAgentModalProps, 'open' | 'onClose' | 'agentObjectId'>>
+    open: boolean;
+    onClose: () => void;
+    agentObjectId: string;
+  };
+  openModal: (agentObjectId: string) => void;
+  Modal: React.FC<
+    Omit<FundAgentModalProps, "open" | "onClose" | "agentObjectId">
+  >;
 }
 
 /**
@@ -20,29 +25,29 @@ interface UseFundAgentModalReturn {
  * - Modal: The modal component ready to be rendered
  */
 export function useFundAgentModal(): UseFundAgentModalReturn {
-  const [isOpen, setIsOpen] = useState(false)
-  const [currentAgentId, setCurrentAgentId] = useState('')
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentAgentId, setCurrentAgentId] = useState("");
 
   const openModal = (agentObjectId: string) => {
-    setCurrentAgentId(agentObjectId)
-    setIsOpen(true)
-  }
+    setCurrentAgentId(agentObjectId);
+    setIsOpen(true);
+  };
 
   const closeModal = () => {
-    setIsOpen(false)
-    setCurrentAgentId('')
-  }
+    setIsOpen(false);
+    setCurrentAgentId("");
+  };
 
-  const Modal: React.FC<Omit<FundAgentModalProps, 'open' | 'onClose' | 'agentObjectId'>> = (
-    props
-  ) => (
+  const Modal: React.FC<
+    Omit<FundAgentModalProps, "open" | "onClose" | "agentObjectId">
+  > = (props) => (
     <FundAgentModal
       open={isOpen}
       onClose={closeModal}
       agentObjectId={currentAgentId}
       {...props}
     />
-  )
+  );
 
   return {
     modalProps: {
@@ -52,5 +57,5 @@ export function useFundAgentModal(): UseFundAgentModalReturn {
     },
     openModal,
     Modal,
-  }
+  };
 }
