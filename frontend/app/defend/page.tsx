@@ -393,7 +393,7 @@ export default function DefendPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-4 pt-24 min-h-body">
+    <div className="container mx-auto px-4 py-4 pt-10 min-h-body">
       <form onSubmit={handleSubmit} className="max-w-[969px] px-4 mx-auto space-y-6 relative">
         <Link
           href="/"
