@@ -1,19 +1,19 @@
-'use client'
+"use client";
 
-import { MoreVertical } from 'lucide-react'
+import { MoreVertical } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-} from '@/components/ui/dropdown-menu'
-import Image from 'next/image'
+} from "@/components/ui/dropdown-menu";
+import Image from "next/image";
 
 interface AgentDropdownProps {
-  isOwner: boolean
-  isFeatured: boolean
-  agentId: string | number
-  openFeatureModal: (agentId: number) => void
+  isOwner: boolean;
+  isFeatured: boolean;
+  agentId: string | number;
+  openFeatureModal: (agentId: number) => void;
 }
 
 export const AgentDropdown = ({
@@ -22,7 +22,7 @@ export const AgentDropdown = ({
   agentId,
   openFeatureModal,
 }: AgentDropdownProps) => {
-  if (!isOwner || isFeatured) return null
+  if (!isOwner || isFeatured) return null;
 
   return (
     <div className="absolute top-2 right-2 z-20">
@@ -48,5 +48,5 @@ export const AgentDropdown = ({
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  )
-}
+  );
+};
