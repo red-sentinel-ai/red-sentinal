@@ -8,7 +8,11 @@ export const fetchAgentDetailsViaObject = async (
 ): Promise<
   Pick<
     AgentDetails,
-    "cost_per_message" | "system_prompt" | "balance" | "last_funded_timestamp"
+    | "cost_per_message"
+    | "system_prompt"
+    | "balance"
+    | "last_funded_timestamp"
+    | "accumulated_fees"
   >
 > => {
   try {
@@ -26,7 +30,6 @@ export const fetchAgentDetailsViaObject = async (
       throw new Error("Invalid agent object");
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fields = (response.data.content as any).fields;
 
     return {
@@ -34,6 +37,7 @@ export const fetchAgentDetailsViaObject = async (
       system_prompt: fields.system_prompt,
       balance: Number(fields.balance),
       last_funded_timestamp: fields.last_funded_timestamp || "0",
+      accumulated_fees: Number(fields.accumulated_fees || 0),
     };
   } catch (error) {
     console.error(
@@ -45,6 +49,7 @@ export const fetchAgentDetailsViaObject = async (
       system_prompt: "Error fetching on-chain data.",
       balance: 0,
       last_funded_timestamp: "0",
+      accumulated_fees: 0,
     };
   }
 };
@@ -63,7 +68,7 @@ export async function getDefeatedAgentIds(
       limit: 100,
       order: "descending",
     });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const defeatedIds = defeatedEvents.data.map(
       (event: any) => event.parsedJson.agent_id
     );
