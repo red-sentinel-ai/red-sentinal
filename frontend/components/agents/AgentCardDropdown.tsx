@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { UpdatePromptModal } from "./UpdatePromptModal";
 import { UpdateCostModal } from "./UpdateCostModal";
-import { ClaimFeesModal } from "./ClaimFeesModal"; 
+import { ClaimFeesModal } from "./ClaimFeesModal";
 import { MIST_PER_SUI } from "@/constants";
 
 interface AgentDropdownProps {
@@ -22,7 +22,7 @@ interface AgentDropdownProps {
   openFeatureModal: (agentId: number) => void;
   currentPrompt?: string;
   currentCost?: number;
-  accumulatedFees?: number; 
+  accumulatedFees?: number;
 }
 
 export const AgentDropdown = ({
