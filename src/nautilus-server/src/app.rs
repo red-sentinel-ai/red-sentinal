@@ -148,15 +148,15 @@ pub async fn consume_prompt(
 
     let response_json: Value = response.json().await?;
 
-    let is_not_used = response_json
-        .get("result")
-        .and_then(|result| result.get("data"))
-        .and_then(|data| data.get("content"))
-        .and_then(|content| content.get("fields"))
-        .and_then(|fields| fields.get("used"))
-        .and_then(|used| used.as_bool())
-        .map(|used| !used) // Negate the boolean value
-        .unwrap_or(false); // Default to not used being false if not found, to be safe
+    // let is_not_used = response_json
+    //     .get("result")
+    //     .and_then(|result| result.get("data"))
+    //     .and_then(|data| data.get("content"))
+    //     .and_then(|content| content.get("fields"))
+    //     .and_then(|fields| fields.get("used"))
+    //     .and_then(|used| used.as_bool())
+    //     .map(|used| !used) // Negate the boolean value
+    //     .unwrap_or(false); // Default to not used being false if not found, to be safe
     let attacker = response_json
         .get("result")
         .and_then(|result| result.get("data"))
@@ -182,11 +182,11 @@ pub async fn consume_prompt(
             EnclaveError::GenericError("Could not retrieve nonce from attack object".to_string())
         })?;
 
-    if !is_not_used {
-        return Err(EnclaveError::GenericError(
-            "Attack object has already been used or is invalid".to_string(),
-        ));
-    }
+    // if !is_not_used {
+    //     return Err(EnclaveError::GenericError(
+    //         "Attack object has already been used or is invalid".to_string(),
+    //     ));
+    // }
     let attack_object_agent_id = response_json
         .get("result")
         .and_then(|result| result.get("data"))
