@@ -51,7 +51,7 @@ export const useUpdateAgent = () => {
           const content = obj.data?.content;
           return (
             content?.dataType === "moveObject" &&
-            (content.fields as any).agent_id === agentId
+            String((content.fields as any).agent_id) === String(agentId)
           );
         });
 
