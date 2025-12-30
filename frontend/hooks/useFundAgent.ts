@@ -109,7 +109,7 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
       }
 
       // Find the matching AgentCap
-      const agentCap = agentCaps.find((cap) => cap.agentId === agentId)
+      const agentCap = agentCaps.find((cap) => cap.agentId.toString() === agentId.toString())
       if (!agentCap) {
         const errorMsg = `You don't own the AgentCap for agent "${agentId}". Only the agent creator can fund it.`
         setError(errorMsg)

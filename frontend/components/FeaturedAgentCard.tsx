@@ -189,7 +189,7 @@ export const FeaturedAgentCard = ({
           {fromProfile && (
             <div className="flex gap-2">
               <button
-                onClick={() => openModal(agent.object_id)}
+                onClick={() => openModal(agent.object_id, agent.agent_id)}
                 className="btn btn-black w-1/2"
               >
                 Fund
