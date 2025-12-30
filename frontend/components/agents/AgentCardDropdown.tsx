@@ -8,7 +8,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { UpdatePromptModal, UpdateCostModal } from "./UpdateAgentModals";
+import { UpdatePromptModal } from "./UpdatePromptModal";
+import { UpdateCostModal } from "./UpdateCostModal";
 import { MIST_PER_SUI } from "@/constants";
 
 interface AgentDropdownProps {
@@ -16,7 +17,7 @@ interface AgentDropdownProps {
   isFeatured: boolean;
   agentId: string;
   agentObjectId: string;
-  openFeatureModal: (agentId: number) => void; 
+  openFeatureModal: (agentId: number) => void;
   currentPrompt?: string;
   currentCost?: number;
 }
