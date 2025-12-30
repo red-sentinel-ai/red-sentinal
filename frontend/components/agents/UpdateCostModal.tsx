@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useUpdateAgent } from "@/hooks/agents/useUpdateAgent";
 import { AgentUpdateDialog } from "./AgentUpdateDialog";
-import { MIST_PER_SUI } from "@/constants";
 
 interface UpdateCostModalProps {
   open: boolean;
@@ -18,7 +17,7 @@ export const UpdateCostModal = ({
   agentObjectId,
   currentCost = 0,
 }: UpdateCostModalProps) => {
-  const initialCost = currentCost ? currentCost / Number(MIST_PER_SUI) : 0;
+  const initialCost = currentCost ? currentCost : 0;
 
   const [cost, setCost] = useState(initialCost.toString());
   const { updateCost, isLoading } = useUpdateAgent();
