@@ -126,7 +126,11 @@ export const FeaturedAgentCard = ({
               isOwner={isOwner}
               isFeatured={agent.is_featured}
               agentId={agent.agent_id}
+              agentObjectId={agent.object_id}
+              currentPrompt={agent.system_prompt}
+              currentCost={agent.cost_per_message}
               openFeatureModal={openFeatureModal}
+              accumulatedFees={agent.accumulated_fees}
             />
           </div>
         </div>
