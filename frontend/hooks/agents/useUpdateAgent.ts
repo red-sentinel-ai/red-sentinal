@@ -14,17 +14,7 @@ export const useUpdateAgent = () => {
   const account = useCurrentAccount();
   const [isLoading, setIsLoading] = useState(false);
 
-  const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction({
-    execute: async ({ bytes, signature }) =>
-      await client.executeTransactionBlock({
-        transactionBlock: bytes,
-        signature,
-        options: {
-          showEffects: true,
-          showObjectChanges: true,
-        },
-      }),
-  });
+  const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction();
 
   const getAgentCap = useCallback(
     async (agentId: string) => {
@@ -99,7 +89,9 @@ export const useUpdateAgent = () => {
         });
 
         signAndExecuteTransaction(
-          { transaction: tx },
+          {
+            transaction: tx,
+          },
           {
             onSuccess: () => {
               toast.success("Agent prompt updated successfully!");
@@ -112,6 +104,7 @@ export const useUpdateAgent = () => {
           }
         );
       } catch (error: any) {
+        console.error(error);
         toast.error(error.message);
       } finally {
         setIsLoading(false);
@@ -153,7 +146,9 @@ export const useUpdateAgent = () => {
         });
 
         signAndExecuteTransaction(
-          { transaction: tx },
+          {
+            transaction: tx,
+          },
           {
             onSuccess: () => {
               toast.success("Agent attack fee updated successfully!");
@@ -166,6 +161,7 @@ export const useUpdateAgent = () => {
           }
         );
       } catch (error: any) {
+        console.error(error);
         toast.error(error.message);
       } finally {
         setIsLoading(false);
