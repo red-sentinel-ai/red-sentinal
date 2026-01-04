@@ -14,10 +14,7 @@ export function HeroSection() {
         className="absolute top-0 left-0 w-full h-full object-cover"
         aria-label="Mountain landscape background video"
       >
-        <source
-          src="/videos/coverVideo.mp4"
-          type="video/mp4"
-        />
+        <source src="/videos/coverVideo.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 
@@ -27,20 +24,15 @@ export function HeroSection() {
         </h1>
         <div className="mt-8 flex flex-col md:flex-row items-center md:items-end justify-between gap-10">
           <p className="max-w-[690px] text-black text-base font-medium md:text-[24px] mb-8 md:mb-32">
-            Deploy AI Sentinels. Defend models. Evolve intelligence. <br /> A living network where
-            every challenge sharpens the code.
+            Sui Sentinel is a decentralized AI Alignment and Security Platform. <br />
+            We transform AI safety testing from a static internal process into a dynamic,
+            adversarial game.
           </p>
           <div className="flex gap-6 shrink-0 w-auto">
-            <Link
-              href={SUI_SENTINEL_APP_URL}
-              target="_blank"
-            >
+            <Link href={SUI_SENTINEL_APP_URL} target="_blank">
               <button className="px-6 btn font-bold btn-white shadow-v1">Launch App</button>
             </Link>
-            <Link
-              href={SUI_SENTINEL_DOCS_URL}
-              target="_blank"
-            >
+            <Link href={SUI_SENTINEL_DOCS_URL} target="_blank">
               <button className="px-6 btn font-bold btn-outline-white backdrop-blur-md">
                 Docs
               </button>
