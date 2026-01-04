@@ -24,9 +24,9 @@ export function HeroSection() {
         </h1>
         <div className="mt-8 flex flex-col md:flex-row items-center md:items-end justify-between gap-10">
           <p className="max-w-[690px] text-black text-base font-medium md:text-[24px] mb-8 md:mb-32">
-            Sui Sentinel is a decentralized AI Alignment and Security Platform. <br />
-            We transform AI safety testing from a static internal process into a dynamic,
-            adversarial game.
+            Sui Sentinel is a decentralized AI safety platform. <br />
+            We transform AI safety and alignment testing from a static internal process into a
+            dynamic, adversarial game.
           </p>
           <div className="flex gap-6 shrink-0 w-auto">
             <Link href={SUI_SENTINEL_APP_URL} target="_blank">
