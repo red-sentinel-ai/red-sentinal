@@ -29,23 +29,23 @@ export const AnimationSection = () => {
         <div className="relative z-10 w-full text-left">
           <h2 className="text-[48px] leading-snug font-medium">
             Sui Sentinel lets you
-            <span className="text-[#C871FF]"> red-team, audit, and defend AI </span> models through
-            real-world attacks while earning SUI/USDC rewards for your mastery
+            <span className="text-[#C871FF]">
+              {' '}
+              stress-test AI systems through adversarial attacks
+            </span>
+            , prove robustness cryptographically, and earn SUI rewards for discovering
+            vulnerabilities.
           </h2>
           <p className="max-w-[984px] text-base md:text-2xl mt-8 mx-auto md:mx-0 text-[#5F5C5C]">
-            Built for AI builders, businesses, and prompt engineers shaping resilient intelligence.
+            Built for anyone integrating LLMs. From startups to enterprises, security researchers
+            discovering exploits, Web3 users earning through skills, and learners mastering prompt
+            engineering.
           </p>
           <div className="flex flex-row gap-6 mt-10 justify-start">
-            <Link
-              href={SUI_SENTINEL_APP_URL}
-              target="_blank"
-            >
+            <Link href={SUI_SENTINEL_APP_URL} target="_blank">
               <button className="btn btn-black px-6">Explore Platform</button>
             </Link>
-            <Link
-              href={SUI_SENTINEL_TELEGRAM_URL}
-              target="_blank"
-            >
+            <Link href={SUI_SENTINEL_TELEGRAM_URL} target="_blank">
               <button className="btn btn-outline px-6">Join Telegram</button>
             </Link>
           </div>

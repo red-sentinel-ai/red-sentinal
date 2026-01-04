@@ -28,17 +28,14 @@ export function Navbar() {
       }`}
     >
       <div className="text-center text-white h-11 flex items-center justify-center bg-linear-to-r from-black/15 to-[rgba(102,102,102,0)] p-2 text-xs md:text-base">
-        <h3 className="text-shadow-[0_4px_4px_rgba(0,0,0,0.25)] font-medium">
+        <h3 className="text-black font-medium">
           Sui Sentinel is live on Testnet. Mainnet launches after smart-contract audits.
         </h3>
       </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
         <div className="flex items-center justify-between h-16">
           <div className="relative z-50">
-            <Link
-              className="shrink-0 flex items-center gap-2"
-              href="/"
-            >
+            <Link className="shrink-0 flex items-center gap-2" href="/">
               <Image
                 src="/icons/logo_large_testnet.svg"
                 alt="shield"
