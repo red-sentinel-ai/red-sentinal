@@ -50,9 +50,9 @@ const Footer = () => {
               />
             </div>
             <p className="text-black leading-relaxed py-4 ">
-              Sui Sentinel is a gamified AI red-teaming and auditing platform built on Sui. Test,
-              defend, and harden AI models through real-world adversarial challenges. Every attack
-              and defense is verified on-chain, every action has real stakes
+              Sui Sentinel is a Decentralized AI safety platform built on Sui. Stress-test models,
+              find vulnerabilities, earn rewards. Every judgment cryptographically verified
+              on-chain.
             </p>
 
             <div className="flex flex-row justify-center gap-4 md:hidden my-4">
@@ -66,12 +66,7 @@ const Footer = () => {
                   aria-label={link.alt}
                 >
                   {link.isImage ? (
-                    <Image
-                      src={link.icon as string}
-                      alt={link.alt}
-                      width={20}
-                      height={20}
-                    />
+                    <Image src={link.icon as string} alt={link.alt} width={20} height={20} />
                   ) : (
                     <link.icon className="size-5 text-black" />
                   )}
@@ -100,10 +95,7 @@ const Footer = () => {
           <div className="w-full md:w-auto hidden md:block">
             <div className="flex flex-col gap-4">
               {socialLinks.map((link) => (
-                <div
-                  key={link.href}
-                  className="flex items-center justify-between gap-6"
-                >
+                <div key={link.href} className="flex items-center justify-between gap-6">
                   <Link
                     className="text-black font-medium whitespace-nowrap hover:underline"
                     href={link.href}
@@ -119,12 +111,7 @@ const Footer = () => {
                     aria-label={link.alt}
                   >
                     {link.isImage ? (
-                      <Image
-                        src={link.icon as string}
-                        alt={link.alt}
-                        width={20}
-                        height={20}
-                      />
+                      <Image src={link.icon as string} alt={link.alt} width={20} height={20} />
                     ) : (
                       <link.icon className="size-5 text-black" />
                     )}
