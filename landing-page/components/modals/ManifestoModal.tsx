@@ -412,8 +412,8 @@ export function ManifestoModal({ isOpen, onClose }: ManifestoModalProps) {
                               evaluations
                             </li>
                             <li>
-                              Attackers cannot influence judgment or see verdicts before they're
-                              finalized
+                              Attackers cannot influence judgment or see verdicts before
+                              they&apos;re finalized
                             </li>
                             <li>
                               Every judgment is cryptographically proven and independently
