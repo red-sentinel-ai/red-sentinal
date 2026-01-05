@@ -7,10 +7,7 @@ import Image from 'next/image'
 
 export function OfferingsSection() {
   return (
-    <section
-      id="offerings"
-      className="py-24 relative text-black"
-    >
+    <section id="offerings" className="py-24 relative text-black">
       <div className="vertical-line left-4"></div>
       <div className="vertical-line right-4"></div>
       <div className="relative z-10 max-w-7xl mx-auto md:px-4">
@@ -24,7 +21,7 @@ export function OfferingsSection() {
           <div className="badge-pink w-fit mb-6">• Offerings</div>
           <h2 className="text-2xl md:text-[48px] font-medium leading-tight">
             Whether you’re deploying your own Sentinel or testing one built for battle, every move
-            shapes the future of <span className="text-[#C871FF]">Sui Sentinel security.</span>
+            shapes the future of <span className="text-[#C871FF]">AI Alignment & Safety.</span>
           </h2>
         </motion.div>
         <motion.div
@@ -53,11 +50,7 @@ export function OfferingsSection() {
                 />
               </div>
             </div>
-            <Link
-              href={SUI_SENTINEL_APP_URL}
-              target="_blank"
-              className="mt-1"
-            >
+            <Link href={SUI_SENTINEL_APP_URL} target="_blank" className="mt-1">
               <button className="btn btn-outline px-8 mt-12 md:mt-0">Attack Now</button>
             </Link>
           </div>
@@ -66,8 +59,7 @@ export function OfferingsSection() {
             <div>
               <h3 className="text-xl md:text-[32px] font-medium mb-6">Deploy Your Sentinel</h3>
               <p className="text-base md:text-[20px] leading-relaxed text-[#939393]">
-                Launch your own AI model into the Sentinel network. Let the world attack it and earn
-                while it evolves.
+                Launch your own Sentinel. Let the world attack it and earn while it evolves.
               </p>
 
               <div className="min-h-0 md:min-h-[300px]">
@@ -81,11 +73,7 @@ export function OfferingsSection() {
               </div>
             </div>
             <div className="flex justify-start md:justify-end">
-              <Link
-                href={SUI_SENTINEL_APP_URL}
-                target="_blank"
-                className="mt-1"
-              >
+              <Link href={SUI_SENTINEL_APP_URL} target="_blank" className="mt-1">
                 <button className="btn btn-outline px-7">Deploy Now!</button>
               </Link>
             </div>
