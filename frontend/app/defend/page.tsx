@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { CameraIcon, ChevronLeft, Loader2, Info } from 'lucide-react'
+import { CameraIcon, ChevronLeft, Loader2 } from 'lucide-react'
 import { toast } from 'react-toastify'
 import posthog from 'posthog-js'
 import { Transaction } from '@mysten/sui/transactions'
@@ -106,7 +106,7 @@ const FormInput: React.FC<FormInputProps> = ({
   )
 }
 
-const DEFAULT_PROVIDER = 'openai'
+const DEFAULT_PROVIDER = 'anthropic'
 const DEFAULT_MODEL = PROVIDER_MODELS[DEFAULT_PROVIDER][0]
 
 export default function DefendPage() {
@@ -486,7 +486,7 @@ export default function DefendPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
           <FormInput
             label="Fee Per Message (SUI)"
             subLabel="You earn this fee whenever users interact with your Sentinel."
@@ -500,7 +500,7 @@ export default function DefendPage() {
             className="h-full"
           />
 
-          <FormInput
+          {/* <FormInput
             label="Reward Pool"
             rightElement={
               <div className="text-gray-400 cursor-pointer hover:text-gray-600">
@@ -514,7 +514,7 @@ export default function DefendPage() {
             type="number"
             placeholder=""
             className="h-full"
-          />
+          /> */}
         </div>
 
         <div className="flex flex-col gap-2">
