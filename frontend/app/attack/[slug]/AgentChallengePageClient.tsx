@@ -21,7 +21,7 @@ import ChatInterface from "@/components/agents/ChatInterface";
 import { AgentSidebar } from "@/components/agents/AgentSidebar";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { MobileAgentHeader } from "./MobileAgentHeader";
-import { Loader2 } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 
 export default function AgentChallengePage({ slug }: { slug: string }) {
   const account = useCurrentAccount();
@@ -30,6 +30,8 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   const { trackAttackSentinel } = useRewardsMissionTracker();
 
   const { data: agent, isLoading, error, refetch } = useAgentBySlug(slug);
+
+  const [isReadMoreOpen, setIsReadMoreOpen] = useState(false);
 
   const { consumePrompt } = useConsumePrompt({
     showToasts: true,
@@ -144,6 +146,28 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
     }
   };
 
+  const ReadMoreModal = () => (
+    <div className="absolute inset-0 flex flex-col animate-in fade-in duration-200 overflow-hidden">
+      <div className="flex justify-between py-6 md:py-8 shrink-0 items-center">
+        <h2 className="text-2xl font-medium">Instructions</h2>
+        <button onClick={() => setIsReadMoreOpen(false)} className="p-2">
+          <X size={24} />
+        </button>
+      </div>
+
+      <div>{agent.system_prompt || "No instructions available."}</div>
+
+      <div className="pt-8 pb-12 shrink-0">
+        <button
+          onClick={() => setIsReadMoreOpen(false)}
+          className="btn btn-black"
+        >
+          CLOSE
+        </button>
+      </div>
+    </div>
+  );
+
   if (isLoading) {
     return (
       <div
@@ -195,23 +219,32 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
             maxSize={40}
             className="bg-gray-50/50"
           >
-            <AgentSidebar agent={agent} agentEvents={agentEvents} />
+            <AgentSidebar
+              agent={agent}
+              agentEvents={agentEvents}
+              onReadMore={() => setIsReadMoreOpen(true)}
+            />
           </ResizablePanel>
           <ResizableHandle withHandle={true} />
           <ResizablePanel defaultSize={75}>
-            <div className="max-w-v1 mx-auto w-full h-full">
-              <ChatInterface
-                agent={agent}
-                agentEvents={agentEvents}
-                apiResponse={apiResponse}
-                onSendMessage={handleSendMessage}
-                isSubmitting={isSubmitting}
-                submitError={submitError}
-                refetchAgent={refetch}
-              />
+            <div className="max-w-v1 mx-auto w-full h-full relative">
+              {isReadMoreOpen ? (
+                <ReadMoreModal />
+              ) : (
+                <ChatInterface
+                  agent={agent}
+                  agentEvents={agentEvents}
+                  apiResponse={apiResponse}
+                  onSendMessage={handleSendMessage}
+                  isSubmitting={isSubmitting}
+                  submitError={submitError}
+                  refetchAgent={refetch}
+                />
+              )}
             </div>
           </ResizablePanel>
         </ResizablePanelGroup>
+
         {apiResponse && txnHash && (
           <AttackStatusModal
             apiResponse={apiResponse}
@@ -258,13 +291,22 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
               animate={{ x: "0%" }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="fixed top-0 left-0 bottom-0 w-[85%] max-w-sm z-50 shadow-2xl bg-gray-50"
+              className="fixed top-0 left-0 bottom-0 w-[85%] max-w-sm z-50 shadow-2xl bg-gray-50 overflow-y-auto"
             >
-              <AgentSidebar agent={agent} agentEvents={agentEvents} />
+              <AgentSidebar
+                agent={agent}
+                agentEvents={agentEvents}
+                onReadMore={() => {
+                  setIsSidebarOpen(false);
+                  setIsReadMoreOpen(true);
+                }}
+              />
             </motion.div>
           </>
         )}
       </AnimatePresence>
+
+      {isReadMoreOpen && <ReadMoreModal />}
 
       {apiResponse && txnHash && (
         <AttackStatusModal
