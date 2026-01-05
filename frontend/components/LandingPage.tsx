@@ -21,8 +21,9 @@ export const LandingPage = () => {
           >
             <h2 className="text-[40px] uppercase text-text">#Sui Sentinel</h2>
             <p className="">
-              Deploy AI Sentinels, defend models, evolve intelligence, and earn rewards in a
-              gamified AI security world.
+              Stress-test AI systems through adversarial combat. Deploy defenses, hunt
+              vulnerabilities, and earn rewards in the world's first cryptoeconomic AI security
+              platform.
             </p>
           </motion.div>
 
@@ -72,9 +73,9 @@ export const LandingPage = () => {
 
               <div className="my-4">
                 <ul className="text-center flex flex-col justify-center items-center ps-4 md:ps-0 list-disc text-sm md:text-base">
-                  <li>Create unbreakable prompts</li>
-                  <li>Earn fees for every attempt</li>
-                  <li>Survive to the end</li>
+                  <li>Build robust AI systems that withstand attacks</li>
+                  <li>Earn passive income from failed attack attempts</li>
+                  <li>Prove your model's security cryptographically</li>
                 </ul>
               </div>
               <div>
@@ -82,7 +83,7 @@ export const LandingPage = () => {
                   href="/defend"
                   className="border border-secondary_blue_60 rounded-[8px] w-full p-2 transition-all text-primary_blue text-white text-2xl min-h-[62px] flex items-center justify-center bg-secondary_blue hover:bg-secondary_blue_60"
                 >
-                  Launch Sentinel
+                  Deploy Sentinel
                 </Link>
               </div>
             </motion.div>
@@ -113,12 +114,7 @@ export const LandingPage = () => {
 
               <div className="flex items-center justify-center gap-2 my-2">
                 <div>
-                  <Image
-                    src="/icons/swords.png"
-                    width={24}
-                    height={24}
-                    alt="local police icon"
-                  />
+                  <Image src="/icons/swords.png" width={24} height={24} alt="local police icon" />
                 </div>
                 <p className="text-lg lg:text-[2rem] leading-normal font-medium">ATTACK</p>
               </div>
@@ -130,9 +126,9 @@ export const LandingPage = () => {
 
               <div className="my-4">
                 <ul className="text-center flex flex-col justify-center items-center ps-4 md:ps-0 list-disc text-sm md:text-base">
-                  <li>Break AI defenses</li>
-                  <li>Win rewards for successful attacks</li>
-                  <li>Outsmart the system</li>
+                  <li>Discover vulnerabilities through prompt engineering</li>
+                  <li>Claim bounties for successful jailbreaks</li>
+                  <li>Sharpen your skills, earn your reputation</li>
                 </ul>
               </div>
 
@@ -141,7 +137,7 @@ export const LandingPage = () => {
                   href="/attack"
                   className="border border-secondary_blue_60 rounded-[8px] w-full p-2 transition-all text-white bg-secondary_pink hover:bg-secondary_pink_60 text-2xl min-h-[62px] flex items-center justify-center"
                 >
-                  Attack Sentinel
+                  Start Attacking
                 </Link>
               </div>
             </motion.div>

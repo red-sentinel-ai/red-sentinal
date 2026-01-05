@@ -37,9 +37,9 @@ export const AnimationSection = () => {
             vulnerabilities.
           </h2>
           <p className="max-w-[984px] text-base md:text-2xl mt-8 mx-auto md:mx-0 text-[#5F5C5C]">
-            Built for anyone integrating LLMs. From startups to enterprises, security researchers
-            discovering exploits, Web3 users earning through skills, and learners mastering prompt
-            engineering.
+            Built for anyone integrating generative AI models. From startups to enterprises,
+            security researchers discovering exploits, Web3 users earning through skills, and
+            learners mastering prompt engineering.
           </p>
           <div className="flex flex-row gap-6 mt-10 justify-start">
             <Link href={SUI_SENTINEL_APP_URL} target="_blank">
