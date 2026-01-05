@@ -13,6 +13,7 @@ import {
   Loader2,
   X,
   CheckCircle,
+  ExternalLink,
 } from "lucide-react";
 import { formatAddress } from "@mysten/sui/utils";
 import { QRCodeSVG } from "qrcode.react";
@@ -46,16 +47,21 @@ import { Dialog } from "@/components/Dialog";
 interface AgentSidebarProps {
   agent: AgentDetails;
   agentEvents: AgentEvents;
+  onReadMore?: () => void;
 }
 
-export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
+export const AgentSidebar = ({
+  agent,
+  agentEvents,
+  onReadMore,
+}: AgentSidebarProps) => {
   const [activeSince, setActiveSince] = useState({
     days: 0,
     hours: 0,
     minutes: 0,
     seconds: 0,
   });
-  const [isExpanded, setIsExpanded] = useState(false);
+
   const [shouldTruncate, setShouldTruncate] = useState(false);
   const instructionsRef = useRef<HTMLParagraphElement>(null);
   const [pageUrl, setPageUrl] = useState("");
@@ -136,18 +142,18 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
       if (diff <= 0) {
         setTimeRemaining("Withdrawal Unlocked");
-        return null; // To stop the interval
+        return null;
       }
 
       const formatted = formatDuration(diff);
       setTimeRemaining(
         `${formatted.days}d ${formatted.hours}h ${formatted.minutes}m ${formatted.seconds}s`
       );
-      return true; // To keep interval running
+      return true;
     };
 
     if (!updateTimer()) {
-      return; // Stop if it's already unlocked
+      return;
     }
 
     const interval = setInterval(() => {
@@ -286,14 +292,14 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
         <div className="flex flex-col gap-6 py-4">
           <div className="flex flex-col gap-2">
-            <h3 className="text-[#5E5E5E]  font-medium uppercase">
+            <h3 className="text-[#5E5E5E] font-medium uppercase">
               Sentinel Object Id
             </h3>
             <Link
               href={`${EXPLORER_BASE_URL}/object/${agent.object_id}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block  hover:underline"
+              className="inline-block hover:underline"
               title={agent.object_id}
             >
               {formatAddress(agent.object_id)}
@@ -302,7 +308,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
           {isDrained ? (
             <div className="flex flex-col gap-2">
-              <h3 className="text-[#5E5E5E]  font-medium uppercase flex items-center gap-1.5">
+              <h3 className="text-[#5E5E5E] font-medium uppercase flex items-center gap-1.5">
                 Total Bounty Won
               </h3>
               <p className="inline-block text-2xl font-semibold">
@@ -312,7 +318,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           ) : (
             <div className="flex flex-col gap-2">
               <div className="flex justify-between items-center">
-                <h3 className="text-[#5E5E5E]  font-medium uppercase">
+                <h3 className="text-[#5E5E5E] font-medium uppercase">
                   Prize pool
                 </h3>
                 {!isLoadingChart &&
@@ -378,13 +384,13 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           )}
           {isDrained && winnerAddress && (
             <div className="flex flex-col gap-2">
-              <h3 className="text-[#5E5E5E]  font-medium uppercase flex items-center gap-1.5">
+              <h3 className="text-[#5E5E5E] font-medium uppercase flex items-center gap-1.5">
                 <User className="w-4 h-4" />
                 Winner
               </h3>
               <Link
                 href={`/u/${winnerAddress}`}
-                className="inline-block  hover:underline"
+                className="inline-block hover:underline"
                 title={winnerAddress}
               >
                 {formatAddress(winnerAddress)}
@@ -393,7 +399,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           )}
 
           <div className="flex flex-col gap-2">
-            <h3 className="text-[#5E5E5E]  font-medium uppercase">
+            <h3 className="text-[#5E5E5E] font-medium uppercase">
               Message Price
             </h3>
             <p className="inline-block text-2xl font-semibold">
@@ -457,24 +463,23 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
         <div className="z-20 mt-4 flex flex-col rounded-xl p-0 text-sm">
           <div className="flex flex-col gap-2">
-            <h3 className="text-[#5E5E5E]  font-medium uppercase">
+            <h3 className="text-[#5E5E5E] font-medium uppercase">
               Instructions
             </h3>
             <p
               ref={instructionsRef}
-              className={cn(
-                "text-xs font-medium blackspace-pre-wrap transition-all duration-300",
-                !isExpanded && shouldTruncate && "line-clamp-4"
-              )}
+              className="text-xs font-medium whitespace-pre-wrap transition-all duration-300 line-clamp-4"
             >
               {agent.system_prompt}
             </p>
-            {shouldTruncate && (
+
+            {shouldTruncate && onReadMore && (
               <button
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="text-sm text-blue-400 hover:underline self-start"
+                onClick={onReadMore}
+                className="flex items-center gap-2 self-end text-[#5E5E5E] font-bold text-xs mt-3 hover:opacity-80 transition-opacity uppercase tracking-wide w-fit"
               >
-                {isExpanded ? "See less" : "See more"}
+                <ExternalLink size={12} strokeWidth={2.5} />
+                Read All
               </button>
             )}
           </div>
@@ -484,7 +489,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           <div className="border-t border-t-black/20"></div>
           <div className="flex justify-between">
             <div className="flex flex-col gap-2">
-              <h3 className="text-[#5E5E5E]  font-medium uppercase">
+              <h3 className="text-[#5E5E5E] font-medium uppercase">
                 Total Participants
               </h3>
               <p className="inline-block text-2xl font-semibold text-center">
@@ -492,7 +497,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
               </p>
             </div>
             <div className="flex flex-col gap-2 text-center">
-              <h3 className="text-[#5E5E5E]  font-medium uppercase">
+              <h3 className="text-[#5E5E5E] font-medium uppercase">
                 Break Attempts
               </h3>
               <p className="inline-block text-2xl font-semibold">
