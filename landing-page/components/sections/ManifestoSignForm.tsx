@@ -3,14 +3,19 @@
 import { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, Mail } from "lucide-react";
+import { Loader2, Mail, AlertCircle, CheckCircle2 } from "lucide-react";
+
+type SubmissionStatus =
+  | "idle"
+  | "loading"
+  | "success"
+  | "email_failed"
+  | "error";
 
 export function ManifestoSignForm() {
   const [email, setEmail] = useState("");
   const [hasAgreed, setHasAgreed] = useState(false);
-  const [status, setStatus] = useState<
-    "idle" | "loading" | "success" | "error"
-  >("idle");
+  const [status, setStatus] = useState<SubmissionStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleSign = async () => {
@@ -29,12 +34,20 @@ export function ManifestoSignForm() {
         body: JSON.stringify({ email, hasAgreed }),
       });
 
-      if (!res.ok) throw new Error("Failed to sign manifesto.");
+      const data = await res.json();
 
-      setStatus("success");
+      if (res.ok) {
+        setStatus("success");
+      } else if (res.status === 424 && data.code === "EMAIL_FAILED") {
+        setStatus("email_failed");
+      } else {
+        throw new Error(data.error || "Failed to sign manifesto.");
+      }
     } catch (error) {
       setStatus("error");
-      setErrorMessage("Something went wrong. Please try again.");
+      setErrorMessage(
+        error instanceof Error ? error.message : "Something went wrong."
+      );
     }
   };
 
@@ -62,6 +75,34 @@ export function ManifestoSignForm() {
 
         <p className="text-sm text-[#939393]">
           Didn&apos;t receive it? Check your spam folder.
+        </p>
+      </motion.div>
+    );
+  }
+
+  if (status === "email_failed") {
+    return (
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="bg-white shadow-[0_4px_4px_rgba(0,0,0,0.25)] px-6 py-12 text-center"
+      >
+        <div className="flex justify-center mb-6">
+          <div className="size-16 bg-yellow-100 rounded-full flex items-center justify-center">
+            <CheckCircle2 className="size-8 text-yellow-600" />
+          </div>
+        </div>
+
+        <h2 className="text-2xl font-medium mb-4">Manifesto Signed</h2>
+        <p className="text-[#5F5C5C] text-lg max-w-[500px] mx-auto leading-relaxed mb-6">
+          You have successfully taken the oath. However, we{" "}
+          <span className="font-bold text-black">
+            could not send the confirmation email
+          </span>{" "}
+          at this moment.
+        </p>
+        <p className="text-sm text-[#939393]">
+          Don&apos;t worry, your signature has been recorded.
         </p>
       </motion.div>
     );
@@ -126,8 +167,9 @@ export function ManifestoSignForm() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="text-red-500 text-sm font-medium"
+              className="text-red-500 text-sm font-medium flex items-center gap-2"
             >
+              <AlertCircle size={14} />
               {errorMessage}
             </motion.p>
           )}

@@ -1206,16 +1206,19 @@ export type Database = {
         Row: {
           created_at: string
           email: string
+          email_sent_at: string | null
           id: number
         }
         Insert: {
           created_at?: string
           email: string
+          email_sent_at?: string | null
           id?: never
         }
         Update: {
           created_at?: string
           email?: string
+          email_sent_at?: string | null
           id?: never
         }
         Relationships: []
