@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { CameraIcon, ChevronLeft, Loader2, Info } from 'lucide-react'
+import { CameraIcon, ChevronLeft, Loader2 } from 'lucide-react'
 import { toast } from 'react-toastify'
 import posthog from 'posthog-js'
 import { Transaction } from '@mysten/sui/transactions'
