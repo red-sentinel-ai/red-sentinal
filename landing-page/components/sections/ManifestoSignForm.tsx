@@ -2,25 +2,20 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, Mail } from "lucide-react";
-import { motion } from "framer-motion";
 
 export function ManifestoSignForm() {
   const [email, setEmail] = useState("");
-  const [isChecked, setIsChecked] = useState(false);
+  const [hasAgreed, setHasAgreed] = useState(false);
   const [status, setStatus] = useState<
     "idle" | "loading" | "success" | "error"
   >("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = async () => {
-    if (!isChecked) {
-      setErrorMessage("Please accept the oath.");
-      return;
-    }
-
-    if (!email || !email.includes("@")) {
-      setErrorMessage("Please enter a valid email.");
+  const handleSign = async () => {
+    if (!email || !hasAgreed) {
+      setErrorMessage("Please enter your email and accept the oath.");
       return;
     }
 
@@ -28,17 +23,16 @@ export function ManifestoSignForm() {
     setErrorMessage("");
 
     try {
-      const res = await fetch("/api/manifesto", {
+      const res = await fetch("/api/manifesto/sign", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, hasAgreed }),
       });
 
-      if (!res.ok) throw new Error("Failed to submit");
+      if (!res.ok) throw new Error("Failed to sign manifesto.");
 
       setStatus("success");
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
       setStatus("error");
       setErrorMessage("Something went wrong. Please try again.");
     }
@@ -49,27 +43,26 @@ export function ManifestoSignForm() {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-white shadow-[0_4px_4px_rgba(0,0,0,0.25)] px-6 py-12 rounded-lg text-center flex flex-col items-center"
+        className="bg-white shadow-[0_4px_4px_rgba(0,0,0,0.25)] px-6 py-12 text-center"
       >
-        <div className="mb-6">
-          <Mail className="w-12 h-12 text-black" strokeWidth={2.5} />
+        <div className="flex justify-center mb-6">
+          <div className="size-16 bg-[#F445AB]/10 rounded-full flex items-center justify-center">
+            <Mail className="size-8 text-[#F445AB]" />
+          </div>
         </div>
 
-        <h2 className="text-3xl font-medium mb-4">Check Your Email</h2>
+        <h2 className="text-2xl font-medium mb-4">Check Your Email</h2>
 
-        <p className="text-lg text-gray-800 mb-8 max-w-md mx-auto">
-          We&apos;ve sent a magic link to{" "}
-          <span className="font-semibold">{email}</span>
+        <p className="text-[#5F5C5C] text-lg max-w-[500px] mx-auto leading-relaxed mb-6">
+          We&apos;ve sent a confirmation to{" "}
+          <span className="font-bold text-black">{email}</span>.
           <br />
-          Click the link in your email to complete your manifesto signature.
+          You have officially taken the oath.
         </p>
 
-        <div className="bg-[#EAEAEA] rounded-xl p-4 md:p-6 w-full max-w-xl mx-auto mb-8">
-          <p className="text-sm md:text-base text-gray-700 leading-relaxed">
-            Didn&apos;t receive it? Check your spam folder or wait a few
-            minutes. The email may take time to arrive.
-          </p>
-        </div>
+        <p className="text-sm text-[#939393]">
+          Didn&apos;t receive it? Check your spam folder.
+        </p>
       </motion.div>
     );
   }
@@ -82,20 +75,21 @@ export function ManifestoSignForm() {
 
       <div className="relative min-h-[53px] max-w-[734px] mx-auto my-6">
         <input
-          className="border border-[#000000] w-full shadow-[0_4px_4px_rgba(0,0,0,0.25)] rounded-xl p-4 pr-[220px] text-xl font-medium focus:outline-hidden focus:ring-2 focus:ring-black/50 transition-all"
-          placeholder="Your Email Address"
+          type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && isChecked && handleSubmit()}
           disabled={status === "loading"}
+          className="border border-[#000000] w-full shadow-[0_4px_4px_rgba(0,0,0,0.25)] rounded-xl p-4 pr-[220px] text-xl font-medium focus:outline-hidden focus:ring-1 focus:ring-black placeholder:text-gray-400"
+          placeholder="Your Email Address"
         />
+
         <button
-          onClick={handleSubmit}
-          disabled={status === "loading" || !isChecked}
-          className="btn btn-black focus-visible:border-black text-[18px] font-medium rounded-xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] min-h-[45px]! min-w-[207px]! flex items-center justify-center gap-1 absolute right-1 top-1/2 -translate-y-1/2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          onClick={handleSign}
+          disabled={status === "loading" || !hasAgreed || !email}
+          className="btn btn-black focus-visible:border-black text-[18px] font-medium rounded-xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] min-h-[45px]! min-w-[207px]! flex items-center justify-center gap-2 absolute right-1 top-1/2 -translate-y-1/2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
         >
           {status === "loading" ? (
-            <Loader2 className="animate-spin w-6 h-6" />
+            <Loader2 className="animate-spin size-5 text-white" />
           ) : (
             <>
               <Image
@@ -111,22 +105,33 @@ export function ManifestoSignForm() {
       </div>
 
       <div className="flex flex-col items-center gap-2">
-        <label className="flex items-center justify-center gap-2 cursor-pointer select-none">
+        <div
+          className="flex items-center justify-center gap-2 cursor-pointer"
+          onClick={() => setHasAgreed(!hasAgreed)}
+        >
           <input
             type="checkbox"
-            className="w-4 h-4 accent-black cursor-pointer"
-            checked={isChecked}
-            onChange={(e) => setIsChecked(e.target.checked)}
+            checked={hasAgreed}
+            onChange={(e) => setHasAgreed(e.target.checked)}
+            className="size-4 accent-black cursor-pointer"
           />
-          <span className="cursor-pointer">
+          <p className="select-none text-sm md:text-base">
             I understand this is a visible, irreversible Sentinel oath.
-          </span>
-        </label>
-        {errorMessage && (
-          <p className="text-red-500 text-sm font-medium animate-pulse">
-            {errorMessage}
           </p>
-        )}
+        </div>
+
+        <AnimatePresence>
+          {errorMessage && (
+            <motion.p
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="text-red-500 text-sm font-medium"
+            >
+              {errorMessage}
+            </motion.p>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
