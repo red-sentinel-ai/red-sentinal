@@ -22,7 +22,7 @@ export const LandingPage = () => {
             <h2 className="text-[40px] uppercase text-text">#Sui Sentinel</h2>
             <p className="">
               Stress-test AI systems through adversarial combat. Deploy defenses, hunt
-              vulnerabilities, and earn rewards in the world's first cryptoeconomic AI security
+              vulnerabilities, and earn rewards in the world&apos;s first cryptoeconomic AI security
               platform.
             </p>
           </motion.div>
@@ -75,7 +75,7 @@ export const LandingPage = () => {
                 <ul className="text-center flex flex-col justify-center items-center ps-4 md:ps-0 list-disc text-sm md:text-base">
                   <li>Build robust AI systems that withstand attacks</li>
                   <li>Earn passive income from failed attack attempts</li>
-                  <li>Prove your model's security cryptographically</li>
+                  <li>Prove your model&apos;s security cryptographically</li>
                 </ul>
               </div>
               <div>
