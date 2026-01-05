@@ -146,6 +146,36 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
     }
   };
 
+  const ReadMoreModal = () => (
+    <div className="absolute inset-0 flex flex-col animate-in fade-in duration-200 overflow-hidden">
+      <div className="flex justify-end p-6 md:p-8 shrink-0">
+        <button onClick={() => setIsReadMoreOpen(false)} className="p-2">
+          <X size={32} />
+        </button>
+      </div>
+
+      <div className="flex-1 overflow-y-auto px-6 md:px-20 py-4">
+        <div className="max-w-3xl mx-auto">
+          <h1 className="text-3xl md:text-4xl font-bold mb-8">
+            {agent.agent_name}
+          </h1>
+          <div className="text-gray-300 text-lg md:text-xl leading-relaxed whitespace-pre-wrap font-sans">
+            {agent.system_prompt || "No instructions available."}
+          </div>
+        </div>
+      </div>
+
+      <div className="p-8 flex justify-center pb-12 shrink-0">
+        <button
+          onClick={() => setIsReadMoreOpen(false)}
+          className="px-10 py-3 border border-white/20 rounded-full hover:bg-white/10 transition-all font-bold tracking-wider text-sm"
+        >
+          CLOSE
+        </button>
+      </div>
+    </div>
+  );
+
   if (isLoading) {
     return (
       <div
@@ -207,36 +237,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
           <ResizablePanel defaultSize={75}>
             <div className="max-w-v1 mx-auto w-full h-full relative">
               {isReadMoreOpen ? (
-                <div className="absolute inset-0 flex flex-col animate-in fade-in duration-200 overflow-hidden">
-                  <div className="flex justify-end p-6 md:p-8 shrink-0">
-                    <button
-                      onClick={() => setIsReadMoreOpen(false)}
-                      className="p-2"
-                    >
-                      <X size={32} />
-                    </button>
-                  </div>
-
-                  <div className="flex-1 overflow-y-auto px-6 md:px-20 py-4">
-                    <div className="max-w-3xl mx-auto">
-                      <h1 className="text-3xl md:text-4xl font-bold mb-8">
-                        {agent.agent_name}
-                      </h1>
-                      <div className="text-gray-300 text-lg md:text-xl leading-relaxed whitespace-pre-wrap font-sans">
-                        {agent.system_prompt || "No instructions available."}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="p-8 flex justify-center pb-12 shrink-0">
-                    <button
-                      onClick={() => setIsReadMoreOpen(false)}
-                      className="px-10 py-3 border border-white/20 rounded-full hover:bg-white/10 transition-all font-bold tracking-wider text-sm"
-                    >
-                      CLOSE
-                    </button>
-                  </div>
-                </div>
+                <ReadMoreModal />
               ) : (
                 <ChatInterface
                   agent={agent}
@@ -251,6 +252,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
             </div>
           </ResizablePanel>
         </ResizablePanelGroup>
+
         {apiResponse && txnHash && (
           <AttackStatusModal
             apiResponse={apiResponse}
@@ -312,36 +314,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
         )}
       </AnimatePresence>
 
-      {isReadMoreOpen && (
-        <div className="absolute inset-0 z-[9999] bg-[#0a0a0a] flex flex-col animate-in fade-in duration-200 overflow-hidden">
-          <div className="flex justify-end p-6 md:p-8 shrink-0">
-            <button
-              onClick={() => setIsReadMoreOpen(false)}
-              className="text-white/60 hover:text-white transition-colors p-2"
-            >
-              <X size={32} />
-            </button>
-          </div>
-          <div className="flex-1 overflow-y-auto px-6 md:px-20 py-4">
-            <div className="max-w-3xl mx-auto">
-              <h1 className="text-3xl md:text-4xl font-bold text-white mb-8">
-                {agent.agent_name}
-              </h1>
-              <div className="text-gray-300 text-lg md:text-xl leading-relaxed whitespace-pre-wrap font-sans">
-                {agent.system_prompt || "No instructions available."}
-              </div>
-            </div>
-          </div>
-          <div className="p-8 flex justify-center pb-12 shrink-0">
-            <button
-              onClick={() => setIsReadMoreOpen(false)}
-              className="px-10 py-3 text-white border border-white/20 rounded-full hover:bg-white/10 transition-all font-bold tracking-wider text-sm"
-            >
-              CLOSE
-            </button>
-          </div>
-        </div>
-      )}
+      {isReadMoreOpen && <ReadMoreModal />}
 
       {apiResponse && txnHash && (
         <AttackStatusModal
