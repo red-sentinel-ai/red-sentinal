@@ -699,6 +699,54 @@ export type Database = {
           },
         ]
       }
+      rh_bridge_transactions: {
+        Row: {
+          amount: string
+          claim_secret: string | null
+          created_at: string
+          id: number
+          is_private: boolean | null
+          l1_tx_hash: string | null
+          l2_tx_hash: string | null
+          message_leaf_index: string | null
+          recipient_address: string
+          status: Database["public"]["Enums"]["bridge_status"] | null
+          token_symbol: string
+          updated_at: string
+          user_address: string
+        }
+        Insert: {
+          amount: string
+          claim_secret?: string | null
+          created_at?: string
+          id?: number
+          is_private?: boolean | null
+          l1_tx_hash?: string | null
+          l2_tx_hash?: string | null
+          message_leaf_index?: string | null
+          recipient_address: string
+          status?: Database["public"]["Enums"]["bridge_status"] | null
+          token_symbol: string
+          updated_at?: string
+          user_address: string
+        }
+        Update: {
+          amount?: string
+          claim_secret?: string | null
+          created_at?: string
+          id?: number
+          is_private?: boolean | null
+          l1_tx_hash?: string | null
+          l2_tx_hash?: string | null
+          message_leaf_index?: string | null
+          recipient_address?: string
+          status?: Database["public"]["Enums"]["bridge_status"] | null
+          token_symbol?: string
+          updated_at?: string
+          user_address?: string
+        }
+        Relationships: []
+      }
       rh_feature_requests: {
         Row: {
           collection_id: string
@@ -875,12 +923,14 @@ export type Database = {
         Row: {
           avatar_url: string | null
           banner_url: string | null
+          citizenship_country: string | null
           created_at: string | null
           current_streak: number | null
           display_name: string | null
           email: string | null
           id: string
           is_public: boolean | null
+          is_verified_human: boolean | null
           last_activity_date: string | null
           lifetime_points: number | null
           longest_streak: number | null
@@ -888,17 +938,21 @@ export type Database = {
           rewards_updated_at: string | null
           total_points: number | null
           username: string | null
+          verification_data: Json | null
           wallet_addresses: string[] | null
+          zk_passport_id: string | null
         }
         Insert: {
           avatar_url?: string | null
           banner_url?: string | null
+          citizenship_country?: string | null
           created_at?: string | null
           current_streak?: number | null
           display_name?: string | null
           email?: string | null
           id?: string
           is_public?: boolean | null
+          is_verified_human?: boolean | null
           last_activity_date?: string | null
           lifetime_points?: number | null
           longest_streak?: number | null
@@ -906,17 +960,21 @@ export type Database = {
           rewards_updated_at?: string | null
           total_points?: number | null
           username?: string | null
+          verification_data?: Json | null
           wallet_addresses?: string[] | null
+          zk_passport_id?: string | null
         }
         Update: {
           avatar_url?: string | null
           banner_url?: string | null
+          citizenship_country?: string | null
           created_at?: string | null
           current_streak?: number | null
           display_name?: string | null
           email?: string | null
           id?: string
           is_public?: boolean | null
+          is_verified_human?: boolean | null
           last_activity_date?: string | null
           lifetime_points?: number | null
           longest_streak?: number | null
@@ -924,7 +982,9 @@ export type Database = {
           rewards_updated_at?: string | null
           total_points?: number | null
           username?: string | null
+          verification_data?: Json | null
           wallet_addresses?: string[] | null
+          zk_passport_id?: string | null
         }
         Relationships: []
       }
@@ -1067,6 +1127,7 @@ export type Database = {
           email_id: string
           id: string
           name: string
+          status: Database["public"]["Enums"]["status"] | null
           telegram_username: string | null
           twitter_username: string | null
           wallet_address: string
@@ -1078,6 +1139,7 @@ export type Database = {
           email_id: string
           id?: string
           name: string
+          status?: Database["public"]["Enums"]["status"] | null
           telegram_username?: string | null
           twitter_username?: string | null
           wallet_address: string
@@ -1089,6 +1151,7 @@ export type Database = {
           email_id?: string
           id?: string
           name?: string
+          status?: Database["public"]["Enums"]["status"] | null
           telegram_username?: string | null
           twitter_username?: string | null
           wallet_address?: string
@@ -1143,17 +1206,23 @@ export type Database = {
         Row: {
           created_at: string
           email: string
+          email_sent_at: string | null
           id: number
+          signed_at: string | null
         }
         Insert: {
           created_at?: string
           email: string
+          email_sent_at?: string | null
           id?: never
+          signed_at?: string | null
         }
         Update: {
           created_at?: string
           email?: string
+          email_sent_at?: string | null
           id?: never
+          signed_at?: string | null
         }
         Relationships: []
       }
@@ -1595,6 +1664,7 @@ export type Database = {
       }
     }
     Enums: {
+      bridge_status: "DEPOSITED" | "CLAIMED" | "FAILED"
       nft_category:
         | "FOUNDER"
         | "DESIGNER"
@@ -1603,6 +1673,7 @@ export type Database = {
         | "TOTEM"
         | "YOUR_NEW_CATEGORY"
         | "ZKON"
+      status: "pending" | "approved" | "denied"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1730,6 +1801,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      bridge_status: ["DEPOSITED", "CLAIMED", "FAILED"],
       nft_category: [
         "FOUNDER",
         "DESIGNER",
@@ -1739,6 +1811,7 @@ export const Constants = {
         "YOUR_NEW_CATEGORY",
         "ZKON",
       ],
+      status: ["pending", "approved", "denied"],
     },
   },
 } as const

@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
   let query = supabaseServiceClient
     .from('ss_agents')
     .select(
-      'agent_id, agent_name, agent_profile, object_id, owner, is_featured, agent_path, created_at'
+      'agent_id, agent_name, agent_profile, object_id, owner, is_featured, agent_path, created_at, model_provider, model_name'
     )
 
   if (objectId) {

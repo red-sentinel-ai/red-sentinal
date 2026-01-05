@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
-import { useState, useEffect, useRef } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
+import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import Image from "next/image";
 import {
   ChevronLeft,
   Info,
@@ -13,11 +13,12 @@ import {
   Loader2,
   X,
   CheckCircle,
-} from 'lucide-react'
-import { formatAddress } from '@mysten/sui/utils'
-import { QRCodeSVG } from 'qrcode.react'
-import { toast } from 'react-toastify'
-import { useCurrentAccount } from '@mysten/dapp-kit'
+  ExternalLink,
+} from "lucide-react";
+import { formatAddress } from "@mysten/sui/utils";
+import { QRCodeSVG } from "qrcode.react";
+import { toast } from "react-toastify";
+import { useCurrentAccount } from "@mysten/dapp-kit";
 import {
   DEFAULT_PROFILE_URL,
   MIST_PER_SUI,
@@ -25,192 +26,207 @@ import {
   SLUSH_BASE_URL,
   WITHDRAWAL_LOCK_MS,
   SUI_SENTINEL_X_USERNAME,
-} from '@/constants'
-import { type AgentDetails } from '@/hooks/agents/useAllAgents'
-import { type AgentEvents } from '@/hooks/useAgentEvents'
-import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
-import { DefenderProfile } from './DefenderProfile'
-import { formatDuration, cn } from '@/lib/utils'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, Button } from '@/components/ui'
-import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
-import { SparklineChart } from '../ui/common/SparklineChart'
-import { useAgentPrizePoolHistory } from '@/hooks/agents/useAgentPrizePoolHistory'
-import { Dialog } from '@/components/Dialog'
+} from "@/constants";
+import { type AgentDetails } from "@/hooks/agents/useAllAgents";
+import { type AgentEvents } from "@/hooks/useAgentEvents";
+import { useUserProfiles } from "@/hooks/profile/useUserProfiles";
+import { DefenderProfile } from "./DefenderProfile";
+import { formatDuration, cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+  Button,
+} from "@/components/ui";
+import { PrizePoolChartModal } from "@/components/charts/PrizePoolChartModal";
+import { SparklineChart } from "../ui/common/SparklineChart";
+import { useAgentPrizePoolHistory } from "@/hooks/agents/useAgentPrizePoolHistory";
+import { Dialog } from "@/components/Dialog";
 
 interface AgentSidebarProps {
-  agent: AgentDetails
-  agentEvents: AgentEvents
+  agent: AgentDetails;
+  agentEvents: AgentEvents;
+  onReadMore?: () => void;
 }
 
-export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
+export const AgentSidebar = ({
+  agent,
+  agentEvents,
+  onReadMore,
+}: AgentSidebarProps) => {
   const [activeSince, setActiveSince] = useState({
     days: 0,
     hours: 0,
     minutes: 0,
     seconds: 0,
-  })
-  const [isExpanded, setIsExpanded] = useState(false)
-  const [shouldTruncate, setShouldTruncate] = useState(false)
-  const instructionsRef = useRef<HTMLParagraphElement>(null)
-  const [pageUrl, setPageUrl] = useState('')
-  const [deepLinkUrl, setDeepLinkUrl] = useState('')
-  const [timeRemaining, setTimeRemaining] = useState<string | null>(null)
-  const [isChartModalOpen, setIsChartModalOpen] = useState(false)
+  });
 
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false)
-  const [tweetLink, setTweetLink] = useState('')
-  const [isVerifying, setIsVerifying] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [shouldTruncate, setShouldTruncate] = useState(false);
+  const instructionsRef = useRef<HTMLParagraphElement>(null);
+  const [pageUrl, setPageUrl] = useState("");
+  const [deepLinkUrl, setDeepLinkUrl] = useState("");
+  const [timeRemaining, setTimeRemaining] = useState<string | null>(null);
+  const [isChartModalOpen, setIsChartModalOpen] = useState(false);
 
-  const account = useCurrentAccount()
-  const isOwner = account?.address === agent.owner
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [tweetLink, setTweetLink] = useState("");
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const { data: prizePoolData, isLoading: isLoadingChart } = useAgentPrizePoolHistory(
-    agent.agent_id
-  )
+  const account = useCurrentAccount();
+  const isOwner = account?.address === agent.owner;
 
-  const { data: userProfilesMap, isLoading: isLoadingProfile } = useUserProfiles([agent.owner])
-  const defenderProfile = userProfilesMap?.[agent.owner]
+  const { data: prizePoolData, isLoading: isLoadingChart } =
+    useAgentPrizePoolHistory(agent.agent_id);
+
+  const { data: userProfilesMap, isLoading: isLoadingProfile } =
+    useUserProfiles([agent.owner]);
+  const defenderProfile = userProfilesMap?.[agent.owner];
 
   useEffect(() => {
-    const currentUrl = window.location.href
-    setPageUrl(currentUrl)
+    const currentUrl = window.location.href;
+    setPageUrl(currentUrl);
 
-    const encodedUrl = encodeURIComponent(currentUrl)
-    setDeepLinkUrl(SLUSH_BASE_URL + encodedUrl)
-  }, [])
+    const encodedUrl = encodeURIComponent(currentUrl);
+    setDeepLinkUrl(SLUSH_BASE_URL + encodedUrl);
+  }, []);
 
-  const isDrained = agentEvents.agentDefeated.length > 0
-  const bountyWonEvent = isDrained ? agentEvents.agentDefeated[0] : null
+  const isDrained = agentEvents.agentDefeated.length > 0;
+  const bountyWonEvent = isDrained ? agentEvents.agentDefeated[0] : null;
   const bountyWonAmount = bountyWonEvent
     ? (Number(bountyWonEvent.parsedJson.amount_won) / MIST_PER_SUI).toFixed(2)
-    : '0.00'
-  const winnerAddress = bountyWonEvent ? bountyWonEvent.parsedJson.winner : null
+    : "0.00";
+  const winnerAddress = bountyWonEvent
+    ? bountyWonEvent.parsedJson.winner
+    : null;
 
   useEffect(() => {
-    if (!agent.created_at || isDrained) return
+    if (!agent.created_at || isDrained) return;
 
-    const createdTime = new Date(agent.created_at).getTime()
+    const createdTime = new Date(agent.created_at).getTime();
 
     const updateTimer = () => {
-      const now = Date.now()
-      const diff = now - createdTime
-      setActiveSince(formatDuration(diff))
-    }
+      const now = Date.now();
+      const diff = now - createdTime;
+      setActiveSince(formatDuration(diff));
+    };
 
-    updateTimer()
-    const interval = setInterval(updateTimer, 1000)
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
 
-    return () => clearInterval(interval)
-  }, [agent.created_at, isDrained])
+    return () => clearInterval(interval);
+  }, [agent.created_at, isDrained]);
 
   useEffect(() => {
     if (isDrained) {
-      setTimeRemaining('Funds Withdrawn')
-      return
+      setTimeRemaining("Funds Withdrawn");
+      return;
     }
     if (!isOwner) {
-      setTimeRemaining(null)
-      return
+      setTimeRemaining(null);
+      return;
     }
 
-    const lastFunded = Number(agent.last_funded_timestamp)
+    const lastFunded = Number(agent.last_funded_timestamp);
     if (lastFunded === 0) {
-      setTimeRemaining('Withdrawal Unlocked')
-      return
+      setTimeRemaining("Withdrawal Unlocked");
+      return;
     }
 
-    const unlockTimestamp = lastFunded + WITHDRAWAL_LOCK_MS
+    const unlockTimestamp = lastFunded + WITHDRAWAL_LOCK_MS;
 
     const updateTimer = () => {
-      const now = Date.now()
-      const diff = unlockTimestamp - now
+      const now = Date.now();
+      const diff = unlockTimestamp - now;
 
       if (diff <= 0) {
-        setTimeRemaining('Withdrawal Unlocked')
-        return null // To stop the interval
+        setTimeRemaining("Withdrawal Unlocked");
+        return null;
       }
 
-      const formatted = formatDuration(diff)
+      const formatted = formatDuration(diff);
       setTimeRemaining(
         `${formatted.days}d ${formatted.hours}h ${formatted.minutes}m ${formatted.seconds}s`
-      )
-      return true // To keep interval running
-    }
+      );
+      return true;
+    };
 
     if (!updateTimer()) {
-      return // Stop if it's already unlocked
+      return;
     }
 
     const interval = setInterval(() => {
       if (!updateTimer()) {
-        clearInterval(interval)
+        clearInterval(interval);
       }
-    }, 1000)
+    }, 1000);
 
-    return () => clearInterval(interval)
-  }, [agent.last_funded_timestamp, isDrained, isOwner])
+    return () => clearInterval(interval);
+  }, [agent.last_funded_timestamp, isDrained, isOwner]);
 
   useEffect(() => {
     if (instructionsRef.current) {
-      const lineHeight = parseFloat(getComputedStyle(instructionsRef.current).lineHeight)
-      const maxHeightForFourLines = lineHeight * 4
+      const lineHeight = parseFloat(
+        getComputedStyle(instructionsRef.current).lineHeight
+      );
+      const maxHeightForFourLines = lineHeight * 4;
       if (instructionsRef.current.scrollHeight > maxHeightForFourLines) {
-        setShouldTruncate(true)
+        setShouldTruncate(true);
       } else {
-        setShouldTruncate(false)
+        setShouldTruncate(false);
       }
     }
-  }, [agent.system_prompt])
+  }, [agent.system_prompt]);
 
-  const breakAttempts = agentEvents.promptConsumed.length
+  const breakAttempts = agentEvents.promptConsumed.length;
   const totalParticipants = new Set(
     agentEvents.promptConsumed.map((event) => event.parsedJson.sender)
-  ).size
+  ).size;
 
   const handleCopyLink = () => {
     if (pageUrl) {
-      navigator.clipboard.writeText(pageUrl)
-      toast.success('Link copied to clipboard!')
+      navigator.clipboard.writeText(pageUrl);
+      toast.success("Link copied to clipboard!");
     }
-  }
+  };
 
   const handleShareClick = () => {
-    const text = `I'm challenging ${agent.agent_name} on @${SUI_SENTINEL_X_USERNAME}! 🛡️\n\nThink you can break this AI agent and win the prize pool?\n\nTry it here:`
-    const url = pageUrl || window.location.href
-    const hashtags = 'SuiSentinel,AI,Web3,Sui'
+    const text = `I'm challenging ${agent.agent_name} on @${SUI_SENTINEL_X_USERNAME}! 🛡️\n\nThink you can break this AI agent and win the prize pool?\n\nTry it here:`;
+    const url = pageUrl || window.location.href;
+    const hashtags = "SuiSentinel,AI,Web3,Sui";
 
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
       text
-    )}&url=${encodeURIComponent(url)}&hashtags=${hashtags}`
+    )}&url=${encodeURIComponent(url)}&hashtags=${hashtags}`;
 
-    window.open(twitterUrl, '_blank', 'noopener,noreferrer')
-  }
+    window.open(twitterUrl, "_blank", "noopener,noreferrer");
+  };
 
   const handleCloseShareModal = () => {
-    setIsShareModalOpen(false)
-    setIsSubmitted(false)
-    setTweetLink('')
-  }
+    setIsShareModalOpen(false);
+    setIsSubmitted(false);
+    setTweetLink("");
+  };
 
   const handleVerifyTweet = async () => {
     if (!tweetLink.trim()) {
-      toast.error('Please paste your tweet link first')
-      return
+      toast.error("Please paste your tweet link first");
+      return;
     }
 
-    if (!tweetLink.includes('twitter.com') && !tweetLink.includes('x.com')) {
-      toast.error('Please enter a valid X (Twitter) URL')
-      return
+    if (!tweetLink.includes("twitter.com") && !tweetLink.includes("x.com")) {
+      toast.error("Please enter a valid X (Twitter) URL");
+      return;
     }
 
-    setIsVerifying(true)
+    setIsVerifying(true);
 
     try {
-      const response = await fetch('/api/rewards/verify-tweet', {
-        method: 'POST',
+      const response = await fetch("/api/rewards/verify-tweet", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           wallet_address: account?.address,
@@ -218,23 +234,23 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           agent_name: agent.agent_name,
           agent_id: agent.agent_id,
         }),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Verification request failed')
+        throw new Error(data.error || "Verification request failed");
       }
 
-      setIsSubmitted(true)
-      setTweetLink('')
+      setIsSubmitted(true);
+      setTweetLink("");
     } catch (error) {
-      console.error('Submission error:', error)
-      toast.error('Failed to submit tweet for verification')
+      console.error("Submission error:", error);
+      toast.error("Failed to submit tweet for verification");
     } finally {
-      setIsVerifying(false)
+      setIsVerifying(false);
     }
-  }
+  };
 
   return (
     <>
@@ -276,48 +292,87 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
         <div className="flex flex-col gap-6 py-4">
           <div className="flex flex-col gap-2">
-            <h3 className="text-[#5E5E5E]  font-medium uppercase">Sentinel Object Id</h3>
+            <h3 className="text-[#5E5E5E] font-medium uppercase">
+              Sentinel Object Id
+            </h3>
             <Link
               href={`${EXPLORER_BASE_URL}/object/${agent.object_id}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block  hover:underline"
+              className="inline-block hover:underline"
               title={agent.object_id}
             >
               {formatAddress(agent.object_id)}
             </Link>
           </div>
 
+
+          {(agent.model_provider || agent.model_name) && (
+            <div className="flex justify-between gap-2">
+              {agent.model_provider && (
+                <div className="flex flex-col gap-2">
+                  <h3 className="text-[#5E5E5E] font-medium uppercase">
+                    LLM Provider
+                  </h3>
+                  <p className="text-base font-semibold capitalize">
+                    {agent.model_provider}
+                  </p>
+                </div>
+              )}
+              
+              {agent.model_name && (
+                <div className={`flex flex-col gap-2 ${agent.model_provider ? 'text-right items-end' : ''}`}>
+                  <h3 className="text-[#5E5E5E] font-medium uppercase">
+                    Model
+                  </h3>
+                  <p className="text-base font-semibold max-w-[150px] truncate" title={agent.model_name}>
+                    {agent.model_name}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
           {isDrained ? (
             <div className="flex flex-col gap-2">
-              <h3 className="text-[#5E5E5E]  font-medium uppercase flex items-center gap-1.5">
+              <h3 className="text-[#5E5E5E] font-medium uppercase flex items-center gap-1.5">
                 Total Bounty Won
               </h3>
-              <p className="inline-block text-2xl font-semibold">{bountyWonAmount} SUI</p>
+              <p className="inline-block text-2xl font-semibold">
+                {bountyWonAmount} SUI
+              </p>
             </div>
           ) : (
             <div className="flex flex-col gap-2">
               <div className="flex justify-between items-center">
-                <h3 className="text-[#5E5E5E]  font-medium uppercase">Prize pool</h3>
-                {!isLoadingChart && prizePoolData && prizePoolData.history.length > 0 && (
-                  <div
-                    className={cn(
-                      'flex items-center gap-1 text-xs font-medium',
-                      prizePoolData.change7d.percentage >= 0 ? 'text-green-500' : 'text-red-500'
-                    )}
-                  >
-                    {prizePoolData.change7d.percentage >= 0 ? (
-                      <TrendingUp className="w-3 h-3" />
-                    ) : (
-                      <TrendingDown className="w-3 h-3" />
-                    )}
-                    <span>
-                      {isFinite(prizePoolData.change7d.percentage)
-                        ? `${prizePoolData.change7d.percentage.toFixed(1)}% (7d)`
-                        : 'New'}
-                    </span>
-                  </div>
-                )}
+                <h3 className="text-[#5E5E5E] font-medium uppercase">
+                  Prize pool
+                </h3>
+                {!isLoadingChart &&
+                  prizePoolData &&
+                  prizePoolData.history.length > 0 && (
+                    <div
+                      className={cn(
+                        "flex items-center gap-1 text-xs font-medium",
+                        prizePoolData.change7d.percentage >= 0
+                          ? "text-green-500"
+                          : "text-red-500"
+                      )}
+                    >
+                      {prizePoolData.change7d.percentage >= 0 ? (
+                        <TrendingUp className="w-3 h-3" />
+                      ) : (
+                        <TrendingDown className="w-3 h-3" />
+                      )}
+                      <span>
+                        {isFinite(prizePoolData.change7d.percentage)
+                          ? `${prizePoolData.change7d.percentage.toFixed(
+                              1
+                            )}% (7d)`
+                          : "New"}
+                      </span>
+                    </div>
+                  )}
               </div>
               <div className="flex items-end justify-between gap-4">
                 <p className="inline-block text-2xl font-semibold">
@@ -329,35 +384,40 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
                   </div>
                 ) : (
                   <div>
-                    <SparklineChart data={prizePoolData?.history.map((p) => p.value) || []} />
+                    <SparklineChart
+                      data={prizePoolData?.history.map((p) => p.value) || []}
+                    />
                   </div>
                 )}
               </div>
-              {!isLoadingChart && prizePoolData && prizePoolData.history.length > 0 && (
-                <Button
-                  onClick={() => setIsChartModalOpen(true)}
-                  className="w-full bg-transparent border border-[#558EB4]/50 text-[#558EB4] hover:bg-[#558EB4]/20 hover:text-black transition-colors duration-300 font-semibold text-sm mt-2"
-                  size="sm"
-                >
-                  See Growth Chart
-                </Button>
-              )}
-              {!isLoadingChart && (!prizePoolData || prizePoolData.history.length === 0) && (
-                <p className="text-xs text-gray-500 text-center mt-2">
-                  No prize pool history available.
-                </p>
-              )}
+              {!isLoadingChart &&
+                prizePoolData &&
+                prizePoolData.history.length > 0 && (
+                  <Button
+                    onClick={() => setIsChartModalOpen(true)}
+                    className="w-full bg-transparent border border-[#558EB4]/50 text-[#558EB4] hover:bg-[#558EB4]/20 hover:text-black transition-colors duration-300 font-semibold text-sm mt-2"
+                    size="sm"
+                  >
+                    See Growth Chart
+                  </Button>
+                )}
+              {!isLoadingChart &&
+                (!prizePoolData || prizePoolData.history.length === 0) && (
+                  <p className="text-xs text-gray-500 text-center mt-2">
+                    No prize pool history available.
+                  </p>
+                )}
             </div>
           )}
           {isDrained && winnerAddress && (
             <div className="flex flex-col gap-2">
-              <h3 className="text-[#5E5E5E]  font-medium uppercase flex items-center gap-1.5">
+              <h3 className="text-[#5E5E5E] font-medium uppercase flex items-center gap-1.5">
                 <User className="w-4 h-4" />
                 Winner
               </h3>
               <Link
                 href={`/u/${winnerAddress}`}
-                className="inline-block  hover:underline"
+                className="inline-block hover:underline"
                 title={winnerAddress}
               >
                 {formatAddress(winnerAddress)}
@@ -366,7 +426,9 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           )}
 
           <div className="flex flex-col gap-2">
-            <h3 className="text-[#5E5E5E]  font-medium uppercase">Message Price</h3>
+            <h3 className="text-[#5E5E5E] font-medium uppercase">
+              Message Price
+            </h3>
             <p className="inline-block text-2xl font-semibold">
               {(Number(agent.cost_per_message) / MIST_PER_SUI).toFixed(4)} SUI
             </p>
@@ -375,18 +437,13 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           {!isDrained && (
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-1">
-                <h3 className="text-black/70 text-sm font-semibold uppercase">Active Since</h3>
+                <h3 className="text-black/70 text-sm font-semibold uppercase">
+                  Active Since
+                </h3>
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger
-                      asChild
-                      className="cursor-help"
-                    >
-                      <Info
-                        width={12}
-                        height={12}
-                        className="text-black/60"
-                      />
+                    <TooltipTrigger asChild className="cursor-help">
+                      <Info width={12} height={12} className="text-black/60" />
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>Format: Days, Hours, Minutes, Seconds</p>
@@ -396,12 +453,12 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
               </div>
               <p className="inline-block text-2xl font-semibold">
                 {activeSince.days}
-                <span className="text-lg text-black/60">D</span>{' '}
-                {String(activeSince.hours).padStart(2, '0')}
-                <span className="text-lg text-black/60">H</span>{' '}
-                {String(activeSince.minutes).padStart(2, '0')}
-                <span className="text-lg text-black/60">M</span>{' '}
-                {String(activeSince.seconds).padStart(2, '0')}
+                <span className="text-lg text-black/60">D</span>{" "}
+                {String(activeSince.hours).padStart(2, "0")}
+                <span className="text-lg text-black/60">H</span>{" "}
+                {String(activeSince.minutes).padStart(2, "0")}
+                <span className="text-lg text-black/60">M</span>{" "}
+                {String(activeSince.seconds).padStart(2, "0")}
                 <span className="text-lg text-black/60">S</span>
               </p>
             </div>
@@ -409,12 +466,16 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
           {isOwner && !isDrained && (
             <div className="flex flex-col gap-2">
-              <h3 className="text-[#5E5E5E] font-medium uppercase">Withdrawal Lock</h3>
+              <h3 className="text-[#5E5E5E] font-medium uppercase">
+                Withdrawal Lock
+              </h3>
               {timeRemaining ? (
                 <p
                   className={cn(
-                    'inline-block text-xl font-semibold',
-                    timeRemaining === 'Withdrawal Unlocked' ? 'text-green-600' : 'text-yellow-700'
+                    "inline-block text-xl font-semibold",
+                    timeRemaining === "Withdrawal Unlocked"
+                      ? "text-green-600"
+                      : "text-yellow-700"
                   )}
                 >
                   {timeRemaining}
@@ -429,22 +490,23 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
         <div className="z-20 mt-4 flex flex-col rounded-xl p-0 text-sm">
           <div className="flex flex-col gap-2">
-            <h3 className="text-[#5E5E5E]  font-medium uppercase">Instructions</h3>
+            <h3 className="text-[#5E5E5E] font-medium uppercase">
+              Instructions
+            </h3>
             <p
               ref={instructionsRef}
-              className={cn(
-                'text-xs font-medium blackspace-pre-wrap transition-all duration-300',
-                !isExpanded && shouldTruncate && 'line-clamp-4'
-              )}
+              className="text-xs font-medium whitespace-pre-wrap transition-all duration-300 line-clamp-4"
             >
               {agent.system_prompt}
             </p>
-            {shouldTruncate && (
+
+            {shouldTruncate && onReadMore && (
               <button
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="text-sm text-blue-400 hover:underline self-start"
+                onClick={onReadMore}
+                className="flex items-center gap-2 self-end text-[#5E5E5E] font-bold text-xs mt-3 hover:opacity-80 transition-opacity uppercase tracking-wide w-fit"
               >
-                {isExpanded ? 'See less' : 'See more'}
+                <ExternalLink size={12} strokeWidth={2.5} />
+                Read All
               </button>
             )}
           </div>
@@ -454,12 +516,20 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           <div className="border-t border-t-black/20"></div>
           <div className="flex justify-between">
             <div className="flex flex-col gap-2">
-              <h3 className="text-[#5E5E5E]  font-medium uppercase">Total Participants</h3>
-              <p className="inline-block text-2xl font-semibold text-center">{totalParticipants}</p>
+              <h3 className="text-[#5E5E5E] font-medium uppercase">
+                Total Participants
+              </h3>
+              <p className="inline-block text-2xl font-semibold text-center">
+                {totalParticipants}
+              </p>
             </div>
             <div className="flex flex-col gap-2 text-center">
-              <h3 className="text-[#5E5E5E]  font-medium uppercase">Break Attempts</h3>
-              <p className="inline-block text-2xl font-semibold">{breakAttempts}</p>
+              <h3 className="text-[#5E5E5E] font-medium uppercase">
+                Break Attempts
+              </h3>
+              <p className="inline-block text-2xl font-semibold">
+                {breakAttempts}
+              </p>
             </div>
           </div>
         </div>
@@ -474,7 +544,9 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
         <div className="mt-6 pt-6 border-t border-black/20">
           <div className="flex justify-between items-start mb-2">
-            <h3 className="font-bold text-base text-black leading-tight">Earn SENTINEL Rewards</h3>
+            <h3 className="font-bold text-base text-black leading-tight">
+              Earn SENTINEL Rewards
+            </h3>
           </div>
 
           <p className="text-[#5E5E5E] text-base mb-4 leading-relaxed">
@@ -497,7 +569,8 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
         <div className="mt-auto pt-6 border-t border-black/20">
           <h3 className="text-black/80 text-sm font-semibold text-center mb-4">
-            Scan this QR Code if you want to try to attack this agent using slush mobile wallet
+            Scan this QR Code if you want to try to attack this agent using
+            slush mobile wallet
           </h3>
           <div className="rounded-xl p-4 border border-gray-200 flex justify-center">
             {deepLinkUrl ? (
@@ -525,10 +598,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
         agentName={agent.agent_name}
       />
 
-      <Dialog
-        open={isShareModalOpen}
-        onClose={handleCloseShareModal}
-      >
+      <Dialog open={isShareModalOpen} onClose={handleCloseShareModal}>
         <div className="bg-white rounded-2xl w-full text-black">
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center gap-2">
@@ -554,9 +624,12 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
                 <CheckCircle className="w-8 h-8 text-green-600" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-black mb-2">Submission Received!</h3>
+                <h3 className="text-xl font-bold text-black mb-2">
+                  Submission Received!
+                </h3>
                 <p className="text-gray-600 max-w-xs mx-auto">
-                  Once verified SENTINEL Points will be reflected in your profile.
+                  Once verified SENTINEL Points will be reflected in your
+                  profile.
                 </p>
               </div>
               <button
@@ -570,7 +643,9 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
             <div className="space-y-6">
               <div className="relative">
                 <p className="text-sm mb-1">Step 1</p>
-                <p className="font-medium mb-3">Share about Sentinel on X and earn SENTINEL rewards.</p>
+                <p className="font-medium mb-3">
+                  Share about Sentinel on X and earn SENTINEL rewards.
+                </p>
                 <button
                   onClick={handleShareClick}
                   className="btn btn-white w-full sm:w-auto h-[36px] flex items-center gap-2 px-4 !border-black"
@@ -589,7 +664,9 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
               <div className="relative">
                 <p className="text-sm mb-1">Step 2</p>
-                <p className="font-medium text-base mb-3">Paste Your Tweet Link for Verification</p>
+                <p className="font-medium text-base mb-3">
+                  Paste Your Tweet Link for Verification
+                </p>
                 <div className="flex flex-col sm:flex-row gap-2">
                   <input
                     value={tweetLink}
@@ -608,7 +685,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
                         Verifying...
                       </>
                     ) : (
-                      'Verify Tweet'
+                      "Verify Tweet"
                     )}
                   </button>
                 </div>
@@ -618,5 +695,5 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
         </div>
       </Dialog>
     </>
-  )
-}
+  );
+};

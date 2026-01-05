@@ -21,6 +21,8 @@ export interface AgentDetails {
   created_at: string;
   last_funded_timestamp: string;
   accumulated_fees: number;
+  model_provider?: string;
+  model_name?: string;
 }
 
 export const useAllAgents = () => {
