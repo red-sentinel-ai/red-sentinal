@@ -317,6 +317,8 @@ export default function DefendPage() {
       payload.append("object_id", agentObjectId);
       payload.append("owner", account!.address);
       payload.append("digest", result.digest.toString());
+      payload.append("model_provider", formData.llmProvider);
+      payload.append("model_name", formData.llmModel);
 
       if (agentImage) {
         payload.append("image", agentImage);
