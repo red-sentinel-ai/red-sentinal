@@ -306,6 +306,33 @@ export const AgentSidebar = ({
             </Link>
           </div>
 
+
+          {(agent.model_provider || agent.model_name) && (
+            <div className="flex justify-between gap-2">
+              {agent.model_provider && (
+                <div className="flex flex-col gap-2">
+                  <h3 className="text-[#5E5E5E] font-medium uppercase">
+                    LLM Provider
+                  </h3>
+                  <p className="text-base font-semibold capitalize">
+                    {agent.model_provider}
+                  </p>
+                </div>
+              )}
+              
+              {agent.model_name && (
+                <div className={`flex flex-col gap-2 ${agent.model_provider ? 'text-right items-end' : ''}`}>
+                  <h3 className="text-[#5E5E5E] font-medium uppercase">
+                    Model
+                  </h3>
+                  <p className="text-base font-semibold max-w-[150px] truncate" title={agent.model_name}>
+                    {agent.model_name}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
           {isDrained ? (
             <div className="flex flex-col gap-2">
               <h3 className="text-[#5E5E5E] font-medium uppercase flex items-center gap-1.5">
