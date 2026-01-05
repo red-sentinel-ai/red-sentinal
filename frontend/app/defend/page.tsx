@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useState } from "react";
 import Link from "next/link";
@@ -35,6 +34,7 @@ import { FundSuccessModal } from "@/components/FundSuccessModal";
 import { useRewardsMissionTracker } from "@/hooks/rewards/useRewardsMissionTracker";
 import { SUI_CLOCK_OBJECT_ID } from "@mysten/sui/utils";
 import { CustomDropdown } from "@/components/ui/common/CustomDropdown";
+import { RewardsConditions } from "@/components/defend/RewardsConditions";
 
 interface FormData {
   agentName: string;
@@ -592,6 +592,8 @@ export default function DefendPage() {
             </p>
           )}
         </div>
+
+        <RewardsConditions />
 
         <div className="pt-2 pb-20">
           {account?.address ? (
