@@ -8,6 +8,7 @@ type RequestPayload = {
   agent_id: number
   telegram_username?: string
   twitter_username?: string
+  status: string
 }
 
 export function useRequestFeatureAgent() {
