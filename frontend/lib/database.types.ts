@@ -1046,6 +1046,7 @@ export type Database = {
           email_id: string
           id: string
           name: string
+          status: string | null
           telegram_username: string | null
           twitter_username: string | null
           wallet_address: string
@@ -1057,6 +1058,7 @@ export type Database = {
           email_id: string
           id?: string
           name: string
+          status?: string | null
           telegram_username?: string | null
           twitter_username?: string | null
           wallet_address: string
@@ -1068,6 +1070,7 @@ export type Database = {
           email_id?: string
           id?: string
           name?: string
+          status?: string | null
           telegram_username?: string | null
           twitter_username?: string | null
           wallet_address?: string
