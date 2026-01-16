@@ -102,7 +102,8 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         tx.object(agentDetails.object_id),
         tx.object(SUI_CONFIG.PROTOCOL_CONFIG_OBJECT_ID),
         paymentCoin,
-        tx.object('0x8')
+        tx.object('0x8'),
+        tx.object(SUI_CLOCK_OBJECT_ID)
       ],
     })
 
