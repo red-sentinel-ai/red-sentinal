@@ -994,30 +994,36 @@ export type Database = {
           collection_id: string | null
           created_at: string | null
           id: string
+          identifier_hash: string | null
           indices: string[]
           is_active: boolean | null
           root: string
           siblings: string[]
+          whitelist_type: string | null
         }
         Insert: {
           address: string
           collection_id?: string | null
           created_at?: string | null
           id?: string
+          identifier_hash?: string | null
           indices: string[]
           is_active?: boolean | null
           root: string
           siblings: string[]
+          whitelist_type?: string | null
         }
         Update: {
           address?: string
           collection_id?: string | null
           created_at?: string | null
           id?: string
+          identifier_hash?: string | null
           indices?: string[]
           is_active?: boolean | null
           root?: string
           siblings?: string[]
+          whitelist_type?: string | null
         }
         Relationships: [
           {
@@ -1092,6 +1098,8 @@ export type Database = {
           created_at: string | null
           digest: string | null
           is_featured: boolean
+          model_name: string | null
+          model_provider: string | null
           object_id: string
           owner: string
         }
@@ -1103,6 +1111,8 @@ export type Database = {
           created_at?: string | null
           digest?: string | null
           is_featured?: boolean
+          model_name?: string | null
+          model_provider?: string | null
           object_id: string
           owner: string
         }
@@ -1114,6 +1124,8 @@ export type Database = {
           created_at?: string | null
           digest?: string | null
           is_featured?: boolean
+          model_name?: string | null
+          model_provider?: string | null
           object_id?: string
           owner?: string
         }

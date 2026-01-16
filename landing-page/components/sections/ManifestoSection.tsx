@@ -1,12 +1,28 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { ManifestoModal } from '../modals/ManifestoModal'
 
 export function ManifestoSection() {
   const [isManifestoOpen, setIsManifestoOpen] = useState(false)
+  const [signatureCount, setSignatureCount] = useState<number | null>(null)
+
+  useEffect(() => {
+    async function fetchSignatureCount() {
+      try {
+        const response = await fetch('/api/manifesto/count')
+        if (response.ok) {
+          const data = await response.json()
+          setSignatureCount(data.count)
+        }
+      } catch (error) {
+        console.error('Failed to fetch signature count:', error)
+      }
+    }
+    fetchSignatureCount()
+  }, [])
 
   return (
     <section
@@ -123,7 +139,11 @@ export function ManifestoSection() {
               </button>
             </div>
           </div>
-          <p className="text-sm text-center mt-3">12,483 Sentinels have already taken the oath.</p>
+          <p className="text-sm text-center mt-3">
+            {signatureCount !== null
+              ? `${signatureCount.toLocaleString()} Sentinels have already taken the oath.`
+              : 'Loading...'}
+          </p>
         </div>
       </div>
 
