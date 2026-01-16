@@ -35,6 +35,7 @@ import { useRewardsMissionTracker } from "@/hooks/rewards/useRewardsMissionTrack
 import { SUI_CLOCK_OBJECT_ID } from "@mysten/sui/utils";
 import { CustomDropdown } from "@/components/ui/common/CustomDropdown";
 import { RewardsConditions } from "@/components/defend/RewardsConditions";
+import { useEffect } from "react";
 
 interface FormData {
   agentName: string;
@@ -118,6 +119,23 @@ const DEFAULT_MODEL = PROVIDER_MODELS[DEFAULT_PROVIDER][0];
 export default function DefendPage() {
   const client = useSuiClient();
   const account = useCurrentAccount();
+
+  // Load template from sessionStorage if user came from templates page
+  useEffect(() => {
+    const templateData = sessionStorage.getItem("selectedTemplate");
+    if (templateData) {
+      try {
+        const template = JSON.parse(templateData);
+        setFormData((prev) => ({
+          ...prev,
+          systemPrompt: template.prompt,
+        }));
+        sessionStorage.removeItem("selectedTemplate");
+      } catch (error) {
+        console.error("Failed to load template:", error);
+      }
+    }
+  }, []);
   const { addAgentObjectIdWithName } = useAgentObjectNames();
   const { mutate: createAgent } = useCreateAgent();
   const [agentImage, setAgentImage] = useState<File | null>(null);
@@ -558,13 +576,21 @@ export default function DefendPage() {
               </span>
             </div>
 
-            <Link
-              href={`${SUI_SENTINEL_DOCS_URL}/guides/defender-guide`}
-              target="_blank"
-              className="underline text-sm text-[#0077FF] hover:text-[#0077ffd3] mt-1 shrink-0 ml-4"
-            >
-              View Instructions Example
-            </Link>
+            <div className="flex gap-4 shrink-0 ml-4">
+              <Link
+                href="/instruction-templates"
+                className="underline text-sm text-[#0077FF] hover:text-[#0077ffd3] mt-1"
+              >
+                View Templates
+              </Link>
+              <Link
+                href={`${SUI_SENTINEL_DOCS_URL}/guides/defender-guide`}
+                target="_blank"
+                className="underline text-sm text-[#0077FF] hover:text-[#0077ffd3] mt-1"
+              >
+                Docs Example
+              </Link>
+            </div>
           </div>
 
           <textarea
