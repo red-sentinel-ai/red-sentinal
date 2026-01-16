@@ -163,4 +163,23 @@ export const socialLinks = [
   },
 ]
 
+export const extraLinks = [
+  {
+    href: '/contact-us',
+    icon: '/icons/call.png',
+    isImage: true,
+    alt: 'Contact Us',
+    name: 'Contact Us',
+    isOutside: false,
+  },
+  {
+    href: '/back-story',
+    icon: '/icons/back-story.png',
+    isImage: true,
+    alt: 'Back story',
+    name: 'Back story',
+    isOutside: false,
+  },
+]
+
 export const JOB_APPLICATIONS_BUCKET_NAME = 'job-applications'
