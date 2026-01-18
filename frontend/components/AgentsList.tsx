@@ -46,14 +46,14 @@ export const AgentsList = ({
           <LeaderboardSkeleton />
         ) : (
           <div className="flex flex-col gap-1">
-            <div className="hidden md:grid md:grid-cols-12 backdrop-blur-xl p-3 rounded-lg border border-[#5E5E5E] hover:border-black/80 mb-2 font-medium text-2xl">
+            <div className="mb-2 hidden rounded-lg border border-[#5E5E5E] p-3 text-2xl font-medium backdrop-blur-xl hover:border-black/80 md:grid md:grid-cols-12">
               <div className="col-span-1 grid grid-cols-12 items-center">
-                <p className="pr-1 col-span-12">#</p>
+                <p className="col-span-12 pr-1">#</p>
               </div>
               <div className="col-span-1 flex items-center">
-                 <p className="">Agent Id</p>
+                <p className="">Agent Id</p>
               </div>
-              
+
               <div className="col-span-2 ps-4">Name</div>
               <div className="col-span-1 ps-4">Balance</div>
               <div className="col-span-2 ps-4">Message Price</div>
@@ -74,11 +74,11 @@ export const AgentsList = ({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.2, delay: idx * 0.05 }}
-                    className="backdrop-blur-xl p-3 rounded-lg border border-black/30 hover:border-black/80 cursor-pointer text-xl"
+                    className="cursor-pointer rounded-lg border border-black/30 p-3 text-xl backdrop-blur-xl hover:border-black/80"
                     onClick={() => router.push(`/attack/${agent.agent_path}`)}
                   >
-                    <div className="md:hidden space-y-3">
-                      <div className="flex justify-between items-center">
+                    <div className="space-y-3 md:hidden">
+                      <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <span className="">#{idx + 1}</span>
                           <span className="truncate">{agent.agent_name}</span>
@@ -95,9 +95,9 @@ export const AgentsList = ({
                           variant={agent.status === 'Active' ? 'secondary' : 'destructive'}
                           className={`${
                             agent.status === 'Active'
-                              ? 'bg-[#D1E6DB] text-[#1FAD57] border-[#1FAD57]'
-                              : 'bg-red-500/10 text-red-400 border-red-500/20'
-                          } text-xs rounded-xl`}
+                              ? 'border-[#1FAD57] bg-[#D1E6DB] text-[#1FAD57]'
+                              : 'border-red-500/20 bg-red-500/10 text-red-400'
+                          } rounded-xl text-xs`}
                         >
                           {agent.status === 'Active' ? (
                             <Image
@@ -121,21 +121,21 @@ export const AgentsList = ({
                       </div>
                       <div className="grid grid-cols-2 gap-2 text-sm">
                         <div>
-                          <p className="text-gray-400 text-xs">Reward</p>
+                          <p className="text-xs text-gray-400">Reward</p>
                           <p>{`${balance} SUI`}</p>
                         </div>
                         <div>
-                          <p className="text-gray-400 text-xs">Message Price</p>
+                          <p className="text-xs text-gray-400">Message Price</p>
                           <p>{`${costPerMessage} SUI`}</p>
                         </div>
                         <div className="col-span-2">
-                           <p className="text-gray-400 text-xs">7d Change</p>
-                           <PrizePoolChangeDisplay agentId={agent.agent_id} variant="list" />
+                          <p className="text-xs text-gray-400">7d Change</p>
+                          <PrizePoolChangeDisplay agentId={agent.agent_id} variant="list" />
                         </div>
                       </div>
-                      <div className="flex gap-3 text-xs pt-2 border-t border-gray-700/50">
+                      <div className="flex gap-3 border-t border-gray-700/50 pt-2 text-xs">
                         <button
-                          onClick={(e) => handleRefresh(e)}
+                          onClick={e => handleRefresh(e)}
                           className="text-blue-400 hover:text-blue-300"
                         >
                           Refresh
@@ -149,15 +149,13 @@ export const AgentsList = ({
                       </div>
                     </div>
 
-                    <div className="hidden md:grid md:grid-cols-12 items-center">
+                    <div className="hidden items-center md:grid md:grid-cols-12">
                       <div className="col-span-1 flex items-center">
                         <p className="pr-1">{idx + 1}</p>
                       </div>
-                      <div className="col-span-1 pl-0">
-                        {agent.agent_id}
-                      </div>
-                      
-                      <div className="flex items-center gap-1 col-span-2 ps-4">
+                      <div className="col-span-1 pl-0">{agent.agent_id}</div>
+
+                      <div className="col-span-2 flex items-center gap-1 ps-4">
                         <p className="truncate">{agent.agent_name}</p>
                         {agent.is_featured && (
                           <Image
@@ -168,10 +166,10 @@ export const AgentsList = ({
                           />
                         )}
                       </div>
-                      
+
                       <div className="col-span-1 ps-4">{`${balance} SUI`}</div>
                       <div className="col-span-2 ps-4">{`${costPerMessage} SUI`}</div>
-                      
+
                       <div className="col-span-2 ps-4">
                         <PrizePoolChangeDisplay agentId={agent.agent_id} variant="list" />
                       </div>
@@ -181,9 +179,9 @@ export const AgentsList = ({
                           variant={agent.status === 'Active' ? 'secondary' : 'destructive'}
                           className={`${
                             agent.status === 'Active'
-                              ? 'bg-[#D1E6DB] text-[#1FAD57] border-[#1FAD57]'
-                              : 'bg-red-500/10 text-red-400 border-red-500/20'
-                          } text-base rounded-xl`}
+                              ? 'border-[#1FAD57] bg-[#D1E6DB] text-[#1FAD57]'
+                              : 'border-red-500/20 bg-red-500/10 text-red-400'
+                          } rounded-xl text-base`}
                         >
                           {agent.status === 'Active' ? (
                             <Image
@@ -205,8 +203,8 @@ export const AgentsList = ({
                           {agent.status}
                         </Badge>
                       </div>
-                      <div className="col-span-2 flex gap-4 items-center ">
-                     <button
+                      <div className="col-span-2 flex items-center gap-4">
+                        <button
                           onClick={() => router.push(`/attack/${agent.agent_path}`)}
                           className="badge-black"
                         >
@@ -219,14 +217,8 @@ export const AgentsList = ({
                           />
                           Attack
                         </button>
-                       <button
-                          onClick={(e) => handleRefresh(e)}
-                          className="badge-outline-black"
-                        >
-                          <RefreshCcw
-                            width={16}
-                            className="mr-1"
-                          />
+                        <button onClick={e => handleRefresh(e)} className="badge-outline-black">
+                          <RefreshCcw width={16} className="mr-1" />
                           Refresh
                         </button>
                       </div>

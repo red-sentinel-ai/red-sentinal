@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
   const digest = formData.get('digest')
   const model_provider = formData.get('model_provider') as string
   const model_name = formData.get('model_name') as string
-  
+
   const imageFile = formData.get('image') as File | null
   const imageUrlString = formData.get('image_url') as string | null
 
@@ -26,9 +26,9 @@ export async function POST(req: NextRequest) {
   if (imageFile && imageFile.name) {
     const arrayBuffer = await imageFile.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
-     const fileExt = imageFile.name.split('.').pop()
-     const safeAgentName = agent_name.replace(/\s+/g, '_')
-     const filePath = `${agent_id}_${safeAgentName}.${fileExt}`
+    const fileExt = imageFile.name.split('.').pop()
+    const safeAgentName = agent_name.replace(/\s+/g, '_')
+    const filePath = `${agent_id}_${safeAgentName}.${fileExt}`
 
     const { data: uploadData, error: uploadError } = await supabaseServiceClient.storage
       .from(AGENTS_BUCKET_NAME)

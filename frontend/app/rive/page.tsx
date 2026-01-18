@@ -15,7 +15,7 @@ export default function AvatarCustomizer() {
 
   return (
     <div className="h-body">
-      <div className="w-full h-[700px]">
+      <div className="h-[700px] w-full">
         <RiveComponent />
       </div>
     </div>

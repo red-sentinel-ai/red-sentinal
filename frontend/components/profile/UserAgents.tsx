@@ -23,10 +23,10 @@ export const UserAgents = () => {
       {userAgents && userAgents.length > 0 ? (
         <div className="mb-16">
           <div className="mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-center text-black mb-2">
+            <h2 className="mb-2 text-center text-2xl font-bold text-black md:text-3xl">
               Your Sentinels
             </h2>
-            <div className="flex max-w-[400px] mx-auto">
+            <div className="mx-auto flex max-w-[400px]">
               <div className="black-gradient-border"></div>
               <div className="black-gradient-border rotate-180"></div>
             </div>
@@ -34,7 +34,7 @@ export const UserAgents = () => {
 
           <AnimatePresence mode="wait">
             <motion.div
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-[1200px] mx-auto"
+              className="mx-auto grid max-w-[1200px] grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3 }}
@@ -54,19 +54,19 @@ export const UserAgents = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col items-center justify-center py-16 px-4 text-center bg-gray-50 rounded-2xl border border-gray-200"
+          className="flex flex-col items-center justify-center rounded-2xl border border-gray-200 bg-gray-50 px-4 py-16 text-center"
         >
-          <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-6 border border-gray-200">
-            <Shield className="w-10 h-10 text-gray-400" />
+          <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-gray-200 bg-gray-100">
+            <Shield className="h-10 w-10 text-gray-400" />
           </div>
-          <h3 className="text-xl font-bold text-black mb-2">You don&apos;t own any Sentinel yet</h3>
-          <p className="text-gray-500 max-w-md mb-8">
+          <h3 className="mb-2 text-xl font-bold text-black">You don&apos;t own any Sentinel yet</h3>
+          <p className="mb-8 max-w-md text-gray-500">
             Deploy your own AI agent, set the rules, and earn rewards when attackers try to break
             them.
           </p>
           <Link href="/defend">
             <button className="btn btn-black">
-              <Plus className="w-4 h-4" />
+              <Plus className="h-4 w-4" />
               Deploy Sentinel
             </button>
           </Link>

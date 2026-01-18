@@ -20,11 +20,7 @@ export const SparklineChart = ({
 }: SparklineChartProps) => {
   if (!data || data.length < 2) {
     return (
-      <svg
-        width={width}
-        height={height}
-        {...props}
-      >
+      <svg width={width} height={height} {...props}>
         <line
           x1="0"
           y1={height / 2}
@@ -51,29 +47,11 @@ export const SparklineChart = ({
     .join(' ')
 
   return (
-    <svg
-      width={width}
-      height={height}
-      viewBox={`0 0 ${width} ${height}`}
-      {...props}
-    >
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} {...props}>
       <defs>
-        <linearGradient
-          id={gradientId}
-          x1="0"
-          y1="0"
-          x2="1"
-          y2="0"
-        >
-          <stop
-            offset="0%"
-            stopColor="#1FAD57"
-            stopOpacity={0.5}
-          />
-          <stop
-            offset="100%"
-            stopColor="#1FAD57"
-          />
+        <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#1FAD57" stopOpacity={0.5} />
+          <stop offset="100%" stopColor="#1FAD57" />
         </linearGradient>
       </defs>
       <path

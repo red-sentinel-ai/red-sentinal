@@ -15,7 +15,7 @@ export default function RiveLoader() {
 
   return (
     <div className="h-body">
-      <div className="w-[500px] h-[500px]">
+      <div className="h-[500px] w-[500px]">
         <RiveComponent />
       </div>
     </div>

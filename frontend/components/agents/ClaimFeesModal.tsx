@@ -1,13 +1,13 @@
-import { useUpdateAgent } from "@/hooks/agents/useUpdateAgent";
-import { AgentUpdateDialog } from "./AgentUpdateDialog";
-import { MIST_PER_SUI } from "@/constants";
+import { useUpdateAgent } from '@/hooks/agents/useUpdateAgent'
+import { AgentUpdateDialog } from './AgentUpdateDialog'
+import { MIST_PER_SUI } from '@/constants'
 
 interface ClaimFeesModalProps {
-  open: boolean;
-  onClose: () => void;
-  agentId: string;
-  agentObjectId: string;
-  accumulatedFees: number;
+  open: boolean
+  onClose: () => void
+  agentId: string
+  agentObjectId: string
+  accumulatedFees: number
 }
 
 export const ClaimFeesModal = ({
@@ -17,15 +17,15 @@ export const ClaimFeesModal = ({
   agentObjectId,
   accumulatedFees,
 }: ClaimFeesModalProps) => {
-  const { claimFees, isLoading } = useUpdateAgent();
+  const { claimFees, isLoading } = useUpdateAgent()
 
-  const feesInSui = accumulatedFees / Number(MIST_PER_SUI);
-  const hasFees = accumulatedFees > 0;
+  const feesInSui = accumulatedFees / Number(MIST_PER_SUI)
+  const hasFees = accumulatedFees > 0
 
   const handleClaim = () => {
-    if (!hasFees) return;
-    claimFees(agentId, agentObjectId, onClose);
-  };
+    if (!hasFees) return
+    claimFees(agentId, agentObjectId, onClose)
+  }
 
   return (
     <AgentUpdateDialog
@@ -37,29 +37,28 @@ export const ClaimFeesModal = ({
       confirmText="Claim Fees"
       isConfirmDisabled={isLoading || !hasFees}
     >
-      <div className="flex flex-col items-center justify-center py-6 space-y-2 bg-gray-50 rounded-xl border border-gray-100">
-        <span className="text-sm text-gray-500 font-medium uppercase tracking-wider">
+      <div className="flex flex-col items-center justify-center space-y-2 rounded-xl border border-gray-100 bg-gray-50 py-6">
+        <span className="text-sm font-medium uppercase tracking-wider text-gray-500">
           Available to Claim
         </span>
-        <div className="text-4xl font-extrabold text-black tracking-tight">
+        <div className="text-4xl font-extrabold tracking-tight text-black">
           {feesInSui.toLocaleString(undefined, {
             minimumFractionDigits: 2,
             maximumFractionDigits: 4,
           })}
-          <span className="text-lg text-gray-400 ml-1">SUI</span>
+          <span className="ml-1 text-lg text-gray-400">SUI</span>
         </div>
       </div>
 
       {!hasFees && (
-        <p className="text-center text-sm text-red-500 mt-2">
+        <p className="mt-2 text-center text-sm text-red-500">
           There are no fees available to claim at this time.
         </p>
       )}
 
-      <p className="text-xs text-gray-400 text-center px-4">
-        These fees are collected from attackers who pay to interact with your
-        agent.
+      <p className="px-4 text-center text-xs text-gray-400">
+        These fees are collected from attackers who pay to interact with your agent.
       </p>
     </AgentUpdateDialog>
-  );
-};
+  )
+}

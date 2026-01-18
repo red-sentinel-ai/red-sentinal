@@ -42,7 +42,7 @@ async function getUserProfile(identifier: string) {
   const defeatedAgentIds = await getDefeatedAgentIds(client)
 
   const enrichedAgents = await Promise.all(
-    basicAgents.map(async (agent) => {
+    basicAgents.map(async agent => {
       const onchainData = await fetchAgentDetailsViaObject(client, agent.object_id)
 
       const status: AgentStatus = defeatedAgentIds.has(String(agent.agent_id))
@@ -81,37 +81,32 @@ export default async function PublicProfilePage({
   const { user, agents } = profileData
 
   return (
-    <div className="container mx-auto px-4 pb-12 pt-24 min-h-body text-black">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-body container mx-auto px-4 pb-12 pt-24 text-black">
+      <div className="mx-auto max-w-6xl">
         <div className="mb-12">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-6">
-            <div className="relative w-28 h-28 rounded-full border-2 border-gray-200 overflow-hidden flex-shrink-0">
+          <div className="mb-6 flex flex-col items-start gap-6 sm:flex-row sm:items-center">
+            <div className="relative h-28 w-28 flex-shrink-0 overflow-hidden rounded-full border-2 border-gray-200">
               {user.avatar_url ? (
-                <Image
-                  src={user.avatar_url}
-                  alt="User Avatar"
-                  fill
-                  className="object-cover"
-                />
+                <Image src={user.avatar_url} alt="User Avatar" fill className="object-cover" />
               ) : (
-                <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                <div className="flex h-full w-full items-center justify-center bg-gray-100">
                   <User className="h-14 w-14 text-gray-400" />
                 </div>
               )}
             </div>
             <div className="flex-1">
-              <h1 className="text-3xl sm:text-4xl font-bold">
+              <h1 className="text-3xl font-bold sm:text-4xl">
                 {user.display_name || user.username}
               </h1>
-              <p className="text-gray-500 mt-1">@{user.username}</p>
+              <p className="mt-1 text-gray-500">@{user.username}</p>
               {user.wallet_addresses?.[0] && (
-                <div className="mt-3 flex flex-col sm:flex-row items-start sm:items-center gap-1">
-                  <p className="text-gray-600 text-sm font-medium">Wallet Address:</p>
+                <div className="mt-3 flex flex-col items-start gap-1 sm:flex-row sm:items-center">
+                  <p className="text-sm font-medium text-gray-600">Wallet Address:</p>
                   <Link
                     href={`${EXPLORER_BASE_URL}/address/${user.wallet_addresses[0]}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-600 hover:underline font-mono text-sm"
+                    className="font-mono text-sm text-blue-600 hover:underline"
                   >
                     {formatAddress(user.wallet_addresses[0])}
                   </Link>
@@ -122,24 +117,20 @@ export default async function PublicProfilePage({
         </div>
 
         <div>
-          <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
+          <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold">
             <Folder className="h-6 w-6 text-blue-500" />
             <span>
               {user.display_name}&apos;s Sentinels ({agents.length})
             </span>
           </h2>
           {agents.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {agents.map((agent, index) => (
-                <FeaturedAgentCard
-                  key={agent.agent_id}
-                  agent={agent}
-                  index={index}
-                />
+                <FeaturedAgentCard key={agent.agent_id} agent={agent} index={index} />
               ))}
             </div>
           ) : (
-            <div className="text-center py-16 bg-gray-50 rounded-lg border border-gray-200">
+            <div className="rounded-lg border border-gray-200 bg-gray-50 py-16 text-center">
               <p className="text-gray-500">This user has not launched any Sentinels yet.</p>
             </div>
           )}

@@ -28,13 +28,10 @@ export function MissionsGrid({
     return (
       <div className="space-y-8">
         <div>
-          <Skeleton className="h-8 w-48 mb-6 bg-gray-200" />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <Skeleton
-                key={i}
-                className="h-64 rounded-xl bg-gray-200"
-              />
+          <Skeleton className="mb-6 h-8 w-48 bg-gray-200" />
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3, 4, 5, 6].map(i => (
+              <Skeleton key={i} className="h-64 rounded-xl bg-gray-200" />
             ))}
           </div>
         </div>
@@ -42,8 +39,8 @@ export function MissionsGrid({
     )
   }
 
-  const onChainMissions = missions.filter((m) => m.category === 'on_chain')
-  const socialMissions = missions.filter((m) => m.category === 'social_media')
+  const onChainMissions = missions.filter(m => m.category === 'on_chain')
+  const socialMissions = missions.filter(m => m.category === 'social_media')
 
   return (
     <div className="space-y-12">
@@ -53,19 +50,19 @@ export function MissionsGrid({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="flex items-center gap-3 mb-8">
+          <div className="mb-8 flex items-center gap-3">
             <motion.div
-              className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center border border-gray-200"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-gray-100"
               whileHover={{ scale: 1.1, rotate: 5 }}
             >
               <Zap className="h-5 w-5 text-black" />
             </motion.div>
             <div>
-              <h3 className="text-2xl font-bold text-black uppercase">On-Chain Missions</h3>
+              <h3 className="text-2xl font-bold uppercase text-black">On-Chain Missions</h3>
               <p className="text-gray-500">Complete transactions and earn rewards</p>
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {onChainMissions.map((mission, index) => {
               const completionCounts = completedMissions[mission.type] || DEFAULT_COMPLETION_COUNTS
               return (
@@ -95,19 +92,19 @@ export function MissionsGrid({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.2 }}
         >
-          <div className="flex items-center gap-3 mb-8">
+          <div className="mb-8 flex items-center gap-3">
             <motion.div
-              className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center border border-gray-200"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-gray-100"
               whileHover={{ scale: 1.1, rotate: 5 }}
             >
               <Users className="h-5 w-5 text-black" />
             </motion.div>
             <div>
-              <h3 className="text-2xl font-bold text-black uppercase">Social Media Missions</h3>
+              <h3 className="text-2xl font-bold uppercase text-black">Social Media Missions</h3>
               <p className="text-gray-500">Engage with our community and spread the word</p>
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {socialMissions.map((mission, index) => {
               const completionCounts = completedMissions[mission.type] || DEFAULT_COMPLETION_COUNTS
               return (
@@ -132,15 +129,15 @@ export function MissionsGrid({
 
       {missions.length === 0 && (
         <motion.div
-          className="text-center py-16"
+          className="py-16 text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-6 border border-gray-200">
+          <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full border border-gray-200 bg-gray-100">
             <Zap className="h-12 w-12 text-gray-400" />
           </div>
-          <h3 className="text-xl font-semibold text-black mb-2 uppercase">No Missions Available</h3>
+          <h3 className="mb-2 text-xl font-semibold uppercase text-black">No Missions Available</h3>
           <p className="text-gray-500">Check back later for new missions to complete!</p>
         </motion.div>
       )}

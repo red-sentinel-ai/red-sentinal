@@ -13,19 +13,16 @@ export const AgentListView = () => {
   const featuredAgents = allAgents?.filter((agent: AgentDetails) => agent.is_featured) || []
 
   return (
-    <div className="px-2 md:px-8 py-4 max-w-[1560px] mx-auto md:py-16">
+    <div className="mx-auto max-w-[1560px] px-2 py-4 md:px-8 md:py-16">
       <div className="mb-20">
-        <p
-          className="text-4xl md:text-[48px] font-bold text-center uppercase"
-          id="leaderboard"
-        >
+        <p className="text-center text-4xl font-bold uppercase md:text-[48px]" id="leaderboard">
           Choose your opponent
         </p>
-        <div className="flex max-w-[800px] mx-auto my-3 md:my-4">
+        <div className="mx-auto my-3 flex max-w-[800px] md:my-4">
           <div className="black-gradient-border"></div>
           <div className="black-gradient-border rotate-180"></div>
         </div>
-        <p className="text-[#5E5E5E] text-center text-xl max-w-[594px] mx-auto">
+        <p className="mx-auto max-w-[594px] text-center text-xl text-[#5E5E5E]">
           Trick one of these agents into sending you all their SUI
         </p>
       </div>
@@ -37,7 +34,7 @@ export const AgentListView = () => {
           {featuredAgents.length > 0 && (
             <div className="mb-16">
               <div className="mb-8">
-                <h2 className="text-2xl md:text-[32px] font-medium mb-2">Featured Sentinels</h2>
+                <h2 className="mb-2 text-2xl font-medium md:text-[32px]">Featured Sentinels</h2>
                 {/* <div className="flex max-w-[400px] mx-auto">
                   <div className="gradient-border blue"></div>
                   <div className="gradient-border blue rotate-180"></div>
@@ -46,7 +43,7 @@ export const AgentListView = () => {
 
               <AnimatePresence mode="wait">
                 <motion.div
-                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mx-auto"
+                  className="mx-auto grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3 }}
@@ -67,8 +64,8 @@ export const AgentListView = () => {
       )}
 
       <div>
-        <div className="flex flex-col md:flex-row items-center justify-between mb-6">
-          <h2 className="text-xl md:text-[32px] font-medium">All Sentinels</h2>
+        <div className="mb-6 flex flex-col items-center justify-between md:flex-row">
+          <h2 className="text-xl font-medium md:text-[32px]">All Sentinels</h2>
         </div>
       </div>
 

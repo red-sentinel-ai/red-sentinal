@@ -76,24 +76,21 @@ export const WithdrawAgentModal = ({
   }
 
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-    >
+    <Dialog open={open} onClose={onClose}>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold">Withdraw Funds</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-black transition-colors"
+            className="text-gray-400 transition-colors hover:text-black"
             disabled={isLoading}
           >
-            <X className="w-6 h-6" />
+            <X className="h-6 w-6" />
           </button>
         </div>
 
         <div>
-          <div className="flex justify-between items-center mb-2">
+          <div className="mb-2 flex items-center justify-between">
             <label className="block text-sm font-medium">Amount (SUI)</label>
             <span className="text-xs text-gray-500">Max: {agentBalanceSui.toFixed(4)}</span>
           </div>
@@ -102,7 +99,7 @@ export const WithdrawAgentModal = ({
               type="number"
               value={amount}
               onChange={handleAmountChange}
-              className="w-full bg-white border border-gray-300 rounded-lg p-3 pr-16 placeholder:text-gray-400 focus:ring-1 focus:ring-black"
+              className="w-full rounded-lg border border-gray-300 bg-white p-3 pr-16 placeholder:text-gray-400 focus:ring-1 focus:ring-black"
               placeholder="0.00"
               min="0"
               step="0.001"
@@ -110,7 +107,7 @@ export const WithdrawAgentModal = ({
             />
             <button
               onClick={() => setAmount(agentBalanceSui.toString())}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-xs font-medium btn btn-outline h-7 px-3"
+              className="btn btn-outline absolute right-2 top-1/2 h-7 -translate-y-1/2 px-3 text-xs font-medium"
               disabled={isLoading}
             >
               Max
@@ -122,11 +119,11 @@ export const WithdrawAgentModal = ({
         <button
           onClick={handleWithdraw}
           disabled={isLoading || !amount.trim()}
-          className="w-full btn btn-black disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+          className="btn btn-black flex w-full items-center justify-center disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isLoading ? (
             <>
-              <Loader2 className="w-4 h-4 animate-spin mr-2" />
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Withdrawing...
             </>
           ) : (

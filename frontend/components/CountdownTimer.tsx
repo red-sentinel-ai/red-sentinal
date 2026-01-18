@@ -83,26 +83,33 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
     return null
   }
 
-  const TimeUnit = ({ value, unit, className }: { value: number; unit: string, className?: string }) => (
+  const TimeUnit = ({
+    value,
+    unit,
+    className,
+  }: {
+    value: number
+    unit: string
+    className?: string
+  }) => (
     <div className={cn(`flex items-center`, className)}>
-      <span className="text-white text-right tabular-nums">
-        {value}
-      </span>
-      <span className="text-gray-400 ml-0.5">{unit}</span>
+      <span className="text-right tabular-nums text-white">{value}</span>
+      <span className="ml-0.5 text-gray-400">{unit}</span>
     </div>
   )
 
   return (
-    <div
-      className={cn(
-        `flex bg-black rounded-full p-1 items-center`,
-        className
-      )}
-    >
-      <div className={`${sizeClasses[size].dot} ${sizeClasses[size].dotSpacing} bg-[#00D369] rounded-full`} />
+    <div className={cn(`flex items-center rounded-full bg-black p-1`, className)}>
+      <div
+        className={`${sizeClasses[size].dot} ${sizeClasses[size].dotSpacing} rounded-full bg-[#00D369]`}
+      />
       <div className={`flex ${sizeClasses[size].gap} ${sizeClasses[size].container}`}>
-        {timeLeft.days > 0 && <TimeUnit className={sizeClasses[size].numberSpacing} value={timeLeft.days} unit="d" />}
-        {(timeLeft.days > 0 || timeLeft.hours > 0) && <TimeUnit className={sizeClasses[size].numberSpacing} value={timeLeft.hours} unit="h" />}
+        {timeLeft.days > 0 && (
+          <TimeUnit className={sizeClasses[size].numberSpacing} value={timeLeft.days} unit="d" />
+        )}
+        {(timeLeft.days > 0 || timeLeft.hours > 0) && (
+          <TimeUnit className={sizeClasses[size].numberSpacing} value={timeLeft.hours} unit="h" />
+        )}
         <TimeUnit className={sizeClasses[size].numberSpacing} value={timeLeft.minutes} unit="m" />
         <TimeUnit className={sizeClasses[size].numberSpacing} value={timeLeft.seconds} unit="s" />
       </div>

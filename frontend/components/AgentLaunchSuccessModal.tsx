@@ -20,31 +20,28 @@ export const AgentLaunchSuccessModal = ({
   }
 
   return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-    >
-      <div className="p-6 space-y-5 relative">
+    <Dialog open={open} onClose={handleClose}>
+      <div className="relative space-y-5 p-6">
         <button
           onClick={handleClose}
-          className="absolute top-0 right-0 p-2 text-gray-400 hover:text-white"
+          className="absolute right-0 top-0 p-2 text-gray-400 hover:text-white"
           aria-label="Close"
         >
-          <X className="w-5 h-5" />
+          <X className="h-5 w-5" />
         </button>
 
         <div className="text-center">
-          <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Check className="w-8 h-8 text-green-500" />
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-500/20">
+            <Check className="h-8 w-8 text-green-500" />
           </div>
-          <h2 className="text-2xl font-bold mb-2">Agent Launched Successfully!</h2>
+          <h2 className="mb-2 text-2xl font-bold">Agent Launched Successfully!</h2>
 
-          <div className="space-y-3 mb-4">
+          <div className="mb-4 space-y-3">
             <Link
               href={`/attack/${agentAddress}`}
-              className="w-full bg-gray-800 text-white rounded-lg py-2.5 font-medium hover:bg-gray-700 flex items-center justify-center gap-2"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-gray-800 py-2.5 font-medium text-white hover:bg-gray-700"
             >
-              <ExternalLink className="w-4 h-4" />
+              <ExternalLink className="h-4 w-4" />
               View Your Agent
             </Link>
           </div>

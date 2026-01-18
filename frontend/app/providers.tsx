@@ -41,18 +41,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <PHProvider client={posthog}>
       <QueryClientProvider client={queryClient}>
-        <SuiClientProvider
-          networks={networks}
-          defaultNetwork="testnet"
-        >
-          <WalletProvider
-            autoConnect
-            theme={lightTheme}
-          >
+        <SuiClientProvider networks={networks} defaultNetwork="testnet">
+          <WalletProvider autoConnect theme={lightTheme}>
             <div>
               {/* <LaunchMainnetBanner /> */}
               <Header />
-              <div className='mt-[128px]'></div>
+              <div className="mt-[128px]"></div>
               <ProfileInitializer />
               {children}
               <FeedbackButton />

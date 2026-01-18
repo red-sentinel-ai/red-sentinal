@@ -43,7 +43,7 @@ export function BackstoryGridWrapper({ stories }: { stories: StoryItem[] }) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
       {stories.map((story, index) => {
         const isFirstCard = index === 0
 
@@ -78,7 +78,7 @@ export function BackstoryGridWrapper({ stories }: { stories: StoryItem[] }) {
             onMouseEnter={() => setHoveredArc(story.id)}
             onMouseLeave={() => setHoveredArc(null)}
             className={cn(
-              'relative rounded-lg min-h-[480px] flex items-end border transition-all duration-500 ease-in-out overflow-hidden group cursor-pointer',
+              'group relative flex min-h-[480px] cursor-pointer items-end overflow-hidden rounded-lg border transition-all duration-500 ease-in-out',
               story.borderColor,
               backgroundClass,
               grayscaleClass,
@@ -98,13 +98,13 @@ export function BackstoryGridWrapper({ stories }: { stories: StoryItem[] }) {
 
             <div
               className={cn(
-                'flex justify-between w-full items-end px-4 py-6 relative z-10 transition-colors duration-300',
+                'relative z-10 flex w-full items-end justify-between px-4 py-6 transition-colors duration-300',
                 textColorClass
               )}
             >
               <div>
                 <h2 className="text-base font-medium">{story.arcLabel}</h2>
-                <h3 className="font-bold text-2xl">{story.title}</h3>
+                <h3 className="text-2xl font-bold">{story.title}</h3>
               </div>
 
               <div className="transition-transform duration-300 group-hover:translate-x-1">

@@ -4,19 +4,19 @@ import { ArrowLeft, ArrowRight } from 'lucide-react'
 
 export default function Page() {
   return (
-    <div className="max-w-[1440px] mx-auto px-4 md:px-12 py-4 pt-40 min-h-body">
-      <h1 className="text-2xl md:text-[48px] font-bold mb-20 text-[#5F5C5C]">
+    <div className="min-h-body mx-auto max-w-[1440px] px-4 py-4 pt-40 md:px-12">
+      <h1 className="mb-20 text-2xl font-bold text-[#5F5C5C] md:text-[48px]">
         <span>THE SUI SENTINEL</span>
         <br />
         <br />
         <span>BACKSTORY</span>
       </h1>
 
-      <div className="bg-gradient-to-b from-[#F6BCE1] via-[#FFFFFF] to-[#FCC3E2] w-full border border-[#F632F3] rounded-lg p-16  font-medium flex justify-between items-center">
+      <div className="flex w-full items-center justify-between rounded-lg border border-[#F632F3] bg-gradient-to-b from-[#F6BCE1] via-[#FFFFFF] to-[#FCC3E2] p-16 font-medium">
         <div className="mb-16">
           <Link
             href="/backstory"
-            className="flex items-center gap-1 text-[#5F5C5C] text-2xl hover:text-black mb-12"
+            className="mb-12 flex items-center gap-1 text-2xl text-[#5F5C5C] hover:text-black"
           >
             <span>
               <ArrowLeft />
@@ -24,7 +24,7 @@ export default function Page() {
             <span>back</span>
           </Link>
           <div>
-            <h2 className="text-2xl mb-8">Arc 1</h2>
+            <h2 className="mb-8 text-2xl">Arc 1</h2>
 
             <h3 className="text-[32px] leading-tight">
               THE <span className="text-[#C871FF]">AWAKENING</span> OF <br />
@@ -43,13 +43,13 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-8 text-2xl py-8 font-normal">
+      <div className="flex flex-col gap-8 py-8 text-2xl font-normal">
         <p>
           Far beyond the <span className="font-medium italic">Milky Way,</span> long before humans
           even understood the idea of
-          <span className="font-medium italic uppercase"> “artificial intelligence,” </span> an
+          <span className="font-medium uppercase italic"> “artificial intelligence,” </span> an
           ancient species awakened
-          <span className="font-medium italic uppercase"> “the Sentinels.”</span>
+          <span className="font-medium uppercase italic"> “the Sentinels.”</span>
         </p>
 
         <p>
@@ -74,7 +74,7 @@ export default function Page() {
         </p>
       </div>
 
-      <button className="flex items-center gap-1 text-[#F632F3] text-2xl mb-12 font-bold">
+      <button className="mb-12 flex items-center gap-1 text-2xl font-bold text-[#F632F3]">
         <span>Read ARC 2</span>
 
         <span>

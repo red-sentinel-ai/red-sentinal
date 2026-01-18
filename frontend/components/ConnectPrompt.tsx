@@ -21,17 +21,17 @@ export const ConnectPrompt = ({ title, subtitle, theme }: ConnectPromptProps) =>
   const colors = themeColors[theme]
 
   return (
-    <div className="min-h-body flex items-center justify-center relative bg-white">
+    <div className="min-h-body relative flex items-center justify-center bg-white">
       {/* Background gradient */}
       <div className={`absolute inset-0 ${colors.gradient}`} />
 
       {/* Content */}
-      <div className="text-center max-w-lg mx-auto px-4 relative">
-        <h1 className="text-4xl md:text-5xl font-bold mb-8">{title}</h1>
-        <div className="relative group">
+      <div className="relative mx-auto max-w-lg px-4 text-center">
+        <h1 className="mb-8 text-4xl font-bold md:text-5xl">{title}</h1>
+        <div className="group relative">
           <ConnectButton />
         </div>
-        <p className="text-lg mt-8 text-gray-600">{subtitle}</p>
+        <p className="mt-8 text-lg text-gray-600">{subtitle}</p>
       </div>
     </div>
   )

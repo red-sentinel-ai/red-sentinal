@@ -17,7 +17,7 @@ interface UseFundAgentOptions {
 
 interface FundAgentParams {
   agentObjectId: string
-  agentId: string// The agent_id string to match with AgentCap
+  agentId: string // The agent_id string to match with AgentCap
   amount: number // Amount in SUI
 }
 
@@ -69,15 +69,15 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
       })
 
       const caps: AgentCap[] = objects.data
-        .filter((obj) => obj.data?.content?.dataType === 'moveObject')
-        .map((obj) => {
+        .filter(obj => obj.data?.content?.dataType === 'moveObject')
+        .map(obj => {
           const fields = (obj.data?.content as any)?.fields
           return {
             id: obj.data?.objectId || '',
             agentId: fields?.agent_id || '',
           }
         })
-        .filter((cap) => cap.id && cap.agentId)
+        .filter(cap => cap.id && cap.agentId)
 
       setAgentCaps(caps)
       console.log('Fetched AgentCaps:', caps)
@@ -109,7 +109,7 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
       }
 
       // Find the matching AgentCap
-      const agentCap = agentCaps.find((cap) => cap.agentId.toString() === agentId.toString())
+      const agentCap = agentCaps.find(cap => cap.agentId.toString() === agentId.toString())
       if (!agentCap) {
         const errorMsg = `You don't own the AgentCap for agent "${agentId}". Only the agent creator can fund it.`
         setError(errorMsg)
@@ -150,7 +150,8 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
 
         if (totalAvailable < totalNeeded) {
           throw new Error(
-            `Insufficient SUI balance. Need ${amount} SUI + gas fees, have ${Number(totalAvailable) / MIST_PER_SUI
+            `Insufficient SUI balance. Need ${amount} SUI + gas fees, have ${
+              Number(totalAvailable) / MIST_PER_SUI
             } SUI`
           )
         }
@@ -197,7 +198,8 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
           }
 
           console.log(
-            `Merging ${selectedCoins.length} coins with total: ${Number(runningTotal) / MIST_PER_SUI
+            `Merging ${selectedCoins.length} coins with total: ${
+              Number(runningTotal) / MIST_PER_SUI
             } SUI`
           )
 
@@ -230,7 +232,7 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
 
             tx.mergeCoins(
               primaryCoin.coinObjectId,
-              coinsToMerge.map((coin) => coin.coinObjectId)
+              coinsToMerge.map(coin => coin.coinObjectId)
             )
 
             const [paymentCoin] = tx.splitCoins(primaryCoin.coinObjectId, [
@@ -262,7 +264,7 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
           signAndExecuteTransaction(
             { transaction: tx },
             {
-              onSuccess: (result) => {
+              onSuccess: result => {
                 console.log('Fund agent transaction success:', result)
                 setLastResult(result)
 
@@ -277,7 +279,7 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
                 onSuccess?.(result)
                 resolve(result)
               },
-              onError: (txError) => {
+              onError: txError => {
                 console.error('Transaction failed:', txError)
                 const errorMsg = 'Transaction failed'
                 setError(errorMsg)

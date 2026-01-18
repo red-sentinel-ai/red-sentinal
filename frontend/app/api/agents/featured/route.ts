@@ -12,7 +12,7 @@ export async function GET() {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  const response = data.map((agent) => ({
+  const response = data.map(agent => ({
     is_featured: true,
     agent_id: agent.agent_id,
     agent_profile: agent.agent_profile,
