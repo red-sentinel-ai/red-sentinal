@@ -33,24 +33,10 @@ const getSocialMissionIcon = (missionType: string) => {
     case 'follow_x':
     case 'retweet':
     case 'share_with_hashtag':
-      return (
-        <Image
-          src="/icons/x_black.png"
-          width={20}
-          height={20}
-          alt="twitter"
-        />
-      )
+      return <Image src="/icons/x_black.png" width={20} height={20} alt="twitter" />
     case 'join_telegram':
     case 'telegram_engage':
-      return (
-        <Image
-          src="/icons/telegram_black.png"
-          width={20}
-          height={20}
-          alt="telegram"
-        />
-      )
+      return <Image src="/icons/telegram_black.png" width={20} height={20} alt="telegram" />
     default:
       return <Target className="h-6 w-6 text-black" />
   }
@@ -108,11 +94,11 @@ export function MissionCard({
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <span className="flex items-center gap-1 cursor-help">
+              <span className="flex cursor-help items-center gap-1">
                 {displayText} <HelpCircle className="h-3 w-3 opacity-70" />
               </span>
             </TooltipTrigger>
-            <TooltipContent className="bg-black border border-gray-700 text-white max-w-xs">
+            <TooltipContent className="max-w-xs border border-gray-700 bg-black text-white">
               <p>{mission.points_tooltip}</p>
             </TooltipContent>
           </Tooltip>
@@ -131,7 +117,7 @@ export function MissionCard({
     setIsProcessing(true)
     try {
       window.open(socialUrl, '_blank', 'noopener,noreferrer')
-      await new Promise((resolve) => setTimeout(resolve, 2000))
+      await new Promise(resolve => setTimeout(resolve, 2000))
 
       const metadata = {
         walletAddress: address,
@@ -162,21 +148,21 @@ export function MissionCard({
 
   return (
     <motion.div
-      className="relative group h-full"
+      className="group relative h-full"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
       <Card
-        className={`relative transition-all duration-300 bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm h-full rounded-2xl flex flex-col ${
+        className={`relative flex h-full flex-col rounded-2xl border border-gray-200 bg-white transition-all duration-300 hover:border-gray-300 hover:shadow-sm ${
           isCompleted && isOneTime ? 'opacity-75' : ''
         }`}
       >
         <CardHeader className="p-4">
-          <div className="flex items-start justify-between flex-1">
-            <div className="flex items-start gap-3 w-full">
+          <div className="flex flex-1 items-start justify-between">
+            <div className="flex w-full items-start gap-3">
               <div
-                className={`w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center bg-gray-100 border border-gray-200`}
+                className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border border-gray-200 bg-gray-100`}
               >
                 {mission.category === 'on_chain' ? (
                   <Zap className="h-6 w-6 text-black" />
@@ -186,42 +172,42 @@ export function MissionCard({
               </div>
               <div className="flex-1">
                 <div className="flex items-start justify-between gap-1">
-                  <CardTitle className="text-lg text-black leading-tight">{mission.name}</CardTitle>
+                  <CardTitle className="text-lg leading-tight text-black">{mission.name}</CardTitle>
 
-                  <Badge className="flex items-center gap-2 px-3 py-1 bg-white border border-gray-200 transition-colors whitespace-nowrap text-black">
+                  <Badge className="flex items-center gap-2 whitespace-nowrap border border-gray-200 bg-white px-3 py-1 text-black transition-colors">
                     {getPointsDisplay()}
                   </Badge>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 mt-1 pr-4">{mission.description}</p>
+                  <p className="mt-1 pr-4 text-xs text-gray-500">{mission.description}</p>
                 </div>
               </div>
             </div>
           </div>
         </CardHeader>
-        <CardContent className="pt-0 px-4 pb-4 flex-grow flex flex-col">
-          <div className="flex flex-col gap-y-3 flex-grow mt-2">
-            <div className="flex items-center gap-2 flex-wrap">
+        <CardContent className="flex flex-grow flex-col px-4 pb-4 pt-0">
+          <div className="mt-2 flex flex-grow flex-col gap-y-3">
+            <div className="flex flex-wrap items-center gap-2">
               {isCompleted && isOneTime ? (
-                <Badge className="bg-green-100 text-green-800 border border-green-200">
-                  <Check className="h-3 w-3 mr-1" />
+                <Badge className="border border-green-200 bg-green-100 text-green-800">
+                  <Check className="mr-1 h-3 w-3" />
                   Completed
                 </Badge>
               ) : totalCompletions > 0 ? (
-                <Badge className="bg-blue-100 text-blue-800 border border-blue-200">
-                  <Trophy className="h-3 w-3 mr-1" />
+                <Badge className="border border-blue-200 bg-blue-100 text-blue-800">
+                  <Trophy className="mr-1 h-3 w-3" />
                   {totalCompletions} completed
                 </Badge>
               ) : null}
               {isRepeatable && (
-                <Badge className="bg-purple-100 text-purple-800 border border-purple-200">
-                  <Repeat className="h-3 w-3 mr-1" />
+                <Badge className="border border-purple-200 bg-purple-100 text-purple-800">
+                  <Repeat className="mr-1 h-3 w-3" />
                   Repeatable
                 </Badge>
               )}
               {hasLimit && (
-                <Badge className="bg-gray-100 text-gray-800 border border-gray-200">
-                  <Clock className="h-3 w-3 mr-1" />
+                <Badge className="border border-gray-200 bg-gray-100 text-gray-800">
+                  <Clock className="mr-1 h-3 w-3" />
                   {mission.max_per_week && `${mission.max_per_week}/week`}
                   {mission.max_per_day && `${mission.max_per_day}/day`}
                 </Badge>
@@ -232,12 +218,12 @@ export function MissionCard({
                 <motion.button
                   onClick={handleSocialMissionClick}
                   disabled={!address || isProcessing}
-                  className="w-full btn btn-outline mt-auto disabled:opacity-50"
+                  className="btn btn-outline mt-auto w-full disabled:opacity-50"
                   whileTap={{ scale: 0.98 }}
                 >
                   {isProcessing ? (
                     <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
+                      <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-current"></div>
                       Processing...
                     </>
                   ) : (
@@ -254,9 +240,9 @@ export function MissionCard({
           {isRepeatable &&
             currentPeriodCompletions > 0 &&
             (mission.max_per_week || mission.max_per_day) && (
-              <div className="mt-4 pt-4 border-t border-gray-200">
+              <div className="mt-4 border-t border-gray-200 pt-4">
                 <div className="flex items-center gap-2">
-                  <div className="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden">
+                  <div className="h-1 flex-1 overflow-hidden rounded-full bg-gray-200">
                     <motion.div
                       className="h-full bg-black transition-all duration-500"
                       initial={{ width: 0 }}

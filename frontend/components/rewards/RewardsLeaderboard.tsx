@@ -30,7 +30,7 @@ export function RewardsLeaderboard({ pointsSymbol }: RewardsLeaderboardProps) {
     debouncedSearch
   )
 
-  const entries = data?.pages.flatMap((page) => page.leaderboard) || []
+  const entries = data?.pages.flatMap(page => page.leaderboard) || []
 
   useEffect(() => {
     debouncedSearchUpdate(searchInput)
@@ -44,7 +44,7 @@ export function RewardsLeaderboard({ pointsSymbol }: RewardsLeaderboardProps) {
 
     const currentLoadMoreRef = loadMoreRef.current
     observer.current = new IntersectionObserver(
-      (entries) => {
+      entries => {
         if (entries[0].isIntersecting) {
           fetchNextPage()
         }
@@ -68,34 +68,34 @@ export function RewardsLeaderboard({ pointsSymbol }: RewardsLeaderboardProps) {
       <div className="container mx-auto md:px-4">
         <AnimatePresence mode="wait">
           <motion.div
-            className="max-w-4xl mx-auto"
+            className="mx-auto max-w-4xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <Card className="bg-gray-50/50 backdrop-blur-lg border border-gray-200 rounded-2xl">
-              <CardHeader className="flex-col sm:flex-row justify-between items-start gap-4">
+            <Card className="rounded-2xl border border-gray-200 bg-gray-50/50 backdrop-blur-lg">
+              <CardHeader className="flex-col items-start justify-between gap-4 sm:flex-row">
                 <div className="flex items-center gap-3">
                   <motion.div
-                    className="w-12 h-12 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center"
+                    className="flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-gray-100"
                     whileHover={{ scale: 1.1, rotate: 5 }}
                   >
                     <Trophy className="h-6 w-6 text-black" />
                   </motion.div>
                   <div>
-                    <CardTitle className="text-lg sm:text-2xl text-black uppercase">
+                    <CardTitle className="text-lg uppercase text-black sm:text-2xl">
                       SENTINEL Points Leaderboard
                     </CardTitle>
                     <p className="text-gray-500">Top performers in the Sui Sentinel</p>
                   </div>
                 </div>
-                <div className="mt-4 sm:mt-0 w-full max-w-md">
+                <div className="mt-4 w-full max-w-md sm:mt-0">
                   <Input
                     type="text"
                     placeholder="Search by Discord or X username..."
                     value={searchInput}
-                    onChange={(e) => setSearchInput(e.target.value)}
-                    className="bg-white border border-gray-300 rounded-lg text-black placeholder:text-gray-400 focus:border-black transition-colors"
+                    onChange={e => setSearchInput(e.target.value)}
+                    className="rounded-lg border border-gray-300 bg-white text-black transition-colors placeholder:text-gray-400 focus:border-black"
                   />
                 </div>
               </CardHeader>
@@ -103,38 +103,35 @@ export function RewardsLeaderboard({ pointsSymbol }: RewardsLeaderboardProps) {
                 <div className="space-y-3">
                   {isLoading ? (
                     <div className="space-y-4">
-                      {[1, 2, 3, 4, 5].map((i) => (
-                        <Skeleton
-                          key={i}
-                          className="h-24 rounded-lg bg-gray-200"
-                        />
+                      {[1, 2, 3, 4, 5].map(i => (
+                        <Skeleton key={i} className="h-24 rounded-lg bg-gray-200" />
                       ))}
                     </div>
                   ) : entries.length === 0 ? (
                     <motion.div
-                      className="text-center py-16"
+                      className="py-16 text-center"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <div className="w-24 h-24 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center mx-auto mb-6">
+                      <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full border border-gray-200 bg-gray-100">
                         {debouncedSearch ? (
                           <Search className="h-12 w-12 text-gray-400" />
                         ) : (
                           <TrendingUp className="h-12 w-12 text-gray-400" />
                         )}
                       </div>
-                      <h3 className="text-2xl font-bold text-black mb-3 uppercase">
+                      <h3 className="mb-3 text-2xl font-bold uppercase text-black">
                         {debouncedSearch ? 'No Search Results' : 'No Rankings Yet'}
                       </h3>
-                      <p className="text-gray-600 max-w-md mx-auto leading-relaxed">
+                      <p className="mx-auto max-w-md leading-relaxed text-gray-600">
                         {debouncedSearch
                           ? 'No users found matching your search criteria. Try a different username.'
                           : 'Be the first to complete missions and claim your spot at the top of the leaderboard!'}
                       </p>
                       {!debouncedSearch && (
                         <div className="mt-6">
-                          <span className="bg-blue-100 text-blue-800 border border-blue-200 px-3 py-1 rounded-full text-sm flex items-center gap-1 w-fit mx-auto">
+                          <span className="mx-auto flex w-fit items-center gap-1 rounded-full border border-blue-200 bg-blue-100 px-3 py-1 text-sm text-blue-800">
                             <Zap className="h-3 w-3" />
                             Start earning points today
                           </span>
@@ -151,27 +148,27 @@ export function RewardsLeaderboard({ pointsSymbol }: RewardsLeaderboardProps) {
                         return (
                           <motion.div
                             key={entry.user_id}
-                            className={`relative group transition-all duration-300 rounded-xl ${
+                            className={`group relative rounded-xl transition-all duration-300 ${
                               isCurrentUser ? 'ring-2 ring-blue-500/50' : ''
                             }`}
                           >
                             <div
-                              className={`relative flex flex-col sm:flex-row sm:items-center justify-between gap-1 md:gap-4 p-3 md:p-4 rounded-xl transition-all duration-300 border ${
+                              className={`relative flex flex-col justify-between gap-1 rounded-xl border p-3 transition-all duration-300 sm:flex-row sm:items-center md:gap-4 md:p-4 ${
                                 isCurrentUser
-                                  ? 'bg-blue-50 border-blue-200'
+                                  ? 'border-blue-200 bg-blue-50'
                                   : isTopThree
-                                  ? 'bg-white border-gray-200 hover:border-gray-300 hover:shadow-sm'
-                                  : 'bg-white border-gray-200 hover:bg-gray-50/50 hover:border-gray-300'
+                                    ? 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'
+                                    : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50/50'
                               }`}
                             >
-                              <div className="flex items-center gap-4 flex-1 min-w-0">
-                                <div className="flex-shrink-0 w-10 sm:w-12 flex justify-center">
+                              <div className="flex min-w-0 flex-1 items-center gap-4">
+                                <div className="flex w-10 flex-shrink-0 justify-center sm:w-12">
                                   {getRankIcon(index)}
                                 </div>
-                                <div className="flex-1 min-w-0">
+                                <div className="min-w-0 flex-1">
                                   <UserDisplay entry={entry} />
                                   {isCurrentUser && (
-                                    <span className="mt-2 bg-blue-100 text-blue-800 border border-blue-200 px-2 py-1 rounded-full text-xs flex items-center gap-1 w-fit">
+                                    <span className="mt-2 flex w-fit items-center gap-1 rounded-full border border-blue-200 bg-blue-100 px-2 py-1 text-xs text-blue-800">
                                       <Crown className="h-3 w-3" />
                                       You
                                     </span>
@@ -179,28 +176,28 @@ export function RewardsLeaderboard({ pointsSymbol }: RewardsLeaderboardProps) {
                                 </div>
                               </div>
 
-                              <div className="flex items-center justify-between sm:justify-normal sm:flex-col md:flex-row gap-3 sm:gap-2 md:gap-4 flex-shrink-0 w-full sm:w-auto sm:pl-14 md:pl-0">
+                              <div className="flex w-full flex-shrink-0 items-center justify-between gap-3 sm:w-auto sm:flex-col sm:justify-normal sm:gap-2 sm:pl-14 md:flex-row md:gap-4 md:pl-0">
                                 <div className="text-left sm:text-right">
-                                  <div className="flex items-center gap-1 justify-start sm:justify-end mb-0 sm:mb-1">
+                                  <div className="mb-0 flex items-center justify-start gap-1 sm:mb-1 sm:justify-end">
                                     <Zap className="h-4 w-4 text-black" />
-                                    <span className="text-lg sm:text-xl font-bold text-black">
+                                    <span className="text-lg font-bold text-black sm:text-xl">
                                       {entry.total_points?.toLocaleString()}
                                     </span>
-                                    <span className="text-xs sm:text-sm text-gray-500 font-medium">
+                                    <span className="text-xs font-medium text-gray-500 sm:text-sm">
                                       {pointsSymbol}
                                     </span>
                                   </div>
                                 </div>
                                 <div className="relative">
                                   <div
-                                    className={`px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-bold min-w-20 text-center border ${tierConfig.bgClass} ${tierConfig.textClass} ${tierConfig.borderClass}`}
+                                    className={`min-w-20 rounded-full border px-3 py-2 text-center text-xs font-bold sm:px-4 sm:text-sm ${tierConfig.bgClass} ${tierConfig.textClass} ${tierConfig.borderClass}`}
                                   >
                                     {(entry.tier || 'Bronze').charAt(0).toUpperCase() +
                                       (entry.tier || 'bronze').slice(1)}
                                   </div>
                                   {isTopThree && (
-                                    <div className="absolute -top-1 -right-1">
-                                      <div className="w-6 h-6 rounded-full bg-yellow-400 flex items-center justify-center">
+                                    <div className="absolute -right-1 -top-1">
+                                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-yellow-400">
                                         <Star className="h-3 w-3 text-white" />
                                       </div>
                                     </div>
@@ -213,20 +210,12 @@ export function RewardsLeaderboard({ pointsSymbol }: RewardsLeaderboardProps) {
                       })}
                       {isFetchingNextPage && (
                         <div className="space-y-4">
-                          {[1, 2, 3, 4, 5].map((i) => (
-                            <Skeleton
-                              key={i}
-                              className="h-24 rounded-lg bg-gray-200"
-                            />
+                          {[1, 2, 3, 4, 5].map(i => (
+                            <Skeleton key={i} className="h-24 rounded-lg bg-gray-200" />
                           ))}
                         </div>
                       )}
-                      {hasNextPage && (
-                        <div
-                          ref={loadMoreRef}
-                          className="h-10"
-                        />
-                      )}
+                      {hasNextPage && <div ref={loadMoreRef} className="h-10" />}
                     </>
                   )}
                 </div>
@@ -244,34 +233,34 @@ const getRankIcon = (index: number) => {
     case 0:
       return (
         <div className="relative">
-          <Crown className="h-7 w-7 sm:h-8 sm:w-8 text-yellow-500" />
-          <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-yellow-500 flex items-center justify-center border-2 border-white">
-            <span className="text-[10px] sm:text-xs font-bold text-white">1</span>
+          <Crown className="h-7 w-7 text-yellow-500 sm:h-8 sm:w-8" />
+          <div className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white bg-yellow-500">
+            <span className="text-[10px] font-bold text-white sm:text-xs">1</span>
           </div>
         </div>
       )
     case 1:
       return (
         <div className="relative">
-          <Trophy className="h-6 w-6 sm:h-7 sm:w-7 text-gray-500" />
-          <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-gray-500 flex items-center justify-center border-2 border-white">
-            <span className="text-[10px] sm:text-xs font-bold text-white">2</span>
+          <Trophy className="h-6 w-6 text-gray-500 sm:h-7 sm:w-7" />
+          <div className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white bg-gray-500">
+            <span className="text-[10px] font-bold text-white sm:text-xs">2</span>
           </div>
         </div>
       )
     case 2:
       return (
         <div className="relative">
-          <Medal className="h-6 w-6 sm:h-7 sm:w-7 text-yellow-700" />
-          <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-yellow-700 flex items-center justify-center border-2 border-white">
-            <span className="text-[10px] sm:text-xs font-bold text-white">3</span>
+          <Medal className="h-6 w-6 text-yellow-700 sm:h-7 sm:w-7" />
+          <div className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white bg-yellow-700">
+            <span className="text-[10px] font-bold text-white sm:text-xs">3</span>
           </div>
         </div>
       )
     default:
       return (
-        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center">
-          <span className="text-xs sm:text-sm font-bold text-gray-600">#{index + 1}</span>
+        <div className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-gray-100 sm:h-10 sm:w-10">
+          <span className="text-xs font-bold text-gray-600 sm:text-sm">#{index + 1}</span>
         </div>
       )
   }

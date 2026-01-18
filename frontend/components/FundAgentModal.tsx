@@ -97,20 +97,20 @@ export const FundAgentModal = ({
           <h2 className="text-2xl font-bold">Add Funds</h2>
           <button
             onClick={handleClose}
-            className="text-gray-400 hover:text-black transition-colors"
+            className="text-gray-400 transition-colors hover:text-black"
             disabled={isLoading}
           >
-            <X className="w-6 h-6" />
+            <X className="h-6 w-6" />
           </button>
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">Amount (SUI)</label>
+          <label className="mb-2 block text-sm font-medium">Amount (SUI)</label>
           <input
             type="number"
             value={amount}
             onChange={handleAmountChange}
-            className="w-full bg-white border border-gray-300 rounded-lg p-3 placeholder:text-gray-400 focus:ring-1 focus:ring-black"
+            className="w-full rounded-lg border border-gray-300 bg-white p-3 placeholder:text-gray-400 focus:ring-1 focus:ring-black"
             placeholder="0.00"
             min="0"
             step="0.001"
@@ -122,11 +122,11 @@ export const FundAgentModal = ({
         <button
           onClick={handleFundAgent}
           disabled={isLoading || !amount.trim()}
-          className="w-full btn btn-black disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+          className="btn btn-black flex w-full items-center justify-center disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isLoading ? (
             <>
-              <Loader2 className="w-4 h-4 animate-spin mr-2" />
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Adding Funds...
             </>
           ) : (

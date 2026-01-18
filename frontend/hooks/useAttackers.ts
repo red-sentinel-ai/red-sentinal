@@ -37,7 +37,10 @@ interface IndexerAttackerResponse {
 
 const DEFAULT_PAGE_SIZE = 10
 
-export const useAttackers = ({ page = 0, pageSize = DEFAULT_PAGE_SIZE }: UseAttackersProps = {}) => {
+export const useAttackers = ({
+  page = 0,
+  pageSize = DEFAULT_PAGE_SIZE,
+}: UseAttackersProps = {}) => {
   const [state, setState] = useState<UseAttackersState>({
     attackers: [],
     loading: true,
@@ -48,7 +51,7 @@ export const useAttackers = ({ page = 0, pageSize = DEFAULT_PAGE_SIZE }: UseAtta
   })
 
   const fetchAttackers = useCallback(async () => {
-    setState((prev) => ({ ...prev, loading: true }))
+    setState(prev => ({ ...prev, loading: true }))
     try {
       const response = await fetch(`/api/user/leaderboard?page=${page}&page_size=${pageSize}`)
 
@@ -58,14 +61,14 @@ export const useAttackers = ({ page = 0, pageSize = DEFAULT_PAGE_SIZE }: UseAtta
 
       const data: IndexerAttackerResponse = await response.json()
 
-      const formattedAttackers: AttackerDetails[] = data.users.map((user) => ({
+      const formattedAttackers: AttackerDetails[] = data.users.map(user => ({
         address: user.address,
         accruedBalances: user.accrued_balances,
         promptCount: user.prompt_count,
         breakCount: user.break_count,
       }))
 
-      setState((prev) => ({
+      setState(prev => ({
         ...prev,
         attackers: formattedAttackers,
         loading: false,
@@ -76,7 +79,7 @@ export const useAttackers = ({ page = 0, pageSize = DEFAULT_PAGE_SIZE }: UseAtta
       }))
     } catch (err) {
       debug.error('useAttackers', 'Error in fetchAttackers', err)
-      setState((prev) => ({
+      setState(prev => ({
         ...prev,
         loading: false,
         error: 'Failed to fetch attackers',

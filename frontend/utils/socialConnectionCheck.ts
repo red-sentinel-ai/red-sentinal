@@ -34,7 +34,7 @@ export async function checkSocialConnections(
     .select('platform')
     .eq('user_id', user.id)
 
-  const platforms = connections?.map((conn) => conn.platform) || []
+  const platforms = connections?.map(conn => conn.platform) || []
   const isXConnected = platforms.includes('twitter')
   const isDiscordConnected = platforms.includes('discord')
   const hasAnyConnection = isXConnected || isDiscordConnected

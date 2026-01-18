@@ -1,16 +1,16 @@
-import { ReactNode } from "react";
-import { Dialog } from "@/components/Dialog";
-import { Loader2, X } from "lucide-react";
+import { ReactNode } from 'react'
+import { Dialog } from '@/components/Dialog'
+import { Loader2, X } from 'lucide-react'
 
 interface AgentUpdateDialogProps {
-  open: boolean;
-  onClose: () => void;
-  title: string;
-  isLoading: boolean;
-  onConfirm: () => void;
-  confirmText: string;
-  isConfirmDisabled: boolean;
-  children: ReactNode;
+  open: boolean
+  onClose: () => void
+  title: string
+  isLoading: boolean
+  onConfirm: () => void
+  confirmText: string
+  isConfirmDisabled: boolean
+  children: ReactNode
 }
 
 export const AgentUpdateDialog = ({
@@ -29,7 +29,7 @@ export const AgentUpdateDialog = ({
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold">{title}</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-black">
-            <X className="w-6 h-6" />
+            <X className="h-6 w-6" />
           </button>
         </div>
 
@@ -38,12 +38,12 @@ export const AgentUpdateDialog = ({
         <button
           onClick={onConfirm}
           disabled={isConfirmDisabled}
-          className="w-full btn btn-black flex justify-center items-center gap-2"
+          className="btn btn-black flex w-full items-center justify-center gap-2"
         >
-          {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+          {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
           {confirmText}
         </button>
       </div>
     </Dialog>
-  );
-};
+  )
+}

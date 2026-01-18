@@ -85,7 +85,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body
-        className={`${satoshi.className} text-black bg-no-repeat`}
+        className={`${satoshi.className} bg-no-repeat text-black`}
         style={{
           backgroundImage: `
       url('/img/hero_bg.png'),
@@ -103,7 +103,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       >
         <Providers>
           <NextTopLoader color="#000000" showSpinner={false} />
-          <main className="flex-grow ">{children}</main>
+          <main className="flex-grow">{children}</main>
           <Footer />
           <ToastContainer />
         </Providers>

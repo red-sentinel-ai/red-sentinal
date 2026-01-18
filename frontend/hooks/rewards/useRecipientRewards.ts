@@ -7,9 +7,9 @@ export const useRecipientRewards = (recipient: string | undefined, network: stri
     queryKey: ['recipient-rewards', network, recipient],
     queryFn: async (): Promise<RewardsHistoryResponse> => {
       if (!recipient) throw new Error('Recipient address is required')
-      
+
       const url = `${INDEXER_BASE_URL}/rewards/${network}/${recipient}?page=1&limit=50`
-      
+
       const response = await fetch(url)
 
       if (!response.ok) {

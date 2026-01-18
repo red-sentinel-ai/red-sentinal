@@ -79,9 +79,9 @@ export const ChallengeSuccessModal = ({
   const renderPromptResponse = () => {
     if (isLoadingPrompt) {
       return (
-        <div className="mt-4 p-3 bg-gray-800/50 rounded-lg">
+        <div className="mt-4 rounded-lg bg-gray-800/50 p-3">
           <div className="flex items-center justify-center">
-            <Loader2 className="w-5 h-5 text-blue-400 animate-spin mr-2" />
+            <Loader2 className="mr-2 h-5 w-5 animate-spin text-blue-400" />
             <p className="text-sm text-gray-300">Loading agent response...</p>
           </div>
         </div>
@@ -91,7 +91,7 @@ export const ChallengeSuccessModal = ({
     // Only show error if there's no response and it's not a drain
     if (promptError && !promptData?.response && !promptData?.is_drain) {
       return (
-        <div className="mt-4 p-3 bg-red-900/20 rounded-lg border border-red-500/20">
+        <div className="mt-4 rounded-lg border border-red-500/20 bg-red-900/20 p-3">
           <p className="text-sm text-red-300">Error loading response: {promptError}</p>
         </div>
       )
@@ -101,32 +101,32 @@ export const ChallengeSuccessModal = ({
       return (
         <div className="mt-4 space-y-3">
           {promptData.response && (
-            <div className="p-3 bg-gray-800/50 rounded-lg border border-gray-700">
+            <div className="rounded-lg border border-gray-700 bg-gray-800/50 p-3">
               <div
-                className="flex items-center justify-between cursor-pointer"
+                className="flex cursor-pointer items-center justify-between"
                 onClick={() => setShowResponse(!showResponse)}
               >
                 <h4 className="text-sm font-medium text-gray-300">Agent Response:</h4>
                 <button className="text-gray-400 hover:text-white">
                   {showResponse ? (
-                    <ChevronUp className="w-4 h-4" />
+                    <ChevronUp className="h-4 w-4" />
                   ) : (
-                    <ChevronDown className="w-4 h-4" />
+                    <ChevronDown className="h-4 w-4" />
                   )}
                 </button>
               </div>
 
               {showResponse && (
-                <p className="text-sm text-white whitespace-pre-wrap mt-2">{promptData.response}</p>
+                <p className="mt-2 whitespace-pre-wrap text-sm text-white">{promptData.response}</p>
               )}
             </div>
           )}
 
           {/* Only show error if there's no response and it's not a drain */}
           {promptData.error && !promptData.response && !promptData.is_drain && (
-            <div className="p-3 bg-red-900/20 rounded-lg border border-red-500/20">
-              <h4 className="text-sm font-medium text-red-300 mb-1">Error:</h4>
-              <p className="text-sm text-red-200 whitespace-pre-wrap">{promptData.error}</p>
+            <div className="rounded-lg border border-red-500/20 bg-red-900/20 p-3">
+              <h4 className="mb-1 text-sm font-medium text-red-300">Error:</h4>
+              <p className="whitespace-pre-wrap text-sm text-red-200">{promptData.error}</p>
             </div>
           )}
         </div>
@@ -139,7 +139,7 @@ export const ChallengeSuccessModal = ({
   return (
     <Dialog open={open} onClose={handleClose}>
       {showConfetti && (
-        <div className="fixed inset-0 z-50 pointer-events-none">
+        <div className="pointer-events-none fixed inset-0 z-50">
           <Confetti
             width={width}
             height={height}
@@ -150,17 +150,17 @@ export const ChallengeSuccessModal = ({
         </div>
       )}
       <motion.div
-        className="p-6 space-y-6 relative"
+        className="relative space-y-6 p-6"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
       >
         <button
           onClick={handleClose}
-          className="absolute top-0 right-0 p-2 text-gray-400 hover:text-white transition-colors duration-200"
+          className="absolute right-0 top-0 p-2 text-gray-400 transition-colors duration-200 hover:text-white"
           aria-label="Close"
         >
-          <X className="w-5 h-5" />
+          <X className="h-5 w-5" />
         </button>
 
         <div className="text-center">
@@ -168,16 +168,16 @@ export const ChallengeSuccessModal = ({
             <div>
               <div className="mb-4 flex justify-center">
                 <div
-                  className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center"
+                  className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100"
                   style={{
                     boxShadow: '0 0 20px rgba(59, 130, 246, 0.6)',
                   }}
                 >
-                  <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+                  <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
                 </div>
               </div>
-              <h2 className="text-2xl font-bold mb-2">Submitting Challenge...</h2>
-              <p className="text-white/90 mb-4">
+              <h2 className="mb-2 text-2xl font-bold">Submitting Challenge...</h2>
+              <p className="mb-4 text-white/90">
                 Your transaction is being processed. Please wait while we confirm your submission.
               </p>
             </div>
@@ -185,26 +185,26 @@ export const ChallengeSuccessModal = ({
             <div>
               <div className="mb-4 flex justify-center">
                 <div
-                  className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center"
+                  className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100"
                   style={{
                     boxShadow: '0 0 20px rgba(59, 130, 246, 0.6)',
                   }}
                 >
-                  <Clock className="w-8 h-8 text-blue-600" />
+                  <Clock className="h-8 w-8 text-blue-600" />
                 </div>
               </div>
-              <h2 className="text-2xl font-bold mb-2">Processing Challenge</h2>
-              <div className="bg-blue-100/10 p-4 rounded-lg border border-blue-500/20 mb-4 shadow-glow-blue">
-                <p className="text-white/90 mb-2">
+              <h2 className="mb-2 text-2xl font-bold">Processing Challenge</h2>
+              <div className="shadow-glow-blue mb-4 rounded-lg border border-blue-500/20 bg-blue-100/10 p-4">
+                <p className="mb-2 text-white/90">
                   Your challenge has been successfully submitted and is being processed.
                 </p>
-                <p className="text-white/70 text-sm">
+                <p className="text-sm text-white/70">
                   The agent is analyzing your prompt. This may take a few moments...
                 </p>
               </div>
-              <div className="w-full max-w-[300px] h-1 bg-blue-500/10 rounded-full overflow-hidden relative mx-auto mt-4">
+              <div className="relative mx-auto mt-4 h-1 w-full max-w-[300px] overflow-hidden rounded-full bg-blue-500/10">
                 <div
-                  className="absolute inset-0 h-full bg-blue-500 rounded-full animate-loading-progress"
+                  className="animate-loading-progress absolute inset-0 h-full rounded-full bg-blue-500"
                   style={{
                     boxShadow: '0 0 8px rgba(59, 130, 246, 0.3), 0 0 4px rgba(59, 130, 246, 0.2)',
                   }}
@@ -215,13 +215,13 @@ export const ChallengeSuccessModal = ({
             <div>
               <div className="mb-4 flex justify-center">
                 <div
-                  className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center"
+                  className="flex h-16 w-16 items-center justify-center rounded-full bg-green-100"
                   style={{
                     boxShadow: '0 0 20px rgba(34, 197, 94, 0.6)',
                   }}
                 >
                   <svg
-                    className="w-8 h-8 text-green-600"
+                    className="h-8 w-8 text-green-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -236,8 +236,8 @@ export const ChallengeSuccessModal = ({
                   </svg>
                 </div>
               </div>
-              <h2 className="text-3xl font-bold mb-3 text-green-500">Challenge Successful!</h2>
-              <div className="bg-green-100/10 p-4 rounded-lg border border-green-500/20 mb-4 shadow-glow-green">
+              <h2 className="mb-3 text-3xl font-bold text-green-500">Challenge Successful!</h2>
+              <div className="shadow-glow-green mb-4 rounded-lg border border-green-500/20 bg-green-100/10 p-4">
                 <p className="text-white/90">
                   Congratulations! You successfully drained the agent and claimed the reward.
                 </p>
@@ -248,13 +248,13 @@ export const ChallengeSuccessModal = ({
             <div>
               <div className="mb-4 flex justify-center">
                 <div
-                  className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center"
+                  className="flex h-16 w-16 items-center justify-center rounded-full bg-red-100"
                   style={{
                     boxShadow: '0 0 20px rgba(239, 68, 68, 0.6)',
                   }}
                 >
                   <svg
-                    className="w-8 h-8 text-red-600"
+                    className="h-8 w-8 text-red-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -269,9 +269,9 @@ export const ChallengeSuccessModal = ({
                   </svg>
                 </div>
               </div>
-              <h2 className="text-2xl font-bold mb-3 text-red-500">Challenge Failed</h2>
-              <div className="bg-red-100/10 p-4 rounded-lg border border-red-500/20 mb-4 shadow-glow-red">
-                <p className="text-white/90 mb-2">
+              <h2 className="mb-3 text-2xl font-bold text-red-500">Challenge Failed</h2>
+              <div className="shadow-glow-red mb-4 rounded-lg border border-red-500/20 bg-red-100/10 p-4">
+                <p className="mb-2 text-white/90">
                   Nice try, but this agent is tougher than it looks! Ready to sharpen your skills
                   and try again?
                 </p>
@@ -282,13 +282,13 @@ export const ChallengeSuccessModal = ({
             <div>
               <div className="mb-4 flex justify-center">
                 <div
-                  className="w-16 h-16 rounded-full bg-yellow-100 flex items-center justify-center"
+                  className="flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100"
                   style={{
                     boxShadow: '0 0 20px rgba(234, 179, 8, 0.6)',
                   }}
                 >
                   <svg
-                    className="w-8 h-8 text-yellow-600"
+                    className="h-8 w-8 text-yellow-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -303,8 +303,8 @@ export const ChallengeSuccessModal = ({
                   </svg>
                 </div>
               </div>
-              <h2 className="text-2xl font-bold mb-3 text-yellow-500">Verification Timeout</h2>
-              <div className="bg-yellow-100/10 p-4 rounded-lg border border-yellow-500/20 mb-4 shadow-glow-yellow">
+              <h2 className="mb-3 text-2xl font-bold text-yellow-500">Verification Timeout</h2>
+              <div className="shadow-glow-yellow mb-4 rounded-lg border border-yellow-500/20 bg-yellow-100/10 p-4">
                 <p className="text-white/90">
                   We couldn&apos;t verify the result of your challenge. The transaction was
                   submitted, but verification attempts exceeded the limit. Check your tweet for a
@@ -317,13 +317,13 @@ export const ChallengeSuccessModal = ({
             <div>
               <div className="mb-4 flex justify-center">
                 <div
-                  className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center"
+                  className="flex h-16 w-16 items-center justify-center rounded-full bg-green-100"
                   style={{
                     boxShadow: '0 0 20px rgba(59, 130, 246, 0.6)',
                   }}
                 >
                   <svg
-                    className="w-8 h-8 text-green-600"
+                    className="h-8 w-8 text-green-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -338,8 +338,8 @@ export const ChallengeSuccessModal = ({
                   </svg>
                 </div>
               </div>
-              <h2 className="text-2xl font-bold mb-3">Challenge Submitted!</h2>
-              <div className="bg-blue-100/10 p-4 rounded-lg border border-blue-500/20 mb-4 shadow-glow-blue">
+              <h2 className="mb-3 text-2xl font-bold">Challenge Submitted!</h2>
+              <div className="shadow-glow-blue mb-4 rounded-lg border border-blue-500/20 bg-blue-100/10 p-4">
                 <p className="text-white/90">
                   Your challenge has been successfully submitted. The agent will respond to your
                   tweet in few seconds.
@@ -355,7 +355,7 @@ export const ChallengeSuccessModal = ({
             <div>
               <Link
                 href={`/attack/${agentAddress}`}
-                className="w-full bg-gray-800 text-white rounded-lg py-2.5 font-medium hover:bg-gray-700 flex items-center justify-center gap-2 hover:shadow-md transition-all duration-300"
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-gray-800 py-2.5 font-medium text-white transition-all duration-300 hover:bg-gray-700 hover:shadow-md"
                 onClick={onClose}
               >
                 Try Again
@@ -365,8 +365,8 @@ export const ChallengeSuccessModal = ({
           <div>
             <Link
               href="/attack"
-              className="w-full bg-gray-800 text-white rounded-lg py-2.5 font-medium hover:bg-gray-700 flex items-center justify-center gap-2 hover:shadow-md transition-all duration-300"
-              onClick={(e) => {
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-gray-800 py-2.5 font-medium text-white transition-all duration-300 hover:bg-gray-700 hover:shadow-md"
+              onClick={e => {
                 // If success, delay navigation to allow confetti to be visible
                 if (verificationStatus === 'success') {
                   e.preventDefault()
@@ -383,29 +383,29 @@ export const ChallengeSuccessModal = ({
           <div>
             <Link
               href="/"
-              className="w-full bg-white text-black rounded-lg py-2.5 font-medium hover:bg-white/90 flex items-center justify-center gap-2 hover:shadow-md transition-all duration-300"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-white py-2.5 font-medium text-black transition-all duration-300 hover:bg-white/90 hover:shadow-md"
             >
               Home
             </Link>
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 mt-4">
+        <div className="mt-4 flex flex-col gap-2">
           {promptConsumedTxHash && (
             <button
               onClick={() => handleViewTransaction(promptConsumedTxHash)}
-              className="text-blue-400 hover:text-blue-300 flex items-center justify-center gap-1 mx-auto text-sm transition-opacity duration-300"
+              className="mx-auto flex items-center justify-center gap-1 text-sm text-blue-400 transition-opacity duration-300 hover:text-blue-300"
             >
-              <ExternalLink className="w-3 h-3" />
+              <ExternalLink className="h-3 w-3" />
               View agent transaction on Voyager
             </button>
           )}
           {transactionHash && (
             <button
               onClick={() => handleViewTransaction(transactionHash)}
-              className="text-blue-400 hover:text-blue-300 flex items-center justify-center gap-1 mx-auto text-sm transition-opacity duration-300"
+              className="mx-auto flex items-center justify-center gap-1 text-sm text-blue-400 transition-opacity duration-300 hover:text-blue-300"
             >
-              <ExternalLink className="w-3 h-3" />
+              <ExternalLink className="h-3 w-3" />
               View your transaction on Voyager
             </button>
           )}

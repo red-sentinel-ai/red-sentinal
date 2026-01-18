@@ -1,12 +1,12 @@
-import Image from "next/image";
-import Link from "next/link";
-import { Clock, Shield, Zap } from "lucide-react";
-import { SUI_SENTINEL_DEFENDER_REWARDS_DOCS_URL } from "@/constants";
+import Image from 'next/image'
+import Link from 'next/link'
+import { Clock, Shield, Zap } from 'lucide-react'
+import { SUI_SENTINEL_DEFENDER_REWARDS_DOCS_URL } from '@/constants'
 
 export const RewardsConditions = () => {
   return (
-    <div className="bg-white w-full border border-[#D8D8D8] rounded-xl py-5 px-10">
-      <h3 className="font-medium text-xl mb-3">Reward Conditions</h3>
+    <div className="w-full rounded-xl border border-[#D8D8D8] bg-white px-10 py-5">
+      <h3 className="mb-3 text-xl font-medium">Reward Conditions</h3>
 
       <div className="flex items-center gap-8">
         <div className="flex items-center gap-1">
@@ -20,23 +20,18 @@ export const RewardsConditions = () => {
         </div>
 
         <div className="flex items-center gap-1">
-          <Image
-            src="/icons/three_circles.png"
-            width={20}
-            height={20}
-            alt="three circles icon"
-          />
+          <Image src="/icons/three_circles.png" width={20} height={20} alt="three circles icon" />
           <span>No Defeats</span>
         </div>
       </div>
 
-      <div className="flex items-center gap-1 mt-8">
+      <div className="mt-8 flex items-center gap-1">
         <span>
           <Zap size={20} fill="#f632f3" stroke="#f632f3" />
         </span>
 
         <p>
-          Defeat pauses rewards.{" "}
+          Defeat pauses rewards.{' '}
           <Link
             href={SUI_SENTINEL_DEFENDER_REWARDS_DOCS_URL}
             className="text-[#5E5E5E] hover:underline"
@@ -47,5 +42,5 @@ export const RewardsConditions = () => {
         </p>
       </div>
     </div>
-  );
-};
+  )
+}

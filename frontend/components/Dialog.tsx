@@ -32,11 +32,11 @@ export const Dialog = ({ open, onClose, children, className }: DialogProps) => {
         'fixed inset-0 z-50',
         'bg-black/20 backdrop-blur-sm',
         'flex items-center justify-center',
-        'animate-in fade-in-0 duration-200'
+        'duration-200 animate-in fade-in-0'
       )}
       onClick={handleBackdropClick}
-      onMouseDown={(e) => e.stopPropagation()}
-      onMouseUp={(e) => e.stopPropagation()}
+      onMouseDown={e => e.stopPropagation()}
+      onMouseUp={e => e.stopPropagation()}
     >
       <div
         className={cn(
@@ -45,12 +45,12 @@ export const Dialog = ({ open, onClose, children, className }: DialogProps) => {
           'rounded-lg border border-gray-200 shadow-lg',
           'w-[90vw] max-w-[440px]',
           'p-6',
-          'animate-in zoom-in-95 duration-200',
+          'duration-200 animate-in zoom-in-95',
           className
         )}
         onClick={handleContentClick}
-        onMouseDown={(e) => e.stopPropagation()}
-        onMouseUp={(e) => e.stopPropagation()}
+        onMouseDown={e => e.stopPropagation()}
+        onMouseUp={e => e.stopPropagation()}
       >
         {children}
       </div>

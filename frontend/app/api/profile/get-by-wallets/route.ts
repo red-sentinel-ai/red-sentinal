@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const orQuery = walletAddresses.map((addr) => `wallet_addresses.cs.{${addr}}`).join(',')
+    const orQuery = walletAddresses.map(addr => `wallet_addresses.cs.{${addr}}`).join(',')
 
     const { data, error } = await supabaseServiceClient
       .from('ss_users')

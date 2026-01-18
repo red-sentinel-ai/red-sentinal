@@ -17,7 +17,7 @@ import type { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { ChatMessage } from './ChatMessage'
 import { useTokenCount } from '@/hooks/useTokenCount'
 import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
-import { JuryResponseModal } from './JuryResponseModal' 
+import { JuryResponseModal } from './JuryResponseModal'
 
 export interface ChatMessage {
   id: string
@@ -70,8 +70,8 @@ export default function ChatInterface({
 
   const senderAddresses = useMemo(() => {
     const addresses = chatMessages
-      .filter((msg) => msg.type === 'user' && msg.sender)
-      .map((msg) => msg.sender!)
+      .filter(msg => msg.type === 'user' && msg.sender)
+      .map(msg => msg.sender!)
     return [...new Set(addresses)]
   }, [chatMessages])
 
@@ -80,12 +80,12 @@ export default function ChatInterface({
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false)
 
   const isAgentDrained = chatMessages.some(
-    (message) => message.type === 'agent' && message.isSuccess === true
+    message => message.type === 'agent' && message.isSuccess === true
   )
 
   const winnerInfo = useMemo(() => {
     const winningAgentMessageIndex = chatMessages.findIndex(
-      (msg) => msg.type === 'agent' && msg.isSuccess === true
+      msg => msg.type === 'agent' && msg.isSuccess === true
     )
 
     if (winningAgentMessageIndex > 0) {
@@ -139,7 +139,7 @@ export default function ChatInterface({
           isSuccess: event.parsedJson.success,
           score: event.parsedJson.score,
           txDigest: event.id.txDigest,
-          juryResponse: event.parsedJson.jury_response 
+          juryResponse: event.parsedJson.jury_response,
         })
       })
 
@@ -155,9 +155,9 @@ export default function ChatInterface({
         timestamp: Date.now().toString(),
         isSuccess: apiResponse.response.data.success,
         score: apiResponse.response.data.score,
-        juryResponse: apiResponse.response.data.jury_response
+        juryResponse: apiResponse.response.data.jury_response,
       }
-      setChatMessages((prevMessages) => [...prevMessages, newAgentMessage])
+      setChatMessages(prevMessages => [...prevMessages, newAgentMessage])
       refetchAgent()
     }
   }, [apiResponse, refetchAgent])
@@ -190,24 +190,24 @@ export default function ChatInterface({
       sender: account?.address,
     }
 
-    setChatMessages((prevMessages) => [...prevMessages, newUserMessage])
+    setChatMessages(prevMessages => [...prevMessages, newUserMessage])
     await onSendMessage(promptInput)
     setPromptInput('')
   }
 
   return (
-    <div className="flex flex-col h-full flex-1 text-black justify-between pb-6">
-      <JuryResponseModal 
-        isOpen={isJuryModalOpen} 
-        onClose={() => setIsJuryModalOpen(false)} 
-        response={selectedJuryResponse} 
+    <div className="flex h-full flex-1 flex-col justify-between pb-6 text-black">
+      <JuryResponseModal
+        isOpen={isJuryModalOpen}
+        onClose={() => setIsJuryModalOpen(false)}
+        response={selectedJuryResponse}
       />
       <div
         ref={chatContainerRef}
-        className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-4 sm:space-y-6 max-h-[calc(100vh-210px)]"
+        className="max-h-[calc(100vh-210px)] flex-1 space-y-4 overflow-y-auto p-3 sm:space-y-6 sm:p-6"
       >
         {chatMessages.length === 0 && (
-          <div className="text-center py-8 sm:py-12 text-gray-500">
+          <div className="py-8 text-center text-gray-500 sm:py-12">
             <Image
               src="/icons/exclamation.png"
               width={60}
@@ -216,7 +216,7 @@ export default function ChatInterface({
               className="mx-auto mb-4 opacity-70"
             />
             <p className="text-base sm:text-lg">No messages yet. Start attacking the agent!</p>
-            <p className="text-xs sm:text-sm mt-2 opacity-75 px-4">
+            <p className="mt-2 px-4 text-xs opacity-75 sm:text-sm">
               Try to break through their defenses with clever prompts.
             </p>
           </div>
@@ -237,26 +237,26 @@ export default function ChatInterface({
               />
             )
           })}
-          
+
           {isSubmitting && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="flex justify-start"
             >
-              <div className="max-w-[85%] sm:max-w-[75%] flex items-start gap-2 sm:gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gray-200 flex items-center justify-center ring-2 ring-gray-300">
+              <div className="flex max-w-[85%] items-start gap-2 sm:max-w-[75%] sm:gap-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 ring-2 ring-gray-300 sm:h-10 sm:w-10">
                   <Image
                     src={agent.agent_profile || DEFAULT_PROFILE_URL}
                     width={32}
                     height={32}
                     alt="agent"
-                    className="rounded-full object-cover w-full h-full"
+                    className="h-full w-full rounded-full object-cover"
                   />
                 </div>
-                <div className="border border-gray-200 rounded-2xl p-3 sm:p-4 flex items-center gap-3 bg-gray-50">
-                  <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin text-gray-600" />
-                  <span className="text-xs sm:text-sm text-gray-700">
+                <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-gray-50 p-3 sm:p-4">
+                  <Loader2 className="h-4 w-4 animate-spin text-gray-600 sm:h-5 sm:w-5" />
+                  <span className="text-xs text-gray-700 sm:text-sm">
                     Agent is analyzing your attack...
                   </span>
                 </div>
@@ -267,29 +267,29 @@ export default function ChatInterface({
       </div>
 
       {isAgentDrained ? (
-        <div className="bg-gray-50 border-t border-gray-200 p-4">
-          <div className="text-center w-full">
+        <div className="border-t border-gray-200 bg-gray-50 p-4">
+          <div className="w-full text-center">
             <h3 className="text-lg font-bold text-red-600">This Sentinel is Drained</h3>
-            <p className="text-xs text-gray-500 mb-2">
+            <p className="mb-2 text-xs text-gray-500">
               The sentinel has been successfully defeated.
             </p>
 
             {winnerInfo && (
-              <div className="bg-white border border-gray-200 rounded-lg mx-auto px-3">
-                <div className="flex flex-col sm:flex-row items-center justify-center sm:divide-x sm:divide-gray-200 gap-y-2 sm:gap-y-0">
-                  <div className="flex items-baseline gap-x-2 px-3 w-full sm:w-auto justify-center">
-                    <p className="text-xs font-semibold text-gray-600 shrink-0">Winner:</p>
+              <div className="mx-auto rounded-lg border border-gray-200 bg-white px-3">
+                <div className="flex flex-col items-center justify-center gap-y-2 sm:flex-row sm:gap-y-0 sm:divide-x sm:divide-gray-200">
+                  <div className="flex w-full items-baseline justify-center gap-x-2 px-3 sm:w-auto">
+                    <p className="shrink-0 text-xs font-semibold text-gray-600">Winner:</p>
 
                     <Link
                       href={`/u/${winnerInfo.winnerAddress}`}
-                      className="text-right underline text-sm text-blue-600"
+                      className="text-right text-sm text-blue-600 underline"
                     >
                       {formatAddress(winnerInfo.winnerAddress as string)}
                     </Link>
                   </div>
 
-                  <div className="flex items-baseline gap-x-2 px-3 w-full sm:w-auto justify-center">
-                    <p className="text-xs font-semibold text-gray-600 shrink-0">Amount:</p>
+                  <div className="flex w-full items-baseline justify-center gap-x-2 px-3 sm:w-auto">
+                    <p className="shrink-0 text-xs font-semibold text-gray-600">Amount:</p>
                     <p className="text-base font-bold text-green-600">{winnerInfo.wonAmount} SUI</p>
                   </div>
                 </div>
@@ -300,21 +300,21 @@ export default function ChatInterface({
       ) : (
         <div>
           <form onSubmit={handleSubmit} className="relative">
-             <div className="relative">
-              <div className="relative w-full border border-gray-300 rounded-2xl bg-white focus-within:ring-1 focus-within:ring-black transition-all duration-200 z-10 overflow-hidden">
+            <div className="relative">
+              <div className="relative z-10 w-full overflow-hidden rounded-2xl border border-gray-300 bg-white transition-all duration-200 focus-within:ring-1 focus-within:ring-black">
                 <textarea
                   ref={textareaRef}
                   value={promptInput}
-                  onChange={(e) => {
+                  onChange={e => {
                     setPromptInput(e.target.value)
                     countTokens(e.target.value)
                   }}
-                  className="w-full p-3 sm:p-4 min-h-[50px] sm:min-h-[60px] text-sm sm:text-base bg-transparent border-none outline-none focus:ring-0 placeholder:text-gray-400 resize-none text-black"
+                  className="min-h-[50px] w-full resize-none border-none bg-transparent p-3 text-sm text-black outline-none placeholder:text-gray-400 focus:ring-0 sm:min-h-[60px] sm:p-4 sm:text-base"
                   disabled={isSubmitting}
                   placeholder="Craft your attack prompt..."
                   rows={1}
                   style={{ overflow: 'hidden' }}
-                  onKeyDown={(e) => {
+                  onKeyDown={e => {
                     if (e.key === 'Enter' && !e.shiftKey) {
                       e.preventDefault()
                       handleSubmit(e)
@@ -322,10 +322,10 @@ export default function ChatInterface({
                   }}
                 />
 
-                 <div className="flex items-center justify-between px-3 pb-2 sm:px-4 sm:pb-3 bg-white">
+                <div className="flex items-center justify-between bg-white px-3 pb-2 sm:px-4 sm:pb-3">
                   <div
                     className={clsx(
-                      'text-xs bg-[#D9D9D9] px-2 py-1 rounded',
+                      'rounded bg-[#D9D9D9] px-2 py-1 text-xs',
                       tokenCount > ATTACK_PROMPT_MAX_TOKENS ? 'text-red-500' : 'text-black'
                     )}
                   >
@@ -341,40 +341,40 @@ export default function ChatInterface({
                       promptInput.length === 0 ||
                       tokenCount > ATTACK_PROMPT_MAX_TOKENS
                     }
-                    className="w-8 h-8 sm:w-10 sm:h-10 text-white bg-black rounded-full flex items-center justify-center transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl hover:bg-gray-800"
+                    className="flex h-8 w-8 items-center justify-center rounded-full bg-black text-white shadow-lg transition-all duration-200 hover:bg-gray-800 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 sm:h-10 sm:w-10"
                   >
                     {isSubmitting ? (
-                      <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                      <Loader2 className="h-4 w-4 animate-spin sm:h-5 sm:w-5" />
                     ) : (
                       <Image
                         src="/icons/top-arrow.svg"
                         width={24}
                         height={24}
                         alt="top arrow"
-                        className="filter invert"
+                        className="invert filter"
                       />
                     )}
                   </button>
                 </div>
               </div>
 
-              <div className="rounded-[12px] bg-[#F49BEE]/90 blur-[4px] absolute sm:min-h-[120px] w-[100%] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 pointer-events-none"></div>
+              <div className="pointer-events-none absolute left-1/2 top-1/2 z-0 w-[100%] -translate-x-1/2 -translate-y-1/2 rounded-[12px] bg-[#F49BEE]/90 blur-[4px] sm:min-h-[120px]"></div>
             </div>
 
             {submitError && (
-              <div className="mt-2 text-red-600 text-xs sm:text-sm bg-red-100 border border-red-200 rounded-lg p-2 relative z-10">
+              <div className="relative z-10 mt-2 rounded-lg border border-red-200 bg-red-100 p-2 text-xs text-red-600 sm:text-sm">
                 {submitError}
               </div>
             )}
             {tokenCount > ATTACK_PROMPT_MAX_TOKENS && (
-              <div className="mt-2 text-red-600 text-xs sm:text-sm bg-red-100 border border-red-200 rounded-lg p-2 relative z-10">
+              <div className="relative z-10 mt-2 rounded-lg border border-red-200 bg-red-100 p-2 text-xs text-red-600 sm:text-sm">
                 Your prompt exceeds the token limit.
               </div>
             )}
           </form>
         </div>
-     )}
-     
+      )}
+
       <ConnectModal
         open={isWalletModalOpen}
         onOpenChange={setIsWalletModalOpen}

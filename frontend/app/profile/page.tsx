@@ -9,7 +9,7 @@ import { useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { UserActivity } from '@/components/profile/UserActivity'
 import { UserAgents } from '@/components/profile/UserAgents'
-import { RewardsHistory } from '@/components/profile/RewardsHistory' 
+import { RewardsHistory } from '@/components/profile/RewardsHistory'
 import { ConnectPrompt } from '@/components/ConnectPrompt'
 import { EditProfileModal } from '@/components/profile/EditProfileModal'
 import { SocialConnectionsSectionWrapper } from '@/components/profile/SocialConnectionsSectionWrapper'
@@ -20,7 +20,7 @@ import { SENTINEL_GIFS, TESTNET_SENTINEL_COIN_TYPE, USER_IMAGES } from '@/consta
 const PROFILE_TABS = {
   AGENTS: 'agents',
   ACTIVITY: 'activity',
-  REWARDS: 'rewards', 
+  REWARDS: 'rewards',
 } as const
 
 type ProfileTabValue = (typeof PROFILE_TABS)[keyof typeof PROFILE_TABS]
@@ -30,7 +30,7 @@ export default function ProfilePage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isImagePickerOpen, setIsImagePickerOpen] = useState(false)
   const [sentinelBalance, setSentinelBalance] = useState<string>('0')
-  
+
   const account = useCurrentAccount()
   const client = useSuiClient()
   const { data: profile, isLoading: isLoadingProfile } = useUserProfile()
@@ -42,18 +42,18 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchSentinelBalance = async () => {
       if (!account?.address) return
-      
+
       try {
         const balance = await client.getBalance({
           owner: account.address,
-          coinType: TESTNET_SENTINEL_COIN_TYPE
+          coinType: TESTNET_SENTINEL_COIN_TYPE,
         })
-        
+
         const formatted = (Number(balance.totalBalance) / 10).toLocaleString(undefined, {
           minimumFractionDigits: 0,
-          maximumFractionDigits: 2
+          maximumFractionDigits: 2,
         })
-        
+
         setSentinelBalance(formatted)
       } catch (error) {
         console.error('Failed to fetch SENTINEL balance:', error)
@@ -101,54 +101,45 @@ export default function ProfilePage() {
       <div className="relative">
         <div className="vertical-line left-4"></div>
         <div className="vertical-line right-4"></div>
-        <div className="max-w-[1440px] mx-auto pb-12 min-h-body relative">
+        <div className="min-h-body relative mx-auto max-w-[1440px] pb-12">
           <div
-            className="flex flex-col sm:flex-row items-end gap-4 min-h-[376px] bg-cover bg-bottom bg-no-repeat px-4 md:px-12 pt-4 pb-20 mb-6 w-full"
+            className="mb-6 flex min-h-[376px] w-full flex-col items-end gap-4 bg-cover bg-bottom bg-no-repeat px-4 pb-20 pt-4 sm:flex-row md:px-12"
             style={{ backgroundImage: 'url("/img/footer-bg.png")' }}
           >
             <div
-              className="relative w-20 h-20 md:w-44 md:h-44 rounded-full overflow-hidden cursor-pointer group flex-shrink-0"
+              className="group relative h-20 w-20 flex-shrink-0 cursor-pointer overflow-hidden rounded-full md:h-44 md:w-44"
               onClick={() => setIsImagePickerOpen(true)}
             >
               {isUpdatingAvatar ? (
-                <div className="w-full h-full flex items-center justify-center bg-white/70">
-                  <Loader2 className="w-8 h-8 animate-spin text-black" />
+                <div className="flex h-full w-full items-center justify-center bg-white/70">
+                  <Loader2 className="h-8 w-8 animate-spin text-black" />
                 </div>
               ) : profile?.avatar_url ? (
-                <Image
-                  src={profile.avatar_url}
-                  alt="User Avatar"
-                  fill
-                  className="object-cover"
-                />
+                <Image src={profile.avatar_url} alt="User Avatar" fill className="object-cover" />
               ) : (
-                <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                <div className="flex h-full w-full items-center justify-center bg-gray-100">
                   <User className="h-12 w-12 text-gray-500" />
                 </div>
               )}
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                <Camera className="w-8 h-8 text-white" />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
+                <Camera className="h-8 w-8 text-white" />
               </div>
             </div>
 
-            <div className="flex-1 min-w-0 pt-2">
-              <h1 className="text-2xl sm:text-[32px] truncate font-medium leading-snug">
+            <div className="min-w-0 flex-1 pt-2">
+              <h1 className="truncate text-2xl font-medium leading-snug sm:text-[32px]">
                 {profile?.display_name || 'Your Profile'}
               </h1>
-              <p className="text-[#5E5E5E] mt-1 font-medium mb-3">@{profile?.username}</p>
-              
-              <div className='bg-white rounded-xl min-h-10 flex items-center justify-center w-fit px-2 gap-2 mb-5'>
-                  <Image 
-                    src="/icons/dollar_coin.png"
-                    width={24}
-                    height={24}
-                    alt='coin'
-                  />
-                  <span className='font-medium'>
-                    Sentinel Balance: <span className='text-[#F632F3]'>{sentinelBalance} SENTINEL</span>
-                  </span>
+              <p className="mb-3 mt-1 font-medium text-[#5E5E5E]">@{profile?.username}</p>
+
+              <div className="mb-5 flex min-h-10 w-fit items-center justify-center gap-2 rounded-xl bg-white px-2">
+                <Image src="/icons/dollar_coin.png" width={24} height={24} alt="coin" />
+                <span className="font-medium">
+                  Sentinel Balance:{' '}
+                  <span className="text-[#F632F3]">{sentinelBalance} SENTINEL</span>
+                </span>
               </div>
-              
+
               <button
                 onClick={() => setIsEditModalOpen(true)}
                 className="btn btn-outline h-[50px] font-medium"
@@ -156,26 +147,17 @@ export default function ProfilePage() {
                 Edit Profile
               </button>
             </div>
-            <div className="flex items-center gap-2 sm:ml-auto pt-2">
-              <Link
-                className="btn btn-black"
-                href="/defend"
-              >
+            <div className="flex items-center gap-2 pt-2 sm:ml-auto">
+              <Link className="btn btn-black" href="/defend">
                 Launch Sentinel
               </Link>
 
-              <Link
-                className="btn btn-outline"
-                href="/attack"
-              >
+              <Link className="btn btn-outline" href="/attack">
                 Attack Sentinel
               </Link>
 
               {profile?.username && (
-                <Link
-                  href={`/u/${profile.username}`}
-                  className=""
-                >
+                <Link href={`/u/${profile.username}`} className="">
                   <button className="btn btn-outline h-[30px]">View Profile as Public</button>
                 </Link>
               )}
@@ -186,12 +168,8 @@ export default function ProfilePage() {
           </div>
 
           <div className="px-4 md:px-8">
-            <Tabs
-              value={activeTab}
-              onValueChange={handleTabChange}
-              className="w-full"
-            >
-              <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:flex lg:justify-start gap-2">
+            <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+              <TabsList className="grid w-full grid-cols-3 gap-2 lg:flex lg:w-auto lg:justify-start">
                 <TabsTrigger
                   value={PROFILE_TABS.AGENTS}
                   className="flex items-center gap-2 text-sm sm:text-lg md:text-xl"
@@ -199,7 +177,7 @@ export default function ProfilePage() {
                   <Folder className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="truncate">Sentinels</span>
                 </TabsTrigger>
-                
+
                 <TabsTrigger
                   value={PROFILE_TABS.ACTIVITY}
                   className="flex items-center gap-2 text-sm sm:text-lg md:text-xl"
@@ -221,7 +199,7 @@ export default function ProfilePage() {
                 <TabsContent value={PROFILE_TABS.AGENTS}>
                   <UserAgents />
                 </TabsContent>
-                
+
                 <TabsContent value={PROFILE_TABS.ACTIVITY}>
                   <UserActivity />
                 </TabsContent>
