@@ -144,7 +144,9 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
         </button>
       </div>
 
-      <div>{agent.system_prompt || 'No instructions available.'}</div>
+      <div className="overflow-y-auto whitespace-pre-wrap px-1">
+        {agent.system_prompt || 'No instructions available.'}
+      </div>
 
       <div className="shrink-0 pb-12 pt-8">
         <button onClick={() => setIsReadMoreOpen(false)} className="btn btn-black">
