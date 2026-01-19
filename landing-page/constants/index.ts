@@ -177,7 +177,7 @@ export const extraLinks = [
     icon: '/icons/back-story.png',
     isImage: true,
     alt: 'Back story',
-    name: 'Back story',
+    name: 'Back Story',
     isOutside: false,
   },
 ]
