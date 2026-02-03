@@ -93,7 +93,7 @@ const Footer = () => {
           </div>
 
           <div className="hidden w-full md:block md:w-auto">
-            <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-2 gap-x-8 gap-y-4">
               {socialLinks.map(link => (
                 <div key={link.href} className="flex items-center justify-between gap-6">
                   <Link
