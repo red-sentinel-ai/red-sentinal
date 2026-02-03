@@ -1,10 +1,12 @@
 import { useState, useCallback, useEffect } from 'react'
 import { Transaction } from '@mysten/sui/transactions'
-import { useSignAndExecuteTransaction, useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
+import { useSuiClient } from '@mysten/dapp-kit'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 import { MIST_PER_SUI, SUI_CONFIG } from '@/constants'
 import { toast } from 'react-toastify'
 import { useRewardsMissionTracker } from './rewards/useRewardsMissionTracker'
+import { useUnifiedWallet } from './useUnifiedWallet'
+import { useWalletContext } from '@/lib/wallet/context'
 
 const GAS_BUDGET = 1_000_000
 const GAS_OBJECT_MIN_BALANCE = BigInt(GAS_BUDGET) * BigInt(2)
@@ -36,29 +38,19 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
   const [agentCaps, setAgentCaps] = useState<AgentCap[]>([])
   const { trackFundSentinel } = useRewardsMissionTracker()
 
-  const account = useCurrentAccount()
-  const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction({
-    execute: async ({ bytes, signature }) =>
-      await client.executeTransactionBlock({
-        transactionBlock: bytes,
-        signature,
-        options: {
-          showRawEffects: true,
-          showObjectChanges: true,
-        },
-      }),
-  })
+  const { address, isConnected } = useUnifiedWallet()
+  const { signAndExecuteTransaction } = useWalletContext()
 
   // Fetch user's AgentCaps
   const fetchAgentCaps = useCallback(async () => {
-    if (!account?.address) {
+    if (!address) {
       setAgentCaps([])
       return
     }
 
     try {
       const objects = await client.getOwnedObjects({
-        owner: account.address,
+        owner: address,
         filter: {
           StructType: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::AgentCap`,
         },
@@ -84,7 +76,7 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
     } catch (error) {
       console.error('Error fetching AgentCaps:', error)
     }
-  }, [account?.address, client])
+  }, [address, client])
 
   // Fetch AgentCaps when account changes
   useEffect(() => {
@@ -94,7 +86,7 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
   const fundAgent = useCallback(
     async ({ agentObjectId, agentId, amount }: FundAgentParams) => {
       console.log({ agentObjectId, agentId, amount })
-      if (!account?.address) {
+      if (!address) {
         const errorMsg = 'Wallet not connected'
         setError(errorMsg)
         if (showToasts) toast.error(errorMsg)
@@ -123,7 +115,7 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
       try {
         // Get user's SUI coins
         const coins = await client.getCoins({
-          owner: account.address,
+          owner: address,
           coinType: '0x2::sui::SUI',
           limit: 100,
         })
@@ -260,41 +252,20 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
         }
 
         // Execute transaction
-        return new Promise((resolve, reject) => {
-          signAndExecuteTransaction(
-            { transaction: tx },
-            {
-              onSuccess: result => {
-                console.log('Fund agent transaction success:', result)
-                setLastResult(result)
+        const result = await signAndExecuteTransaction(tx)
+        console.log('Fund agent transaction success:', result)
+        setLastResult(result)
 
-                trackFundSentinel(result.digest, amount, {
-                  agent_object_id: agentObjectId,
-                })
-
-                if (showToasts) {
-                  toast.success(`Successfully funded agent with ${amount} SUI`)
-                }
-
-                onSuccess?.(result)
-                resolve(result)
-              },
-              onError: txError => {
-                console.error('Transaction failed:', txError)
-                const errorMsg = 'Transaction failed'
-                setError(errorMsg)
-
-                if (showToasts) {
-                  toast.error(errorMsg)
-                }
-
-                const error = new Error(errorMsg)
-                onError?.(error)
-                reject(error)
-              },
-            }
-          )
+        trackFundSentinel(result.digest, amount, {
+          agent_object_id: agentObjectId,
         })
+
+        if (showToasts) {
+          toast.success(`Successfully funded agent with ${amount} SUI`)
+        }
+
+        onSuccess?.(result)
+        return result
       } catch (error) {
         console.error('Error funding agent:', error)
         const errorMessage = error instanceof Error ? error.message : 'Failed to fund agent'
@@ -312,7 +283,7 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
       }
     },
     [
-      account?.address,
+      address,
       client,
       signAndExecuteTransaction,
       onSuccess,
@@ -334,7 +305,7 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
     error,
     lastResult,
     reset,
-    isConnected: !!account?.address,
+    isConnected,
     agentCaps, // Expose fetched caps
     refetchAgentCaps: fetchAgentCaps, // Allow manual refresh
   }

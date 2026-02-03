@@ -1,15 +1,14 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useCurrentAccount } from '@mysten/dapp-kit'
 import { toast } from 'react-toastify'
 import type { Tables } from '@/lib/database.types'
+import { useUnifiedWallet } from '../useUnifiedWallet'
 
 type UserProfile = Tables<'ss_users'>
 
 export const USER_PROFILE_QUERY_KEY = 'userProfile'
 
 export function useUserProfile() {
-  const account = useCurrentAccount()
-  const walletAddress = account?.address
+  const { address: walletAddress } = useUnifiedWallet()
 
   return useQuery<UserProfile | null>({
     queryKey: [USER_PROFILE_QUERY_KEY, walletAddress],
@@ -40,8 +39,7 @@ interface UseUpdateProfileOptions {
 
 export function useUpdateProfile(options: UseUpdateProfileOptions = {}) {
   const queryClient = useQueryClient()
-  const account = useCurrentAccount()
-  const walletAddress = account?.address
+  const { address: walletAddress } = useUnifiedWallet()
 
   return useMutation({
     mutationFn: async (formData: FormData) => {
@@ -73,8 +71,7 @@ export function useUpdateProfile(options: UseUpdateProfileOptions = {}) {
 
 export function useUpdateAvatar(options: UseUpdateProfileOptions = {}) {
   const queryClient = useQueryClient()
-  const account = useCurrentAccount()
-  const walletAddress = account?.address
+  const { address: walletAddress } = useUnifiedWallet()
 
   return useMutation({
     mutationFn: async (formData: FormData) => {

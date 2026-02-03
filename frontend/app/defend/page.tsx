@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { CameraIcon, ChevronLeft, Loader2 } from 'lucide-react'
@@ -7,12 +7,7 @@ import { toast } from 'react-toastify'
 import posthog from 'posthog-js'
 import { Transaction } from '@mysten/sui/transactions'
 import { SuiTransactionBlockResponse } from '@mysten/sui/client'
-import {
-  ConnectButton,
-  useCurrentAccount,
-  useSignAndExecuteTransaction,
-  useSuiClient,
-} from '@mysten/dapp-kit'
+import { useSuiClient } from '@mysten/dapp-kit'
 import {
   MIST_PER_SUI,
   PROVIDER_MODELS,
@@ -35,7 +30,9 @@ import { useRewardsMissionTracker } from '@/hooks/rewards/useRewardsMissionTrack
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 import { CustomDropdown } from '@/components/ui/common/CustomDropdown'
 import { RewardsConditions } from '@/components/defend/RewardsConditions'
-import { useEffect } from 'react'
+import { useUnifiedWallet } from '@/hooks/useUnifiedWallet'
+import { useWalletContext } from '@/lib/wallet/context'
+import { ConnectButton } from '@/components/ConnectButton'
 
 interface FormData {
   agentName: string
@@ -112,7 +109,8 @@ const DEFAULT_MODEL = PROVIDER_MODELS[DEFAULT_PROVIDER][0]
 
 export default function DefendPage() {
   const client = useSuiClient()
-  const account = useCurrentAccount()
+  const { address, isConnected } = useUnifiedWallet()
+  const { signAndExecuteTransaction } = useWalletContext()
 
   // Load template from sessionStorage if user came from templates page
   useEffect(() => {
@@ -172,17 +170,6 @@ export default function DefendPage() {
     isCustom: false,
   })
 
-  const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction({
-    execute: async ({ bytes, signature }) =>
-      await client.executeTransactionBlock({
-        transactionBlock: bytes,
-        signature,
-        options: {
-          showRawEffects: true,
-          showObjectChanges: true,
-        },
-      }),
-  })
 
   const [formData, setFormData] = useState<FormData>({
     agentName: '',
@@ -324,7 +311,7 @@ export default function DefendPage() {
         agent_name: agentName,
         agent_id: agent_id,
         agent_object_id: (agentObject as any).objectId,
-        owner_address: account!.address,
+        owner_address: address!,
         cost_per_message: formData.feePerMessage,
         system_prompt_length: formData.systemPrompt.length,
         system_prompt_tokens: tokenCount,
@@ -335,14 +322,14 @@ export default function DefendPage() {
         agent_id: agent_id,
         agent_name: agentName,
         agent_object_id: agentObjectId,
-        owner_address: account!.address,
+        owner_address: address!,
       })
 
       const payload = new FormData()
       payload.append('agent_id', agent_id)
       payload.append('agent_name', agentName)
       payload.append('object_id', agentObjectId)
-      payload.append('owner', account!.address)
+      payload.append('owner', address!)
       payload.append('digest', result.digest.toString())
       payload.append('model_provider', formData.llmProvider)
       payload.append('model_name', formData.llmModel)
@@ -382,23 +369,14 @@ export default function DefendPage() {
       ],
     })
 
-    return await signAndExecuteTransaction(
-      { transaction: tx },
-      {
-        onSuccess: async result => {
-          await handleOffChainSuccess(
-            result,
-            formData.agentName,
-            agentDetails.response.data.agent_id
-          )
-        },
-      }
-    )
+    const result = await signAndExecuteTransaction(tx)
+    await handleOffChainSuccess(result, formData.agentName, agentDetails.response.data.agent_id)
+    return result
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!validateForm() || !account) return
+    if (!validateForm() || !address) return
     setIsLoading(true)
 
     try {
@@ -424,7 +402,7 @@ export default function DefendPage() {
       const agentDetails = await registerAgentUtil(
         formData.systemPrompt,
         feePerMessage,
-        account.address,
+        address,
         formData.llmProvider,
         formData.llmModel
       )
@@ -623,7 +601,7 @@ export default function DefendPage() {
         <RewardsConditions />
 
         <div className="pb-20 pt-2">
-          {account?.address ? (
+          {isConnected ? (
             <button
               type="submit"
               disabled={isLoading || tokenCount > SYSTEM_PROMPT_MAX_TOKENS}
@@ -648,8 +626,8 @@ export default function DefendPage() {
               )}
             </button>
           ) : (
-            <div className="h-[65px]">
-              <ConnectButton className="h-full w-full !rounded-xl !text-xl" />
+            <div className="h-[65px] flex items-center justify-center">
+              <ConnectButton />
             </div>
           )}
         </div>

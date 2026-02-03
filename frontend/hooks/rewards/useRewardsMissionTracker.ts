@@ -1,11 +1,10 @@
 import { MissionMetadata } from '@/types/Rewards'
 import { REWARDS_CONSTANTS } from '@/constants/rewards'
-import { useCurrentAccount } from '@mysten/dapp-kit'
 import { useCompleteMission } from './useCompleteMission'
+import { useUnifiedWallet } from '../useUnifiedWallet'
 
 export function useRewardsMissionTracker() {
-  const account = useCurrentAccount()
-  const address = account?.address
+  const { address } = useUnifiedWallet()
 
   const { mutate: completeMission } = useCompleteMission()
 

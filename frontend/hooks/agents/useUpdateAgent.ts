@@ -1,27 +1,28 @@
 import { useState, useCallback } from 'react'
 import { Transaction } from '@mysten/sui/transactions'
-import { useSignAndExecuteTransaction, useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
+import { useSuiClient } from '@mysten/dapp-kit'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 import { toast } from 'react-toastify'
 import { MIST_PER_SUI, SUI_CONFIG } from '@/constants'
+import { useUnifiedWallet } from '../useUnifiedWallet'
+import { useWalletContext } from '@/lib/wallet/context'
 
 export const useUpdateAgent = () => {
   const client = useSuiClient()
-  const account = useCurrentAccount()
+  const { address } = useUnifiedWallet()
+  const { signAndExecuteTransaction } = useWalletContext()
   const [isLoading, setIsLoading] = useState(false)
-
-  const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction()
 
   const getAgentCap = useCallback(
     async (agentId: string) => {
-      if (!account?.address) return null
+      if (!address) return null
 
       let cursor = null
       let hasNextPage = true
 
       while (hasNextPage) {
         const response = await client.getOwnedObjects({
-          owner: account.address,
+          owner: address,
           filter: {
             StructType: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::AgentCap`,
           },
@@ -51,7 +52,7 @@ export const useUpdateAgent = () => {
 
       return null
     },
-    [account?.address, client]
+    [address, client]
   )
 
   const executeUpdate = useCallback(
@@ -61,7 +62,7 @@ export const useUpdateAgent = () => {
       successMessage: string,
       onSuccess?: () => void
     ) => {
-      if (!account?.address) {
+      if (!address) {
         toast.error('Wallet not connected')
         return
       }
@@ -76,27 +77,17 @@ export const useUpdateAgent = () => {
         const tx = new Transaction()
         buildTransaction(tx, capId)
 
-        signAndExecuteTransaction(
-          { transaction: tx },
-          {
-            onSuccess: () => {
-              toast.success(successMessage)
-              onSuccess?.()
-            },
-            onError: error => {
-              console.error('Update error:', error)
-              toast.error(`Failed to update: ${error.message}`)
-            },
-          }
-        )
+        await signAndExecuteTransaction(tx)
+        toast.success(successMessage)
+        onSuccess?.()
       } catch (error: any) {
-        console.error(error)
-        toast.error(error.message)
+        console.error('Update error:', error)
+        toast.error(`Failed to update: ${error.message}`)
       } finally {
         setIsLoading(false)
       }
     },
-    [account?.address, getAgentCap, signAndExecuteTransaction]
+    [address, getAgentCap, signAndExecuteTransaction]
   )
 
   const updatePrompt = useCallback(

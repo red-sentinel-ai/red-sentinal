@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useCallback } from 'react'
 import { Transaction } from '@mysten/sui/transactions'
-import { useSignAndExecuteTransaction, useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
+import { useSuiClient } from '@mysten/dapp-kit'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 import { MIST_PER_SUI, SUI_CONFIG } from '@/constants'
 import { toast } from 'react-toastify'
 import { useQueryClient } from '@tanstack/react-query'
 import { AGENT_DETAILS_QUERY_KEY } from './useAgentBySlug'
+import { useUnifiedWallet } from '../useUnifiedWallet'
+import { useWalletContext } from '@/lib/wallet/context'
 
 interface UseWithdrawAgentOptions {
   onSuccess?: (result: any) => void
@@ -28,22 +30,12 @@ export const useWithdrawAgent = (options: UseWithdrawAgentOptions = {}) => {
   const [error, setError] = useState<string | null>(null)
   const [lastResult, setLastResult] = useState<any>(null)
 
-  const account = useCurrentAccount()
-  const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction({
-    execute: async ({ bytes, signature }) =>
-      await client.executeTransactionBlock({
-        transactionBlock: bytes,
-        signature,
-        options: {
-          showRawEffects: true,
-          showObjectChanges: true,
-        },
-      }),
-  })
+  const { address, isConnected } = useUnifiedWallet()
+  const { signAndExecuteTransaction } = useWalletContext()
 
   const withdrawAgent = useCallback(
     async ({ agentObjectId, amount }: WithdrawAgentParams) => {
-      if (!account?.address) {
+      if (!address) {
         const errorMsg = 'Wallet not connected'
         setError(errorMsg)
         if (showToasts) toast.error(errorMsg)
@@ -73,45 +65,24 @@ export const useWithdrawAgent = (options: UseWithdrawAgentOptions = {}) => {
           ],
         })
 
-        return new Promise((resolve, reject) => {
-          signAndExecuteTransaction(
-            { transaction: tx },
-            {
-              onSuccess: result => {
-                console.log('Withdraw agent transaction success:', result)
-                setLastResult(result)
+        const result = await signAndExecuteTransaction(tx)
+        console.log('Withdraw agent transaction success:', result)
+        setLastResult(result)
 
-                if (showToasts) {
-                  toast.success(`Successfully withdrew ${amount} SUI`)
-                }
+        if (showToasts) {
+          toast.success(`Successfully withdrew ${amount} SUI`)
+        }
 
-                // Refetch agent data
-                queryClient.invalidateQueries({
-                  queryKey: ['agents-by-owner', account?.address],
-                })
-                queryClient.invalidateQueries({
-                  queryKey: [AGENT_DETAILS_QUERY_KEY],
-                })
-
-                onSuccess?.(result)
-                resolve(result)
-              },
-              onError: txError => {
-                console.error('Transaction failed:', txError)
-                const errorMsg = 'Transaction failed: ' + txError.message
-                setError(errorMsg)
-
-                if (showToasts) {
-                  toast.error(errorMsg)
-                }
-
-                const error = new Error(errorMsg)
-                onError?.(error)
-                reject(error)
-              },
-            }
-          )
+        // Refetch agent data
+        queryClient.invalidateQueries({
+          queryKey: ['agents-by-owner', address],
         })
+        queryClient.invalidateQueries({
+          queryKey: [AGENT_DETAILS_QUERY_KEY],
+        })
+
+        onSuccess?.(result)
+        return result
       } catch (error) {
         console.error('Error withdrawing from agent:', error)
         const errorMessage =
@@ -129,7 +100,7 @@ export const useWithdrawAgent = (options: UseWithdrawAgentOptions = {}) => {
         setIsLoading(false)
       }
     },
-    [account?.address, signAndExecuteTransaction, onSuccess, onError, showToasts, queryClient]
+    [address, signAndExecuteTransaction, onSuccess, onError, showToasts, queryClient]
   )
 
   const reset = useCallback(() => {
@@ -143,6 +114,6 @@ export const useWithdrawAgent = (options: UseWithdrawAgentOptions = {}) => {
     error,
     lastResult,
     reset,
-    isConnected: !!account?.address,
+    isConnected,
   }
 }

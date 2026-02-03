@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useCallback } from 'react'
 import { Transaction } from '@mysten/sui/transactions'
-import { useSignAndExecuteTransaction, useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
+import { useSuiClient } from '@mysten/dapp-kit'
 import { SUI_CONFIG } from '@/constants'
 import { toast } from 'react-toastify'
 import { ConsumePromptApiResponse } from '@/types'
@@ -9,6 +9,8 @@ import { hexToVector } from '@/lib/utils'
 import { type AgentDetails } from './agents/useAllAgents'
 import { SuiTransactionBlockResponse, SuiObjectResponse } from '@mysten/sui/client'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
+import { useUnifiedWallet } from './useUnifiedWallet'
+import { useWalletContext } from '@/lib/wallet/context'
 
 const GAS_BUDGET = 50_000_000
 
@@ -52,22 +54,12 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
   const [error, setError] = useState<string | null>(null)
   const [lastResult, setLastResult] = useState<any>(null)
 
-  const account = useCurrentAccount()
-  const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction({
-    execute: async ({ bytes, signature }) =>
-      await client.executeTransactionBlock({
-        transactionBlock: bytes,
-        signature,
-        options: {
-          showRawEffects: true,
-          showObjectChanges: true,
-        },
-      }),
-  })
+  const { address, isConnected } = useUnifiedWallet()
+  const { signAndExecuteTransaction } = useWalletContext()
 
   // Step 2: Request an Attack Ticket
   const requestAttackTicket = async (agentDetails: AgentDetails): Promise<AttackTicket> => {
-    if (!account?.address) {
+    if (!address) {
       throw new Error('Wallet not connected')
     }
     if (!SUI_CONFIG.PROTOCOL_CONFIG_OBJECT_ID) {
@@ -78,7 +70,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
 
     // Check if user has enough balance
     const balance = await client.getBalance({
-      owner: account.address,
+      owner: address,
       coinType: '0x2::sui::SUI',
     })
 
@@ -107,63 +99,51 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
       ],
     })
 
-    tx.transferObjects([attackTicket], tx.pure.address(account.address))
+    tx.transferObjects([attackTicket], tx.pure.address(address))
 
     tx.setGasBudget(GAS_BUDGET)
 
-    return new Promise((resolve, reject) => {
-      signAndExecuteTransaction(
-        { transaction: tx },
-        {
-          onSuccess: async result => {
-            onAttackRequestSuccess?.(result)
+    const result = await signAndExecuteTransaction(tx)
+    onAttackRequestSuccess?.(result)
 
-            const attackObjectChange = result.objectChanges?.find(
-              (obj: any) => obj.type === 'created' && obj.objectType.endsWith('::sentinel::Attack')
-            ) as { objectId: string } | undefined
+    const attackObjectChange = result.objectChanges?.find(
+      (obj: any) => obj.type === 'created' && obj.objectType.endsWith('::sentinel::Attack')
+    ) as { objectId: string } | undefined
 
-            if (!attackObjectChange) {
-              return reject(new Error('Failed to create Attack ticket object.'))
-            }
+    if (!attackObjectChange) {
+      throw new Error('Failed to create Attack ticket object.')
+    }
 
-            const attackObjectId = attackObjectChange.objectId
+    const attackObjectId = attackObjectChange.objectId
 
-            // Wait 1 second (1000ms) for the RPC node to index the new object's content
-            await new Promise(resolve => setTimeout(resolve, 1000))
+    // Wait 1 second (1000ms) for the RPC node to index the new object's content
+    await new Promise(resolve => setTimeout(resolve, 1000))
 
-            let objectResponse: SuiObjectResponse | null = null
-            try {
-              objectResponse = await client.getObject({
-                id: attackObjectId,
-                options: { showContent: true },
-              })
-              console.log({ objectResponse, attackObjectId })
-            } catch (error) {
-              console.error('Error fetching object after sleep', error)
-              return reject(new Error('Failed to fetch Attack ticket after 1s delay.'))
-            }
+    let objectResponse: SuiObjectResponse | null = null
+    try {
+      objectResponse = await client.getObject({
+        id: attackObjectId,
+        options: { showContent: true },
+      })
+      console.log({ objectResponse, attackObjectId })
+    } catch (fetchError) {
+      console.error('Error fetching object after sleep', fetchError)
+      throw new Error('Failed to fetch Attack ticket after 1s delay.')
+    }
 
-            if (objectResponse?.data?.content?.dataType !== 'moveObject') {
-              console.error('Failed to fetch object content after 1s delay.', objectResponse)
-              return reject(new Error('Failed to fetch Attack ticket content after 1s delay.'))
-            }
+    if (objectResponse?.data?.content?.dataType !== 'moveObject') {
+      console.error('Failed to fetch object content after 1s delay.', objectResponse)
+      throw new Error('Failed to fetch Attack ticket content after 1s delay.')
+    }
 
-            const fields = (objectResponse.data.content as any).fields
-            const nonce = fields.nonce
+    const fields = (objectResponse.data.content as any).fields
+    const nonce = fields.nonce
 
-            if (!nonce) {
-              return reject(new Error('Failed to retrieve nonce from Attack ticket.'))
-            }
+    if (!nonce) {
+      throw new Error('Failed to retrieve nonce from Attack ticket.')
+    }
 
-            resolve({ objectId: attackObjectId, nonce: nonce as string })
-          },
-          onError: txError => {
-            console.error('Attack request transaction failed:', txError)
-            reject(new Error(txError?.message || 'Failed to request attack ticket'))
-          },
-        }
-      )
-    })
+    return { objectId: attackObjectId, nonce: nonce as string }
   }
 
   // Step 3: Call consume prompt API
@@ -172,7 +152,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
     message: string,
     attack_object_id: string
   ): Promise<ConsumePromptApiResponse> => {
-    if (!account?.address) {
+    if (!address) {
       throw new Error('Wallet not connected')
     }
 
@@ -233,29 +213,17 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
 
     tx.setGasBudget(GAS_BUDGET)
 
-    return new Promise((resolve, reject) => {
-      signAndExecuteTransaction(
-        { transaction: tx },
-        {
-          onSuccess: result => {
-            console.log('Consume prompt transaction success:', result)
-            setLastResult(result)
-            onSuccess?.(result)
-            resolve(result)
-          },
-          onError: txError => {
-            console.error('Consume prompt transaction failed:', txError)
-            reject(new Error(txError?.message || 'Consume prompt failed'))
-          },
-        }
-      )
-    })
+    const result = await signAndExecuteTransaction(tx)
+    console.log('Consume prompt transaction success:', result)
+    setLastResult(result)
+    onSuccess?.(result)
+    return result
   }
 
   // Main function that orchestrates all steps
   const consumePrompt = useCallback(
     async ({ agentDetails, message }: ConsumePromptParams) => {
-      if (!account?.address) {
+      if (!address) {
         const errorMsg = 'Wallet not connected'
         setError(errorMsg)
         if (showToasts) toast.error(errorMsg)
@@ -331,7 +299,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
       }
     },
     [
-      account?.address,
+      address,
       signAndExecuteTransaction,
       onSuccess,
       onError,
@@ -355,7 +323,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
     error,
     lastResult,
     reset,
-    isConnected: !!account?.address,
+    isConnected,
   }
 }
 

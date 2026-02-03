@@ -6,10 +6,12 @@ import posthog from 'posthog-js'
 import { PostHogProvider as PHProvider } from 'posthog-js/react'
 import { SuiClientProvider, WalletProvider, lightTheme } from '@mysten/dapp-kit'
 import { getFullnodeUrl } from '@mysten/sui/client'
+import { PrivyProvider } from '@privy-io/react-auth'
 import { Header } from '@/components/Header'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ProfileInitializer } from '@/components/profile/ProfileInitializer'
 import { FeedbackButton } from '@/components/feedback/FeedbackButton'
+import { WalletContextProvider } from '@/lib/wallet/context'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -41,18 +43,33 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <PHProvider client={posthog}>
       <QueryClientProvider client={queryClient}>
-        <SuiClientProvider networks={networks} defaultNetwork="testnet">
-          <WalletProvider autoConnect theme={lightTheme}>
-            <div>
-              {/* <LaunchMainnetBanner /> */}
-              <Header />
-              <div className="mt-[128px]"></div>
-              <ProfileInitializer />
-              {children}
-              <FeedbackButton />
-            </div>
-          </WalletProvider>
-        </SuiClientProvider>
+        <PrivyProvider
+          appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || ''}
+          config={{
+            loginMethods: ['email', 'twitter', 'discord', 'google'],
+            appearance: {
+              theme: 'light',
+            },
+            embeddedWallets: {
+              createOnLogin: 'users-without-wallets',
+            },
+          }}
+        >
+          <SuiClientProvider networks={networks} defaultNetwork="testnet">
+            <WalletProvider autoConnect theme={lightTheme}>
+              <WalletContextProvider>
+                <div>
+                  {/* <LaunchMainnetBanner /> */}
+                  <Header />
+                  <div className="mt-[128px]"></div>
+                  <ProfileInitializer />
+                  {children}
+                  <FeedbackButton />
+                </div>
+              </WalletContextProvider>
+            </WalletProvider>
+          </SuiClientProvider>
+        </PrivyProvider>
       </QueryClientProvider>
     </PHProvider>
   )

@@ -4,11 +4,11 @@ import type React from 'react'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { AlertCircle, ExternalLink, Shield, Sparkles } from 'lucide-react'
-import { useCurrentAccount } from '@mysten/dapp-kit'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui'
 import { useSocialStatus } from '@/hooks/profile/useSocialStatus'
 import { handleConnectDiscord, handleConnectTwitter } from '@/utils/socialConnection'
+import { useUnifiedWallet } from '@/hooks/useUnifiedWallet'
 
 interface RewardsAccessGuardProps {
   children: React.ReactNode
@@ -16,8 +16,7 @@ interface RewardsAccessGuardProps {
 }
 
 export function RewardsAccessGuard({ children, fallback }: RewardsAccessGuardProps) {
-  const account = useCurrentAccount()
-  const address = account?.address
+  const { address } = useUnifiedWallet()
   const { data: socialStatus, isLoading } = useSocialStatus(address || undefined)
 
   const hasTwitter = socialStatus?.isXConnected || false
