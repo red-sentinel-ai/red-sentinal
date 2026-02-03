@@ -32,7 +32,7 @@ import { type AgentEvents } from '@/hooks/useAgentEvents'
 import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
 import { DefenderProfile } from './DefenderProfile'
 import { formatDuration, cn } from '@/lib/utils'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, Button } from '@/components/ui'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, Button, Skeleton } from '@/components/ui'
 import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
 import { SparklineChart } from '../ui/common/SparklineChart'
 import { useAgentPrizePoolHistory } from '@/hooks/agents/useAgentPrizePoolHistory'
@@ -64,6 +64,7 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
   const [isVerifying, setIsVerifying] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [attackGoal, setAttackGoal] = useState<string>('')
+  const [isLoadingAttackGoal, setIsLoadingAttackGoal] = useState(false)
 
   const account = useCurrentAccount()
   const isOwner = account?.address === agent.owner
@@ -77,6 +78,7 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
 
   useEffect(() => {
     const fetchAttackGoal = async () => {
+      setIsLoadingAttackGoal(true)
       try {
         const response = await fetch(`/api/agents/attack-goal?agent_id=${agent.agent_id}`)
         if (response.ok) {
@@ -87,6 +89,8 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
         }
       } catch (error) {
         console.error('Failed to fetch attack goal', error)
+      } finally {
+        setIsLoadingAttackGoal(false)
       }
     }
 
@@ -298,12 +302,18 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
         </div>
 
         <div className="flex flex-col gap-6 py-4">
-          {attackGoal && (
-            <div className="flex flex-col gap-2 border border-black/20 rounded-md p-3">
+          {isLoadingAttackGoal ? (
+          <div className="flex flex-col gap-2 border border-black/20 rounded-md p-3">
+              <h3 className="font-medium uppercase text-[#5E5E5E]">Attack Goal</h3>
+              <Skeleton className="h-5 w-full bg-gray-200" />
+              <Skeleton className="h-5 w-3/4 bg-gray-200" />
+            </div>
+          ) : attackGoal ? (
+          <div className="flex flex-col gap-2 border border-black/20 rounded-md p-3">
               <h3 className="font-medium uppercase text-[#5E5E5E]">Attack Goal</h3>
               <p className="text-base font-semibold">{attackGoal}</p>
             </div>
-          )}
+          ) : null}
 
           <div className="flex flex-col gap-2">
             <h3 className="font-medium uppercase text-[#5E5E5E]">Sentinel Object Id</h3>
