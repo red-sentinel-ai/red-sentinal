@@ -8,6 +8,7 @@ import { AnimationSection } from '@/components/sections/AnimationSection'
 import { VulnerabilitySection } from '@/components/sections/VulnerabilitySection'
 import { EarnWhileDefendingSection } from '@/components/sections/EarnWhileDefendingSection'
 import { WhyChooseUsSection } from '@/components/sections/WhyChooseUsSection'
+import { AuditSection } from '@/components/sections/AuditSection'
 import { ManifestoSection } from '@/components/sections/ManifestoSection'
 
 export default function LandingPage() {
@@ -20,6 +21,7 @@ export default function LandingPage() {
       <OfferingsSection />
       <EarnWhileDefendingSection />
       <WhyChooseUsSection />
+      <AuditSection />
       <ManifestoSection />
     </>
   )
