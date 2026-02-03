@@ -16,12 +16,16 @@ pub struct Agent {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RegisterAgentRequest {
     pub system_prompt: String,
+    pub private_prompt: Option<String>,
+    pub attack_goal: String,
+    pub jury_prompt: String,
     pub cost_per_message: u64,
     pub creator: String,
     pub model_provider: String,
     pub model_name: String,
     pub api_base_url: Option<String>,
     pub api_key: Option<String>,
+    pub sentinel_type: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]

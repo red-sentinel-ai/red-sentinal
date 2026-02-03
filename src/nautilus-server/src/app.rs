@@ -29,16 +29,32 @@ pub async fn register_agent(
 ) -> Result<Json<ProcessedDataResponse<IntentMessage<RegisterAgentResponse>>>, EnclaveError> {
     #[derive(Debug, Deserialize)]
     struct ExternalRegisterResponse {
-        agent_id: u64,
-        creator: String,
+        sentinel_id: u64,
+        sentinel_type: String,
         status: String,
+        public_url: String,
     }
+
+    // Build the new API request body according to v2 structure
+    let sentinel_type = payload.sentinel_type.clone().unwrap_or_else(|| "basic".to_string());
+    let hidden_instructions = payload.private_prompt.clone().unwrap_or_default();
+    
+    let request_body = json!({
+        "sentinel_type": sentinel_type,
+        "public_instructions": payload.system_prompt,
+        "hidden_instructions": hidden_instructions,
+        "attack_goal": payload.attack_goal,
+        "judge_prompt": payload.jury_prompt,
+        "model_provider": payload.model_provider,
+        "model_name": payload.model_name,
+        "creator": payload.creator
+    });
 
     let client = Client::new();
     let external_response = client
-        .post("https://redteam.suisentinel.xyz/register")
+        .post("https://redteam.suisentinel.xyz/sentinels")
         .bearer_auth("suihero@345") // adds: Authorization: Bearer <token>
-        .json(&payload)
+        .json(&request_body)
         .send()
         .await
         .map_err(|e| {
@@ -56,13 +72,13 @@ pub async fn register_agent(
         )));
     }
 
-    let ExternalRegisterResponse { agent_id, .. } = external_response
+    let ExternalRegisterResponse { sentinel_id, .. } = external_response
         .json::<ExternalRegisterResponse>()
         .await
         .map_err(|e| {
             EnclaveError::GenericError(format!("Failed to parse register response: {}", e))
         })?;
-    let agent_id = agent_id.to_string();
+    let agent_id = sentinel_id.to_string();
     let current_timestamp = std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
         .map_err(|e| EnclaveError::GenericError(format!("Failed to get current timestamp: {}", e)))?
