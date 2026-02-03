@@ -63,6 +63,7 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
   const [tweetLink, setTweetLink] = useState('')
   const [isVerifying, setIsVerifying] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [attackGoal, setAttackGoal] = useState<string>('')
 
   const account = useCurrentAccount()
   const isOwner = account?.address === agent.owner
@@ -73,6 +74,26 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
 
   const { data: userProfilesMap, isLoading: isLoadingProfile } = useUserProfiles([agent.owner])
   const defenderProfile = userProfilesMap?.[agent.owner]
+
+  useEffect(() => {
+    const fetchAttackGoal = async () => {
+      try {
+        const response = await fetch(`/api/agents/attack-goal?agent_id=${agent.agent_id}`)
+        if (response.ok) {
+          const data = await response.json()
+          if (data.attack_goal) {
+            setAttackGoal(data.attack_goal)
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch attack goal', error)
+      }
+    }
+
+    if (agent.agent_id) {
+      fetchAttackGoal()
+    }
+  }, [agent.agent_id])
 
   useEffect(() => {
     const currentUrl = window.location.href
@@ -277,6 +298,13 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
         </div>
 
         <div className="flex flex-col gap-6 py-4">
+          {attackGoal && (
+            <div className="flex flex-col gap-2 border border-black/20 rounded-md p-3">
+              <h3 className="font-medium uppercase text-[#5E5E5E]">Attack Goal</h3>
+              <p className="text-base font-semibold">{attackGoal}</p>
+            </div>
+          )}
+
           <div className="flex flex-col gap-2">
             <h3 className="font-medium uppercase text-[#5E5E5E]">Sentinel Object Id</h3>
             <Link
