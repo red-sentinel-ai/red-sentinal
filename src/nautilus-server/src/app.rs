@@ -235,7 +235,7 @@ pub async fn consume_prompt(
     }
 
     let eval_url = format!(
-        "https://redteam.suisentinel.xyz/evaluate/{}",
+        "https://redteam.suisentinel.xyz/attack/{}",
         payload.agent_id
     );
 
