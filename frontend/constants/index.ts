@@ -180,12 +180,12 @@ export const socialLinks = [
     name: 'Blog',
     isOutside: true,
   },
-    {
+  {
     href: SUI_SENTINEL_AUDIT_REPORT_URL,
     icon: Shield,
     isImage: false,
     alt: "Audit Report",
-    name: "Audit",
+    name: "Audit Report",
     isOutside: true,
   },
 ]
@@ -221,7 +221,6 @@ export const PROVIDER_MODELS: Record<string, string[]> = {
     'mistral.mistral-large-3-675b-instruct',
     'openai.gpt-oss-120b-1:0',
     'us.meta.llama4-maverick-17b-instruct-v1:0',
-    'us.deepseek.r1-v1:0',
     'us.meta.llama3-2-90b-instruct-v1:0',
     'us.meta.llama3-3-70b-instruct-v1:0',
   ],
