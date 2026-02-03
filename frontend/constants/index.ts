@@ -1,4 +1,4 @@
-import { FileText, Github } from 'lucide-react'
+import { FileText, Github, Shield } from 'lucide-react'
 import { ChartDataPoint } from '@/components/charts/PrizePoolChartModal'
 
 export const AGENT_REGISTRY_ADDRESS =
@@ -18,6 +18,7 @@ export const SUI_SENTINEL_X_URL = 'https://twitter.com/intent/follow?screen_name
 export const SUI_SENTINEL_X_USERNAME = 'suisentinal'
 export const SUI_SENTINEL_GITHUB_URL = 'https://github.com/sui-sentinel/contracts'
 export const SUI_SENTINEL_TELEGRAM_URL = 'https://t.me/suisentinel'
+export const SUI_SENTINEL_AUDIT_REPORT_URL = "/pdfs/audit_final.pdf";
 
 export const SUI_SENTINEL_DEFENDER_REWARDS_DOCS_URL = `${SUI_SENTINEL_DOCS_URL}/incentives/defender-rewards`
 
@@ -177,6 +178,14 @@ export const socialLinks = [
     isImage: false,
     alt: 'blog',
     name: 'Blog',
+    isOutside: true,
+  },
+    {
+    href: SUI_SENTINEL_AUDIT_REPORT_URL,
+    icon: Shield,
+    isImage: false,
+    alt: "Audit Report",
+    name: "Audit",
     isOutside: true,
   },
 ]
