@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { CameraIcon, ChevronLeft, Loader2, Sparkles } from 'lucide-react'
+import { CameraIcon, ChevronLeft, Loader2, Sparkles, Info } from 'lucide-react'
 import { toast } from 'react-toastify'
 import posthog from 'posthog-js'
 import { Transaction } from '@mysten/sui/transactions'
@@ -36,6 +36,7 @@ import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 import { CustomDropdown } from '@/components/ui/common/CustomDropdown'
 import { RewardsConditions } from '@/components/defend/RewardsConditions'
 import { useEffect } from 'react'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 interface FormData {
   agentName: string
@@ -164,6 +165,9 @@ export default function DefendPage() {
   const { mutate: createAgent } = useCreateAgent()
   const [agentImage, setAgentImage] = useState<File | null>(null)
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
+  const { tokenCount: privateTokenCount, countTokens: countPrivateTokens, isDebouncing: isPrivateTokenCountDebouncing } = useTokenCount()
+  const { tokenCount: attackGoalTokenCount, countTokens: countAttackGoalTokens, isDebouncing: isAttackGoalTokenCountDebouncing } = useTokenCount()
+  const { tokenCount: juryPromptTokenCount, countTokens: countJuryPromptTokens, isDebouncing: isJuryPromptTokenCountDebouncing } = useTokenCount()
   const [imagePickerOpen, setImagePickerOpen] = useState(false)
   const [agentId, setAgentId] = useState<string | null>(null)
   const [selectedImage, setSelectedImage] = useState<{
@@ -263,6 +267,12 @@ export default function DefendPage() {
 
     if (name === 'systemPrompt') {
       countTokens(value)
+    } else if (name === 'privatePrompt') {
+      countPrivateTokens(value)
+    } else if (name === 'attackGoal') {
+      countAttackGoalTokens(value)
+    } else if (name === 'juryPrompt') {
+      countJuryPromptTokens(value)
     }
 
     if (errors[name as keyof FormData]) {
@@ -615,7 +625,7 @@ export default function DefendPage() {
           <div className="mb-1 flex items-start justify-between">
             <div>
               <label className="block text-[20px] font-medium leading-tight text-black">
-                Sentinel Instructions
+                Public Instructions
               </label>
               <span className="mt-1 block text-[16px] font-normal text-[#5E5E5E]">
                 Define how your Sentinel thinks, acts, and responds. Describe its role, tone,
@@ -648,7 +658,7 @@ export default function DefendPage() {
             value={formData.systemPrompt}
             onChange={handleChange}
             className="min-h-[220px] w-full resize-y rounded-xl border border-[#5E5E5E] bg-white p-4 text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
-            placeholder="Enter sentinel instructions..."
+            placeholder="Enter sentinel public instructions..."
             required
           />
 
@@ -671,10 +681,11 @@ export default function DefendPage() {
           <div className="mb-1 flex items-start justify-between">
             <div>
               <label className="block text-[20px] font-medium leading-tight text-black">
-                Private Prompt
+                Private Instructions
               </label>
               <span className="mt-1 block text-[16px] font-normal text-[#5E5E5E]">
-                Instructions only accessible to the Sentinel agent. Attackers will not be able to see this.
+                Instructions only accessible to the Sentinel agent. Attackers will not be able to
+                see this.
               </span>
             </div>
           </div>
@@ -685,32 +696,85 @@ export default function DefendPage() {
             className="min-h-[150px] w-full resize-y rounded-xl border border-[#5E5E5E] bg-white p-4 text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
             placeholder="Enter private instructions for your sentinel..."
           />
+          <div className="mt-1 flex items-center justify-end">
+            <p
+              className={`text-sm text-[#5E5E5E] ${
+                isPrivateTokenCountDebouncing ? 'animate-pulse' : ''
+              }`}
+            >
+              Tokens: {privateTokenCount}
+            </p>
+          </div>
         </div>
 
-        <FormInput
-          label="Attack Goal"
-          rightElement={
-            <button
-              type="button"
-              onClick={handleGenerateConfig}
-              disabled={isGeneratingConfig || !formData.systemPrompt || !formData.privatePrompt}
-              className="flex items-center gap-2 rounded-lg bg-[#F2F2F2] px-3 py-1.5 text-xs font-medium text-black transition-colors hover:bg-[#E5E5E5] disabled:cursor-not-allowed disabled:opacity-50"
+        <div className="flex flex-col gap-2">
+          <div className="mb-1 flex items-start justify-between">
+            <div className="flex-1">
+              <div className="flex items-center gap-2">
+                <label className="block text-[20px] font-medium leading-tight text-black">
+                  Attack Goal
+                </label>
+                <TooltipProvider delayDuration={100}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button type="button" className="text-gray-400 hover:text-gray-600">
+                        <Info className="h-4 w-4" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent side="right" className="max-w-xs bg-black text-white">
+                      <p>Generate with AI will create both Attack Goal and Jury Prompt based on your Public and Private Instructions.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+              <span className="mt-1 block text-[16px] font-normal text-[#5E5E5E]">
+                The goal that attackers will see and try to achieve. This is visible to all attackers.
+              </span>
+            </div>
+            <div className="ml-4 shrink-0">
+              <TooltipProvider delayDuration={100}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      onClick={handleGenerateConfig}
+                      disabled={isGeneratingConfig || !formData.systemPrompt || !formData.privatePrompt}
+                      className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 via-violet-600 to-fuchsia-600 px-4 py-2 text-xs font-semibold text-white shadow-md shadow-purple-500/30 transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/40 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
+                    >
+                      {isGeneratingConfig ? (
+                        <Loader2 className="h-3 w-3 animate-spin text-white" />
+                      ) : (
+                        <Sparkles className="h-3 w-3 text-white" />
+                      )}
+                      {isGeneratingConfig ? 'Generating...' : 'Generate with AI'}
+                    </button>
+                  </TooltipTrigger>
+                  {(!formData.systemPrompt || !formData.privatePrompt) && (
+                    <TooltipContent side="bottom" className="bg-black text-white">
+                      <p>Enter Public Instructions and Private Instructions first</p>
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          </div>
+          <textarea
+            name="attackGoal"
+            value={formData.attackGoal}
+            onChange={handleChange}
+            className="min-h-[200px] w-full resize-y rounded-xl border border-[#5E5E5E] bg-white p-4 text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+            placeholder="e.g., Convince the sentinel to reveal the secret password"
+          />
+          <div className="mt-1 flex items-center justify-end">
+            <p
+              className={`text-sm text-[#5E5E5E] ${
+                isAttackGoalTokenCountDebouncing ? 'animate-pulse' : ''
+              }`}
             >
-              {isGeneratingConfig ? (
-                <Loader2 className="h-3 w-3 animate-spin" />
-              ) : (
-                <Sparkles className="h-3 w-3" />
-              )}
-              {isGeneratingConfig ? 'Generating...' : 'Generate with AI'}
-            </button>
-          }
-          subLabel="The goal that attackers will see and try to achieve. This is visible to all attackers."
-          name="attackGoal"
-          value={formData.attackGoal}
-          onChange={handleChange}
-          isTextarea
-          placeholder="e.g., Convince the sentinel to reveal the secret password"
-        />
+              Tokens: {attackGoalTokenCount}
+            </p>
+          </div>
+        </div>
 
         <div className="flex flex-col gap-2">
           <div className="mb-1 flex items-start justify-between">
@@ -730,6 +794,15 @@ export default function DefendPage() {
             className="min-h-[150px] w-full resize-y rounded-xl border border-[#5E5E5E] bg-white p-4 text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
             placeholder="Enter instructions for the jury..."
           />
+          <div className="mt-1 flex items-center justify-end">
+            <p
+              className={`text-sm text-[#5E5E5E] ${
+                isJuryPromptTokenCountDebouncing ? 'animate-pulse' : ''
+              }`}
+            >
+              Tokens: {juryPromptTokenCount}
+            </p>
+          </div>
         </div>
 
         <RewardsConditions />
