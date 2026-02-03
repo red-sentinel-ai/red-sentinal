@@ -50,9 +50,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
             appearance: {
               theme: 'light',
             },
-            embeddedWallets: {
-              createOnLogin: 'users-without-wallets',
-            },
           }}
         >
           <SuiClientProvider networks={networks} defaultNetwork="testnet">

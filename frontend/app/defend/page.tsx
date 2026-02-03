@@ -7,7 +7,6 @@ import { toast } from 'react-toastify'
 import posthog from 'posthog-js'
 import { Transaction } from '@mysten/sui/transactions'
 import { SuiTransactionBlockResponse } from '@mysten/sui/client'
-import { useSuiClient } from '@mysten/dapp-kit'
 import {
   MIST_PER_SUI,
   PROVIDER_MODELS,
@@ -108,7 +107,6 @@ const DEFAULT_PROVIDER = 'anthropic'
 const DEFAULT_MODEL = PROVIDER_MODELS[DEFAULT_PROVIDER][0]
 
 export default function DefendPage() {
-  const client = useSuiClient()
   const { address, isConnected } = useUnifiedWallet()
   const { signAndExecuteTransaction } = useWalletContext()
 

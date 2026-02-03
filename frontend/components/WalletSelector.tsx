@@ -1,7 +1,6 @@
 'use client'
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { usePrivy } from '@privy-io/react-auth'
 import { ConnectButton as SuiConnectButton } from '@mysten/dapp-kit'
 import { useWalletContext } from '@/lib/wallet/context'
 import { Wallet, Mail } from 'lucide-react'
@@ -12,7 +11,6 @@ interface WalletSelectorProps {
 }
 
 export function WalletSelector({ open, onOpenChange }: WalletSelectorProps) {
-  const { login } = usePrivy()
   const { connect } = useWalletContext()
 
   const handlePrivyLogin = async () => {

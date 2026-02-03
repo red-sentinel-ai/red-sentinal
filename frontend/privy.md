@@ -745,33 +745,3 @@ address: The account address
 epoch: Serialized to [0, 0, 0, 0, 0, 0, 0, 0].
 
 To generate a proof of possession in Rust, see the implementation at fn generate_proof_of_possession. For test vectors, see fn test_proof_of_possession.
-
-<!--  -->
-
-Module '"@privy-io/react-auth"' has no exported member 'useSolanaWallets'.ts(2305)
-import useSolanaWallets
- why do we need solana wallet BTW?
-
-
-Conversion of type 'SuiSignAndExecuteTransactionOutput' to type 'SuiTransactionBlockResponse' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
-  Types of property 'effects' are incompatible.
-    Type 'string' is not comparable to type 'TransactionEffects'.ts(2352)
-(alias) interface SuiTransactionBlockResponse
-import SuiTransactionBlockResponse
-
-here
-
-embeddedWallets: {
-              createOnLogin: 'users-without-wallets',
-            },
-
-this
-
-Object literal may only specify known properties, and 'createOnLogin' does not exist in type '{ ethereum?: { createOnLogin?: EmbeddedWalletCreateOnLoginConfig; }; solana?: { createOnLogin?: EmbeddedWalletCreateOnLoginConfig; }; disableAutomaticMigration?: boolean; showWalletUIs?: boolean; priceDisplay?: PriceDisplayOptions; extendedCalldataDecoding?: boolean; }'.
-
-./app/defend/page.tsx
-111:9  Error: 'client' is assigned a value but never used.  @typescript-eslint/no-unused-vars
-
-./components/WalletSelector.tsx
-15:11  Error: 'login' is assigned a value but never used.  @typescript-eslint/no-unused-vars
-

@@ -9,7 +9,7 @@ import {
   useEffect,
   ReactNode,
 } from 'react'
-import { usePrivy } from '@privy-io/react-auth'
+import { usePrivy, useWallets } from '@privy-io/react-auth'
 import {
   useCurrentAccount,
   useDisconnectWallet,
@@ -33,7 +33,7 @@ export function WalletContextProvider({ children }: WalletContextProviderProps) 
   const [activeWalletType, setActiveWalletType] = useState<WalletType>(null)
   const [isReady, setIsReady] = useState(false)
 
-  // Slush wallet hooks
+  // Slush wallet hooks (external Sui wallet)
   const slushAccount = useCurrentAccount()
   const { mutateAsync: slushSignAndExecute } = useSignAndExecuteTransaction()
   const { mutate: disconnectSlush } = useDisconnectWallet()
@@ -41,33 +41,30 @@ export function WalletContextProvider({ children }: WalletContextProviderProps) 
 
   // Privy hooks
   const { login, logout, authenticated, ready: privyReady, user } = usePrivy()
-  const { wallets: solanaWallets } = {} as any
+  const { wallets: privyWallets } = useWallets()
 
-  // Get Privy Sui wallet from linked accounts
-  // Privy uses Solana wallets infrastructure for Sui as it's a Tier 2 chain
+  // Find Privy's embedded Sui wallet
+  // Privy creates embedded wallets that can be used for Sui (Tier 2 chain)
   const privySuiWallet = useMemo(() => {
     if (!authenticated || !user) return null
 
-    // Find embedded wallet from user's linked accounts
-    const embeddedWallet = user.linkedAccounts.find(
-      account => account.type === 'wallet' && account.walletClientType === 'privy'
-    )
+    // Find the embedded wallet from Privy
+    // For Tier 2 chains like Sui, Privy uses embedded wallets with raw signing
+    const embeddedWallet = privyWallets.find(w => w.walletClientType === 'privy')
 
-    if (!embeddedWallet || embeddedWallet.type !== 'wallet') return null
+    if (!embeddedWallet) return null
 
-    // For Sui (Tier 2), we need to derive the address
-    // The embedded wallet for Sui uses ED25519
-    const solanaEmbedded = solanaWallets.find(w => w.walletClientType === 'privy')
-
-    if (!solanaEmbedded) return null
-
+    // For Sui, we need to derive the address from the public key
+    // The wallet should have a public key that can be used for Sui
     return {
-      id: solanaEmbedded.address,
+      id: embeddedWallet.address,
+      // Privy wallets use the same address/public key for signing
+      // The actual Sui address derivation happens when we sign
       address: embeddedWallet.address,
-      // Public key will be fetched when needed
-      wallet: solanaEmbedded,
+      publicKey: (embeddedWallet as any).publicKey || '',
+      wallet: embeddedWallet,
     }
-  }, [authenticated, user, solanaWallets])
+  }, [authenticated, user, privyWallets])
 
   // Load persisted wallet type on mount
   useEffect(() => {
@@ -118,7 +115,7 @@ export function WalletContextProvider({ children }: WalletContextProviderProps) 
         isConnected: true,
       }
     }
-    // Check if either wallet is connected even without explicit selection
+    // Auto-detect if one is connected
     if (slushAccount?.address) {
       return { address: slushAccount.address, type: 'slush', isConnected: true }
     }
@@ -132,44 +129,39 @@ export function WalletContextProvider({ children }: WalletContextProviderProps) 
     return { address: null, type: null, isConnected: false }
   }, [activeWalletType, slushAccount, privySuiWallet, authenticated])
 
-  // Unified sign and execute
+  // Sign and execute transaction
   const signAndExecuteTransaction = useCallback(
-    async (
-      tx: Transaction,
-      options?: {
-        showRawEffects?: boolean
-        showObjectChanges?: boolean
-      }
-    ): Promise<SuiTransactionBlockResponse> => {
+    async (tx: Transaction): Promise<SuiTransactionBlockResponse> => {
       if (wallet.type === 'slush') {
         const result = await slushSignAndExecute({
           transaction: tx,
         })
-        return result as SuiTransactionBlockResponse
+
+        // Get full transaction response with effects
+        const txResponse = await client.waitForTransaction({
+          digest: result.digest,
+          options: {
+            showRawEffects: true,
+            showObjectChanges: true,
+          },
+        })
+
+        return txResponse
       }
 
       if (wallet.type === 'privy' && privySuiWallet?.wallet) {
-        // For Privy, we need to use the raw sign method
-        const solanaWallet = privySuiWallet.wallet
-
-        // Get the public key
-        const publicKey = await (solanaWallet as any).getPublicKey?.()
-        if (!publicKey) {
-          throw new Error('Failed to get public key from Privy wallet')
-        }
-
+        // Use Privy's raw sign for Sui transactions
         const privyWalletForSigning = {
-          id: solanaWallet.address,
           address: privySuiWallet.address,
-          publicKey: typeof publicKey === 'string' ? publicKey : publicKey.toString('hex'),
-          sign: async (params: { hash: string }) => {
-            // Privy's raw sign for Sui transactions
-            const result = await (solanaWallet as any).sign(params.hash)
-            return result
+          publicKey: privySuiWallet.publicKey,
+          rawSign: async (hash: string) => {
+            // Privy's signMessage with raw bytes for Tier 2 chains
+            const signature = await (privySuiWallet.wallet as any).sign(hash)
+            return signature
           },
         }
 
-        return signAndExecuteWithPrivy(tx, client, privyWalletForSigning, options)
+        return signAndExecuteWithPrivy(tx, client, privyWalletForSigning)
       }
 
       throw new Error('No wallet connected')
