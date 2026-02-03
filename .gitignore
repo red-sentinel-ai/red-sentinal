@@ -21,3 +21,4 @@ private.md
 node_modules
 .next
 next-env.d.ts
+.DS_Store
