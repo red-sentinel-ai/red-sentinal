@@ -92,7 +92,7 @@ Sui Sentinel leverages the [Nautilus](https://github.com/MystenLabs/nautilus) fo
 ### **TEE Server**: `http://54.81.11.64:3000`
 
 ```
-ssh -i "MyEC2KeyPair.pem" ec2-user@ec2-3-237-26-201.compute-1.amazonaws.com
+ssh -i "MyEC2KeyPair.pem" ec2-user@ec2-18-213-79-225.compute-1.amazonaws.com
 ```
 
 #### **Register Agent**
@@ -266,14 +266,14 @@ aws sts get-session-token \
 **Note:** If above command gives error, run `unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_PROFILE` and then again run `aws configure` with admin_user credentials
 
 3. Once you get value for above keys, set
-{
-    "Credentials": {
-        "AccessKeyId": "*STS_KEY_REMOVED*",
-        "SecretAccessKey": "*REMOVED*",
-        "SessionToken": "IQoJb3JpZ2luX2VjEEgaCXVzLWVhc3QtMSJGMEQCIEMcE2qjSA5YQ8At+L3do/YeWQGSdfnXpkMPGglCQItjAiB4V1LNIHCtpxsC4H+fKlibrWUJGk0hnpLGCYcAaeYfnSrvAQgREAAaDDQwMjA1NDgwMzExMyIMZYg7Z0HGvjzaQC2UKswBgoxFMu1IeIMqJ9ApDwGSd7vuS5fAPAzrMLcX348XEDgwuCvzGBP5591HkZ7w1BbyOyMvht7pqA2vfcFTB0JFKYpOGekboGd8+YsgQZk/T8sy/JoKLTqYyCM/kxI/DzBLliMOX4WANm20fnV4+2xGJH1e6iNUOGMqnzEqsqzGrVjNw2HliSzQyi66pOj8fldKTR34cGa62o9cUmvPlXilXbTJneUVQwKOdnuR3FuuGSd0kzufNotH3cIu70swXOZa+Zl0mfYorYZCLvVRMKH1qsoGOpkBgn69nDuqyXow3z3SDO6/r3oOqhIvPFtdbuygNKVdI0WbaixgR1arzm0PGNrZMJ+jazo13CvSPm/GZg4FwtFhEy+hsfXg5lNn94j4XaagVUUDTJHbr/KNNLEtsYLVdvDtyr4Vg9714TyXZ+WFZlPj7ABeYtgeOya0/3l80ggeXCqwCCfJG+wig9OXbqFzuP2PfcYfGqzHrsjs",
-        "Expiration": "2025-12-24T03:52:01+00:00"
-    }
-}
+   {
+   "Credentials": {
+   "AccessKeyId": "*STS_KEY_REMOVED*",
+   "SecretAccessKey": "*REMOVED*",
+   "SessionToken": "IQoJb3JpZ2luX2VjEEgaCXVzLWVhc3QtMSJGMEQCIEMcE2qjSA5YQ8At+L3do/YeWQGSdfnXpkMPGglCQItjAiB4V1LNIHCtpxsC4H+fKlibrWUJGk0hnpLGCYcAaeYfnSrvAQgREAAaDDQwMjA1NDgwMzExMyIMZYg7Z0HGvjzaQC2UKswBgoxFMu1IeIMqJ9ApDwGSd7vuS5fAPAzrMLcX348XEDgwuCvzGBP5591HkZ7w1BbyOyMvht7pqA2vfcFTB0JFKYpOGekboGd8+YsgQZk/T8sy/JoKLTqYyCM/kxI/DzBLliMOX4WANm20fnV4+2xGJH1e6iNUOGMqnzEqsqzGrVjNw2HliSzQyi66pOj8fldKTR34cGa62o9cUmvPlXilXbTJneUVQwKOdnuR3FuuGSd0kzufNotH3cIu70swXOZa+Zl0mfYorYZCLvVRMKH1qsoGOpkBgn69nDuqyXow3z3SDO6/r3oOqhIvPFtdbuygNKVdI0WbaixgR1arzm0PGNrZMJ+jazo13CvSPm/GZg4FwtFhEy+hsfXg5lNn94j4XaagVUUDTJHbr/KNNLEtsYLVdvDtyr4Vg9714TyXZ+WFZlPj7ABeYtgeOya0/3l80ggeXCqwCCfJG+wig9OXbqFzuP2PfcYfGqzHrsjs",
+   "Expiration": "2025-12-24T03:52:01+00:00"
+   }
+   }
 
 ```
 export KEY_PAIR=MyEC2KeyPair
@@ -333,7 +333,4 @@ This project is licensed under the APACHE License - see the LICENSE file for det
 
 1636703322293403648
 
-
 Enforce cost per message in TEE
-
-

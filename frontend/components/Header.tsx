@@ -32,7 +32,7 @@ export const Header = () => {
           <Link className="block flex-shrink-0" href="https://suisentinel.xyz" target="_blank">
             <div className="relative">
               <Image
-                src="/icons/logo_large_testnet.svg"
+                src="/icons/logo_large.svg"
                 alt="logo"
                 height={49}
                 width={198}

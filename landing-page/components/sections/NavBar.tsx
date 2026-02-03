@@ -41,7 +41,7 @@ export function Navbar() {
           <div className="relative z-50">
             <Link className="shrink-0 flex items-center gap-2" href="/">
               <Image
-                src="/icons/logo_large_testnet.svg"
+                src="/icons/logo_large.svg"
                 alt="shield"
                 style={{ objectFit: 'contain' }}
                 height={40}
