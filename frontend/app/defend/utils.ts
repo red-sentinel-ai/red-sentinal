@@ -3,7 +3,10 @@ export const registerAgentUtil = async (
   feePerMessage: number,
   creatorAddress: string,
   modelProvider: string,
-  modelName: string
+  modelName: string,
+  privatePrompt: string,
+  attackGoal: string,
+  juryPrompt: string,
 ) => {
   const response = await fetch('/api/register-agent', {
     method: 'POST',
@@ -14,6 +17,9 @@ export const registerAgentUtil = async (
       creator: creatorAddress,
       model_provider: modelProvider,
       model_name: modelName,
+      private_prompt: privatePrompt,
+      attack_goal: attackGoal,
+      jury_prompt: juryPrompt,
     }),
   })
 
