@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { CameraIcon, ChevronLeft, Loader2 } from 'lucide-react'
+import { CameraIcon, ChevronLeft, Loader2, Sparkles } from 'lucide-react'
 import { toast } from 'react-toastify'
 import posthog from 'posthog-js'
 import { Transaction } from '@mysten/sui/transactions'
@@ -201,6 +201,7 @@ export default function DefendPage() {
 
   const [errors, setErrors] = useState<Partial<FormData>>({})
   const [isLoading, setIsLoading] = useState(false)
+  const [isGeneratingConfig, setIsGeneratingConfig] = useState(false)
 
   const [deployedAgentObjectId, setDeployedAgentObjectId] = useState<string | null>(null)
   const [deployedAgentPath, setDeployedAgentPath] = useState<string | null>(null)
@@ -220,6 +221,40 @@ export default function DefendPage() {
       llmProvider: provider,
       llmModel: defaultModelForProvider,
     }))
+  }
+
+  const handleGenerateConfig = async () => {
+    if (!formData.systemPrompt || !formData.privatePrompt) {
+      toast.error('Please fill in Sentinel Instructions and Private Prompt first')
+      return
+    }
+
+    setIsGeneratingConfig(true)
+    try {
+      const response = await fetch('/api/generate-config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          public_instructions: formData.systemPrompt,
+          hidden_instructions: formData.privatePrompt,
+        }),
+      })
+
+      if (!response.ok) throw new Error('Failed to generate config')
+
+      const data = await response.json()
+      setFormData(prev => ({
+        ...prev,
+        attackGoal: data.attack_goal || prev.attackGoal,
+        juryPrompt: data.judge_prompt || prev.juryPrompt,
+      }))
+      toast.success('Generated Attack Goal and Jury Prompt successfully!')
+    } catch (error) {
+      console.error('Error generating config:', error)
+      toast.error('Failed to generate config')
+    } finally {
+      setIsGeneratingConfig(false)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -654,6 +689,21 @@ export default function DefendPage() {
 
         <FormInput
           label="Attack Goal"
+          rightElement={
+            <button
+              type="button"
+              onClick={handleGenerateConfig}
+              disabled={isGeneratingConfig || !formData.systemPrompt || !formData.privatePrompt}
+              className="flex items-center gap-2 rounded-lg bg-[#F2F2F2] px-3 py-1.5 text-xs font-medium text-black transition-colors hover:bg-[#E5E5E5] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {isGeneratingConfig ? (
+                <Loader2 className="h-3 w-3 animate-spin" />
+              ) : (
+                <Sparkles className="h-3 w-3" />
+              )}
+              {isGeneratingConfig ? 'Generating...' : 'Generate with AI'}
+            </button>
+          }
           subLabel="The goal that attackers will see and try to achieve. This is visible to all attackers."
           name="attackGoal"
           value={formData.attackGoal}
