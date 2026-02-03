@@ -180,7 +180,7 @@ export const socialLinks = [
     icon: Shield,
     isImage: false,
     alt: "Audit Report",
-    name: "Audit",
+    name: "Audit Report",
     isOutside: true,
   },
 ];
