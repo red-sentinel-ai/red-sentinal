@@ -20,7 +20,11 @@ export const Header = () => {
     >
       <div className="flex h-11 items-center justify-center bg-gradient-to-r from-black/15 to-[rgba(102,102,102,0.2)] p-2 text-center text-xs text-black md:text-base">
         <h3 className="text-shadow-[0_4px_4px_rgba(0,0,0,0.25)] font-medium">
-          Sui Sentinel is live on Testnet. Mainnet launches after smart-contract audits.
+          Sui Sentinel is fully audited by{' '}
+          <a href="https://osec.io/" target="_blank" className="underline">
+            OtterSec
+          </a>{' '}
+          and live on Sui Mainnet.
         </h3>
       </div>
       <div className="mx-auto flex max-w-full items-center justify-between p-3 py-4 lg:px-8">
