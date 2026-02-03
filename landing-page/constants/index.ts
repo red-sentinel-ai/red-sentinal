@@ -25,6 +25,7 @@ export const SUI_SENTINEL_TELEGRAM_URL = "https://t.me/suisentinel";
 export const SUI_SENTINEL_X_USERNAME = "suisentinal";
 export const SUI_SENTINEL_BRAND_KIT_URL =
   "https://drive.google.com/drive/u/0/folders/1WrratyBwcJRus9SL3_gz447D-V0DtyKO";
+export const SUI_SENTINEL_AUDIT_REPORT_URL = "/pdfs/audit_final.pdf";
 
 export const defenderSteps = [
   {
@@ -172,6 +173,14 @@ export const socialLinks = [
     alt: "Brand Kit",
     name: "Brand Kit",
     isOutside: false,
+  },
+  {
+    href: SUI_SENTINEL_AUDIT_REPORT_URL,
+    icon: Shield,
+    isImage: false,
+    alt: "Audit Report",
+    name: "Audit",
+    isOutside: true,
   },
 ];
 
