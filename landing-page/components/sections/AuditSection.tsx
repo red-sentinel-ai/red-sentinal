@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Shield, FileText, ExternalLink } from 'lucide-react'
-import { SUI_SENTINEL_AUDIT_REPORT_URL } from '@/constants'
+import { SUI_SENTINEL_AUDIT_REPORT_URL, OTTERSEC_URL } from '@/constants'
 
 export function AuditSection() {
   return (
@@ -25,7 +25,7 @@ export function AuditSection() {
               Uncompromised Security
             </h2>
             <p className="text-lg text-[#939393] mb-8 leading-relaxed">
-              We believe in building a secure future for decentralized AI. That&apos;s why our core infrastructure and smart contracts have been rigorously audited by <span className="text-black font-semibold">OtterSec</span>, ensuring that your assets and agents are protected by industry-leading security standards.
+              We believe in building a secure future for decentralized AI. That&apos;s why our core infrastructure and smart contracts have been rigorously audited by <Link href={OTTERSEC_URL} target="_blank" className="text-black font-semibold hover:underline decoration-[#C871FF] decoration-2 underline-offset-4">OtterSec</Link>, ensuring that your assets and agents are protected by industry-leading security standards.
             </p>
             
             <Link 
