@@ -26,6 +26,7 @@ export const SUI_SENTINEL_X_USERNAME = "suisentinal";
 export const SUI_SENTINEL_BRAND_KIT_URL =
   "https://drive.google.com/drive/u/0/folders/1WrratyBwcJRus9SL3_gz447D-V0DtyKO";
 export const SUI_SENTINEL_AUDIT_REPORT_URL = "/pdfs/audit_final.pdf";
+export const OTTERSEC_URL = "https://osec.io";
 
 export const defenderSteps = [
   {
