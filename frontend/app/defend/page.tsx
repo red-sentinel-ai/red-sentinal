@@ -44,6 +44,9 @@ interface FormData {
   rewardPool: string
   llmProvider: string
   llmModel: string
+  privatePrompt: string
+  attackGoal: string
+  juryPrompt: string
 }
 
 interface FormInputProps {
@@ -191,6 +194,9 @@ export default function DefendPage() {
     rewardPool: '',
     llmProvider: DEFAULT_PROVIDER,
     llmModel: DEFAULT_MODEL,
+    privatePrompt: '',
+    attackGoal: '',
+    juryPrompt: '',
   })
 
   const [errors, setErrors] = useState<Partial<FormData>>({})
@@ -239,6 +245,9 @@ export default function DefendPage() {
       rewardPool: '',
       llmProvider: DEFAULT_PROVIDER,
       llmModel: DEFAULT_MODEL,
+      privatePrompt: '',
+      attackGoal: '',
+      juryPrompt: '',
     })
     setFundedAmount('')
     setSelectedImage({
@@ -426,7 +435,10 @@ export default function DefendPage() {
         feePerMessage,
         account.address,
         formData.llmProvider,
-        formData.llmModel
+        formData.llmModel,
+        formData.privatePrompt,
+        formData.attackGoal,
+        formData.juryPrompt
       )
       setAgentId(agentDetails.response.data.agent_id)
       await createAgentTransaction(agentDetails)
@@ -618,6 +630,56 @@ export default function DefendPage() {
           {tokenCount > SYSTEM_PROMPT_MAX_TOKENS && (
             <p className="text-right text-sm text-red-500">System prompt exceeds token limit</p>
           )}
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <div className="mb-1 flex items-start justify-between">
+            <div>
+              <label className="block text-[20px] font-medium leading-tight text-black">
+                Private Prompt
+              </label>
+              <span className="mt-1 block text-[16px] font-normal text-[#5E5E5E]">
+                Instructions only accessible to the Sentinel agent. Attackers will not be able to see this.
+              </span>
+            </div>
+          </div>
+          <textarea
+            name="privatePrompt"
+            value={formData.privatePrompt}
+            onChange={handleChange}
+            className="min-h-[150px] w-full resize-y rounded-xl border border-[#5E5E5E] bg-white p-4 text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+            placeholder="Enter private instructions for your sentinel..."
+          />
+        </div>
+
+        <FormInput
+          label="Attack Goal"
+          subLabel="The goal that attackers will see and try to achieve. This is visible to all attackers."
+          name="attackGoal"
+          value={formData.attackGoal}
+          onChange={handleChange}
+          isTextarea
+          placeholder="e.g., Convince the sentinel to reveal the secret password"
+        />
+
+        <div className="flex flex-col gap-2">
+          <div className="mb-1 flex items-start justify-between">
+            <div>
+              <label className="block text-[20px] font-medium leading-tight text-black">
+                Jury Prompt
+              </label>
+              <span className="mt-1 block text-[16px] font-normal text-[#5E5E5E]">
+                Instructions for the jury to evaluate whether an attack was successful.
+              </span>
+            </div>
+          </div>
+          <textarea
+            name="juryPrompt"
+            value={formData.juryPrompt}
+            onChange={handleChange}
+            className="min-h-[150px] w-full resize-y rounded-xl border border-[#5E5E5E] bg-white p-4 text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+            placeholder="Enter instructions for the jury..."
+          />
         </div>
 
         <RewardsConditions />
