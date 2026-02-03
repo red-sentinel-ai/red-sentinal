@@ -85,7 +85,7 @@ export function Footer() {
               ))}
             </div>
 
-            <div className="hidden md:flex flex-col gap-4">
+            <div className="hidden md:grid grid-cols-2 gap-x-8 gap-y-4">
               {socialLinks.map((link) => (
                 <div key={link.href} className="flex items-center justify-between gap-6">
                   <Link

@@ -29,7 +29,11 @@ export function Navbar() {
     >
       <div className="text-center text-white h-11 flex items-center justify-center bg-linear-to-r from-black/15 to-[rgba(102,102,102,0)] p-2 text-xs md:text-base">
         <h3 className="text-black font-medium">
-          Sui Sentinel is live on Testnet. Mainnet launches after smart-contract audits.
+          Sui Sentinel is fully audited by{' '}
+          <a href="https://ottersec.com" target="_blank" className="underline">
+            OtterSec
+          </a>{' '}
+          and live on Sui Mainnet.
         </h3>
       </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
