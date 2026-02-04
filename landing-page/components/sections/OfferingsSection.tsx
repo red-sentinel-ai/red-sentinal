@@ -40,13 +40,13 @@ export function OfferingsSection() {
                 strength, and earn rewards for every exploit discovered.
               </p>
 
-              <div className="min-h-[280px] md:min-h-[300px]">
+              <div className="min-h-[220px] sm:min-h-[260px] md:min-h-[300px]">
                 <Image
                   src="/img/customAIArt.png"
                   alt="custom ai"
                   width={500}
                   height={500}
-                  className="w-full max-w-md h-auto mx-auto absolute top-[5%] md:w-[500px] md:h-[500px] md:max-w-none left-1/2 -translate-x-1/2"
+                  className="w-full max-w-[280px] sm:max-w-[350px] md:max-w-[450px] lg:max-w-[500px] h-auto mx-auto absolute top-[10%] sm:top-[8%] md:top-[5%] left-1/2 -translate-x-1/2"
                 />
               </div>
             </div>
@@ -62,13 +62,13 @@ export function OfferingsSection() {
                 Launch your own Sentinel. Let the world attack it and earn while it evolves.
               </p>
 
-              <div className="min-h-0 md:min-h-[300px]">
+              <div className="min-h-0 sm:min-h-[200px] md:min-h-[300px]">
                 <Image
                   src="/img/deploySentinelArt.png"
                   alt="deploy sentinel"
                   width={400}
                   height={400}
-                  className="relative w-full max-w-xs h-auto mx-auto my-6 md:absolute md:bottom-[2%] md:w-[400px] md:h-[400px] md:max-w-none md:my-0"
+                  className="relative w-full max-w-[200px] sm:max-w-[280px] md:max-w-[350px] lg:max-w-[400px] h-auto mx-auto my-6 md:absolute md:bottom-[2%] md:my-0"
                 />
               </div>
             </div>

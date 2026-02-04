@@ -27,7 +27,7 @@ export const AnimationSection = () => {
         className="relative flex items-center max-w-[1340px] mx-auto pt-12 md:py-24 overflow-visible"
       >
         <div className="relative z-10 w-full text-left">
-          <h2 className="text-[48px] leading-snug font-medium">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[48px] leading-snug font-medium">
             Sui Sentinel lets you
             <span className="text-[#C871FF]">
               {' '}
@@ -55,7 +55,7 @@ export const AnimationSection = () => {
           alt="animation section art"
           width={1700}
           height={1700}
-          className="absolute top-[-250px] right-[-50px] pointer-events-none select-none opacity-40"
+          className="absolute top-[-100px] right-[-100px] md:top-[-200px] md:right-[-50px] lg:top-[-250px] pointer-events-none select-none opacity-40 w-[600px] md:w-[1000px] lg:w-[1700px]"
         />
 
         {/* <video

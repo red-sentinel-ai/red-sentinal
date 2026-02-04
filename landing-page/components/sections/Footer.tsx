@@ -34,14 +34,14 @@ export function Footer() {
             </p>
           </div>
 
-          <div className="flex w-full max-w-xs md:max-w-lg mx-auto items-end justify-between mt-8 md:mt-auto order-3 md:order-2">
+          <div className="flex w-full max-w-[280px] sm:max-w-xs md:max-w-lg mx-auto items-end justify-between mt-8 md:mt-auto order-3 md:order-2">
             <div>
               <Image
                 src="/img/robot_defend.png"
                 width={260}
                 height={346}
                 alt="Defender Robot"
-                className="h-auto w-[225px] md:w-[260px]"
+                className="h-auto w-[150px] sm:w-[180px] md:w-[220px] lg:w-[260px]"
               />
             </div>
             <div className="flex">
@@ -50,7 +50,7 @@ export function Footer() {
                 width={215}
                 height={286}
                 alt="Attacker Robot"
-                className="mt-auto h-auto w-[152px] md:w-[215px]"
+                className="mt-auto h-auto w-[100px] sm:w-[130px] md:w-[180px] lg:w-[215px]"
               />
             </div>
           </div>
@@ -64,7 +64,7 @@ export function Footer() {
                     href={link.href}
                     target={link.isOutside ? '_blank' : '_self'}
                     rel="noopener noreferrer"
-                    className="w-[70px] h-[51px] border border-[#ACACAC] rounded-xl flex items-center justify-center hover:bg-black/5 transition-colors"
+                    className="w-[50px] h-[40px] sm:w-[60px] sm:h-[45px] border border-[#ACACAC] rounded-xl flex items-center justify-center hover:bg-black/5 transition-colors"
                     aria-label={link.alt}
                   >
                     {link.isImage ? (
@@ -99,7 +99,7 @@ export function Footer() {
                     href={link.href}
                     target={link.isOutside ? '_blank' : '_self'}
                     rel="noopener noreferrer"
-                    className="w-[70px] h-[51px] border border-[#ACACAC] rounded-xl flex items-center justify-center hover:bg-black/5 transition-colors"
+                    className="w-[50px] h-[40px] sm:w-[60px] sm:h-[45px] md:w-[70px] md:h-[51px] border border-[#ACACAC] rounded-xl flex items-center justify-center hover:bg-black/5 transition-colors"
                     aria-label={link.alt}
                   >
                     {link.isImage ? (
@@ -114,7 +114,7 @@ export function Footer() {
           </div>
         </div>
 
-        <p className="absolute bottom-1 md:hidden text-white font-medium text-[10px] w-full text-center">
+        <p className="absolute bottom-1 md:hidden text-white font-medium text-[10px] w-full text-center left-0">
           <span>© 2025 </span>
           <span>All Rights Reserved @Cyphronix Software</span>
         </p>
