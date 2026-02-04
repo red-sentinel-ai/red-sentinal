@@ -55,14 +55,14 @@ const Footer = () => {
               on-chain.
             </p>
 
-            <div className="my-4 flex flex-row justify-center gap-4 md:hidden">
+            <div className="my-4 flex flex-row flex-wrap justify-center gap-2 md:hidden">
               {socialLinks.map(link => (
                 <Link
                   key={link.href}
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex w-10 h-10 md:h-[51px] md:w-[70px] items-center justify-center rounded-[8px] border border-black transition-colors hover:bg-black/5"
+                  className="flex h-10 w-10 items-center justify-center rounded-[8px] border border-black transition-colors hover:bg-black/5"
                   aria-label={link.alt}
                 >
                   {link.isImage ? (
@@ -74,7 +74,7 @@ const Footer = () => {
               ))}
             </div>
 
-            <div className="mt-auto md:text-base">
+            <div className="mt-auto text-sm md:text-base">
               <span>Powered by </span>
               <a
                 href={NAUTILUS_URL}
@@ -84,9 +84,10 @@ const Footer = () => {
               >
                 Nautilus Framework
               </a>
-              <span> • Secured by TEE</span>
+              <span className="hidden sm:inline"> • </span>
+              <span className="block sm:inline">Secured by TEE</span>
             </div>
-            <p className="mb-4 font-medium text-white">
+            <p className="mb-4 text-sm font-medium text-white md:text-base">
               <span>© 2025 </span>
               <span>All Rights Reserved @Cyphronix Software</span>
             </p>
