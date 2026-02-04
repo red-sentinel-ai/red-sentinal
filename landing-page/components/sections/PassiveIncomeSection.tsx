@@ -17,7 +17,7 @@ export function PassiveIncomeSection() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-6xl font-bold mb-6">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold mb-6">
             Passive Income for Prompt Engineers
           </h2>
           <p className="text-xl text-gray-400 max-w-3xl mx-auto">Monetize your expertise</p>
@@ -44,7 +44,7 @@ export function PassiveIncomeSection() {
               unique way to monetize your expertise while contributing to AI security.
             </p>
 
-            <div className="flex max-w-[400px] mx-auto mb-8">
+            <div className="flex max-w-[280px] sm:max-w-[350px] md:max-w-[400px] mx-auto mb-8">
               <div className="blue gradient-border"></div>
               <div className="blue gradient-border rotate-180"></div>
             </div>
