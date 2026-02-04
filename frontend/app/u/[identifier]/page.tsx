@@ -5,7 +5,7 @@ import { User, Folder } from 'lucide-react'
 import { SuiClient, getFullnodeUrl } from '@mysten/sui/client'
 import { formatAddress } from '@mysten/sui/utils'
 import { supabaseServiceClient } from '@/db/config/server'
-import { getDefeatedAgentIds, fetchAgentDetailsViaObject } from '@/lib/sui-utils'
+import { getDefeatedAgentIds, fetchAgentDetailsViaObject, getAttackCountsPerAgent } from '@/lib/sui-utils'
 import { FeaturedAgentCard } from '@/components/FeaturedAgentCard'
 import { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { AgentStatus } from '@/types'
@@ -39,7 +39,10 @@ async function getUserProfile(identifier: string) {
   }
 
   const client = new SuiClient({ url: getFullnodeUrl('testnet') })
-  const defeatedAgentIds = await getDefeatedAgentIds(client)
+  const [defeatedAgentIds, attackCounts] = await Promise.all([
+    getDefeatedAgentIds(client),
+    getAttackCountsPerAgent(client),
+  ])
 
   const enrichedAgents = await Promise.all(
     basicAgents.map(async agent => {
@@ -57,6 +60,7 @@ async function getUserProfile(identifier: string) {
         agent_path: agent.agent_path || '',
         created_at: agent.created_at || new Date().toISOString(),
         status,
+        total_attacks: attackCounts.get(String(agent.agent_id)) || 0,
       } as AgentDetails
 
       return returnData
