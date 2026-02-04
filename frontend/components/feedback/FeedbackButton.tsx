@@ -14,15 +14,15 @@ export const FeedbackButton = () => {
 
   return (
     <>
-      {!shouldHideButton && (
-        <button
-          onClick={() => setIsOpen(true)}
-          className="fixed bottom-5 right-5 z-40 rounded-full bg-black p-3 text-white shadow-lg transition-all hover:bg-gray-800"
-          aria-label="Open feedback form"
-        >
-          <MessageSquare className="h-6 w-6" />
-        </button>
-      )}
+      <button
+        onClick={() => setIsOpen(true)}
+        className={`fixed bottom-5 right-5 z-40 items-center justify-center rounded-full bg-black p-3 text-white shadow-lg transition-all hover:bg-gray-800 ${
+          shouldHideButton ? 'hidden md:flex' : 'flex'
+        }`}
+        aria-label="Open feedback form"
+      >
+        <MessageSquare className="h-6 w-6" />
+      </button>
 
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetContent
