@@ -24,12 +24,12 @@ export const AgentUpdateDialog = ({
   children,
 }: AgentUpdateDialogProps) => {
   return (
-    <Dialog open={open} onClose={onClose}>
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">{title}</h2>
+    <Dialog open={open} onClose={onClose} className="p-4 sm:p-6">
+      <div className="space-y-4 sm:space-y-6">
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="text-xl font-bold sm:text-2xl">{title}</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-black">
-            <X className="h-6 w-6" />
+            <X className="size-5 sm:size-6" />
           </button>
         </div>
 
