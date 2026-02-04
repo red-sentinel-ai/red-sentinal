@@ -62,7 +62,7 @@ const Footer = () => {
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex h-[51px] w-[70px] items-center justify-center rounded-[8px] border border-black transition-colors hover:bg-black/5"
+                  className="flex w-10 h-10 md:h-[51px] md:w-[70px] items-center justify-center rounded-[8px] border border-black transition-colors hover:bg-black/5"
                   aria-label={link.alt}
                 >
                   {link.isImage ? (
