@@ -7,7 +7,6 @@ import { useCurrentAccount } from '@mysten/dapp-kit'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { PointsHistoryChart } from '@/components/profile/PointsHistoryChart'
 import { useRecipientRewards } from '@/hooks/rewards/useRecipientRewards'
 import { SUI_TESTNET_BASE_URL, MIST_PER_SUI } from '@/constants'
 
@@ -21,22 +20,16 @@ export const RewardsHistory = () => {
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-md">
-          <Skeleton className="mb-4 h-6 w-32 bg-gray-100" />
-          <Skeleton className="h-[280px] w-full rounded-lg bg-gray-100" />
-        </div>
-        <Card className="border-gray-200 shadow-sm">
-          <CardHeader>
-            <CardTitle>Rewards History</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {[1, 2, 3].map(i => (
-              <Skeleton key={i} className="h-12 w-full rounded-lg bg-gray-100" />
-            ))}
-          </CardContent>
-        </Card>
-      </div>
+      <Card className="border-gray-200 shadow-sm">
+        <CardHeader>
+          <CardTitle>Rewards History</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {[1, 2, 3].map(i => (
+            <Skeleton key={i} className="h-12 w-full rounded-lg bg-gray-100" />
+          ))}
+        </CardContent>
+      </Card>
     )
   }
 
@@ -54,8 +47,6 @@ export const RewardsHistory = () => {
           <Gift className="h-6 w-6 text-gray-600" />
         </div>
       </div>
-
-      {history.length > 0 && <PointsHistoryChart history={history} />}
 
       <Card className="overflow-hidden border-gray-200 bg-white shadow-sm">
         <CardHeader className="border-b border-gray-100 pb-4">

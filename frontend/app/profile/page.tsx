@@ -3,12 +3,13 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { User, Folder, Activity, Loader2, Camera, Gift } from 'lucide-react'
+import { User, Folder, Activity, Loader2, Camera, Gift, BarChart3 } from 'lucide-react'
 import { useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { UserActivity } from '@/components/profile/UserActivity'
 import { UserAgents } from '@/components/profile/UserAgents'
+import { UserStats } from '@/components/profile/UserStats'
 import { RewardsHistory } from '@/components/profile/RewardsHistory'
 import { ConnectPrompt } from '@/components/ConnectPrompt'
 import { EditProfileModal } from '@/components/profile/EditProfileModal'
@@ -20,6 +21,7 @@ import { SENTINEL_GIFS, TESTNET_SENTINEL_COIN_TYPE, USER_IMAGES } from '@/consta
 const PROFILE_TABS = {
   AGENTS: 'agents',
   ACTIVITY: 'activity',
+  STATS: 'stats',
   REWARDS: 'rewards',
 } as const
 
@@ -169,7 +171,7 @@ export default function ProfilePage() {
 
           <div className="px-4 md:px-8">
             <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-              <TabsList className="grid w-full grid-cols-3 gap-2 lg:flex lg:w-auto lg:justify-start">
+              <TabsList className="grid w-full grid-cols-4 gap-2 lg:flex lg:w-auto lg:justify-start">
                 <TabsTrigger
                   value={PROFILE_TABS.AGENTS}
                   className="flex items-center gap-2 text-sm sm:text-lg md:text-xl"
@@ -184,6 +186,14 @@ export default function ProfilePage() {
                 >
                   <Activity className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="truncate">Activity</span>
+                </TabsTrigger>
+
+                <TabsTrigger
+                  value={PROFILE_TABS.STATS}
+                  className="flex items-center gap-2 text-sm sm:text-lg md:text-xl"
+                >
+                  <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span className="truncate">Stats</span>
                 </TabsTrigger>
 
                 <TabsTrigger
@@ -202,6 +212,12 @@ export default function ProfilePage() {
 
                 <TabsContent value={PROFILE_TABS.ACTIVITY}>
                   <UserActivity />
+                </TabsContent>
+
+                <TabsContent value={PROFILE_TABS.STATS}>
+                  <div className="max-w-5xl">
+                    <UserStats />
+                  </div>
                 </TabsContent>
 
                 <TabsContent value={PROFILE_TABS.REWARDS}>
