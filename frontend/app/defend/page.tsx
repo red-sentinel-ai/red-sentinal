@@ -507,17 +507,17 @@ export default function DefendPage() {
           <span>Home</span>
         </Link>
 
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="mb-3 text-5xl font-medium">Deploy Sentinel</h1>
-            <p className="text-xl font-medium text-[#5E5E5E]">
+        <div className="flex flex-col-reverse items-center gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="text-center sm:text-left">
+            <h1 className="mb-3 text-3xl font-medium sm:text-4xl md:text-5xl">Deploy Sentinel</h1>
+            <p className="text-base font-medium text-[#5E5E5E] sm:text-xl">
               Create, configure, and deploy your AI Sentinel
             </p>
           </div>
 
           <div className="flex flex-col items-center justify-center gap-2">
             <div
-              className="group relative flex h-[90px] w-[90px] cursor-pointer items-center justify-center overflow-hidden rounded-full border border-black bg-gray-50 text-gray-400 shadow-sm transition-colors hover:bg-gray-100 hover:text-black"
+              className="group relative flex h-[70px] w-[70px] cursor-pointer items-center justify-center overflow-hidden rounded-full border border-black bg-gray-50 text-gray-400 shadow-sm transition-colors hover:bg-gray-100 hover:text-black sm:h-[90px] sm:w-[90px]"
               onClick={() => setImagePickerOpen(true)}
             >
               {selectedImage?.url ? (
@@ -622,21 +622,21 @@ export default function DefendPage() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <div className="mb-1 flex items-start justify-between">
+          <div className="mb-1 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <label className="block text-[20px] font-medium leading-tight text-black">
+              <label className="block text-base font-medium leading-tight text-black sm:text-[20px]">
                 Public Instructions
               </label>
-              <span className="mt-1 block text-[16px] font-normal text-[#5E5E5E]">
+              <span className="mt-1 block text-sm font-normal text-[#5E5E5E] sm:text-[16px]">
                 Define how your Sentinel thinks, acts, and responds. Describe its role, tone,
                 constraints, and objectives.
               </span>
             </div>
 
-            <div className="ml-4 flex shrink-0 gap-4">
+            <div className="flex shrink-0 gap-4 sm:ml-4">
               <Link
                 href="/instruction-templates"
-                className="mt-1 text-sm text-[#0077FF] underline hover:text-[#0077ffd3]"
+                className="text-sm text-[#0077FF] underline hover:text-[#0077ffd3] sm:mt-1"
                 onClick={() => {
                   sessionStorage.setItem('defendFormData', JSON.stringify(formData))
                 }}
@@ -646,7 +646,7 @@ export default function DefendPage() {
               <Link
                 href={`${SUI_SENTINEL_DOCS_URL}/guides/defender-guide`}
                 target="_blank"
-                className="mt-1 text-sm text-[#0077FF] underline hover:text-[#0077ffd3]"
+                className="text-sm text-[#0077FF] underline hover:text-[#0077ffd3] sm:mt-1"
               >
                 Docs Example
               </Link>

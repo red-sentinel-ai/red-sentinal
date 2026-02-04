@@ -138,7 +138,7 @@ export const FeaturedAgentCard = ({
           <div className="mx-auto flex max-w-[394px] border-t border-gray-200"></div>
         </div>
 
-        <div className="mb-4 space-y-3 text-xl font-medium">
+        <div className="mb-4 space-y-3 text-base font-medium sm:text-xl">
           <div className="flex items-center justify-between">
             <span className="text-[#5E5E5E]">Reward Pool:</span>
             <div className="flex items-center">
