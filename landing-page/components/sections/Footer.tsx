@@ -56,30 +56,28 @@ export function Footer() {
           </div>
 
           <div className="w-full md:w-auto order-2 md:order-3 pb-4 overflow-auto">
-            <div className="flex flex-row justify-center gap-4 md:hidden">
+            <div className="grid grid-cols-2 gap-x-6 gap-y-4 md:hidden">
               {socialLinks.map((link) => (
-                <div key={link.href} className="flex flex-col items-center justify-between gap-1">
+                <div key={link.href} className="flex items-center justify-between gap-3">
                   <Link
-                    key={link.href}
-                    href={link.href}
-                    target={link.isOutside ? '_blank' : '_self'}
-                    rel="noopener noreferrer"
-                    className="w-[50px] h-[40px] sm:w-[60px] sm:h-[45px] border border-[#ACACAC] rounded-xl flex items-center justify-center hover:bg-black/5 transition-colors"
-                    aria-label={link.alt}
-                  >
-                    {link.isImage ? (
-                      <Image src={link.icon as string} alt={link.alt} width={20} height={20} />
-                    ) : (
-                      <link.icon className="size-5 text-black" />
-                    )}
-                  </Link>
-
-                  <Link
-                    className="text-black font-medium whitespace-nowrap hover:underline"
+                    className="text-black font-medium whitespace-nowrap hover:underline text-sm"
                     href={link.href}
                     target={link.isOutside ? '_blank' : '_self'}
                   >
                     {link.name}
+                  </Link>
+                  <Link
+                    href={link.href}
+                    target={link.isOutside ? '_blank' : '_self'}
+                    rel="noopener noreferrer"
+                    className="w-[45px] h-[36px] sm:w-[50px] sm:h-[40px] border border-[#ACACAC] rounded-xl flex items-center justify-center hover:bg-black/5 transition-colors"
+                    aria-label={link.alt}
+                  >
+                    {link.isImage ? (
+                      <Image src={link.icon as string} alt={link.alt} width={18} height={18} />
+                    ) : (
+                      <link.icon className="size-4 text-black" />
+                    )}
                   </Link>
                 </div>
               ))}
