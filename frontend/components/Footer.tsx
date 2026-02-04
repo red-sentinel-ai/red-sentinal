@@ -15,7 +15,7 @@ const Footer = () => {
 
   return (
     <footer
-      className="relative bg-cover bg-bottom bg-no-repeat pt-16"
+      className="relative bg-cover bg-bottom bg-no-repeat pt-8 sm:pt-16"
       style={{ backgroundImage: "url('/img/footer-bg.png')" }}
     >
       <div className="vertical-line left-4"></div>
@@ -26,19 +26,19 @@ const Footer = () => {
           width={500}
           height={346}
           alt="Decorative blend element"
-          className="h-auto w-[160px] max-w-xs md:w-auto md:max-w-lg"
+          className="h-auto w-[100px] max-w-xs sm:w-[160px] md:w-auto md:max-w-lg"
         />
         <Image
           width={310}
           height={29}
           src="/img/shadowEllipse.png"
           alt="shadow ellipse"
-          className="h-auto w-[200px] md:w-[310px]"
+          className="h-auto w-[120px] sm:w-[200px] md:w-[310px]"
         />
       </div>
 
       <div className="relative z-10 mx-auto max-w-[1440px] px-4 pb-4 sm:px-6 md:pb-0 lg:px-8">
-        <div className="flex min-h-[440px] flex-col items-center justify-between gap-12 text-center md:min-h-[398px] md:flex-row md:items-start md:text-left">
+        <div className="flex min-h-[360px] flex-col items-center justify-between gap-6 text-center sm:min-h-[440px] sm:gap-12 md:min-h-[398px] md:flex-row md:items-start md:text-left">
           <div className="flex max-w-md flex-grow flex-col md:self-stretch">
             <div className="mb-4 flex items-center justify-center gap-3 md:justify-start">
               <Image
@@ -49,7 +49,7 @@ const Footer = () => {
                 width={198}
               />
             </div>
-            <p className="py-4 leading-relaxed text-black">
+            <p className="py-2 text-sm leading-relaxed text-black sm:py-4 sm:text-base">
               Sui Sentinel is a Decentralized AI safety platform built on Sui. Stress-test models,
               find vulnerabilities, earn rewards. Every judgment cryptographically verified
               on-chain.
@@ -74,7 +74,7 @@ const Footer = () => {
               ))}
             </div>
 
-            <div className="mt-auto text-sm md:text-base">
+            <div className="mt-auto text-xs sm:text-sm md:text-base">
               <span>Powered by </span>
               <a
                 href={NAUTILUS_URL}
@@ -84,10 +84,10 @@ const Footer = () => {
               >
                 Nautilus Framework
               </a>
-              <span className="hidden sm:inline"> • </span>
-              <span className="block sm:inline">Secured by TEE</span>
+              <span className="mx-1">•</span>
+              <span>Secured by TEE</span>
             </div>
-            <p className="mb-4 text-sm font-medium text-white md:text-base">
+            <p className="mb-4 text-xs font-medium text-white sm:text-sm md:text-base">
               <span>© 2025 </span>
               <span>All Rights Reserved @Cyphronix Software</span>
             </p>
