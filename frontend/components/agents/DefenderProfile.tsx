@@ -17,13 +17,13 @@ interface DefenderProfileProps {
 export const DefenderProfile = ({ ownerAddress, profile, isLoading }: DefenderProfileProps) => {
   if (isLoading) {
     return (
-      <div className="my-4 flex flex-col gap-2">
-        <h3 className="text-sm font-semibold uppercase text-black/60">Defender</h3>
-        <div className="flex items-center gap-3">
-          <Skeleton className="h-10 w-10 rounded-full bg-gray-200" />
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-24 bg-gray-200" />
-            <Skeleton className="h-3 w-32 bg-gray-200" />
+      <div className="my-2 flex flex-col gap-1.5 md:my-3 md:gap-2 lg:my-4">
+        <h3 className="text-xs font-semibold uppercase text-black/60 md:text-sm">Defender</h3>
+        <div className="flex items-center gap-2 md:gap-3">
+          <Skeleton className="h-8 w-8 rounded-full bg-gray-200 md:h-10 md:w-10" />
+          <div className="space-y-1.5 md:space-y-2">
+            <Skeleton className="h-3.5 w-20 bg-gray-200 md:h-4 md:w-24" />
+            <Skeleton className="h-2.5 w-28 bg-gray-200 md:h-3 md:w-32" />
           </div>
         </div>
       </div>
@@ -35,10 +35,10 @@ export const DefenderProfile = ({ ownerAddress, profile, isLoading }: DefenderPr
   const profileLink = username ? `/u/${username}` : `/u/${ownerAddress}`
 
   return (
-    <div className="my-4 flex flex-col gap-2">
-      <h3 className="text-sm font-semibold uppercase text-black/60">Defender</h3>
-      <Link href={profileLink} className="group flex items-center gap-3">
-        <div className="relative h-10 w-10 flex-shrink-0 rounded-full border border-gray-200">
+    <div className="my-2 flex flex-col gap-1.5 md:my-3 md:gap-2 lg:my-4">
+      <h3 className="text-xs font-semibold uppercase text-black/60 md:text-sm">Defender</h3>
+      <Link href={profileLink} className="group flex items-center gap-2 md:gap-3">
+        <div className="relative h-8 w-8 flex-shrink-0 rounded-full border border-gray-200 md:h-10 md:w-10">
           {avatar ? (
             <Image
               src={avatar}
@@ -48,19 +48,19 @@ export const DefenderProfile = ({ ownerAddress, profile, isLoading }: DefenderPr
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center rounded-full bg-gray-100">
-              <User className="h-5 w-5 text-gray-400" />
+              <User className="h-4 w-4 text-gray-400 md:h-5 md:w-5" />
             </div>
           )}
         </div>
         <div className="min-w-0">
           {username && (
-            <p className="truncate font-semibold text-black group-hover:underline">{username}</p>
+            <p className="truncate text-sm font-semibold text-black group-hover:underline md:text-base">{username}</p>
           )}
           <div
-            className="flex items-center gap-1.5 font-mono text-sm text-gray-500"
+            className="flex items-center gap-1 font-mono text-xs text-gray-500 md:gap-1.5 md:text-sm"
             onClick={e => e.preventDefault()}
           >
-            <Wallet className="h-3 w-3 flex-shrink-0" />
+            <Wallet className="h-2.5 w-2.5 flex-shrink-0 md:h-3 md:w-3" />
             {formatAddress(ownerAddress)}
           </div>
         </div>
