@@ -11,7 +11,7 @@ import { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { MIST_PER_SUI } from '@/constants'
 import { PrizePoolChangeDisplay } from './agents/PrizePoolChangeDisplay'
 
-type SortField = 'balance' | 'costPerMessage' | null
+type SortField = 'balance' | 'costPerMessage' | 'totalAttacks' | null
 type SortDirection = 'asc' | 'desc'
 
 export enum TabType {
@@ -52,9 +52,12 @@ export const AgentsList = ({
       if (sortField === 'balance') {
         valueA = Number(a.balance)
         valueB = Number(b.balance)
-      } else {
+      } else if (sortField === 'costPerMessage') {
         valueA = Number(a.cost_per_message)
         valueB = Number(b.cost_per_message)
+      } else {
+        valueA = a.total_attacks || 0
+        valueB = b.total_attacks || 0
       }
 
       return sortDirection === 'asc' ? valueA - valueB : valueB - valueA
@@ -108,15 +111,22 @@ export const AgentsList = ({
                 <SortIcon field="balance" />
               </div>
               <div
-                className="col-span-2 flex cursor-pointer items-center ps-4 hover:text-gray-600"
+                className="col-span-1 flex cursor-pointer items-center ps-4 hover:text-gray-600"
                 onClick={() => handleSort('costPerMessage')}
               >
-                Message Price
+                Price
                 <SortIcon field="costPerMessage" />
+              </div>
+              <div
+                className="col-span-1 flex cursor-pointer items-center ps-4 hover:text-gray-600"
+                onClick={() => handleSort('totalAttacks')}
+              >
+                Attacks
+                <SortIcon field="totalAttacks" />
               </div>
               <div className="col-span-2 ps-4">Change (7d)</div>
               <div className="col-span-1">Status</div>
-              <div className="col-span-1 ps-4">Actions</div>
+              <div className="col-span-2 ps-4">Actions</div>
             </div>
 
             <AnimatePresence>
@@ -185,7 +195,11 @@ export const AgentsList = ({
                           <p className="text-xs text-gray-400">Message Price</p>
                           <p>{`${costPerMessage} SUI`}</p>
                         </div>
-                        <div className="col-span-2">
+                        <div>
+                          <p className="text-xs text-gray-400">Attacks</p>
+                          <p>{agent.total_attacks || 0}</p>
+                        </div>
+                        <div>
                           <p className="text-xs text-gray-400">7d Change</p>
                           <PrizePoolChangeDisplay agentId={agent.agent_id} variant="list" />
                         </div>
@@ -225,7 +239,8 @@ export const AgentsList = ({
                       </div>
 
                       <div className="col-span-1 ps-4">{`${balance} SUI`}</div>
-                      <div className="col-span-2 ps-4">{`${costPerMessage} SUI`}</div>
+                      <div className="col-span-1 ps-4">{`${costPerMessage} SUI`}</div>
+                      <div className="col-span-1 ps-4">{agent.total_attacks || 0}</div>
 
                       <div className="col-span-2 ps-4">
                         <PrizePoolChangeDisplay agentId={agent.agent_id} variant="list" />
