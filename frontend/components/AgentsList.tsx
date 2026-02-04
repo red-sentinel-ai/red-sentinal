@@ -1,14 +1,18 @@
 'use client'
+import { useMemo, useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { RefreshCcw, ArrowUp, ArrowDown } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 
 import { Badge } from '@/components/ui'
 import { LeaderboardSkeleton } from './ui/skeletons/LeaderboardSkeleton'
 import { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { MIST_PER_SUI } from '@/constants'
-import { RefreshCcw } from 'lucide-react'
 import { PrizePoolChangeDisplay } from './agents/PrizePoolChangeDisplay'
+
+type SortField = 'balance' | 'costPerMessage' | null
+type SortDirection = 'asc' | 'desc'
 
 export enum TabType {
   AgentRanking = 'AGENT_RANKING',
@@ -26,6 +30,47 @@ export const AgentsList = ({
   onRefreshAgent: () => void
 }) => {
   const router = useRouter()
+  const [sortField, setSortField] = useState<SortField>(null)
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection(prev => (prev === 'asc' ? 'desc' : 'asc'))
+    } else {
+      setSortField(field)
+      setSortDirection('desc')
+    }
+  }
+
+  const sortedAgents = useMemo(() => {
+    if (!agents || !sortField) return agents
+
+    return [...agents].sort((a, b) => {
+      let valueA: number
+      let valueB: number
+
+      if (sortField === 'balance') {
+        valueA = Number(a.balance)
+        valueB = Number(b.balance)
+      } else {
+        valueA = Number(a.cost_per_message)
+        valueB = Number(b.cost_per_message)
+      }
+
+      return sortDirection === 'asc' ? valueA - valueB : valueB - valueA
+    })
+  }, [agents, sortField, sortDirection])
+
+  const SortIcon = ({ field }: { field: SortField }) => {
+    if (sortField !== field) {
+      return <ArrowDown className="ml-1 h-4 w-4 opacity-30" />
+    }
+    return sortDirection === 'asc' ? (
+      <ArrowUp className="ml-1 h-4 w-4" />
+    ) : (
+      <ArrowDown className="ml-1 h-4 w-4" />
+    )
+  }
 
   const handleRefresh = async (e: React.MouseEvent) => {
     e.preventDefault()
@@ -55,15 +100,27 @@ export const AgentsList = ({
               </div>
 
               <div className="col-span-2 ps-4">Name</div>
-              <div className="col-span-1 ps-4">Balance</div>
-              <div className="col-span-2 ps-4">Message Price</div>
+              <div
+                className="col-span-1 flex cursor-pointer items-center ps-4 hover:text-gray-600"
+                onClick={() => handleSort('balance')}
+              >
+                Balance
+                <SortIcon field="balance" />
+              </div>
+              <div
+                className="col-span-2 flex cursor-pointer items-center ps-4 hover:text-gray-600"
+                onClick={() => handleSort('costPerMessage')}
+              >
+                Message Price
+                <SortIcon field="costPerMessage" />
+              </div>
               <div className="col-span-2 ps-4">Change (7d)</div>
               <div className="col-span-1">Status</div>
               <div className="col-span-1 ps-4">Actions</div>
             </div>
 
             <AnimatePresence>
-              {agents.map((agent, idx) => {
+              {sortedAgents.map((agent, idx) => {
                 const balance = (Number(agent.balance) / MIST_PER_SUI).toFixed(2)
                 const costPerMessage = (Number(agent.cost_per_message) / MIST_PER_SUI).toFixed(2)
 
