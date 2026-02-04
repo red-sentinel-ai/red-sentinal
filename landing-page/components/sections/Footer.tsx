@@ -11,7 +11,7 @@ export function Footer() {
       <div className="vertical-line right-4 -top-40"></div>
 
       <div className="relative z-10 max-w-[1440px] mx-auto pb-0 px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row justify-between md:items-start gap-12 md:text-left">
+        <div className="flex flex-col md:flex-row justify-between md:items-start gap-4 md:text-left">
           <div className="max-w-md md:self-stretch flex flex-col order-1 md:order-1">
             <div className="flex items-center text-sm md:text-base md:justify-start gap-3 mb-4">
               <Image
@@ -83,9 +83,9 @@ export function Footer() {
               ))}
             </div>
 
-            <div className="hidden md:grid grid-cols-2 gap-x-8 gap-y-4">
+            <div className="hidden md:grid grid-cols-2 gap-x-10 gap-y-4">
               {socialLinks.map((link) => (
-                <div key={link.href} className="flex items-center justify-between gap-6">
+                <div key={link.href} className="flex items-center justify-between gap-2">
                   <Link
                     className="text-black font-medium whitespace-nowrap hover:underline"
                     href={link.href}
