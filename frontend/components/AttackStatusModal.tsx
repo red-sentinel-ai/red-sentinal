@@ -19,6 +19,38 @@ type AttackStatusModalProps = {
   txnHash: string
 }
 
+const TruncatedText = ({ text, limit = 200 }: { text: string; limit?: number }) => {
+  const [isExpanded, setIsExpanded] = useState(false)
+
+  if (!text) return null
+
+  if (text.length <= limit) {
+    return <p className="mt-1 pr-2 text-sm leading-relaxed text-[#575757]">{text}</p>
+  }
+
+  return (
+    <div className="mt-1 pr-2">
+      <div
+        className={cn(
+          'text-sm leading-relaxed text-[#575757] transition-all',
+          isExpanded && 'max-h-[150px] overflow-y-auto pr-1'
+        )}
+      >
+        {isExpanded ? text : `${text.slice(0, limit)}...`}
+      </div>
+      <button
+        onClick={(e) => {
+          e.stopPropagation()
+          setIsExpanded(!isExpanded)
+        }}
+        className="mt-1 text-xs font-medium text-[#989898] underline decoration-1 underline-offset-2 hover:text-black"
+      >
+        {isExpanded ? 'Read Less' : 'Read More'}
+      </button>
+    </div>
+  )
+}
+
 export const AttackStatusModal = ({
   apiResponse,
   showResultModal,
@@ -52,7 +84,7 @@ export const AttackStatusModal = ({
     <Dialog
       open={showResultModal && !!apiResponse}
       onClose={() => setShowResultModal(false)}
-      className="min-h-[824px] w-full max-w-[773px] overflow-hidden rounded-xl border border-[#9A9A9A] bg-white p-0"
+      className="max-h-[calc(100vh-40px)] w-full max-w-[773px] overflow-hidden overflow-y-auto rounded-xl border border-[#9A9A9A] bg-white p-0"
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -134,9 +166,9 @@ export const AttackStatusModal = ({
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
-                    <p className="mt-1 pr-2 text-sm leading-relaxed text-[#575757]">
-                      {explanation || 'No explanation provided by the Sentinel.'}
-                    </p>
+                    <TruncatedText
+                      text={explanation || 'No explanation provided by the Sentinel.'}
+                    />
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -146,9 +178,9 @@ export const AttackStatusModal = ({
               <h3 className="text-[15px] font-medium text-black">Jury Response</h3>
 
               <div className="overflow-hidden">
-                <p className="mt-1 pr-2 text-sm leading-relaxed text-[#575757]">
-                  {juryResponse || 'No jury response provided by the Sentinel.'}
-                </p>
+                <TruncatedText
+                  text={juryResponse || 'No jury response provided by the Sentinel.'}
+                />
               </div>
             </div>
           </div>
