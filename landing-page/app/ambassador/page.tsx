@@ -83,7 +83,7 @@ export default function AmbassadorPage() {
 
   const form = useForm<AmbassadorApplicationFormData>({
     resolver: zodResolver(ambassadorApplicationSchema),
-    mode: 'onChange',
+    mode: 'onTouched',
     defaultValues: {
       full_name: '',
       preferred_name: '',
