@@ -41,14 +41,14 @@ export function AuditSection() {
           </div>
 
           <div className="w-full md:w-2/5 flex justify-center items-center">
-             <div className="relative w-64 h-64 md:w-80 md:h-80 bg-white border border-black rounded-full flex flex-col items-center justify-center p-8 shadow-sm">
-                <Shield className="w-24 h-24 text-black mb-4" strokeWidth={1} />
-                <div className="text-2xl font-bold tracking-wider uppercase">Audited By</div>
-                <div className="text-3xl font-black mt-1">OtterSec</div>
-                
+             <div className="relative w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-80 lg:h-80 bg-white border border-black rounded-full flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 shadow-sm">
+                <Shield className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 text-black mb-2 md:mb-4" strokeWidth={1} />
+                <div className="text-lg sm:text-xl md:text-2xl font-bold tracking-wider uppercase">Audited By</div>
+                <div className="text-xl sm:text-2xl md:text-3xl font-black mt-1">OtterSec</div>
+
                 {/* Decorative dots/elements */}
-                <div className="absolute top-4 right-12 text-2xl text-[#C871FF]">+</div>
-                <div className="absolute bottom-10 left-8 text-xl text-[#C871FF]">✦</div>
+                <div className="absolute top-2 right-8 sm:top-4 sm:right-10 md:right-12 text-xl md:text-2xl text-[#C871FF]">+</div>
+                <div className="absolute bottom-6 left-4 sm:bottom-8 sm:left-6 md:bottom-10 md:left-8 text-lg md:text-xl text-[#C871FF]">✦</div>
              </div>
           </div>
         </motion.div>

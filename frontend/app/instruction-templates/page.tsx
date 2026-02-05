@@ -787,8 +787,8 @@ export default function InstructionTemplatesPage() {
             <span>Back to Deploy</span>
           </Link>
 
-          <h1 className="mb-3 text-5xl font-medium">Sentinel Instructions Templates</h1>
-          <p className="max-w-3xl text-xl text-[#5E5E5E]">
+          <h1 className="mb-3 text-2xl font-medium sm:text-4xl md:text-5xl">Sentinel Instructions Templates</h1>
+          <p className="max-w-3xl text-base text-[#5E5E5E] sm:text-xl">
             Expert-crafted system prompt templates to help your Sentinel resist prompt injection
             attacks. Choose a template, customize it, and deploy a robust defender.
           </p>
@@ -848,11 +848,11 @@ export default function InstructionTemplatesPage() {
         </div>
 
         {/* Category Filters */}
-        <div className="mb-8 flex flex-wrap gap-3">
+        <div className="mb-8 flex flex-wrap gap-2 sm:gap-3">
           <button
             onClick={() => setSelectedCategory('all')}
             className={cn(
-              'rounded-xl px-6 py-3 font-medium transition-all',
+              'rounded-xl px-4 py-2 text-sm font-medium transition-all sm:px-6 sm:py-3 sm:text-base',
               selectedCategory === 'all'
                 ? 'bg-black text-white'
                 : 'border border-[#5E5E5E] bg-white hover:border-black'
@@ -865,14 +865,14 @@ export default function InstructionTemplatesPage() {
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
               className={cn(
-                'flex items-center gap-2 rounded-xl px-6 py-3 font-medium transition-all',
+                'flex items-center gap-1 rounded-xl px-3 py-2 text-sm font-medium transition-all sm:gap-2 sm:px-6 sm:py-3 sm:text-base',
                 selectedCategory === category.id
                   ? 'bg-black text-white'
                   : 'border border-[#5E5E5E] bg-white hover:border-black'
               )}
             >
               {category.icon}
-              {category.name}
+              <span className="hidden sm:inline">{category.name}</span>
             </button>
           ))}
         </div>

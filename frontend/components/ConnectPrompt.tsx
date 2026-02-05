@@ -27,7 +27,7 @@ export const ConnectPrompt = ({ title, subtitle, theme }: ConnectPromptProps) =>
 
       {/* Content */}
       <div className="relative mx-auto max-w-lg px-4 text-center">
-        <h1 className="mb-8 text-4xl font-bold md:text-5xl">{title}</h1>
+        <h1 className="mb-8 text-2xl font-bold sm:text-4xl md:text-5xl">{title}</h1>
         <div className="group relative">
           <ConnectButton />
         </div>

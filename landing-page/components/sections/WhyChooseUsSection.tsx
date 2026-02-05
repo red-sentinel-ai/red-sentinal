@@ -48,6 +48,7 @@ export function WhyChooseUsSection() {
                 height={400}
                 src="/img/evolvingSecurityArt.png"
                 alt="evolving security art"
+                className="w-full max-w-[250px] sm:max-w-[300px] md:max-w-[350px] lg:max-w-[400px] h-auto"
               />
             </div>
           </motion.div>
@@ -72,6 +73,7 @@ export function WhyChooseUsSection() {
                 height={243}
                 src="/img/incentivizedIntelligence.png"
                 alt="evolving security art"
+                className="w-full max-w-[250px] sm:max-w-[300px] md:max-w-[340px] lg:max-w-[367px] h-auto"
               />
             </div>
           </motion.div>
@@ -99,6 +101,7 @@ export function WhyChooseUsSection() {
                 height={400}
                 src="/img/dualPower.png"
                 alt="evolving security art"
+                className="w-full max-w-[150px] sm:max-w-[180px] md:max-w-[200px] lg:max-w-[220px] h-auto"
               />
             </div>
           </motion.div>

@@ -58,13 +58,14 @@ export function HowItWorksSection() {
         </div>
       </div>
 
-      <div className="absolute bottom-[-9%] md:bottom-[-22%] left-1/2 -translate-x-1/2">
+      <div className="absolute bottom-[-5%] sm:bottom-[-9%] md:bottom-[-15%] lg:bottom-[-22%] left-1/2 -translate-x-1/2">
         <Image
           src="/img/fullCircle.png"
           width={535}
           height={802}
           alt="full circle"
           quality={100}
+          className="w-[200px] sm:w-[300px] md:w-[400px] lg:w-[535px] h-auto"
         />
       </div>
     </section>
