@@ -13,36 +13,27 @@ export const MenuItems = ({
 }) => {
   return (
     <ul
-       className={clsx('flex flex-col xl:flex-row  items-center md:items-end gap-4 md:gap-8 text-black font-medium mr-4', {
-        'w-full': menuOpen,
-      })}
+      className={clsx(
+        'mr-4 flex flex-col items-center gap-4 font-medium text-black md:items-end md:gap-8 xl:flex-row',
+        {
+          'w-full': menuOpen,
+        }
+      )}
     >
       <li>
-        <Link
-          className="block"
-          href="/"
-          onClick={onItemClick}
-        >
+        <Link className="block" href="/" onClick={onItemClick}>
           Home
         </Link>
       </li>
-    
+
       <li>
-        <Link
-          className="block"
-          href="/rewards/leaderboard"
-          onClick={onItemClick}
-        >
+        <Link className="block" href="/rewards/leaderboard" onClick={onItemClick}>
           Leaderboard
         </Link>
       </li>
 
-        <li>
-        <Link
-          className="block"
-          href="/rewards"
-          onClick={onItemClick}
-        >
+      <li>
+        <Link className="block" href="/rewards" onClick={onItemClick}>
           Rewards
         </Link>
       </li>
@@ -67,18 +58,13 @@ export const MenuItems = ({
         </Badge>
       </li> */}
 
-      <li className='xl:ms-auto'>
+      <li className="xl:ms-auto">
         <Link
           href={SUI_SENTINEL_DOCS_URL}
           target="_blank"
-          className="!px-6 btn font-medium text-base btn-outline !rounded-[25px] flex items-center justify-center h-[50px] min-h-[50px]!"
+          className="btn btn-outline min-h-[50px]! flex h-[50px] items-center justify-center !rounded-[25px] !px-6 text-base font-medium"
         >
-           <Image
-            src="/icons/x_black.png"
-            width={20}
-            height={20}
-            alt="x"
-          />
+          <Image src="/icons/x_black.png" width={20} height={20} alt="x" />
           Support on X
         </Link>
       </li>

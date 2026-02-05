@@ -21,7 +21,7 @@ export function useRewardsLeaderboard(limit = 20, search = '') {
       const data = await response.json()
       return { ...data, pageParam }
     },
-    getNextPageParam: (lastPage) => {
+    getNextPageParam: lastPage => {
       if (lastPage.leaderboard.length < lastPage.limit) {
         return undefined
       }

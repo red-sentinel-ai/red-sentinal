@@ -70,15 +70,15 @@ export function SocialConnectionsSection() {
 
   if (isLoading) {
     return (
-      <Card className="bg-gray-50 border-gray-200 p-6">
+      <Card className="border-gray-200 bg-gray-50 p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="animate-pulse bg-gray-200 h-5 w-5 rounded"></div>
-            <div className="animate-pulse bg-gray-200 h-5 w-40 rounded"></div>
+            <div className="h-5 w-5 animate-pulse rounded bg-gray-200"></div>
+            <div className="h-5 w-40 animate-pulse rounded bg-gray-200"></div>
           </div>
           <div className="flex gap-3">
-            <div className="animate-pulse bg-gray-200 h-9 w-28 rounded-lg"></div>
-            <div className="animate-pulse bg-gray-200 h-9 w-36 rounded-lg"></div>
+            <div className="h-9 w-28 animate-pulse rounded-lg bg-gray-200"></div>
+            <div className="h-9 w-36 animate-pulse rounded-lg bg-gray-200"></div>
           </div>
         </div>
       </Card>
@@ -91,17 +91,12 @@ export function SocialConnectionsSection() {
   return (
     <div className="px-4 md:px-8">
       {!hasAnyConnection && (
-        <div className="p-4 rounded-lg mb-10 bg-gradient-to-r from-white/45 to-[rgba(255,158,244,0.46)] border border-[#5E5E5E]">
+        <div className="mb-10 rounded-lg border border-[#5E5E5E] bg-gradient-to-r from-white/45 to-[rgba(255,158,244,0.46)] p-4">
           <div className="flex items-start gap-3">
-            <Image
-              src="/icons/star-badge-black.png"
-              width={35}
-              height={35}
-              alt="star badge"
-            />
+            <Image src="/icons/star-badge-black.png" width={35} height={35} alt="star badge" />
             <div>
               <p className="text-2xl font-medium">Connect your socials to unlock rewards</p>
-              <p className="text-base mt-1 text-[#5E5E5E]">
+              <p className="mt-1 text-base text-[#5E5E5E]">
                 Connect at least one social account to access the rewards program and exclusive
                 benefits.
               </p>
@@ -110,12 +105,12 @@ export function SocialConnectionsSection() {
         </div>
       )}
 
-      <Card className="bg-transparent border-[#5E5E5E] p-6 bg-gradient-to-r from-white/45 to-[rgba(249,241,248,0.45)]">
+      <Card className="border-[#5E5E5E] bg-transparent bg-gradient-to-r from-white/45 to-[rgba(249,241,248,0.45)] p-6">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div>
-                <h3 className="font-medium text-black tex-lg md:text-[32px]">Social Connections</h3>
+                <h3 className="tex-lg font-medium text-black md:text-[32px]">Social Connections</h3>
                 <p className="text-2xl text-gray-500">
                   {hasAnyConnection
                     ? `${connectionCount} of 2 platforms connected`
@@ -127,18 +122,18 @@ export function SocialConnectionsSection() {
             {hasAnyConnection && (
               <Badge
                 variant="secondary"
-                className="bg-green-100 text-green-800 border-green-200 px-3 py-1"
+                className="border-green-200 bg-green-100 px-3 py-1 text-green-800"
               >
-                <Check className="h-3 w-3 mr-1" />
+                <Check className="mr-1 h-3 w-3" />
                 Active
               </Badge>
             )}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-white/45 to-[rgba(249,240,249,0.46)] rounded-lg border border-[#5E5E5E]">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="flex items-center justify-between rounded-lg border border-[#5E5E5E] bg-gradient-to-r from-white/45 to-[rgba(249,240,249,0.46)] p-4">
               <div className="flex items-center gap-3">
-                <div className="relative border border-[#5E5E5E] w-10 h-10 md:w-[70px] md:h-[70px] flex items-center justify-center rounded-lg">
+                <div className="relative flex h-10 w-10 items-center justify-center rounded-lg border border-[#5E5E5E] md:h-[70px] md:w-[70px]">
                   <Image
                     src="/icons/x_black.png"
                     width={42}
@@ -147,11 +142,11 @@ export function SocialConnectionsSection() {
                     className="rounded"
                   />
                   {hasTwitter && (
-                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                    <div className="absolute -right-1 -top-1 h-3 w-3 rounded-full border-2 border-white bg-green-500"></div>
                   )}
                 </div>
                 <div>
-                  <p className="font-medium text-2xl">X (Twitter)</p>
+                  <p className="text-2xl font-medium">X (Twitter)</p>
                   <p className="text-base text-[#5E5E5E]">
                     {hasTwitter ? 'Connected' : 'Not connected'}
                   </p>
@@ -167,16 +162,16 @@ export function SocialConnectionsSection() {
                   size="sm"
                   variant="outline"
                   disabled={disconnectingPlatform === 'twitter'}
-                  className="px-3 border-red-200 text-red-600 hover:text-red-700 hover:bg-red-50 hover:border-red-300 disabled:opacity-50 h-[50px] min-w-[145px] text-base flex items-center gap-1"
+                  className="flex h-[50px] min-w-[145px] items-center gap-1 border-red-200 px-3 text-base text-red-600 hover:border-red-300 hover:bg-red-50 hover:text-red-700 disabled:opacity-50"
                 >
                   {disconnectingPlatform === 'twitter' ? (
                     <>
-                      <div className="animate-spin h-4 w-4 mr-1 border border-black border-t-transparent rounded-full flex-shrink-0"></div>
+                      <div className="mr-1 h-4 w-4 flex-shrink-0 animate-spin rounded-full border border-black border-t-transparent"></div>
                       Disconnecting...
                     </>
                   ) : (
                     <>
-                      <X className="h-6 w-6 mr-1" />
+                      <X className="mr-1 h-6 w-6" />
                       Disconnect
                     </>
                   )}
@@ -189,11 +184,11 @@ export function SocialConnectionsSection() {
                   }}
                   size="sm"
                   disabled={connectingPlatform === 'twitter'}
-                  className="btn btn-outline h-[50px] w-[145px] text-base flex items-center gap-1"
+                  className="btn btn-outline flex h-[50px] w-[145px] items-center gap-1 text-base"
                 >
                   {connectingPlatform === 'twitter' ? (
                     <>
-                      <div className="animate-spin h-4 w-4 mr-1 border border-black border-t-transparent rounded-full flex-shrink-0"></div>
+                      <div className="mr-1 h-4 w-4 flex-shrink-0 animate-spin rounded-full border border-black border-t-transparent"></div>
                       <span>Connecting...</span>
                     </>
                   ) : (
@@ -203,7 +198,7 @@ export function SocialConnectionsSection() {
               )}
             </div>
 
-            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-white/45 to-[rgba(249,240,249,0.46)] rounded-lg border border-[#5E5E5E]">
+            <div className="flex items-center justify-between rounded-lg border border-[#5E5E5E] bg-gradient-to-r from-white/45 to-[rgba(249,240,249,0.46)] p-4">
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <Image
@@ -214,11 +209,11 @@ export function SocialConnectionsSection() {
                     className="rounded"
                   />
                   {hasDiscord && (
-                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                    <div className="absolute -right-1 -top-1 h-3 w-3 rounded-full border-2 border-white bg-green-500"></div>
                   )}
                 </div>
                 <div>
-                  <p className="font-medium text-2xl">Discord</p>
+                  <p className="text-2xl font-medium">Discord</p>
                   <p className="text-base text-[#5E5E5E]">
                     {hasDiscord ? 'Connected' : 'Not connected'}
                   </p>
@@ -234,16 +229,16 @@ export function SocialConnectionsSection() {
                   size="sm"
                   variant="outline"
                   disabled={disconnectingPlatform === 'discord'}
-                  className="px-3 border-red-200 text-red-600 hover:text-red-700 hover:bg-red-50 hover:border-red-300 disabled:opacity-50 h-[50px] min-w-[145px] text-base flex items-center gap-1"
+                  className="flex h-[50px] min-w-[145px] items-center gap-1 border-red-200 px-3 text-base text-red-600 hover:border-red-300 hover:bg-red-50 hover:text-red-700 disabled:opacity-50"
                 >
                   {disconnectingPlatform === 'discord' ? (
                     <>
-                      <div className="animate-spin h-4 w-4 mr-1 border border-black border-t-transparent rounded-full flex-shrink-0"></div>
+                      <div className="mr-1 h-4 w-4 flex-shrink-0 animate-spin rounded-full border border-black border-t-transparent"></div>
                       Disconnecting...
                     </>
                   ) : (
                     <>
-                      <X className="h-6 w-6 mr-1" />
+                      <X className="mr-1 h-6 w-6" />
                       Disconnect
                     </>
                   )}
@@ -260,7 +255,7 @@ export function SocialConnectionsSection() {
                 >
                   {connectingPlatform === 'discord' ? (
                     <>
-                      <div className="animate-spin h-4 w-4 mr-1 border border-black border-t-transparent rounded-full flex-shrink-0"></div>
+                      <div className="mr-1 h-4 w-4 flex-shrink-0 animate-spin rounded-full border border-black border-t-transparent"></div>
                       Connecting...
                     </>
                   ) : (

@@ -1,0 +1,39 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build outputs
+.next
+out
+dist
+build
+
+# Cache
+.turbo
+.vercel
+.cache
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+bun.lockb
+package-lock.json
+
+# OS files
+.DS_Store
+*.pem
+
+# Testing
+coverage
+.nyc_output
+
+# Misc
+*.md
+LICENSE

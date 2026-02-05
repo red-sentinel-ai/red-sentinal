@@ -28,7 +28,7 @@ export function useWithdrawAgentModal(): UseWithdrawAgentModalReturn {
 
   const Modal: React.FC<
     Omit<WithdrawAgentModalProps, 'open' | 'onClose' | 'agentObjectId' | 'agentBalanceInMist'>
-  > = (props) => (
+  > = props => (
     <WithdrawAgentModal
       open={isOpen}
       onClose={closeModal}

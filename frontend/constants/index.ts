@@ -1,4 +1,4 @@
-import { FileText, Github } from 'lucide-react'
+import { FileText, Github, Shield } from 'lucide-react'
 import { ChartDataPoint } from '@/components/charts/PrizePoolChartModal'
 
 export const AGENT_REGISTRY_ADDRESS =
@@ -18,6 +18,9 @@ export const SUI_SENTINEL_X_URL = 'https://twitter.com/intent/follow?screen_name
 export const SUI_SENTINEL_X_USERNAME = 'suisentinal'
 export const SUI_SENTINEL_GITHUB_URL = 'https://github.com/sui-sentinel/contracts'
 export const SUI_SENTINEL_TELEGRAM_URL = 'https://t.me/suisentinel'
+export const SUI_SENTINEL_AUDIT_REPORT_URL = "/pdfs/audit_final.pdf";
+
+export const SUI_SENTINEL_DEFENDER_REWARDS_DOCS_URL = `${SUI_SENTINEL_DOCS_URL}/incentives/defender-rewards`
 
 export const SLUSH_BASE_URL = 'https://my.slush.app/browse/'
 
@@ -36,18 +39,20 @@ export const TEXT_COPIES = {
 export const SUI_FAUCET_URL = 'https://faucet.sui.io/'
 
 export const LOCAL_API_PATH = 'http://18.213.79.225:3000'
+export const RED_TEAM_API_URL = `https://redteam.suisentinel.xyz/`
 
 export const SUI_CONFIG = {
-  EXAMPLES_PACKAGE_ID: '0x77f8bc360582dcc5c31ccb5f550e2649981ad05d62eb2df24728a5a4c7befce9',
+  EXAMPLES_PACKAGE_ID: '0x487c9f46f99f2ea824db30b089c9bd8b104de252ed27950efcf8ecf0115cd75a',
   MODULE_NAME: 'sentinel',
   OTW_NAME: 'SENTINEL',
-  AGENT_REGISTRY: '0x29580d8160573f38f3ee4740b393b1ddec2655e5f9374f9e7cdf1c1f5d120794',
-  ENCLAVE_OBJECT_ID: '0xba571019c601097db3263b7b0dc52e25a0f2f0e451198be9795ab3149b2c1e2f',
-  PROTOCOL_CONFIG_OBJECT_ID: '0xe634b68d0ddb96ae946d26602e674dd0c34796f8f0d99b32e392769a5542c549',
+  AGENT_REGISTRY: '0xa1a717c5caebe7b645ed9d40ee571129cc89efa320f6318ed7b525d4690f3949',
+  ENCLAVE_OBJECT_ID: '0x261c18a1889ade27b027e5008b25f0b632f932b1e42998e294da29921b2a3438',
+  PROTOCOL_CONFIG_OBJECT_ID: '0xf6d08d6600b5559c8953dbba34ae1c2e19e6467140ad840bdaadd310090d2d27',
   AGENT_OBJECT_IDS: [''],
 }
 
-export const TESTNET_SENTINEL_COIN_TYPE = "0x0a4f205fc5191939e652ae68c8318528f4f01901f1f6776aba8d26c268fede4e::sentinel::SENTINEL"
+export const TESTNET_SENTINEL_COIN_TYPE =
+  '0x0a4f205fc5191939e652ae68c8318528f4f01901f1f6776aba8d26c268fede4e::sentinel::SENTINEL'
 
 export const EXPLORER_BASE_URL = 'https://testnet.suivision.xyz'
 export const MIST_PER_SUI = 1_000_000_000
@@ -136,7 +141,7 @@ export const TEAM_MEMBER_WALLETS = [
   '0xe4e8af19c2943fc2e3cbefa2fca9149985fc3b3c3d9dd312902b2c26dc600d95',
   '0x5a8f695e50fff36c97dd1f7999c85293b811a932db508bbd51ab1fa5f742417f',
   '0xc647dfdb8d8b575809902c9b86a26b6ace9f9271dfe5385468f503833a237177',
-].map((wallet) => wallet.toLowerCase())
+].map(wallet => wallet.toLowerCase())
 
 export const socialLinks = [
   {
@@ -153,7 +158,13 @@ export const socialLinks = [
     alt: 'Telegram',
     name: 'Telegram',
   },
-  { href: SUI_SENTINEL_GITHUB_URL, icon: Github, isImage: false, alt: 'GitHub', name: 'Github' },
+  {
+    href: SUI_SENTINEL_GITHUB_URL,
+    icon: Github,
+    isImage: false,
+    alt: 'GitHub',
+    name: 'Github',
+  },
   {
     href: SUI_SENTINEL_DOCS_URL,
     icon: '/icons/docs_outline.png',
@@ -167,6 +178,14 @@ export const socialLinks = [
     isImage: false,
     alt: 'blog',
     name: 'Blog',
+    isOutside: true,
+  },
+  {
+    href: SUI_SENTINEL_AUDIT_REPORT_URL,
+    icon: Shield,
+    isImage: false,
+    alt: "Audit Report",
+    name: "Audit Report",
     isOutside: true,
   },
 ]
@@ -185,3 +204,24 @@ export const ADMIN_API_TOKEN = process.env.ADMIN_API_TOKEN
 export const WITHDRAWAL_LOCK_MS = 1_209_600_000 // 14 days in milliseconds
 
 export const AGENT_PRIZE_POOL_HISTORY_QUERY_KEY = 'agentPrizePoolHistory'
+
+export const PROVIDER_MODELS: Record<string, string[]> = {
+  openai: ['gpt-4o', 'gpt-4.1', 'gpt-4o-mini', 'gpt-3.5-turbo'],
+  anthropic: [
+    'claude-opus-4-5',
+    'claude-sonnet-4-5',
+    'claude-haiku-4-5',
+    'claude-3-5-sonnet-20241022',
+    'claude-3-5-sonnet-20240620',
+    'claude-3-opus-20240229',
+    'claude-3-haiku-20240307',
+  ],
+  deepseek: ['deepseek-chat', 'deepseek-reasoner'],
+  bedrock: [
+    'mistral.mistral-large-3-675b-instruct',
+    'openai.gpt-oss-120b-1:0',
+    'us.meta.llama4-maverick-17b-instruct-v1:0',
+    'us.meta.llama3-2-90b-instruct-v1:0',
+    'us.meta.llama3-3-70b-instruct-v1:0',
+  ],
+}

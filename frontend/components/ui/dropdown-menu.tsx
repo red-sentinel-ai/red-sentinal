@@ -6,23 +6,13 @@ import { CheckIcon, ChevronRightIcon, CircleIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 function DropdownMenu({ ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Root>) {
-  return (
-    <DropdownMenuPrimitive.Root
-      data-slot="dropdown-menu"
-      {...props}
-    />
-  )
+  return <DropdownMenuPrimitive.Root data-slot="dropdown-menu" {...props} />
 }
 
 function DropdownMenuPortal({
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Portal>) {
-  return (
-    <DropdownMenuPrimitive.Portal
-      data-slot="dropdown-menu-portal"
-      {...props}
-    />
-  )
+  return <DropdownMenuPrimitive.Portal data-slot="dropdown-menu-portal" {...props} />
 }
 
 function DropdownMenuTrigger({
@@ -41,7 +31,7 @@ function DropdownMenuContent({
       <DropdownMenuPrimitive.Content
         sideOffset={sideOffset}
         className={cn(
-          'z-50 min-w-[8rem] overflow-hidden rounded-lg bg-white/80 backdrop-blur-md border border-gray-200 p-1.5 shadow-lg text-black',
+          'z-50 min-w-[8rem] overflow-hidden rounded-lg border border-gray-200 bg-white/80 p-1.5 text-black shadow-lg backdrop-blur-md',
           'animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
           className
         )}
@@ -98,7 +88,7 @@ function DropdownMenuCheckboxItem({
     >
       <span className="absolute left-2.5 flex h-3.5 w-3.5 items-center justify-center">
         <DropdownMenuPrimitive.ItemIndicator>
-          <CheckIcon className="h-4 w-4 text-primary" />
+          <CheckIcon className="text-primary h-4 w-4" />
         </DropdownMenuPrimitive.ItemIndicator>
       </span>
       {children}
@@ -129,7 +119,7 @@ function DropdownMenuRadioItem({
     >
       <span className="absolute left-2.5 flex h-3.5 w-3.5 items-center justify-center">
         <DropdownMenuPrimitive.ItemIndicator>
-          <CircleIcon className="h-2 w-2 fill-current text-primary" />
+          <CircleIcon className="text-primary h-2 w-2 fill-current" />
         </DropdownMenuPrimitive.ItemIndicator>
       </span>
       {children}
@@ -166,10 +156,7 @@ function DropdownMenuSeparator({
 
 function DropdownMenuShortcut({ className, ...props }: React.ComponentProps<'span'>) {
   return (
-    <span
-      className={cn('ml-auto text-xs tracking-widest text-gray-500', className)}
-      {...props}
-    />
+    <span className={cn('ml-auto text-xs tracking-widest text-gray-500', className)} {...props} />
   )
 }
 
@@ -189,7 +176,7 @@ function DropdownMenuSubTrigger({
     <DropdownMenuPrimitive.SubTrigger
       className={cn(
         'flex cursor-pointer select-none items-center rounded-md px-2.5 py-1.5 text-sm outline-none transition-colors',
-        'focus:bg-gray-100 data-[state=open]:bg-gray-100 focus:text-gray-900 data-[state=open]:text-gray-900',
+        'focus:bg-gray-100 focus:text-gray-900 data-[state=open]:bg-gray-100 data-[state=open]:text-gray-900',
         inset && 'pl-8',
         className
       )}
@@ -208,7 +195,7 @@ function DropdownMenuSubContent({
   return (
     <DropdownMenuPrimitive.SubContent
       className={cn(
-        'z-50 min-w-[8rem] overflow-hidden rounded-lg bg-white/80 backdrop-blur-md border border-gray-200 p-1.5 shadow-lg text-black',
+        'z-50 min-w-[8rem] overflow-hidden rounded-lg border border-gray-200 bg-white/80 p-1.5 text-black shadow-lg backdrop-blur-md',
         'animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
         className
       )}

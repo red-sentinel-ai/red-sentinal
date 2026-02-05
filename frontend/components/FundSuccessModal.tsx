@@ -40,19 +40,16 @@ export const FundSuccessModal = ({
     <Dialog
       open={open}
       onClose={onClose}
-      className="max-w-[600px] bg-white border-gray-200 text-black"
+      className="max-w-[600px] border-gray-200 bg-white text-black"
     >
       <div className="space-y-6 text-center">
         <div className="flex items-center justify-between">
           <span className="w-6" /> {/* Spacer to center the title */}
-          <h2 className="text-2xl font-bold text-center flex-grow">
+          <h2 className="flex-grow text-center text-2xl font-bold">
             Your Sentinel is Live and Ready for Battle!
           </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-black transition-colors"
-          >
-            <X className="w-6 h-6" />
+          <button onClick={onClose} className="text-gray-500 transition-colors hover:text-black">
+            <X className="h-6 w-6" />
           </button>
         </div>
 
@@ -62,38 +59,32 @@ export const FundSuccessModal = ({
           to attract attackers and start earning attack fees!
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4">
+        <div className="flex flex-col gap-4 sm:flex-row">
           <button
             onClick={handleCopyLink}
             disabled={!sentinelUrl}
-            className="w-full btn btn-outline disabled:opacity-50 flex items-center justify-center gap-2"
+            className="btn btn-outline flex w-full items-center justify-center gap-2 disabled:opacity-50"
           >
-            <Copy className="w-4 h-4" />
+            <Copy className="h-4 w-4" />
             Copy Link
           </button>
           <button
             onClick={handleShareOnX}
             disabled={!sentinelUrl}
-            className="w-full bg-[#1DA1F2] text-white rounded-lg py-3 font-medium hover:bg-[#1a91da] transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#1DA1F2] py-3 font-medium text-white transition-colors hover:bg-[#1a91da] disabled:opacity-50"
           >
-            <Twitter className="w-4 h-4" />
+            <Twitter className="h-4 w-4" />
             Share on X
           </button>
         </div>
 
-        <div className="text-center p-4 bg-gray-50 rounded-lg border border-gray-200">
-          <p className="text-sm text-gray-500 mb-3">
+        <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-center">
+          <p className="mb-3 text-sm text-gray-500">
             You can manage <span className="font-bold text-black">{agentName}</span> from your
             Profile, including adding more funds or updating instructions.
           </p>
-          <Link
-            href="/profile"
-            passHref
-          >
-            <button
-              onClick={onClose}
-              className="w-full sm:w-auto px-6 btn btn-black"
-            >
+          <Link href="/profile" passHref>
+            <button onClick={onClose} className="btn btn-black w-full px-6 sm:w-auto">
               Go to Profile
             </button>
           </Link>
