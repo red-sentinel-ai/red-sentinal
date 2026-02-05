@@ -33,12 +33,12 @@ export default function CommitmentStep({ form, disabled }: CommitmentStepProps) 
           placeholder="e.g., 10-15 hours per week"
         />
         {errors.weekly_availability && (
-          <p className="mt-1 text-sm text-red-600">{errors.weekly_availability.message}</p>
+          <p className="mt-1 text-2xl text-red-600">{errors.weekly_availability.message}</p>
         )}
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-3">
+        <label className="block text-2xl font-medium text-gray-700 mb-3">
           Open to performance-based rewards?
         </label>
         <div className="flex gap-6">
@@ -51,7 +51,7 @@ export default function CommitmentStep({ form, disabled }: CommitmentStepProps) 
               disabled={disabled}
               className="h-4 w-4 border-gray-300 text-black focus:ring-black"
             />
-            <span className="text-sm text-gray-700">Yes</span>
+            <span className="text-2xl text-gray-700">Yes</span>
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
             <input
@@ -62,7 +62,7 @@ export default function CommitmentStep({ form, disabled }: CommitmentStepProps) 
               disabled={disabled}
               className="h-4 w-4 border-gray-300 text-black focus:ring-black"
             />
-            <span className="text-sm text-gray-700">No</span>
+            <span className="text-2xl text-gray-700">No</span>
           </label>
         </div>
       </div>
@@ -73,13 +73,12 @@ export default function CommitmentStep({ form, disabled }: CommitmentStepProps) 
             type="checkbox"
             {...register('agreed_to_code_of_conduct')}
             disabled={disabled}
-            className="h-4 w-4 mt-1 rounded border-gray-300 text-black focus:ring-black"
+            className="h-6 w-6 mt-1 rounded border-gray-300 text-black focus:ring-black"
           />
-          <span className="text-sm text-gray-700">
+          <span className="text-2xl text-gray-700">
             I agree to the{' '}
             <a
-              href="/code-of-conduct"
-              target="_blank"
+              href="#"
               rel="noopener noreferrer"
               className="text-black underline hover:text-gray-600"
             >
@@ -90,7 +89,7 @@ export default function CommitmentStep({ form, disabled }: CommitmentStepProps) 
           </span>
         </label>
         {errors.agreed_to_code_of_conduct && (
-          <p className="mt-1 text-sm text-red-600">{errors.agreed_to_code_of_conduct.message}</p>
+          <p className="mt-1 text-2xl text-red-600">{errors.agreed_to_code_of_conduct.message}</p>
         )}
       </div>
     </div>
