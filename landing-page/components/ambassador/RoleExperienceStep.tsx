@@ -27,11 +27,12 @@ export default function RoleExperienceStep({ form, disabled }: RoleExperienceSte
 
   const handleRoleChange = (roleValue: string, checked: boolean) => {
     if (checked) {
-      setValue('roles', [...selectedRoles, roleValue])
+      setValue('roles', [...selectedRoles, roleValue], { shouldValidate: true })
     } else {
       setValue(
         'roles',
-        selectedRoles.filter((r) => r !== roleValue)
+        selectedRoles.filter((r) => r !== roleValue),
+        { shouldValidate: true }
       )
     }
   }
@@ -88,9 +89,8 @@ export default function RoleExperienceStep({ form, disabled }: RoleExperienceSte
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="radio"
-              {...register('has_ambassador_experience')}
-              value="true"
-              onChange={() => setValue('has_ambassador_experience', true)}
+              name="has_ambassador_experience"
+              onChange={() => setValue('has_ambassador_experience', true, { shouldValidate: true })}
               checked={hasAmbassadorExperience === true}
               disabled={disabled}
               className="h-4 w-4 border-gray-300 text-black focus:ring-black"
@@ -100,10 +100,9 @@ export default function RoleExperienceStep({ form, disabled }: RoleExperienceSte
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="radio"
-              {...register('has_ambassador_experience')}
-              value="false"
+              name="has_ambassador_experience"
               onChange={() => {
-                setValue('has_ambassador_experience', false)
+                setValue('has_ambassador_experience', false, { shouldValidate: true })
                 setValue('previous_ambassador_programs', [])
               }}
               checked={hasAmbassadorExperience === false}
