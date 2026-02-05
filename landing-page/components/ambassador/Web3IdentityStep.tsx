@@ -24,7 +24,7 @@ export default function Web3IdentityStep({ form, disabled }: Web3IdentityStepPro
           type="text"
           id="sui_wallet_address"
           {...register('sui_wallet_address')}
-          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3"
+          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3 text-xl"
           disabled={disabled}
           placeholder="0x..."
         />
@@ -38,7 +38,7 @@ export default function Web3IdentityStep({ form, disabled }: Web3IdentityStepPro
           type="url"
           id="twitter_url"
           {...register('twitter_url')}
-          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3"
+          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3 text-xl"
           disabled={disabled}
           placeholder="https://twitter.com/username"
         />
@@ -55,7 +55,7 @@ export default function Web3IdentityStep({ form, disabled }: Web3IdentityStepPro
           type="text"
           id="discord_id"
           {...register('discord_id')}
-          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3"
+          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3 text-xl"
           disabled={disabled}
           placeholder="123456789012345678"
         />
@@ -69,7 +69,7 @@ export default function Web3IdentityStep({ form, disabled }: Web3IdentityStepPro
           type="url"
           id="github_url"
           {...register('github_url')}
-          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3"
+          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3 text-xl"
           disabled={disabled}
           placeholder="https://github.com/username"
         />
@@ -86,7 +86,7 @@ export default function Web3IdentityStep({ form, disabled }: Web3IdentityStepPro
           id="other_web3_profiles"
           rows={3}
           {...register('other_web3_profiles')}
-          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3"
+          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3 text-xl"
           disabled={disabled}
           placeholder="Enter your profile URLs, one per line"
         />
