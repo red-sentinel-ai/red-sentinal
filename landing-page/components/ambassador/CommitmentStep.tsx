@@ -44,21 +44,23 @@ export default function CommitmentStep({ form, disabled }: CommitmentStepProps) 
         <div className="flex gap-6">
           <label className="flex items-center gap-2 cursor-pointer">
             <input
-              type="checkbox"
+              type="radio"
+              name="open_to_performance_rewards"
               checked={openToRewards === true}
-              onChange={(e) => setValue('open_to_performance_rewards', e.target.checked)}
+              onChange={() => setValue('open_to_performance_rewards', true)}
               disabled={disabled}
-              className="h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
+              className="h-4 w-4 border-gray-300 text-black focus:ring-black"
             />
             <span className="text-sm text-gray-700">Yes</span>
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
             <input
-              type="checkbox"
+              type="radio"
+              name="open_to_performance_rewards"
               checked={openToRewards === false}
-              onChange={(e) => setValue('open_to_performance_rewards', !e.target.checked)}
+              onChange={() => setValue('open_to_performance_rewards', false)}
               disabled={disabled}
-              className="h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
+              className="h-4 w-4 border-gray-300 text-black focus:ring-black"
             />
             <span className="text-sm text-gray-700">No</span>
           </label>
