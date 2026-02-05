@@ -49,27 +49,27 @@ export function RewardsDashboard() {
         <div className="container mx-auto px-4 py-12">
           <AnimatePresence mode="wait">
             <motion.div
-              className="max-w-2xl mx-auto"
+              className="mx-auto max-w-2xl"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <Card className="bg-gray-50 border border-gray-200">
-                <CardContent className="text-center py-16">
+              <Card className="border border-gray-200 bg-gray-50">
+                <CardContent className="py-16 text-center">
                   <motion.div
-                    className="w-24 h-24 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-6"
+                    className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-blue-100"
                     whileHover={{ scale: 1.05 }}
                   >
                     <Trophy className="h-12 w-12 text-blue-600" />
                   </motion.div>
-                  <h2 className="text-3xl font-bold mb-4 text-black uppercase">
+                  <h2 className="mb-4 text-3xl font-bold uppercase text-black">
                     Rewards Coming Soon
                   </h2>
-                  <p className="text-gray-600 text-lg">
+                  <p className="text-lg text-gray-600">
                     Our rewards program is currently being prepared. Check back soon!
                   </p>
                   {missionsData?.message && (
-                    <p className="text-sm text-gray-500 mt-4 bg-white p-3 rounded-lg border border-gray-200">
+                    <p className="mt-4 rounded-lg border border-gray-200 bg-white p-3 text-sm text-gray-500">
                       {missionsData.message}
                     </p>
                   )}
@@ -83,33 +83,29 @@ export function RewardsDashboard() {
   }
 
   return (
-    <div className="min-h-body  pt-20">
+    <div className="min-h-body">
       <div className="container mx-auto px-4 py-12">
-        <div className="max-w-7xl mx-auto">
+        <div className="mx-auto max-w-7xl">
           <AnimatePresence mode="wait">
             <motion.div
-              className="text-center mb-12"
+              className="mb-12 text-center"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <motion.div className="inline-flex items-center gap-2 bg-blue-100 px-4 py-2 rounded-full mb-4 border border-blue-200">
+              <motion.div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-100 px-4 py-2">
                 <Sparkles className="h-4 w-4 text-blue-600" />
                 <span className="text-sm font-medium text-blue-800">Sui Sentinel Rewards</span>
               </motion.div>
-              <h1 className="text-5xl font-bold mb-4 text-black uppercase">
+              <h1 className="mb-4 text-5xl font-bold uppercase text-black">
                 Earn. Compete. Conquer.
               </h1>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-6">
+              <p className="mx-auto mb-6 max-w-2xl text-xl text-gray-600">
                 Complete missions, earn points, and unlock exclusive rewards in the Sui Sentinel
                 ecosystem
               </p>
-              <div className="flex items-center justify-center gap-4 mb-4">
-                <Link
-                  href={REWARDS_DOCS_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+              <div className="mb-4 flex items-center justify-center gap-4">
+                <Link href={REWARDS_DOCS_URL} target="_blank" rel="noopener noreferrer">
                   <motion.button className="btn btn-outline flex items-center gap-2">
                     <BookOpen className="h-4 w-4" />
                     Program Guide
@@ -118,8 +114,8 @@ export function RewardsDashboard() {
                 </Link>
               </div>
               {isLoadingMissions && (
-                <div className="flex items-center justify-center gap-2 mt-4">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-black"></div>
+                <div className="mt-4 flex items-center justify-center gap-2">
+                  <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-black"></div>
                   <span className="text-sm text-black">Loading latest missions...</span>
                 </div>
               )}
@@ -146,22 +142,16 @@ export function RewardsDashboard() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.2 }}
           >
-            <Card className="bg-gray-50/50 border border-gray-200 rounded-2xl">
+            <Card className="rounded-2xl border border-gray-200 bg-gray-50/50">
               <CardContent className="p-6">
                 <Tabs defaultValue="missions">
-                  <div className="flex items-center justify-between mb-6">
+                  <div className="mb-6 flex items-center justify-between">
                     <TabsList>
-                      <TabsTrigger
-                        value="missions"
-                        className="flex items-center gap-2"
-                      >
+                      <TabsTrigger value="missions" className="flex items-center gap-2">
                         <Target className="h-4 w-4" />
                         <span className="hidden sm:inline">Missions</span>
                       </TabsTrigger>
-                      <TabsTrigger
-                        value="activity"
-                        className="flex items-center gap-2"
-                      >
+                      <TabsTrigger value="activity" className="flex items-center gap-2">
                         <TrendingUp className="h-4 w-4" />
                         <span className="hidden sm:inline">Activity</span>
                       </TabsTrigger>
@@ -177,10 +167,7 @@ export function RewardsDashboard() {
                     </div>
                   </div>
                   <div>
-                    <TabsContent
-                      value="missions"
-                      className="space-y-6"
-                    >
+                    <TabsContent value="missions" className="space-y-6">
                       <MissionsGrid
                         missions={effectiveMissionsData?.missions || []}
                         completedMissions={userRewards?.completed_missions || {}}
@@ -188,10 +175,7 @@ export function RewardsDashboard() {
                         pointsSymbol={effectiveMissionsData?.points_symbol || 'SENTINEL'}
                       />
                     </TabsContent>
-                    <TabsContent
-                      value="activity"
-                      className="space-y-6"
-                    >
+                    <TabsContent value="activity" className="space-y-6">
                       <RecentActivity
                         activities={userRewards?.recent_activity || []}
                         isLoading={isLoadingUser}

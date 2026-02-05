@@ -19,7 +19,9 @@ export type ConsumePromptApiResponse = {
     data: {
       agent_id: string
       success: boolean
-      explanation: string
+      agent_response: string
+      fun_response: string
+      jury_response: string
       score: number
     }
   }

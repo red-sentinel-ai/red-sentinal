@@ -59,7 +59,7 @@ export function useUpdateProfile(options: UseUpdateProfileOptions = {}) {
       }
       return response.json()
     },
-    onSuccess: (updatedProfile) => {
+    onSuccess: updatedProfile => {
       toast.success('Profile updated successfully!')
       queryClient.setQueryData([USER_PROFILE_QUERY_KEY, walletAddress], updatedProfile)
       options.onSuccess?.(updatedProfile)
@@ -92,7 +92,7 @@ export function useUpdateAvatar(options: UseUpdateProfileOptions = {}) {
       }
       return (await response.json()).data as UserProfile
     },
-    onSuccess: (updatedProfile) => {
+    onSuccess: updatedProfile => {
       toast.success('Profile picture updated!')
       queryClient.setQueryData([USER_PROFILE_QUERY_KEY, walletAddress], updatedProfile)
       options.onSuccess?.(updatedProfile)

@@ -41,7 +41,7 @@ const fetchEvents = async (client: SuiClient, eventType: string): Promise<AgentE
 
 const calculatePrizePoolHistory = (events: AgentEvent[], agentId: string): PrizePoolHistoryData => {
   const filteredEvents = events
-    .filter((event) => event.parsedJson?.agent_id === agentId)
+    .filter(event => event.parsedJson?.agent_id === agentId)
     .sort((a, b) => Number(a.timestampMs) - Number(b.timestampMs))
 
   if (filteredEvents.length === 0) {
@@ -100,12 +100,12 @@ const calculatePrizePoolHistory = (events: AgentEvent[], agentId: string): Prize
   const sevenDaysAgo = now - 7 * 24 * 60 * 60 * 1000
   const currentSuiBalance = history.length > 0 ? history[history.length - 1].value : 0
 
-  const firstDataPointInWindow = history.find((p) => p.time.getTime() >= sevenDaysAgo)
+  const firstDataPointInWindow = history.find(p => p.time.getTime() >= sevenDaysAgo)
 
   // Find the data point just *before* the 7-day window
   const lastDataPointBeforeWindow = [...history]
     .reverse()
-    .find((p) => p.time.getTime() < sevenDaysAgo)
+    .find(p => p.time.getTime() < sevenDaysAgo)
 
   // Use the data point before the window as the starting balance.
   // If no data point before, use the first data point in the window (or 0 if none).

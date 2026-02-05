@@ -15,32 +15,32 @@ const Footer = () => {
 
   return (
     <footer
-      className="relative pt-16 bg-cover bg-bottom bg-no-repeat"
+      className="relative bg-cover bg-bottom bg-no-repeat pt-16"
       style={{ backgroundImage: "url('/img/footer-bg.png')" }}
     >
       <div className="vertical-line left-4"></div>
       <div className="vertical-line right-4"></div>
-      <div className="absolute inset-0 flex items-center pointer-events-none justify-end md:justify-center pb-[24px] md:pb-0 flex-col">
+      <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-end pb-[24px] md:justify-center md:pb-0">
         <Image
           src="/gifs/fullCircleRed.gif"
           width={500}
           height={346}
           alt="Decorative blend element"
-          className="w-[160px] md:w-auto h-auto max-w-xs md:max-w-lg"
+          className="h-auto w-[160px] max-w-xs md:w-auto md:max-w-lg"
         />
         <Image
           width={310}
           height={29}
           src="/img/shadowEllipse.png"
           alt="shadow ellipse"
-          className="w-[200px] md:w-[310px] h-auto"
+          className="h-auto w-[200px] md:w-[310px]"
         />
       </div>
 
-      <div className="relative z-10 max-w-[1440px] mx-auto pb-4 md:pb-0 px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-12 text-center md:text-left min-h-[440px] md:min-h-[398px]">
-          <div className="max-w-md md:self-stretch flex flex-col flex-grow">
-            <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
+      <div className="relative z-10 mx-auto max-w-[1440px] px-4 pb-4 sm:px-6 md:pb-0 lg:px-8">
+        <div className="flex min-h-[440px] flex-col items-center justify-between gap-12 text-center md:min-h-[398px] md:flex-row md:items-start md:text-left">
+          <div className="flex max-w-md flex-grow flex-col md:self-stretch">
+            <div className="mb-4 flex items-center justify-center gap-3 md:justify-start">
               <Image
                 src="/icons/logo_large_testnet.svg"
                 alt="Sui Sentinel Logo"
@@ -49,29 +49,24 @@ const Footer = () => {
                 width={198}
               />
             </div>
-            <p className="text-black leading-relaxed py-4 ">
-              Sui Sentinel is a gamified AI red-teaming and auditing platform built on Sui. Test,
-              defend, and harden AI models through real-world adversarial challenges. Every attack
-              and defense is verified on-chain, every action has real stakes
+            <p className="py-4 leading-relaxed text-black">
+              Sui Sentinel is a Decentralized AI safety platform built on Sui. Stress-test models,
+              find vulnerabilities, earn rewards. Every judgment cryptographically verified
+              on-chain.
             </p>
 
-            <div className="flex flex-row justify-center gap-4 md:hidden my-4">
-              {socialLinks.map((link) => (
+            <div className="my-4 flex flex-row justify-center gap-4 md:hidden">
+              {socialLinks.map(link => (
                 <Link
                   key={link.href}
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-[70px] h-[51px] border border-black rounded-[8px] flex items-center justify-center hover:bg-black/5 transition-colors"
+                  className="flex w-10 h-10 md:h-[51px] md:w-[70px] items-center justify-center rounded-[8px] border border-black transition-colors hover:bg-black/5"
                   aria-label={link.alt}
                 >
                   {link.isImage ? (
-                    <Image
-                      src={link.icon as string}
-                      alt={link.alt}
-                      width={20}
-                      height={20}
-                    />
+                    <Image src={link.icon as string} alt={link.alt} width={20} height={20} />
                   ) : (
                     <link.icon className="size-5 text-black" />
                   )}
@@ -79,7 +74,7 @@ const Footer = () => {
               ))}
             </div>
 
-            <div className="md:text-base mt-auto">
+            <div className="mt-auto md:text-base">
               <span>Powered by </span>
               <a
                 href={NAUTILUS_URL}
@@ -91,21 +86,18 @@ const Footer = () => {
               </a>
               <span> • Secured by TEE</span>
             </div>
-            <p className="text-white font-medium mb-4">
+            <p className="mb-4 font-medium text-white">
               <span>© 2025 </span>
               <span>All Rights Reserved @Cyphronix Software</span>
             </p>
           </div>
 
-          <div className="w-full md:w-auto hidden md:block">
-            <div className="flex flex-col gap-4">
-              {socialLinks.map((link) => (
-                <div
-                  key={link.href}
-                  className="flex items-center justify-between gap-6"
-                >
+          <div className="hidden w-full md:block md:w-auto">
+            <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+              {socialLinks.map(link => (
+                <div key={link.href} className="flex items-center justify-between gap-6">
                   <Link
-                    className="text-black font-medium whitespace-nowrap hover:underline"
+                    className="whitespace-nowrap font-medium text-black hover:underline"
                     href={link.href}
                     target="_blank"
                   >
@@ -115,16 +107,11 @@ const Footer = () => {
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-[70px] h-[51px] border border-[#ACACAC] rounded-[8px] flex items-center justify-center hover:bg-black/5 transition-colors"
+                    className="flex h-[51px] w-[70px] items-center justify-center rounded-[8px] border border-[#ACACAC] transition-colors hover:bg-black/5"
                     aria-label={link.alt}
                   >
                     {link.isImage ? (
-                      <Image
-                        src={link.icon as string}
-                        alt={link.alt}
-                        width={20}
-                        height={20}
-                      />
+                      <Image src={link.icon as string} alt={link.alt} width={20} height={20} />
                     ) : (
                       <link.icon className="size-5 text-black" />
                     )}

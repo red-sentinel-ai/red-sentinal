@@ -15,7 +15,7 @@ export const RewardsHistory = () => {
   const { data, isLoading } = useRecipientRewards(account?.address)
 
   const history = data?.result || []
-  
+
   const totalRewards = history.reduce((acc, item) => acc + (item.rewardAmount || 0), 0)
 
   if (isLoading) {
@@ -25,7 +25,7 @@ export const RewardsHistory = () => {
           <CardTitle>Rewards History</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {[1, 2, 3].map((i) => (
+          {[1, 2, 3].map(i => (
             <Skeleton key={i} className="h-12 w-full rounded-lg bg-gray-100" />
           ))}
         </CardContent>
@@ -35,28 +35,24 @@ export const RewardsHistory = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white text-black rounded-xl p-6 shadow-md flex justify-between items-center border border-gray-100">
+      <div className="flex items-center justify-between rounded-xl border border-gray-100 bg-white p-6 text-black shadow-md">
         <div>
-          <p className="text-gray-400 text-sm font-medium uppercase tracking-wide">
-            Total Earned
-          </p>
-          <div className="flex items-baseline gap-2 mt-1">
-            <h3 className="text-3xl font-bold tracking-tight">
-              {totalRewards.toLocaleString()}
-            </h3>
+          <p className="text-sm font-medium uppercase tracking-wide text-gray-400">Total Earned</p>
+          <div className="mt-1 flex items-baseline gap-2">
+            <h3 className="text-3xl font-bold tracking-tight">{totalRewards.toLocaleString()}</h3>
             <span className="text-sm font-bold text-[#F632F3]">SENTINEL</span>
           </div>
         </div>
-        <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center">
-          <Gift className="w-6 h-6 text-gray-600" />
+        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-50">
+          <Gift className="h-6 w-6 text-gray-600" />
         </div>
       </div>
 
-      <Card className="border-gray-200 shadow-sm bg-white overflow-hidden">
+      <Card className="overflow-hidden border-gray-200 bg-white shadow-sm">
         <CardHeader className="border-b border-gray-100 pb-4">
-          <div className="flex justify-between items-center">
+          <div className="flex items-center justify-between">
             <CardTitle className="text-xl text-black">Activity History</CardTitle>
-            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+            <span className="rounded bg-gray-100 px-2 py-1 text-xs text-gray-500">
               {data?.total || 0} Transactions
             </span>
           </div>
@@ -64,13 +60,13 @@ export const RewardsHistory = () => {
 
         <CardContent className="p-0">
           {history.length === 0 ? (
-            <div className="text-center py-12 px-4">
-              <AlertCircle className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500 text-sm">No rewards history found for this account.</p>
+            <div className="px-4 py-12 text-center">
+              <AlertCircle className="mx-auto mb-3 h-10 w-10 text-gray-300" />
+              <p className="text-sm text-gray-500">No rewards history found for this account.</p>
             </div>
           ) : (
             <div className="divide-y divide-gray-100">
-              <div className="hidden md:grid grid-cols-12 px-6 py-3 bg-gray-50 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              <div className="hidden grid-cols-12 bg-gray-50 px-6 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500 md:grid">
                 <div className="col-span-3">Reward</div>
                 <div className="col-span-5">Description</div>
                 <div className="col-span-2">Time</div>
@@ -87,46 +83,48 @@ export const RewardsHistory = () => {
                     initial={{ opacity: 0, y: 5 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    className="grid grid-cols-1 md:grid-cols-12 px-4 md:px-6 py-4 items-center hover:bg-gray-50 transition-colors gap-y-2 md:gap-y-0"
+                    className="grid grid-cols-1 items-center gap-y-2 px-4 py-4 transition-colors hover:bg-gray-50 md:grid-cols-12 md:gap-y-0 md:px-6"
                   >
-                    <div className="col-span-6 md:col-span-3 order-1 md:order-1">
-                      <span className="font-bold text-[#F632F3] text-sm inline-block">
+                    <div className="order-1 col-span-6 md:order-1 md:col-span-3">
+                      <span className="inline-block text-sm font-bold text-[#F632F3]">
                         +{item.rewardAmount} SENTINEL
                       </span>
                     </div>
 
-                    <div className="col-span-12 md:col-span-5 order-3 md:order-2 text-sm text-gray-800 font-medium">
+                    <div className="order-3 col-span-12 text-sm font-medium text-gray-800 md:order-2 md:col-span-5">
                       <p>{item.description}</p>
-                      
+
                       {item.eventType === 'AgentFunded' && item.metadata?.event?.amount && (
-                        <p className="text-gray-500 text-xs mt-0.5 font-normal">
-                          Contributed: {(Number(item.metadata.event.amount) / MIST_PER_SUI).toFixed(2)} SUI
+                        <p className="mt-0.5 text-xs font-normal text-gray-500">
+                          Contributed:{' '}
+                          {(Number(item.metadata.event.amount) / MIST_PER_SUI).toFixed(2)} SUI
                         </p>
                       )}
-                      
+
                       {item.metadata?.event?.agent_id && (
-                        <p className="text-gray-400 text-[10px] mt-0.5 font-mono">
+                        <p className="mt-0.5 font-mono text-[10px] text-gray-400">
                           Agent ID: {item.metadata.event.agent_id}
                         </p>
                       )}
                     </div>
 
-                    <div className="col-span-6 md:col-span-2 order-2 md:order-3 text-right md:text-left text-xs text-gray-500">
-                      {item.timestampMs 
-                        ? formatDistanceToNow(new Date(parseInt(item.timestampMs)), { addSuffix: true })
-                        : '-'
-                      }
+                    <div className="order-2 col-span-6 text-right text-xs text-gray-500 md:order-3 md:col-span-2 md:text-left">
+                      {item.timestampMs
+                        ? formatDistanceToNow(new Date(parseInt(item.timestampMs)), {
+                            addSuffix: true,
+                          })
+                        : '-'}
                     </div>
 
-                    <div className="col-span-12 md:col-span-2 order-4 md:order-4 text-right">
+                    <div className="order-4 col-span-12 text-right md:order-4 md:col-span-2">
                       {linkDigest && (
-                        <a 
+                        <a
                           href={explorerLink}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-1.5 text-xs font-medium text-blue-600 hover:text-blue-800 hover:underline bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition-colors"
+                          className="inline-flex items-center gap-1.5 rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-600 transition-colors hover:bg-blue-100 hover:text-blue-800 hover:underline"
                         >
-                          View TX <ExternalLink className="w-3 h-3" />
+                          View TX <ExternalLink className="h-3 w-3" />
                         </a>
                       )}
                     </div>

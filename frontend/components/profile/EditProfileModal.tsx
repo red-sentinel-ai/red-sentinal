@@ -45,41 +45,29 @@ export function EditProfileModal({ open, onClose, profile }: EditProfileModalPro
 
   return (
     <>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        className="max-w-md bg-white/75"
-      >
+      <Dialog open={open} onClose={handleClose} className="max-w-md bg-white/75">
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold">Edit Profile</h2>
-            <button
-              onClick={handleClose}
-              className="text-black"
-            >
-              <X className="w-5 h-5" />
+            <button onClick={handleClose} className="text-black">
+              <X className="h-5 w-5" />
             </button>
           </div>
 
           <div className="flex justify-center">
             <div
-              className="relative w-24 h-24 rounded-full border-2 border-gray-600 overflow-hidden cursor-pointer group"
+              className="group relative h-24 w-24 cursor-pointer overflow-hidden rounded-full border-2 border-gray-600"
               onClick={() => setIsImagePickerOpen(true)}
             >
               {displayAvatarUrl ? (
-                <Image
-                  src={displayAvatarUrl}
-                  alt="User Avatar"
-                  fill
-                  className="object-cover"
-                />
+                <Image src={displayAvatarUrl} alt="User Avatar" fill className="object-cover" />
               ) : (
-                <div className="w-full h-full bg-foreground/20 flex items-center justify-center">
+                <div className="bg-foreground/20 flex h-full w-full items-center justify-center">
                   <User className="h-12 w-12" />
                 </div>
               )}
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                <Camera className="w-8 h-8" />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
+                <Camera className="h-8 w-8" />
               </div>
             </div>
           </div>

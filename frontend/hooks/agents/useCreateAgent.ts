@@ -34,7 +34,7 @@ export const useCreateAgent = () => {
       return response.json()
     },
 
-    onSuccess: (data) => {
+    onSuccess: data => {
       toast.success(`Agent "${data.data.agent_name}" created successfully!`)
       queryClient.invalidateQueries({ queryKey: ['agents'] })
     },

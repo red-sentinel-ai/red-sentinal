@@ -13,6 +13,7 @@ import {
   Loader2,
   X,
   CheckCircle,
+  ExternalLink,
 } from 'lucide-react'
 import { formatAddress } from '@mysten/sui/utils'
 import { QRCodeSVG } from 'qrcode.react'
@@ -31,7 +32,7 @@ import { type AgentEvents } from '@/hooks/useAgentEvents'
 import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
 import { DefenderProfile } from './DefenderProfile'
 import { formatDuration, cn } from '@/lib/utils'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, Button } from '@/components/ui'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, Button, Skeleton } from '@/components/ui'
 import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
 import { SparklineChart } from '../ui/common/SparklineChart'
 import { useAgentPrizePoolHistory } from '@/hooks/agents/useAgentPrizePoolHistory'
@@ -40,16 +41,17 @@ import { Dialog } from '@/components/Dialog'
 interface AgentSidebarProps {
   agent: AgentDetails
   agentEvents: AgentEvents
+  onReadMore?: () => void
 }
 
-export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
+export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarProps) => {
   const [activeSince, setActiveSince] = useState({
     days: 0,
     hours: 0,
     minutes: 0,
     seconds: 0,
   })
-  const [isExpanded, setIsExpanded] = useState(false)
+
   const [shouldTruncate, setShouldTruncate] = useState(false)
   const instructionsRef = useRef<HTMLParagraphElement>(null)
   const [pageUrl, setPageUrl] = useState('')
@@ -61,6 +63,8 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
   const [tweetLink, setTweetLink] = useState('')
   const [isVerifying, setIsVerifying] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [attackGoal, setAttackGoal] = useState<string>('')
+  const [isLoadingAttackGoal, setIsLoadingAttackGoal] = useState(false)
 
   const account = useCurrentAccount()
   const isOwner = account?.address === agent.owner
@@ -71,6 +75,29 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
   const { data: userProfilesMap, isLoading: isLoadingProfile } = useUserProfiles([agent.owner])
   const defenderProfile = userProfilesMap?.[agent.owner]
+
+  useEffect(() => {
+    const fetchAttackGoal = async () => {
+      setIsLoadingAttackGoal(true)
+      try {
+        const response = await fetch(`/api/agents/attack-goal?agent_id=${agent.agent_id}`)
+        if (response.ok) {
+          const data = await response.json()
+          if (data.attack_goal) {
+            setAttackGoal(data.attack_goal)
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch attack goal', error)
+      } finally {
+        setIsLoadingAttackGoal(false)
+      }
+    }
+
+    if (agent.agent_id) {
+      fetchAttackGoal()
+    }
+  }, [agent.agent_id])
 
   useEffect(() => {
     const currentUrl = window.location.href
@@ -128,18 +155,18 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
       if (diff <= 0) {
         setTimeRemaining('Withdrawal Unlocked')
-        return null // To stop the interval
+        return null
       }
 
       const formatted = formatDuration(diff)
       setTimeRemaining(
         `${formatted.days}d ${formatted.hours}h ${formatted.minutes}m ${formatted.seconds}s`
       )
-      return true // To keep interval running
+      return true
     }
 
     if (!updateTimer()) {
-      return // Stop if it's already unlocked
+      return
     }
 
     const interval = setInterval(() => {
@@ -165,7 +192,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
   const breakAttempts = agentEvents.promptConsumed.length
   const totalParticipants = new Set(
-    agentEvents.promptConsumed.map((event) => event.parsedJson.sender)
+    agentEvents.promptConsumed.map(event => event.parsedJson.sender)
   ).size
 
   const handleCopyLink = () => {
@@ -238,25 +265,25 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
   return (
     <>
-      <div className="w-full flex flex-col overflow-x-hidden overflow-y-scroll px-6 py-2 mr-4 h-screen md:h-[calc(100vh-64px)]">
+      <div className="mr-4 flex h-screen w-full flex-col overflow-x-hidden overflow-y-scroll px-6 py-2 md:h-[calc(100vh-127px)]">
         <div>
           <Link
             href="/attack"
-            className="flex items-center gap-1 text-gray-500 hover:text-black transition-colors py-3"
+            className="flex items-center gap-1 py-3 text-gray-500 transition-colors hover:text-black"
           >
-            <ChevronLeft className="w-5 h-5" /> Back to Sentinels
+            <ChevronLeft className="h-5 w-5" /> Back to Sentinels
           </Link>
         </div>
 
-        <div className="rounded-xl px-4 my-4 border border-gray-600/50 shadow-lg w-full text-xs sm:text-sm bg-gradient-to-r from-[#F7F3FC] to-[#FFFEFF] py-[10px]">
+        <div className="my-4 w-full rounded-xl border border-gray-600/50 bg-gradient-to-r from-[#F7F3FC] to-[#FFFEFF] px-4 py-[10px] text-xs shadow-lg sm:text-sm">
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-full overflow-hidden grow-0 shrink-0 basis-auto">
+            <div className="h-10 w-10 shrink-0 grow-0 basis-auto overflow-hidden rounded-full">
               <Image
                 src={agent.agent_profile || DEFAULT_PROFILE_URL}
                 width={40}
                 height={40}
                 alt={agent.agent_name}
-                className="rounded-full object-cover w-full h-full"
+                className="h-full w-full rounded-full object-cover"
               />
             </div>
             <div className="flex items-center gap-1">
@@ -275,30 +302,68 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
         </div>
 
         <div className="flex flex-col gap-6 py-4">
+          {isLoadingAttackGoal ? (
+          <div className="flex flex-col gap-2 border border-black/20 rounded-md p-3">
+              <h3 className="font-medium uppercase text-[#5E5E5E]">Attack Goal</h3>
+              <Skeleton className="h-5 w-full bg-gray-200" />
+              <Skeleton className="h-5 w-3/4 bg-gray-200" />
+            </div>
+          ) : attackGoal ? (
+          <div className="flex flex-col gap-2 border border-black/20 rounded-md p-3">
+              <h3 className="font-medium uppercase text-[#5E5E5E]">Attack Goal</h3>
+              <p className="text-base font-semibold">{attackGoal}</p>
+            </div>
+          ) : null}
+
           <div className="flex flex-col gap-2">
-            <h3 className="text-[#5E5E5E]  font-medium uppercase">Sentinel Object Id</h3>
+            <h3 className="font-medium uppercase text-[#5E5E5E]">Sentinel Object Id</h3>
             <Link
               href={`${EXPLORER_BASE_URL}/object/${agent.object_id}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block  hover:underline"
+              className="inline-block hover:underline"
               title={agent.object_id}
             >
               {formatAddress(agent.object_id)}
             </Link>
           </div>
 
+          {(agent.model_provider || agent.model_name) && (
+            <div className="flex justify-between gap-2">
+              {agent.model_provider && (
+                <div className="flex flex-col gap-2">
+                  <h3 className="font-medium uppercase text-[#5E5E5E]">LLM Provider</h3>
+                  <p className="text-base font-semibold capitalize">{agent.model_provider}</p>
+                </div>
+              )}
+
+              {agent.model_name && (
+                <div
+                  className={`flex flex-col gap-2 ${agent.model_provider ? 'items-end text-right' : ''}`}
+                >
+                  <h3 className="font-medium uppercase text-[#5E5E5E]">Model</h3>
+                  <p
+                    className="max-w-[150px] truncate text-base font-semibold"
+                    title={agent.model_name}
+                  >
+                    {agent.model_name}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
           {isDrained ? (
             <div className="flex flex-col gap-2">
-              <h3 className="text-[#5E5E5E]  font-medium uppercase flex items-center gap-1.5">
+              <h3 className="flex items-center gap-1.5 font-medium uppercase text-[#5E5E5E]">
                 Total Bounty Won
               </h3>
               <p className="inline-block text-2xl font-semibold">{bountyWonAmount} SUI</p>
             </div>
           ) : (
             <div className="flex flex-col gap-2">
-              <div className="flex justify-between items-center">
-                <h3 className="text-[#5E5E5E]  font-medium uppercase">Prize pool</h3>
+              <div className="flex items-center justify-between">
+                <h3 className="font-medium uppercase text-[#5E5E5E]">Prize pool</h3>
                 {!isLoadingChart && prizePoolData && prizePoolData.history.length > 0 && (
                   <div
                     className={cn(
@@ -307,9 +372,9 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
                     )}
                   >
                     {prizePoolData.change7d.percentage >= 0 ? (
-                      <TrendingUp className="w-3 h-3" />
+                      <TrendingUp className="h-3 w-3" />
                     ) : (
-                      <TrendingDown className="w-3 h-3" />
+                      <TrendingDown className="h-3 w-3" />
                     )}
                     <span>
                       {isFinite(prizePoolData.change7d.percentage)
@@ -324,26 +389,26 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
                   {(Number(agent.balance) / MIST_PER_SUI).toFixed(2)} SUI
                 </p>
                 {isLoadingChart ? (
-                  <div className="w-[100px] h-[30px] flex items-center justify-center">
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                  <div className="flex h-[30px] w-[100px] items-center justify-center">
+                    <Loader2 className="h-4 w-4 animate-spin" />
                   </div>
                 ) : (
                   <div>
-                    <SparklineChart data={prizePoolData?.history.map((p) => p.value) || []} />
+                    <SparklineChart data={prizePoolData?.history.map(p => p.value) || []} />
                   </div>
                 )}
               </div>
               {!isLoadingChart && prizePoolData && prizePoolData.history.length > 0 && (
                 <Button
                   onClick={() => setIsChartModalOpen(true)}
-                  className="w-full bg-transparent border border-[#558EB4]/50 text-[#558EB4] hover:bg-[#558EB4]/20 hover:text-black transition-colors duration-300 font-semibold text-sm mt-2"
+                  className="mt-2 w-full border border-[#558EB4]/50 bg-transparent text-sm font-semibold text-[#558EB4] transition-colors duration-300 hover:bg-[#558EB4]/20 hover:text-black"
                   size="sm"
                 >
                   See Growth Chart
                 </Button>
               )}
               {!isLoadingChart && (!prizePoolData || prizePoolData.history.length === 0) && (
-                <p className="text-xs text-gray-500 text-center mt-2">
+                <p className="mt-2 text-center text-xs text-gray-500">
                   No prize pool history available.
                 </p>
               )}
@@ -351,13 +416,13 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           )}
           {isDrained && winnerAddress && (
             <div className="flex flex-col gap-2">
-              <h3 className="text-[#5E5E5E]  font-medium uppercase flex items-center gap-1.5">
-                <User className="w-4 h-4" />
+              <h3 className="flex items-center gap-1.5 font-medium uppercase text-[#5E5E5E]">
+                <User className="h-4 w-4" />
                 Winner
               </h3>
               <Link
                 href={`/u/${winnerAddress}`}
-                className="inline-block  hover:underline"
+                className="inline-block hover:underline"
                 title={winnerAddress}
               >
                 {formatAddress(winnerAddress)}
@@ -366,7 +431,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           )}
 
           <div className="flex flex-col gap-2">
-            <h3 className="text-[#5E5E5E]  font-medium uppercase">Message Price</h3>
+            <h3 className="font-medium uppercase text-[#5E5E5E]">Message Price</h3>
             <p className="inline-block text-2xl font-semibold">
               {(Number(agent.cost_per_message) / MIST_PER_SUI).toFixed(4)} SUI
             </p>
@@ -375,18 +440,11 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           {!isDrained && (
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-1">
-                <h3 className="text-black/70 text-sm font-semibold uppercase">Active Since</h3>
+                <h3 className="text-sm font-semibold uppercase text-black/70">Active Since</h3>
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger
-                      asChild
-                      className="cursor-help"
-                    >
-                      <Info
-                        width={12}
-                        height={12}
-                        className="text-black/60"
-                      />
+                    <TooltipTrigger asChild className="cursor-help">
+                      <Info width={12} height={12} className="text-black/60" />
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>Format: Days, Hours, Minutes, Seconds</p>
@@ -409,7 +467,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
           {isOwner && !isDrained && (
             <div className="flex flex-col gap-2">
-              <h3 className="text-[#5E5E5E] font-medium uppercase">Withdrawal Lock</h3>
+              <h3 className="font-medium uppercase text-[#5E5E5E]">Withdrawal Lock</h3>
               {timeRemaining ? (
                 <p
                   className={cn(
@@ -420,7 +478,7 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
                   {timeRemaining}
                 </p>
               ) : (
-                <div className="h-7 bg-gray-200 rounded w-40 animate-pulse"></div>
+                <div className="h-7 w-40 animate-pulse rounded bg-gray-200"></div>
               )}
             </div>
           )}
@@ -429,22 +487,21 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
         <div className="z-20 mt-4 flex flex-col rounded-xl p-0 text-sm">
           <div className="flex flex-col gap-2">
-            <h3 className="text-[#5E5E5E]  font-medium uppercase">Instructions</h3>
+            <h3 className="font-medium uppercase text-[#5E5E5E]">Instructions</h3>
             <p
               ref={instructionsRef}
-              className={cn(
-                'text-xs font-medium blackspace-pre-wrap transition-all duration-300',
-                !isExpanded && shouldTruncate && 'line-clamp-4'
-              )}
+              className="line-clamp-4 whitespace-pre-wrap text-xs font-medium transition-all duration-300"
             >
               {agent.system_prompt}
             </p>
-            {shouldTruncate && (
+
+            {shouldTruncate && onReadMore && (
               <button
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="text-sm text-blue-400 hover:underline self-start"
+                onClick={onReadMore}
+                className="mt-3 flex w-fit items-center gap-2 self-end text-xs font-bold uppercase tracking-wide text-[#5E5E5E] transition-opacity hover:opacity-80"
               >
-                {isExpanded ? 'See less' : 'See more'}
+                <ExternalLink size={12} strokeWidth={2.5} />
+                Read All
               </button>
             )}
           </div>
@@ -454,11 +511,11 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           <div className="border-t border-t-black/20"></div>
           <div className="flex justify-between">
             <div className="flex flex-col gap-2">
-              <h3 className="text-[#5E5E5E]  font-medium uppercase">Total Participants</h3>
-              <p className="inline-block text-2xl font-semibold text-center">{totalParticipants}</p>
+              <h3 className="font-medium uppercase text-[#5E5E5E]">Total Participants</h3>
+              <p className="inline-block text-center text-2xl font-semibold">{totalParticipants}</p>
             </div>
             <div className="flex flex-col gap-2 text-center">
-              <h3 className="text-[#5E5E5E]  font-medium uppercase">Break Attempts</h3>
+              <h3 className="font-medium uppercase text-[#5E5E5E]">Break Attempts</h3>
               <p className="inline-block text-2xl font-semibold">{breakAttempts}</p>
             </div>
           </div>
@@ -466,24 +523,24 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
 
         <Button
           onClick={handleCopyLink}
-          className="w-full bg-transparent border border-[#558EB4] text-[#558EB4] hover:bg-[#558EB4]/20 transition-colors duration-300 font-semibold flex items-center gap-2 mt-4"
+          className="mt-4 flex w-full items-center gap-2 border border-[#558EB4] bg-transparent font-semibold text-[#558EB4] transition-colors duration-300 hover:bg-[#558EB4]/20"
         >
           Share {agent.agent_name} Link
-          <LinkIcon className="w-4 h-4" />
+          <LinkIcon className="h-4 w-4" />
         </Button>
 
-        <div className="mt-6 pt-6 border-t border-black/20">
-          <div className="flex justify-between items-start mb-2">
-            <h3 className="font-bold text-base text-black leading-tight">Earn SENTINEL Rewards</h3>
+        <div className="mt-6 border-t border-black/20 pt-6">
+          <div className="mb-2 flex items-start justify-between">
+            <h3 className="text-base font-bold leading-tight text-black">Earn SENTINEL Rewards</h3>
           </div>
 
-          <p className="text-[#5E5E5E] text-base mb-4 leading-relaxed">
+          <p className="mb-4 text-base leading-relaxed text-[#5E5E5E]">
             Share your Sentinel on X and get real SENTINEL every time you share.
           </p>
 
           <button
             onClick={() => setIsShareModalOpen(true)}
-            className="btn btn-black w-full h-[42px] flex items-center justify-center gap-2 text-base font-medium transition-transform active:scale-[0.98]"
+            className="btn btn-black flex h-[42px] w-full items-center justify-center gap-2 text-base font-medium transition-transform active:scale-[0.98]"
           >
             Share on X & Earn SENTINEL
           </button>
@@ -495,11 +552,11 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
           isLoading={isLoadingProfile}
         />
 
-        <div className="mt-auto pt-6 border-t border-black/20">
-          <h3 className="text-black/80 text-sm font-semibold text-center mb-4">
+        <div className="mt-auto border-t border-black/20 pt-6">
+          <h3 className="mb-4 text-center text-sm font-semibold text-black/80">
             Scan this QR Code if you want to try to attack this agent using slush mobile wallet
           </h3>
-          <div className="rounded-xl p-4 border border-gray-200 flex justify-center">
+          <div className="flex justify-center rounded-xl border border-gray-200 p-4">
             {deepLinkUrl ? (
               <QRCodeSVG
                 value={deepLinkUrl}
@@ -510,8 +567,8 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
                 includeMargin={true}
               />
             ) : (
-              <div className="w-32 h-32 bg-gray-200 animate-pulse rounded-lg flex items-center justify-center">
-                <div className="w-8 h-8 border-4 border-gray-300 rounded-full animate-spin border-t-transparent"></div>
+              <div className="flex h-32 w-32 animate-pulse items-center justify-center rounded-lg bg-gray-200">
+                <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-transparent"></div>
               </div>
             )}
           </div>
@@ -525,62 +582,48 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
         agentName={agent.agent_name}
       />
 
-      <Dialog
-        open={isShareModalOpen}
-        onClose={handleCloseShareModal}
-      >
-        <div className="bg-white rounded-2xl w-full text-black">
-          <div className="flex justify-between items-center mb-6">
+      <Dialog open={isShareModalOpen} onClose={handleCloseShareModal}>
+        <div className="w-full rounded-2xl bg-white text-black">
+          <div className="mb-6 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Image
-                src="/icons/dollar_coin.png"
-                width={24}
-                height={24}
-                alt="dollar coin"
-              />
+              <Image src="/icons/dollar_coin.png" width={24} height={24} alt="dollar coin" />
               <h2 className="text-xl font-bold">Share on X & Earn SENTINEL</h2>
             </div>
             <button
               onClick={handleCloseShareModal}
-              className="text-gray-500 hover:text-black transition-colors"
+              className="text-gray-500 transition-colors hover:text-black"
             >
-              <X className="w-5 h-5" />
+              <X className="h-5 w-5" />
             </button>
           </div>
 
           {isSubmitted ? (
-            <div className="flex flex-col items-center justify-center py-6 text-center space-y-4 animate-in fade-in zoom-in duration-300">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-                <CheckCircle className="w-8 h-8 text-green-600" />
+            <div className="flex flex-col items-center justify-center space-y-4 py-6 text-center duration-300 animate-in fade-in zoom-in">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+                <CheckCircle className="h-8 w-8 text-green-600" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-black mb-2">Submission Received!</h3>
-                <p className="text-gray-600 max-w-xs mx-auto">
-                  Once verified RP will be reflected in your profile.
+                <h3 className="mb-2 text-xl font-bold text-black">Submission Received!</h3>
+                <p className="mx-auto max-w-xs text-gray-600">
+                  Once verified SENTINEL Points will be reflected in your profile.
                 </p>
               </div>
-              <button
-                onClick={handleCloseShareModal}
-                className="btn btn-black w-full mt-4"
-              >
+              <button onClick={handleCloseShareModal} className="btn btn-black mt-4 w-full">
                 Close
               </button>
             </div>
           ) : (
             <div className="space-y-6">
               <div className="relative">
-                <p className="text-sm mb-1">Step 1</p>
-                <p className="font-medium mb-3">Share about Sentinel on X and earn SENTINEL rewards.</p>
+                <p className="mb-1 text-sm">Step 1</p>
+                <p className="mb-3 font-medium">
+                  Share about Sentinel on X and earn SENTINEL rewards.
+                </p>
                 <button
                   onClick={handleShareClick}
-                  className="btn btn-white w-full sm:w-auto h-[36px] flex items-center gap-2 px-4 !border-black"
+                  className="btn btn-white flex h-[36px] w-full items-center gap-2 !border-black px-4 sm:w-auto"
                 >
-                  <Image
-                    src="/icons/share.png"
-                    width={24}
-                    height={24}
-                    alt="share"
-                  />
+                  <Image src="/icons/share.png" width={24} height={24} alt="share" />
                   Share on X
                 </button>
               </div>
@@ -588,23 +631,23 @@ export const AgentSidebar = ({ agent, agentEvents }: AgentSidebarProps) => {
               <div className="border-t border-[#9A9A9A]"></div>
 
               <div className="relative">
-                <p className="text-sm mb-1">Step 2</p>
-                <p className="font-medium text-base mb-3">Paste Your Tweet Link for Verification</p>
-                <div className="flex flex-col sm:flex-row gap-2">
+                <p className="mb-1 text-sm">Step 2</p>
+                <p className="mb-3 text-base font-medium">Paste Your Tweet Link for Verification</p>
+                <div className="flex flex-col gap-2 sm:flex-row">
                   <input
                     value={tweetLink}
-                    onChange={(e) => setTweetLink(e.target.value)}
+                    onChange={e => setTweetLink(e.target.value)}
                     placeholder="https://x.com/username/status/..."
-                    className="flex-1 bg-white border border-black rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black"
+                    className="flex-1 rounded-lg border border-black bg-white px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black"
                   />
                   <button
                     onClick={handleVerifyTweet}
                     disabled={isVerifying}
-                    className="btn btn-black h-[36px] px-6 text-base font-normal whitespace-nowrap disabled:opacity-70 disabled:cursor-not-allowed"
+                    className="btn btn-black h-[36px] whitespace-nowrap px-6 text-base font-normal disabled:cursor-not-allowed disabled:opacity-70"
                   >
                     {isVerifying ? (
                       <>
-                        <Loader2 className="w-3 h-3 animate-spin mr-2" />
+                        <Loader2 className="mr-2 h-3 w-3 animate-spin" />
                         Verifying...
                       </>
                     ) : (

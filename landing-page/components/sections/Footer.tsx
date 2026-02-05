@@ -15,7 +15,7 @@ export function Footer() {
           <div className="max-w-md md:self-stretch flex flex-col order-1 md:order-1">
             <div className="flex items-center text-sm md:text-base md:justify-start gap-3 mb-4">
               <Image
-                src="/icons/logo_large_testnet.svg"
+                src="/icons/logo_large.svg"
                 alt="Sui Sentinel Logo"
                 style={{ objectFit: 'contain' }}
                 height={49}
@@ -23,9 +23,9 @@ export function Footer() {
               />
             </div>
             <p className="text-black leading-relaxed">
-              Sui Sentinel is a gamified AI red-teaming and auditing platform built on Sui. Test,
-              defend, and harden AI models through real-world adversarial challenges. Every attack
-              and defense is verified on-chain, every action has real stakes
+              Sui Sentinel is a Decentralized AI safety platform built on Sui. Stress-test models,
+              find vulnerabilities, earn rewards. Every judgment cryptographically verified
+              on-chain.
             </p>
 
             <p className="hidden md:block mt-auto py-4 text-white font-medium">
@@ -58,10 +58,7 @@ export function Footer() {
           <div className="w-full md:w-auto order-2 md:order-3 pb-4 overflow-auto">
             <div className="flex flex-row justify-center gap-4 md:hidden">
               {socialLinks.map((link) => (
-                <div
-                  key={link.href}
-                  className="flex flex-col items-center justify-between gap-1"
-                >
+                <div key={link.href} className="flex flex-col items-center justify-between gap-1">
                   <Link
                     key={link.href}
                     href={link.href}
@@ -71,12 +68,7 @@ export function Footer() {
                     aria-label={link.alt}
                   >
                     {link.isImage ? (
-                      <Image
-                        src={link.icon as string}
-                        alt={link.alt}
-                        width={20}
-                        height={20}
-                      />
+                      <Image src={link.icon as string} alt={link.alt} width={20} height={20} />
                     ) : (
                       <link.icon className="size-5 text-black" />
                     )}
@@ -93,12 +85,9 @@ export function Footer() {
               ))}
             </div>
 
-            <div className="hidden md:flex flex-col gap-4">
+            <div className="hidden md:grid grid-cols-2 gap-x-8 gap-y-4">
               {socialLinks.map((link) => (
-                <div
-                  key={link.href}
-                  className="flex items-center justify-between gap-6"
-                >
+                <div key={link.href} className="flex items-center justify-between gap-6">
                   <Link
                     className="text-black font-medium whitespace-nowrap hover:underline"
                     href={link.href}
@@ -114,12 +103,7 @@ export function Footer() {
                     aria-label={link.alt}
                   >
                     {link.isImage ? (
-                      <Image
-                        src={link.icon as string}
-                        alt={link.alt}
-                        width={20}
-                        height={20}
-                      />
+                      <Image src={link.icon as string} alt={link.alt} width={20} height={20} />
                     ) : (
                       <link.icon className="size-5 text-black" />
                     )}

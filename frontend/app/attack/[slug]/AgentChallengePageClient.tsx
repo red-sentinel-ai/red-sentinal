@@ -17,7 +17,7 @@ import ChatInterface from '@/components/agents/ChatInterface'
 import { AgentSidebar } from '@/components/agents/AgentSidebar'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { MobileAgentHeader } from './MobileAgentHeader'
-import { Loader2 } from 'lucide-react'
+import { Loader2, X } from 'lucide-react'
 
 export default function AgentChallengePage({ slug }: { slug: string }) {
   const account = useCurrentAccount()
@@ -27,9 +27,11 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
   const { data: agent, isLoading, error, refetch } = useAgentBySlug(slug)
 
+  const [isReadMoreOpen, setIsReadMoreOpen] = useState(false)
+
   const { consumePrompt } = useConsumePrompt({
     showToasts: true,
-    onError: (err) => {
+    onError: err => {
       setSubmitError(err.message || 'Something went wrong')
     },
     onComplete: ({ apiResponse, transactionResult }) => {
@@ -52,7 +54,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
         const attackFeeInSui = agent.cost_per_message / MIST_PER_SUI
 
         const previousAttempts = agentEvents.promptConsumed.filter(
-          (event) => event.parsedJson.sender === account.address
+          event => event.parsedJson.sender === account.address
         ).length
 
         const isWinner = apiResponse.response.data.success
@@ -99,10 +101,10 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
     if (!agent) return { agentDefeated: [], promptConsumed: [] }
     return {
       agentDefeated: allEvents.agentDefeated.filter(
-        (e) => e.parsedJson.agent_id === `${agent.agent_id}`
+        e => e.parsedJson.agent_id === `${agent.agent_id}`
       ),
       promptConsumed: allEvents.promptConsumed.filter(
-        (e) => e.parsedJson.agent_id === `${agent.agent_id}`
+        e => e.parsedJson.agent_id === `${agent.agent_id}`
       ),
     }
   }, [agent, allEvents])
@@ -133,17 +135,38 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
     }
   }
 
+  const ReadMoreModal = () => (
+    <div className="absolute inset-0 flex flex-col overflow-hidden duration-200 animate-in fade-in">
+      <div className="flex shrink-0 items-center justify-between py-6 md:py-8">
+        <h2 className="text-2xl font-medium">Instructions</h2>
+        <button onClick={() => setIsReadMoreOpen(false)} className="p-2">
+          <X size={24} />
+        </button>
+      </div>
+
+      <div className="overflow-y-auto whitespace-pre-wrap px-1">
+        {agent.system_prompt || 'No instructions available.'}
+      </div>
+
+      <div className="shrink-0 pb-12 pt-8">
+        <button onClick={() => setIsReadMoreOpen(false)} className="btn btn-black">
+          CLOSE
+        </button>
+      </div>
+    </div>
+  )
+
   if (isLoading) {
     return (
       <div
-        className="min-h-screen bg-no-repeat flex items-center justify-center"
+        className="flex h-[calc(100vh-128px)] items-end justify-center bg-no-repeat"
         style={{
           backgroundImage: 'url(/img/chat_bg.png)',
           backgroundPosition: '0% 17%',
           backgroundSize: '100% auto',
         }}
       >
-        <Loader2 className="w-10 h-10 animate-spin mr-2" />
+        <Loader2 className="mr-2 h-10 w-10 animate-spin" />
       </div>
     )
   }
@@ -151,14 +174,14 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   if (error || !agent) {
     return (
       <div
-        className="min-h-screen bg-no-repeat text-gray-800 p-4 pt-20"
+        className="h-[calc(100vh-128px)] bg-no-repeat p-4 pt-20 text-gray-800"
         style={{
           backgroundImage: 'url(/img/chat_bg.png)',
           backgroundPosition: '0% 17%',
           backgroundSize: '100% auto',
         }}
       >
-        <div className="flex items-center justify-center min-h-[400px]">
+        <div className="flex min-h-[400px] items-center justify-center">
           <p className="text-lg text-gray-600">{error?.message || 'Agent not found'}</p>
         </div>
       </div>
@@ -168,43 +191,41 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   if (!isMobile) {
     return (
       <div
-        className="min-h-screen bg-no-repeat pt-16 flex"
+        className="flex h-[calc(100vh-128px)] items-end bg-no-repeat"
         style={{
           backgroundImage: 'url(/img/chat_bg.png)',
           backgroundPosition: '0% 17%',
           backgroundSize: '100% auto',
         }}
       >
-        <ResizablePanelGroup
-          direction="horizontal"
-          className="w-full"
-        >
-          <ResizablePanel
-            defaultSize={25}
-            minSize={20}
-            maxSize={40}
-            className="bg-gray-50/50"
-          >
+        <ResizablePanelGroup direction="horizontal" className="w-full">
+          <ResizablePanel defaultSize={25} minSize={20} maxSize={40} className="bg-gray-50/50">
             <AgentSidebar
               agent={agent}
               agentEvents={agentEvents}
+              onReadMore={() => setIsReadMoreOpen(true)}
             />
           </ResizablePanel>
           <ResizableHandle withHandle={true} />
           <ResizablePanel defaultSize={75}>
-            <div className="max-w-v1 mx-auto w-full h-full">
-              <ChatInterface
-                agent={agent}
-                agentEvents={agentEvents}
-                apiResponse={apiResponse}
-                onSendMessage={handleSendMessage}
-                isSubmitting={isSubmitting}
-                submitError={submitError}
-                refetchAgent={refetch}
-              />
+            <div className="max-w-v1 relative mx-auto h-full w-full">
+              {isReadMoreOpen ? (
+                <ReadMoreModal />
+              ) : (
+                <ChatInterface
+                  agent={agent}
+                  agentEvents={agentEvents}
+                  apiResponse={apiResponse}
+                  onSendMessage={handleSendMessage}
+                  isSubmitting={isSubmitting}
+                  submitError={submitError}
+                  refetchAgent={refetch}
+                />
+              )}
             </div>
           </ResizablePanel>
         </ResizablePanelGroup>
+
         {apiResponse && txnHash && (
           <AttackStatusModal
             apiResponse={apiResponse}
@@ -218,13 +239,10 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   }
 
   return (
-    <div className="h-screen pt-16 flex flex-col bg-white">
-      <MobileAgentHeader
-        agentName={agent.agent_name}
-        onInfoClick={() => setIsSidebarOpen(true)}
-      />
+    <div className="flex h-screen flex-col bg-white pt-16">
+      <MobileAgentHeader agentName={agent.agent_name} onInfoClick={() => setIsSidebarOpen(true)} />
 
-      <div className="flex-1 min-h-0">
+      <div className="min-h-0 flex-1">
         <ChatInterface
           agent={agent}
           agentEvents={agentEvents}
@@ -244,23 +262,29 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsSidebarOpen(false)}
-              className="fixed inset-0 bg-black/60 z-40"
+              className="fixed inset-0 z-40 bg-black/60"
             />
             <motion.div
               initial={{ x: '-100%' }}
               animate={{ x: '0%' }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="fixed top-0 left-0 bottom-0 w-[85%] max-w-sm z-50 shadow-2xl bg-gray-50"
+              className="fixed bottom-0 left-0 top-0 z-50 w-[85%] max-w-sm overflow-y-auto bg-gray-50 shadow-2xl"
             >
               <AgentSidebar
                 agent={agent}
                 agentEvents={agentEvents}
+                onReadMore={() => {
+                  setIsSidebarOpen(false)
+                  setIsReadMoreOpen(true)
+                }}
               />
             </motion.div>
           </>
         )}
       </AnimatePresence>
+
+      {isReadMoreOpen && <ReadMoreModal />}
 
       {apiResponse && txnHash && (
         <AttackStatusModal

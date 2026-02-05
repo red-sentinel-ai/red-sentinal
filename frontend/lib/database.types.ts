@@ -74,6 +74,7 @@ export type Database = {
           collection_id: string
           collection_type: string | null
           contract_address: string | null
+          contract_artifact_hash: string | null
           created_at: string | null
           creator_address: string
           description: string
@@ -111,6 +112,7 @@ export type Database = {
           collection_id?: string
           collection_type?: string | null
           contract_address?: string | null
+          contract_artifact_hash?: string | null
           created_at?: string | null
           creator_address: string
           description: string
@@ -148,6 +150,7 @@ export type Database = {
           collection_id?: string
           collection_type?: string | null
           contract_address?: string | null
+          contract_artifact_hash?: string | null
           created_at?: string | null
           creator_address?: string
           description?: string
@@ -655,6 +658,97 @@ export type Database = {
         }
         Relationships: []
       }
+      raven_comments: {
+        Row: {
+          commenter_hash: string
+          confession_id: number | null
+          content: string
+          created_at: string | null
+          id: number
+        }
+        Insert: {
+          commenter_hash: string
+          confession_id?: number | null
+          content: string
+          created_at?: string | null
+          id?: never
+        }
+        Update: {
+          commenter_hash?: string
+          confession_id?: number | null
+          content?: string
+          created_at?: string | null
+          id?: never
+        }
+        Relationships: [
+          {
+            foreignKeyName: "raven_comments_confession_id_fkey"
+            columns: ["confession_id"]
+            isOneToOne: false
+            referencedRelation: "raven_confessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      raven_confessions: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: number
+          nullifier_hash: string
+          tips_count: number | null
+          title: string
+          total_tips_value: number | null
+          views_count: number | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: never
+          nullifier_hash: string
+          tips_count?: number | null
+          title: string
+          total_tips_value?: number | null
+          views_count?: number | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: never
+          nullifier_hash?: string
+          tips_count?: number | null
+          title?: string
+          total_tips_value?: number | null
+          views_count?: number | null
+        }
+        Relationships: []
+      }
+      raven_likes: {
+        Row: {
+          confession_id: number | null
+          id: number
+          user_nullifier: string
+        }
+        Insert: {
+          confession_id?: number | null
+          id?: never
+          user_nullifier: string
+        }
+        Update: {
+          confession_id?: number | null
+          id?: never
+          user_nullifier?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "raven_likes_confession_id_fkey"
+            columns: ["confession_id"]
+            isOneToOne: false
+            referencedRelation: "raven_confessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reviews: {
         Row: {
           created_at: string | null
@@ -698,6 +792,54 @@ export type Database = {
             referencedColumns: ["place_id"]
           },
         ]
+      }
+      rh_bridge_transactions: {
+        Row: {
+          amount: string
+          claim_secret: string | null
+          created_at: string
+          id: number
+          is_private: boolean | null
+          l1_tx_hash: string | null
+          l2_tx_hash: string | null
+          message_leaf_index: string | null
+          recipient_address: string
+          status: Database["public"]["Enums"]["bridge_status"] | null
+          token_symbol: string
+          updated_at: string
+          user_address: string
+        }
+        Insert: {
+          amount: string
+          claim_secret?: string | null
+          created_at?: string
+          id?: number
+          is_private?: boolean | null
+          l1_tx_hash?: string | null
+          l2_tx_hash?: string | null
+          message_leaf_index?: string | null
+          recipient_address: string
+          status?: Database["public"]["Enums"]["bridge_status"] | null
+          token_symbol: string
+          updated_at?: string
+          user_address: string
+        }
+        Update: {
+          amount?: string
+          claim_secret?: string | null
+          created_at?: string
+          id?: number
+          is_private?: boolean | null
+          l1_tx_hash?: string | null
+          l2_tx_hash?: string | null
+          message_leaf_index?: string | null
+          recipient_address?: string
+          status?: Database["public"]["Enums"]["bridge_status"] | null
+          token_symbol?: string
+          updated_at?: string
+          user_address?: string
+        }
+        Relationships: []
       }
       rh_feature_requests: {
         Row: {
@@ -874,36 +1016,69 @@ export type Database = {
       rh_users: {
         Row: {
           avatar_url: string | null
+          banner_url: string | null
+          citizenship_country: string | null
           created_at: string | null
+          current_streak: number | null
+          display_name: string | null
+          email: string | null
           id: string
+          is_public: boolean | null
+          is_verified_human: boolean | null
+          last_activity_date: string | null
           lifetime_points: number | null
+          longest_streak: number | null
           rewards_tier: string | null
           rewards_updated_at: string | null
           total_points: number | null
           username: string | null
+          verification_data: Json | null
           wallet_addresses: string[] | null
+          zk_passport_id: string | null
         }
         Insert: {
           avatar_url?: string | null
+          banner_url?: string | null
+          citizenship_country?: string | null
           created_at?: string | null
+          current_streak?: number | null
+          display_name?: string | null
+          email?: string | null
           id?: string
+          is_public?: boolean | null
+          is_verified_human?: boolean | null
+          last_activity_date?: string | null
           lifetime_points?: number | null
+          longest_streak?: number | null
           rewards_tier?: string | null
           rewards_updated_at?: string | null
           total_points?: number | null
           username?: string | null
+          verification_data?: Json | null
           wallet_addresses?: string[] | null
+          zk_passport_id?: string | null
         }
         Update: {
           avatar_url?: string | null
+          banner_url?: string | null
+          citizenship_country?: string | null
           created_at?: string | null
+          current_streak?: number | null
+          display_name?: string | null
+          email?: string | null
           id?: string
+          is_public?: boolean | null
+          is_verified_human?: boolean | null
+          last_activity_date?: string | null
           lifetime_points?: number | null
+          longest_streak?: number | null
           rewards_tier?: string | null
           rewards_updated_at?: string | null
           total_points?: number | null
           username?: string | null
+          verification_data?: Json | null
           wallet_addresses?: string[] | null
+          zk_passport_id?: string | null
         }
         Relationships: []
       }
@@ -913,30 +1088,36 @@ export type Database = {
           collection_id: string | null
           created_at: string | null
           id: string
+          identifier_hash: string | null
           indices: string[]
           is_active: boolean | null
           root: string
           siblings: string[]
+          whitelist_type: string | null
         }
         Insert: {
           address: string
           collection_id?: string | null
           created_at?: string | null
           id?: string
+          identifier_hash?: string | null
           indices: string[]
           is_active?: boolean | null
           root: string
           siblings: string[]
+          whitelist_type?: string | null
         }
         Update: {
           address?: string
           collection_id?: string | null
           created_at?: string | null
           id?: string
+          identifier_hash?: string | null
           indices?: string[]
           is_active?: boolean | null
           root?: string
           siblings?: string[]
+          whitelist_type?: string | null
         }
         Relationships: [
           {
@@ -1011,6 +1192,8 @@ export type Database = {
           created_at: string | null
           digest: string | null
           is_featured: boolean
+          model_name: string | null
+          model_provider: string | null
           object_id: string
           owner: string
         }
@@ -1022,6 +1205,8 @@ export type Database = {
           created_at?: string | null
           digest?: string | null
           is_featured?: boolean
+          model_name?: string | null
+          model_provider?: string | null
           object_id: string
           owner: string
         }
@@ -1033,6 +1218,8 @@ export type Database = {
           created_at?: string | null
           digest?: string | null
           is_featured?: boolean
+          model_name?: string | null
+          model_provider?: string | null
           object_id?: string
           owner?: string
         }
@@ -1046,7 +1233,7 @@ export type Database = {
           email_id: string
           id: string
           name: string
-          status: string | null
+          status: Database["public"]["Enums"]["status"] | null
           telegram_username: string | null
           twitter_username: string | null
           wallet_address: string
@@ -1058,7 +1245,7 @@ export type Database = {
           email_id: string
           id?: string
           name: string
-          status?: string | null
+          status?: Database["public"]["Enums"]["status"] | null
           telegram_username?: string | null
           twitter_username?: string | null
           wallet_address: string
@@ -1070,7 +1257,7 @@ export type Database = {
           email_id?: string
           id?: string
           name?: string
-          status?: string | null
+          status?: Database["public"]["Enums"]["status"] | null
           telegram_username?: string | null
           twitter_username?: string | null
           wallet_address?: string
@@ -1084,6 +1271,66 @@ export type Database = {
             referencedColumns: ["agent_id"]
           },
         ]
+      }
+      ss_job_applications: {
+        Row: {
+          availability_notes: string | null
+          created_at: string
+          email: string
+          github_link: string | null
+          id: string
+          interest_notes: string | null
+          job_title: string
+          name: string
+          resume_file_path: string
+        }
+        Insert: {
+          availability_notes?: string | null
+          created_at?: string
+          email: string
+          github_link?: string | null
+          id?: string
+          interest_notes?: string | null
+          job_title: string
+          name: string
+          resume_file_path: string
+        }
+        Update: {
+          availability_notes?: string | null
+          created_at?: string
+          email?: string
+          github_link?: string | null
+          id?: string
+          interest_notes?: string | null
+          job_title?: string
+          name?: string
+          resume_file_path?: string
+        }
+        Relationships: []
+      }
+      ss_manifesto_signatures: {
+        Row: {
+          created_at: string
+          email: string
+          email_sent_at: string | null
+          id: number
+          signed_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          email_sent_at?: string | null
+          id?: never
+          signed_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          email_sent_at?: string | null
+          id?: never
+          signed_at?: string | null
+        }
+        Relationships: []
       }
       ss_rewards_activity: {
         Row: {
@@ -1523,6 +1770,7 @@ export type Database = {
       }
     }
     Enums: {
+      bridge_status: "DEPOSITED" | "CLAIMED" | "FAILED"
       nft_category:
         | "FOUNDER"
         | "DESIGNER"
@@ -1531,6 +1779,7 @@ export type Database = {
         | "TOTEM"
         | "YOUR_NEW_CATEGORY"
         | "ZKON"
+      status: "pending" | "approved" | "denied"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1658,6 +1907,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      bridge_status: ["DEPOSITED", "CLAIMED", "FAILED"],
       nft_category: [
         "FOUNDER",
         "DESIGNER",
@@ -1667,6 +1917,7 @@ export const Constants = {
         "YOUR_NEW_CATEGORY",
         "ZKON",
       ],
+      status: ["pending", "approved", "denied"],
     },
   },
 } as const

@@ -80,13 +80,8 @@ export const ConnectButton = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-2 px-4 py-2 rounded-full border border-black text-black hover:bg-gray-100 transition-colors group">
-          <Image
-            width={31}
-            height={31}
-            src="/icons/wallet.png"
-            alt="wallet icon"
-          />
+        <button className="group flex items-center gap-2 rounded-full border border-black px-4 py-2 text-black transition-colors hover:bg-gray-100">
+          <Image width={31} height={31} src="/icons/wallet.png" alt="wallet icon" />
           <span className="text-sm font-medium">
             <span className="hidden sm:inline">{formatAddress(account.address)}</span>
             <span className="sm:hidden">{formatAddress(account.address)}</span>
@@ -95,17 +90,17 @@ export const ConnectButton = () => {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="w-64 sm:w-72 bg-white/80 backdrop-blur-xl border border-gray-200 rounded-2xl p-2 text-black"
+        className="w-64 rounded-2xl border border-gray-200 bg-white/80 p-2 text-black backdrop-blur-xl sm:w-72"
         align="end"
       >
-        <DropdownMenuLabel className="text-lg font-bold text-black px-2 pt-2">
+        <DropdownMenuLabel className="px-2 pt-2 text-lg font-bold text-black">
           My Wallet
         </DropdownMenuLabel>
         <DropdownMenuSeparator className="bg-gray-200" />
 
-        <div className="px-4 py-3 flex justify-between items-center">
+        <div className="flex items-center justify-between px-4 py-3">
           <div className="text-sm font-medium text-gray-600">Balance</div>
-          <span className="text-base font-bold text-black flex items-center gap-2">
+          <span className="flex items-center gap-2 text-base font-bold text-black">
             {isLoadingBalance ? (
               <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
             ) : (
@@ -117,7 +112,7 @@ export const ConnectButton = () => {
         <DropdownMenuSeparator className="bg-gray-200" />
 
         <Link href="/profile">
-          <DropdownMenuItem className="cursor-pointer flex items-center gap-2 rounded-lg px-4 py-2 hover:bg-gray-100 transition-colors">
+          <DropdownMenuItem className="flex cursor-pointer items-center gap-2 rounded-lg px-4 py-2 transition-colors hover:bg-gray-100">
             <User className="h-4 w-4 text-gray-700" />
             <span className="text-gray-800">Profile</span>
           </DropdownMenuItem>
@@ -125,7 +120,7 @@ export const ConnectButton = () => {
 
         <DropdownMenuItem
           onClick={handleCopy}
-          className="cursor-pointer flex items-center gap-2 rounded-lg px-4 py-2 hover:bg-gray-100 transition-colors"
+          className="flex cursor-pointer items-center gap-2 rounded-lg px-4 py-2 transition-colors hover:bg-gray-100"
         >
           {copied ? (
             <CheckCircle className="h-4 w-4 text-green-500" />
@@ -137,7 +132,7 @@ export const ConnectButton = () => {
 
         <DropdownMenuItem
           onClick={() => disconnect()}
-          className="cursor-pointer flex items-center gap-2 text-red-600 hover:text-red-700 focus:text-red-700 hover:bg-red-50 focus:bg-red-50 rounded-lg px-4 py-2 transition-colors"
+          className="flex cursor-pointer items-center gap-2 rounded-lg px-4 py-2 text-red-600 transition-colors hover:bg-red-50 hover:text-red-700 focus:bg-red-50 focus:text-red-700"
         >
           <LogOut className="h-4 w-4" />
           <span>Disconnect</span>
@@ -150,7 +145,7 @@ export const ConnectButton = () => {
             href={SUI_FAUCET_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 px-4 py-2 rounded-full border border-gray-200 text-sm text-blue-600 hover:bg-blue-50 transition-colors group"
+            className="group flex items-center justify-center gap-2 rounded-full border border-gray-200 px-4 py-2 text-sm text-blue-600 transition-colors hover:bg-blue-50"
           >
             Get SUI from Faucet
           </a>

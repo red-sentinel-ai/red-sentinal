@@ -93,24 +93,24 @@ export const FeaturedAgentCard = ({
 
   return (
     <motion.div
-      className="rounded-lg agent-card lg:rounded-xl overflow-hidden group flex flex-col p-[1px]"
+      className="agent-card group flex flex-col overflow-hidden rounded-lg p-[1px] lg:rounded-xl"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
     >
-      <div className="bg-white overflow-hidden w-full h-full p-2 lg:p-6 rounded-lg lg:rounded-xl">
+      <div className="h-full w-full overflow-hidden rounded-lg bg-white p-2 lg:rounded-xl lg:p-6">
         <div className="relative mb-4">
-          <div className="w-full h-80 rounded-lg flex items-center justify-center relative overflow-hidden bg-gray-100">
+          <div className="relative flex h-80 w-full items-center justify-center overflow-hidden rounded-lg bg-gray-100">
             {agent.agent_profile ? (
               <Image
                 src={agent.agent_profile || '/placeholder.svg'}
                 alt={`${agent.agent_name} profile`}
                 fill
-                className="object-cover rounded-lg z-10"
+                className="z-10 rounded-lg object-cover"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
             ) : (
-              <div className="text-2xl font-medium z-10 relative">
+              <div className="relative z-10 text-2xl font-medium">
                 {agent.agent_name.charAt(0).toUpperCase()}
               </div>
             )}
@@ -119,42 +119,41 @@ export const FeaturedAgentCard = ({
               isOwner={isOwner}
               isFeatured={agent.is_featured}
               agentId={agent.agent_id}
+              agentObjectId={agent.object_id}
+              currentPrompt={agent.system_prompt}
+              currentCost={agent.cost_per_message}
               openFeatureModal={openFeatureModal}
+              accumulatedFees={agent.accumulated_fees}
             />
           </div>
         </div>
 
-        <div className="text-center mb-4">
-          <div className="flex items-center justify-center gap-1 mb-2">
-            <h3 className="text-lg lg:text-2xl font-medium  truncate">{agent.agent_name}</h3>
+        <div className="mb-4 text-center">
+          <div className="mb-2 flex items-center justify-center gap-1">
+            <h3 className="truncate text-lg font-medium lg:text-2xl">{agent.agent_name}</h3>
             {agent.is_featured && (
-              <Image
-                src="/icons/check-mark.svg"
-                width={20}
-                height={20}
-                alt="checkmark"
-              />
+              <Image src="/icons/check-mark.svg" width={20} height={20} alt="checkmark" />
             )}
           </div>
-          <div className="flex max-w-[394px] mx-auto border-t border-gray-200"></div>
+          <div className="mx-auto flex max-w-[394px] border-t border-gray-200"></div>
         </div>
 
-        <div className="space-y-3 mb-4 text-xl font-medium">
-          <div className="flex justify-between items-center">
+        <div className="mb-4 space-y-3 text-xl font-medium">
+          <div className="flex items-center justify-between">
             <span className="text-[#5E5E5E]">Reward Pool:</span>
             <div className="flex items-center">
-              <span className='mr-2'>{formatBalance(agent.balance)}</span>
+              <span className="mr-2">{formatBalance(agent.balance)}</span>
               <PrizePoolChangeDisplay agentId={agent.agent_id} variant="card" />
             </div>
           </div>
-          <div className="flex justify-between items-center">
+          <div className="flex items-center justify-between">
             <span className="text-[#5E5E5E]">Message price:</span>
             <span>{formatCost(agent.cost_per_message)}</span>
           </div>
         </div>
 
         {fromProfile && (
-          <div className="text-xs text-center mb-4">
+          <div className="mb-4 text-center text-xs">
             {isWithdrawalLocked ? (
               <span className="font-medium text-yellow-700">{timeRemaining}</span>
             ) : (
@@ -165,7 +164,7 @@ export const FeaturedAgentCard = ({
 
         <div className="mt-auto flex flex-col gap-2">
           <button
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation()
               handleAttack()
             }}
@@ -176,7 +175,7 @@ export const FeaturedAgentCard = ({
           {fromProfile && (
             <div className="flex gap-2">
               <button
-                onClick={() => openModal(agent.object_id)}
+                onClick={() => openModal(agent.object_id, agent.agent_id)}
                 className="btn btn-black w-1/2"
               >
                 Fund
@@ -189,8 +188,8 @@ export const FeaturedAgentCard = ({
                   isWithdrawalLocked
                     ? timeRemaining
                     : agent.balance === 0
-                    ? 'Balance is zero'
-                    : 'Withdraw funds'
+                      ? 'Balance is zero'
+                      : 'Withdraw funds'
                 }
               >
                 Withdraw

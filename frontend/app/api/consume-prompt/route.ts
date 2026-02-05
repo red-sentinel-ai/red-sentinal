@@ -14,14 +14,17 @@ export async function POST(request: NextRequest) {
     })
 
     if (!response.ok) {
-      throw new Error(`External API error! status: ${response.status}`)
+      const errorText = await response.text()
+      console.error('Backend Response Error:', errorText)
+
+      throw new Error(`External API error! status: ${response.status} - ${errorText}`)
     }
 
     const data = await response.json()
-
     return NextResponse.json(data)
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in consume-prompt API route:', error)
-    return NextResponse.json({ error: 'Failed to consume agent' }, { status: 500 })
+
+    return NextResponse.json({ error: error.message || 'Failed to consume agent' }, { status: 500 })
   }
 }
