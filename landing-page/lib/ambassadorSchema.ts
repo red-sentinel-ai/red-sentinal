@@ -14,10 +14,8 @@ export type PreviousAmbassadorProgram = z.infer<typeof previousAmbassadorProgram
 export const AMBASSADOR_ROLES = [
   { value: 'content_creator', label: 'Content Creator' },
   { value: 'community_manager', label: 'Community Manager' },
-  { value: 'developer_advocate', label: 'Developer Advocate' },
-  { value: 'regional_lead', label: 'Regional Lead' },
-  { value: 'meme_viral_marketing', label: 'Meme / Viral Marketing' },
-  { value: 'other', label: 'Other / Multi-role' },
+  { value: 'research_writer', label: 'Research / Writer' },
+  { value: 'developer_technical', label: 'Developer / Technical' },
 ] as const
 
 // Web3 experience levels
