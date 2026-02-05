@@ -24,7 +24,7 @@ export default function ContributionPlanStep({ form, disabled }: ContributionPla
           id="why_become_ambassador"
           rows={5}
           {...register('why_become_ambassador')}
-          className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black disabled:bg-gray-100"
+          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3"
           disabled={disabled}
           placeholder="Tell us about your motivation and what drives you to join our ambassador program..."
         />
@@ -41,7 +41,7 @@ export default function ContributionPlanStep({ form, disabled }: ContributionPla
           id="first_30_days_plan"
           rows={5}
           {...register('first_30_days_plan')}
-          className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black disabled:bg-gray-100"
+          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3"
           disabled={disabled}
           placeholder="Describe your action plan for the first 30 days as an ambassador..."
         />
@@ -58,7 +58,7 @@ export default function ContributionPlanStep({ form, disabled }: ContributionPla
           id="target_region_language_audience"
           rows={3}
           {...register('target_region_language_audience')}
-          className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black disabled:bg-gray-100"
+          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3"
           disabled={disabled}
           placeholder="e.g., Southeast Asia, English and Vietnamese speaking developers and crypto enthusiasts"
         />

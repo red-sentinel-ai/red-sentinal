@@ -28,7 +28,7 @@ export default function CommitmentStep({ form, disabled }: CommitmentStepProps) 
           type="text"
           id="weekly_availability"
           {...register('weekly_availability')}
-          className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black disabled:bg-gray-100"
+          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3"
           disabled={disabled}
           placeholder="e.g., 10-15 hours per week"
         />

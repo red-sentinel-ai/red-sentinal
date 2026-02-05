@@ -66,7 +66,7 @@ export default function RoleExperienceStep({ form, disabled }: RoleExperienceSte
         </label>
         <select
           {...register('web3_experience_level')}
-          className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black disabled:bg-gray-100"
+          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3"
           disabled={disabled}
         >
           <option value="">Select your experience level</option>
@@ -219,7 +219,7 @@ export default function RoleExperienceStep({ form, disabled }: RoleExperienceSte
           id="past_experience"
           rows={4}
           {...register('past_experience')}
-          className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black disabled:bg-gray-100"
+          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3"
           disabled={disabled}
           placeholder="Describe any other relevant experience in Web3, community building, content creation, etc."
         />
