@@ -40,7 +40,7 @@ export default function BasicInfoStep({
           type="text"
           id="full_name"
           {...register('full_name')}
-          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3"
+          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3 text-xl text-xl"  
           disabled={disabled}
           placeholder="John Doe"
         />
@@ -57,7 +57,7 @@ export default function BasicInfoStep({
           type="text"
           id="preferred_name"
           {...register('preferred_name')}
-          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3"
+          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3 text-xl"
           disabled={disabled}
           placeholder="Johnny"
         />
@@ -73,7 +73,7 @@ export default function BasicInfoStep({
             id="email"
             {...register('email')}
             onBlur={handleEmailBlur}
-            className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3"
+            className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3 text-xl"
             disabled={disabled || isCheckingEmail}
             placeholder="john@example.com"
           />
@@ -93,7 +93,7 @@ export default function BasicInfoStep({
         <select
           id="country"
           {...register('country')}
-          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3"
+          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3 text-xl"
           disabled={disabled}
         >
           <option value="">Select your country</option>
@@ -114,7 +114,7 @@ export default function BasicInfoStep({
           type="text"
           id="discord_username"
           {...register('discord_username')}
-          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3"
+          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3 text-xl"
           disabled={disabled}
           placeholder="username#1234"
         />
@@ -130,7 +130,7 @@ export default function BasicInfoStep({
         <select
           id="timezone"
           {...register('timezone')}
-          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3"
+          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3 text-xl"
           disabled={disabled}
         >
           <option value="">Select your timezone</option>
@@ -151,7 +151,7 @@ export default function BasicInfoStep({
           type="text"
           id="telegram_username"
           {...register('telegram_username')}
-          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3"
+          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3 text-xl"
           disabled={disabled}
           placeholder="@username"
         />
