@@ -21,7 +21,7 @@ export default function CommitmentStep({ form, disabled }: CommitmentStepProps) 
   return (
     <div className="space-y-6">
       <div>
-        <label htmlFor="weekly_availability" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="weekly_availability" className="block text-2xl font-medium">
           Weekly availability <span className="text-red-500">*</span>
         </label>
         <input

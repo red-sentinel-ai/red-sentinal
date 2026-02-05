@@ -17,7 +17,7 @@ export default function Web3IdentityStep({ form, disabled }: Web3IdentityStepPro
   return (
     <div className="space-y-6">
       <div>
-        <label htmlFor="sui_wallet_address" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="sui_wallet_address" className="block text-2xl font-medium">
           Sui Wallet Address <span className="text-gray-400">(Optional)</span>
         </label>
         <input
@@ -31,7 +31,7 @@ export default function Web3IdentityStep({ form, disabled }: Web3IdentityStepPro
       </div>
 
       <div>
-        <label htmlFor="twitter_url" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="twitter_url" className="block text-2xl font-medium">
           X (Twitter) Profile URL
         </label>
         <input
@@ -48,7 +48,7 @@ export default function Web3IdentityStep({ form, disabled }: Web3IdentityStepPro
       </div>
 
       <div>
-        <label htmlFor="discord_id" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="discord_id" className="block text-2xl font-medium">
           Discord ID
         </label>
         <input
@@ -62,7 +62,7 @@ export default function Web3IdentityStep({ form, disabled }: Web3IdentityStepPro
       </div>
 
       <div>
-        <label htmlFor="github_url" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="github_url" className="block text-2xl font-medium">
           GitHub Profile <span className="text-gray-400">(Optional)</span>
         </label>
         <input
@@ -79,7 +79,7 @@ export default function Web3IdentityStep({ form, disabled }: Web3IdentityStepPro
       </div>
 
       <div>
-        <label htmlFor="other_web3_profiles" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="other_web3_profiles" className="block text-2xl font-medium">
           Other Web3 Profiles <span className="text-gray-400">(Medium / Substack / YouTube / TikTok)</span>
         </label>
         <textarea

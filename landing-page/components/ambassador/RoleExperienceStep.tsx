@@ -117,7 +117,7 @@ export default function RoleExperienceStep({ form, disabled }: RoleExperienceSte
       {hasAmbassadorExperience && (
         <div className="space-y-4 p-4 bg-gray-50 rounded-lg">
           <div className="flex items-center justify-between">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-2xl font-medium">
               Previous Ambassador Programs
             </label>
             <button
@@ -212,7 +212,7 @@ export default function RoleExperienceStep({ form, disabled }: RoleExperienceSte
       )}
 
       <div>
-        <label htmlFor="past_experience" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="past_experience" className="block text-2xl font-medium">
           Past Experience <span className="text-gray-400">(Other relevant experience)</span>
         </label>
         <textarea
