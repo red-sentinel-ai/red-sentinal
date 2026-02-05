@@ -1,0 +1,96 @@
+'use client'
+
+import { UseFormReturn } from 'react-hook-form'
+import { AmbassadorApplicationFormData } from '@/lib/ambassadorSchema'
+
+interface Web3IdentityStepProps {
+  form: UseFormReturn<AmbassadorApplicationFormData>
+  disabled?: boolean
+}
+
+export default function Web3IdentityStep({ form, disabled }: Web3IdentityStepProps) {
+  const {
+    register,
+    formState: { errors },
+  } = form
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <label htmlFor="sui_wallet_address" className="block text-sm font-medium text-gray-700">
+          Sui Wallet Address <span className="text-gray-400">(Optional)</span>
+        </label>
+        <input
+          type="text"
+          id="sui_wallet_address"
+          {...register('sui_wallet_address')}
+          className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black disabled:bg-gray-100"
+          disabled={disabled}
+          placeholder="0x..."
+        />
+      </div>
+
+      <div>
+        <label htmlFor="twitter_url" className="block text-sm font-medium text-gray-700">
+          X (Twitter) Profile URL
+        </label>
+        <input
+          type="url"
+          id="twitter_url"
+          {...register('twitter_url')}
+          className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black disabled:bg-gray-100"
+          disabled={disabled}
+          placeholder="https://twitter.com/username"
+        />
+        {errors.twitter_url && (
+          <p className="mt-1 text-sm text-red-600">{errors.twitter_url.message}</p>
+        )}
+      </div>
+
+      <div>
+        <label htmlFor="discord_id" className="block text-sm font-medium text-gray-700">
+          Discord ID
+        </label>
+        <input
+          type="text"
+          id="discord_id"
+          {...register('discord_id')}
+          className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black disabled:bg-gray-100"
+          disabled={disabled}
+          placeholder="123456789012345678"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="github_url" className="block text-sm font-medium text-gray-700">
+          GitHub Profile <span className="text-gray-400">(Optional)</span>
+        </label>
+        <input
+          type="url"
+          id="github_url"
+          {...register('github_url')}
+          className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black disabled:bg-gray-100"
+          disabled={disabled}
+          placeholder="https://github.com/username"
+        />
+        {errors.github_url && (
+          <p className="mt-1 text-sm text-red-600">{errors.github_url.message}</p>
+        )}
+      </div>
+
+      <div>
+        <label htmlFor="other_web3_profiles" className="block text-sm font-medium text-gray-700">
+          Other Web3 Profiles <span className="text-gray-400">(Medium / Substack / YouTube / TikTok)</span>
+        </label>
+        <textarea
+          id="other_web3_profiles"
+          rows={3}
+          {...register('other_web3_profiles')}
+          className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black disabled:bg-gray-100"
+          disabled={disabled}
+          placeholder="Enter your profile URLs, one per line"
+        />
+      </div>
+    </div>
+  )
+}
