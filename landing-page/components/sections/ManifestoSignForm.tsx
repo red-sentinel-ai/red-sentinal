@@ -114,20 +114,20 @@ export function ManifestoSignForm() {
         The Sentinel oath: defend intelligence in the age of artificial minds.
       </h2>
 
-      <div className="relative min-h-[53px] max-w-[734px] mx-auto my-6">
+      <div className="relative max-w-[734px] mx-auto my-6">
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           disabled={status === "loading"}
-          className="border border-[#000000] w-full shadow-[0_4px_4px_rgba(0,0,0,0.25)] rounded-xl p-4 pr-[220px] text-xl font-medium focus:outline-hidden focus:ring-1 focus:ring-black placeholder:text-gray-400"
+          className="border border-[#000000] w-full shadow-[0_4px_4px_rgba(0,0,0,0.25)] rounded-xl p-4 pr-4 md:pr-[220px] text-base md:text-xl font-medium focus:outline-hidden focus:ring-1 focus:ring-black placeholder:text-gray-400"
           placeholder="Your Email Address"
         />
 
         <button
           onClick={handleSign}
           disabled={status === "loading" || !hasAgreed || !email}
-          className="btn btn-black focus-visible:border-black text-[18px] font-medium rounded-xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] min-h-[45px]! min-w-[207px]! flex items-center justify-center gap-2 absolute right-1 top-1/2 -translate-y-1/2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          className="btn btn-black focus-visible:border-black text-base md:text-[18px] font-medium rounded-xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] min-h-[45px]! w-full md:w-auto md:min-w-[207px]! flex items-center justify-center gap-2 mt-3 md:mt-0 md:absolute md:right-1 md:top-1/2 md:-translate-y-1/2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
         >
           {status === "loading" ? (
             <Loader2 className="animate-spin size-5 text-white" />

@@ -15,14 +15,14 @@ export const AgentListView = () => {
   return (
     <div className="mx-auto max-w-[1560px] px-2 py-4 md:px-8 md:py-16">
       <div className="mb-20">
-        <p className="text-center text-4xl font-bold uppercase md:text-[48px]" id="leaderboard">
+        <p className="text-center text-2xl font-bold uppercase sm:text-4xl md:text-[48px]" id="leaderboard">
           Choose your opponent
         </p>
         <div className="mx-auto my-3 flex max-w-[800px] md:my-4">
           <div className="black-gradient-border"></div>
           <div className="black-gradient-border rotate-180"></div>
         </div>
-        <p className="mx-auto max-w-[594px] text-center text-xl text-[#5E5E5E]">
+        <p className="mx-auto max-w-[594px] px-4 text-center text-base text-[#5E5E5E] sm:text-xl">
           Trick one of these agents into sending you all their SUI
         </p>
       </div>

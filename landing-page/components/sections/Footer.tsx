@@ -11,7 +11,7 @@ export function Footer() {
       <div className="vertical-line right-4 -top-40"></div>
 
       <div className="relative z-10 max-w-[1440px] mx-auto pb-0 px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row justify-between md:items-start gap-12 md:text-left">
+        <div className="flex flex-col md:flex-row justify-between md:items-start gap-4 md:text-left">
           <div className="max-w-md md:self-stretch flex flex-col order-1 md:order-1">
             <div className="flex items-center text-sm md:text-base md:justify-start gap-3 mb-4">
               <Image
@@ -34,14 +34,14 @@ export function Footer() {
             </p>
           </div>
 
-          <div className="flex w-full max-w-xs md:max-w-lg mx-auto items-end justify-between mt-8 md:mt-auto order-3 md:order-2">
+          <div className="flex w-full max-w-[280px] sm:max-w-xs md:max-w-lg mx-auto items-end justify-between mt-8 md:mt-auto order-3 md:order-2">
             <div>
               <Image
                 src="/img/robot_defend.png"
                 width={260}
                 height={346}
                 alt="Defender Robot"
-                className="h-auto w-[225px] md:w-[260px]"
+                className="h-auto w-[150px] sm:w-[180px] md:w-[220px] lg:w-[260px]"
               />
             </div>
             <div className="flex">
@@ -50,44 +50,42 @@ export function Footer() {
                 width={215}
                 height={286}
                 alt="Attacker Robot"
-                className="mt-auto h-auto w-[152px] md:w-[215px]"
+                className="mt-auto h-auto w-[100px] sm:w-[130px] md:w-[180px] lg:w-[215px]"
               />
             </div>
           </div>
 
           <div className="w-full md:w-auto order-2 md:order-3 pb-4 overflow-auto">
-            <div className="flex flex-row justify-center gap-4 md:hidden">
+            <div className="grid grid-cols-2 gap-x-6 gap-y-4 md:hidden">
               {socialLinks.map((link) => (
-                <div key={link.href} className="flex flex-col items-center justify-between gap-1">
+                <div key={link.href} className="flex items-center justify-between gap-3">
                   <Link
-                    key={link.href}
-                    href={link.href}
-                    target={link.isOutside ? '_blank' : '_self'}
-                    rel="noopener noreferrer"
-                    className="w-[70px] h-[51px] border border-[#ACACAC] rounded-xl flex items-center justify-center hover:bg-black/5 transition-colors"
-                    aria-label={link.alt}
-                  >
-                    {link.isImage ? (
-                      <Image src={link.icon as string} alt={link.alt} width={20} height={20} />
-                    ) : (
-                      <link.icon className="size-5 text-black" />
-                    )}
-                  </Link>
-
-                  <Link
-                    className="text-black font-medium whitespace-nowrap hover:underline"
+                    className="text-black font-medium whitespace-nowrap hover:underline text-sm"
                     href={link.href}
                     target={link.isOutside ? '_blank' : '_self'}
                   >
                     {link.name}
+                  </Link>
+                  <Link
+                    href={link.href}
+                    target={link.isOutside ? '_blank' : '_self'}
+                    rel="noopener noreferrer"
+                    className="w-[45px] h-[36px] sm:w-[50px] sm:h-[40px] border border-[#ACACAC] rounded-xl flex items-center justify-center hover:bg-black/5 transition-colors"
+                    aria-label={link.alt}
+                  >
+                    {link.isImage ? (
+                      <Image src={link.icon as string} alt={link.alt} width={18} height={18} />
+                    ) : (
+                      <link.icon className="size-4 text-black" />
+                    )}
                   </Link>
                 </div>
               ))}
             </div>
 
-            <div className="hidden md:grid grid-cols-2 gap-x-8 gap-y-4">
+            <div className="hidden md:grid grid-cols-2 gap-x-10 gap-y-4">
               {socialLinks.map((link) => (
-                <div key={link.href} className="flex items-center justify-between gap-6">
+                <div key={link.href} className="flex items-center justify-between gap-2">
                   <Link
                     className="text-black font-medium whitespace-nowrap hover:underline"
                     href={link.href}
@@ -99,7 +97,7 @@ export function Footer() {
                     href={link.href}
                     target={link.isOutside ? '_blank' : '_self'}
                     rel="noopener noreferrer"
-                    className="w-[70px] h-[51px] border border-[#ACACAC] rounded-xl flex items-center justify-center hover:bg-black/5 transition-colors"
+                    className="w-[50px] h-[40px] sm:w-[60px] sm:h-[45px] md:w-[70px] md:h-[51px] border border-[#ACACAC] rounded-xl flex items-center justify-center hover:bg-black/5 transition-colors"
                     aria-label={link.alt}
                   >
                     {link.isImage ? (
@@ -114,7 +112,7 @@ export function Footer() {
           </div>
         </div>
 
-        <p className="absolute bottom-1 md:hidden text-white font-medium text-[10px] w-full text-center">
+        <p className="absolute bottom-1 md:hidden text-white font-medium text-[10px] w-full text-center left-0">
           <span>© 2025 </span>
           <span>All Rights Reserved @Cyphronix Software</span>
         </p>

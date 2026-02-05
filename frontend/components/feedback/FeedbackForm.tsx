@@ -66,10 +66,10 @@ export const FeedbackForm = ({ onSuccess }: { onSuccess: () => void }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
+    <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
         <div className="space-y-1">
-          <label htmlFor="name" className="text-sm font-medium text-gray-700">
+          <label htmlFor="name" className="text-xs font-medium text-gray-700 sm:text-sm">
             Name (Optional)
           </label>
           <input
@@ -77,11 +77,11 @@ export const FeedbackForm = ({ onSuccess }: { onSuccess: () => void }) => {
             type="text"
             value={name}
             onChange={e => setName(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 bg-white p-2 text-black"
+            className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-black sm:text-base"
           />
         </div>
         <div className="space-y-1">
-          <label htmlFor="email" className="text-sm font-medium text-gray-700">
+          <label htmlFor="email" className="text-xs font-medium text-gray-700 sm:text-sm">
             Email (Optional)
           </label>
           <input
@@ -89,20 +89,20 @@ export const FeedbackForm = ({ onSuccess }: { onSuccess: () => void }) => {
             type="email"
             value={email}
             onChange={e => setEmail(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 bg-white p-2 text-black"
+            className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-black sm:text-base"
           />
         </div>
       </div>
 
       <div className="space-y-1">
-        <label htmlFor="feedbackType" className="text-sm font-medium text-gray-700">
+        <label htmlFor="feedbackType" className="text-xs font-medium text-gray-700 sm:text-sm">
           Feedback Type
         </label>
         <select
           id="feedbackType"
           value={feedbackType}
           onChange={e => setFeedbackType(e.target.value)}
-          className="w-full rounded-lg border border-gray-300 bg-white p-2 text-black"
+          className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-black sm:text-base"
         >
           <option>Suggestion</option>
           <option>Bug Report</option>
@@ -111,15 +111,15 @@ export const FeedbackForm = ({ onSuccess }: { onSuccess: () => void }) => {
       </div>
 
       <div className="space-y-1">
-        <label htmlFor="message" className="text-sm font-medium text-gray-700">
+        <label htmlFor="message" className="text-xs font-medium text-gray-700 sm:text-sm">
           Message <span className="text-red-500">*</span>
         </label>
         <textarea
           id="message"
           value={message}
           onChange={e => setMessage(e.target.value)}
-          rows={5}
-          className="w-full rounded-lg border border-gray-300 bg-white p-2 text-black"
+          rows={4}
+          className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-black sm:text-base"
           placeholder="How can we improve?"
         />
       </div>

@@ -97,10 +97,10 @@ export function RewardsDashboard() {
                 <Sparkles className="h-4 w-4 text-blue-600" />
                 <span className="text-sm font-medium text-blue-800">Sui Sentinel Rewards</span>
               </motion.div>
-              <h1 className="mb-4 text-5xl font-bold uppercase text-black">
+              <h1 className="mb-4 text-3xl font-bold uppercase text-black sm:text-4xl md:text-5xl">
                 Earn. Compete. Conquer.
               </h1>
-              <p className="mx-auto mb-6 max-w-2xl text-xl text-gray-600">
+              <p className="mx-auto mb-6 max-w-2xl text-base text-gray-600 sm:text-xl">
                 Complete missions, earn points, and unlock exclusive rewards in the Sui Sentinel
                 ecosystem
               </p>
@@ -145,7 +145,7 @@ export function RewardsDashboard() {
             <Card className="rounded-2xl border border-gray-200 bg-gray-50/50">
               <CardContent className="p-6">
                 <Tabs defaultValue="missions">
-                  <div className="mb-6 flex items-center justify-between">
+                  <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <TabsList>
                       <TabsTrigger value="missions" className="flex items-center gap-2">
                         <Target className="h-4 w-4" />
@@ -158,7 +158,7 @@ export function RewardsDashboard() {
                     </TabsList>
                     <div className="flex items-center gap-3">
                       <Link href="/rewards/leaderboard">
-                        <motion.button className="btn btn-black flex items-center gap-2">
+                        <motion.button className="btn btn-black flex items-center gap-2 text-sm sm:text-base">
                           <Trophy className="h-4 w-4" />
                           Leaderboard
                           <ArrowRight className="h-3 w-3" />
