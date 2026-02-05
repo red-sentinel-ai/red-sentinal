@@ -345,13 +345,13 @@ function AmbassadorPageContent() {
       <div className="relative z-10">
         {/* Banner */}
         <div
-          className="min-h-[300px] md:min-h-[400px] bg-no-repeat bg-top h-full flex items-end pb-16 justify-center text-center bg-cover lg:bg-size-[100%_auto]"
+          className="min-h-[300px] md:min-h-[500px] bg-no-repeat bg-top h-full flex items-end pb-12 justify-center text-center bg-cover lg:bg-size-[100%_auto]"
           style={{
             backgroundImage: 'url("/img/bannerImage.png")',
           }}
         >
           <div className="text-white max-w-4xl mx-auto px-4">
-            <h1 className="text-2xl md:text-5xl font-bold">
+            <h1 className="text-2xl md:text-5xl font-bold leading-snug">
               Sui Sentinel Ambassador Program
               <br />
               Application
@@ -359,7 +359,7 @@ function AmbassadorPageContent() {
           </div>
         </div>
 
-        <div className="max-w-2xl mx-auto my-8 px-4 md:px-8">
+        <div className="max-w-[1286px] mx-auto my-8 px-4 md:px-8">
           <Link href="/" className="font-medium mb-8 inline-block">
             ← Back to Home
           </Link>
@@ -371,9 +371,8 @@ function AmbassadorPageContent() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="bg-white p-6 md:p-8 rounded-lg shadow-sm border border-gray-100"
               >
-                <p className="text-gray-700 leading-relaxed whitespace-pre-line mb-8">
+                <p className="leading-relaxed whitespace-pre-line mb-8 text-2xl">
                   {AMBASSADOR_INTRO_TEXT}
                 </p>
                 <button onClick={handleStartApplication} className="btn btn-black w-full md:w-auto">
@@ -389,7 +388,6 @@ function AmbassadorPageContent() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
               >
-                {/* Progress indicator */}
                 <div className="mb-8">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-medium text-gray-600">
