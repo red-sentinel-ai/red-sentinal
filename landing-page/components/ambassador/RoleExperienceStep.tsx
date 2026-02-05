@@ -40,7 +40,7 @@ export default function RoleExperienceStep({ form, disabled }: RoleExperienceSte
   return (
     <div className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-3">
+        <label className="block text-xl font-medium text-gray-700 mb-3">
           Which roles are you applying for? <span className="text-red-500">*</span>
         </label>
         <div className="space-y-2">
@@ -53,15 +53,15 @@ export default function RoleExperienceStep({ form, disabled }: RoleExperienceSte
                 disabled={disabled}
                 className="h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
               />
-              <span className="text-sm text-gray-700">{role.label}</span>
+              <span className="text-xl text-gray-700">{role.label}</span>
             </label>
           ))}
         </div>
-        {errors.roles && <p className="mt-1 text-sm text-red-600">{errors.roles.message}</p>}
+        {errors.roles && <p className="mt-1 text-xl text-red-600">{errors.roles.message}</p>}
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-3">
+        <label className="block text-xl font-medium text-gray-700 mb-3">
           Web3 Experience Level <span className="text-red-500">*</span>
         </label>
         <select
@@ -77,12 +77,12 @@ export default function RoleExperienceStep({ form, disabled }: RoleExperienceSte
           ))}
         </select>
         {errors.web3_experience_level && (
-          <p className="mt-1 text-sm text-red-600">{errors.web3_experience_level.message}</p>
+          <p className="mt-1 text-xl text-red-600">{errors.web3_experience_level.message}</p>
         )}
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-3">
+        <label className="block text-xl font-medium text-gray-700 mb-3">
           Have you been part of any ambassador programs before?
         </label>
         <div className="flex gap-6">
@@ -95,7 +95,7 @@ export default function RoleExperienceStep({ form, disabled }: RoleExperienceSte
               disabled={disabled}
               className="h-4 w-4 border-gray-300 text-black focus:ring-black"
             />
-            <span className="text-sm text-gray-700">Yes</span>
+            <span className="text-xl text-gray-700">Yes</span>
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
             <input
@@ -109,7 +109,7 @@ export default function RoleExperienceStep({ form, disabled }: RoleExperienceSte
               disabled={disabled}
               className="h-4 w-4 border-gray-300 text-black focus:ring-black"
             />
-            <span className="text-sm text-gray-700">No</span>
+            <span className="text-xl text-gray-700">No</span>
           </label>
         </div>
       </div>
@@ -124,7 +124,7 @@ export default function RoleExperienceStep({ form, disabled }: RoleExperienceSte
               type="button"
               onClick={() => append({ project_name: '', role: '', duration: '', proof_links: [] })}
               disabled={disabled}
-              className="flex items-center gap-1 text-sm text-black hover:text-gray-600 disabled:opacity-50"
+              className="flex items-center gap-1 text-xl text-black hover:text-gray-600 disabled:opacity-50"
             >
               <Plus size={16} />
               Add Program
@@ -134,7 +134,7 @@ export default function RoleExperienceStep({ form, disabled }: RoleExperienceSte
           {fields.map((field, index) => (
             <div key={field.id} className="p-4 bg-white rounded-md border border-gray-200 space-y-4">
               <div className="flex justify-between items-start">
-                <span className="text-sm font-medium text-gray-500">Program {index + 1}</span>
+                <span className="text-xl font-medium text-gray-500">Program {index + 1}</span>
                 <button
                   type="button"
                   onClick={() => remove(index)}
@@ -152,7 +152,7 @@ export default function RoleExperienceStep({ form, disabled }: RoleExperienceSte
                 <input
                   type="text"
                   {...register(`previous_ambassador_programs.${index}.project_name`)}
-                  className="block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-2 text-sm focus:ring-black disabled:bg-gray-100"
+                  className="block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-2 text-xl focus:ring-black disabled:bg-gray-100"
                   disabled={disabled}
                   placeholder="e.g., Sui Foundation"
                 />
@@ -165,7 +165,7 @@ export default function RoleExperienceStep({ form, disabled }: RoleExperienceSte
                 <input
                   type="text"
                   {...register(`previous_ambassador_programs.${index}.role`)}
-                  className="block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-2 text-sm focus:ring-black disabled:bg-gray-100"
+                  className="block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-2 text-xl focus:ring-black disabled:bg-gray-100"
                   disabled={disabled}
                   placeholder="e.g., Community Lead"
                 />
@@ -178,7 +178,7 @@ export default function RoleExperienceStep({ form, disabled }: RoleExperienceSte
                 <input
                   type="text"
                   {...register(`previous_ambassador_programs.${index}.duration`)}
-                  className="block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-2 text-sm focus:ring-black disabled:bg-gray-100"
+                  className="block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-2 text-xl focus:ring-black disabled:bg-gray-100"
                   disabled={disabled}
                   placeholder="e.g., 6 months"
                 />
@@ -195,7 +195,7 @@ export default function RoleExperienceStep({ form, disabled }: RoleExperienceSte
                     setValue(`previous_ambassador_programs.${index}.proof_links`, links)
                   }}
                   defaultValue={field.proof_links?.join(', ')}
-                  className="block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-2 text-sm focus:ring-black disabled:bg-gray-100"
+                  className="block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-2 text-xl focus:ring-black disabled:bg-gray-100"
                   disabled={disabled}
                   placeholder="https://twitter.com/..., https://medium.com/..."
                 />
@@ -204,7 +204,7 @@ export default function RoleExperienceStep({ form, disabled }: RoleExperienceSte
           ))}
 
           {fields.length === 0 && (
-            <p className="text-sm text-gray-500 text-center py-4">
+            <p className="text-xl text-gray-500 text-center py-4">
               Click &quot;Add Program&quot; to add your previous ambassador experience
             </p>
           )}
