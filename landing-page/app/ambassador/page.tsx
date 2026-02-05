@@ -321,7 +321,7 @@ function AmbassadorPageContent() {
                 You&apos;ll receive an email confirmation at the address you provided. We&apos;ll be in
                 touch soon!
               </p>
-              <Link href="/" className="btn btn-black inline-block">
+              <Link href="/" className="btn btn-black text-2xl items-center justify-center flex">
                 Back to Home
               </Link>
             </motion.div>
