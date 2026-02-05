@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, Suspense } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useState, useEffect, useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Loader2, CheckCircle, ArrowLeft } from 'lucide-react'
@@ -45,90 +44,16 @@ const stepSchemasList = [
 ]
 
 export default function AmbassadorPage() {
-  return (
-    <Suspense fallback={<AmbassadorPageLoading />}>
-      <AmbassadorPageContent />
-    </Suspense>
-  )
-}
-
-function AmbassadorPageLoading() {
-  return (
-    <div
-      className="relative min-h-screen bg-white text-black bg-no-repeat"
-      style={{
-        backgroundImage: "url('/img/hero_bg.png')",
-        backgroundSize: '100% auto',
-      }}
-    >
-      <div className="vertical-line left-4"></div>
-      <div className="vertical-line right-4"></div>
-      <div className="relative z-10">
-        <div
-          className="min-h-[300px] md:min-h-[400px] bg-no-repeat bg-top h-full flex items-end pb-16 justify-center text-center bg-cover lg:bg-size-[100%_auto]"
-          style={{
-            backgroundImage: 'url("/img/bannerImage.png")',
-          }}
-        >
-          <div className="text-white max-w-4xl mx-auto px-4">
-            <h1 className="text-2xl md:text-5xl font-bold">
-              Sui Sentinel Ambassador Program
-              <br />
-              Application
-            </h1>
-          </div>
-        </div>
-        <div className="max-w-2xl mx-auto my-16 px-4 flex justify-center">
-          <Loader2 className="size-8 animate-spin text-gray-400" />
-        </div>
-      </div>
-    </div>
-  )
+  return <AmbassadorPageContent />
 }
 
 function AmbassadorPageContent() {
-  const searchParams = useSearchParams()
-  const router = useRouter()
-
-  const stepFromUrl = searchParams.get('step')
-  const initialStep = stepFromUrl ? Math.min(Math.max(parseInt(stepFromUrl, 10) || 1, 1), TOTAL_STEPS) : 1
-  const initialFormState: FormState = stepFromUrl ? 'form' : 'intro'
-
-  const [formState, setFormState] = useState<FormState>(initialFormState)
-  const [currentStep, setCurrentStep] = useState(initialStep)
+  const [formState, setFormState] = useState<FormState>('intro')
+  const [currentStep, setCurrentStep] = useState(1)
   const [applicationId, setApplicationId] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState('')
   const [isSaving, setIsSaving] = useState(false)
-
-  const updateUrlStep = useCallback(
-    (step: number) => {
-      const params = new URLSearchParams(searchParams.toString())
-      params.set('step', step.toString())
-      router.replace(`/ambassador?${params.toString()}`, { scroll: false })
-    },
-    [searchParams, router]
-  )
-
-  // Clear URL params (used on success)
-  const clearUrlParams = useCallback(() => {
-    router.replace('/ambassador', { scroll: false })
-  }, [router])
-
-  useEffect(() => {
-    const stepParam = searchParams.get('step')
-    if (stepParam) {
-      const step = Math.min(Math.max(parseInt(stepParam, 10) || 1, 1), TOTAL_STEPS)
-      setCurrentStep(step)
-      setFormState('form')
-    }
-  }, [searchParams])
-
-  // Sync URL when entering form state or changing steps
-  useEffect(() => {
-    if (formState === 'form' || formState === 'submitting' || formState === 'error') {
-      updateUrlStep(currentStep)
-    }
-  }, [currentStep, formState, updateUrlStep])
+  const [isCheckingEmail, setIsCheckingEmail] = useState(false)
 
   const form = useForm<AmbassadorApplicationFormData>({
     mode: 'onSubmit',
@@ -189,10 +114,48 @@ function AmbassadorPageContent() {
     }
   }
 
-  const handleStartApplication = async () => {
+  const handleStartApplication = () => {
     setFormState('form')
-    updateUrlStep(1)
   }
+
+  const checkExistingEmail = useCallback(async (email: string) => {
+    if (!email || applicationId) return
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) return
+
+    setIsCheckingEmail(true)
+    setErrorMessage('')
+
+    try {
+      const response = await fetch(`/api/ambassador?email=${encodeURIComponent(email)}`)
+      const result = await response.json()
+
+      if (result.isSubmitted) {
+        setErrorMessage('An application has already been submitted with this email.')
+        return
+      }
+
+      if (result.data) {
+        setApplicationId(result.data.id)
+        const existingData = result.data
+        const currentValues = form.getValues()
+
+        Object.keys(existingData).forEach((key) => {
+          if (key in currentValues && existingData[key] !== null) {
+            form.setValue(key as keyof AmbassadorApplicationFormData, existingData[key])
+          }
+        })
+
+        const savedStep = existingData.current_step || 1
+        setCurrentStep(savedStep)
+      }
+    } catch (err) {
+      console.error('Error checking email:', err)
+    } finally {
+      setIsCheckingEmail(false)
+    }
+  }, [applicationId, form])
 
   const saveProgress = async (nextStep?: number, submit = false) => {
     setIsSaving(true)
@@ -256,7 +219,6 @@ function AmbassadorPageContent() {
 
       if (submit) {
         setFormState('success')
-        clearUrlParams()
       }
     } catch (err) {
       setErrorMessage(err instanceof Error ? err.message : 'An error occurred')
@@ -279,9 +241,7 @@ function AmbassadorPageContent() {
 
   const handleBack = () => {
     if (currentStep > 1) {
-      const prevStep = currentStep - 1
-      setCurrentStep(prevStep)
-      updateUrlStep(prevStep)
+      setCurrentStep(currentStep - 1)
     }
   }
 
@@ -296,7 +256,14 @@ function AmbassadorPageContent() {
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return <BasicInfoStep form={form} disabled={isSaving} />
+        return (
+          <BasicInfoStep
+            form={form}
+            disabled={isSaving}
+            onEmailBlur={checkExistingEmail}
+            isCheckingEmail={isCheckingEmail}
+          />
+        )
       case 2:
         return <Web3IdentityStep form={form} disabled={isSaving} />
       case 3:

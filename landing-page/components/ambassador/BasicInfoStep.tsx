@@ -1,19 +1,34 @@
 'use client'
 
 import { UseFormReturn } from 'react-hook-form'
+import { Loader2 } from 'lucide-react'
 import { AmbassadorApplicationFormData } from '@/lib/ambassadorSchema'
 import { COUNTRIES, TIMEZONES } from '@/constants/ambassador'
 
 interface BasicInfoStepProps {
   form: UseFormReturn<AmbassadorApplicationFormData>
   disabled?: boolean
+  onEmailBlur?: (email: string) => void
+  isCheckingEmail?: boolean
 }
 
-export default function BasicInfoStep({ form, disabled }: BasicInfoStepProps) {
+export default function BasicInfoStep({
+  form,
+  disabled,
+  onEmailBlur,
+  isCheckingEmail,
+}: BasicInfoStepProps) {
   const {
     register,
     formState: { errors },
   } = form
+
+  const handleEmailBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const email = e.target.value.trim()
+    if (email && onEmailBlur) {
+      onEmailBlur(email)
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -52,14 +67,22 @@ export default function BasicInfoStep({ form, disabled }: BasicInfoStepProps) {
         <label htmlFor="email" className="block text-sm font-medium text-gray-700">
           Email Address <span className="text-red-500">*</span>
         </label>
-        <input
-          type="email"
-          id="email"
-          {...register('email')}
-          className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black disabled:bg-gray-100"
-          disabled={disabled}
-          placeholder="john@example.com"
-        />
+        <div className="relative">
+          <input
+            type="email"
+            id="email"
+            {...register('email')}
+            onBlur={handleEmailBlur}
+            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black disabled:bg-gray-100"
+            disabled={disabled || isCheckingEmail}
+            placeholder="john@example.com"
+          />
+          {isCheckingEmail && (
+            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+              <Loader2 className="size-5 animate-spin text-gray-400" />
+            </div>
+          )}
+        </div>
         {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
       </div>
 

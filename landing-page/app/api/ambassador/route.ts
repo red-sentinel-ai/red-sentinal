@@ -120,25 +120,54 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'ID or email is required' }, { status: 400 })
     }
 
-    let query = supabaseServiceClient.from('ss_ambassador_applications').select('*')
-
     if (id) {
-      query = query.eq('id', id)
-    } else if (email) {
-      query = query.eq('email', email).eq('status', 'draft')
-    }
+      const { data, error } = await supabaseServiceClient
+        .from('ss_ambassador_applications')
+        .select('*')
+        .eq('id', id)
+        .single()
 
-    const { data, error } = await query.single()
-
-    if (error) {
-      if (error.code === 'PGRST116') {
-        return NextResponse.json({ data: null })
+      if (error) {
+        if (error.code === 'PGRST116') {
+          return NextResponse.json({ data: null })
+        }
+        console.error('Supabase select error:', error)
+        return NextResponse.json({ error: error.message }, { status: 500 })
       }
-      console.error('Supabase select error:', error)
-      return NextResponse.json({ error: error.message }, { status: 500 })
+
+      return NextResponse.json({ success: true, data })
     }
 
-    return NextResponse.json({ success: true, data })
+    // For email lookup: first check for submitted, then check for draft
+    const { data: submittedApp } = await supabaseServiceClient
+      .from('ss_ambassador_applications')
+      .select('id, status')
+      .eq('email', email!)
+      .eq('status', 'submitted')
+      .single()
+
+    if (submittedApp) {
+      return NextResponse.json({
+        success: true,
+        data: { status: 'submitted' },
+        isSubmitted: true,
+      })
+    }
+
+    // Check for draft
+    const { data: draftApp, error: draftError } = await supabaseServiceClient
+      .from('ss_ambassador_applications')
+      .select('*')
+      .eq('email', email!)
+      .eq('status', 'draft')
+      .single()
+
+    if (draftError && draftError.code !== 'PGRST116') {
+      console.error('Supabase select error:', draftError)
+      return NextResponse.json({ error: draftError.message }, { status: 500 })
+    }
+
+    return NextResponse.json({ success: true, data: draftApp || null })
   } catch (err) {
     console.error('API route error:', err)
     return NextResponse.json(
