@@ -17,7 +17,7 @@ export default function ContributionPlanStep({ form, disabled }: ContributionPla
   return (
     <div className="space-y-6">
       <div>
-        <label htmlFor="why_become_ambassador" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="why_become_ambassador" className="block text-2xl font-medium">
           Why do you want to become a Sui Sentinel Ambassador? <span className="text-red-500">*</span>
         </label>
         <textarea
@@ -34,7 +34,7 @@ export default function ContributionPlanStep({ form, disabled }: ContributionPla
       </div>
 
       <div>
-        <label htmlFor="first_30_days_plan" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="first_30_days_plan" className="block text-2xl font-medium">
           What will you do for Sui Sentinel in your first 30 days? <span className="text-red-500">*</span>
         </label>
         <textarea
@@ -51,7 +51,7 @@ export default function ContributionPlanStep({ form, disabled }: ContributionPla
       </div>
 
       <div>
-        <label htmlFor="target_region_language_audience" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="target_region_language_audience" className="block text-2xl font-medium">
           Which region / language / audience will you focus on? <span className="text-red-500">*</span>
         </label>
         <textarea

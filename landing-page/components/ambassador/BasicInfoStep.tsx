@@ -33,7 +33,7 @@ export default function BasicInfoStep({
   return (
     <div className="space-y-6">
       <div>
-        <label htmlFor="full_name" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="full_name" className="block text-2xl font-medium">
           Full Name <span className="text-red-500">*</span>
         </label>
         <input
@@ -50,7 +50,7 @@ export default function BasicInfoStep({
       </div>
 
       <div>
-        <label htmlFor="preferred_name" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="preferred_name" className="block text-2xl font-medium">
           Preferred Name / Nickname
         </label>
         <input
@@ -64,7 +64,7 @@ export default function BasicInfoStep({
       </div>
 
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="email" className="block text-2xl font-medium">
           Email Address <span className="text-red-500">*</span>
         </label>
         <div className="relative">
@@ -87,7 +87,7 @@ export default function BasicInfoStep({
       </div>
 
       <div>
-        <label htmlFor="country" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="country" className="block text-2xl font-medium">
           Country <span className="text-red-500">*</span>
         </label>
         <select
@@ -107,7 +107,7 @@ export default function BasicInfoStep({
       </div>
 
       <div>
-        <label htmlFor="discord_username" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="discord_username" className="block text-2xl font-medium">
           Discord Username <span className="text-red-500">*</span>
         </label>
         <input
@@ -124,7 +124,7 @@ export default function BasicInfoStep({
       </div>
 
       <div>
-        <label htmlFor="timezone" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="timezone" className="block text-2xl font-medium">
           Time Zone <span className="text-red-500">*</span>
         </label>
         <select
@@ -144,7 +144,7 @@ export default function BasicInfoStep({
       </div>
 
       <div>
-        <label htmlFor="telegram_username" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="telegram_username" className="block text-2xl font-medium">
           Telegram Username
         </label>
         <input
