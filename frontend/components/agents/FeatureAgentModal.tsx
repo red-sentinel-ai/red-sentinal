@@ -92,7 +92,7 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
     <Dialog
       open={open}
       onClose={handleClose}
-      className="w-full max-w-lg border-gray-200 bg-white p-6"
+      className="w-full max-w-lg border-gray-200 bg-white p-4 sm:p-6"
     >
       {isCheckingRequest ? (
         <LoadingSkeleton />
@@ -101,13 +101,13 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
       ) : showSuccessState ? (
         <FeatureRequestSuccessState onClose={handleClose} />
       ) : (
-        <div className="space-y-4 text-black">
-          <div className="flex items-start justify-between">
-            <div className="flex items-center gap-3">
-              <Image src="/icons/check-mark.svg" width={24} height={24} alt="checkmark" />
+        <div className="space-y-3 text-black sm:space-y-4">
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Image src="/icons/check-mark.svg" width={24} height={24} alt="checkmark" className="size-5 sm:size-6" />
               <div>
-                <h2 className="text-lg font-bold text-black">Request to Feature Your Agent</h2>
-                <p className="text-xs text-gray-500">
+                <h2 className="text-base font-bold text-black sm:text-lg">Request to Feature Your Agent</h2>
+                <p className="text-[10px] text-gray-500 sm:text-xs">
                   Please share a few details so we can consider your agent for featuring.
                 </p>
                 <div className="mt-2">

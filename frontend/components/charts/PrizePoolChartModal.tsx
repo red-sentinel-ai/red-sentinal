@@ -54,21 +54,21 @@ export const PrizePoolChartModal = ({
   agentName,
 }: PrizePoolChartModalProps) => {
   return (
-    <Dialog open={open} onClose={onClose} className="max-w-3xl border-gray-200 bg-white p-6">
-      <div className="mb-4 flex items-start justify-between">
+    <Dialog open={open} onClose={onClose} className="max-w-3xl border-gray-200 bg-white p-4 sm:p-6">
+      <div className="mb-3 flex items-start justify-between sm:mb-4">
         <div>
-          <h2 className="flex items-center gap-2 text-xl font-bold text-black">
-            <TrendingUp className="text-[#1FAD57]" />
+          <h2 className="flex items-center gap-2 text-base font-bold text-black sm:text-xl">
+            <TrendingUp className="size-5 text-[#1FAD57] sm:size-6" />
             Prize Pool History
           </h2>
-          <p className="text-gray-600">For Sentinel: {agentName}</p>
+          <p className="text-sm text-gray-600 sm:text-base">For Sentinel: {agentName}</p>
         </div>
         <button onClick={onClose} className="text-gray-500 transition-colors hover:text-black">
-          <X className="h-6 w-6" />
+          <X className="size-5 sm:size-6" />
         </button>
       </div>
 
-      <div className="h-[400px] w-full">
+      <div className="h-[280px] w-full sm:h-[400px]">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 20 }}>
             <defs>
@@ -81,18 +81,19 @@ export const PrizePoolChartModal = ({
             <XAxis
               dataKey="time"
               stroke="#6b7280"
-              fontSize={12}
+              fontSize={10}
               tickLine={false}
               axisLine={false}
-              tickFormatter={time => format(new Date(time), 'MMM d, HH:mm')}
+              tickFormatter={time => format(new Date(time), 'MMM d')}
               dy={10}
             />
             <YAxis
               stroke="#6b7280"
-              fontSize={12}
+              fontSize={10}
               tickLine={false}
               axisLine={false}
-              tickFormatter={value => `${value} SUI`}
+              tickFormatter={value => `${value}`}
+              width={40}
             />
             <Tooltip content={<CustomTooltip />} />
             <Area

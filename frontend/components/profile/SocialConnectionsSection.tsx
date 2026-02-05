@@ -91,12 +91,12 @@ export function SocialConnectionsSection() {
   return (
     <div className="px-4 md:px-8">
       {!hasAnyConnection && (
-        <div className="mb-10 rounded-lg border border-[#5E5E5E] bg-gradient-to-r from-white/45 to-[rgba(255,158,244,0.46)] p-4">
+        <div className="mb-6 rounded-lg border border-[#5E5E5E] bg-gradient-to-r from-white/45 to-[rgba(255,158,244,0.46)] p-3 sm:mb-10 sm:p-4">
           <div className="flex items-start gap-3">
-            <Image src="/icons/star-badge-black.png" width={35} height={35} alt="star badge" />
+            <Image src="/icons/star-badge-black.png" width={35} height={35} alt="star badge" className="flex-shrink-0" />
             <div>
-              <p className="text-2xl font-medium">Connect your socials to unlock rewards</p>
-              <p className="mt-1 text-base text-[#5E5E5E]">
+              <p className="text-lg font-medium sm:text-2xl">Connect your socials to unlock rewards</p>
+              <p className="mt-1 text-sm text-[#5E5E5E] sm:text-base">
                 Connect at least one social account to access the rewards program and exclusive
                 benefits.
               </p>
@@ -110,8 +110,8 @@ export function SocialConnectionsSection() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div>
-                <h3 className="tex-lg font-medium text-black md:text-[32px]">Social Connections</h3>
-                <p className="text-2xl text-gray-500">
+                <h3 className="text-xl font-medium text-black sm:text-2xl md:text-[32px]">Social Connections</h3>
+                <p className="text-sm text-gray-500 sm:text-base md:text-2xl">
                   {hasAnyConnection
                     ? `${connectionCount} of 2 platforms connected`
                     : 'Connect your social accounts'}
@@ -131,9 +131,9 @@ export function SocialConnectionsSection() {
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="flex items-center justify-between rounded-lg border border-[#5E5E5E] bg-gradient-to-r from-white/45 to-[rgba(249,240,249,0.46)] p-4">
+            <div className="flex flex-col items-start justify-between gap-3 rounded-lg border border-[#5E5E5E] bg-gradient-to-r from-white/45 to-[rgba(249,240,249,0.46)] p-4 sm:flex-row sm:items-center">
               <div className="flex items-center gap-3">
-                <div className="relative flex h-10 w-10 items-center justify-center rounded-lg border border-[#5E5E5E] md:h-[70px] md:w-[70px]">
+                <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-[#5E5E5E] md:h-[70px] md:w-[70px]">
                   <Image
                     src="/icons/x_black.png"
                     width={42}
@@ -146,8 +146,8 @@ export function SocialConnectionsSection() {
                   )}
                 </div>
                 <div>
-                  <p className="text-2xl font-medium">X (Twitter)</p>
-                  <p className="text-base text-[#5E5E5E]">
+                  <p className="text-lg font-medium sm:text-2xl">X (Twitter)</p>
+                  <p className="text-sm text-[#5E5E5E] sm:text-base">
                     {hasTwitter ? 'Connected' : 'Not connected'}
                   </p>
                 </div>
@@ -162,7 +162,7 @@ export function SocialConnectionsSection() {
                   size="sm"
                   variant="outline"
                   disabled={disconnectingPlatform === 'twitter'}
-                  className="flex h-[50px] min-w-[145px] items-center gap-1 border-red-200 px-3 text-base text-red-600 hover:border-red-300 hover:bg-red-50 hover:text-red-700 disabled:opacity-50"
+                  className="flex h-[40px] min-w-[100px] items-center gap-1 border-red-200 px-2 text-sm text-red-600 hover:border-red-300 hover:bg-red-50 hover:text-red-700 disabled:opacity-50 sm:h-[50px] sm:min-w-[145px] sm:px-3 sm:text-base"
                 >
                   {disconnectingPlatform === 'twitter' ? (
                     <>
@@ -184,7 +184,7 @@ export function SocialConnectionsSection() {
                   }}
                   size="sm"
                   disabled={connectingPlatform === 'twitter'}
-                  className="btn btn-outline flex h-[50px] w-[145px] items-center gap-1 text-base"
+                  className="btn btn-outline flex h-[40px] w-[100px] items-center gap-1 text-sm sm:h-[50px] sm:w-[145px] sm:text-base"
                 >
                   {connectingPlatform === 'twitter' ? (
                     <>
@@ -198,13 +198,13 @@ export function SocialConnectionsSection() {
               )}
             </div>
 
-            <div className="flex items-center justify-between rounded-lg border border-[#5E5E5E] bg-gradient-to-r from-white/45 to-[rgba(249,240,249,0.46)] p-4">
+            <div className="flex flex-col items-start justify-between gap-3 rounded-lg border border-[#5E5E5E] bg-gradient-to-r from-white/45 to-[rgba(249,240,249,0.46)] p-4 sm:flex-row sm:items-center">
               <div className="flex items-center gap-3">
-                <div className="relative">
+                <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-[#5E5E5E] md:h-[70px] md:w-[70px]">
                   <Image
                     src="/icons/discord_black.svg"
-                    width={20}
-                    height={20}
+                    width={42}
+                    height={42}
                     alt="Discord"
                     className="rounded"
                   />
@@ -213,8 +213,8 @@ export function SocialConnectionsSection() {
                   )}
                 </div>
                 <div>
-                  <p className="text-2xl font-medium">Discord</p>
-                  <p className="text-base text-[#5E5E5E]">
+                  <p className="text-lg font-medium sm:text-2xl">Discord</p>
+                  <p className="text-sm text-[#5E5E5E] sm:text-base">
                     {hasDiscord ? 'Connected' : 'Not connected'}
                   </p>
                 </div>
@@ -229,7 +229,7 @@ export function SocialConnectionsSection() {
                   size="sm"
                   variant="outline"
                   disabled={disconnectingPlatform === 'discord'}
-                  className="flex h-[50px] min-w-[145px] items-center gap-1 border-red-200 px-3 text-base text-red-600 hover:border-red-300 hover:bg-red-50 hover:text-red-700 disabled:opacity-50"
+                  className="flex h-[40px] min-w-[100px] items-center gap-1 border-red-200 px-2 text-sm text-red-600 hover:border-red-300 hover:bg-red-50 hover:text-red-700 disabled:opacity-50 sm:h-[50px] sm:min-w-[145px] sm:px-3 sm:text-base"
                 >
                   {disconnectingPlatform === 'discord' ? (
                     <>
@@ -251,7 +251,7 @@ export function SocialConnectionsSection() {
                   }}
                   size="sm"
                   disabled={connectingPlatform === 'discord'}
-                  className="btn btn-outline h-[50px] w-[145px] text-base"
+                  className="btn btn-outline h-[40px] w-[100px] text-sm sm:h-[50px] sm:w-[145px] sm:text-base"
                 >
                   {connectingPlatform === 'discord' ? (
                     <>
