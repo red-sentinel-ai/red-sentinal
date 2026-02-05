@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -46,11 +47,39 @@ const stepSchemasList = [
 ]
 
 export default function AmbassadorPage() {
-  const [formState, setFormState] = useState<FormState>('intro')
-  const [currentStep, setCurrentStep] = useState(1)
+  const searchParams = useSearchParams()
+  const router = useRouter()
+
+  const stepFromUrl = searchParams.get('step')
+  const initialStep = stepFromUrl ? Math.min(Math.max(parseInt(stepFromUrl, 10) || 1, 1), TOTAL_STEPS) : 1
+  const initialFormState: FormState = stepFromUrl ? 'form' : 'intro'
+
+  const [formState, setFormState] = useState<FormState>(initialFormState)
+  const [currentStep, setCurrentStep] = useState(initialStep)
   const [applicationId, setApplicationId] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState('')
   const [isSaving, setIsSaving] = useState(false)
+
+  const updateUrlStep = useCallback(
+    (step: number) => {
+      const params = new URLSearchParams(searchParams.toString())
+      params.set('step', step.toString())
+      router.replace(`/ambassador?${params.toString()}`, { scroll: false })
+    },
+    [searchParams, router]
+  )
+
+  // Clear URL params (used on success)
+  const clearUrlParams = useCallback(() => {
+    router.replace('/ambassador', { scroll: false })
+  }, [router])
+
+  // Sync URL when entering form state or changing steps
+  useEffect(() => {
+    if (formState === 'form' || formState === 'submitting' || formState === 'error') {
+      updateUrlStep(currentStep)
+    }
+  }, [currentStep, formState, updateUrlStep])
 
   const form = useForm<AmbassadorApplicationFormData>({
     resolver: zodResolver(ambassadorApplicationSchema),
@@ -103,6 +132,7 @@ export default function AmbassadorPage() {
 
   const handleStartApplication = async () => {
     setFormState('form')
+    updateUrlStep(1)
   }
 
   const saveProgress = async (nextStep?: number, submit = false) => {
@@ -167,6 +197,7 @@ export default function AmbassadorPage() {
 
       if (submit) {
         setFormState('success')
+        clearUrlParams()
       }
     } catch (err) {
       setErrorMessage(err instanceof Error ? err.message : 'An error occurred')
@@ -189,7 +220,9 @@ export default function AmbassadorPage() {
 
   const handleBack = () => {
     if (currentStep > 1) {
-      setCurrentStep(currentStep - 1)
+      const prevStep = currentStep - 1
+      setCurrentStep(prevStep)
+      updateUrlStep(prevStep)
     }
   }
 
