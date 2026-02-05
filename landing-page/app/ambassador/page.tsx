@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Loader2, CheckCircle, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
@@ -17,7 +16,6 @@ import {
   roleExperienceSchema,
   contributionPlanSchema,
   commitmentSchema,
-  ambassadorApplicationSchema,
 } from '@/lib/ambassadorSchema'
 import { AMBASSADOR_INTRO_TEXT } from '@/constants/ambassador'
 import {
@@ -74,6 +72,15 @@ export default function AmbassadorPage() {
     router.replace('/ambassador', { scroll: false })
   }, [router])
 
+  useEffect(() => {
+    const stepParam = searchParams.get('step')
+    if (stepParam) {
+      const step = Math.min(Math.max(parseInt(stepParam, 10) || 1, 1), TOTAL_STEPS)
+      setCurrentStep(step)
+      setFormState('form')
+    }
+  }, [searchParams])
+
   // Sync URL when entering form state or changing steps
   useEffect(() => {
     if (formState === 'form' || formState === 'submitting' || formState === 'error') {
@@ -82,8 +89,7 @@ export default function AmbassadorPage() {
   }, [currentStep, formState, updateUrlStep])
 
   const form = useForm<AmbassadorApplicationFormData>({
-    resolver: zodResolver(ambassadorApplicationSchema),
-    mode: 'onTouched',
+    mode: 'onSubmit',
     defaultValues: {
       full_name: '',
       preferred_name: '',
@@ -111,19 +117,30 @@ export default function AmbassadorPage() {
     },
   })
 
+  // Clear all form errors when step changes
+  useEffect(() => {
+    form.clearErrors()
+  }, [currentStep, form])
+
   const validateCurrentStep = async () => {
     const currentSchema = stepSchemasList[currentStep - 1]
     const values = form.getValues()
+
+    const fields = Object.keys(currentSchema.shape) as (keyof AmbassadorApplicationFormData)[]
+    fields.forEach((field) => {
+      form.clearErrors(field)
+    })
 
     try {
       await currentSchema.parseAsync(values)
       return true
     } catch (error) {
       if (error instanceof z.ZodError) {
-        // Trigger form validation for the fields
-        const fields = Object.keys(currentSchema.shape) as (keyof AmbassadorApplicationFormData)[]
-        fields.forEach((field) => {
-          form.trigger(field)
+        error.issues.forEach((issue) => {
+          const fieldName = issue.path[0] as keyof AmbassadorApplicationFormData
+          if (fieldName) {
+            form.setError(fieldName, { type: 'manual', message: issue.message })
+          }
         })
       }
       return false
