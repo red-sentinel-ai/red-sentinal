@@ -426,9 +426,9 @@ function AmbassadorPageContent() {
                             type="button"
                             onClick={handleBack}
                             disabled={isSaving || formState === 'submitting'}
-                            className="btn btn-outline flex items-center gap-2"
+                            className="btn btn-outline flex items-center gap-2 justify-center text-2xl"
                           >
-                            <ArrowLeft size={16} />
+                            <ArrowLeft size={24} />
                             Back
                           </button>
                         )}
