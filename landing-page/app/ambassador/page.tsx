@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -45,6 +45,48 @@ const stepSchemasList = [
 ]
 
 export default function AmbassadorPage() {
+  return (
+    <Suspense fallback={<AmbassadorPageLoading />}>
+      <AmbassadorPageContent />
+    </Suspense>
+  )
+}
+
+function AmbassadorPageLoading() {
+  return (
+    <div
+      className="relative min-h-screen bg-white text-black bg-no-repeat"
+      style={{
+        backgroundImage: "url('/img/hero_bg.png')",
+        backgroundSize: '100% auto',
+      }}
+    >
+      <div className="vertical-line left-4"></div>
+      <div className="vertical-line right-4"></div>
+      <div className="relative z-10">
+        <div
+          className="min-h-[300px] md:min-h-[400px] bg-no-repeat bg-top h-full flex items-end pb-16 justify-center text-center bg-cover lg:bg-size-[100%_auto]"
+          style={{
+            backgroundImage: 'url("/img/bannerImage.png")',
+          }}
+        >
+          <div className="text-white max-w-4xl mx-auto px-4">
+            <h1 className="text-2xl md:text-5xl font-bold">
+              Sui Sentinel Ambassador Program
+              <br />
+              Application
+            </h1>
+          </div>
+        </div>
+        <div className="max-w-2xl mx-auto my-16 px-4 flex justify-center">
+          <Loader2 className="size-8 animate-spin text-gray-400" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function AmbassadorPageContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
 
