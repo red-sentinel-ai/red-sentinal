@@ -1,0 +1,138 @@
+'use client'
+
+import { UseFormReturn } from 'react-hook-form'
+import { AmbassadorApplicationFormData } from '@/lib/ambassadorSchema'
+import { COUNTRIES, TIMEZONES } from '@/constants/ambassador'
+
+interface BasicInfoStepProps {
+  form: UseFormReturn<AmbassadorApplicationFormData>
+  disabled?: boolean
+}
+
+export default function BasicInfoStep({ form, disabled }: BasicInfoStepProps) {
+  const {
+    register,
+    formState: { errors },
+  } = form
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <label htmlFor="full_name" className="block text-sm font-medium text-gray-700">
+          Full Name <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          id="full_name"
+          {...register('full_name')}
+          className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black disabled:bg-gray-100"
+          disabled={disabled}
+          placeholder="John Doe"
+        />
+        {errors.full_name && (
+          <p className="mt-1 text-sm text-red-600">{errors.full_name.message}</p>
+        )}
+      </div>
+
+      <div>
+        <label htmlFor="preferred_name" className="block text-sm font-medium text-gray-700">
+          Preferred Name / Nickname
+        </label>
+        <input
+          type="text"
+          id="preferred_name"
+          {...register('preferred_name')}
+          className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black disabled:bg-gray-100"
+          disabled={disabled}
+          placeholder="Johnny"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+          Email Address <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="email"
+          id="email"
+          {...register('email')}
+          className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black disabled:bg-gray-100"
+          disabled={disabled}
+          placeholder="john@example.com"
+        />
+        {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
+      </div>
+
+      <div>
+        <label htmlFor="country" className="block text-sm font-medium text-gray-700">
+          Country <span className="text-red-500">*</span>
+        </label>
+        <select
+          id="country"
+          {...register('country')}
+          className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black disabled:bg-gray-100"
+          disabled={disabled}
+        >
+          <option value="">Select your country</option>
+          {COUNTRIES.map((country) => (
+            <option key={country} value={country}>
+              {country}
+            </option>
+          ))}
+        </select>
+        {errors.country && <p className="mt-1 text-sm text-red-600">{errors.country.message}</p>}
+      </div>
+
+      <div>
+        <label htmlFor="discord_username" className="block text-sm font-medium text-gray-700">
+          Discord Username <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          id="discord_username"
+          {...register('discord_username')}
+          className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black disabled:bg-gray-100"
+          disabled={disabled}
+          placeholder="username#1234"
+        />
+        {errors.discord_username && (
+          <p className="mt-1 text-sm text-red-600">{errors.discord_username.message}</p>
+        )}
+      </div>
+
+      <div>
+        <label htmlFor="timezone" className="block text-sm font-medium text-gray-700">
+          Time Zone <span className="text-red-500">*</span>
+        </label>
+        <select
+          id="timezone"
+          {...register('timezone')}
+          className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black disabled:bg-gray-100"
+          disabled={disabled}
+        >
+          <option value="">Select your timezone</option>
+          {TIMEZONES.map((tz) => (
+            <option key={tz.value} value={tz.value}>
+              {tz.label}
+            </option>
+          ))}
+        </select>
+        {errors.timezone && <p className="mt-1 text-sm text-red-600">{errors.timezone.message}</p>}
+      </div>
+
+      <div>
+        <label htmlFor="telegram_username" className="block text-sm font-medium text-gray-700">
+          Telegram Username
+        </label>
+        <input
+          type="text"
+          id="telegram_username"
+          {...register('telegram_username')}
+          className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-black p-3 focus:ring-black disabled:bg-gray-100"
+          disabled={disabled}
+          placeholder="@username"
+        />
+      </div>
+    </div>
+  )
+}
