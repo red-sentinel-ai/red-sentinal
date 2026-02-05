@@ -375,7 +375,7 @@ function AmbassadorPageContent() {
                 <p className="leading-relaxed whitespace-pre-line mb-8 text-2xl">
                   {AMBASSADOR_INTRO_TEXT}
                 </p>
-                <button onClick={handleStartApplication} className="btn btn-black w-full md:w-auto">
+                <button onClick={handleStartApplication} className="btn btn-black w-full md:w-auto text-2xl">
                   Apply Now
                 </button>
               </motion.div>
@@ -426,7 +426,7 @@ function AmbassadorPageContent() {
                             type="button"
                             onClick={handleBack}
                             disabled={isSaving || formState === 'submitting'}
-                            className="btn btn-outline flex items-center gap-2 justify-center text-2xl"
+                            className="btn btn-outline flex items-center gap-2 justify-center min-w-[220px] text-2xl"
                           >
                             <ArrowLeft size={24} />
                             Back
@@ -440,7 +440,7 @@ function AmbassadorPageContent() {
                             type="button"
                             onClick={handleNext}
                             disabled={isSaving}
-                            className="btn btn-black flex items-center justify-center min-w-[140px]"
+                            className="btn btn-black flex items-center justify-center min-w-[220px] text-2xl"
                           >
                             {isSaving ? (
                               <Loader2 size={20} className="animate-spin" />
@@ -453,7 +453,7 @@ function AmbassadorPageContent() {
                             type="button"
                             onClick={handleSubmit}
                             disabled={isSaving || formState === 'submitting'}
-                            className="btn btn-black flex items-center justify-center min-w-[140px]"
+                            className="btn btn-black flex items-center justify-center min-w-[220px] text-2xl"
                           >
                             {formState === 'submitting' || isSaving ? (
                               <Loader2 size={20} className="animate-spin" />
