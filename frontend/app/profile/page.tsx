@@ -16,7 +16,7 @@ import { EditProfileModal } from '@/components/profile/EditProfileModal'
 import { SocialConnectionsSectionWrapper } from '@/components/profile/SocialConnectionsSectionWrapper'
 import { useUserProfile, useUpdateAvatar } from '@/hooks/profile/useUserProfile'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
-import { SENTINEL_GIFS, USER_IMAGES } from '@/constants'
+import { SENTINEL_GIFS, USER_IMAGES } from '@/constants/asset_paths'
 import { useSentinelBalance } from '@/hooks/rewards/useSentinelBalance'
 
 const PROFILE_TABS = {

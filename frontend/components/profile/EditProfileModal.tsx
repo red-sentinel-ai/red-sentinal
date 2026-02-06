@@ -7,7 +7,7 @@ import { Dialog } from '@/components/Dialog'
 import { ProfileEditForm } from './ProfileEditForm'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 import type { Tables } from '@/lib/database.types'
-import { SENTINEL_GIFS, USER_IMAGES } from '@/constants'
+import { SENTINEL_GIFS, USER_IMAGES } from '@/constants/asset_paths'
 
 type SelectedImage = {
   previewUrl: string

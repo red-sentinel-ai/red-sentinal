@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
-import { TESTNET_SENTINEL_COIN_TYPE } from '@/constants'
+import { SUI_CONFIG } from '@/constants'
 import { REWARDS_CONSTANTS } from '@/constants/rewards'
 
 interface SentinelBalanceResult {
@@ -43,7 +43,7 @@ export function useSentinelBalance(): SentinelBalanceResult {
       try {
         const result = await client.getBalance({
           owner: account.address,
-          coinType: TESTNET_SENTINEL_COIN_TYPE,
+          coinType: SUI_CONFIG.SENTINEL_COIN_TYPE,
         })
 
         const rawBalance = Math.floor(Number(result.totalBalance))
