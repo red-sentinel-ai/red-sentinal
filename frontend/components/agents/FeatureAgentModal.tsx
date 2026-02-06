@@ -72,6 +72,7 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
         agent_id: agentId,
         telegram_username: form.telegram_username || undefined,
         twitter_username: form.twitter_username || undefined,
+        status: 'pending',
       })
 
       setShowSuccessState(true)
@@ -104,9 +105,17 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
         <div className="space-y-3 text-black sm:space-y-4">
           <div className="flex items-start justify-between gap-2">
             <div className="flex items-center gap-2 sm:gap-3">
-              <Image src="/icons/check-mark.svg" width={24} height={24} alt="checkmark" className="size-5 sm:size-6" />
+              <Image
+                src="/icons/check-mark.svg"
+                width={24}
+                height={24}
+                alt="checkmark"
+                className="size-5 sm:size-6"
+              />
               <div>
-                <h2 className="text-base font-bold text-black sm:text-lg">Request to Feature Your Agent</h2>
+                <h2 className="text-base font-bold text-black sm:text-lg">
+                  Request to Feature Your Agent
+                </h2>
                 <p className="text-[10px] text-gray-500 sm:text-xs">
                   Please share a few details so we can consider your agent for featuring.
                 </p>
