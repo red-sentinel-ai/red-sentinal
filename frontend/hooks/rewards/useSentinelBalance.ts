@@ -46,7 +46,7 @@ export function useSentinelBalance(): SentinelBalanceResult {
           coinType: TESTNET_SENTINEL_COIN_TYPE,
         })
 
-        const rawBalance = Number(result.totalBalance) / 10
+        const rawBalance = Math.floor(Number(result.totalBalance) / 10)
         const formatted = rawBalance.toLocaleString(undefined, {
           minimumFractionDigits: 0,
           maximumFractionDigits: 2,
