@@ -31,7 +31,6 @@ import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
 import { useTokenCount } from '@/hooks/useTokenCount'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 import { FundSuccessModal } from '@/components/FundSuccessModal'
-import { useRewardsMissionTracker } from '@/hooks/rewards/useRewardsMissionTracker'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 import { CustomDropdown } from '@/components/ui/common/CustomDropdown'
 import { RewardsConditions } from '@/components/defend/RewardsConditions'
@@ -215,8 +214,6 @@ export default function DefendPage() {
   const [showFundModal, setShowFundModal] = useState(false)
   const [showFundSuccessModal, setShowFundSuccessModal] = useState(false)
   const [fundedAmount, setFundedAmount] = useState('')
-  const { trackLaunchSentinel } = useRewardsMissionTracker()
-
   const handleProviderChange = (provider: string) => {
     const defaultModelForProvider = PROVIDER_MODELS[provider]?.[0] || DEFAULT_MODEL
 
@@ -383,13 +380,6 @@ export default function DefendPage() {
         system_prompt_length: formData.systemPrompt.length,
         system_prompt_tokens: tokenCount,
         tx_digest: result.digest.toString(),
-      })
-
-      trackLaunchSentinel(result.digest.toString(), {
-        agent_id: agent_id,
-        agent_name: agentName,
-        agent_object_id: agentObjectId,
-        owner_address: account!.address,
       })
 
       const payload = new FormData()
