@@ -65,7 +65,7 @@ export const useWithdrawAgent = (options: UseWithdrawAgentOptions = {}) => {
         const amountInMist = BigInt(Math.floor(amount * MIST_PER_SUI))
 
         tx.moveCall({
-          target: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::withdraw_from_agent`,
+          target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::withdraw_from_agent`,
           arguments: [
             tx.object(agentObjectId),
             tx.pure.u64(amountInMist),

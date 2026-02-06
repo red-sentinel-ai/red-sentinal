@@ -1,10 +1,8 @@
 'use client'
 
-import { useState } from 'react'
 import Image from 'next/image'
-import { Check, Clock, Trophy, Zap, Repeat, Target, ExternalLink, HelpCircle } from 'lucide-react'
+import { Check, Clock, Trophy, Zap, Repeat, Target, Lock, HelpCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { useCurrentAccount } from '@mysten/dapp-kit'
 
 import type { MissionCompletionCounts, RewardsMission } from '@/types/Rewards'
 import {
@@ -18,8 +16,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '../ui'
-import { SOCIAL_MEDIA_URLS } from '@/constants'
-import { useRewardsMissionTracker } from '@/hooks/rewards/useRewardsMissionTracker'
 
 interface MissionCardProps {
   mission: RewardsMission
@@ -42,39 +38,12 @@ const getSocialMissionIcon = (missionType: string) => {
   }
 }
 
-const getSocialMissionUrl = (missionType: string): string | null => {
-  switch (missionType) {
-    case 'follow_x':
-      return SOCIAL_MEDIA_URLS.TWITTER_FOLLOW
-    case 'retweet':
-      return SOCIAL_MEDIA_URLS.TWITTER_PROFILE
-    case 'share_with_hashtag':
-      return SOCIAL_MEDIA_URLS.TWITTER_TWEET
-    case 'join_telegram':
-      return SOCIAL_MEDIA_URLS.TELEGRAM_JOIN
-    case 'telegram_engage':
-      return SOCIAL_MEDIA_URLS.TELEGRAM_GENERAL_CHAT_URL
-    default:
-      return null
-  }
-}
-
 export function MissionCard({
   mission,
   completionCounts,
   isCompleted,
   pointsSymbol,
 }: MissionCardProps) {
-  const { address } = useCurrentAccount()
-  const [isProcessing, setIsProcessing] = useState(false)
-  const {
-    trackFollowedOnX,
-    trackRetweet,
-    trackShareWithHashtag,
-    trackJoinedTelegram,
-    trackTelegramEngage,
-  } = useRewardsMissionTracker()
-
   const isOneTime = mission.frequency === 'one_time'
   const hasLimit = mission.max_per_week || mission.max_per_day
   const isRepeatable = !isOneTime
@@ -107,43 +76,6 @@ export function MissionCard({
     }
 
     return displayText
-  }
-
-  const handleSocialMissionClick = async () => {
-    if (!address || isProcessing) return
-    const socialUrl = getSocialMissionUrl(mission.type)
-    if (!socialUrl) return
-
-    setIsProcessing(true)
-    try {
-      window.open(socialUrl, '_blank', 'noopener,noreferrer')
-      await new Promise(resolve => setTimeout(resolve, 2000))
-
-      const metadata = {
-        walletAddress: address,
-      }
-
-      switch (mission.type) {
-        case 'follow_x':
-          trackFollowedOnX('social_mission', metadata)
-          break
-        case 'retweet':
-          trackRetweet('social_mission', metadata)
-          break
-        case 'share_with_hashtag':
-          trackShareWithHashtag('social_mission', metadata)
-          break
-        case 'join_telegram':
-          trackJoinedTelegram('social_mission', metadata)
-          break
-        case 'telegram_engage':
-          trackTelegramEngage('social_mission', metadata)
-      }
-    } catch (error) {
-      console.error('Error completing social mission:', error)
-    } finally {
-      setIsProcessing(false)
-    }
   }
 
   return (
@@ -213,26 +145,15 @@ export function MissionCard({
                 </Badge>
               )}
             </div>
-            {isSocialMission && (!isOneTime || !isCompleted) && (
+            {isSocialMission && (
               <div className="mt-auto">
-                <motion.button
-                  onClick={handleSocialMissionClick}
-                  disabled={!address || isProcessing}
-                  className="btn btn-outline mt-auto w-full disabled:opacity-50"
-                  whileTap={{ scale: 0.98 }}
+                <button
+                  disabled
+                  className="btn btn-outline mt-auto w-full cursor-not-allowed opacity-50"
                 >
-                  {isProcessing ? (
-                    <>
-                      <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-current"></div>
-                      Processing...
-                    </>
-                  ) : (
-                    <>
-                      <ExternalLink className="h-4 w-4" />
-                      Do Now
-                    </>
-                  )}
-                </motion.button>
+                  <Lock className="h-4 w-4" />
+                  Coming Soon
+                </button>
               </div>
             )}
           </div>

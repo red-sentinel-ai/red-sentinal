@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { User, Folder, Activity, Loader2, Camera, Gift, BarChart3 } from 'lucide-react'
-import { useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
+import { useCurrentAccount } from '@mysten/dapp-kit'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { UserActivity } from '@/components/profile/UserActivity'
@@ -16,7 +16,8 @@ import { EditProfileModal } from '@/components/profile/EditProfileModal'
 import { SocialConnectionsSectionWrapper } from '@/components/profile/SocialConnectionsSectionWrapper'
 import { useUserProfile, useUpdateAvatar } from '@/hooks/profile/useUserProfile'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
-import { SENTINEL_GIFS, TESTNET_SENTINEL_COIN_TYPE, USER_IMAGES } from '@/constants'
+import { SENTINEL_GIFS, USER_IMAGES } from '@/constants'
+import { useSentinelBalance } from '@/hooks/rewards/useSentinelBalance'
 
 const PROFILE_TABS = {
   AGENTS: 'agents',
@@ -31,33 +32,14 @@ export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState<ProfileTabValue>(PROFILE_TABS.AGENTS)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isImagePickerOpen, setIsImagePickerOpen] = useState(false)
-  const [sentinelBalance, setSentinelBalance] = useState<string>('0')
 
   const account = useCurrentAccount()
-  const client = useSuiClient()
   const { data: profile, isLoading: isLoadingProfile } = useUserProfile()
+  const { formattedBalance: sentinelBalance } = useSentinelBalance()
 
   const { mutate: updateAvatar, isPending: isUpdatingAvatar } = useUpdateAvatar({
     onSuccess: () => setIsImagePickerOpen(false),
   })
-
-  useEffect(() => {
-    const fetchSentinelBalance = async () => {
-      if (!account?.address) return
-
-      try {
-        const balance = await client.getBalance({
-          owner: account.address,
-          coinType: TESTNET_SENTINEL_COIN_TYPE,
-        })
-        setSentinelBalance(balance.totalBalance)
-      } catch (error) {
-        console.error('Failed to fetch SENTINEL balance:', error)
-      }
-    }
-
-    fetchSentinelBalance()
-  }, [account?.address, client])
 
   const handleTabChange = (value: string) => {
     setActiveTab(value as ProfileTabValue)
