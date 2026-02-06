@@ -99,8 +99,8 @@ export const FeaturedAgentCard = ({
       transition={{ duration: 0.4, delay: index * 0.1 }}
     >
       <div className="h-full w-full overflow-hidden rounded-lg bg-white p-2 lg:rounded-xl lg:p-6">
-        <div className="relative mb-4">
-          <div className="relative flex h-80 w-full items-center justify-center overflow-hidden rounded-lg bg-gray-100">
+        <div className="relative mb-2 sm:mb-4">
+          <div className="relative flex h-32 w-full items-center justify-center overflow-hidden rounded-lg bg-gray-100 sm:h-80">
             {agent.agent_profile ? (
               <Image
                 src={agent.agent_profile || '/placeholder.svg'}
@@ -128,32 +128,32 @@ export const FeaturedAgentCard = ({
           </div>
         </div>
 
-        <div className="mb-4 text-center">
-          <div className="mb-2 flex items-center justify-center gap-1">
-            <h3 className="truncate text-lg font-medium lg:text-2xl">{agent.agent_name}</h3>
+        <div className="mb-2 text-center sm:mb-4">
+          <div className="mb-1 flex items-center justify-center gap-1 sm:mb-2">
+            <h3 className="truncate text-sm font-medium sm:text-lg lg:text-2xl">{agent.agent_name}</h3>
             {agent.is_featured && (
-              <Image src="/icons/check-mark.svg" width={20} height={20} alt="checkmark" />
+              <Image src="/icons/check-mark.svg" width={20} height={20} alt="checkmark" className="size-4 sm:size-5" />
             )}
           </div>
           <div className="mx-auto flex max-w-[394px] border-t border-gray-200"></div>
         </div>
 
-        <div className="mb-4 space-y-3 text-xl font-medium">
-          <div className="flex items-center justify-between">
+        <div className="mb-2 space-y-1 text-xs font-medium sm:mb-4 sm:space-y-3 sm:text-base lg:text-xl">
+          <div className="flex flex-col items-start gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
             <span className="text-[#5E5E5E]">Reward Pool:</span>
             <div className="flex items-center">
-              <span className="mr-2">{formatBalance(agent.balance)}</span>
+              <span className="mr-1 sm:mr-2">{formatBalance(agent.balance)}</span>
               <PrizePoolChangeDisplay agentId={agent.agent_id} variant="card" />
             </div>
           </div>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col items-start gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
             <span className="text-[#5E5E5E]">Message price:</span>
             <span>{formatCost(agent.cost_per_message)}</span>
           </div>
         </div>
 
         {fromProfile && (
-          <div className="mb-4 text-center text-xs">
+          <div className="mb-2 text-center text-[10px] sm:mb-4 sm:text-xs">
             {isWithdrawalLocked ? (
               <span className="font-medium text-yellow-700">{timeRemaining}</span>
             ) : (
@@ -162,27 +162,27 @@ export const FeaturedAgentCard = ({
           </div>
         )}
 
-        <div className="mt-auto flex flex-col gap-2">
+        <div className="mt-auto flex flex-col gap-1.5 sm:gap-2">
           <button
             onClick={e => {
               e.stopPropagation()
               handleAttack()
             }}
-            className="btn btn-black h-[62px] w-full text-xl"
+            className="btn btn-black h-9 w-full text-xs sm:h-[62px] sm:text-xl"
           >
-            {fromProfile ? 'View Sentinel' : ctaHeading}
+            {fromProfile ? 'View' : ctaHeading}
           </button>
           {fromProfile && (
-            <div className="flex gap-2">
+            <div className="flex gap-1.5 sm:gap-2">
               <button
                 onClick={() => openModal(agent.object_id, agent.agent_id)}
-                className="btn btn-black w-1/2"
+                className="btn btn-black w-1/2 px-2 py-1.5 text-[10px] sm:px-4 sm:py-2.5 sm:text-sm"
               >
                 Fund
               </button>
               <button
                 onClick={() => openWithdrawModal(agent.object_id, agent.balance)}
-                className="btn btn-outline w-1/2"
+                className="btn btn-outline w-1/2 px-2 py-1.5 text-[10px] sm:px-4 sm:py-2.5 sm:text-sm"
                 disabled={isWithdrawalLocked || agent.balance === 0}
                 title={
                   isWithdrawalLocked

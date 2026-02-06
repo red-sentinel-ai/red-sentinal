@@ -19,8 +19,8 @@ export const LandingPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.1 }}
           >
-            <h2 className="text-[40px] uppercase text-text">#Sui Sentinel</h2>
-            <p className="">
+            <h2 className="text-2xl uppercase text-text sm:text-[32px] md:text-[40px]">#Sui Sentinel</h2>
+            <p className="text-sm sm:text-base">
               Stress-test AI systems through adversarial combat. Deploy defenses, hunt
               vulnerabilities, and earn rewards in the world&apos;s first cryptoeconomic AI security
               platform.

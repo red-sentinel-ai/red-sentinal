@@ -74,6 +74,7 @@ export type Database = {
           collection_id: string
           collection_type: string | null
           contract_address: string | null
+          contract_artifact_hash: string | null
           created_at: string | null
           creator_address: string
           description: string
@@ -111,6 +112,7 @@ export type Database = {
           collection_id?: string
           collection_type?: string | null
           contract_address?: string | null
+          contract_artifact_hash?: string | null
           created_at?: string | null
           creator_address: string
           description: string
@@ -148,6 +150,7 @@ export type Database = {
           collection_id?: string
           collection_type?: string | null
           contract_address?: string | null
+          contract_artifact_hash?: string | null
           created_at?: string | null
           creator_address?: string
           description?: string
@@ -655,6 +658,97 @@ export type Database = {
         }
         Relationships: []
       }
+      raven_comments: {
+        Row: {
+          commenter_hash: string
+          confession_id: number | null
+          content: string
+          created_at: string | null
+          id: number
+        }
+        Insert: {
+          commenter_hash: string
+          confession_id?: number | null
+          content: string
+          created_at?: string | null
+          id?: never
+        }
+        Update: {
+          commenter_hash?: string
+          confession_id?: number | null
+          content?: string
+          created_at?: string | null
+          id?: never
+        }
+        Relationships: [
+          {
+            foreignKeyName: "raven_comments_confession_id_fkey"
+            columns: ["confession_id"]
+            isOneToOne: false
+            referencedRelation: "raven_confessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      raven_confessions: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: number
+          nullifier_hash: string
+          tips_count: number | null
+          title: string
+          total_tips_value: number | null
+          views_count: number | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: never
+          nullifier_hash: string
+          tips_count?: number | null
+          title: string
+          total_tips_value?: number | null
+          views_count?: number | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: never
+          nullifier_hash?: string
+          tips_count?: number | null
+          title?: string
+          total_tips_value?: number | null
+          views_count?: number | null
+        }
+        Relationships: []
+      }
+      raven_likes: {
+        Row: {
+          confession_id: number | null
+          id: number
+          user_nullifier: string
+        }
+        Insert: {
+          confession_id?: number | null
+          id?: never
+          user_nullifier: string
+        }
+        Update: {
+          confession_id?: number | null
+          id?: never
+          user_nullifier?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "raven_likes_confession_id_fkey"
+            columns: ["confession_id"]
+            isOneToOne: false
+            referencedRelation: "raven_confessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reviews: {
         Row: {
           created_at: string | null
@@ -1128,6 +1222,108 @@ export type Database = {
           model_provider?: string | null
           object_id?: string
           owner?: string
+        }
+        Relationships: []
+      }
+      ss_ambassador_applications: {
+        Row: {
+          agreed_to_code_of_conduct: boolean
+          country: string | null
+          created_at: string
+          current_step: number
+          discord_id: string | null
+          discord_username: string | null
+          email: string | null
+          first_30_days_plan: string | null
+          full_name: string | null
+          github_url: string | null
+          has_ambassador_experience: boolean | null
+          id: string
+          open_to_performance_rewards: boolean | null
+          other_web3_profiles: string | null
+          past_experience: string | null
+          preferred_name: string | null
+          previous_ambassador_programs: Json | null
+          roles: string[] | null
+          status: Database["public"]["Enums"]["ss_ambassador_status"]
+          submitted_at: string | null
+          sui_wallet_address: string | null
+          target_region_language_audience: string | null
+          telegram_username: string | null
+          timezone: string | null
+          twitter_url: string | null
+          updated_at: string
+          web3_experience_level:
+            | Database["public"]["Enums"]["ss_web3_experience_level"]
+            | null
+          weekly_availability: string | null
+          why_become_ambassador: string | null
+        }
+        Insert: {
+          agreed_to_code_of_conduct?: boolean
+          country?: string | null
+          created_at?: string
+          current_step?: number
+          discord_id?: string | null
+          discord_username?: string | null
+          email?: string | null
+          first_30_days_plan?: string | null
+          full_name?: string | null
+          github_url?: string | null
+          has_ambassador_experience?: boolean | null
+          id?: string
+          open_to_performance_rewards?: boolean | null
+          other_web3_profiles?: string | null
+          past_experience?: string | null
+          preferred_name?: string | null
+          previous_ambassador_programs?: Json | null
+          roles?: string[] | null
+          status?: Database["public"]["Enums"]["ss_ambassador_status"]
+          submitted_at?: string | null
+          sui_wallet_address?: string | null
+          target_region_language_audience?: string | null
+          telegram_username?: string | null
+          timezone?: string | null
+          twitter_url?: string | null
+          updated_at?: string
+          web3_experience_level?:
+            | Database["public"]["Enums"]["ss_web3_experience_level"]
+            | null
+          weekly_availability?: string | null
+          why_become_ambassador?: string | null
+        }
+        Update: {
+          agreed_to_code_of_conduct?: boolean
+          country?: string | null
+          created_at?: string
+          current_step?: number
+          discord_id?: string | null
+          discord_username?: string | null
+          email?: string | null
+          first_30_days_plan?: string | null
+          full_name?: string | null
+          github_url?: string | null
+          has_ambassador_experience?: boolean | null
+          id?: string
+          open_to_performance_rewards?: boolean | null
+          other_web3_profiles?: string | null
+          past_experience?: string | null
+          preferred_name?: string | null
+          previous_ambassador_programs?: Json | null
+          roles?: string[] | null
+          status?: Database["public"]["Enums"]["ss_ambassador_status"]
+          submitted_at?: string | null
+          sui_wallet_address?: string | null
+          target_region_language_audience?: string | null
+          telegram_username?: string | null
+          timezone?: string | null
+          twitter_url?: string | null
+          updated_at?: string
+          web3_experience_level?:
+            | Database["public"]["Enums"]["ss_web3_experience_level"]
+            | null
+          weekly_availability?: string | null
+          why_become_ambassador?: string | null
         }
         Relationships: []
       }
@@ -1685,6 +1881,17 @@ export type Database = {
         | "TOTEM"
         | "YOUR_NEW_CATEGORY"
         | "ZKON"
+      ss_ambassador_status:
+        | "draft"
+        | "submitted"
+        | "under_review"
+        | "approved"
+        | "rejected"
+      ss_web3_experience_level:
+        | "beginner"
+        | "intermediate"
+        | "advanced"
+        | "expert"
       status: "pending" | "approved" | "denied"
     }
     CompositeTypes: {
@@ -1822,6 +2029,19 @@ export const Constants = {
         "TOTEM",
         "YOUR_NEW_CATEGORY",
         "ZKON",
+      ],
+      ss_ambassador_status: [
+        "draft",
+        "submitted",
+        "under_review",
+        "approved",
+        "rejected",
+      ],
+      ss_web3_experience_level: [
+        "beginner",
+        "intermediate",
+        "advanced",
+        "expert",
       ],
       status: ["pending", "approved", "denied"],
     },
