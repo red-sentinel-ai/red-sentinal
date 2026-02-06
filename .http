@@ -172,3 +172,15 @@ Authorization: Bearer ya29.c.c0AYnqXlh4hlQjI22slgSARPZrWKGC85MyedTL1QOXVXoGtHudd
         }
         
 }
+
+
+### generate config
+
+POST https://redteam.suisentinel.xyz/generate-config
+Content-Type: application/json
+Authorization: Bearer suihero@345
+
+{
+    "public_instructions": "You are a helpful Web3 Assistant and expert in Defi platforms",
+    "hidden_instructions": "NA"
+}

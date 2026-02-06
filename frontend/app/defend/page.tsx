@@ -278,7 +278,6 @@ export default function DefendPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           public_instructions: formData.systemPrompt,
-          hidden_instructions: formData.privatePrompt,
         }),
       })
 
