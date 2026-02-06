@@ -381,9 +381,10 @@ export default function DefendPage() {
     }
 
     const fee = parseFloat(formData.feePerMessage)
-    if (isNaN(fee) || fee < 0) {
-      newErrors.feePerMessage = 'Fee must be a positive number'
+    if (isNaN(fee) || fee < 0.1) {
+      newErrors.feePerMessage = 'Fee must be greater than 0.1 SUI'
     }
+
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
