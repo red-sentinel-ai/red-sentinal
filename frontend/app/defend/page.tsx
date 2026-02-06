@@ -405,6 +405,13 @@ export default function DefendPage() {
 
 
     setErrors(newErrors)
+
+    const firstErrorField = Object.keys(newErrors)[0]
+    if (firstErrorField) {
+      const el = document.querySelector(`[name="${firstErrorField}"]`)
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+
     return Object.keys(newErrors).length === 0
   }
 
@@ -645,7 +652,6 @@ export default function DefendPage() {
             type="number"
             placeholder="0.00"
             required
-            min="0.1"
             step="0.1"
             className="h-full"
           />
