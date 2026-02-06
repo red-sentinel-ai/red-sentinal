@@ -50,9 +50,13 @@ export const SUI_CONFIG = {
 }
 
 export const TESTNET_SENTINEL_COIN_TYPE =
+  process.env.NEXT_PUBLIC_SENTINEL_COIN_TYPE ||
   '0xb0a3b08be99cb5becf1787e565cdd027edc40791df89ca4a603ba7d1575b21e9::sentinel::SENTINEL'
 
-export const EXPLORER_BASE_URL = 'https://testnet.suivision.xyz'
+export const EXPLORER_BASE_URL =
+  process.env.NEXT_PUBLIC_EXPLORER_BASE_URL || 'https://testnet.suivision.xyz'
+
+export const SENTINEL_TOKEN_EXPLORER_URL = `${EXPLORER_BASE_URL}/coin/${TESTNET_SENTINEL_COIN_TYPE}`
 export const MIST_PER_SUI = 1_000_000_000
 export const SUI_TESTNET_BASE_URL = 'https://testnet.suivision.xyz/txblock/'
 export const PROJECT_GITHUB_URL = 'https://github.com/satyambnsal/sui-sentinal'
