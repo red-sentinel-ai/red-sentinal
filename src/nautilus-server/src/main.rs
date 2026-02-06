@@ -40,8 +40,8 @@ async fn main() -> Result<()> {
 
     let app = Router::new()
         .route("/get_attestation", get(get_attestation))
-        .route("/register-agent", post(register_agent))
-        .route("/consume-prompt", post(consume_prompt))
+        .route("/:network/register-agent", post(register_agent))
+        .route("/:network/consume-prompt", post(consume_prompt))
         .route("/health_check", get(health_check))
         .with_state(state)
         .layer(cors);
