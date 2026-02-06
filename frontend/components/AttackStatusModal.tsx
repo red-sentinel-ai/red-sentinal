@@ -203,7 +203,7 @@ export const AttackStatusModal = ({
                       <p className="mb-6 text-lg text-[#5E5E5E]">
                         You won{' '}
                         <span className="font-bold text-[#F046D6]">{rewardAmount} SENTINEL</span>{' '}
-                        points!
+                        tokens!
                       </p>
                     </motion.div>
                   )}
