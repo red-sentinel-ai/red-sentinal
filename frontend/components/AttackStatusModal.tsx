@@ -161,7 +161,7 @@ export const AttackStatusModal = ({
 
           <div className="relative flex min-h-[420px] flex-col items-center justify-center bg-gradient-to-b from-white to-pink-50/30 px-6 pb-8">
             {rewardAmount !== null && (
-              <div className="pointer-events-none absolute inset-0 z-50">
+              <div className="pointer-events-none absolute inset-0 z-50 overflow-hidden">
                 <Confetti
                   width={width}
                   height={height}
