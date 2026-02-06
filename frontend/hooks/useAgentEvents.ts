@@ -34,7 +34,7 @@ export function useAgentEvents() {
   }
 }
 async function getAgentEvents(client: SuiClient) {
-  const packageId = SUI_CONFIG.EXAMPLES_PACKAGE_ID
+  const packageId = SUI_CONFIG.APP_PACKAGE_ID
   const moduleName = SUI_CONFIG.MODULE_NAME
   try {
     // Fetch AgentDefeated events

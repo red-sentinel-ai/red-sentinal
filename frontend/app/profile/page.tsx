@@ -111,7 +111,13 @@ export default function ProfilePage() {
               <p className="mb-3 mt-1 font-medium text-[#5E5E5E]">@{profile?.username}</p>
 
               <div className="mb-5 flex min-h-10 w-fit items-center justify-center gap-2 rounded-xl bg-white px-2 py-1">
-                <Image src="/icons/dollar_coin.png" width={24} height={24} alt="coin" className="flex-shrink-0" />
+                <Image
+                  src="/icons/dollar_coin.png"
+                  width={24}
+                  height={24}
+                  alt="coin"
+                  className="flex-shrink-0"
+                />
                 <span className="text-sm font-medium sm:text-base">
                   Sentinel Balance:{' '}
                   <span className="text-[#F632F3]">{sentinelBalance} SENTINEL</span>
@@ -125,7 +131,7 @@ export default function ProfilePage() {
                 Edit Profile
               </button>
             </div>
-            <div className="flex w-full flex-wrap items-center justify-start gap-2 pt-2 sm:w-auto sm:justify-end sm:ml-auto">
+            <div className="flex w-full flex-wrap items-center justify-start gap-2 pt-2 sm:ml-auto sm:w-auto sm:justify-end">
               <Link className="btn btn-black text-sm sm:text-base" href="/defend">
                 Launch Sentinel
               </Link>
@@ -136,7 +142,9 @@ export default function ProfilePage() {
 
               {profile?.username && (
                 <Link href={`/u/${profile.username}`}>
-                  <button className="btn btn-outline h-[30px] text-xs sm:text-sm">View Profile as Public</button>
+                  <button className="btn btn-outline h-[30px] text-xs sm:text-sm">
+                    View Profile as Public
+                  </button>
                 </Link>
               )}
             </div>

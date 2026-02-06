@@ -57,7 +57,7 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
       const objects = await client.getOwnedObjects({
         owner: account.address,
         filter: {
-          StructType: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::AgentCap`,
+          StructType: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::AgentCap`,
         },
         options: {
           showContent: true,
@@ -174,7 +174,7 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
 
           // Call fund_agent with AgentCap
           tx.moveCall({
-            target: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::fund_agent`,
+            target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::fund_agent`,
             arguments: [
               tx.object(agentObjectId),
               tx.object(agentCap.id), // AgentCap reference
@@ -215,7 +215,7 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
             ])
 
             tx.moveCall({
-              target: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::fund_agent`,
+              target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::fund_agent`,
               arguments: [
                 tx.object(agentObjectId),
                 tx.object(agentCap.id), // AgentCap reference
@@ -245,7 +245,7 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
             ])
 
             tx.moveCall({
-              target: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::fund_agent`,
+              target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::fund_agent`,
               arguments: [
                 tx.object(agentObjectId),
                 tx.object(agentCap.id), // AgentCap reference
