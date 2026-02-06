@@ -95,13 +95,13 @@ export function RewardsDashboard() {
             >
               <motion.div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-100 px-4 py-2">
                 <Sparkles className="h-4 w-4 text-blue-600" />
-                <span className="text-sm font-medium text-blue-800">Sui Sentinel Rewards</span>
+                <span className="text-sm font-medium text-blue-800">Sui Sentinel Tokens</span>
               </motion.div>
               <h1 className="mb-4 text-3xl font-bold uppercase text-black sm:text-4xl md:text-5xl">
                 Earn. Compete. Conquer.
               </h1>
               <p className="mx-auto mb-6 max-w-2xl text-base text-gray-600 sm:text-xl">
-                Complete missions, earn points, and unlock exclusive rewards in the Sui Sentinel
+                Complete missions, earn tokens, and unlock exclusive rewards in the Sui Sentinel
                 ecosystem
               </p>
               <div className="mb-4 flex items-center justify-center gap-4">
