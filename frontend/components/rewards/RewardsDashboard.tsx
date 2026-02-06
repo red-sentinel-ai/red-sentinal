@@ -13,20 +13,19 @@ import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 
-import { Card, CardContent, TabsTrigger, TabsContent, TabsList, Tabs } from '@/components/ui'
+import { Card, CardContent, Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui'
 import { PointsDisplay } from './PointsDisplay'
 import { MissionsGrid } from './MissionsGrid'
-import { RecentActivity } from './RecentActivity'
-import { useUserRewards } from '@/hooks/rewards/useUserRewards'
+import { RewardsHistory } from '@/components/profile/RewardsHistory'
 import { useRewardsMissions } from '@/hooks/rewards/useRewardsMissions'
+import { useSentinelBalance } from '@/hooks/rewards/useSentinelBalance'
 import { REWARDS_CONSTANTS } from '@/constants/rewards'
 import { REWARDS_DOCS_URL } from '@/constants'
 import { ConnectPrompt } from '../ConnectPrompt'
 
 export function RewardsDashboard() {
   const account = useCurrentAccount()
-  const address = account?.address
-  const { data: userRewards, isLoading: isLoadingUser } = useUserRewards(address)
+  const { balance, tier, isLoading: isLoadingBalance } = useSentinelBalance()
   const { data: missionsData, isLoading: isLoadingMissions } = useRewardsMissions()
 
   const effectiveMissionsData = isLoadingMissions
@@ -129,9 +128,9 @@ export function RewardsDashboard() {
             transition={{ duration: 0.3, delay: 0.1 }}
           >
             <PointsDisplay
-              totalPoints={userRewards?.user?.total_points || 0}
-              tier={userRewards?.user.rewards_tier || 'bronze'}
-              isLoading={isLoadingUser}
+              totalPoints={balance}
+              tier={tier}
+              isLoading={isLoadingBalance}
               pointsSymbol={effectiveMissionsData?.points_symbol || 'SENTINEL'}
             />
           </motion.div>
@@ -170,17 +169,13 @@ export function RewardsDashboard() {
                     <TabsContent value="missions" className="space-y-6">
                       <MissionsGrid
                         missions={effectiveMissionsData?.missions || []}
-                        completedMissions={userRewards?.completed_missions || {}}
+                        completedMissions={{}}
                         isLoading={isLoadingMissions}
                         pointsSymbol={effectiveMissionsData?.points_symbol || 'SENTINEL'}
                       />
                     </TabsContent>
                     <TabsContent value="activity" className="space-y-6">
-                      <RecentActivity
-                        activities={userRewards?.recent_activity || []}
-                        isLoading={isLoadingUser}
-                        pointsSymbol={effectiveMissionsData?.points_symbol || 'SENTINEL'}
-                      />
+                      <RewardsHistory />
                     </TabsContent>
                   </div>
                 </Tabs>
