@@ -23,7 +23,7 @@ export const useClaimReward = () => {
       const url = `${INDEXER_BASE_URL}/claim-tokens/${network}/${recipient}`
 
       const response = await fetch(url, {
-        method: 'GET', 
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },

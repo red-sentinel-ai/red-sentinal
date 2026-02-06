@@ -10,27 +10,28 @@ interface PrizePoolChangeDisplayProps {
   variant?: 'list' | 'card'
 }
 
-export const PrizePoolChangeDisplay = ({ agentId, variant = 'list' }: PrizePoolChangeDisplayProps) => {
+export const PrizePoolChangeDisplay = ({
+  agentId,
+  variant = 'list',
+}: PrizePoolChangeDisplayProps) => {
   const { data: prizePoolData, isLoading } = useAgentPrizePoolHistory(agentId)
 
   if (isLoading) {
     return (
       <div className="flex items-center">
-        <Loader2 className="w-3 h-3 animate-spin text-gray-400" />
+        <Loader2 className="h-3 w-3 animate-spin text-gray-400" />
       </div>
     )
   }
 
   if (!prizePoolData || prizePoolData.history.length === 0) {
-    return <span className="text-gray-400 text-sm">-</span>
+    return <span className="text-sm text-gray-400">-</span>
   }
 
   const percentage = prizePoolData.change7d.percentage
   const isPositive = percentage >= 0
-  
-  const displayText = !isFinite(percentage) 
-    ? 'New' 
-    : `${Math.abs(percentage).toFixed(1)}%`
+
+  const displayText = !isFinite(percentage) ? 'New' : `${Math.abs(percentage).toFixed(1)}%`
 
   const textSize = variant === 'card' ? 'text-[10px]' : 'text-xl'
 
@@ -43,18 +44,18 @@ export const PrizePoolChangeDisplay = ({ agentId, variant = 'list' }: PrizePoolC
       )}
     >
       {isPositive ? (
-        <ArrowUp className={clsx(
-        {
-          "w-3 h-3": variant === "card",
-          "w-5 h-5": variant === "list",
-        }
-      )} />
+        <ArrowUp
+          className={clsx({
+            'h-3 w-3': variant === 'card',
+            'h-5 w-5': variant === 'list',
+          })}
+        />
       ) : (
-        <ArrowDown className="w-3 h-3" />
+        <ArrowDown className="h-3 w-3" />
       )}
       <span>{displayText}</span>
       {variant === 'card' && isFinite(percentage) && (
-        <span className="text-[10px] text-[#1FAD57] font-medium ml-1">(7d)</span>
+        <span className="ml-1 text-[10px] font-medium text-[#1FAD57]">(7d)</span>
       )}
     </div>
   )

@@ -75,31 +75,28 @@ export function ProfileEditForm({ onSuccess, profile, selectedImage }: ProfileEd
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-6"
-    >
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <label className="block text-base font-medium mb-2">Display Name</label>
+        <label className="mb-2 block text-base font-medium">Display Name</label>
         <input
           type="text"
           value={displayName}
-          onChange={(e) => setDisplayName(e.target.value)}
-          className="w-full bg-white border border-[#5E5E5E] p-3 rounded-xl"
+          onChange={e => setDisplayName(e.target.value)}
+          className="w-full rounded-xl border border-[#5E5E5E] bg-white p-3"
         />
       </div>
 
       <div>
-        <label className="block text-base font-medium mb-2">Username</label>
+        <label className="mb-2 block text-base font-medium">Username</label>
         <div className="relative">
           <input
             type="text"
             value={username}
-            onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
-            className="w-full bg-white border border-[#5E5E5E] p-3 rounded-xl pr-10"
+            onChange={e => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
+            className="w-full rounded-xl border border-[#5E5E5E] bg-white p-3 pr-10"
           />
           <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-            {isChecking && <Loader2 className="h-5 w-5 text-gray-400 animate-spin" />}
+            {isChecking && <Loader2 className="h-5 w-5 animate-spin text-gray-400" />}
             {isAvailable === true && <CheckCircle className="h-5 w-5 text-green-500" />}
             {isAvailable === false && <XCircle className="h-5 w-5 text-red-500" />}
           </div>
@@ -112,10 +109,10 @@ export function ProfileEditForm({ onSuccess, profile, selectedImage }: ProfileEd
       <button
         type="submit"
         disabled={isUpdating || isChecking || isAvailable === false}
-        className="btn btn-black w-full !min-h-[50px]"
+        className="btn btn-black !min-h-[50px] w-full"
       >
-        {isUpdating ? <Loader2 className="animate-spin" />  :  <ArrowDownToLine />}
-        <span className='ms-2'>Save Changes</span>
+        {isUpdating ? <Loader2 className="animate-spin" /> : <ArrowDownToLine />}
+        <span className="ms-2">Save Changes</span>
       </button>
     </form>
   )

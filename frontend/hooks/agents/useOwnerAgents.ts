@@ -18,7 +18,7 @@ export const useAgentsByOwner = (owner: string | undefined) => {
       >[] = await res.json()
 
       const enrichedAgents = await Promise.all(
-        basicAgents.map(async (agent) => {
+        basicAgents.map(async agent => {
           const onchain = await fetchAgentDetailsViaObject(client, agent.object_id)
           return {
             ...agent,

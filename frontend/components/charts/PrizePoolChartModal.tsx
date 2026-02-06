@@ -38,7 +38,7 @@ interface CustomTooltipProps {
 const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-white/80 backdrop-blur-md border border-gray-300 rounded-lg p-3 shadow-lg">
+      <div className="rounded-lg border border-gray-300 bg-white/80 p-3 shadow-lg backdrop-blur-md">
         <p className="text-xs text-gray-500">{format(new Date(label || 0), 'MMM d, yyyy p')}</p>
         <p className="text-base font-bold text-black">{`${payload[0].value.toFixed(2)} SUI`}</p>
       </div>
@@ -54,75 +54,46 @@ export const PrizePoolChartModal = ({
   agentName,
 }: PrizePoolChartModalProps) => {
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      className="max-w-3xl bg-white border-gray-200 p-6"
-    >
-      <div className="flex items-start justify-between mb-4">
+    <Dialog open={open} onClose={onClose} className="max-w-3xl border-gray-200 bg-white p-4 sm:p-6">
+      <div className="mb-3 flex items-start justify-between sm:mb-4">
         <div>
-          <h2 className="text-xl font-bold text-black flex items-center gap-2">
-            <TrendingUp className="text-[#1FAD57]" />
+          <h2 className="flex items-center gap-2 text-base font-bold text-black sm:text-xl">
+            <TrendingUp className="size-5 text-[#1FAD57] sm:size-6" />
             Prize Pool History
           </h2>
-          <p className="text-gray-600">For Sentinel: {agentName}</p>
+          <p className="text-sm text-gray-600 sm:text-base">For Sentinel: {agentName}</p>
         </div>
-        <button
-          onClick={onClose}
-          className="text-gray-500 hover:text-black transition-colors"
-        >
-          <X className="w-6 h-6" />
+        <button onClick={onClose} className="text-gray-500 transition-colors hover:text-black">
+          <X className="size-5 sm:size-6" />
         </button>
       </div>
 
-      <div className="w-full h-[400px]">
-        <ResponsiveContainer
-          width="100%"
-          height="100%"
-        >
-          <AreaChart
-            data={data}
-            margin={{ top: 10, right: 30, left: 0, bottom: 20 }}
-          >
+      <div className="h-[280px] w-full sm:h-[400px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 20 }}>
             <defs>
-              <linearGradient
-                id="colorValue"
-                x1="0"
-                y1="0"
-                x2="0"
-                y2="1"
-              >
-                <stop
-                  offset="5%"
-                  stopColor="#1FAD57"
-                  stopOpacity={0.4}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="#1FAD57"
-                  stopOpacity={0}
-                />
+              <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#1FAD57" stopOpacity={0.4} />
+                <stop offset="95%" stopColor="#1FAD57" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid
-              strokeDasharray="3 3"
-              stroke="#e5e7eb"
-            />
+            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
             <XAxis
               dataKey="time"
               stroke="#6b7280"
-              fontSize={12}
+              fontSize={10}
               tickLine={false}
               axisLine={false}
-              tickFormatter={(time) => format(new Date(time), 'MMM d, HH:mm')}
+              tickFormatter={time => format(new Date(time), 'MMM d')}
               dy={10}
             />
             <YAxis
               stroke="#6b7280"
-              fontSize={12}
+              fontSize={10}
               tickLine={false}
               axisLine={false}
-              tickFormatter={(value) => `${value} SUI`}
+              tickFormatter={value => `${value}`}
+              width={40}
             />
             <Tooltip content={<CustomTooltip />} />
             <Area

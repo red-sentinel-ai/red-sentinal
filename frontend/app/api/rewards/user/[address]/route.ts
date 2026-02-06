@@ -23,22 +23,22 @@ const getMissionCompletionCounts = (
 
   const counts: Record<string, MissionCompletionCounts> = {}
 
-  missions.forEach((mission) => {
+  missions.forEach(mission => {
     counts[mission.type] = { total: 0, current_period: 0 }
   })
 
-  activities.forEach((activity) => {
+  activities.forEach(activity => {
     if (!counts[activity.mission_type]) {
       counts[activity.mission_type] = { total: 0, current_period: 0 }
     }
     counts[activity.mission_type].total += 1
   })
 
-  missions.forEach((mission) => {
+  missions.forEach(mission => {
     if (mission.max_per_week || mission.max_per_day) {
       const startDate = mission.max_per_week ? weekStart : dayStart
       const periodActivities = activities.filter(
-        (activity) =>
+        activity =>
           activity.mission_type === mission.type && new Date(activity.completed_at) >= startDate
       )
       counts[mission.type].current_period = periodActivities.length

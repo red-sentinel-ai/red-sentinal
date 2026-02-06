@@ -77,7 +77,7 @@ export const useWithdrawAgent = (options: UseWithdrawAgentOptions = {}) => {
           signAndExecuteTransaction(
             { transaction: tx },
             {
-              onSuccess: (result) => {
+              onSuccess: result => {
                 console.log('Withdraw agent transaction success:', result)
                 setLastResult(result)
 
@@ -96,7 +96,7 @@ export const useWithdrawAgent = (options: UseWithdrawAgentOptions = {}) => {
                 onSuccess?.(result)
                 resolve(result)
               },
-              onError: (txError) => {
+              onError: txError => {
                 console.error('Transaction failed:', txError)
                 const errorMsg = 'Transaction failed: ' + txError.message
                 setError(errorMsg)

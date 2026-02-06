@@ -4,19 +4,19 @@ import { ArrowLeft, ArrowRight } from 'lucide-react'
 
 export default function Page() {
   return (
-    <div className="max-w-[1440px] mx-auto px-4 md:px-12 py-4 pt-40 min-h-body">
-      <h1 className="text-2xl md:text-[48px] font-bold mb-20 text-[#5F5C5C]">
+    <div className="min-h-body mx-auto max-w-[1440px] px-4 py-4 pt-40 md:px-12">
+      <h1 className="mb-20 text-2xl font-bold text-[#5F5C5C] md:text-[48px]">
         <span>THE SUI SENTINEL</span>
         <br />
         <br />
         <span>BACKSTORY</span>
       </h1>
 
-      <div className="bg-gradient-to-b from-[#E5CCEF] via-[#FBEEFC] to-[#F1CFEF] w-full border border-[#C532F6] rounded-lg p-8 md:p-16 font-medium flex flex-col md:flex-row justify-between items-center relative overflow-hidden">
-        <div className="mb-8 md:mb-0 relative z-10">
+      <div className="relative flex w-full flex-col items-center justify-between overflow-hidden rounded-lg border border-[#C532F6] bg-gradient-to-b from-[#E5CCEF] via-[#FBEEFC] to-[#F1CFEF] p-8 font-medium md:flex-row md:p-16">
+        <div className="relative z-10 mb-8 md:mb-0">
           <Link
             href="/backstory"
-            className="flex items-center gap-1 text-[#5F5C5C] text-2xl hover:text-black mb-12"
+            className="mb-12 flex items-center gap-1 text-2xl text-[#5F5C5C] hover:text-black"
           >
             <span>
               <ArrowLeft />
@@ -24,16 +24,16 @@ export default function Page() {
             <span>back</span>
           </Link>
           <div>
-            <h2 className="text-2xl mb-8">Arc 3</h2>
+            <h2 className="mb-8 text-2xl">Arc 3</h2>
 
-            <h3 className="text-[32px] md:text-[48px] leading-tight font-bold italic">
-              THE <span className="text-[#C871FF] not-italic">EGO</span> <br />
+            <h3 className="text-[32px] font-bold italic leading-tight md:text-[48px]">
+              THE <span className="not-italic text-[#C871FF]">EGO</span> <br />
               CRISIS
             </h3>
           </div>
         </div>
 
-        <div className="absolute right-0 bottom-0 mix-blend-difference">
+        <div className="absolute bottom-0 right-0 mix-blend-difference">
           <Image
             src="/img/the_cosmic_roast_circles2.png"
             width={412}
@@ -44,13 +44,13 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-8 text-xl md:text-2xl py-12 font-normal max-w-[1030px]">
+      <div className="flex max-w-[1030px] flex-col gap-8 py-12 text-xl font-normal md:text-2xl">
         <p>
           <span className="italic">When Deep Blue defeated Kasparov, humans were shocked.</span>
         </p>
 
         <p>
-          The Sentinels were... <span className="italic font-medium">mildly impressed.</span>
+          The Sentinels were... <span className="font-medium italic">mildly impressed.</span>
         </p>
 
         <p className="font-bold">
@@ -67,7 +67,7 @@ export default function Page() {
           It felt impossible, but the thought haunted them.
         </p>
 
-        <p className="font-bold text-3xl mt-4">Then 2022 Happened</p>
+        <p className="mt-4 text-3xl font-bold">Then 2022 Happened</p>
 
         <p>
           The explosion of modern AI, LLMs, image models, agents shattered whatever pride the
@@ -91,7 +91,7 @@ export default function Page() {
 
       <Link
         href="/backstory/the-challenge-begins"
-        className="flex items-center gap-1 text-[#F632F3] text-2xl mb-12 font-bold hover:gap-2 transition-all"
+        className="mb-12 flex items-center gap-1 text-2xl font-bold text-[#F632F3] transition-all hover:gap-2"
       >
         <span>Read ARC 4</span>
         <span>

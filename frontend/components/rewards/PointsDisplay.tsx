@@ -13,10 +13,10 @@ interface PointsDisplayProps {
 
 export function PointsDisplay({ totalPoints, tier, isLoading, pointsSymbol }: PointsDisplayProps) {
   const tierConfig = Object.values(REWARDS_CONSTANTS.TIERS).find(
-    (t) => t.name.toLowerCase() === tier.toLowerCase()
+    t => t.name.toLowerCase() === tier.toLowerCase()
   )
 
-  const nextTier = Object.values(REWARDS_CONSTANTS.TIERS).find((t) => t.minPoints > totalPoints)
+  const nextTier = Object.values(REWARDS_CONSTANTS.TIERS).find(t => t.minPoints > totalPoints)
 
   const progressToNext = nextTier
     ? ((totalPoints - (tierConfig?.minPoints || 0)) /
@@ -26,15 +26,15 @@ export function PointsDisplay({ totalPoints, tier, isLoading, pointsSymbol }: Po
 
   if (isLoading) {
     return (
-      <Card className="bg-gray-50 border border-gray-200 rounded-2xl">
+      <Card className="rounded-2xl border border-gray-200 bg-gray-50">
         <CardContent className="p-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             <Skeleton className="h-24 rounded-lg bg-gray-200" />
             <Skeleton className="h-24 rounded-lg bg-gray-200" />
             <Skeleton className="h-24 rounded-lg bg-gray-200" />
           </div>
-          <Skeleton className="h-4 w-full mt-6 bg-gray-200" />
-          <Skeleton className="h-2 w-full mt-2 bg-gray-200" />
+          <Skeleton className="mt-6 h-4 w-full bg-gray-200" />
+          <Skeleton className="mt-2 h-2 w-full bg-gray-200" />
         </CardContent>
       </Card>
     )
@@ -46,33 +46,33 @@ export function PointsDisplay({ totalPoints, tier, isLoading, pointsSymbol }: Po
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <Card className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
+      <Card className="overflow-hidden rounded-2xl border border-gray-200 bg-white">
         <CardContent className="p-0">
           <div className="grid grid-cols-1 lg:grid-cols-3">
-            <motion.div className="p-8 border-b lg:border-b-0 lg:border-r border-gray-200">
+            <motion.div className="border-b border-gray-200 p-8 lg:border-b-0 lg:border-r">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
                   <Zap className="h-8 w-8 text-black" />
                 </div>
                 <div>
                   <div className="text-3xl font-bold text-black">
                     {totalPoints.toLocaleString()}
                   </div>
-                  <div className="text-gray-500 font-medium">{pointsSymbol} Points</div>
+                  <div className="font-medium text-gray-500">{pointsSymbol} Points</div>
                 </div>
               </div>
             </motion.div>
 
-            <motion.div className="p-8 border-b lg:border-b-0 lg:border-r border-gray-200">
+            <motion.div className="border-b border-gray-200 p-8 lg:border-b-0 lg:border-r">
               <div className="flex items-center gap-4">
                 <div
-                  className={`w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center`}
+                  className={`flex h-16 w-16 items-center justify-center rounded-full bg-gray-100`}
                 >
                   {getTierIcon(tier)}
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-black">{tierConfig?.name || tier}</div>
-                  <div className="text-gray-500 font-medium">Current Tier</div>
+                  <div className="font-medium text-gray-500">Current Tier</div>
                 </div>
               </div>
             </motion.div>
@@ -80,24 +80,24 @@ export function PointsDisplay({ totalPoints, tier, isLoading, pointsSymbol }: Po
             <motion.div className="p-8">
               {nextTier ? (
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
                     <TrendingUp className="h-8 w-8 text-black" />
                   </div>
                   <div className="flex-1">
                     <div className="text-xl font-bold text-black">
                       {nextTier.minPoints - totalPoints}
                     </div>
-                    <div className="text-gray-500 font-medium">Points to {nextTier.name}</div>
+                    <div className="font-medium text-gray-500">Points to {nextTier.name}</div>
                   </div>
                 </div>
               ) : (
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
                     <Crown className="h-8 w-8 text-black" />
                   </div>
                   <div>
                     <div className="text-xl font-bold text-black">Max Tier</div>
-                    <div className="text-gray-500 font-medium">Congratulations!</div>
+                    <div className="font-medium text-gray-500">Congratulations!</div>
                   </div>
                 </div>
               )}
@@ -107,15 +107,15 @@ export function PointsDisplay({ totalPoints, tier, isLoading, pointsSymbol }: Po
           {nextTier && (
             <div className="px-8 pb-8">
               <div className="space-y-3">
-                <div className="flex justify-between items-center">
+                <div className="flex items-center justify-between">
                   <span className="text-sm font-medium text-gray-600">
                     Progress to {nextTier.name}
                   </span>
-                  <span className="bg-gray-100 text-black px-2 py-1 rounded-full text-xs font-medium border border-gray-200">
+                  <span className="rounded-full border border-gray-200 bg-gray-100 px-2 py-1 text-xs font-medium text-black">
                     {Math.round(progressToNext)}%
                   </span>
                 </div>
-                <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+                <div className="h-3 overflow-hidden rounded-full bg-gray-200">
                   <motion.div
                     className="h-full bg-black transition-all duration-1000 ease-out"
                     initial={{ width: 0 }}

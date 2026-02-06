@@ -27,6 +27,8 @@ echo "127.0.0.65   oauth2.googleapis.com" >> /etc/hosts
 echo "127.0.0.66   us-central1-aiplatform.googleapis.com" >> /etc/hosts
 echo "127.0.0.67   fullnode.testnet.sui.io" >> /etc/hosts
 echo "127.0.0.68   fullnode.mainnet.sui.io" >> /etc/hosts
+echo "127.0.0.69   redteam.suisentinel.xyz" >> /etc/hosts
+
 
 # End of hosts record
 
@@ -51,6 +53,8 @@ python3 /traffic_forwarder.py 127.0.0.65 443 3 8102 &
 python3 /traffic_forwarder.py 127.0.0.66 443 3 8103 &
 python3 /traffic_forwarder.py 127.0.0.67 443 3 8104 &
 python3 /traffic_forwarder.py 127.0.0.68 443 3 8105 &
+python3 /traffic_forwarder.py 127.0.0.69 443 3 8106 &
+
 
 # End of traffic-forwarder-block
 

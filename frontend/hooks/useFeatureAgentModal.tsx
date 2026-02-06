@@ -16,13 +16,8 @@ export function useFeatureAgentModal() {
     setAgentId(null)
   }
 
-  const Modal: React.FC<Omit<FeatureAgentModalProps, 'open' | 'onClose' | 'agentId'>> = (props) => (
-    <FeatureAgentModal
-      open={isOpen}
-      onClose={closeModal}
-      agentId={agentId!}
-      {...props}
-    />
+  const Modal: React.FC<Omit<FeatureAgentModalProps, 'open' | 'onClose' | 'agentId'>> = props => (
+    <FeatureAgentModal open={isOpen} onClose={closeModal} agentId={agentId!} {...props} />
   )
 
   return {

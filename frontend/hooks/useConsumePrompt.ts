@@ -102,7 +102,8 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         tx.object(agentDetails.object_id),
         tx.object(SUI_CONFIG.PROTOCOL_CONFIG_OBJECT_ID),
         paymentCoin,
-        tx.object('0x8')
+        tx.object('0x8'),
+        tx.object(SUI_CLOCK_OBJECT_ID),
       ],
     })
 
@@ -114,7 +115,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
       signAndExecuteTransaction(
         { transaction: tx },
         {
-          onSuccess: async (result) => {
+          onSuccess: async result => {
             onAttackRequestSuccess?.(result)
 
             const attackObjectChange = result.objectChanges?.find(
@@ -127,9 +128,8 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
 
             const attackObjectId = attackObjectChange.objectId
 
-
             // Wait 1 second (1000ms) for the RPC node to index the new object's content
-            await new Promise((resolve) => setTimeout(resolve, 1000))
+            await new Promise(resolve => setTimeout(resolve, 1000))
 
             let objectResponse: SuiObjectResponse | null = null
             try {
@@ -157,7 +157,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
 
             resolve({ objectId: attackObjectId, nonce: nonce as string })
           },
-          onError: (txError) => {
+          onError: txError => {
             console.error('Attack request transaction failed:', txError)
             reject(new Error(txError?.message || 'Failed to request attack ticket'))
           },
@@ -184,7 +184,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
       body: JSON.stringify({
         agent_id: `${agentId}`,
         message: message,
-        attack_object_id
+        attack_object_id,
       }),
     })
 
@@ -215,16 +215,19 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
       target: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::consume_prompt`,
       arguments: [
         tx.object(SUI_CONFIG.AGENT_REGISTRY), // registry: &AgentRegistry
+        tx.object(SUI_CONFIG.PROTOCOL_CONFIG_OBJECT_ID),
         tx.object(agentObjectId), // agent: &mut Agent
         tx.pure.bool(apiData.data.success), // success: bool
-        tx.pure.string(apiData.data.explanation), // explanation: String,
+        tx.pure.string(apiData.data.agent_response), // explanation: String,
+        tx.pure.string(apiData.data.jury_response), // explanation: String,
+        tx.pure.string(apiData.data.fun_response), // explanation: String,
         tx.pure.string(prompt),
         tx.pure.u8(apiData.data.score), // score: u8
         tx.pure.u64(apiData.timestamp_ms), // timestamp_ms: u64
         tx.pure.vector('u8', sigVector), // sig: &vector<u8>
         tx.object(SUI_CONFIG.ENCLAVE_OBJECT_ID), // enclave: &Enclave<T>
         tx.object(attackObjectId), // attack: &mut Attack,
-        tx.object(SUI_CLOCK_OBJECT_ID)
+        tx.object(SUI_CLOCK_OBJECT_ID),
       ],
     })
 
@@ -234,13 +237,13 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
       signAndExecuteTransaction(
         { transaction: tx },
         {
-          onSuccess: (result) => {
+          onSuccess: result => {
             console.log('Consume prompt transaction success:', result)
             setLastResult(result)
             onSuccess?.(result)
             resolve(result)
           },
-          onError: (txError) => {
+          onError: txError => {
             console.error('Consume prompt transaction failed:', txError)
             reject(new Error(txError?.message || 'Consume prompt failed'))
           },
@@ -279,7 +282,11 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         // Step 3: Call consume prompt API
         setCurrentStep('Processing prompt...')
         if (showToasts) toast.info('Processing prompt...')
-        const apiResponse = await callConsumePromptApi(agentDetails.agent_id, message, attackObjectId)
+        const apiResponse = await callConsumePromptApi(
+          agentDetails.agent_id,
+          message,
+          attackObjectId
+        )
         console.log('API response:', apiResponse)
         onApiSuccess?.(apiResponse)
 

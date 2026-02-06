@@ -31,7 +31,7 @@ export function EarnWhileDefendingSection() {
         alt="animation section art"
         width={1066.5}
         height={1005}
-        className="absolute -top-60 pointer-events-none select-none opacity-48"
+        className="absolute -top-40 md:-top-60 pointer-events-none select-none opacity-48 w-[400px] md:w-[700px] lg:w-auto left-1/2 -translate-x-1/2"
       />
 
       <motion.div
@@ -41,7 +41,7 @@ export function EarnWhileDefendingSection() {
         viewport={{ once: true }}
         className="relative z-10"
       >
-        <h2 className="text-[48px] md:text-5xl font-medium leading-snug text-black">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium leading-snug text-black">
           Earn While Defending Sentinels. Turn your{' '}
           <span className="text-[#C871FF]">Prompt engineering skills into SUI/USDC rewards. </span>
           Every successful defense strengthens AI and your wallet.

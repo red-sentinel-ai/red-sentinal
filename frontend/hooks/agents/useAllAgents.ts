@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { useSuiClient } from '@mysten/dapp-kit'
 import { AgentStatus } from '@/types'
-import { getDefeatedAgentIds, fetchAgentDetailsViaObject } from '@/lib/sui-utils'
+import { getDefeatedAgentIds, fetchAgentDetailsViaObject, getAttackCountsPerAgent } from '@/lib/sui-utils'
 
 export interface AgentDetails {
   agent_id: string
@@ -17,6 +17,10 @@ export interface AgentDetails {
   agent_path: string
   created_at: string
   last_funded_timestamp: string
+  accumulated_fees: number
+  model_provider?: string
+  model_name?: string
+  total_attacks: number
 }
 
 export const useAllAgents = () => {
@@ -25,8 +29,9 @@ export const useAllAgents = () => {
   return useQuery<AgentDetails[], Error>({
     queryKey: ['allAgents'],
     queryFn: async () => {
-      const [defeatedAgentIds, basicAgentsRes] = await Promise.all([
+      const [defeatedAgentIds, attackCounts, basicAgentsRes] = await Promise.all([
         getDefeatedAgentIds(client),
+        getAttackCountsPerAgent(client),
         fetch('/api/agents/all'),
       ])
 
@@ -37,11 +42,16 @@ export const useAllAgents = () => {
 
       const basicAgents: Omit<
         AgentDetails,
-        'cost_per_message' | 'system_prompt' | 'balance' | 'status' | 'last_funded_timestamp'
+        | 'cost_per_message'
+        | 'system_prompt'
+        | 'balance'
+        | 'status'
+        | 'last_funded_timestamp'
+        | 'accumulated_fees'
       >[] = await basicAgentsRes.json()
 
       const enrichedAgents = await Promise.all(
-        basicAgents.map(async (agent) => {
+        basicAgents.map(async agent => {
           const onchain = await fetchAgentDetailsViaObject(client, agent.object_id)
 
           const status: AgentStatus = defeatedAgentIds.has(String(agent.agent_id))
@@ -53,6 +63,7 @@ export const useAllAgents = () => {
             ...onchain,
             agent_id: String(agent.agent_id),
             status,
+            total_attacks: attackCounts.get(String(agent.agent_id)) || 0,
           } as AgentDetails
         })
       )

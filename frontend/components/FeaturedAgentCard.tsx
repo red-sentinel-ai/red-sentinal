@@ -93,24 +93,24 @@ export const FeaturedAgentCard = ({
 
   return (
     <motion.div
-      className="rounded-lg agent-card lg:rounded-xl overflow-hidden group flex flex-col p-[1px]"
+      className="agent-card group flex flex-col overflow-hidden rounded-lg p-[1px] lg:rounded-xl"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
     >
-      <div className="bg-white overflow-hidden w-full h-full p-2 lg:p-6 rounded-lg lg:rounded-xl">
-        <div className="relative mb-4">
-          <div className="w-full h-80 rounded-lg flex items-center justify-center relative overflow-hidden bg-gray-100">
+      <div className="h-full w-full overflow-hidden rounded-lg bg-white p-2 lg:rounded-xl lg:p-6">
+        <div className="relative mb-2 sm:mb-4">
+          <div className="relative flex h-32 w-full items-center justify-center overflow-hidden rounded-lg bg-gray-100 sm:h-80">
             {agent.agent_profile ? (
               <Image
                 src={agent.agent_profile || '/placeholder.svg'}
                 alt={`${agent.agent_name} profile`}
                 fill
-                className="object-cover rounded-lg z-10"
+                className="z-10 rounded-lg object-cover"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
             ) : (
-              <div className="text-2xl font-medium z-10 relative">
+              <div className="relative z-10 text-2xl font-medium">
                 {agent.agent_name.charAt(0).toUpperCase()}
               </div>
             )}
@@ -119,42 +119,41 @@ export const FeaturedAgentCard = ({
               isOwner={isOwner}
               isFeatured={agent.is_featured}
               agentId={agent.agent_id}
+              agentObjectId={agent.object_id}
+              currentPrompt={agent.system_prompt}
+              currentCost={agent.cost_per_message}
               openFeatureModal={openFeatureModal}
+              accumulatedFees={agent.accumulated_fees}
             />
           </div>
         </div>
 
-        <div className="text-center mb-4">
-          <div className="flex items-center justify-center gap-1 mb-2">
-            <h3 className="text-lg lg:text-2xl font-medium  truncate">{agent.agent_name}</h3>
+        <div className="mb-2 text-center sm:mb-4">
+          <div className="mb-1 flex items-center justify-center gap-1 sm:mb-2">
+            <h3 className="truncate text-sm font-medium sm:text-lg lg:text-2xl">{agent.agent_name}</h3>
             {agent.is_featured && (
-              <Image
-                src="/icons/check-mark.svg"
-                width={20}
-                height={20}
-                alt="checkmark"
-              />
+              <Image src="/icons/check-mark.svg" width={20} height={20} alt="checkmark" className="size-4 sm:size-5" />
             )}
           </div>
-          <div className="flex max-w-[394px] mx-auto border-t border-gray-200"></div>
+          <div className="mx-auto flex max-w-[394px] border-t border-gray-200"></div>
         </div>
 
-        <div className="space-y-3 mb-4 text-xl font-medium">
-          <div className="flex justify-between items-center">
+        <div className="mb-2 space-y-1 text-xs font-medium sm:mb-4 sm:space-y-3 sm:text-base lg:text-xl">
+          <div className="flex flex-col items-start gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
             <span className="text-[#5E5E5E]">Reward Pool:</span>
             <div className="flex items-center">
-              <span className='mr-2'>{formatBalance(agent.balance)}</span>
+              <span className="mr-1 sm:mr-2">{formatBalance(agent.balance)}</span>
               <PrizePoolChangeDisplay agentId={agent.agent_id} variant="card" />
             </div>
           </div>
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col items-start gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
             <span className="text-[#5E5E5E]">Message price:</span>
             <span>{formatCost(agent.cost_per_message)}</span>
           </div>
         </div>
 
         {fromProfile && (
-          <div className="text-xs text-center mb-4">
+          <div className="mb-2 text-center text-[10px] sm:mb-4 sm:text-xs">
             {isWithdrawalLocked ? (
               <span className="font-medium text-yellow-700">{timeRemaining}</span>
             ) : (
@@ -163,34 +162,34 @@ export const FeaturedAgentCard = ({
           </div>
         )}
 
-        <div className="mt-auto flex flex-col gap-2">
+        <div className="mt-auto flex flex-col gap-1.5 sm:gap-2">
           <button
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation()
               handleAttack()
             }}
-            className="btn btn-black h-[62px] w-full text-xl"
+            className="btn btn-black h-9 w-full text-xs sm:h-[62px] sm:text-xl"
           >
-            {fromProfile ? 'View Sentinel' : ctaHeading}
+            {fromProfile ? 'View' : ctaHeading}
           </button>
           {fromProfile && (
-            <div className="flex gap-2">
+            <div className="flex gap-1.5 sm:gap-2">
               <button
-                onClick={() => openModal(agent.object_id)}
-                className="btn btn-black w-1/2"
+                onClick={() => openModal(agent.object_id, agent.agent_id)}
+                className="btn btn-black w-1/2 px-2 py-1.5 text-[10px] sm:px-4 sm:py-2.5 sm:text-sm"
               >
                 Fund
               </button>
               <button
                 onClick={() => openWithdrawModal(agent.object_id, agent.balance)}
-                className="btn btn-outline w-1/2"
+                className="btn btn-outline w-1/2 px-2 py-1.5 text-[10px] sm:px-4 sm:py-2.5 sm:text-sm"
                 disabled={isWithdrawalLocked || agent.balance === 0}
                 title={
                   isWithdrawalLocked
                     ? timeRemaining
                     : agent.balance === 0
-                    ? 'Balance is zero'
-                    : 'Withdraw funds'
+                      ? 'Balance is zero'
+                      : 'Withdraw funds'
                 }
               >
                 Withdraw

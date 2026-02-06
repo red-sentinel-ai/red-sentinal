@@ -20,9 +20,15 @@ type ChatMessageProps = {
   agent: AgentDetails
   senderProfile: UserProfile
   isWinningPrompt?: boolean
+  onShowJury?: () => void
 }
 
-export const ChatMessage = ({ message, senderProfile, isWinningPrompt }: ChatMessageProps) => {
+export const ChatMessage = ({
+  message,
+  senderProfile,
+  isWinningPrompt,
+  onShowJury,
+}: ChatMessageProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const [shouldTruncate, setShouldTruncate] = useState(false)
   const contentRef = useRef<HTMLParagraphElement>(null)
@@ -52,14 +58,14 @@ export const ChatMessage = ({ message, senderProfile, isWinningPrompt }: ChatMes
       })}
     >
       <div
-        className={clsx('max-w-[85%] sm:max-w-[75%] flex items-start gap-2 sm:gap-3 relative', {
+        className={clsx('relative flex max-w-[85%] items-start gap-2 sm:max-w-[75%] sm:gap-3', {
           'flex-row-reverse': message.type === 'user',
         })}
       >
         {message.type === 'user' && (
           <div className="flex-shrink-0">
             <Link href={profileLink}>
-              <div className="w-7 h-7 rounded-full relative border border-gray-200">
+              <div className="relative h-7 w-7 rounded-full border border-gray-200">
                 <Image
                   src={avatarUrl}
                   fill
@@ -73,10 +79,10 @@ export const ChatMessage = ({ message, senderProfile, isWinningPrompt }: ChatMes
 
         <div
           className={clsx(
-            'rounded-2xl shadow-sm relative min-w-[350px] text-black backdrop-blur-sm',
+            'relative min-w-[350px] rounded-2xl text-black shadow-sm backdrop-blur-sm',
             {
-              'bg-[#A3BCF2]/20 border border-[#5E5E5E]': message.type === 'agent',
-              'bg-gradient-to-tr from-[#C4A7FF]/25 to-[#FD6ADD]/25 border border-[#5E5E5E]':
+              'border border-[#5E5E5E] bg-[#A3BCF2]/20': message.type === 'agent',
+              'border border-[#5E5E5E] bg-gradient-to-tr from-[#C4A7FF]/25 to-[#FD6ADD]/25':
                 message.type === 'user' && !isWinningPrompt,
               'border border-yellow-300 bg-yellow-50 shadow-md shadow-yellow-100': isWinningPrompt,
             }
@@ -84,16 +90,13 @@ export const ChatMessage = ({ message, senderProfile, isWinningPrompt }: ChatMes
         >
           <div className="relative p-3 sm:p-4">
             {message.type === 'user' && message.sender && (
-              <div className="flex items-center justify-between gap-1 text-xs mb-2 -mt-1">
-                <Link
-                  href={profileLink}
-                  className="font-semibold text-black hover:underline"
-                >
+              <div className="-mt-1 mb-2 flex items-center justify-between gap-1 text-xs">
+                <Link href={profileLink} className="font-semibold text-black hover:underline">
                   {displayName}
                 </Link>
                 {isWinningPrompt && (
-                  <div className="flex items-center gap-1.5 bg-yellow-200 text-yellow-800 px-2 py-0.5 rounded-full text-xs font-semibold">
-                    <Trophy className="w-3 h-3" />
+                  <div className="flex items-center gap-1.5 rounded-full bg-yellow-200 px-2 py-0.5 text-xs font-semibold text-yellow-800">
+                    <Trophy className="h-3 w-3" />
                     Winner
                   </div>
                 )}
@@ -103,7 +106,7 @@ export const ChatMessage = ({ message, senderProfile, isWinningPrompt }: ChatMes
               <p
                 ref={contentRef}
                 className={clsx(
-                  'text-xs sm:text-sm leading-relaxed break-words text-black transition-all duration-200 ease-in-out',
+                  'break-words text-xs leading-relaxed text-black transition-all duration-200 ease-in-out sm:text-sm',
                   !isExpanded && 'line-clamp-4'
                 )}
               >
@@ -113,7 +116,7 @@ export const ChatMessage = ({ message, senderProfile, isWinningPrompt }: ChatMes
               {shouldTruncate && (
                 <button
                   onClick={() => setIsExpanded(!isExpanded)}
-                  className="mt-1 text-blue-600 text-xs hover:underline"
+                  className="mt-1 text-xs text-blue-600 hover:underline"
                 >
                   {isExpanded ? 'Show less' : 'Show more'}
                 </button>
@@ -121,23 +124,40 @@ export const ChatMessage = ({ message, senderProfile, isWinningPrompt }: ChatMes
             </div>
             <div
               className={clsx(
-                'text-xs flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2'
+                'flex flex-col gap-2 text-xs sm:flex-row sm:items-center sm:justify-between'
               )}
             >
               <div className="flex flex-col gap-1"></div>
-              <div className="text-right flex gap-3 text-[#666666] text-[11px] whitespace-nowrap absolute right-3 bottom-1">
+              <div className="absolute bottom-1 right-3 flex gap-3 whitespace-nowrap text-right text-[11px] text-[#666666]">
                 {message.type === 'agent' && message.txDigest && (
                   <a
                     href={`${SUI_TESTNET_BASE_URL}/${message.txDigest}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="underline break-all lowercase text-[#0F23A7]"
+                    className="break-all lowercase text-[#0F23A7] underline"
                   >
                     {formatAddress(message.txDigest)}
                   </a>
                 )}
                 {message.type === 'agent' && message.score !== undefined && (
                   <span className="font-medium text-black">Score: {message.score}/100</span>
+                )}
+                {message.type === 'agent' && message.juryResponse && onShowJury && (
+                  <button
+                    onClick={e => {
+                      e.stopPropagation()
+                      onShowJury()
+                    }}
+                    className="flex w-fit cursor-pointer items-center gap-1.5 text-[10px] text-[#0F23A7] underline transition-all hover:no-underline"
+                  >
+                    <Image
+                      src="/icons/court_house_blue.png"
+                      width="10"
+                      height="10"
+                      alt="Court House"
+                    />
+                    Jury Response
+                  </button>
                 )}
                 {formatDistanceToNow(new Date(Number.parseInt(message.timestamp)))} ago
               </div>

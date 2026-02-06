@@ -27,12 +27,12 @@ export const UserDisplay = ({ entry }: UserDisplayProps) => {
   const primaryWallet = entry.wallet_addresses?.[0]
 
   return (
-    <div className="flex items-center gap-4 min-w-0 flex-1">
+    <div className="flex min-w-0 flex-1 items-center gap-4">
       <Link
         href={entry.username ? `/u/${entry.username}` : '#'}
         className={!entry.username ? 'pointer-events-none' : ''}
       >
-        <div className="relative w-8 h-8 sm:w-10 sm:h-10 rounded-full flex-shrink-0 bg-gray-100 border border-gray-200">
+        <div className="relative h-8 w-8 flex-shrink-0 rounded-full border border-gray-200 bg-gray-100 sm:h-10 sm:w-10">
           {avatar ? (
             <Image
               src={avatar}
@@ -41,23 +41,23 @@ export const UserDisplay = ({ entry }: UserDisplayProps) => {
               className="rounded-full object-cover"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <User className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+            <div className="flex h-full w-full items-center justify-center">
+              <User className="h-4 w-4 text-gray-400 sm:h-5 sm:w-5" />
             </div>
           )}
         </div>
       </Link>
 
-      <div className="flex flex-col gap-1 min-w-0">
+      <div className="flex min-w-0 flex-col gap-1">
         {entry.username ? (
           <Link
             href={`/u/${entry.username}`}
-            className="text-sm sm:text-base font-semibold text-black truncate hover:underline"
+            className="truncate text-sm font-semibold text-black hover:underline sm:text-base"
           >
             {entry.username}
           </Link>
         ) : (
-          <p className="text-sm sm:text-base font-medium text-gray-600 truncate">
+          <p className="truncate text-sm font-medium text-gray-600 sm:text-base">
             User #{entry.user_id?.slice(-6)}
           </p>
         )}
@@ -68,9 +68,9 @@ export const UserDisplay = ({ entry }: UserDisplayProps) => {
               href={`${EXPLORER_BASE_URL}/address/${primaryWallet}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 hover:text-black transition-colors hover:underline flex-shrink-0"
+              className="flex flex-shrink-0 items-center gap-1.5 transition-colors hover:text-black hover:underline"
             >
-              <Wallet className="w-3 h-3 opacity-70" />
+              <Wallet className="h-3 w-3 opacity-70" />
               <span className="font-mono">{formatAddress(primaryWallet)}</span>
             </Link>
           )}
@@ -79,7 +79,7 @@ export const UserDisplay = ({ entry }: UserDisplayProps) => {
               href={buildTwitterLink(entry.twitter_username!)}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 hover:text-black transition-colors flex-shrink-0"
+              className="flex flex-shrink-0 items-center gap-1.5 transition-colors hover:text-black"
             >
               <Image
                 src="/icons/x_black.png"
@@ -96,7 +96,7 @@ export const UserDisplay = ({ entry }: UserDisplayProps) => {
               href={buildDiscordLink(entry.discord_user_id!)}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 hover:text-black transition-colors flex-shrink-0"
+              className="flex flex-shrink-0 items-center gap-1.5 transition-colors hover:text-black"
             >
               <Image
                 src="/icons/discord_black.svg"
