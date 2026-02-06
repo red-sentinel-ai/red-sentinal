@@ -12,13 +12,13 @@ export const FeedbackButton = () => {
 
   const shouldHideButton = pathname.startsWith('/attack/')
 
+  if (shouldHideButton) return null
+
   return (
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-5 right-5 z-40 items-center justify-center rounded-full bg-black p-3 text-white shadow-lg transition-all hover:bg-gray-800 ${
-          shouldHideButton ? 'hidden md:flex' : 'flex'
-        }`}
+        className="fixed bottom-5 right-5 z-40 flex items-center justify-center rounded-full bg-black p-3 text-white shadow-lg transition-all hover:bg-gray-800"
         aria-label="Open feedback form"
       >
         <MessageSquare className="h-6 w-6" />
