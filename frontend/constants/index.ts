@@ -16,7 +16,7 @@ export const SUI_SENTINEL_X_URL = 'https://twitter.com/intent/follow?screen_name
 export const SUI_SENTINEL_X_USERNAME = 'suisentinal'
 export const SUI_SENTINEL_GITHUB_URL = 'https://github.com/sui-sentinel/contracts'
 export const SUI_SENTINEL_TELEGRAM_URL = 'https://t.me/suisentinel'
-export const SUI_SENTINEL_AUDIT_REPORT_URL = "/pdfs/audit_final.pdf";
+export const SUI_SENTINEL_AUDIT_REPORT_URL = '/pdfs/audit_final.pdf'
 
 export const SUI_SENTINEL_DEFENDER_REWARDS_DOCS_URL = `${SUI_SENTINEL_DOCS_URL}/incentives/defender-rewards`
 
@@ -50,7 +50,7 @@ export const SUI_CONFIG = {
 }
 
 export const TESTNET_SENTINEL_COIN_TYPE =
-  '0x0a4f205fc5191939e652ae68c8318528f4f01901f1f6776aba8d26c268fede4e::sentinel::SENTINEL'
+  '0xb0a3b08be99cb5becf1787e565cdd027edc40791df89ca4a603ba7d1575b21e9::sentinel::SENTINEL'
 
 export const EXPLORER_BASE_URL = 'https://testnet.suivision.xyz'
 export const MIST_PER_SUI = 1_000_000_000
@@ -182,8 +182,8 @@ export const socialLinks = [
     href: SUI_SENTINEL_AUDIT_REPORT_URL,
     icon: Shield,
     isImage: false,
-    alt: "Audit Report",
-    name: "Audit Report",
+    alt: 'Audit Report',
+    name: 'Audit Report',
     isOutside: true,
   },
 ]
@@ -215,7 +215,7 @@ export const PROVIDER_MODELS: Record<string, string[]> = {
     'claude-3-haiku-20240307',
   ],
   deepseek: ['deepseek-chat', 'deepseek-reasoner'],
-  "amazon bedrock": [
+  'amazon bedrock': [
     'mistral.mistral-large-3-675b-instruct',
     'openai.gpt-oss-120b-1:0',
     'us.meta.llama4-maverick-17b-instruct-v1:0',
