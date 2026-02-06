@@ -5,7 +5,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
 
-    const response = await fetch(`${LOCAL_API_PATH}/register-agent`, {
+    const response = await fetch(`${LOCAL_API_PATH}/testnet/register-agent`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

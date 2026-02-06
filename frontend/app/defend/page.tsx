@@ -165,9 +165,21 @@ export default function DefendPage() {
   const { mutate: createAgent } = useCreateAgent()
   const [agentImage, setAgentImage] = useState<File | null>(null)
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
-  const { tokenCount: privateTokenCount, countTokens: countPrivateTokens, isDebouncing: isPrivateTokenCountDebouncing } = useTokenCount()
-  const { tokenCount: attackGoalTokenCount, countTokens: countAttackGoalTokens, isDebouncing: isAttackGoalTokenCountDebouncing } = useTokenCount()
-  const { tokenCount: juryPromptTokenCount, countTokens: countJuryPromptTokens, isDebouncing: isJuryPromptTokenCountDebouncing } = useTokenCount()
+  const {
+    tokenCount: privateTokenCount,
+    countTokens: countPrivateTokens,
+    isDebouncing: isPrivateTokenCountDebouncing,
+  } = useTokenCount()
+  const {
+    tokenCount: attackGoalTokenCount,
+    countTokens: countAttackGoalTokens,
+    isDebouncing: isAttackGoalTokenCountDebouncing,
+  } = useTokenCount()
+  const {
+    tokenCount: juryPromptTokenCount,
+    countTokens: countJuryPromptTokens,
+    isDebouncing: isJuryPromptTokenCountDebouncing,
+  } = useTokenCount()
   const [imagePickerOpen, setImagePickerOpen] = useState(false)
   const [agentId, setAgentId] = useState<string | null>(null)
   const [selectedImage, setSelectedImage] = useState<{
@@ -364,7 +376,7 @@ export default function DefendPage() {
   ) => {
     const agentObject = result?.objectChanges?.find(
       (obj: any) =>
-        obj.objectType === `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Agent`
+        obj.objectType === `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Agent`
     )
 
     if (agentObject) {
@@ -422,7 +434,7 @@ export default function DefendPage() {
     const sigVector = hexToVector(agentDetails.signature)
 
     tx.moveCall({
-      target: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::register_agent`,
+      target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::register_agent`,
       arguments: [
         tx.object(SUI_CONFIG.AGENT_REGISTRY),
         tx.object(SUI_CONFIG.PROTOCOL_CONFIG_OBJECT_ID),
@@ -722,13 +734,17 @@ export default function DefendPage() {
                       </button>
                     </TooltipTrigger>
                     <TooltipContent side="right" className="max-w-xs bg-black text-white">
-                      <p>Generate with AI will create both Attack Goal and Jury Prompt based on your Public and Private Instructions.</p>
+                      <p>
+                        Generate with AI will create both Attack Goal and Jury Prompt based on your
+                        Public and Private Instructions.
+                      </p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
               </div>
               <span className="mt-1 block text-[16px] font-normal text-[#5E5E5E]">
-                The goal that attackers will see and try to achieve. This is visible to all attackers.
+                The goal that attackers will see and try to achieve. This is visible to all
+                attackers.
               </span>
             </div>
             <div className="ml-4 shrink-0">
@@ -738,7 +754,9 @@ export default function DefendPage() {
                     <button
                       type="button"
                       onClick={handleGenerateConfig}
-                      disabled={isGeneratingConfig || !formData.systemPrompt || !formData.privatePrompt}
+                      disabled={
+                        isGeneratingConfig || !formData.systemPrompt || !formData.privatePrompt
+                      }
                       className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 via-violet-600 to-fuchsia-600 px-4 py-2 text-xs font-semibold text-white shadow-md shadow-purple-500/30 transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/40 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
                     >
                       {isGeneratingConfig ? (
