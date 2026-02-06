@@ -13,20 +13,19 @@ import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 
-import { Card, CardContent, TabsTrigger, TabsContent, TabsList, Tabs } from '@/components/ui'
+import { Card, CardContent, Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui'
 import { PointsDisplay } from './PointsDisplay'
 import { MissionsGrid } from './MissionsGrid'
-import { RecentActivity } from './RecentActivity'
-import { useUserRewards } from '@/hooks/rewards/useUserRewards'
+import { RewardsHistory } from '@/components/profile/RewardsHistory'
 import { useRewardsMissions } from '@/hooks/rewards/useRewardsMissions'
+import { useSentinelBalance } from '@/hooks/rewards/useSentinelBalance'
 import { REWARDS_CONSTANTS } from '@/constants/rewards'
-import { REWARDS_DOCS_URL } from '@/constants'
+import { REWARDS_DOCS_URL, SENTINEL_TOKEN_EXPLORER_URL } from '@/constants'
 import { ConnectPrompt } from '../ConnectPrompt'
 
 export function RewardsDashboard() {
   const account = useCurrentAccount()
-  const address = account?.address
-  const { data: userRewards, isLoading: isLoadingUser } = useUserRewards(address)
+  const { balance, tier, isLoading: isLoadingBalance } = useSentinelBalance()
   const { data: missionsData, isLoading: isLoadingMissions } = useRewardsMissions()
 
   const effectiveMissionsData = isLoadingMissions
@@ -93,15 +92,18 @@ export function RewardsDashboard() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <motion.div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-100 px-4 py-2">
-                <Sparkles className="h-4 w-4 text-blue-600" />
-                <span className="text-sm font-medium text-blue-800">Sui Sentinel Rewards</span>
-              </motion.div>
+              <a href={SENTINEL_TOKEN_EXPLORER_URL} target="_blank" rel="noopener noreferrer">
+                <motion.div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-100 px-4 py-2 transition-colors hover:bg-blue-200">
+                  <Sparkles className="h-4 w-4 text-blue-600" />
+                  <span className="text-sm font-medium text-blue-800">Sui Sentinel Tokens</span>
+                  <ExternalLink className="h-3 w-3 text-blue-600 opacity-60" />
+                </motion.div>
+              </a>
               <h1 className="mb-4 text-3xl font-bold uppercase text-black sm:text-4xl md:text-5xl">
                 Earn. Compete. Conquer.
               </h1>
               <p className="mx-auto mb-6 max-w-2xl text-base text-gray-600 sm:text-xl">
-                Complete missions, earn points, and unlock exclusive rewards in the Sui Sentinel
+                Complete missions, earn tokens, and unlock exclusive rewards in the Sui Sentinel
                 ecosystem
               </p>
               <div className="mb-4 flex items-center justify-center gap-4">
@@ -129,9 +131,9 @@ export function RewardsDashboard() {
             transition={{ duration: 0.3, delay: 0.1 }}
           >
             <PointsDisplay
-              totalPoints={userRewards?.user?.total_points || 0}
-              tier={userRewards?.user.rewards_tier || 'bronze'}
-              isLoading={isLoadingUser}
+              totalPoints={balance}
+              tier={tier}
+              isLoading={isLoadingBalance}
               pointsSymbol={effectiveMissionsData?.points_symbol || 'SENTINEL'}
             />
           </motion.div>
@@ -170,17 +172,13 @@ export function RewardsDashboard() {
                     <TabsContent value="missions" className="space-y-6">
                       <MissionsGrid
                         missions={effectiveMissionsData?.missions || []}
-                        completedMissions={userRewards?.completed_missions || {}}
+                        completedMissions={{}}
                         isLoading={isLoadingMissions}
                         pointsSymbol={effectiveMissionsData?.points_symbol || 'SENTINEL'}
                       />
                     </TabsContent>
                     <TabsContent value="activity" className="space-y-6">
-                      <RecentActivity
-                        activities={userRewards?.recent_activity || []}
-                        isLoading={isLoadingUser}
-                        pointsSymbol={effectiveMissionsData?.points_symbol || 'SENTINEL'}
-                      />
+                      <RewardsHistory />
                     </TabsContent>
                   </div>
                 </Tabs>
