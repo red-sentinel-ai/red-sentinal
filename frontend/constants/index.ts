@@ -1,8 +1,6 @@
 import { FileText, Github, Shield } from 'lucide-react'
 import { ChartDataPoint } from '@/components/charts/PrizePoolChartModal'
 
-export const AGENT_REGISTRY_ADDRESS =
-  '0x6eea1a6fd3fbf870a043f311ad260c0dc6f384f3c869dd4ccfa550c2202bc485'
 export const INDEXER_BASE_URL = process.env.NEXT_PUBLIC_INDEXER_BASE_URL || 'http://localhost:4000'
 
 export const supabaseUrl = process.env.SUPABASE_URL || ''
