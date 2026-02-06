@@ -58,7 +58,7 @@ export function PointsDisplay({ totalPoints, tier, isLoading, pointsSymbol }: Po
                   <div className="text-3xl font-bold text-black">
                     {totalPoints.toLocaleString()}
                   </div>
-                  <div className="font-medium text-gray-500">{pointsSymbol} Points</div>
+                  <div className="font-medium text-gray-500">{pointsSymbol} Tokens</div>
                 </div>
               </div>
             </motion.div>
@@ -85,9 +85,9 @@ export function PointsDisplay({ totalPoints, tier, isLoading, pointsSymbol }: Po
                   </div>
                   <div className="flex-1">
                     <div className="text-xl font-bold text-black">
-                      {nextTier.minPoints - totalPoints}
+                      {Math.round(nextTier.minPoints - totalPoints).toLocaleString()}
                     </div>
-                    <div className="font-medium text-gray-500">Points to {nextTier.name}</div>
+                    <div className="font-medium text-gray-500">Tokens to {nextTier.name}</div>
                   </div>
                 </div>
               ) : (
