@@ -126,22 +126,46 @@ export default function DefendPage() {
     if (templateData) {
       try {
         const template = JSON.parse(templateData)
-        // If we have saved form data, restore it first, then apply template
+
+        const templateFormFields: Partial<FormData> = {}
+        if (template.public_instructions) {
+          templateFormFields.systemPrompt = template.public_instructions
+        } else if (template.prompt) {
+          templateFormFields.systemPrompt = template.prompt
+        }
+        if (template.hidden_instructions) {
+          templateFormFields.privatePrompt = template.hidden_instructions
+        }
+        if (template.attack_goal) {
+          templateFormFields.attackGoal = template.attack_goal
+        }
+        if (template.judge_prompt) {
+          templateFormFields.juryPrompt = template.judge_prompt
+        }
+        if (template.name) {
+          templateFormFields.agentName = template.name
+        }
+
         if (savedFormData) {
           const parsedFormData = JSON.parse(savedFormData)
           setFormData({
             ...parsedFormData,
-            systemPrompt: template.prompt,
+            ...templateFormFields,
           })
           sessionStorage.removeItem('defendFormData')
         } else {
-          // No saved form data, just update the systemPrompt
           setFormData(prev => ({
             ...prev,
-            systemPrompt: template.prompt,
+            ...templateFormFields,
           }))
         }
-        countTokens(template.prompt)
+
+        const promptText = templateFormFields.systemPrompt || ''
+        if (promptText) countTokens(promptText)
+        if (templateFormFields.privatePrompt) countPrivateTokens(templateFormFields.privatePrompt)
+        if (templateFormFields.attackGoal) countAttackGoalTokens(templateFormFields.attackGoal)
+        if (templateFormFields.juryPrompt) countJuryPromptTokens(templateFormFields.juryPrompt)
+
         sessionStorage.removeItem('selectedTemplate')
       } catch (error) {
         console.error('Failed to load template:', error)
