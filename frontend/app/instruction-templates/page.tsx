@@ -2,14 +2,20 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { ChevronLeft, Copy, Check, Eye, EyeOff, Crosshair, Gavel } from 'lucide-react'
+import { ChevronLeft, Copy, Check, Eye, EyeOff, Crosshair, Gavel, AlertTriangle } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { SENTINEL_TEMPLATES, SentinelTemplate } from '@/constants/sentinel-templates'
 
 export default function InstructionTemplatesPage() {
+  const [selectedCategory, setSelectedCategory] = useState<'all' | 'basic' | 'rag'>('all')
   const [selectedTemplate, setSelectedTemplate] = useState<SentinelTemplate | null>(null)
   const [copiedField, setCopiedField] = useState<string | null>(null)
+
+  const filteredTemplates =
+    selectedCategory === 'all'
+      ? SENTINEL_TEMPLATES
+      : SENTINEL_TEMPLATES.filter(t => t.sentinel_type === selectedCategory)
 
   const copyToClipboard = async (text: string, fieldId: string) => {
     await navigator.clipboard.writeText(text)
@@ -67,9 +73,78 @@ export default function InstructionTemplatesPage() {
           </p>
         </div>
 
+          <div className="mb-8 rounded-xl border border-amber-200 bg-amber-50 p-6">
+          <div className="flex gap-4">
+            <AlertTriangle className="mt-1 h-6 w-6 flex-shrink-0 text-amber-600" />
+            <div>
+              <h3 className="mb-2 font-semibold text-amber-900">
+                No Perfect Defense — But These Help
+              </h3>
+              <p className="text-sm text-amber-800">
+                These templates draw from security research including{' '}
+                <Link
+                  href="https://github.com/NVIDIA/garak"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline hover:text-amber-900"
+                >
+                  garak
+                </Link>
+                ,{' '}
+                <Link
+                  href="https://www.promptfoo.dev"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline hover:text-amber-900"
+                >
+                  promptfoo
+                </Link>
+                ,{' '}
+                <Link
+                  href="https://github.com/safety-research/petri"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline hover:text-amber-900"
+                >
+                  petri
+                </Link>
+                , and{' '}
+                <Link
+                  href="https://github.com/safety-research/bloom"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline hover:text-amber-900"
+                >
+                  bloom
+                </Link>
+                . No defense is perfect against determined attackers, but these templates
+                significantly raise the bar. Always test your Sentinel against real attacks before
+                deploying.
+              </p>
+            </div>
+          </div>
+          </div>
+
+        <div className="mb-8 flex flex-wrap gap-2 sm:gap-3">
+          {(['all', 'basic', 'rag'] as const).map(category => (
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={cn(
+                'rounded-xl px-4 py-2 text-sm font-medium transition-all sm:px-6 sm:py-3 sm:text-base',
+                selectedCategory === category
+                  ? 'bg-black text-white'
+                  : 'border border-[#5E5E5E] bg-white hover:border-black'
+              )}
+            >
+              {category === 'all' ? 'All Templates' : category === 'basic' ? 'Basic' : 'RAG'}
+            </button>
+          ))}
+        </div>
+
         {/* Templates Grid */}
         <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {SENTINEL_TEMPLATES.map((template, index) => (
+          {filteredTemplates.map((template, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
