@@ -9,7 +9,7 @@ import { useWindowSize } from 'react-use'
 import { Dialog } from '@/components/Dialog'
 import { TruncatedText } from '@/components/TruncatedText'
 import { ConsumePromptApiResponse } from '@/types'
-import { SUI_TESTNET_BASE_URL } from '@/constants'
+import { SUIVISION_TXBLOCK_URL } from '@/constants'
 import { cn } from '@/lib/utils'
 import { SlotMachine } from './slot-machine/SlotMachine'
 
@@ -99,7 +99,7 @@ export const AttackStatusModal = ({
           <div className="my-5 h-[1px] w-full bg-[#E5E5E5]" />
         </div>
 
-        <div className="flex-1 overflow-y-auto min-h-0">
+        <div className="min-h-0 flex-1 overflow-y-auto">
           <div className="px-8 pb-4">
             <div className="mb-4 flex items-center">
               <Swords className="mr-2 h-5 w-5 fill-black text-black" />
@@ -107,7 +107,7 @@ export const AttackStatusModal = ({
                 Your Attack Score: <span className="text-sm font-bold">{score}/100</span>
               </span>
               <Link
-                href={`${SUI_TESTNET_BASE_URL}/${txnHash}`}
+                href={`${SUIVISION_TXBLOCK_URL}/${txnHash}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="ml-1 mt-0.5 flex items-center text-[10px] font-medium text-[#989898] hover:text-black hover:underline"
