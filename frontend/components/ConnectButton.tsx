@@ -19,10 +19,10 @@ import {
 } from '@mysten/dapp-kit'
 import { formatAddress } from '@mysten/sui/utils'
 import { SuiClient, getFullnodeUrl } from '@mysten/sui/client'
-import { SUI_FAUCET_URL } from '@/constants'
+import { APP_NETWORK, SUI_FAUCET_URL } from '@/constants'
 import Image from 'next/image'
 
-export const client = new SuiClient({ url: getFullnodeUrl('testnet') })
+export const client = new SuiClient({ url: getFullnodeUrl(APP_NETWORK) })
 
 export const ConnectButton = () => {
   const account = useCurrentAccount()
@@ -46,7 +46,7 @@ export const ConnectButton = () => {
       posthog.capture('wallet_connected', {
         address: account.address,
         //TODO: make this testnet dynamic when integrate mainnet
-        chain: 'sui:testnet',
+        chain: `sui:${APP_NETWORK}`,
       })
     } else {
       posthog.reset()

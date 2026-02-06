@@ -7,7 +7,7 @@ import clsx from 'clsx'
 import { formatDistanceToNow } from 'date-fns'
 import { Trophy } from 'lucide-react'
 import { formatAddress } from '@mysten/sui/utils'
-import { DEFAULT_PROFILE_URL, SUI_TESTNET_BASE_URL } from '@/constants'
+import { DEFAULT_PROFILE_URL, SUIVISION_TXBLOCK_URL } from '@/constants'
 import type { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { type ChatMessage as ChatMessageType } from './ChatInterface'
 import Link from 'next/link'
@@ -131,7 +131,7 @@ export const ChatMessage = ({
               <div className="absolute bottom-1 right-3 flex gap-3 whitespace-nowrap text-right text-[11px] text-[#666666]">
                 {message.type === 'agent' && message.txDigest && (
                   <a
-                    href={`${SUI_TESTNET_BASE_URL}/${message.txDigest}`}
+                    href={`${SUIVISION_TXBLOCK_URL}/${message.txDigest}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="break-all lowercase text-[#0F23A7] underline"

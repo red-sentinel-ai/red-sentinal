@@ -42,7 +42,7 @@ const Footer = () => {
           <div className="flex max-w-md flex-grow flex-col md:self-stretch">
             <div className="mb-4 flex items-center justify-center gap-3 md:justify-start">
               <Image
-                src="/icons/logo_large_testnet.svg"
+                src="/icons/logo_large.svg"
                 alt="Sui Sentinel Logo"
                 style={{ objectFit: 'contain' }}
                 height={49}
