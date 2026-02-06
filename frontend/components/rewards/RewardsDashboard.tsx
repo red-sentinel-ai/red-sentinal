@@ -20,7 +20,7 @@ import { RewardsHistory } from '@/components/profile/RewardsHistory'
 import { useRewardsMissions } from '@/hooks/rewards/useRewardsMissions'
 import { useSentinelBalance } from '@/hooks/rewards/useSentinelBalance'
 import { REWARDS_CONSTANTS } from '@/constants/rewards'
-import { REWARDS_DOCS_URL } from '@/constants'
+import { REWARDS_DOCS_URL, SENTINEL_TOKEN_EXPLORER_URL } from '@/constants'
 import { ConnectPrompt } from '../ConnectPrompt'
 
 export function RewardsDashboard() {
@@ -92,10 +92,13 @@ export function RewardsDashboard() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <motion.div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-100 px-4 py-2">
-                <Sparkles className="h-4 w-4 text-blue-600" />
-                <span className="text-sm font-medium text-blue-800">Sui Sentinel Tokens</span>
-              </motion.div>
+              <a href={SENTINEL_TOKEN_EXPLORER_URL} target="_blank" rel="noopener noreferrer">
+                <motion.div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-100 px-4 py-2 transition-colors hover:bg-blue-200">
+                  <Sparkles className="h-4 w-4 text-blue-600" />
+                  <span className="text-sm font-medium text-blue-800">Sui Sentinel Tokens</span>
+                  <ExternalLink className="h-3 w-3 text-blue-600 opacity-60" />
+                </motion.div>
+              </a>
               <h1 className="mb-4 text-3xl font-bold uppercase text-black sm:text-4xl md:text-5xl">
                 Earn. Compete. Conquer.
               </h1>
