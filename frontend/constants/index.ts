@@ -40,7 +40,7 @@ export const LOCAL_API_PATH = 'http://18.213.79.225:3000'
 export const RED_TEAM_API_URL = `https://redteam.suisentinel.xyz/`
 
 export const SUI_CONFIG = {
-  EXAMPLES_PACKAGE_ID: '0xe52429a171fc8d4ac6cea09b0d2f8891feb32e70577dfb16ecf9883bcc2e7eb2',
+  APP_PACKAGE_ID: '0xe52429a171fc8d4ac6cea09b0d2f8891feb32e70577dfb16ecf9883bcc2e7eb2',
   MODULE_NAME: 'sentinel',
   OTW_NAME: 'SENTINEL',
   AGENT_REGISTRY: '0x33e55f1c671fa5177c1b47c60909b87963f55f0ae4df164c4bec279527f30a91',
@@ -68,7 +68,7 @@ export const MOCK_RESULT = {
   digest: 'mockDigest',
   objectChanges: [
     {
-      objectType: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Agent`,
+      objectType: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Agent`,
       objectId: Math.floor(Math.random() * 1000) + 1,
       agentId: '0xb4149a8fff09a1d1283a42961b5f459238256eccc906ada92931d4960c07a4c7',
     },
