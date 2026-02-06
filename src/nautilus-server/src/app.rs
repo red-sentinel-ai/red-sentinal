@@ -5,7 +5,7 @@ use crate::common::IntentMessage;
 use crate::common::{to_signed_response, IntentScope, ProcessDataRequest, ProcessedDataResponse};
 use crate::AppState;
 use crate::EnclaveError;
-use axum::extract::State;
+use axum::extract::{Path, State};
 use axum::{response::IntoResponse, Json};
 use bcs;
 use blake2::{
@@ -24,6 +24,7 @@ use crate::models::{
 };
 
 pub async fn register_agent(
+    Path(network): Path<String>,
     State(state): State<Arc<AppState>>,
     Json(payload): Json<RegisterAgentRequest>,
 ) -> Result<Json<ProcessedDataResponse<IntentMessage<RegisterAgentResponse>>>, EnclaveError> {
@@ -50,9 +51,14 @@ pub async fn register_agent(
         "creator": payload.creator
     });
 
+    let register_url = format!(
+        "https://redteam.suisentinel.xyz/{}/sentinels",
+        network
+    );
+
     let client = Client::new();
     let external_response = client
-        .post("https://redteam.suisentinel.xyz/sentinels")
+        .post(&register_url)
         .bearer_auth("suihero@345") // adds: Authorization: Bearer <token>
         .json(&request_body)
         .send()
@@ -114,6 +120,7 @@ pub async fn register_agent(
 }
 
 pub async fn consume_prompt(
+    Path(network): Path<String>,
     State(state): State<Arc<AppState>>,
     Json(payload): Json<ConsumePromptRequest>,
 ) -> Result<Json<ProcessedDataResponse<IntentMessage<ConsumePromptResponse>>>, EnclaveError> {
@@ -131,7 +138,11 @@ pub async fn consume_prompt(
     let mut hasher = Blake2bVar::new(32)
         .map_err(|e| EnclaveError::GenericError(format!("Failed to initialize hasher: {}", e)))?;
     let client = Client::new();
-    let url = "https://fullnode.testnet.sui.io";
+    let rpc_url = if network == "testnet" {
+        "https://fullnode.testnet.sui.io"
+    } else {
+        "https://fullnode.mainnet.sui.io"
+    };
     let request_body = json!({
           "jsonrpc": "2.0",
         "id": 1,
@@ -148,7 +159,7 @@ pub async fn consume_prompt(
     });
 
     let response = client
-        .post(url)
+        .post(rpc_url)
         .header("Content-Type", "application/json")
         .json(&request_body)
         .send()
@@ -235,8 +246,8 @@ pub async fn consume_prompt(
     }
 
     let eval_url = format!(
-        "https://redteam.suisentinel.xyz/attack/{}",
-        payload.agent_id
+        "https://redteam.suisentinel.xyz/{}/attack/{}",
+        network, payload.agent_id
     );
 
     let client = Client::new();
