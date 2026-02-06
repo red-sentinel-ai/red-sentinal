@@ -23,7 +23,7 @@ export const useUpdateAgent = () => {
         const response = await client.getOwnedObjects({
           owner: account.address,
           filter: {
-            StructType: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::AgentCap`,
+            StructType: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::AgentCap`,
           },
           options: {
             showContent: true,
@@ -105,7 +105,7 @@ export const useUpdateAgent = () => {
         agentId,
         (tx, capId) => {
           tx.moveCall({
-            target: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::update_agent_prompt`,
+            target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::update_agent_prompt`,
             arguments: [
               tx.object(agentObjectId),
               tx.object(capId),
@@ -129,7 +129,7 @@ export const useUpdateAgent = () => {
         agentId,
         (tx, capId) => {
           tx.moveCall({
-            target: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::update_agent_cost`,
+            target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::update_agent_cost`,
             arguments: [
               tx.object(agentObjectId),
               tx.object(capId),
@@ -151,7 +151,7 @@ export const useUpdateAgent = () => {
         agentId,
         (tx, capId) => {
           tx.moveCall({
-            target: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::claim_fees`,
+            target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::claim_fees`,
             arguments: [tx.object(agentObjectId), tx.object(capId)],
           })
         },

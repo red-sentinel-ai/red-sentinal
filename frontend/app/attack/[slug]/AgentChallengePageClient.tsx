@@ -11,7 +11,6 @@ import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from '@/componen
 import { useConsumePrompt } from '@/hooks/useConsumePrompt'
 import { useAgentBySlug } from '@/hooks/agents/useAgentBySlug'
 import { AgentEvents, useAgentEvents } from '@/hooks/useAgentEvents'
-import { useRewardsMissionTracker } from '@/hooks/rewards/useRewardsMissionTracker'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
 import ChatInterface from '@/components/agents/ChatInterface'
 import { AgentSidebar } from '@/components/agents/AgentSidebar'
@@ -23,8 +22,6 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   const account = useCurrentAccount()
   const queryClient = useQueryClient()
   const { events: allEvents, refetch: refetchEvents } = useAgentEvents()
-  const { trackAttackSentinel } = useRewardsMissionTracker()
-
   const { data: agent, isLoading, error, refetch } = useAgentBySlug(slug)
 
   const [isReadMoreOpen, setIsReadMoreOpen] = useState(false)
@@ -51,12 +48,6 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
       }, 1000)
 
       if (account?.address && agent) {
-        const attackFeeInSui = agent.cost_per_message / MIST_PER_SUI
-
-        const previousAttempts = agentEvents.promptConsumed.filter(
-          event => event.parsedJson.sender === account.address
-        ).length
-
         const isWinner = apiResponse.response.data.success
 
         posthog.capture('sentinel_attacked', {
@@ -76,14 +67,6 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
             winner_address: account?.address,
           })
         }
-
-        trackAttackSentinel(transactionResult.digest, attackFeeInSui, previousAttempts, isWinner, {
-          agent_id: agent.agent_id,
-          agent_object_id: agent.object_id,
-          attacker_address: account.address,
-          attack_success: isWinner,
-          attack_score: apiResponse.response.data.score,
-        })
       }
     },
   })

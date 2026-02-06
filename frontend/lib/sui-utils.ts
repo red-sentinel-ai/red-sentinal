@@ -45,7 +45,7 @@ export const fetchAgentDetailsViaObject = async (
 }
 
 export async function getDefeatedAgentIds(client: SuiClient): Promise<Set<string>> {
-  const packageId = SUI_CONFIG.EXAMPLES_PACKAGE_ID
+  const packageId = SUI_CONFIG.APP_PACKAGE_ID
   const moduleName = SUI_CONFIG.MODULE_NAME
 
   try {
@@ -66,7 +66,7 @@ export async function getDefeatedAgentIds(client: SuiClient): Promise<Set<string
 }
 
 export async function getAttackCountsPerAgent(client: SuiClient): Promise<Map<string, number>> {
-  const packageId = SUI_CONFIG.EXAMPLES_PACKAGE_ID
+  const packageId = SUI_CONFIG.APP_PACKAGE_ID
   const moduleName = SUI_CONFIG.MODULE_NAME
   const attackCounts = new Map<string, number>()
 
