@@ -29,13 +29,12 @@ pub struct IntentMessage<T: Serialize> {
     pub data: T,
 }
 
-
 #[derive(Serialize_repr, Deserialize_repr, Debug)]
 #[repr(u8)]
 pub enum IntentScope {
     Weather = 0,
     RegisterAgent = 1,
-    ConsumePrompt = 2
+    ConsumePrompt = 2,
 }
 
 impl<T: Serialize + Debug> IntentMessage<T> {
@@ -55,12 +54,10 @@ pub struct ProcessedDataResponse<T> {
     pub signature: String,
 }
 
-
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ProcessDataRequest<T> {
     pub payload: T,
 }
-
 
 pub fn to_signed_response<T: Serialize + Clone>(
     kp: &Ed25519KeyPair,
@@ -82,13 +79,10 @@ pub fn to_signed_response<T: Serialize + Clone>(
     }
 }
 
-
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetAttestationResponse {
-
     pub attestation: String,
 }
-
 
 pub async fn get_attestation(
     State(state): State<Arc<AppState>>,
@@ -97,7 +91,6 @@ pub async fn get_attestation(
 
     let pk = state.eph_kp.public();
     let fd = driver::nsm_init();
-
 
     let request = NsmRequest::Attestation {
         user_data: None,

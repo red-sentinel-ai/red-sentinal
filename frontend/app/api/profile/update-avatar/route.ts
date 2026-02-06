@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
       const { data: urlData } = supabaseServiceClient.storage
         .from(AVATARS_BUCKET_NAME)
         .getPublicUrl(filePath)
-        
+
       newAvatarUrl = `${urlData.publicUrl}?t=${new Date().getTime()}`
     } else if (imageUrlString) {
       newAvatarUrl = imageUrlString

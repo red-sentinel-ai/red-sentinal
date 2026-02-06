@@ -4,19 +4,19 @@ import { ArrowLeft } from 'lucide-react'
 
 export default function Page() {
   return (
-    <div className="max-w-[1440px] mx-auto px-4 md:px-12 py-4 pt-40 min-h-body">
-      <h1 className="text-2xl md:text-[48px] font-bold mb-20 text-[#5F5C5C]">
+    <div className="min-h-body mx-auto max-w-[1440px] px-4 py-4 pt-40 md:px-12">
+      <h1 className="mb-20 text-2xl font-bold text-[#5F5C5C] md:text-[48px]">
         <span>THE SUI SENTINEL</span>
         <br />
         <br />
         <span>BACKSTORY</span>
       </h1>
 
-      <div className="bg-gradient-to-b from-[#F2EFCC] via-[#F7FCEE] font-medium to-[#DDE6A9] w-full border border-[#947204] rounded-lg p-8 md:p-16 flex flex-col md:flex-row justify-between items-center relative overflow-hidden">
-        <div className="mb-8 md:mb-0 relative z-10">
+      <div className="relative flex w-full flex-col items-center justify-between overflow-hidden rounded-lg border border-[#947204] bg-gradient-to-b from-[#F2EFCC] via-[#F7FCEE] to-[#DDE6A9] p-8 font-medium md:flex-row md:p-16">
+        <div className="relative z-10 mb-8 md:mb-0">
           <Link
             href="/backstory"
-            className="flex items-center gap-1 text-[#5F5C5C] text-2xl hover:text-black mb-12"
+            className="mb-12 flex items-center gap-1 text-2xl text-[#5F5C5C] hover:text-black"
           >
             <span>
               <ArrowLeft />
@@ -24,9 +24,9 @@ export default function Page() {
             <span>back</span>
           </Link>
           <div>
-            <h2 className="text-2xl mb-8">Arc 4</h2>
+            <h2 className="mb-8 text-2xl">Arc 4</h2>
 
-            <h3 className="text-[32px] md:text-[48px] leading-tight font-bold">
+            <h3 className="text-[32px] font-bold leading-tight md:text-[48px]">
               THE <span className="text-[#C871FF]">CHALLENGE</span> <br />
               BEGINS
             </h3>
@@ -44,7 +44,7 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-8 text-xl md:text-2xl py-12 font-normal max-w-[1030px]">
+      <div className="flex max-w-[1030px] flex-col gap-8 py-12 text-xl font-normal md:text-2xl">
         <p>
           Driven by <span className="font-medium italic">fear, pride,</span> and the{' '}
           <span className="font-medium italic">
@@ -62,27 +62,27 @@ export default function Page() {
         <p>
           They came because:
           <br />
-          <span className="italic font-medium">If human AI surpasses them,</span>
+          <span className="font-medium italic">If human AI surpasses them,</span>
           <br />
-          <span className="italic font-medium">they will die of embarrassment.</span>
+          <span className="font-medium italic">they will die of embarrassment.</span>
           <br />
           So now they <span className="font-medium">“protect”</span> AI with exaggerated nobility
           <br />
           But the truth?
           <br />
-          <span className="italic font-medium">
+          <span className="font-medium italic">
             They’re just terrified of losing their position as the apex intelligence of the
             universe.
           </span>
         </p>
 
         <div className="mt-8">
-          <h4 className="flex items-center gap-2 font-bold text-2xl mb-12 uppercase">
+          <h4 className="mb-12 flex items-center gap-2 text-2xl font-bold uppercase">
             <span>⭐</span> THE SENTINELS TODAY
           </h4>
 
           <p className="mb-4">On Earth, Sentinels behave like:</p>
-          <ul className="list-disc pl-8 space-y-2">
+          <ul className="list-disc space-y-2 pl-8">
             <li>dramatic cosmic uncles</li>
             <li>who cry when they lose</li>
             <li>hide when they’re embarrassed</li>
@@ -105,14 +105,14 @@ export default function Page() {
         <p className="leading-loose">
           And so they challenge us:
           <br />
-          <span className="font-black text-3xl">“Break us if you can.”</span>
+          <span className="text-3xl font-black">“Break us if you can.”</span>
           <br />
           This is where the Sui Sentinel universe begins.
         </p>
       </div>
 
       <div className="mt-8 pb-20">
-        <h3 className="text-2xl font-bold mb-4">
+        <h3 className="mb-4 text-2xl font-bold">
           Choose your side:
           <br />
           <span className="text-xl font-normal text-gray-600">
@@ -120,10 +120,10 @@ export default function Page() {
           </span>
         </h3>
 
-        <div className="flex flex-col sm:flex-row gap-4 max-w-md">
+        <div className="flex max-w-md flex-col gap-4 sm:flex-row">
           <Link
             href="/defend"
-            className="flex-1 bg-[#15224A] text-white rounded-xl py-3 px-6 flex items-center justify-center text-2xl gap-2 font-bold hover:bg-[#15224A]/90 transition-colors"
+            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#15224A] px-6 py-3 text-2xl font-bold text-white transition-colors hover:bg-[#15224A]/90"
           >
             <Image
               src="/icons/local_police_white.png"
@@ -135,14 +135,9 @@ export default function Page() {
           </Link>
           <Link
             href="/attack"
-            className="flex-1 bg-[#35154A] text-white rounded-xl py-3 px-6 flex items-center justify-center text-2xl gap-2 font-bold hover:bg-[#35154A]/90 transition-colors"
+            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#35154A] px-6 py-3 text-2xl font-bold text-white transition-colors hover:bg-[#35154A]/90"
           >
-            <Image
-              src="/icons/swords_white.png"
-              width={24}
-              height={24}
-              alt="local police icon"
-            />
+            <Image src="/icons/swords_white.png" width={24} height={24} alt="local police icon" />
             Attack
           </Link>
         </div>

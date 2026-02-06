@@ -25,7 +25,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
       }
     })
     if (agentId) {
-      response = response.filter((agent) => agent.agentId === agentId)
+      response = response.filter(agent => agent.agentId === agentId)
     }
 
     return NextResponse.json({ agents: response })
@@ -104,7 +104,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse<ApiResp
     }
 
     const currentObjectIds: string[] = (await kv.get(ARRAY_KEY)) || []
-    const newIds = currentObjectIds.filter((s) => s !== body.agentObjectId)
+    const newIds = currentObjectIds.filter(s => s !== body.agentObjectId)
     await kv.set(ARRAY_KEY, newIds)
 
     return NextResponse.json({ success: true, agentObjectIds: newIds })

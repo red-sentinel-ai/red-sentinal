@@ -7,10 +7,7 @@ import Image from 'next/image'
 
 export function OfferingsSection() {
   return (
-    <section
-      id="offerings"
-      className="py-24 relative text-black"
-    >
+    <section id="offerings" className="py-24 relative text-black">
       <div className="vertical-line left-4"></div>
       <div className="vertical-line right-4"></div>
       <div className="relative z-10 max-w-7xl mx-auto md:px-4">
@@ -24,7 +21,7 @@ export function OfferingsSection() {
           <div className="badge-pink w-fit mb-6">• Offerings</div>
           <h2 className="text-2xl md:text-[48px] font-medium leading-tight">
             Whether you’re deploying your own Sentinel or testing one built for battle, every move
-            shapes the future of <span className="text-[#C871FF]">Sui Sentinel security.</span>
+            shapes the future of <span className="text-[#C871FF]">AI Alignment & Safety.</span>
           </h2>
         </motion.div>
         <motion.div
@@ -43,21 +40,17 @@ export function OfferingsSection() {
                 strength, and earn rewards for every exploit discovered.
               </p>
 
-              <div className="min-h-[280px] md:min-h-[300px]">
+              <div className="min-h-[220px] sm:min-h-[260px] md:min-h-[300px]">
                 <Image
                   src="/img/customAIArt.png"
                   alt="custom ai"
                   width={500}
                   height={500}
-                  className="w-full max-w-md h-auto mx-auto absolute top-[5%] md:w-[500px] md:h-[500px] md:max-w-none left-1/2 -translate-x-1/2"
+                  className="w-full max-w-[280px] sm:max-w-[350px] md:max-w-[450px] lg:max-w-[500px] h-auto mx-auto absolute top-[10%] sm:top-[8%] md:top-[5%] left-1/2 -translate-x-1/2"
                 />
               </div>
             </div>
-            <Link
-              href={SUI_SENTINEL_APP_URL}
-              target="_blank"
-              className="mt-1"
-            >
+            <Link href={SUI_SENTINEL_APP_URL} target="_blank" className="mt-1">
               <button className="btn btn-outline px-8 mt-12 md:mt-0">Attack Now</button>
             </Link>
           </div>
@@ -66,26 +59,21 @@ export function OfferingsSection() {
             <div>
               <h3 className="text-xl md:text-[32px] font-medium mb-6">Deploy Your Sentinel</h3>
               <p className="text-base md:text-[20px] leading-relaxed text-[#939393]">
-                Launch your own AI model into the Sentinel network. Let the world attack it and earn
-                while it evolves.
+                Launch your own Sentinel. Let the world attack it and earn while it evolves.
               </p>
 
-              <div className="min-h-0 md:min-h-[300px]">
+              <div className="min-h-0 sm:min-h-[200px] md:min-h-[300px]">
                 <Image
                   src="/img/deploySentinelArt.png"
                   alt="deploy sentinel"
                   width={400}
                   height={400}
-                  className="relative w-full max-w-xs h-auto mx-auto my-6 md:absolute md:bottom-[2%] md:w-[400px] md:h-[400px] md:max-w-none md:my-0"
+                  className="relative w-full max-w-[200px] sm:max-w-[280px] md:max-w-[350px] lg:max-w-[400px] h-auto mx-auto my-6 md:absolute md:bottom-[2%] md:my-0"
                 />
               </div>
             </div>
             <div className="flex justify-start md:justify-end">
-              <Link
-                href={SUI_SENTINEL_APP_URL}
-                target="_blank"
-                className="mt-1"
-              >
+              <Link href={SUI_SENTINEL_APP_URL} target="_blank" className="mt-1">
                 <button className="btn btn-outline px-7">Deploy Now!</button>
               </Link>
             </div>

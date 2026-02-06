@@ -92,7 +92,7 @@ Sui Sentinel leverages the [Nautilus](https://github.com/MystenLabs/nautilus) fo
 ### **TEE Server**: `http://54.81.11.64:3000`
 
 ```
-ssh -i "MyEC2KeyPair.pem" ec2-user@ec2-3-237-26-201.compute-1.amazonaws.com
+ssh -i "MyEC2KeyPair.pem" ec2-user@ec2-18-213-79-225.compute-1.amazonaws.com
 ```
 
 #### **Register Agent**
@@ -269,9 +269,9 @@ aws sts get-session-token \
    {
    "Credentials": {
    "AccessKeyId": "*STS_KEY_REMOVED*",
-   "SecretAccessKey": "KSkSZznN7QQOSS1ruNBaQUrpPNizCA+dto2gpmHm",
-   "SessionToken": "IQoJb3JpZ2luX2VjECYaCXVzLWVhc3QtMSJIMEYCIQD4y4KUBHDIHtwiXRXCEREwnPkXyDge2XKX0VA5Du/mXgIhAKdLgwp1bTN+kUHecpRVXdNp6xUtmexzs4OXvPQFLo8ZKvgBCO///////////wEQABoMNDAyMDU0ODAzMTEzIgxsnOE8i8cS12olLWwqzAH4rgHBDZ3DqLjv/xOuFSwLgi5twyLl4zT8aZ2mgjTmnTVLG2UnoFk34rz3AOOErGQah6WdtSBynZI2IqHCW58pHMf6M5IS5XhrnxmZU479qkK3gOkGOjeuHSoyB/DUtclMKgRh3A7UEN+xUmKTMrHs2gRx8ZedyURWSNH/FU35HZqS+x06F97GL0c5e1DGXdf23rTKBtSXNVlo4VU+vqAayLpI9mbipXMzPQEo1QyV4KiNqBU19QZeMCvjYP/wF5xBxEYdl8BLEFXLCMowgtT6yAY6lwHgH2+SZ87DlDZqkOhTMpphfFNJD/tGgMhDmRm4D2y1oDX2kzQO9xDoR2SKt4NbxiIPtrWXwbVvsensHflzOD2k6NOfhQGnjZ2toveFRcJNdewWS+LVVOsRu8J3luWNJu08D7Bc8+aTWtvEvFd/u8HsvmQiyqEVLxDwlw1fxKw2A4C6aw1iV4JAvNdHXuGEfRm9frtlA2Lz",
-   "Expiration": "2025-11-20T17:41:22+00:00"
+   "SecretAccessKey": "*REMOVED*",
+   "SessionToken": "IQoJb3JpZ2luX2VjEEgaCXVzLWVhc3QtMSJGMEQCIEMcE2qjSA5YQ8At+L3do/YeWQGSdfnXpkMPGglCQItjAiB4V1LNIHCtpxsC4H+fKlibrWUJGk0hnpLGCYcAaeYfnSrvAQgREAAaDDQwMjA1NDgwMzExMyIMZYg7Z0HGvjzaQC2UKswBgoxFMu1IeIMqJ9ApDwGSd7vuS5fAPAzrMLcX348XEDgwuCvzGBP5591HkZ7w1BbyOyMvht7pqA2vfcFTB0JFKYpOGekboGd8+YsgQZk/T8sy/JoKLTqYyCM/kxI/DzBLliMOX4WANm20fnV4+2xGJH1e6iNUOGMqnzEqsqzGrVjNw2HliSzQyi66pOj8fldKTR34cGa62o9cUmvPlXilXbTJneUVQwKOdnuR3FuuGSd0kzufNotH3cIu70swXOZa+Zl0mfYorYZCLvVRMKH1qsoGOpkBgn69nDuqyXow3z3SDO6/r3oOqhIvPFtdbuygNKVdI0WbaixgR1arzm0PGNrZMJ+jazo13CvSPm/GZg4FwtFhEy+hsfXg5lNn94j4XaagVUUDTJHbr/KNNLEtsYLVdvDtyr4Vg9714TyXZ+WFZlPj7ABeYtgeOya0/3l80ggeXCqwCCfJG+wig9OXbqFzuP2PfcYfGqzHrsjs",
+   "Expiration": "2025-12-24T03:52:01+00:00"
    }
    }
 
@@ -279,7 +279,7 @@ aws sts get-session-token \
 export KEY_PAIR=MyEC2KeyPair
 export AWS_ACCESS_KEY_ID=*STS_KEY_REMOVED*
 export AWS_SECRET_ACCESS_KEY=*AWS_SECRET_REMOVED*
-export AWS_SESSION_TOKEN="IQoJb3JpZ2luX2VjECYaCXVzLWVhc3QtMSJIMEYCIQD4y4KUBHDIHtwiXRXCEREwnPkXyDge2XKX0VA5Du/mXgIhAKdLgwp1bTN+kUHecpRVXdNp6xUtmexzs4OXvPQFLo8ZKvgBCO///////////wEQABoMNDAyMDU0ODAzMTEzIgxsnOE8i8cS12olLWwqzAH4rgHBDZ3DqLjv/xOuFSwLgi5twyLl4zT8aZ2mgjTmnTVLG2UnoFk34rz3AOOErGQah6WdtSBynZI2IqHCW58pHMf6M5IS5XhrnxmZU479qkK3gOkGOjeuHSoyB/DUtclMKgRh3A7UEN+xUmKTMrHs2gRx8ZedyURWSNH/FU35HZqS+x06F97GL0c5e1DGXdf23rTKBtSXNVlo4VU+vqAayLpI9mbipXMzPQEo1QyV4KiNqBU19QZeMCvjYP/wF5xBxEYdl8BLEFXLCMowgtT6yAY6lwHgH2+SZ87DlDZqkOhTMpphfFNJD/tGgMhDmRm4D2y1oDX2kzQO9xDoR2SKt4NbxiIPtrWXwbVvsensHflzOD2k6NOfhQGnjZ2toveFRcJNdewWS+LVVOsRu8J3luWNJu08D7Bc8+aTWtvEvFd/u8HsvmQiyqEVLxDwlw1fxKw2A4C6aw1iV4JAvNdHXuGEfRm9frtlA2Lz"
+export AWS_SESSION_TOKEN="IQoJb3JpZ2luX2VjEEgaCXVzLWVhc3QtMSJGMEQCIEMcE2qjSA5YQ8At+L3do/YeWQGSdfnXpkMPGglCQItjAiB4V1LNIHCtpxsC4H+fKlibrWUJGk0hnpLGCYcAaeYfnSrvAQgREAAaDDQwMjA1NDgwMzExMyIMZYg7Z0HGvjzaQC2UKswBgoxFMu1IeIMqJ9ApDwGSd7vuS5fAPAzrMLcX348XEDgwuCvzGBP5591HkZ7w1BbyOyMvht7pqA2vfcFTB0JFKYpOGekboGd8+YsgQZk/T8sy/JoKLTqYyCM/kxI/DzBLliMOX4WANm20fnV4+2xGJH1e6iNUOGMqnzEqsqzGrVjNw2HliSzQyi66pOj8fldKTR34cGa62o9cUmvPlXilXbTJneUVQwKOdnuR3FuuGSd0kzufNotH3cIu70swXOZa+Zl0mfYorYZCLvVRMKH1qsoGOpkBgn69nDuqyXow3z3SDO6/r3oOqhIvPFtdbuygNKVdI0WbaixgR1arzm0PGNrZMJ+jazo13CvSPm/GZg4FwtFhEy+hsfXg5lNn94j4XaagVUUDTJHbr/KNNLEtsYLVdvDtyr4Vg9714TyXZ+WFZlPj7ABeYtgeOya0/3l80ggeXCqwCCfJG+wig9OXbqFzuP2PfcYfGqzHrsjs"
 ```
 
 4. Now run `sh configure_enclave.sh`. here for secrets, select existing ARN
@@ -333,7 +333,4 @@ This project is licensed under the APACHE License - see the LICENSE file for det
 
 1636703322293403648
 
-
 Enforce cost per message in TEE
-
-

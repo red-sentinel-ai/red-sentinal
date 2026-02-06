@@ -57,8 +57,8 @@ export const FeedbackForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
   if (isSuccess) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[300px] text-center">
-        <CheckCircle className="w-16 h-16 text-green-500 mb-4" />
+      <div className="flex min-h-[300px] flex-col items-center justify-center text-center">
+        <CheckCircle className="mb-4 h-16 w-16 text-green-500" />
         <h3 className="text-xl font-bold text-black">Thank You!</h3>
         <p className="text-gray-600">Your feedback has been submitted.</p>
       </div>
@@ -66,55 +66,43 @@ export const FeedbackForm = ({ onSuccess }: { onSuccess: () => void }) => {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-4"
-    >
-      <div className="grid grid-cols-2 gap-4">
+    <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
         <div className="space-y-1">
-          <label
-            htmlFor="name"
-            className="text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="name" className="text-xs font-medium text-gray-700 sm:text-sm">
             Name (Optional)
           </label>
           <input
             id="name"
             type="text"
             value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full bg-white border border-gray-300 rounded-lg p-2 text-black"
+            onChange={e => setName(e.target.value)}
+            className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-black sm:text-base"
           />
         </div>
         <div className="space-y-1">
-          <label
-            htmlFor="email"
-            className="text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="email" className="text-xs font-medium text-gray-700 sm:text-sm">
             Email (Optional)
           </label>
           <input
             id="email"
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full bg-white border border-gray-300 rounded-lg p-2 text-black"
+            onChange={e => setEmail(e.target.value)}
+            className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-black sm:text-base"
           />
         </div>
       </div>
 
       <div className="space-y-1">
-        <label
-          htmlFor="feedbackType"
-          className="text-sm font-medium text-gray-700"
-        >
+        <label htmlFor="feedbackType" className="text-xs font-medium text-gray-700 sm:text-sm">
           Feedback Type
         </label>
         <select
           id="feedbackType"
           value={feedbackType}
-          onChange={(e) => setFeedbackType(e.target.value)}
-          className="w-full bg-white border border-gray-300 rounded-lg p-2 text-black"
+          onChange={e => setFeedbackType(e.target.value)}
+          className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-black sm:text-base"
         >
           <option>Suggestion</option>
           <option>Bug Report</option>
@@ -123,25 +111,22 @@ export const FeedbackForm = ({ onSuccess }: { onSuccess: () => void }) => {
       </div>
 
       <div className="space-y-1">
-        <label
-          htmlFor="message"
-          className="text-sm font-medium text-gray-700"
-        >
+        <label htmlFor="message" className="text-xs font-medium text-gray-700 sm:text-sm">
           Message <span className="text-red-500">*</span>
         </label>
         <textarea
           id="message"
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          rows={5}
-          className="w-full bg-white border border-gray-300 rounded-lg p-2 text-black"
+          onChange={e => setMessage(e.target.value)}
+          rows={4}
+          className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-black sm:text-base"
           placeholder="How can we improve?"
         />
       </div>
 
       {error && (
-        <div className="flex items-center gap-2 text-red-600 text-sm bg-red-100 p-2 rounded-lg">
-          <XCircle className="w-4 h-4" />
+        <div className="flex items-center gap-2 rounded-lg bg-red-100 p-2 text-sm text-red-600">
+          <XCircle className="h-4 w-4" />
           <span>{error}</span>
         </div>
       )}
@@ -149,9 +134,9 @@ export const FeedbackForm = ({ onSuccess }: { onSuccess: () => void }) => {
       <button
         type="submit"
         disabled={isLoading}
-        className="btn btn-black w-full flex items-center justify-center"
+        className="btn btn-black flex w-full items-center justify-center"
       >
-        {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Submit Feedback'}
+        {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Submit Feedback'}
       </button>
     </form>
   )
