@@ -1,0 +1,5 @@
+export { default as BasicInfoStep } from './BasicInfoStep'
+export { default as Web3IdentityStep } from './Web3IdentityStep'
+export { default as RoleExperienceStep } from './RoleExperienceStep'
+export { default as ContributionPlanStep } from './ContributionPlanStep'
+export { default as CommitmentStep } from './CommitmentStep'
