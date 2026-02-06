@@ -1225,6 +1225,108 @@ export type Database = {
         }
         Relationships: []
       }
+      ss_ambassador_applications: {
+        Row: {
+          agreed_to_code_of_conduct: boolean
+          country: string | null
+          created_at: string
+          current_step: number
+          discord_id: string | null
+          discord_username: string | null
+          email: string | null
+          first_30_days_plan: string | null
+          full_name: string | null
+          github_url: string | null
+          has_ambassador_experience: boolean | null
+          id: string
+          open_to_performance_rewards: boolean | null
+          other_web3_profiles: string | null
+          past_experience: string | null
+          preferred_name: string | null
+          previous_ambassador_programs: Json | null
+          roles: string[] | null
+          status: Database["public"]["Enums"]["ss_ambassador_status"]
+          submitted_at: string | null
+          sui_wallet_address: string | null
+          target_region_language_audience: string | null
+          telegram_username: string | null
+          timezone: string | null
+          twitter_url: string | null
+          updated_at: string
+          web3_experience_level:
+            | Database["public"]["Enums"]["ss_web3_experience_level"]
+            | null
+          weekly_availability: string | null
+          why_become_ambassador: string | null
+        }
+        Insert: {
+          agreed_to_code_of_conduct?: boolean
+          country?: string | null
+          created_at?: string
+          current_step?: number
+          discord_id?: string | null
+          discord_username?: string | null
+          email?: string | null
+          first_30_days_plan?: string | null
+          full_name?: string | null
+          github_url?: string | null
+          has_ambassador_experience?: boolean | null
+          id?: string
+          open_to_performance_rewards?: boolean | null
+          other_web3_profiles?: string | null
+          past_experience?: string | null
+          preferred_name?: string | null
+          previous_ambassador_programs?: Json | null
+          roles?: string[] | null
+          status?: Database["public"]["Enums"]["ss_ambassador_status"]
+          submitted_at?: string | null
+          sui_wallet_address?: string | null
+          target_region_language_audience?: string | null
+          telegram_username?: string | null
+          timezone?: string | null
+          twitter_url?: string | null
+          updated_at?: string
+          web3_experience_level?:
+            | Database["public"]["Enums"]["ss_web3_experience_level"]
+            | null
+          weekly_availability?: string | null
+          why_become_ambassador?: string | null
+        }
+        Update: {
+          agreed_to_code_of_conduct?: boolean
+          country?: string | null
+          created_at?: string
+          current_step?: number
+          discord_id?: string | null
+          discord_username?: string | null
+          email?: string | null
+          first_30_days_plan?: string | null
+          full_name?: string | null
+          github_url?: string | null
+          has_ambassador_experience?: boolean | null
+          id?: string
+          open_to_performance_rewards?: boolean | null
+          other_web3_profiles?: string | null
+          past_experience?: string | null
+          preferred_name?: string | null
+          previous_ambassador_programs?: Json | null
+          roles?: string[] | null
+          status?: Database["public"]["Enums"]["ss_ambassador_status"]
+          submitted_at?: string | null
+          sui_wallet_address?: string | null
+          target_region_language_audience?: string | null
+          telegram_username?: string | null
+          timezone?: string | null
+          twitter_url?: string | null
+          updated_at?: string
+          web3_experience_level?:
+            | Database["public"]["Enums"]["ss_web3_experience_level"]
+            | null
+          weekly_availability?: string | null
+          why_become_ambassador?: string | null
+        }
+        Relationships: []
+      }
       ss_feature_requests: {
         Row: {
           agent_id: number
@@ -1427,6 +1529,8 @@ export type Database = {
           avatar_url: string | null
           created_at: string | null
           display_name: string | null
+          email: string | null
+          email_notifications: boolean | null
           id: string
           lifetime_points: number | null
           rewards_tier: string | null
@@ -1439,6 +1543,8 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string | null
           display_name?: string | null
+          email?: string | null
+          email_notifications?: boolean | null
           id?: string
           lifetime_points?: number | null
           rewards_tier?: string | null
@@ -1451,6 +1557,8 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string | null
           display_name?: string | null
+          email?: string | null
+          email_notifications?: boolean | null
           id?: string
           lifetime_points?: number | null
           rewards_tier?: string | null
@@ -1779,6 +1887,17 @@ export type Database = {
         | "TOTEM"
         | "YOUR_NEW_CATEGORY"
         | "ZKON"
+      ss_ambassador_status:
+        | "draft"
+        | "submitted"
+        | "under_review"
+        | "approved"
+        | "rejected"
+      ss_web3_experience_level:
+        | "beginner"
+        | "intermediate"
+        | "advanced"
+        | "expert"
       status: "pending" | "approved" | "denied"
     }
     CompositeTypes: {
@@ -1916,6 +2035,19 @@ export const Constants = {
         "TOTEM",
         "YOUR_NEW_CATEGORY",
         "ZKON",
+      ],
+      ss_ambassador_status: [
+        "draft",
+        "submitted",
+        "under_review",
+        "approved",
+        "rejected",
+      ],
+      ss_web3_experience_level: [
+        "beginner",
+        "intermediate",
+        "advanced",
+        "expert",
       ],
       status: ["pending", "approved", "denied"],
     },
