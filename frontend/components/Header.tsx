@@ -8,6 +8,9 @@ import { MenuItems } from './MenuItems'
 import { MenuIcon, X } from 'lucide-react'
 import Link from 'next/link'
 import { ConnectButton } from './ConnectButton'
+import { APP_NETWORK } from '@/constants'
+
+const HEADER_LOGO = APP_NETWORK === 'testnet' ? '/icons/logo_large_testnet.svg' : '/icons/logo_large.svg'
 
 export const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -32,7 +35,7 @@ export const Header = () => {
           <Link className="block flex-shrink-0" href="https://suisentinel.xyz" target="_blank">
             <div className="relative">
               <Image
-                src="/icons/logo_large.svg"
+                src={HEADER_LOGO}
                 alt="logo"
                 height={49}
                 width={198}

@@ -1,5 +1,4 @@
 import { FileText, Github, Shield } from 'lucide-react'
-import { ChartDataPoint } from '@/components/charts/PrizePoolChartModal'
 
 export const INDEXER_BASE_URL = process.env.NEXT_PUBLIC_INDEXER_BASE_URL || 'http://localhost:4000'
 
@@ -35,7 +34,6 @@ export const TEXT_COPIES = {
   },
 }
 
-export const SUI_FAUCET_URL = 'https://faucet.sui.io/'
 export const LOCAL_API_PATH = 'http://18.213.79.225:3000'
 export const RED_TEAM_API_URL = `https://redteam.suisentinel.xyz/`
 export const APP_NETWORK: 'mainnet' | 'testnet' = process.env.NEXT_PUBLIC_APP_NETWORK === 'testnet' ? 'testnet' : 'mainnet'

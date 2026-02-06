@@ -61,6 +61,8 @@ interface FormInputProps {
   isTextarea?: boolean
   rightElement?: React.ReactNode
   className?: string
+  min?: string
+  step?: string
 }
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -76,6 +78,8 @@ const FormInput: React.FC<FormInputProps> = ({
   isTextarea = false,
   rightElement,
   className = '',
+  min,
+  step,
 }) => {
   const InputComponent = isTextarea ? 'textarea' : 'input'
 
@@ -103,6 +107,8 @@ const FormInput: React.FC<FormInputProps> = ({
         }`}
         placeholder={placeholder}
         required={required}
+        {...(!isTextarea && min ? { min } : {})}
+        {...(!isTextarea && step ? { step } : {})}
       />
       {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
     </div>
@@ -295,7 +301,19 @@ export default function DefendPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
+
+    if (name === 'feePerMessage') {
+      if (value === '') {
+        setFormData(prev => ({ ...prev, feePerMessage: '' }))
+      } else {
+        const num = parseFloat(value)
+        if (!isNaN(num) && num >= 0) {
+          setFormData(prev => ({ ...prev, feePerMessage: value }))
+        }
+      }
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }))
+    }
 
     if (name === 'systemPrompt') {
       countTokens(value)
@@ -619,7 +637,7 @@ export default function DefendPage() {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-1">
           <FormInput
             label="Fee Per Message (SUI)"
-            subLabel="You earn this fee whenever users interact with your Sentinel."
+            subLabel="You earn this fee whenever users interact with your Sentinel. Minimum 0.1 SUI."
             name="feePerMessage"
             value={formData.feePerMessage}
             onChange={handleChange}
@@ -627,6 +645,8 @@ export default function DefendPage() {
             type="number"
             placeholder="0.00"
             required
+            min="0.1"
+            step="0.1"
             className="h-full"
           />
 
