@@ -96,7 +96,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
     const [paymentCoin] = tx.splitCoins(tx.gas, [tx.pure.u64(costInMist)])
 
     const [attackTicket] = tx.moveCall({
-      target: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::request_attack`,
+      target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::request_attack`,
       arguments: [
         tx.object(SUI_CONFIG.AGENT_REGISTRY),
         tx.object(agentDetails.object_id),
@@ -212,7 +212,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
     const { response: apiData } = apiResponse
 
     tx.moveCall({
-      target: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::consume_prompt`,
+      target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::consume_prompt`,
       arguments: [
         tx.object(SUI_CONFIG.AGENT_REGISTRY), // registry: &AgentRegistry
         tx.object(SUI_CONFIG.PROTOCOL_CONFIG_OBJECT_ID),
@@ -277,7 +277,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         // Step 2: Request Attack Ticket
         setCurrentStep('Requesting attack ticket...')
         if (showToasts) toast.info('Processing payment...')
-        const { objectId: attackObjectId, nonce } = await requestAttackTicket(agentDetails)
+        const { objectId: attackObjectId } = await requestAttackTicket(agentDetails)
 
         // Step 3: Call consume prompt API
         setCurrentStep('Processing prompt...')
