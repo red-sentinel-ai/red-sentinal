@@ -1,6 +1,6 @@
 import { Clock, Trophy, AlertCircle, CheckCircle, XCircle, User } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { SUI_TESTNET_BASE_URL } from '@/constants'
+import { SUIVISION_TXBLOCK_URL } from '@/constants'
 
 interface ParsedJson {
   success: boolean
@@ -186,7 +186,7 @@ export default function AgentHistory({ agentEvents }: AgentHistoryProps) {
                   <div>
                     <span className="text-gray-400">Transaction:</span>
                     <a
-                      href={`${SUI_TESTNET_BASE_URL}/tx/${event.id.txDigest}`}
+                      href={`${SUIVISION_TXBLOCK_URL}/tx/${event.id.txDigest}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="ml-2 font-mono text-xs text-[#558EB4] hover:underline"

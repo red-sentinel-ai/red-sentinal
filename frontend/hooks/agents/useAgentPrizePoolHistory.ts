@@ -31,7 +31,7 @@ interface PrizePoolHistoryData {
 const fetchEvents = async (client: SuiClient, eventType: string): Promise<AgentEvent[]> => {
   const { data } = await client.queryEvents({
     query: {
-      MoveEventType: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::${eventType}`,
+      MoveEventType: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::${eventType}`,
     },
     limit: 50, // Increase limit or implement pagination for full history
     order: 'ascending',

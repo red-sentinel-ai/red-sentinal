@@ -145,9 +145,9 @@ export const REWARDS_CONSTANTS = {
 
   TIERS: {
     BRONZE: { name: 'Bronze', minPoints: 0 },
-    SILVER: { name: 'Silver', minPoints: 100 },
-    GOLD: { name: 'Gold', minPoints: 500 },
-    PLATINUM: { name: 'Platinum', minPoints: 1000 },
+    SILVER: { name: 'Silver', minPoints: 50_000 },
+    GOLD: { name: 'Gold', minPoints: 500_000 },
+    PLATINUM: { name: 'Platinum', minPoints: 2_000_000 },
   } as const,
 
   DEFAULT_MISSIONS: DEFAULT_MISSIONS,

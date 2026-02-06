@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
-import { INDEXER_BASE_URL } from '@/constants'
+import { APP_NETWORK, INDEXER_BASE_URL } from '@/constants'
 import { RewardsHistoryResponse } from '@/types/Rewards'
 
-export const useRecipientRewards = (recipient: string | undefined, network: string = 'testnet') => {
+export const useRecipientRewards = (recipient: string | undefined, network: string = APP_NETWORK) => {
   return useQuery({
     queryKey: ['recipient-rewards', network, recipient],
     queryFn: async (): Promise<RewardsHistoryResponse> => {

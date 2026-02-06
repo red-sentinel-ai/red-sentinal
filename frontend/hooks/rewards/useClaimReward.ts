@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
-import { INDEXER_BASE_URL } from '@/constants'
+import { APP_NETWORK, INDEXER_BASE_URL } from '@/constants'
 
 interface ClaimTokensResponse {
   claimed: boolean
@@ -13,7 +13,7 @@ export const useClaimReward = () => {
   return useMutation({
     mutationFn: async ({
       recipient,
-      network = 'testnet',
+      network = APP_NETWORK,
     }: {
       recipient: string
       network?: string

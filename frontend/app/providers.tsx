@@ -10,6 +10,7 @@ import { Header } from '@/components/Header'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ProfileInitializer } from '@/components/profile/ProfileInitializer'
 import { FeedbackButton } from '@/components/feedback/FeedbackButton'
+import { APP_NETWORK } from '@/constants'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -36,12 +37,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   const networks = {
     testnet: { url: getFullnodeUrl('testnet') },
+    mainnet: { url: getFullnodeUrl('mainnet') },
   }
 
   return (
     <PHProvider client={posthog}>
       <QueryClientProvider client={queryClient}>
-        <SuiClientProvider networks={networks} defaultNetwork="testnet">
+        <SuiClientProvider networks={networks} defaultNetwork={APP_NETWORK}>
           <WalletProvider autoConnect theme={lightTheme}>
             <div>
               {/* <LaunchMainnetBanner /> */}

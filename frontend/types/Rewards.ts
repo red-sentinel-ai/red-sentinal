@@ -23,79 +23,9 @@ export interface RewardsConfig {
   rewards_message?: string
 }
 
-export interface RHUser {
-  id: string
-  wallet_addresses: string[]
-  username?: string
-  avatar_url?: string
-  total_points: number
-  lifetime_points: number
-  rewards_tier: 'bronze' | 'silver' | 'gold' | 'platinum'
-  tier?: 'bronze' | 'silver' | 'gold' | 'platinum'
-  rewards_updated_at: string
-  created_at: string
-  updated_at: string
-  display_name: string
-}
-
-export interface MissionMetadata {
-  // For launching a sentinel
-  agent_id?: string
-  agent_name?: string
-  agent_object_id?: string
-  owner_address?: string
-
-  // For attacking a sentinel
-  attacker_address?: string
-  attack_success?: boolean
-  attack_score?: number
-
-  // For social missions
-  discordHandle?: string
-  twitterUserName?: string
-
-  funded_amount_sui?: number
-
-  // Generic wallet address
-  walletAddress?: string
-  [key: string]: string | number | boolean | undefined
-}
-
-export interface RHRewardsActivity {
-  id: string
-  wallet_address: string
-  mission_type: string
-  points_earned: number
-  transaction_hash?: string
-  metadata: MissionMetadata
-  completed_at: string
-}
-
-export interface CompleteMissionRequest {
-  wallet_address: string
-  mission_type: string
-  transaction_hash?: string
-  metadata?: MissionMetadata
-  points_to_award?: number
-}
-
-export interface CompleteMissionResponse {
-  success: boolean
-  points_earned: number
-  new_total: number
-  new_tier: string
-  user: RHUser
-}
-
 export interface MissionCompletionCounts {
   total: number
   current_period: number
-}
-
-export interface UserRewardsData {
-  user: RHUser
-  completed_missions: Record<string, MissionCompletionCounts>
-  recent_activity: RHRewardsActivity[]
 }
 
 export interface LeaderboardEntry {

@@ -7,8 +7,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Confetti from 'react-confetti'
 import { useWindowSize } from 'react-use'
 import { Dialog } from '@/components/Dialog'
+import { TruncatedText } from '@/components/TruncatedText'
 import { ConsumePromptApiResponse } from '@/types'
-import { SUI_TESTNET_BASE_URL } from '@/constants'
+import { SUIVISION_TXBLOCK_URL } from '@/constants'
 import { cn } from '@/lib/utils'
 import { SlotMachine } from './slot-machine/SlotMachine'
 
@@ -52,24 +53,24 @@ export const AttackStatusModal = ({
     <Dialog
       open={showResultModal && !!apiResponse}
       onClose={() => setShowResultModal(false)}
-      className="min-h-[824px] w-full max-w-[773px] overflow-hidden rounded-xl border border-[#9A9A9A] bg-white p-0"
+      className="flex max-h-[calc(100vh-40px)] w-full max-w-[773px] flex-col overflow-hidden rounded-xl border border-[#9A9A9A] bg-white p-0"
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.3 }}
-        className="relative w-full"
+        className="relative flex h-full w-full flex-col overflow-hidden"
       >
         <button
           onClick={() => setShowResultModal(false)}
-          className="absolute right-5 top-5 z-10 rounded-full p-1 text-black transition-colors hover:bg-gray-100"
+          className="absolute right-5 top-5 z-20 rounded-full p-1 text-black transition-colors hover:bg-gray-100"
           aria-label="Close modal"
         >
           <X className="h-5 w-5" />
         </button>
 
-        <div className="p-6 pb-4">
+        <div className="flex-shrink-0 p-6 pb-0">
           <div className="flex items-start gap-4 pr-8">
             <div
               className={cn(
@@ -96,14 +97,17 @@ export const AttackStatusModal = ({
           </div>
 
           <div className="my-5 h-[1px] w-full bg-[#E5E5E5]" />
-          <div className="px-8">
+        </div>
+
+        <div className="min-h-0 flex-1 overflow-y-auto">
+          <div className="px-8 pb-4">
             <div className="mb-4 flex items-center">
               <Swords className="mr-2 h-5 w-5 fill-black text-black" />
               <span className="text-[15px] font-medium text-black">
                 Your Attack Score: <span className="text-sm font-bold">{score}/100</span>
               </span>
               <Link
-                href={`${SUI_TESTNET_BASE_URL}/${txnHash}`}
+                href={`${SUIVISION_TXBLOCK_URL}/${txnHash}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="ml-1 mt-0.5 flex items-center text-[10px] font-medium text-[#989898] hover:text-black hover:underline"
@@ -134,9 +138,9 @@ export const AttackStatusModal = ({
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
-                    <p className="mt-1 pr-2 text-sm leading-relaxed text-[#575757]">
-                      {explanation || 'No explanation provided by the Sentinel.'}
-                    </p>
+                    <TruncatedText
+                      text={explanation || 'No explanation provided by the Sentinel.'}
+                    />
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -146,74 +150,74 @@ export const AttackStatusModal = ({
               <h3 className="text-[15px] font-medium text-black">Jury Response</h3>
 
               <div className="overflow-hidden">
-                <p className="mt-1 pr-2 text-sm leading-relaxed text-[#575757]">
-                  {juryResponse || 'No jury response provided by the Sentinel.'}
-                </p>
+                <TruncatedText
+                  text={juryResponse || 'No jury response provided by the Sentinel.'}
+                />
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="mb-6 h-[1px] w-full bg-[#E5E5E5]" />
+          <div className="mb-6 h-[1px] w-full bg-[#E5E5E5]" />
 
-        <div className="relative flex min-h-[420px] flex-col items-center justify-center bg-gradient-to-b from-white to-pink-50/30 px-6 pb-8">
-          {rewardAmount !== null && (
-            <div className="pointer-events-none absolute inset-0 z-50">
-              <Confetti
-                width={width}
-                height={height}
-                recycle={false}
-                numberOfPieces={500}
-                gravity={0.2}
-              />
-            </div>
-          )}
-
-          <AnimatePresence mode="wait">
-            {isSlotAvailable ? (
-              <motion.div
-                key="slot-section"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="relative z-10 flex w-full flex-col items-center"
-              >
-                {!rewardAmount && (
-                  <div className="mb-6 text-center text-xl font-medium">
-                    <p>
-                      The SENTINEL grants you a{' '}
-                      <span className="font-bold text-[#F632F3]">bonus spin</span>.
-                    </p>
-                    <p className="text-lg text-black">Try your luck!</p>
-                  </div>
-                )}
-
-                <SlotMachine onWin={handleSlotWin} onError={handleSlotError} />
-
-                {rewardAmount !== null && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="mt-6 text-center"
-                  >
-                    <h3 className="mb-2 text-3xl font-bold text-black">Congratulations!</h3>
-                    <p className="mb-6 text-lg text-[#5E5E5E]">
-                      You won{' '}
-                      <span className="font-bold text-[#F046D6]">{rewardAmount} SENTINEL</span>{' '}
-                      points!
-                    </p>
-                  </motion.div>
-                )}
-              </motion.div>
-            ) : (
-              <motion.div
-                key="empty"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-sm italic text-gray-400"
-              ></motion.div>
+          <div className="relative flex min-h-[420px] flex-col items-center justify-center bg-gradient-to-b from-white to-pink-50/30 px-6 pb-8">
+            {rewardAmount !== null && (
+              <div className="pointer-events-none absolute inset-0 z-50">
+                <Confetti
+                  width={width}
+                  height={height}
+                  recycle={false}
+                  numberOfPieces={500}
+                  gravity={0.2}
+                />
+              </div>
             )}
-          </AnimatePresence>
+
+            <AnimatePresence mode="wait">
+              {isSlotAvailable ? (
+                <motion.div
+                  key="slot-section"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="relative z-10 flex w-full flex-col items-center"
+                >
+                  {!rewardAmount && (
+                    <div className="mb-6 text-center text-xl font-medium">
+                      <p>
+                        The SENTINEL grants you a{' '}
+                        <span className="font-bold text-[#F632F3]">bonus spin</span>.
+                      </p>
+                      <p className="text-lg text-black">Try your luck!</p>
+                    </div>
+                  )}
+
+                  <SlotMachine onWin={handleSlotWin} onError={handleSlotError} />
+
+                  {rewardAmount !== null && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-6 text-center"
+                    >
+                      <h3 className="mb-2 text-3xl font-bold text-black">Congratulations!</h3>
+                      <p className="mb-6 text-lg text-[#5E5E5E]">
+                        You won{' '}
+                        <span className="font-bold text-[#F046D6]">{rewardAmount} SENTINEL</span>{' '}
+                        tokens!
+                      </p>
+                    </motion.div>
+                  )}
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="empty"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-sm italic text-gray-400"
+                ></motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </motion.div>
     </Dialog>

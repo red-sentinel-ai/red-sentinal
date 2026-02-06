@@ -16,12 +16,11 @@ import {
 import {
   MIST_PER_SUI,
   PROVIDER_MODELS,
-  SENTINEL_GIFS,
-  SENTINEL_IMAGES,
   SUI_CONFIG,
   SUI_SENTINEL_DOCS_URL,
   SYSTEM_PROMPT_MAX_TOKENS,
 } from '@/constants'
+import { SENTINEL_GIFS, SENTINEL_IMAGES } from '@/constants/asset_paths'
 import { hexToVector } from '@/lib/utils'
 import { registerAgentUtil } from './utils'
 import { useAgentObjectNames } from '@/hooks/useAgentObjectNames'
@@ -31,7 +30,6 @@ import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
 import { useTokenCount } from '@/hooks/useTokenCount'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 import { FundSuccessModal } from '@/components/FundSuccessModal'
-import { useRewardsMissionTracker } from '@/hooks/rewards/useRewardsMissionTracker'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 import { CustomDropdown } from '@/components/ui/common/CustomDropdown'
 import { RewardsConditions } from '@/components/defend/RewardsConditions'
@@ -126,22 +124,46 @@ export default function DefendPage() {
     if (templateData) {
       try {
         const template = JSON.parse(templateData)
-        // If we have saved form data, restore it first, then apply template
+
+        const templateFormFields: Partial<FormData> = {}
+        if (template.public_instructions) {
+          templateFormFields.systemPrompt = template.public_instructions
+        } else if (template.prompt) {
+          templateFormFields.systemPrompt = template.prompt
+        }
+        if (template.hidden_instructions) {
+          templateFormFields.privatePrompt = template.hidden_instructions
+        }
+        if (template.attack_goal) {
+          templateFormFields.attackGoal = template.attack_goal
+        }
+        if (template.judge_prompt) {
+          templateFormFields.juryPrompt = template.judge_prompt
+        }
+        if (template.name) {
+          templateFormFields.agentName = template.name
+        }
+
         if (savedFormData) {
           const parsedFormData = JSON.parse(savedFormData)
           setFormData({
             ...parsedFormData,
-            systemPrompt: template.prompt,
+            ...templateFormFields,
           })
           sessionStorage.removeItem('defendFormData')
         } else {
-          // No saved form data, just update the systemPrompt
           setFormData(prev => ({
             ...prev,
-            systemPrompt: template.prompt,
+            ...templateFormFields,
           }))
         }
-        countTokens(template.prompt)
+
+        const promptText = templateFormFields.systemPrompt || ''
+        if (promptText) countTokens(promptText)
+        if (templateFormFields.privatePrompt) countPrivateTokens(templateFormFields.privatePrompt)
+        if (templateFormFields.attackGoal) countAttackGoalTokens(templateFormFields.attackGoal)
+        if (templateFormFields.juryPrompt) countJuryPromptTokens(templateFormFields.juryPrompt)
+
         sessionStorage.removeItem('selectedTemplate')
       } catch (error) {
         console.error('Failed to load template:', error)
@@ -165,9 +187,21 @@ export default function DefendPage() {
   const { mutate: createAgent } = useCreateAgent()
   const [agentImage, setAgentImage] = useState<File | null>(null)
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
-  const { tokenCount: privateTokenCount, countTokens: countPrivateTokens, isDebouncing: isPrivateTokenCountDebouncing } = useTokenCount()
-  const { tokenCount: attackGoalTokenCount, countTokens: countAttackGoalTokens, isDebouncing: isAttackGoalTokenCountDebouncing } = useTokenCount()
-  const { tokenCount: juryPromptTokenCount, countTokens: countJuryPromptTokens, isDebouncing: isJuryPromptTokenCountDebouncing } = useTokenCount()
+  const {
+    tokenCount: privateTokenCount,
+    countTokens: countPrivateTokens,
+    isDebouncing: isPrivateTokenCountDebouncing,
+  } = useTokenCount()
+  const {
+    tokenCount: attackGoalTokenCount,
+    countTokens: countAttackGoalTokens,
+    isDebouncing: isAttackGoalTokenCountDebouncing,
+  } = useTokenCount()
+  const {
+    tokenCount: juryPromptTokenCount,
+    countTokens: countJuryPromptTokens,
+    isDebouncing: isJuryPromptTokenCountDebouncing,
+  } = useTokenCount()
   const [imagePickerOpen, setImagePickerOpen] = useState(false)
   const [agentId, setAgentId] = useState<string | null>(null)
   const [selectedImage, setSelectedImage] = useState<{
@@ -215,8 +249,6 @@ export default function DefendPage() {
   const [showFundModal, setShowFundModal] = useState(false)
   const [showFundSuccessModal, setShowFundSuccessModal] = useState(false)
   const [fundedAmount, setFundedAmount] = useState('')
-  const { trackLaunchSentinel } = useRewardsMissionTracker()
-
   const handleProviderChange = (provider: string) => {
     const defaultModelForProvider = PROVIDER_MODELS[provider]?.[0] || DEFAULT_MODEL
 
@@ -349,9 +381,10 @@ export default function DefendPage() {
     }
 
     const fee = parseFloat(formData.feePerMessage)
-    if (isNaN(fee) || fee < 0) {
-      newErrors.feePerMessage = 'Fee must be a positive number'
+    if (isNaN(fee) || fee < 0.1) {
+      newErrors.feePerMessage = 'Fee must be greater than 0.1 SUI'
     }
+
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -364,7 +397,7 @@ export default function DefendPage() {
   ) => {
     const agentObject = result?.objectChanges?.find(
       (obj: any) =>
-        obj.objectType === `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Agent`
+        obj.objectType === `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Agent`
     )
 
     if (agentObject) {
@@ -383,13 +416,6 @@ export default function DefendPage() {
         system_prompt_length: formData.systemPrompt.length,
         system_prompt_tokens: tokenCount,
         tx_digest: result.digest.toString(),
-      })
-
-      trackLaunchSentinel(result.digest.toString(), {
-        agent_id: agent_id,
-        agent_name: agentName,
-        agent_object_id: agentObjectId,
-        owner_address: account!.address,
       })
 
       const payload = new FormData()
@@ -422,7 +448,7 @@ export default function DefendPage() {
     const sigVector = hexToVector(agentDetails.signature)
 
     tx.moveCall({
-      target: `${SUI_CONFIG.EXAMPLES_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::register_agent`,
+      target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::register_agent`,
       arguments: [
         tx.object(SUI_CONFIG.AGENT_REGISTRY),
         tx.object(SUI_CONFIG.PROTOCOL_CONFIG_OBJECT_ID),
@@ -722,13 +748,17 @@ export default function DefendPage() {
                       </button>
                     </TooltipTrigger>
                     <TooltipContent side="right" className="max-w-xs bg-black text-white">
-                      <p>Generate with AI will create both Attack Goal and Jury Prompt based on your Public and Private Instructions.</p>
+                      <p>
+                        Generate with AI will create both Attack Goal and Jury Prompt based on your
+                        Public and Private Instructions.
+                      </p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
               </div>
               <span className="mt-1 block text-[16px] font-normal text-[#5E5E5E]">
-                The goal that attackers will see and try to achieve. This is visible to all attackers.
+                The goal that attackers will see and try to achieve. This is visible to all
+                attackers.
               </span>
             </div>
             <div className="ml-4 shrink-0">
@@ -738,7 +768,9 @@ export default function DefendPage() {
                     <button
                       type="button"
                       onClick={handleGenerateConfig}
-                      disabled={isGeneratingConfig || !formData.systemPrompt || !formData.privatePrompt}
+                      disabled={
+                        isGeneratingConfig || !formData.systemPrompt || !formData.privatePrompt
+                      }
                       className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 via-violet-600 to-fuchsia-600 px-4 py-2 text-xs font-semibold text-white shadow-md shadow-purple-500/30 transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/40 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
                     >
                       {isGeneratingConfig ? (
