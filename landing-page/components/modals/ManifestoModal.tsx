@@ -44,7 +44,7 @@ export function ManifestoModal({ isOpen, onClose }: ManifestoModalProps) {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="h-full overflow-y-auto custom-scrollbar pb-44 pt-20">
-                <div className="mx-auto max-w-[862px]">
+                <div className="mx-auto max-w-[862px] px-4 sm:px-6 md:px-0">
                   <div className="bg-white/80 backdrop-blur-md rounded-t-2xl border border-[#9A9A9A] md:rounded-2xl shadow-2xl p-8 md:p-12 pb-12 relative">
                     <div className="flex items-center gap-2">
                       <div>
