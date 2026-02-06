@@ -1,4 +1,4 @@
-import { SUI_TESTNET_BASE_URL } from '@/constants'
+import { SUIVISION_TXBLOCK_URL } from '@/constants'
 import { motion } from 'framer-motion'
 import { CheckCircle, X } from 'lucide-react'
 import Link from 'next/link'
@@ -55,7 +55,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
           <div className="mb-8 rounded-xl border border-blue-200 bg-gray-50 p-4 text-left">
             <p className="mb-2 text-sm text-gray-500">Transaction Block:</p>
             <Link
-              href={`${SUI_TESTNET_BASE_URL}/${transactionDigest}`}
+              href={`${SUIVISION_TXBLOCK_URL}/${transactionDigest}`}
               className="break-all font-mono text-xs text-blue-600 transition-colors hover:underline"
               target="_blank"
               rel="noopener noreferrer"

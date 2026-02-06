@@ -9,7 +9,7 @@ import { getDefeatedAgentIds, fetchAgentDetailsViaObject, getAttackCountsPerAgen
 import { FeaturedAgentCard } from '@/components/FeaturedAgentCard'
 import { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { AgentStatus } from '@/types'
-import { EXPLORER_BASE_URL } from '@/constants'
+import { APP_NETWORK, EXPLORER_BASE_URL } from '@/constants'
 
 async function getUserProfile(identifier: string) {
   const isWalletAddress = identifier.startsWith('0x') && identifier.length > 60
@@ -38,7 +38,7 @@ async function getUserProfile(identifier: string) {
     return { user, agents: [] }
   }
 
-  const client = new SuiClient({ url: getFullnodeUrl('testnet') })
+  const client = new SuiClient({ url: getFullnodeUrl(APP_NETWORK) })
   const [defeatedAgentIds, attackCounts] = await Promise.all([
     getDefeatedAgentIds(client),
     getAttackCountsPerAgent(client),

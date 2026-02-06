@@ -3,7 +3,7 @@ import { CheckCircle, XCircle, Trophy, Clock, User, AlertCircle } from 'lucide-r
 import { useAgentEvents } from '@/hooks/useAgentEvents'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { formatAddress } from '@mysten/sui/utils'
-import { SUI_TESTNET_BASE_URL } from '@/constants'
+import { SUIVISION_TXBLOCK_URL } from '@/constants'
 
 export const UserActivity = () => {
   const { events, loading } = useAgentEvents()
@@ -92,7 +92,7 @@ export const UserActivity = () => {
                       <div>
                         <span className="text-gray-500">Tx:</span>{' '}
                         <a
-                          href={`${SUI_TESTNET_BASE_URL}/${event.id.txDigest}`}
+                          href={`${SUIVISION_TXBLOCK_URL}/${event.id.txDigest}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="font-mono text-blue-600 hover:underline"
@@ -174,7 +174,7 @@ export const UserActivity = () => {
                         <div>
                           <span className="text-gray-500">Tx:</span>
                           <a
-                            href={`${SUI_TESTNET_BASE_URL}/${event.id.txDigest}`}
+                            href={`${SUIVISION_TXBLOCK_URL}/${event.id.txDigest}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="ml-2 font-mono text-xs text-blue-600 hover:underline"

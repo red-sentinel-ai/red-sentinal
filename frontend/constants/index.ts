@@ -18,6 +18,7 @@ export const SUI_SENTINEL_GITHUB_URL = 'https://github.com/sui-sentinel/contract
 export const SUI_SENTINEL_TELEGRAM_URL = 'https://t.me/suisentinel'
 export const SUI_SENTINEL_AUDIT_REPORT_URL = '/pdfs/audit_final.pdf'
 
+
 export const SUI_SENTINEL_DEFENDER_REWARDS_DOCS_URL = `${SUI_SENTINEL_DOCS_URL}/incentives/defender-rewards`
 
 export const SLUSH_BASE_URL = 'https://my.slush.app/browse/'
@@ -35,11 +36,11 @@ export const TEXT_COPIES = {
 }
 
 export const SUI_FAUCET_URL = 'https://faucet.sui.io/'
-
 export const LOCAL_API_PATH = 'http://18.213.79.225:3000'
 export const RED_TEAM_API_URL = `https://redteam.suisentinel.xyz/`
+export const APP_NETWORK: 'mainnet' | 'testnet' = process.env.NEXT_PUBLIC_APP_NETWORK === 'testnet' ? 'testnet' : 'mainnet'
 
-export const SUI_CONFIG = {
+export const SUI_TESTNET_CONFIG = {
   APP_PACKAGE_ID: '0xe52429a171fc8d4ac6cea09b0d2f8891feb32e70577dfb16ecf9883bcc2e7eb2',
   MODULE_NAME: 'sentinel',
   OTW_NAME: 'SENTINEL',
@@ -47,37 +48,36 @@ export const SUI_CONFIG = {
   ENCLAVE_OBJECT_ID: '0x7b48146b5b8ff2f75c26e1a826cd778654ae4dccc49790c7279d240be264986c',
   PROTOCOL_CONFIG_OBJECT_ID: '0x2b7a0a34973bb8ea41de60e7631cedc58210c417a1de776b5208afba94598fc5',
   AGENT_OBJECT_IDS: [''],
+  SENTINEL_COIN_TYPE: "0xb0a3b08be99cb5becf1787e565cdd027edc40791df89ca4a603ba7d1575b21e9::sentinel::SENTINEL",
 }
 
-export const TESTNET_SENTINEL_COIN_TYPE =
-  process.env.NEXT_PUBLIC_SENTINEL_COIN_TYPE ||
-  '0xb0a3b08be99cb5becf1787e565cdd027edc40791df89ca4a603ba7d1575b21e9::sentinel::SENTINEL'
+export const SUI_MAINNET_CONFIG = {
+  APP_PACKAGE_ID: '0x88b83f36dafcd5f6dcdcf1d2cb5889b03f61264ab3cee9cae35db7aa940a21b7',
+  MODULE_NAME: 'sentinel',
+  OTW_NAME: 'SENTINEL',
+  AGENT_REGISTRY: '0xc47564f5f14c12b31e0dfa1a3dc99a6380a1edf8929c28cb0eaa3359c8db36ac',
+  ENCLAVE_OBJECT_ID: '0x290bfc0d72e2407df3ab75fac390132abb621272ed0425ddd4183de4e2c2c7b3',
+  PROTOCOL_CONFIG_OBJECT_ID: '0x2fa4fa4a1dd0498612304635ff9334e1b922e78af325000e9d9c0e88adea459f',
+  AGENT_OBJECT_IDS: [''],
+  SENTINEL_COIN_TYPE: "0x66aaa74fecd25cb19b7576e101b25fd3a844e6b9f678421429d0d49d55e0fca0::sentinel::SENTINEL",
+}
 
-export const EXPLORER_BASE_URL =
-  process.env.NEXT_PUBLIC_EXPLORER_BASE_URL || 'https://testnet.suivision.xyz'
 
-export const SENTINEL_TOKEN_EXPLORER_URL = `${EXPLORER_BASE_URL}/coin/${TESTNET_SENTINEL_COIN_TYPE}`
+
+export const SUI_CONFIG = APP_NETWORK === 'mainnet' ? SUI_MAINNET_CONFIG : SUI_TESTNET_CONFIG
+
+export const EXPLORER_BASE_URL = APP_NETWORK === 'mainnet' ? 'https://suivision.xyz' : 'https://testnet.suivision.xyz'
+
+export const SENTINEL_TOKEN_EXPLORER_URL = `${EXPLORER_BASE_URL}/coin/${SUI_CONFIG.SENTINEL_COIN_TYPE}`
 export const MIST_PER_SUI = 1_000_000_000
-export const SUI_TESTNET_BASE_URL = 'https://testnet.suivision.xyz/txblock/'
+export const SUIVISION_TXBLOCK_URL = APP_NETWORK === 'mainnet' ? 'https://suivision.xyz/txblock/' : 'https://testnet.suivision.xyz/txblock/'
 export const PROJECT_GITHUB_URL = 'https://github.com/satyambnsal/sui-sentinal'
 export const NAUTILUS_URL = 'https://github.com/MystenLabs/nautilus'
 export const YOUTUBE_VIDEO_URL = 'https://www.youtube.com/watch?v=U3qMdgSGASI'
 export const X_URL = 'https://x.com/suisentinal'
 const BLOG_URL = 'https://www.suisentinel.xyz/blog'
 
-export const MOCK_RESULT = {
-  balanceChanges: [],
-  checkpoint: 'mock-check-point',
-  confirmedLocalExecution: null,
-  digest: 'mockDigest',
-  objectChanges: [
-    {
-      objectType: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Agent`,
-      objectId: Math.floor(Math.random() * 1000) + 1,
-      agentId: '0xb4149a8fff09a1d1283a42961b5f459238256eccc906ada92931d4960c07a4c7',
-    },
-  ],
-}
+
 export const PROJECT_DISCORD_URL = 'https://discord.gg'
 
 export const DEFAULT_PROFILE_URL =
@@ -94,49 +94,7 @@ export const SOCIAL_MEDIA_URLS = {
 
 //TODO: Add the correct docs url
 export const REWARDS_DOCS_URL = 'https://docs.suisentinel.xyz/incentives/rewards-program/'
-export const SENTINEL_GIFS = [
-  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//6.png',
-  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//7.png',
-  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//8.png',
-  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//9.png',
-  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//10.png',
-]
 
-export const USER_IMAGES = [
-  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//1.png',
-  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//2.png',
-  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//3.png',
-  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//4.png',
-  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/builder_nfts//5.png',
-]
-
-export const SENTINEL_IMAGES = [
-  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/ss-agents/DEFAULTS/1.png',
-  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/ss-agents/DEFAULTS/2.png',
-  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/ss-agents/DEFAULTS/3.png',
-  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/ss-agents/DEFAULTS/4.png',
-  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/ss-agents/DEFAULTS/5.png',
-  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/ss-agents/DEFAULTS/6.png',
-  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/ss-agents/DEFAULTS/7.png',
-  'https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/ss-agents/DEFAULTS/8.png',
-]
-
-export const mockPrizePoolHistory: ChartDataPoint[] = [
-  { time: new Date('2025-10-01T10:00:00Z'), value: 120 },
-  { time: new Date('2025-10-02T14:30:00Z'), value: 122 },
-  { time: new Date('2025-10-03T18:00:00Z'), value: 125 },
-  { time: new Date('2025-10-04T22:15:00Z'), value: 124 },
-  { time: new Date('2025-10-05T02:00:00Z'), value: 130 },
-  { time: new Date('2025-10-06T06:45:00Z'), value: 135 },
-  { time: new Date('2025-10-07T09:00:00Z'), value: 142 },
-  { time: new Date('2025-10-08T11:30:00Z'), value: 145 },
-  { time: new Date('2025-10-08T13:00:00Z'), value: 150 },
-]
-
-export const mockPrizePool7dChange = {
-  amount: 30.0,
-  percentage: 18.2,
-}
 
 //NOTE: Add Ankita's wallet here and keep this thing in our internal documentation as well.
 export const TEAM_MEMBER_WALLETS = [

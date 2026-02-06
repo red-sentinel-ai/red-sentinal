@@ -8,7 +8,7 @@ import { useCurrentAccount } from '@mysten/dapp-kit'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useRecipientRewards } from '@/hooks/rewards/useRecipientRewards'
-import { SUI_TESTNET_BASE_URL, MIST_PER_SUI } from '@/constants'
+import { SUIVISION_TXBLOCK_URL, MIST_PER_SUI } from '@/constants'
 
 export const RewardsHistory = () => {
   const account = useCurrentAccount()
@@ -75,7 +75,7 @@ export const RewardsHistory = () => {
 
               {history.map((item, index) => {
                 const linkDigest = item.transferDigest || item.txDigest
-                const explorerLink = `${SUI_TESTNET_BASE_URL.replace(/\/$/, '')}/${linkDigest}`
+                const explorerLink = `${SUIVISION_TXBLOCK_URL.replace(/\/$/, '')}/${linkDigest}`
 
                 return (
                   <motion.div
