@@ -4,11 +4,11 @@ import { NextResponse } from 'next/server'
 export async function POST(req: Request) {
   try {
     const body = await req.json()
-    const { public_instructions, hidden_instructions } = body
+    const { public_instructions } = body
 
-    if (!public_instructions || !hidden_instructions) {
+    if (!public_instructions) {
       return NextResponse.json(
-        { error: 'Public and hidden instructions are required' },
+        { error: 'Public instructions are required' },
         { status: 400 }
       )
     }
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       },
       body: JSON.stringify({
         public_instructions,
-        hidden_instructions,
+        hidden_instructions : "NA",
       }),
     })
 
