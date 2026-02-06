@@ -16,12 +16,11 @@ import {
 import {
   MIST_PER_SUI,
   PROVIDER_MODELS,
-  SENTINEL_GIFS,
-  SENTINEL_IMAGES,
   SUI_CONFIG,
   SUI_SENTINEL_DOCS_URL,
   SYSTEM_PROMPT_MAX_TOKENS,
 } from '@/constants'
+import { SENTINEL_GIFS, SENTINEL_IMAGES } from '@/constants/asset_paths'
 import { hexToVector } from '@/lib/utils'
 import { registerAgentUtil } from './utils'
 import { useAgentObjectNames } from '@/hooks/useAgentObjectNames'
