@@ -182,4 +182,5 @@ export const PROVIDER_MODELS: Record<string, string[]> = {
     'us.meta.llama3-2-90b-instruct-v1:0',
     'us.meta.llama3-3-70b-instruct-v1:0',
   ],
+  custom: [],
 }
