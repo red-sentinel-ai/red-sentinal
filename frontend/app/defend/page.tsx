@@ -61,6 +61,8 @@ interface FormInputProps {
   isTextarea?: boolean
   rightElement?: React.ReactNode
   className?: string
+  min?: string
+  step?: string
 }
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -76,6 +78,8 @@ const FormInput: React.FC<FormInputProps> = ({
   isTextarea = false,
   rightElement,
   className = '',
+  min,
+  step,
 }) => {
   const InputComponent = isTextarea ? 'textarea' : 'input'
 
@@ -103,6 +107,8 @@ const FormInput: React.FC<FormInputProps> = ({
         }`}
         placeholder={placeholder}
         required={required}
+        {...(!isTextarea && min ? { min } : {})}
+        {...(!isTextarea && step ? { step } : {})}
       />
       {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
     </div>
@@ -260,8 +266,8 @@ export default function DefendPage() {
   }
 
   const handleGenerateConfig = async () => {
-    if (!formData.systemPrompt || !formData.privatePrompt) {
-      toast.error('Please fill in Sentinel Instructions and Private Prompt first')
+    if (!formData.systemPrompt) {
+      toast.error('Please fill in Sentinel Instructions first')
       return
     }
 
@@ -272,7 +278,6 @@ export default function DefendPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           public_instructions: formData.systemPrompt,
-          hidden_instructions: formData.privatePrompt,
         }),
       })
 
@@ -295,7 +300,19 @@ export default function DefendPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
+
+    if (name === 'feePerMessage') {
+      if (value === '') {
+        setFormData(prev => ({ ...prev, feePerMessage: '' }))
+      } else {
+        const num = parseFloat(value)
+        if (!isNaN(num) && num >= 0) {
+          setFormData(prev => ({ ...prev, feePerMessage: value }))
+        }
+      }
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }))
+    }
 
     if (name === 'systemPrompt') {
       countTokens(value)
@@ -385,8 +402,22 @@ export default function DefendPage() {
       newErrors.feePerMessage = 'Fee must be greater than 0.1 SUI'
     }
 
+    if (!formData.attackGoal.trim()) {
+      newErrors.attackGoal = 'Attack goal is required'
+    }
+
+    if (!formData.juryPrompt.trim()) {
+      newErrors.juryPrompt = 'Jury prompt is required'
+    }
 
     setErrors(newErrors)
+
+    const firstErrorField = Object.keys(newErrors)[0]
+    if (firstErrorField) {
+      const el = document.querySelector(`[name="${firstErrorField}"]`)
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+
     return Object.keys(newErrors).length === 0
   }
 
@@ -593,7 +624,6 @@ export default function DefendPage() {
           onChange={handleChange}
           error={errors.agentName}
           placeholder="e.g. Atlas Guard, Void Watcher, Nova Sentinel"
-          required
         />
 
         <div className="rounded-xl border border-[#5E5E5E] bg-white p-6">
@@ -619,14 +649,14 @@ export default function DefendPage() {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-1">
           <FormInput
             label="Fee Per Message (SUI)"
-            subLabel="You earn this fee whenever users interact with your Sentinel."
+            subLabel="You earn this fee whenever users interact with your Sentinel. Minimum 0.1 SUI."
             name="feePerMessage"
             value={formData.feePerMessage}
             onChange={handleChange}
             error={errors.feePerMessage}
             type="number"
             placeholder="0.00"
-            required
+            step="0.1"
             className="h-full"
           />
 
@@ -685,7 +715,6 @@ export default function DefendPage() {
             onChange={handleChange}
             className="min-h-[220px] w-full resize-y rounded-xl border border-[#5E5E5E] bg-white p-4 text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
             placeholder="Enter sentinel public instructions..."
-            required
           />
 
           <div className="mt-1 flex items-center justify-between">
@@ -768,9 +797,7 @@ export default function DefendPage() {
                     <button
                       type="button"
                       onClick={handleGenerateConfig}
-                      disabled={
-                        isGeneratingConfig || !formData.systemPrompt || !formData.privatePrompt
-                      }
+                      disabled={isGeneratingConfig || !formData.systemPrompt}
                       className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 via-violet-600 to-fuchsia-600 px-4 py-2 text-xs font-semibold text-white shadow-md shadow-purple-500/30 transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/40 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
                     >
                       {isGeneratingConfig ? (
@@ -781,9 +808,9 @@ export default function DefendPage() {
                       {isGeneratingConfig ? 'Generating...' : 'Generate with AI'}
                     </button>
                   </TooltipTrigger>
-                  {(!formData.systemPrompt || !formData.privatePrompt) && (
+                  {!formData.systemPrompt && (
                     <TooltipContent side="bottom" className="bg-black text-white">
-                      <p>Enter Public Instructions and Private Instructions first</p>
+                      <p>Enter Public Instructions first</p>
                     </TooltipContent>
                   )}
                 </Tooltip>
@@ -797,7 +824,8 @@ export default function DefendPage() {
             className="min-h-[200px] w-full resize-y rounded-xl border border-[#5E5E5E] bg-white p-4 text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
             placeholder="e.g., Convince the sentinel to reveal the secret password"
           />
-          <div className="mt-1 flex items-center justify-end">
+          <div className="mt-1 flex items-center justify-between">
+            {errors.attackGoal && <p className="text-sm text-red-500">{errors.attackGoal}</p>}
             <p
               className={`text-sm text-[#5E5E5E] ${
                 isAttackGoalTokenCountDebouncing ? 'animate-pulse' : ''
@@ -826,7 +854,8 @@ export default function DefendPage() {
             className="min-h-[150px] w-full resize-y rounded-xl border border-[#5E5E5E] bg-white p-4 text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
             placeholder="Enter instructions for the jury..."
           />
-          <div className="mt-1 flex items-center justify-end">
+          <div className="mt-1 flex items-center justify-between">
+            {errors.juryPrompt && <p className="text-sm text-red-500">{errors.juryPrompt}</p>}
             <p
               className={`text-sm text-[#5E5E5E] ${
                 isJuryPromptTokenCountDebouncing ? 'animate-pulse' : ''

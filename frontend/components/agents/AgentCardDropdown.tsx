@@ -59,9 +59,11 @@ export const AgentDropdown = ({
     setIsClaimModalOpen(true)
   }
 
+  const hasItems = !isFeatured || isOwner
+
   return (
     <>
-      <div className="absolute right-2 top-2 z-20">
+      {hasItems && <div className="absolute right-2 top-2 z-20">
         <DropdownMenu>
           <DropdownMenuTrigger className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-sm outline-none backdrop-blur-sm transition-colors hover:bg-white">
             <MoreVertical className="h-5 w-5 text-gray-700" />
@@ -100,7 +102,7 @@ export const AgentDropdown = ({
             )}
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
+      </div>}
 
       {isOwner && (
         <>
