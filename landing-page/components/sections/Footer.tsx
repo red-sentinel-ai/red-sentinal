@@ -70,7 +70,7 @@ export function Footer() {
                     href={link.href}
                     target={link.isOutside ? '_blank' : '_self'}
                     rel="noopener noreferrer"
-                    className="w-[45px] h-[36px] sm:w-[50px] sm:h-[40px] border border-[#ACACAC] rounded-xl flex items-center justify-center hover:bg-black/5 transition-colors"
+                    className="w-[45px] h-[36px] sm:w-[50px] sm:h-[40px] border border-[#ACACAC] rounded-xl flex items-center justify-center hover:bg-black/5 transition-colors flex-none"
                     aria-label={link.alt}
                   >
                     {link.isImage ? (
@@ -97,7 +97,7 @@ export function Footer() {
                     href={link.href}
                     target={link.isOutside ? '_blank' : '_self'}
                     rel="noopener noreferrer"
-                    className="w-[50px] h-[40px] sm:w-[60px] sm:h-[45px] md:w-[70px] md:h-[51px] border border-[#ACACAC] rounded-xl flex items-center justify-center hover:bg-black/5 transition-colors"
+                    className="w-[50px] h-[40px] sm:w-[60px] sm:h-[45px] md:w-[70px] md:h-[51px] border border-[#ACACAC] rounded-xl flex items-center justify-center hover:bg-black/5 transition-colors flex-none"
                     aria-label={link.alt}
                   >
                     {link.isImage ? (
