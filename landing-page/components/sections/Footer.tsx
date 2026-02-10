@@ -12,7 +12,7 @@ export function Footer() {
 
       <div className="relative z-10 max-w-[1440px] mx-auto pb-0 px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row justify-between md:items-start gap-4 md:text-left">
-          <div className="max-w-md md:self-stretch flex flex-col order-1 md:order-1">
+          <div className="max-w-md md:self-stretch md:shrink-0 flex flex-col order-1 md:order-1">
             <div className="flex items-center text-sm md:text-base md:justify-start gap-3 mb-4">
               <Image
                 src="/icons/logo_large.svg"
@@ -34,28 +34,28 @@ export function Footer() {
             </p>
           </div>
 
-          <div className="flex w-full max-w-[280px] sm:max-w-xs md:max-w-lg mx-auto items-end justify-between mt-8 md:mt-auto order-3 md:order-2">
-            <div>
+          <div className="flex w-full max-w-[280px] sm:max-w-xs md:max-w-none md:flex-1 md:min-w-0 mx-auto items-end justify-center gap-2 mt-8 md:mt-auto order-3 md:order-2">
+            <div className="shrink min-w-0">
               <Image
                 src="/img/robot_defend.png"
                 width={260}
                 height={346}
                 alt="Defender Robot"
-                className="h-auto w-[150px] sm:w-[180px] md:w-[220px] lg:w-[260px]"
+                className="h-auto w-[150px] sm:w-[180px] md:w-full md:max-w-[220px] lg:max-w-[260px]"
               />
             </div>
-            <div className="flex">
+            <div className="flex shrink min-w-0">
               <Image
                 src="/img/robot_attack.png"
                 width={215}
                 height={286}
                 alt="Attacker Robot"
-                className="mt-auto h-auto w-[100px] sm:w-[130px] md:w-[180px] lg:w-[215px]"
+                className="mt-auto h-auto w-[100px] sm:w-[130px] md:w-full md:max-w-[180px] lg:max-w-[215px]"
               />
             </div>
           </div>
 
-          <div className="w-full md:w-auto order-2 md:order-3 pb-4 overflow-auto">
+          <div className="w-full md:w-auto md:shrink-0 order-2 md:order-3 pb-4 overflow-auto">
             <div className="grid grid-cols-2 gap-x-6 gap-y-4 md:hidden">
               {socialLinks.map((link) => (
                 <div key={link.href} className="flex items-center justify-between gap-3">
