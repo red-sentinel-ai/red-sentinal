@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { Transaction } from '@mysten/sui/transactions'
 import { useSignAndExecuteTransaction, useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
@@ -14,8 +14,14 @@ interface UseWithdrawAgentOptions {
   showToasts?: boolean
 }
 
+interface AgentCap {
+  id: string
+  agentId: string
+}
+
 interface WithdrawAgentParams {
   agentObjectId: string
+  agentId: string
   amount: number // Amount in SUI
 }
 
@@ -27,6 +33,7 @@ export const useWithdrawAgent = (options: UseWithdrawAgentOptions = {}) => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [lastResult, setLastResult] = useState<any>(null)
+  const [agentCaps, setAgentCaps] = useState<AgentCap[]>([])
 
   const account = useCurrentAccount()
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction({
@@ -41,8 +48,47 @@ export const useWithdrawAgent = (options: UseWithdrawAgentOptions = {}) => {
       }),
   })
 
+  const fetchAgentCaps = useCallback(async () => {
+    if (!account?.address) {
+      setAgentCaps([])
+      return
+    }
+
+    try {
+      const objects = await client.getOwnedObjects({
+        owner: account.address,
+        filter: {
+          StructType: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::AgentCap`,
+        },
+        options: {
+          showContent: true,
+          showType: true,
+        },
+      })
+
+      const caps: AgentCap[] = objects.data
+        .filter(obj => obj.data?.content?.dataType === 'moveObject')
+        .map(obj => {
+          const fields = (obj.data?.content as any)?.fields
+          return {
+            id: obj.data?.objectId || '',
+            agentId: fields?.agent_id || '',
+          }
+        })
+        .filter(cap => cap.id && cap.agentId)
+
+      setAgentCaps(caps)
+    } catch (error) {
+      console.error('Error fetching AgentCaps:', error)
+    }
+  }, [account?.address, client])
+
+  useEffect(() => {
+    fetchAgentCaps()
+  }, [fetchAgentCaps])
+
   const withdrawAgent = useCallback(
-    async ({ agentObjectId, amount }: WithdrawAgentParams) => {
+    async ({ agentObjectId, agentId, amount }: WithdrawAgentParams) => {
       if (!account?.address) {
         const errorMsg = 'Wallet not connected'
         setError(errorMsg)
@@ -50,8 +96,16 @@ export const useWithdrawAgent = (options: UseWithdrawAgentOptions = {}) => {
         return
       }
 
-      if (!agentObjectId || !amount || amount <= 0) {
+      if (!agentObjectId || !agentId || !amount || amount <= 0) {
         const errorMsg = 'Invalid agent ID or amount'
+        setError(errorMsg)
+        if (showToasts) toast.error(errorMsg)
+        return
+      }
+
+      const agentCap = agentCaps.find(cap => cap.agentId.toString() === agentId.toString())
+      if (!agentCap) {
+        const errorMsg = `You don't own the AgentCap for this agent. Only the agent creator can withdraw.`
         setError(errorMsg)
         if (showToasts) toast.error(errorMsg)
         return
@@ -64,14 +118,17 @@ export const useWithdrawAgent = (options: UseWithdrawAgentOptions = {}) => {
         const tx = new Transaction()
         const amountInMist = BigInt(Math.floor(amount * MIST_PER_SUI))
 
-        tx.moveCall({
+        const [coin] = tx.moveCall({
           target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::withdraw_from_agent`,
           arguments: [
             tx.object(agentObjectId),
+            tx.object(agentCap.id),
             tx.pure.u64(amountInMist),
             tx.object(SUI_CLOCK_OBJECT_ID),
           ],
         })
+
+        tx.transferObjects([coin], account.address)
 
         return new Promise((resolve, reject) => {
           signAndExecuteTransaction(
@@ -129,7 +186,7 @@ export const useWithdrawAgent = (options: UseWithdrawAgentOptions = {}) => {
         setIsLoading(false)
       }
     },
-    [account?.address, signAndExecuteTransaction, onSuccess, onError, showToasts, queryClient]
+    [account?.address, agentCaps, signAndExecuteTransaction, onSuccess, onError, showToasts, queryClient]
   )
 
   const reset = useCallback(() => {
