@@ -5,10 +5,9 @@ import { User, Folder } from 'lucide-react'
 import { SuiClient, getFullnodeUrl } from '@mysten/sui/client'
 import { formatAddress } from '@mysten/sui/utils'
 import { supabaseServiceClient } from '@/db/config/server'
-import { getDefeatedAgentIds, fetchAgentDetailsViaObject, getAttackCountsPerAgent } from '@/lib/sui-utils'
+import { getDefeatedAgentIds, fetchAgentOnChainDetails, getAttackCountsPerAgent } from '@/lib/sui-utils'
 import { FeaturedAgentCard } from '@/components/FeaturedAgentCard'
 import { AgentDetails } from '@/hooks/agents/useAllAgents'
-import { AgentStatus } from '@/types'
 import { APP_NETWORK, EXPLORER_BASE_URL } from '@/constants'
 
 async function getUserProfile(identifier: string) {
@@ -46,24 +45,33 @@ async function getUserProfile(identifier: string) {
 
   const enrichedAgents = await Promise.all(
     basicAgents.map(async agent => {
-      const onchainData = await fetchAgentDetailsViaObject(client, agent.object_id)
+      const onchainData = await fetchAgentOnChainDetails(client, agent.object_id)
 
-      const status: AgentStatus = defeatedAgentIds.has(String(agent.agent_id))
-        ? 'Defeated'
-        : 'Active'
+      const state = defeatedAgentIds.has(String(agent.agent_id))
+        ? 'defeated' as const
+        : 'active' as const
 
-      const returnData = {
-        ...agent,
+      return {
         agent_id: String(agent.agent_id),
-        ...onchainData,
-
-        agent_path: agent.agent_path || '',
-        created_at: agent.created_at || new Date().toISOString(),
-        status,
+        agent_name: agent.agent_name,
+        prompt: onchainData.prompt,
+        agent_image: agent.agent_profile || null,
+        creator: agent.owner,
+        cost_per_message: String(onchainData.cost_per_message),
+        total_balance: String(onchainData.balance),
+        agent_object_id: agent.object_id,
+        is_featured: agent.is_featured,
+        model_name: agent.model_name || null,
+        model_provider: agent.model_provider || null,
+        state,
         total_attacks: attackCounts.get(String(agent.agent_id)) || 0,
+        agent_path: agent.agent_path || '',
+        timestampMs: agent.created_at
+          ? String(new Date(agent.created_at).getTime())
+          : undefined,
+        last_funded_timestamp: onchainData.last_funded_timestamp,
+        accumulated_fees: onchainData.accumulated_fees,
       } as AgentDetails
-
-      return returnData
     })
   )
 
