@@ -181,7 +181,7 @@ export const FeaturedAgentCard = ({
                 Fund
               </button>
               <button
-                onClick={() => openWithdrawModal(agent.agent_object_id, Number(agent.total_balance))}
+                onClick={() => openWithdrawModal(agent.agent_object_id, agent.agent_id, Number(agent.total_balance))}
                 className="btn btn-outline w-1/2 px-2 py-1.5 text-[10px] sm:px-4 sm:py-2.5 sm:text-sm"
                 disabled={isWithdrawalLocked || Number(agent.total_balance) === 0}
                 title={
