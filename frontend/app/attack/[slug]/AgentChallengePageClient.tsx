@@ -57,13 +57,13 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
           is_successful: isWinner,
           attack_score: apiResponse.response.data.score,
           tx_digest: transactionResult.digest,
-          cost_to_attack: agent ? agent.cost_per_message / MIST_PER_SUI : 0,
+          cost_to_attack: agent ? Number(agent.cost_per_message) / MIST_PER_SUI : 0,
         })
 
         if (isWinner) {
           posthog.capture('sentinel_defeated', {
             agent_id: agent?.agent_id,
-            prize_pool_won: agent ? agent.balance / MIST_PER_SUI : 0,
+            prize_pool_won: agent ? Number(agent.total_balance) / MIST_PER_SUI : 0,
             winner_address: account?.address,
           })
         }
@@ -128,7 +128,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
       </div>
 
       <div className="overflow-y-auto whitespace-pre-wrap px-1">
-        {agent.system_prompt || 'No instructions available.'}
+        {agent.prompt || 'No instructions available.'}
       </div>
 
       <div className="shrink-0 pb-12 pt-8">

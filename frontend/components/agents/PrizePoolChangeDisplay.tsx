@@ -1,34 +1,24 @@
 'use client'
 
-import { ArrowDown, ArrowUp, Loader2 } from 'lucide-react'
+import { ArrowDown, ArrowUp } from 'lucide-react'
 import clsx from 'clsx'
 import { cn } from '@/lib/utils'
-import { useAgentPrizePoolHistory } from '@/hooks/agents/useAgentPrizePoolHistory'
+import { PrizePoolHistory } from '@/hooks/agents/useAllAgents'
 
 interface PrizePoolChangeDisplayProps {
-  agentId: string
+  prizePoolHistory?: PrizePoolHistory | null
   variant?: 'list' | 'card'
 }
 
 export const PrizePoolChangeDisplay = ({
-  agentId,
+  prizePoolHistory,
   variant = 'list',
 }: PrizePoolChangeDisplayProps) => {
-  const { data: prizePoolData, isLoading } = useAgentPrizePoolHistory(agentId)
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center">
-        <Loader2 className="h-3 w-3 animate-spin text-gray-400" />
-      </div>
-    )
-  }
-
-  if (!prizePoolData || prizePoolData.history.length === 0) {
+  if (!prizePoolHistory || prizePoolHistory.history.length === 0) {
     return <span className="text-sm text-gray-400">-</span>
   }
 
-  const percentage = prizePoolData.change7d.percentage
+  const percentage = prizePoolHistory.change7d.percentage ?? Infinity
   const isPositive = percentage >= 0
 
   const displayText = !isFinite(percentage) ? 'New' : `${Math.abs(percentage).toFixed(1)}%`
