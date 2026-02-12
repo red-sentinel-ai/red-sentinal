@@ -102,14 +102,14 @@ export const PointsHistoryChart = ({ history }: PointsHistoryChartProps) => {
     <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-md">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-black">Points Growth</h3>
-          <p className="text-sm text-gray-500">Your SENTINEL points over time</p>
+          <h3 className="text-lg font-semibold text-black">Tokens Growth</h3>
+          <p className="text-sm text-gray-500">Your SENTINEL tokens over time</p>
         </div>
         {totalGrowth > 0 && (
           <div className="flex items-center gap-2 rounded-lg bg-green-50 px-3 py-1.5">
             <TrendingUp className="h-4 w-4 text-green-600" />
             <span className="text-sm font-medium text-green-600">
-              +{totalGrowth.toLocaleString()} pts
+              +{totalGrowth.toLocaleString()} tokens
             </span>
           </div>
         )}

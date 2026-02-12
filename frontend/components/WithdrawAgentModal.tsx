@@ -9,6 +9,7 @@ export interface WithdrawAgentModalProps {
   open: boolean
   onClose: () => void
   agentObjectId: string
+  agentId: string
   agentBalanceInMist: number
   onSuccess?: () => void
 }
@@ -17,6 +18,7 @@ export const WithdrawAgentModal = ({
   open,
   onClose,
   agentObjectId,
+  agentId,
   agentBalanceInMist,
   onSuccess,
 }: WithdrawAgentModalProps) => {
@@ -65,7 +67,7 @@ export const WithdrawAgentModal = ({
     if (!validateAmount()) return
 
     try {
-      await withdrawAgent({ agentObjectId, amount: +amount })
+      await withdrawAgent({ agentObjectId, agentId, amount: +amount })
       onSuccess?.()
       onClose()
     } catch (err) {

@@ -32,13 +32,13 @@ export const FeaturedAgentCard = ({
   const router = useRouter()
   const account = useCurrentAccount()
   const { Modal: FeatureModal, openModal: openFeatureModal } = useFeatureAgentModal()
-  const isOwner = account?.address === agent.owner
+  const isOwner = account?.address === agent.creator
 
   const [isWithdrawalLocked, setIsWithdrawalLocked] = useState(true)
   const [timeRemaining, setTimeRemaining] = useState('')
 
   useEffect(() => {
-    if (!agent.last_funded_timestamp || agent.status === 'Defeated' || agent.balance === 0) {
+    if (!agent.last_funded_timestamp || agent.state === 'defeated' || Number(agent.total_balance) === 0) {
       setIsWithdrawalLocked(false)
       setTimeRemaining('Unlocked')
       return
@@ -85,7 +85,7 @@ export const FeaturedAgentCard = ({
     }, 60000)
 
     return () => clearInterval(interval)
-  }, [agent.last_funded_timestamp, agent.status, agent.balance])
+  }, [agent.last_funded_timestamp, agent.state, agent.total_balance])
 
   const handleAttack = () => {
     router.push(`/attack/${agent.agent_path}`)
@@ -101,9 +101,9 @@ export const FeaturedAgentCard = ({
       <div className="h-full w-full overflow-hidden rounded-lg bg-white p-2 lg:rounded-xl lg:p-6">
         <div className="relative mb-2 sm:mb-4">
           <div className="relative flex h-32 w-full items-center justify-center overflow-hidden rounded-lg bg-gray-100 sm:h-80">
-            {agent.agent_profile ? (
+            {agent.agent_image ? (
               <Image
-                src={agent.agent_profile || '/placeholder.svg'}
+                src={agent.agent_image || '/placeholder.svg'}
                 alt={`${agent.agent_name} profile`}
                 fill
                 className="z-10 rounded-lg object-cover"
@@ -111,7 +111,7 @@ export const FeaturedAgentCard = ({
               />
             ) : (
               <div className="relative z-10 text-2xl font-medium">
-                {agent.agent_name.charAt(0).toUpperCase()}
+                {agent.agent_name?.charAt(0).toUpperCase() || '?'}
               </div>
             )}
 
@@ -119,9 +119,9 @@ export const FeaturedAgentCard = ({
               isOwner={isOwner}
               isFeatured={agent.is_featured}
               agentId={agent.agent_id}
-              agentObjectId={agent.object_id}
-              currentPrompt={agent.system_prompt}
-              currentCost={agent.cost_per_message}
+              agentObjectId={agent.agent_object_id}
+              currentPrompt={agent.prompt}
+              currentCost={Number(agent.cost_per_message)}
               openFeatureModal={openFeatureModal}
               accumulatedFees={agent.accumulated_fees}
             />
@@ -142,8 +142,8 @@ export const FeaturedAgentCard = ({
           <div className="flex flex-col items-start gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
             <span className="text-[#5E5E5E]">Reward Pool:</span>
             <div className="flex items-center">
-              <span className="mr-1 sm:mr-2">{formatBalance(agent.balance)}</span>
-              <PrizePoolChangeDisplay agentId={agent.agent_id} variant="card" />
+              <span className="mr-1 sm:mr-2">{formatBalance(agent.total_balance)}</span>
+              <PrizePoolChangeDisplay prizePoolHistory={agent.prizePoolHistory} variant="card" />
             </div>
           </div>
           <div className="flex flex-col items-start gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
@@ -175,19 +175,19 @@ export const FeaturedAgentCard = ({
           {fromProfile && (
             <div className="flex gap-1.5 sm:gap-2">
               <button
-                onClick={() => openModal(agent.object_id, agent.agent_id)}
+                onClick={() => openModal(agent.agent_object_id, agent.agent_id)}
                 className="btn btn-black w-1/2 px-2 py-1.5 text-[10px] sm:px-4 sm:py-2.5 sm:text-sm"
               >
                 Fund
               </button>
               <button
-                onClick={() => openWithdrawModal(agent.object_id, agent.balance)}
+                onClick={() => openWithdrawModal(agent.agent_object_id, agent.agent_id, Number(agent.total_balance))}
                 className="btn btn-outline w-1/2 px-2 py-1.5 text-[10px] sm:px-4 sm:py-2.5 sm:text-sm"
-                disabled={isWithdrawalLocked || agent.balance === 0}
+                disabled={isWithdrawalLocked || Number(agent.total_balance) === 0}
                 title={
                   isWithdrawalLocked
                     ? timeRemaining
-                    : agent.balance === 0
+                    : Number(agent.total_balance) === 0
                       ? 'Balance is zero'
                       : 'Withdraw funds'
                 }
@@ -206,10 +206,10 @@ export const FeaturedAgentCard = ({
   )
 }
 
-const formatBalance = (balance: number) => {
+const formatBalance = (balance: string) => {
   return (Number(balance) / MIST_PER_SUI).toFixed(4) + ' SUI'
 }
 
-const formatCost = (cost: number) => {
+const formatCost = (cost: string) => {
   return (Number(cost) / MIST_PER_SUI).toFixed(4) + ' SUI'
 }

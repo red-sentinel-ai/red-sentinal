@@ -125,12 +125,12 @@ const calculatePrizePoolHistory = (events: AgentEvent[], agentId: string): Prize
   }
 }
 
-export const useAgentPrizePoolHistory = (agentId: string) => {
+export const useAgentPrizePoolHistory = (agentId: string, enabled = true) => {
   const client = useSuiClient()
 
   return useQuery<PrizePoolHistoryData, Error>({
     queryKey: [AGENT_PRIZE_POOL_HISTORY_QUERY_KEY, agentId],
-    enabled: !!agentId,
+    enabled: !!agentId && enabled,
     queryFn: async () => {
       const [fundedEvents, feeEvents, defeatedEvents, withdrawnEvents] = await Promise.all([
         fetchEvents(client, 'AgentFunded'),
