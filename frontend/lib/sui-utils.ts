@@ -1,5 +1,4 @@
 import { SuiClient } from '@mysten/sui/client'
-import { SUI_CONFIG } from '@/constants'
 
 interface OnChainAgentDetails {
   cost_per_message: number
@@ -46,63 +45,5 @@ export const fetchAgentOnChainDetails = async (
       accumulated_fees: 0,
       is_defeated: false,
     }
-  }
-}
-
-export async function getDefeatedAgentIds(client: SuiClient): Promise<Set<string>> {
-  const packageId = SUI_CONFIG.APP_PACKAGE_ID
-  const moduleName = SUI_CONFIG.MODULE_NAME
-
-  try {
-    const defeatedEvents = await client.queryEvents({
-      query: {
-        MoveEventType: `${packageId}::${moduleName}::AgentDefeated`,
-      },
-      limit: 100,
-      order: 'descending',
-    })
-
-    const defeatedIds = defeatedEvents.data.map((event: any) => event.parsedJson.agent_id)
-    return new Set(defeatedIds)
-  } catch (error) {
-    console.error('Error fetching defeated agent events:', error)
-    return new Set()
-  }
-}
-
-export async function getAttackCountsPerAgent(client: SuiClient): Promise<Map<string, number>> {
-  const packageId = SUI_CONFIG.APP_PACKAGE_ID
-  const moduleName = SUI_CONFIG.MODULE_NAME
-  const attackCounts = new Map<string, number>()
-
-  try {
-    let cursor: { txDigest: string; eventSeq: string } | null | undefined = null
-    let hasMore = true
-
-    while (hasMore) {
-      const response = await client.queryEvents({
-        query: {
-          MoveEventType: `${packageId}::${moduleName}::PromptConsumed`,
-        },
-        limit: 50,
-        order: 'descending',
-        ...(cursor && { cursor }),
-      })
-
-      for (const event of response.data) {
-        const agentId = (event as any).parsedJson?.agent_id
-        if (agentId) {
-          attackCounts.set(agentId, (attackCounts.get(agentId) || 0) + 1)
-        }
-      }
-
-      hasMore = response.hasNextPage
-      cursor = response.nextCursor
-    }
-
-    return attackCounts
-  } catch (error) {
-    console.error('Error fetching attack counts:', error)
-    return attackCounts
   }
 }
