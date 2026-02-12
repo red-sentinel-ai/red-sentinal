@@ -1,74 +1,58 @@
 import { useQuery } from '@tanstack/react-query'
-import { useSuiClient } from '@mysten/dapp-kit'
-import { AgentStatus } from '@/types'
-import { getDefeatedAgentIds, fetchAgentDetailsViaObject, getAttackCountsPerAgent } from '@/lib/sui-utils'
+import { SUI_SENTINEL_API_URL, APP_NETWORK } from '@/constants'
+
+export interface PrizePoolHistory {
+  history: { time: string; value: number }[]
+  change7d: {
+    percentage: number | null
+    absolute: number
+  }
+}
 
 export interface AgentDetails {
   agent_id: string
-  agent_name: string
-  agent_profile: string
-  object_id: string
-  owner: string
+  agent_name: string | null
+  prompt: string
+  agent_image: string | null
+  creator: string
+  cost_per_message: string
+  total_balance: string
+  agent_object_id: string
   is_featured: boolean
-  cost_per_message: number
-  system_prompt: string
-  balance: number
-  status: AgentStatus
-  agent_path: string
-  created_at: string
-  last_funded_timestamp: string
-  accumulated_fees: number
-  model_provider?: string
-  model_name?: string
+  model_name: string | null
+  model_provider: string | null
+  state: 'active' | 'defeated'
   total_attacks: number
+  prizePoolHistory?: PrizePoolHistory | null
+  sender?: string
+  timestampMs?: string
+  // Derived
+  agent_path: string
+  // On-chain fields (only available on single agent pages)
+  last_funded_timestamp?: string
+  accumulated_fees?: number
 }
 
+export const ALL_AGENTS_QUERY_KEY = 'allAgents'
+
 export const useAllAgents = () => {
-  const client = useSuiClient()
-
   return useQuery<AgentDetails[], Error>({
-    queryKey: ['allAgents'],
+    queryKey: [ALL_AGENTS_QUERY_KEY],
     queryFn: async () => {
-      const [defeatedAgentIds, attackCounts, basicAgentsRes] = await Promise.all([
-        getDefeatedAgentIds(client),
-        getAttackCountsPerAgent(client),
-        fetch('/api/agents/all'),
-      ])
-
-      if (!basicAgentsRes.ok) {
-        const err = await basicAgentsRes.json()
-        throw new Error(err.error || 'Failed to fetch agents')
-      }
-
-      const basicAgents: Omit<
-        AgentDetails,
-        | 'cost_per_message'
-        | 'system_prompt'
-        | 'balance'
-        | 'status'
-        | 'last_funded_timestamp'
-        | 'accumulated_fees'
-      >[] = await basicAgentsRes.json()
-
-      const enrichedAgents = await Promise.all(
-        basicAgents.map(async agent => {
-          const onchain = await fetchAgentDetailsViaObject(client, agent.object_id)
-
-          const status: AgentStatus = defeatedAgentIds.has(String(agent.agent_id))
-            ? 'Defeated'
-            : 'Active'
-
-          return {
-            ...agent,
-            ...onchain,
-            agent_id: String(agent.agent_id),
-            status,
-            total_attacks: attackCounts.get(String(agent.agent_id)) || 0,
-          } as AgentDetails
-        })
+      const res = await fetch(
+        `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}?limit=200&include_prize_pool=true`
       )
-
-      return enrichedAgents
+      if (!res.ok) {
+        throw new Error('Failed to fetch agents')
+      }
+      const { agents } = await res.json()
+      return agents.map((agent: AgentDetails) => ({
+        ...agent,
+        agent_path: agent.agent_name
+          ? agent.agent_name.toLowerCase().replace(/\s+/g, '_')
+          : agent.agent_object_id,
+      }))
     },
+    staleTime: 60 * 1000,
   })
 }

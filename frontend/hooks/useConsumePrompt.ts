@@ -99,7 +99,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
       target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::request_attack`,
       arguments: [
         tx.object(SUI_CONFIG.AGENT_REGISTRY),
-        tx.object(agentDetails.object_id),
+        tx.object(agentDetails.agent_object_id),
         tx.object(SUI_CONFIG.PROTOCOL_CONFIG_OBJECT_ID),
         paymentCoin,
         tx.object('0x8'),
@@ -262,7 +262,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         return
       }
 
-      if (!agentDetails?.object_id || !message?.trim()) {
+      if (!agentDetails?.agent_object_id || !message?.trim()) {
         const errorMsg = 'Invalid agent ID or message'
         setError(errorMsg)
         if (showToasts) toast.error(errorMsg)
@@ -294,7 +294,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         setCurrentStep('Finalizing transaction...')
         if (showToasts) toast.info('Finalizing transaction...')
         const result = await executeConsumePrompt(
-          agentDetails.object_id,
+          agentDetails.agent_object_id,
           agentDetails,
           apiResponse,
           message,
