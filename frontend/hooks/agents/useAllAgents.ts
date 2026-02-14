@@ -30,6 +30,7 @@ export interface AgentDetails {
   agent_path: string
   // On-chain fields (only available on single agent pages)
   last_funded_timestamp?: string
+  unlock_timestamp?: string
   accumulated_fees?: number
 }
 
