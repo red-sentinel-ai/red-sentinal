@@ -8,7 +8,7 @@ import { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { useFundAgentModal } from '@/hooks/useFundAgentModal'
 import { useFeatureAgentModal } from '@/hooks/useFeatureAgentModal'
 import { useCurrentAccount } from '@mysten/dapp-kit'
-import { MIST_PER_SUI, WITHDRAWAL_LOCK_MS } from '@/constants'
+import { MIST_PER_SUI } from '@/constants'
 import { AgentDropdown } from './agents/AgentCardDropdown'
 import { useWithdrawAgentModal } from '@/hooks/agents/useWithdrawAgentModal'
 import { formatDuration } from '@/lib/utils'
@@ -37,25 +37,26 @@ export const FeaturedAgentCard = ({
   const [isWithdrawalLocked, setIsWithdrawalLocked] = useState(true)
   const [timeRemaining, setTimeRemaining] = useState('')
 
+  const hasNoBalance = Number(agent.total_balance) === 0
+
   useEffect(() => {
-    if (!agent.last_funded_timestamp || agent.state === 'defeated' || Number(agent.total_balance) === 0) {
+    if (hasNoBalance) {
+      setIsWithdrawalLocked(false)
+      setTimeRemaining('')
+      return
+    }
+
+    const unlock = Number(agent.unlock_timestamp)
+
+    if (!unlock || unlock === 0) {
       setIsWithdrawalLocked(false)
       setTimeRemaining('Unlocked')
       return
     }
-
-    const lastFunded = Number(agent.last_funded_timestamp)
-    if (lastFunded === 0) {
-      setIsWithdrawalLocked(false)
-      setTimeRemaining('Unlocked')
-      return
-    }
-
-    const unlockTimestamp = lastFunded + WITHDRAWAL_LOCK_MS
 
     const updateTimer = () => {
       const now = Date.now()
-      const diff = unlockTimestamp - now
+      const diff = unlock - now
 
       if (diff <= 0) {
         setIsWithdrawalLocked(false)
@@ -85,7 +86,7 @@ export const FeaturedAgentCard = ({
     }, 60000)
 
     return () => clearInterval(interval)
-  }, [agent.last_funded_timestamp, agent.state, agent.total_balance])
+  }, [agent.unlock_timestamp, hasNoBalance])
 
   const handleAttack = () => {
     router.push(`/attack/${agent.agent_path}`)
@@ -115,6 +116,23 @@ export const FeaturedAgentCard = ({
               </div>
             )}
 
+            <div
+              className={`absolute left-2 top-2 z-20 flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium sm:px-2.5 sm:py-1 sm:text-xs ${
+                agent.state === 'active'
+                  ? 'border border-[#1FAD57] bg-[#D1E6DB] text-[#1FAD57]'
+                  : 'border border-red-500/20 bg-red-500/10 text-red-400'
+              }`}
+            >
+              <Image
+                src={agent.state === 'active' ? '/icons/shield-green.png' : '/icons/shield-red.png'}
+                width={14}
+                height={14}
+                alt={agent.state === 'active' ? 'Active' : 'Defeated'}
+                className="size-3 sm:size-3.5"
+              />
+              {agent.state === 'active' ? 'Active' : 'Defeated'}
+            </div>
+
             <AgentDropdown
               isOwner={isOwner}
               isFeatured={agent.is_featured}
@@ -124,6 +142,7 @@ export const FeaturedAgentCard = ({
               currentCost={Number(agent.cost_per_message)}
               openFeatureModal={openFeatureModal}
               accumulatedFees={agent.accumulated_fees}
+              createdAt={agent.timestampMs}
             />
           </div>
         </div>
@@ -152,7 +171,7 @@ export const FeaturedAgentCard = ({
           </div>
         </div>
 
-        {fromProfile && (
+        {fromProfile && timeRemaining && (
           <div className="mb-2 text-center text-[10px] sm:mb-4 sm:text-xs">
             {isWithdrawalLocked ? (
               <span className="font-medium text-yellow-700">{timeRemaining}</span>
