@@ -1,4 +1,4 @@
-import { FileText, Github, Shield } from 'lucide-react'
+import {  FileText, Github, Handshake, Shield } from 'lucide-react'
 
 export const INDEXER_BASE_URL = process.env.NEXT_PUBLIC_INDEXER_BASE_URL || 'http://localhost:4000'
 
@@ -16,6 +16,7 @@ export const SUI_SENTINEL_X_USERNAME = 'suisentinal'
 export const SUI_SENTINEL_GITHUB_URL = 'https://github.com/sui-sentinel/contracts'
 export const SUI_SENTINEL_TELEGRAM_URL = 'https://t.me/suisentinel'
 export const SUI_SENTINEL_AUDIT_REPORT_URL = '/pdfs/audit_final.pdf'
+export const SUI_SENTINEL_AMBASSADOR_URL = "https://www.suisentinel.xyz/ambassador"
 
 
 export const SUI_SENTINEL_DEFENDER_REWARDS_DOCS_URL = `${SUI_SENTINEL_DOCS_URL}/incentives/defender-rewards`
@@ -137,6 +138,14 @@ export const socialLinks = [
     isImage: false,
     alt: 'blog',
     name: 'Blog',
+    isOutside: true,
+  },
+    {
+    href: SUI_SENTINEL_AMBASSADOR_URL,
+    icon: Handshake,
+    isImage: false,
+    alt: 'ambassador',
+    name: 'Ambassador',
     isOutside: true,
   },
   {

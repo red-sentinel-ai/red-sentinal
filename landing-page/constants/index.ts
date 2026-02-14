@@ -3,6 +3,7 @@ import {
   Coins,
   FileText,
   Github,
+  Handshake,
   Shield,
   Target,
   Trophy,
@@ -173,6 +174,14 @@ export const socialLinks = [
     isImage: true,
     alt: "Brand Kit",
     name: "Brand Kit",
+    isOutside: false,
+  },
+      {
+    href: "/ambassador",
+    icon: Handshake,
+    isImage: false,
+    alt: 'ambassador',
+    name: 'Ambassador',
     isOutside: false,
   },
   {
