@@ -5,12 +5,12 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 import { FeaturedAgentCard } from './FeaturedAgentCard'
 import { FeaturedAgentsSkeleton } from './ui/skeletons/FeaturedAgentsSkeleton'
-import { AgentDetails, useAllAgents } from '@/hooks/agents/useAllAgents'
+import { useAllAgents } from '@/hooks/agents/useAllAgents'
 
 export const AgentListView = () => {
   const { data: allAgents, isPending: isFetchingAllAgents, refetch: refetchAgent } = useAllAgents()
 
-  const featuredAgents = allAgents?.filter((agent: AgentDetails) => agent.is_featured) || []
+  const featuredAgents = allAgents?.filter(agent => agent.is_featured) || []
 
   return (
     <div className="mx-auto max-w-[1560px] px-2 py-4 md:px-8 md:py-16">
@@ -35,10 +35,6 @@ export const AgentListView = () => {
             <div className="mb-16">
               <div className="mb-8">
                 <h2 className="mb-2 text-2xl font-medium md:text-[32px]">Featured Sentinels</h2>
-                {/* <div className="flex max-w-[400px] mx-auto">
-                  <div className="gradient-border blue"></div>
-                  <div className="gradient-border blue rotate-180"></div>
-                </div> */}
               </div>
 
               <AnimatePresence mode="wait">
@@ -48,7 +44,7 @@ export const AgentListView = () => {
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {featuredAgents.map((agent: AgentDetails, index: number) => (
+                  {featuredAgents.map((agent, index) => (
                     <FeaturedAgentCard
                       key={agent.agent_id}
                       agent={agent}

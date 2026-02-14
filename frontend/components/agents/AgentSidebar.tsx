@@ -67,14 +67,14 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
   const [isLoadingAttackGoal, setIsLoadingAttackGoal] = useState(false)
 
   const account = useCurrentAccount()
-  const isOwner = account?.address === agent.owner
+  const isOwner = account?.address === agent.creator
 
   const { data: prizePoolData, isLoading: isLoadingChart } = useAgentPrizePoolHistory(
     agent.agent_id
   )
 
-  const { data: userProfilesMap, isLoading: isLoadingProfile } = useUserProfiles([agent.owner])
-  const defenderProfile = userProfilesMap?.[agent.owner]
+  const { data: userProfilesMap, isLoading: isLoadingProfile } = useUserProfiles([agent.creator])
+  const defenderProfile = userProfilesMap?.[agent.creator]
 
   useEffect(() => {
     const fetchAttackGoal = async () => {
@@ -115,9 +115,9 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
   const winnerAddress = bountyWonEvent ? bountyWonEvent.parsedJson.winner : null
 
   useEffect(() => {
-    if (!agent.created_at || isDrained) return
+    if (!agent.timestampMs || isDrained) return
 
-    const createdTime = new Date(agent.created_at).getTime()
+    const createdTime = Number(agent.timestampMs)
 
     const updateTimer = () => {
       const now = Date.now()
@@ -129,7 +129,7 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
     const interval = setInterval(updateTimer, 1000)
 
     return () => clearInterval(interval)
-  }, [agent.created_at, isDrained])
+  }, [agent.timestampMs, isDrained])
 
   useEffect(() => {
     if (isDrained) {
@@ -188,7 +188,7 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
         setShouldTruncate(false)
       }
     }
-  }, [agent.system_prompt])
+  }, [agent.prompt])
 
   const breakAttempts = agentEvents.promptConsumed.length
   const totalParticipants = new Set(
@@ -279,7 +279,7 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
           <div className="flex items-center gap-2 md:gap-4">
             <div className="h-8 w-8 shrink-0 grow-0 basis-auto overflow-hidden rounded-full md:h-10 md:w-10">
               <Image
-                src={agent.agent_profile || DEFAULT_PROFILE_URL}
+                src={agent.agent_image || DEFAULT_PROFILE_URL}
                 width={40}
                 height={40}
                 alt={agent.agent_name}
@@ -318,13 +318,13 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
           <div className="flex flex-col gap-1 md:gap-2">
             <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">Sentinel Object Id</h3>
             <Link
-              href={`${EXPLORER_BASE_URL}/object/${agent.object_id}`}
+              href={`${EXPLORER_BASE_URL}/object/${agent.agent_object_id}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block text-sm hover:underline md:text-base"
-              title={agent.object_id}
+              title={agent.agent_object_id}
             >
-              {formatAddress(agent.object_id)}
+              {formatAddress(agent.agent_object_id)}
             </Link>
           </div>
 
@@ -386,7 +386,7 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
               </div>
               <div className="flex items-end justify-between gap-2 md:gap-4">
                 <p className="inline-block text-lg font-semibold md:text-xl lg:text-2xl">
-                  {(Number(agent.balance) / MIST_PER_SUI).toFixed(2)} SUI
+                  {(Number(agent.total_balance) / MIST_PER_SUI).toFixed(2)} SUI
                 </p>
                 {isLoadingChart ? (
                   <div className="flex h-[24px] w-[80px] items-center justify-center md:h-[30px] md:w-[100px]">
@@ -492,7 +492,7 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
               ref={instructionsRef}
               className="line-clamp-4 whitespace-pre-wrap text-[11px] font-medium transition-all duration-300 md:text-xs"
             >
-              {agent.system_prompt}
+              {agent.prompt}
             </p>
 
             {shouldTruncate && onReadMore && (
@@ -547,7 +547,7 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
         </div>
 
         <DefenderProfile
-          ownerAddress={agent.owner}
+          ownerAddress={agent.creator}
           profile={defenderProfile}
           isLoading={isLoadingProfile}
         />

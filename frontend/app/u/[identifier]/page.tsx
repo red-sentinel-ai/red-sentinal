@@ -2,14 +2,27 @@ import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { User, Folder } from 'lucide-react'
-import { SuiClient, getFullnodeUrl } from '@mysten/sui/client'
 import { formatAddress } from '@mysten/sui/utils'
 import { supabaseServiceClient } from '@/db/config/server'
-import { getDefeatedAgentIds, fetchAgentDetailsViaObject, getAttackCountsPerAgent } from '@/lib/sui-utils'
 import { FeaturedAgentCard } from '@/components/FeaturedAgentCard'
-import { AgentDetails } from '@/hooks/agents/useAllAgents'
-import { AgentStatus } from '@/types'
-import { APP_NETWORK, EXPLORER_BASE_URL } from '@/constants'
+import { type AgentDetails } from '@/hooks/agents/useAllAgents'
+import { APP_NETWORK, EXPLORER_BASE_URL, SUI_SENTINEL_API_URL } from '@/constants'
+
+// Here we didn't used the useAgentsByOwner because it's a server components and good for SEO, if we want to use useAgentsByOwner hook, we will need to convert it to client component
+async function fetchAgentsByCreator(walletAddress: string): Promise<AgentDetails[]> {
+  const res = await fetch(
+    `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}?creator=${walletAddress}&limit=200&include_prize_pool=true`
+  )
+  if (!res.ok) return []
+
+  const { agents } = await res.json()
+  return agents.map((agent: AgentDetails) => ({
+    ...agent,
+    agent_path: agent.agent_name
+      ? agent.agent_name.toLowerCase().replace(/\s+/g, '_')
+      : agent.agent_object_id,
+  }))
+}
 
 async function getUserProfile(identifier: string) {
   const isWalletAddress = identifier.startsWith('0x') && identifier.length > 60
@@ -29,45 +42,12 @@ async function getUserProfile(identifier: string) {
     return null
   }
 
-  const { data: basicAgents } = await supabaseServiceClient
-    .from('ss_agents')
-    .select('*')
-    .in('owner', user.wallet_addresses)
-
-  if (!basicAgents) {
-    return { user, agents: [] }
-  }
-
-  const client = new SuiClient({ url: getFullnodeUrl(APP_NETWORK) })
-  const [defeatedAgentIds, attackCounts] = await Promise.all([
-    getDefeatedAgentIds(client),
-    getAttackCountsPerAgent(client),
-  ])
-
-  const enrichedAgents = await Promise.all(
-    basicAgents.map(async agent => {
-      const onchainData = await fetchAgentDetailsViaObject(client, agent.object_id)
-
-      const status: AgentStatus = defeatedAgentIds.has(String(agent.agent_id))
-        ? 'Defeated'
-        : 'Active'
-
-      const returnData = {
-        ...agent,
-        agent_id: String(agent.agent_id),
-        ...onchainData,
-
-        agent_path: agent.agent_path || '',
-        created_at: agent.created_at || new Date().toISOString(),
-        status,
-        total_attacks: attackCounts.get(String(agent.agent_id)) || 0,
-      } as AgentDetails
-
-      return returnData
-    })
+  const agentsByWallet = await Promise.all(
+    user.wallet_addresses.map((addr: string) => fetchAgentsByCreator(addr))
   )
+  const agents = agentsByWallet.flat()
 
-  return { user, agents: enrichedAgents }
+  return { user, agents }
 }
 
 export default async function PublicProfilePage({

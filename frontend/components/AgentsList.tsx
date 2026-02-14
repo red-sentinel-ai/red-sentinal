@@ -50,8 +50,8 @@ export const AgentsList = ({
       let valueB: number
 
       if (sortField === 'balance') {
-        valueA = Number(a.balance)
-        valueB = Number(b.balance)
+        valueA = Number(a.total_balance)
+        valueB = Number(b.total_balance)
       } else if (sortField === 'costPerMessage') {
         valueA = Number(a.cost_per_message)
         valueB = Number(b.cost_per_message)
@@ -131,7 +131,7 @@ export const AgentsList = ({
 
             <AnimatePresence>
               {sortedAgents.map((agent, idx) => {
-                const balance = (Number(agent.balance) / MIST_PER_SUI).toFixed(2)
+                const balance = (Number(agent.total_balance) / MIST_PER_SUI).toFixed(2)
                 const costPerMessage = (Number(agent.cost_per_message) / MIST_PER_SUI).toFixed(2)
 
                 return (
@@ -159,14 +159,14 @@ export const AgentsList = ({
                           )}
                         </div>
                         <Badge
-                          variant={agent.status === 'Active' ? 'secondary' : 'destructive'}
+                          variant={agent.state === 'active' ? 'secondary' : 'destructive'}
                           className={`${
-                            agent.status === 'Active'
+                            agent.state === 'active'
                               ? 'border-[#1FAD57] bg-[#D1E6DB] text-[#1FAD57]'
                               : 'border-red-500/20 bg-red-500/10 text-red-400'
                           } rounded-xl text-xs`}
                         >
-                          {agent.status === 'Active' ? (
+                          {agent.state === 'active' ? (
                             <Image
                               src="/icons/shield-green.png"
                               width={14}
@@ -183,7 +183,7 @@ export const AgentsList = ({
                               className="mr-1"
                             />
                           )}
-                          {agent.status}
+                          {agent.state === 'active' ? 'Active' : 'Defeated'}
                         </Badge>
                       </div>
                       <div className="grid grid-cols-2 gap-2 text-sm">
@@ -201,7 +201,7 @@ export const AgentsList = ({
                         </div>
                         <div>
                           <p className="text-xs text-gray-400">7d Change</p>
-                          <PrizePoolChangeDisplay agentId={agent.agent_id} variant="list" />
+                          <PrizePoolChangeDisplay prizePoolHistory={agent.prizePoolHistory} variant="list" />
                         </div>
                       </div>
                       <div className="flex gap-3 border-t border-gray-700/50 pt-2 text-xs">
@@ -243,19 +243,19 @@ export const AgentsList = ({
                       <div className="col-span-1 ps-4">{agent.total_attacks || 0}</div>
 
                       <div className="col-span-2 ps-4">
-                        <PrizePoolChangeDisplay agentId={agent.agent_id} variant="list" />
+                        <PrizePoolChangeDisplay prizePoolHistory={agent.prizePoolHistory} variant="list" />
                       </div>
 
                       <div className="col-span-1">
                         <Badge
-                          variant={agent.status === 'Active' ? 'secondary' : 'destructive'}
+                          variant={agent.state === 'active' ? 'secondary' : 'destructive'}
                           className={`${
-                            agent.status === 'Active'
+                            agent.state === 'active'
                               ? 'border-[#1FAD57] bg-[#D1E6DB] text-[#1FAD57]'
                               : 'border-red-500/20 bg-red-500/10 text-red-400'
                           } rounded-xl text-base`}
                         >
-                          {agent.status === 'Active' ? (
+                          {agent.state === 'active' ? (
                             <Image
                               src="/icons/shield-green.png"
                               width={16}
@@ -272,7 +272,7 @@ export const AgentsList = ({
                               className="mr-1"
                             />
                           )}
-                          {agent.status}
+                          {agent.state === 'active' ? 'Active' : 'Defeated'}
                         </Badge>
                       </div>
                       <div className="col-span-2 flex items-center gap-4">
