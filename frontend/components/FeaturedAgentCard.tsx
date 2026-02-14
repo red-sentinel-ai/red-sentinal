@@ -116,6 +116,23 @@ export const FeaturedAgentCard = ({
               </div>
             )}
 
+            <div
+              className={`absolute left-2 top-2 z-20 flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium sm:px-2.5 sm:py-1 sm:text-xs ${
+                agent.state === 'active'
+                  ? 'border border-[#1FAD57] bg-[#D1E6DB] text-[#1FAD57]'
+                  : 'border border-red-500/20 bg-red-500/10 text-red-400'
+              }`}
+            >
+              <Image
+                src={agent.state === 'active' ? '/icons/shield-green.png' : '/icons/shield-red.png'}
+                width={14}
+                height={14}
+                alt={agent.state === 'active' ? 'Active' : 'Defeated'}
+                className="size-3 sm:size-3.5"
+              />
+              {agent.state === 'active' ? 'Active' : 'Defeated'}
+            </div>
+
             <AgentDropdown
               isOwner={isOwner}
               isFeatured={agent.is_featured}
