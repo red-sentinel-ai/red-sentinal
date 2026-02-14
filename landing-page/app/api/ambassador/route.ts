@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { supabaseServiceClient } from '@/db/config/server'
 import { TablesInsert, TablesUpdate } from '@/lib/database.types'
+import { sendAmbassadorConfirmationEmail } from '@/lib/emailUtils'
 
 type AmbassadorInsert = TablesInsert<'ss_ambassador_applications'>
 type AmbassadorUpdate = TablesUpdate<'ss_ambassador_applications'>
@@ -98,6 +99,12 @@ export async function PUT(request: Request) {
     if (error) {
       console.error('Supabase update error:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    if (updateData.status === 'submitted' && data?.email) {
+      sendAmbassadorConfirmationEmail(data.email).catch((err) =>
+        console.error('Failed to send ambassador confirmation email:', err)
+      )
     }
 
     return NextResponse.json({ success: true, data })
