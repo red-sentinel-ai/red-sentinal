@@ -125,6 +125,7 @@ export const FeaturedAgentCard = ({
               currentCost={Number(agent.cost_per_message)}
               openFeatureModal={openFeatureModal}
               accumulatedFees={agent.accumulated_fees}
+              createdAt={agent.timestampMs}
             />
           </div>
         </div>
