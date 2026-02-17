@@ -40,7 +40,7 @@ pub async fn register_agent(
     let sentinel_type = payload.sentinel_type.clone().unwrap_or_else(|| "basic".to_string());
     let hidden_instructions = payload.private_prompt.clone().unwrap_or_default();
     
-    let request_body = json!({
+    let mut request_body = json!({
         "sentinel_type": sentinel_type,
         "public_instructions": payload.system_prompt,
         "hidden_instructions": hidden_instructions,
@@ -50,6 +50,14 @@ pub async fn register_agent(
         "model_name": payload.model_name,
         "creator": payload.creator
     });
+    
+    // Add api_key and api_base_url to request body if available
+    if let Some(api_key) = &payload.api_key {
+        request_body["api_key"] = json!(api_key);
+    }
+    if let Some(api_base_url) = &payload.api_base_url {
+        request_body["api_base_url"] = json!(api_base_url);
+    }
 
     let register_url = format!(
         "https://redteam.suisentinel.xyz/{}/sentinels",
