@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { CameraIcon, ChevronLeft, Loader2, Sparkles, Info } from 'lucide-react'
+import { CameraIcon, ChevronLeft, Loader2, Sparkles, Info, CheckCircle, XCircle, Eye, EyeOff } from 'lucide-react'
 import { toast } from 'react-toastify'
 import posthog from 'posthog-js'
 import { Transaction } from '@mysten/sui/transactions'
@@ -46,6 +46,9 @@ interface FormData {
   privatePrompt: string
   attackGoal: string
   juryPrompt: string
+  customEndpointUrl: string
+  customApiKey: string
+  customModelName: string
 }
 
 interface FormInputProps {
@@ -241,11 +244,19 @@ export default function DefendPage() {
     privatePrompt: '',
     attackGoal: '',
     juryPrompt: '',
+    customEndpointUrl: '',
+    customApiKey: '',
+    customModelName: '',
   })
 
   const [errors, setErrors] = useState<Partial<FormData>>({})
   const [isLoading, setIsLoading] = useState(false)
   const [isGeneratingConfig, setIsGeneratingConfig] = useState(false)
+
+  const [isValidatingCustomProvider, setIsValidatingCustomProvider] = useState(false)
+  const [customProviderValidated, setCustomProviderValidated] = useState(false)
+  const [customProviderError, setCustomProviderError] = useState<string | null>(null)
+  const [showApiKey, setShowApiKey] = useState(false)
 
   const [deployedAgentObjectId, setDeployedAgentObjectId] = useState<string | null>(null)
   const [deployedAgentPath, setDeployedAgentPath] = useState<string | null>(null)
@@ -256,13 +267,63 @@ export default function DefendPage() {
   const [showFundSuccessModal, setShowFundSuccessModal] = useState(false)
   const [fundedAmount, setFundedAmount] = useState('')
   const handleProviderChange = (provider: string) => {
-    const defaultModelForProvider = PROVIDER_MODELS[provider]?.[0] || DEFAULT_MODEL
+    const isCustom = provider === 'custom'
+    const defaultModelForProvider = isCustom ? '' : (PROVIDER_MODELS[provider]?.[0] || DEFAULT_MODEL)
 
     setFormData(prev => ({
       ...prev,
       llmProvider: provider,
       llmModel: defaultModelForProvider,
+      ...(isCustom ? {} : { customEndpointUrl: '', customApiKey: '', customModelName: '' }),
     }))
+
+    if (!isCustom) {
+      setCustomProviderValidated(false)
+      setCustomProviderError(null)
+    }
+  }
+
+  const handleValidateCustomProvider = async () => {
+    if (!formData.customEndpointUrl || !formData.customApiKey || !formData.customModelName) {
+      toast.error('Please fill in all custom provider fields')
+      return
+    }
+
+    setIsValidatingCustomProvider(true)
+    setCustomProviderError(null)
+    setCustomProviderValidated(false)
+
+    try {
+      const response = await fetch('/api/test-model', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model_provider: 'custom',
+          api_base_url: formData.customEndpointUrl,
+          api_key: formData.customApiKey,
+          model_name: formData.customModelName,
+          test_prompt: 'Say OK if you can hear me',
+        }),
+      })
+
+      const data = await response.json()
+
+      if (data.success && data.connected) {
+        setCustomProviderValidated(true)
+        setCustomProviderError(null)
+        setFormData(prev => ({ ...prev, llmModel: prev.customModelName }))
+        toast.success('Custom provider connection validated!')
+      } else {
+        setCustomProviderValidated(false)
+        setCustomProviderError(data.error_details || data.message || 'Connection failed')
+      }
+    } catch (error) {
+      console.error('Error validating custom provider:', error)
+      setCustomProviderValidated(false)
+      setCustomProviderError('Failed to validate connection. Please try again.')
+    } finally {
+      setIsValidatingCustomProvider(false)
+    }
   }
 
   const handleGenerateConfig = async () => {
@@ -314,6 +375,11 @@ export default function DefendPage() {
       setFormData(prev => ({ ...prev, [name]: value }))
     }
 
+    if (['customEndpointUrl', 'customApiKey', 'customModelName'].includes(name)) {
+      setCustomProviderValidated(false)
+      setCustomProviderError(null)
+    }
+
     if (name === 'systemPrompt') {
       countTokens(value)
     } else if (name === 'privatePrompt') {
@@ -342,6 +408,9 @@ export default function DefendPage() {
       privatePrompt: '',
       attackGoal: '',
       juryPrompt: '',
+      customEndpointUrl: '',
+      customApiKey: '',
+      customModelName: '',
     })
     setFundedAmount('')
     setSelectedImage({
@@ -349,6 +418,8 @@ export default function DefendPage() {
       isCustom: false,
     })
     setAgentImage(null)
+    setCustomProviderValidated(false)
+    setCustomProviderError(null)
   }
 
   const handleCloseSuccessModal = () => {
@@ -410,6 +481,22 @@ export default function DefendPage() {
       newErrors.juryPrompt = 'Jury prompt is required'
     }
 
+    if (formData.llmProvider === 'custom') {
+      if (!formData.customEndpointUrl.trim()) {
+        newErrors.customEndpointUrl = 'Endpoint URL is required'
+      }
+      if (!formData.customApiKey.trim()) {
+        newErrors.customApiKey = 'API Key is required'
+      }
+      if (!formData.customModelName.trim()) {
+        newErrors.customModelName = 'Model name is required'
+      }
+      if (!customProviderValidated) {
+        toast.error('Please validate your custom provider connection before deploying')
+        return false
+      }
+    }
+
     setErrors(newErrors)
 
     const firstErrorField = Object.keys(newErrors)[0]
@@ -456,7 +543,7 @@ export default function DefendPage() {
       payload.append('owner', account!.address)
       payload.append('digest', result.digest.toString())
       payload.append('model_provider', formData.llmProvider)
-      payload.append('model_name', formData.llmModel)
+      payload.append('model_name', formData.llmProvider === 'custom' ? formData.customModelName : formData.llmModel)
 
       if (agentImage) {
         payload.append('image', agentImage)
@@ -532,15 +619,19 @@ export default function DefendPage() {
       }
 
       const feePerMessage = parseFloat(formData.feePerMessage) * MIST_PER_SUI
+      const isCustomProvider = formData.llmProvider === 'custom'
       const agentDetails = await registerAgentUtil(
         formData.systemPrompt,
         feePerMessage,
         account.address,
         formData.llmProvider,
-        formData.llmModel,
+        isCustomProvider ? formData.customModelName : formData.llmModel,
         formData.privatePrompt,
         formData.attackGoal,
-        formData.juryPrompt
+        formData.juryPrompt,
+        isCustomProvider
+          ? { apiBaseUrl: formData.customEndpointUrl, apiKey: formData.customApiKey }
+          : undefined
       )
       setAgentId(agentDetails.response.data.agent_id)
       await createAgentTransaction(agentDetails)
@@ -636,13 +727,126 @@ export default function DefendPage() {
               selected={formData.llmProvider}
               onSelect={handleProviderChange}
             />
-            <CustomDropdown
-              label="Select Model"
-              subLabel="Select the model version for the chosen LLM."
-              options={PROVIDER_MODELS[formData.llmProvider] || []}
-              selected={formData.llmModel}
-              onSelect={val => setFormData(prev => ({ ...prev, llmModel: val }))}
-            />
+            {formData.llmProvider !== 'custom' ? (
+              <CustomDropdown
+                label="Select Model"
+                subLabel="Select the model version for the chosen LLM."
+                options={PROVIDER_MODELS[formData.llmProvider] || []}
+                selected={formData.llmModel}
+                onSelect={val => setFormData(prev => ({ ...prev, llmModel: val }))}
+              />
+            ) : (
+              <div className="flex min-w-[200px] flex-1 flex-col gap-4">
+                <div>
+                  <label className="block text-[18px] font-medium text-black">
+                    Endpoint URL
+                  </label>
+                  <p className="mb-2 text-[14px] text-[#5E5E5E]">
+                    OpenAI-compatible API endpoint URL
+                  </p>
+                  <input
+                    name="customEndpointUrl"
+                    type="url"
+                    value={formData.customEndpointUrl}
+                    onChange={handleChange}
+                    className="h-[55px] w-full rounded-xl border border-[#5E5E5E] bg-white px-4 text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+                    placeholder="https://api.example.com/v1"
+                  />
+                  {errors.customEndpointUrl && (
+                    <p className="mt-1 text-sm text-red-500">{errors.customEndpointUrl}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-[18px] font-medium text-black">API Key</label>
+                  <p className="mb-2 text-[14px] text-[#5E5E5E]">
+                    Your API key for authentication
+                  </p>
+                  <div className="relative">
+                    <input
+                      name="customApiKey"
+                      type={showApiKey ? 'text' : 'password'}
+                      value={formData.customApiKey}
+                      onChange={handleChange}
+                      className="h-[55px] w-full rounded-xl border border-[#5E5E5E] bg-white px-4 pr-12 text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+                      placeholder="sk-..."
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowApiKey(!showApiKey)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                      {showApiKey ? (
+                        <EyeOff className="h-5 w-5" />
+                      ) : (
+                        <Eye className="h-5 w-5" />
+                      )}
+                    </button>
+                  </div>
+                  {errors.customApiKey && (
+                    <p className="mt-1 text-sm text-red-500">{errors.customApiKey}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-[18px] font-medium text-black">Model Name</label>
+                  <p className="mb-2 text-[14px] text-[#5E5E5E]">
+                    The model identifier to use (e.g., gpt-4o, claude-3-opus)
+                  </p>
+                  <input
+                    name="customModelName"
+                    type="text"
+                    value={formData.customModelName}
+                    onChange={handleChange}
+                    className="h-[55px] w-full rounded-xl border border-[#5E5E5E] bg-white px-4 text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+                    placeholder="e.g., kimi-k2-turbo-preview"
+                  />
+                  {errors.customModelName && (
+                    <p className="mt-1 text-sm text-red-500">{errors.customModelName}</p>
+                  )}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleValidateCustomProvider}
+                  disabled={
+                    isValidatingCustomProvider ||
+                    !formData.customEndpointUrl ||
+                    !formData.customApiKey ||
+                    !formData.customModelName
+                  }
+                  className="flex h-[48px] items-center justify-center gap-2 rounded-xl border border-black bg-black px-6 font-medium text-white transition-colors hover:bg-black/90 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {isValidatingCustomProvider ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Validating...
+                    </>
+                  ) : customProviderValidated ? (
+                    <>
+                      <CheckCircle className="h-4 w-4 text-green-400" />
+                      Validated
+                    </>
+                  ) : (
+                    'Validate Connection'
+                  )}
+                </button>
+
+                {customProviderValidated && (
+                  <div className="flex items-center gap-2 rounded-lg bg-green-50 px-4 py-3 text-sm text-green-700">
+                    <CheckCircle className="h-4 w-4 shrink-0" />
+                    <span>Connection verified successfully</span>
+                  </div>
+                )}
+
+                {customProviderError && (
+                  <div className="flex items-center gap-2 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+                    <XCircle className="h-4 w-4 shrink-0" />
+                    <span>{customProviderError}</span>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -872,7 +1076,7 @@ export default function DefendPage() {
           {account?.address ? (
             <button
               type="submit"
-              disabled={isLoading || tokenCount > SYSTEM_PROMPT_MAX_TOKENS}
+              disabled={isLoading || tokenCount > SYSTEM_PROMPT_MAX_TOKENS || (formData.llmProvider === 'custom' && !customProviderValidated)}
               className="flex h-[65px] w-full items-center justify-center gap-3 rounded-xl bg-black text-xl font-medium text-white transition-colors hover:bg-black/90 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isLoading ? (
