@@ -1,4 +1,4 @@
-import {  FileText, Github, Handshake, Shield } from 'lucide-react'
+import {  FileText, Github, Handshake, Presentation, Shield } from 'lucide-react'
 
 export const INDEXER_BASE_URL = process.env.NEXT_PUBLIC_INDEXER_BASE_URL || 'http://localhost:4000'
 
@@ -155,6 +155,14 @@ export const socialLinks = [
     isImage: false,
     alt: 'Audit Report',
     name: 'Audit Report',
+    isOutside: true,
+  },
+    {
+    href: "/pdfs/pitch_deck.pdf",
+    icon: Presentation,
+    isImage: false,
+    alt: "Pitch Deck",
+    name: "Pitch Deck",
     isOutside: true,
   },
 ]
