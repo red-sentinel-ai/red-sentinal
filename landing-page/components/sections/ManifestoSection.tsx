@@ -44,10 +44,11 @@ export function ManifestoSection() {
         >
           <div className="badge-pink min-w-40 mb-6">• manifesto</div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium mb-6 max-w-[282px] md:max-w-none">
-            The Sui Sentinel <span className="text-[#C871FF]">Manifesto</span>
+            Our Vision: <span className="text-[#C871FF]">Trust Through Proof</span>
           </h2>
-          <p className="text-base md:text-2xl mx-auto max-w-[270px] md:max-w-none">
-            We believe intelligence must be defended not left exposed.
+          <p className="text-base md:text-2xl mx-auto max-w-[320px] md:max-w-3xl">
+            A world where every AI system is continuously stress-tested, transparently audited, 
+            and provably secure — before it ever touches real users.
           </p>
         </motion.div>
 

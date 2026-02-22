@@ -20,9 +20,13 @@ export function OfferingsSection() {
         >
           <div className="badge-pink w-fit mb-6">• Offerings</div>
           <h2 className="text-2xl md:text-[48px] font-medium leading-tight">
-            Whether you’re deploying your own Sentinel or testing one built for battle, every move
-            shapes the future of <span className="text-[#C871FF]">AI Alignment & Safety.</span>
+            Two Ways to Participate in the{' '}
+            <span className="text-[#C871FF]">AI Security Economy</span>
           </h2>
+          <p className="text-lg md:text-xl text-[#5F5C5C] mt-4 max-w-3xl">
+            Whether you&apos;re stress-testing AI systems for profit or deploying hardened agents
+            for your users. Every interaction makes AI safer for everyone.
+          </p>
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -33,11 +37,12 @@ export function OfferingsSection() {
         >
           <div className="relative p-3 md:p-8 flex flex-col justify-between min-h-[300px] border border-black md:border-r-0">
             <div>
-              <h3 className="text-xl md:text-[32px] font-medium mb-6">Custom AI</h3>
+              <h3 className="text-xl md:text-[32px] font-medium mb-6">Attack & Earn</h3>
 
               <p className="text-base md:text-[20px] leading-relaxed text-[#939393]">
-                Use battle-tested AI models built by the community. Challenge them, test their
-                strength, and earn rewards for every exploit discovered.
+                Browse active Sentinels, pay per attack, and use your prompt engineering skills to
+                break AI defenses. Every successful exploit pays instantly in SUI/USDC. The ultimate
+                test of your red teaming skills.
               </p>
 
               <div className="min-h-[220px] sm:min-h-[260px] md:min-h-[300px]">
@@ -46,20 +51,22 @@ export function OfferingsSection() {
                   alt="custom ai"
                   width={500}
                   height={500}
-                  className="w-full max-w-[280px] sm:max-w-[350px] md:max-w-[450px] lg:max-w-[500px] h-auto mx-auto absolute top-[10%] sm:top-[8%] md:top-[5%] left-1/2 -translate-x-1/2"
+                  className="w-full max-w-[280px] sm:max-w-[350px] md:max-w-[450px] lg:max-w-[500px] h-auto mx-auto absolute top-[20%] sm:top-[8%] md:top-[12%] left-1/2 -translate-x-1/2"
                 />
               </div>
             </div>
             <Link href={SUI_SENTINEL_APP_URL} target="_blank" className="mt-1">
-              <button className="btn btn-outline px-8 mt-12 md:mt-0">Attack Now</button>
+              <button className="btn btn-outline px-8 mt-12 md:mt-0">Start Attacking</button>
             </Link>
           </div>
 
           <div className="relative p-3 md:p-8 border border-black border-t-0 md:border-t md:border-t-black md:border-l flex flex-col justify-between min-h-[300px]">
             <div>
-              <h3 className="text-xl md:text-[32px] font-medium mb-6">Deploy Your Sentinel</h3>
+              <h3 className="text-xl md:text-[32px] font-medium mb-6">Deploy & Defend</h3>
               <p className="text-base md:text-[20px] leading-relaxed text-[#939393]">
-                Launch your own Sentinel. Let the world attack it and earn while it evolves.
+                Launch your AI as a Sentinel with a staked prize pool. The world tries to break it.
+                You earn from every attack attempt while gathering invaluable adversarial data to
+                harden your defenses.
               </p>
 
               <div className="min-h-0 sm:min-h-[200px] md:min-h-[300px]">
@@ -74,7 +81,7 @@ export function OfferingsSection() {
             </div>
             <div className="flex justify-start md:justify-end">
               <Link href={SUI_SENTINEL_APP_URL} target="_blank" className="mt-1">
-                <button className="btn btn-outline px-7">Deploy Now!</button>
+                <button className="btn btn-outline px-7">Deploy Sentinel</button>
               </Link>
             </div>
           </div>
