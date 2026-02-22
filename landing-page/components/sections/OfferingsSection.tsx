@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { SUI_SENTINEL_APP_URL } from '@/constants'
 import Link from 'next/link'
 import Image from 'next/image'
+import { ArrowRight } from 'lucide-react'
 
 export function OfferingsSection() {
   return (
@@ -27,6 +28,13 @@ export function OfferingsSection() {
             Whether you&apos;re stress-testing AI systems for profit or deploying hardened agents
             for your users. Every interaction makes AI safer for everyone.
           </p>
+          <Link 
+            href="/red-teaming" 
+            className="inline-flex items-center gap-2 mt-4 text-[#C871FF] hover:text-[#F632F3] transition-colors group"
+          >
+            <span className="font-medium">Learn about AI Red Teaming</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
