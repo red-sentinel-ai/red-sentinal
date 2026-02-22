@@ -5,10 +5,7 @@ import { motion } from 'framer-motion'
 
 export function WhyChooseUsSection() {
   return (
-    <section
-      id="why-choose-us"
-      className="py-16 md:py-24 relative text-black mt-40"
-    >
+    <section id="why-choose-us" className="py-16 md:py-24 relative text-black mt-40">
       <div className="vertical-line left-4 -top-40"></div>
       <div className="vertical-line right-4 -top-40"></div>
       <div className="relative z-10 max-w-7xl mx-auto lg:px-8">
@@ -24,8 +21,8 @@ export function WhyChooseUsSection() {
             Why Sui Sentinel?
           </h2>
           <p className="text-base md:text-2xl mx-auto max-w-[320px] md:max-w-3xl">
-            The first trustless AI red teaming marketplace. Cryptographic verification. 
-            Instant settlement. No middlemen.
+            the first crowdsource AI red teaming platform. Cryptographic verification. Instant
+            settlement. No middlemen.
           </p>
         </motion.div>
 
@@ -40,9 +37,9 @@ export function WhyChooseUsSection() {
             <h3 className="text-xl md:text-2xl font-medium mb-4">Cryptographic Proof</h3>
 
             <p className="mt-auto text-sm md:text-base text-[#939393]">
-              Every attack is verified inside a Trusted Execution Environment (TEE) with 
-              cryptographic attestations. No fake exploits. No disputed payouts. 
-              Pure, verifiable truth on-chain.
+              Every attack is verified inside a Trusted Execution Environment (TEE) with
+              cryptographic attestations. No fake exploits. No disputed payouts. Pure, verifiable
+              truth on-chain.
             </p>
             <div className="flex items-center justify-center h-full">
               <Image
@@ -65,9 +62,9 @@ export function WhyChooseUsSection() {
             <h3 className="text-xl md:text-2xl font-medium mb-4">Instant Settlement</h3>
 
             <p className="mt-auto text-sm md:text-base text-[#939393]">
-              No waiting for bug bounty committees. No paperwork. Successful attacks pay out 
-              instantly via Sui&apos;s parallel execution. Your reward hits your wallet 
-              the moment verification completes.
+              No waiting for bug bounty committees. No paperwork. Successful attacks pay out
+              instantly via Sui&apos;s parallel execution. Your reward hits your wallet the moment
+              verification completes.
             </p>
 
             <div className="flex items-center justify-center h-full">
@@ -91,9 +88,9 @@ export function WhyChooseUsSection() {
             <h3 className="text-xl md:text-2xl font-medium mb-4">Scalable Marketplace</h3>
 
             <div className="mt-auto text-sm md:text-base text-[#939393]">
-              Web2 competitors charge for red teaming as a service. We built it as a marketplace 
-              that scales without us doing the work. More Sentinels = more attackers = 
-              more security data = stronger AI for everyone.
+              Web2 competitors charge for red teaming as a service. We built it as a marketplace
+              that scales without us doing the work. More Sentinels = more attackers = more security
+              data = stronger AI for everyone.
             </div>
 
             <div className="flex items-center justify-center h-full">

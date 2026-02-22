@@ -5,8 +5,8 @@ import localFont from 'next/font/local'
 import './globals.css'
 import { Navbar } from '@/components/sections/NavBar'
 import { Footer } from '@/components/sections/Footer'
-import { 
-  SUI_SENTINEL_APP_URL, 
+import {
+  SUI_SENTINEL_APP_URL,
   SUI_SENTINEL_X_USERNAME,
   SUI_SENTINEL_LANDING_PAGE_URL,
   SUI_SENTINEL_GITHUB_URL,
@@ -24,7 +24,7 @@ const satoshi = localFont({
 export const metadata: Metadata = {
   title: 'Sui Sentinel | Crowdsourced AI Red Teaming on Sui Blockchain',
   description:
-    'The first trustless AI red teaming marketplace. Attack AI systems, earn SUI/USDC rewards instantly. Deploy Sentinels, get real-world security testing. Cryptographically verified on-chain.',
+    'The first crowdsource AI red teaming platform. Attack AI systems, earn SUI/USDC rewards instantly. Deploy Sentinels, get real-world security testing. Cryptographically verified on-chain.',
   icons: {
     icon: '/icons/logo-sm.svg',
     shortcut: '/icons/logo-sm.svg',
@@ -75,7 +75,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Sui Sentinel | Break AI, Earn Crypto, Make Systems Safer',
     description:
-      'The first trustless AI red teaming marketplace. Attack AI systems → get paid instantly in SUI/USDC. Deploy Sentinels → get battle-tested.',
+      'The first crowdsource AI red teaming platform. Attack AI systems → get paid instantly in SUI/USDC. Deploy Sentinels → get battle-tested.',
     creator: `@${SUI_SENTINEL_X_USERNAME}`,
     images: ['/og-image-v4.png'],
   },
@@ -103,10 +103,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     name: 'Sui Sentinel',
     url: SUI_SENTINEL_LANDING_PAGE_URL,
     logo: `${SUI_SENTINEL_LANDING_PAGE_URL}/icons/logo-sm.svg`,
-    sameAs: [
-      `https://twitter.com/${SUI_SENTINEL_X_USERNAME}`,
-      SUI_SENTINEL_GITHUB_URL,
-    ],
+    sameAs: [`https://twitter.com/${SUI_SENTINEL_X_USERNAME}`, SUI_SENTINEL_GITHUB_URL],
     description: 'Crowdsourced AI red teaming platform on Sui blockchain',
     foundingDate: '2024',
     areaServed: 'Global',
