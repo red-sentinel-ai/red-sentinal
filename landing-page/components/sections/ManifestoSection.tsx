@@ -47,8 +47,8 @@ export function ManifestoSection() {
             Our Vision: <span className="text-[#C871FF]">Trust Through Proof</span>
           </h2>
           <p className="text-base md:text-2xl mx-auto max-w-[320px] md:max-w-3xl">
-            A world where every AI system is continuously stress-tested, transparently audited, 
-            and provably secure — before it ever touches real users.
+            A world where every AI system is continuously stress-tested, transparently audited, and
+            provably secure, before it ever touches real users.
           </p>
         </motion.div>
 
