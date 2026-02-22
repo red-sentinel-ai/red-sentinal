@@ -21,10 +21,11 @@ export function WhyChooseUsSection() {
         >
           <div className="badge-pink min-w-40 mb-6">• why us</div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium mb-6 max-w-[282px] md:max-w-none">
-            Built by Guardians, for Guardians
+            Why Sui Sentinel?
           </h2>
-          <p className="text-base md:text-2xl mx-auto max-w-[270px] md:max-w-none">
-            From businesses to engineers every Guardian strengthens the network.
+          <p className="text-base md:text-2xl mx-auto max-w-[320px] md:max-w-3xl">
+            The first trustless AI red teaming marketplace. Cryptographic verification. 
+            Instant settlement. No middlemen.
           </p>
         </motion.div>
 
@@ -36,11 +37,12 @@ export function WhyChooseUsSection() {
             viewport={{ once: true }}
             className="p-6 md:p-8 bg-[#F5F5F5] flex flex-col border-x border-black lg:border-x-0 lg:border-l min-h-[350px]"
           >
-            <h3 className="text-xl md:text-2xl font-medium mb-4">Evolving Security</h3>
+            <h3 className="text-xl md:text-2xl font-medium mb-4">Cryptographic Proof</h3>
 
             <p className="mt-auto text-sm md:text-base text-[#939393]">
-              Every attack strengthens the network. Every defense makes AI smarter. Sui Sentinel
-              turns testing into evolution creating intelligence that learns from every battle.
+              Every attack is verified inside a Trusted Execution Environment (TEE) with 
+              cryptographic attestations. No fake exploits. No disputed payouts. 
+              Pure, verifiable truth on-chain.
             </p>
             <div className="flex items-center justify-center h-full">
               <Image
@@ -60,11 +62,12 @@ export function WhyChooseUsSection() {
             viewport={{ once: true }}
             className="p-6 md:p-8 bg-[#F5F5F5] flex flex-col border-x border-t border-black lg:border-t-0 lg:border-x-0 lg:border-l min-h-[350px]"
           >
-            <h3 className="text-xl md:text-2xl font-medium mb-4">Incentivized Intelligence</h3>
+            <h3 className="text-xl md:text-2xl font-medium mb-4">Instant Settlement</h3>
 
             <p className="mt-auto text-sm md:text-base text-[#939393]">
-              Earn for every move that matters. Guardians don&apos;t just protect they profit from
-              progress. Our gamified rewards ensure constant testing and growth.
+              No waiting for bug bounty committees. No paperwork. Successful attacks pay out 
+              instantly via Sui&apos;s parallel execution. Your reward hits your wallet 
+              the moment verification completes.
             </p>
 
             <div className="flex items-center justify-center h-full">
@@ -85,14 +88,12 @@ export function WhyChooseUsSection() {
             viewport={{ once: true }}
             className="p-6 md:p-8 bg-[#F5F5F5] flex flex-col border-x  border-t border-black lg:border-t-0 lg:border-x-0 lg:border-l lg:border-r min-h-[350px]"
           >
-            <h3 className="text-xl md:text-2xl font-medium mb-4">Dual Power</h3>
+            <h3 className="text-xl md:text-2xl font-medium mb-4">Scalable Marketplace</h3>
 
             <div className="mt-auto text-sm md:text-base text-[#939393]">
-              <ul className="list-disc list-inside space-y-2">
-                <li>For builders — unmatched AI resilience.</li>
-                <li>For prompt engineers — endless earning through skill and precision.</li>
-                <li>Together, we secure the future of intelligent systems.</li>
-              </ul>
+              Web2 competitors charge for red teaming as a service. We built it as a marketplace 
+              that scales without us doing the work. More Sentinels = more attackers = 
+              more security data = stronger AI for everyone.
             </div>
 
             <div className="flex items-center justify-center h-full">
