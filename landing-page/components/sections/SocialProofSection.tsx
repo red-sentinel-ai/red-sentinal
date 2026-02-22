@@ -2,19 +2,19 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { OTTERSEC_URL } from '@/constants'
+import { SUI_SENTINEL_AUDIT_REPORT_URL } from '@/constants'
 
 const credibilityItems = [
   {
     label: 'Overflow Hackathon',
     value: 'Cryptography Track Winner',
-    subtext: '2024',
+    subtext: '2025',
   },
   {
     label: 'Security Audit',
     value: 'Audited by OtterSec',
     subtext: 'Public Report',
-    href: OTTERSEC_URL,
+    href: SUI_SENTINEL_AUDIT_REPORT_URL,
   },
   {
     label: 'Network Status',
@@ -33,7 +33,7 @@ export function SocialProofSection() {
     <section className="py-16 md:py-20 relative bg-white border-y border-black">
       <div className="vertical-line left-4"></div>
       <div className="vertical-line right-4"></div>
-      
+
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -62,19 +62,13 @@ export function SocialProofSection() {
                 {item.label}
               </p>
               {item.href ? (
-                <Link 
-                  href={item.href} 
-                  target="_blank"
-                  className="group"
-                >
+                <Link href={item.href} target="_blank" className="group">
                   <p className="text-base md:text-lg font-medium text-black group-hover:text-[#C871FF] transition-colors">
                     {item.value}
                   </p>
                 </Link>
               ) : (
-                <p className="text-base md:text-lg font-medium text-black">
-                  {item.value}
-                </p>
+                <p className="text-base md:text-lg font-medium text-black">{item.value}</p>
               )}
               <p className="text-xs text-[#C871FF] mt-1">{item.subtext}</p>
             </motion.div>

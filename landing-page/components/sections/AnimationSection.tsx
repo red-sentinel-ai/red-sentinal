@@ -13,7 +13,9 @@ export const AnimationSection = () => {
         <div className="relative z-10 w-full text-left">
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[48px] leading-snug font-medium">
             AI systems are attacked through language by anyone, not just expert hackers.
-            <span className="text-[#C871FF]">Existing security tools weren't built for this.</span>
+            <span className="text-[#C871FF]">
+              Existing security tools weren&apos;t built for this.
+            </span>
           </h2>
           <p className="max-w-[984px] text-base md:text-2xl mt-8 mx-auto md:mx-0 text-[#5F5C5C]">
             Sui Sentinel is a crowdsourced AI red teaming marketplace. Companies deploy their AI as
