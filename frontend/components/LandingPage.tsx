@@ -19,11 +19,12 @@ export const LandingPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.1 }}
           >
-            <h2 className="text-2xl uppercase text-text sm:text-[32px] md:text-[40px]">#Sui Sentinel</h2>
-            <p className="text-sm sm:text-base">
-              Stress-test AI systems through adversarial combat. Deploy defenses, hunt
-              vulnerabilities, and earn rewards in the world&apos;s first cryptoeconomic AI security
-              platform.
+            <h1 className="text-xl font-medium text-text sm:text-[32px] md:text-[40px] lg:text-[48px]">
+              Ship AI Agents Without Fear
+            </h1>
+            <p className="mx-auto mt-4 max-w-[700px] text-sm sm:text-base md:text-lg">
+              The first crowdsourced AI red teaming platform on Sui. Deploy agents, break defenses,
+              and earn instant rewards.
             </p>
           </motion.div>
 
@@ -73,9 +74,9 @@ export const LandingPage = () => {
 
               <div className="my-4">
                 <ul className="flex list-disc flex-col items-center justify-center ps-4 text-center text-sm md:ps-0 md:text-base">
-                  <li>Build robust AI systems that withstand attacks</li>
-                  <li>Earn passive income from failed attack attempts</li>
-                  <li>Prove your model&apos;s security cryptographically</li>
+                  <li>Launch your AI as a Sentinel with staked rewards</li>
+                  <li>Earn SUI from every failed attack attempt</li>
+                  <li>Get real adversarial data to harden your defenses</li>
                 </ul>
               </div>
               <div>
@@ -126,9 +127,9 @@ export const LandingPage = () => {
 
               <div className="my-4">
                 <ul className="flex list-disc flex-col items-center justify-center ps-4 text-center text-sm md:ps-0 md:text-base">
-                  <li>Discover vulnerabilities through prompt engineering</li>
-                  <li>Claim bounties for successful jailbreaks</li>
-                  <li>Sharpen your skills, earn your reputation</li>
+                  <li>Use prompt engineering to jailbreak AI defenses</li>
+                  <li>Win instant SUI payouts for verified exploits</li>
+                  <li>Build your rep as an elite AI red teamer</li>
                 </ul>
               </div>
 
