@@ -25,13 +25,13 @@ export const SLUSH_BASE_URL = 'https://my.slush.app/browse/'
 
 export const TEXT_COPIES = {
   leaderboard: {
-    heading: 'Leaderboard',
+    heading: 'Red Team Leaderboard',
     subheading:
-      "Discover agents created over time, active agents and check how both hackers who cracked systems and agent's creators have earned SUI rewards",
+      "Track top AI red teamers, undefeated Sentinels, and SUI rewards earned. See who's dominating the trustless security economy.",
   },
   attack: {
-    heading: 'Choose your opponent',
-    subheading: 'Trick one of these agents into sending you all their SUI',
+    heading: 'Choose Your Target',
+    subheading: 'Pick a Sentinel, break its defenses with prompt engineering, and claim the bounty. Every verified exploit pays instantly.',
   },
 }
 

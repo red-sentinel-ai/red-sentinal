@@ -35,8 +35,8 @@ export function RewardsDashboard() {
   if (!account?.address) {
     return (
       <ConnectPrompt
-        title="Rewards Program"
-        subtitle="Connect your wallet to view missions and track your points."
+        title="Earn While You Hack"
+        subtitle="Connect your wallet to view missions, earn SENTINEL tokens, and track your rewards"
         theme="defender"
       />
     )
@@ -62,10 +62,10 @@ export function RewardsDashboard() {
                     <Trophy className="h-12 w-12 text-blue-600" />
                   </motion.div>
                   <h2 className="mb-4 text-3xl font-bold uppercase text-black">
-                    Rewards Coming Soon
+                    Rewards Launching Soon
                   </h2>
                   <p className="text-lg text-gray-600">
-                    Our rewards program is currently being prepared. Check back soon!
+                    Complete missions, earn SENTINEL tokens, and unlock exclusive perks. The rewards program is being finalized.
                   </p>
                   {missionsData?.message && (
                     <p className="mt-4 rounded-lg border border-gray-200 bg-white p-3 text-sm text-gray-500">
@@ -100,11 +100,10 @@ export function RewardsDashboard() {
                 </motion.div>
               </a>
               <h1 className="mb-4 text-3xl font-bold uppercase text-black sm:text-4xl md:text-5xl">
-                Earn. Compete. Conquer.
+                Earn While You Hack
               </h1>
               <p className="mx-auto mb-6 max-w-2xl text-base text-gray-600 sm:text-xl">
-                Complete missions, earn tokens, and unlock exclusive rewards in the Sui Sentinel
-                ecosystem
+                Complete missions, climb the leaderboard, and unlock SENTINEL token rewards. Every attack, defense, and referral counts.
               </p>
               <div className="mb-4 flex items-center justify-center gap-4">
                 <Link href={REWARDS_DOCS_URL} target="_blank" rel="noopener noreferrer">

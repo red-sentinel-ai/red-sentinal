@@ -50,9 +50,9 @@ const Footer = () => {
               />
             </div>
             <p className="py-2 text-sm leading-relaxed text-black sm:py-4 sm:text-base">
-              Sui Sentinel is a Decentralized AI safety platform built on Sui. Stress-test models,
-              find vulnerabilities, earn rewards. Every judgment cryptographically verified
-              on-chain.
+              The first crowdsource AI red teaming platform on Sui. Deploy Sentinels, break AI
+              defenses, earn instant rewards. Every attack verified cryptographically. Every payout
+              trustless.
             </p>
 
             <div className="my-4 flex flex-row flex-wrap justify-center gap-2 md:hidden">

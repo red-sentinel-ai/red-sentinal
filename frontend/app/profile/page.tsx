@@ -60,8 +60,8 @@ export default function ProfilePage() {
   if (!account?.address) {
     return (
       <ConnectPrompt
-        title="Welcome User"
-        subtitle="Connect your wallet to see your activities"
+        title="Join the Red Team"
+        subtitle="Connect your wallet to track your attacks, manage Sentinels, and claim rewards"
         theme="defender"
       />
     )
