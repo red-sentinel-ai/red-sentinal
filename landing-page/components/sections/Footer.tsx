@@ -76,7 +76,7 @@ export function Footer() {
                     {link.isImage ? (
                       <Image src={link.icon as string} alt={link.alt} width={18} height={18} />
                     ) : (
-                      <link.icon className="size-4 text-black" />
+                      <link.icon className="w-5 h-5 text-black" />
                     )}
                   </Link>
                 </div>
@@ -103,7 +103,7 @@ export function Footer() {
                     {link.isImage ? (
                       <Image src={link.icon as string} alt={link.alt} width={20} height={20} />
                     ) : (
-                      <link.icon className="size-5 text-black" />
+                      <link.icon className="w-5 h-5 text-black" />
                     )}
                   </Link>
                 </div>
