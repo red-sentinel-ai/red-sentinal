@@ -4,6 +4,7 @@ import {
   FileText,
   Github,
   Handshake,
+  Presentation,
   Shield,
   Target,
   Trophy,
@@ -190,6 +191,14 @@ export const socialLinks = [
     isImage: false,
     alt: "Audit Report",
     name: "Audit Report",
+    isOutside: true,
+  },
+  {
+    href: "/pdfs/pitch_deck.pdf",
+    icon: Presentation,
+    isImage: false,
+    alt: "Pitch Deck",
+    name: "Pitch Deck",
     isOutside: true,
   },
 ];
