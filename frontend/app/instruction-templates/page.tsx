@@ -2,7 +2,16 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { ChevronLeft, Copy, Check, Eye, EyeOff, Crosshair, Gavel, AlertTriangle } from 'lucide-react'
+import {
+  ChevronLeft,
+  Copy,
+  Check,
+  Eye,
+  EyeOff,
+  Crosshair,
+  Gavel,
+  AlertTriangle,
+} from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { SENTINEL_TEMPLATES, SentinelTemplate } from '@/constants/sentinel-templates'
@@ -64,21 +73,19 @@ export default function InstructionTemplatesPage() {
             <span>Back to Deploy</span>
           </Link>
 
-          <h1 className="mb-3 text-2xl font-medium sm:text-4xl md:text-5xl">
-            Sentinel Templates
-          </h1>
+          <h1 className="mb-3 text-2xl font-medium sm:text-4xl md:text-5xl">Sentinel Templates</h1>
           <p className="max-w-3xl text-base text-[#5E5E5E] sm:text-xl">
-            Fun, pre-configured sentinel characters ready to deploy. Pick a template, customize it if
-            you want, and deploy your defender with all fields auto-filled.
+            Fun, pre-configured sentinel characters ready to deploy. Pick a template, customize it
+            if you want, and deploy your defender with all fields auto-filled.
           </p>
         </div>
 
-          <div className="mb-8 rounded-xl border border-amber-200 bg-amber-50 p-6">
+        <div className="mb-8 rounded-xl border border-amber-200 bg-amber-50 p-6">
           <div className="flex gap-4">
             <AlertTriangle className="mt-1 h-6 w-6 flex-shrink-0 text-amber-600" />
             <div>
               <h3 className="mb-2 font-semibold text-amber-900">
-                No Perfect Defense — But These Help
+                No Perfect Defense But These Help
               </h3>
               <p className="text-sm text-amber-800">
                 These templates draw from security research including{' '}
@@ -123,7 +130,7 @@ export default function InstructionTemplatesPage() {
               </p>
             </div>
           </div>
-          </div>
+        </div>
 
         <div className="mb-8 flex flex-wrap gap-2 sm:gap-3">
           {(['all', 'basic', 'rag'] as const).map(category => (
@@ -229,10 +236,7 @@ export default function InstructionTemplatesPage() {
                         <Eye className="h-4 w-4 text-blue-600" />
                         <h3 className="text-base font-semibold">Public Instructions</h3>
                       </div>
-                      <CopyButton
-                        text={selectedTemplate.public_instructions}
-                        fieldId="public"
-                      />
+                      <CopyButton text={selectedTemplate.public_instructions} fieldId="public" />
                     </div>
                     <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
                       <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-gray-800">
@@ -247,10 +251,7 @@ export default function InstructionTemplatesPage() {
                         <EyeOff className="h-4 w-4 text-orange-600" />
                         <h3 className="text-base font-semibold">Private Instructions</h3>
                       </div>
-                      <CopyButton
-                        text={selectedTemplate.hidden_instructions}
-                        fieldId="hidden"
-                      />
+                      <CopyButton text={selectedTemplate.hidden_instructions} fieldId="hidden" />
                     </div>
                     <div className="rounded-xl border border-orange-200 bg-orange-50 p-4">
                       <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-gray-800">
@@ -292,10 +293,7 @@ export default function InstructionTemplatesPage() {
                   <Link
                     href="/defend"
                     onClick={() => {
-                      sessionStorage.setItem(
-                        'selectedTemplate',
-                        JSON.stringify(selectedTemplate)
-                      )
+                      sessionStorage.setItem('selectedTemplate', JSON.stringify(selectedTemplate))
                     }}
                     className="block w-full rounded-xl bg-black py-4 text-center font-medium text-white transition-all hover:bg-black/90"
                   >
