@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Play, Clock, Shield } from 'lucide-react'
 import { useState } from 'react'
 
-const YOUTUBE_VIDEO_ID = 'dQw4w9WgXcQ'
+const YOUTUBE_VIDEO_ID = '3i2GFOHe5Ao'
 
 export function DemoVideoSection() {
   const [isPlaying, setIsPlaying] = useState(false)
@@ -27,8 +27,8 @@ export function DemoVideoSection() {
             See Sui Sentinel in <span className="text-[#C871FF]">Action</span>
           </h2>
           <p className="text-lg md:text-xl text-[#5F5C5C] max-w-2xl mx-auto">
-            Watch how attackers break AI systems, how defenses evolve, and how rewards
-            flow instantly on-chain. The future of AI security, explained in 2 minutes.
+            Watch how attackers break AI systems, how defenses evolve, and how rewards flow
+            instantly on-chain. The future of AI security, explained in 2 minutes.
           </p>
         </motion.div>
 
