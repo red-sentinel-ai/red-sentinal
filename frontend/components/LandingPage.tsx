@@ -29,34 +29,40 @@ export const LandingPage = () => {
           </motion.div>
 
           <div className="relative z-10 grid grid-cols-1 justify-center gap-8 overflow-hidden px-4 pb-4 pt-12 text-center md:gap-9 md:pt-20 lg:grid-cols-2">
+            {/* DEFEND Card */}
             <motion.div
-              className="robo-card attacker group col-span-1 rounded-lg p-2 backdrop-blur-[0.1px] lg:rounded-2xl lg:p-4"
+              className="robo-card defender group col-span-1 rounded-lg p-2 backdrop-blur-[0.1px] lg:rounded-2xl lg:p-4"
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: 0.2 }}
             >
-              <div className="relative">
-                <Image
-                  src="/img/robot_defend.png"
-                  width={368}
-                  height={546}
-                  alt="robo"
-                  className="relative z-10 mx-auto -mt-[50px] w-[200px] md:-mt-[90px] md:w-[368px]"
-                />
-
-                <Image
-                  src="/img/defend_bg.png"
-                  width={411}
-                  height={546}
-                  alt="robo"
-                  className="absolute left-1/2 right-1/2 top-[50px] -z-10 w-[240px] -translate-x-1/2 md:top-[88px] md:w-auto"
-                />
+              <div className="relative mx-auto w-[240px] md:w-[368px]">
+                {/* Background Image */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Image
+                    src="/img/defend_bg.png"
+                    width={411}
+                    height={546}
+                    alt=""
+                    className="h-auto w-full object-contain"
+                    priority
+                  />
+                </div>
+                {/* Robot Image */}
+                <div className="relative z-10 -mt-[40px] md:-mt-[70px]">
+                  <Image
+                    src="/img/robot_defend.png"
+                    width={368}
+                    height={546}
+                    alt="Defender Robot"
+                    className="h-auto w-full object-contain"
+                    priority
+                  />
+                </div>
               </div>
 
               <div className="my-2 flex items-center justify-center gap-2">
-                <div>
-                  <p className="text-base font-medium leading-normal md:text-lg lg:text-[2rem]">DEFEND</p>
-                </div>
+                <p className="text-base font-medium leading-normal md:text-lg lg:text-[2rem]">DEFEND</p>
               </div>
 
               <div className="mx-auto flex max-w-[280px] md:max-w-[394px]">
@@ -81,28 +87,36 @@ export const LandingPage = () => {
               </div>
             </motion.div>
 
+            {/* ATTACK Card */}
             <motion.div
-              className="robo-card defender group col-span-1 rounded-lg p-2 backdrop-blur-[0.1px] lg:rounded-2xl lg:p-4"
+              className="robo-card attacker group col-span-1 rounded-lg p-2 backdrop-blur-[0.1px] lg:rounded-2xl lg:p-4"
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: 0.3 }}
             >
-              <div className="relative">
-                <Image
-                  src="/img/robot_attack.png"
-                  width={368}
-                  height={546}
-                  alt="robo"
-                  className="relative z-10 mx-auto -mt-[50px] w-[200px] md:-mt-[96px] md:w-[368px]"
-                />
-
-                <Image
-                  src="/img/attack_bg.png"
-                  width={411}
-                  height={546}
-                  alt="robo"
-                  className="absolute left-1/2 right-1/2 top-[50px] -z-10 w-[240px] -translate-x-1/2 md:top-[96px] md:w-auto"
-                />
+              <div className="relative mx-auto w-[240px] md:w-[368px]">
+                {/* Background Image */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Image
+                    src="/img/attack_bg.png"
+                    width={411}
+                    height={546}
+                    alt=""
+                    className="h-auto w-full object-contain"
+                    priority
+                  />
+                </div>
+                {/* Robot Image */}
+                <div className="relative z-10 -mt-[40px] md:-mt-[70px]">
+                  <Image
+                    src="/img/robot_attack.png"
+                    width={368}
+                    height={546}
+                    alt="Attacker Robot"
+                    className="h-auto w-full object-contain"
+                    priority
+                  />
+                </div>
               </div>
 
               <div className="my-2 flex items-center justify-center gap-2">
