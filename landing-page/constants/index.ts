@@ -1,4 +1,5 @@
 import {
+  Calculator,
   Coins,
   Shield,
   Target,
@@ -195,6 +196,14 @@ export const socialLinks = [
     isImage: false,
     alt: 'ambassador',
     name: 'Ambassador',
+    isOutside: false,
+  },
+  {
+    href: "/reward-calculator",
+    icon: Calculator,
+    isImage: false,
+    alt: "Reward Calculator",
+    name: "Reward Calculator",
     isOutside: false,
   },
   {
