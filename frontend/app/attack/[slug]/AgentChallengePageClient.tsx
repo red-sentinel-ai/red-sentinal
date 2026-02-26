@@ -19,7 +19,8 @@ import ChatInterface from '@/components/agents/ChatInterface'
 import { AgentSidebar } from '@/components/agents/AgentSidebar'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { MobileAgentHeader } from './MobileAgentHeader'
-import { Loader2, X } from 'lucide-react'
+import { X } from 'lucide-react'
+import { AgentChallengePageSkeleton } from '@/components/ui/skeletons/AgentChallengePageSkeleton'
 
 // Transform indexer events to match the legacy AgentEvents format expected by child components
 // Events are sorted by timestamp in ascending order (oldest first) so most recent appears last in chat
@@ -192,18 +193,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   )
 
   if (isLoading) {
-    return (
-      <div
-        className="flex h-[calc(100vh-128px)] items-end justify-center bg-no-repeat"
-        style={{
-          backgroundImage: 'url(/img/chat_bg.png)',
-          backgroundPosition: '0% 17%',
-          backgroundSize: '100% auto',
-        }}
-      >
-        <Loader2 className="mr-2 h-10 w-10 animate-spin" />
-      </div>
-    )
+    return <AgentChallengePageSkeleton />
   }
 
   if (error || !agent) {
