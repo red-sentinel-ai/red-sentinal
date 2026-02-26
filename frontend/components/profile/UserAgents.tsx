@@ -7,7 +7,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useAgentsByOwner } from '@/hooks/agents/useOwnerAgents'
 import { FeaturedAgentsSkeleton } from '../ui/skeletons/FeaturedAgentsSkeleton'
 import { FeaturedAgentCard } from '../FeaturedAgentCard'
-import { AgentDetails } from '@/hooks/agents/useAllAgents'
 
 export const UserAgents = () => {
   const account = useCurrentAccount()
@@ -39,7 +38,7 @@ export const UserAgents = () => {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3 }}
             >
-              {userAgents.map((agent: AgentDetails, index: number) => (
+              {userAgents.map((agent, index) => (
                 <FeaturedAgentCard
                   key={agent.agent_id}
                   agent={agent}

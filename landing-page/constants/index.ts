@@ -1,14 +1,20 @@
 import {
-  Briefcase,
   Coins,
-  FileText,
-  Github,
   Shield,
   Target,
   Trophy,
   Users,
   Zap,
 } from "lucide-react";
+
+import {
+  DocumentTextIcon,
+  ShieldCheckIcon,
+  PresentationChartBarIcon,
+  UsersIcon,
+  BriefcaseIcon,
+  CommandLineIcon,
+} from '@heroicons/react/24/outline';
 
 export const supabaseUrl = process.env.SUPABASE_URL || "";
 export const supabaseServiceRoleKey =
@@ -137,7 +143,7 @@ export const socialLinks = [
   },
   {
     href: SUI_SENTINEL_GITHUB_URL,
-    icon: Github,
+    icon: CommandLineIcon,
     isImage: false,
     alt: "GitHub",
     name: "Github",
@@ -153,15 +159,23 @@ export const socialLinks = [
   },
   {
     href: "/blog",
-    icon: FileText,
+    icon: DocumentTextIcon,
     isImage: false,
     alt: "blog",
     name: "Blog",
     isOutside: false,
   },
   {
+    href: "/red-teaming",
+    icon: ShieldCheckIcon,
+    isImage: false,
+    alt: "AI Red Teaming",
+    name: "Red Teaming",
+    isOutside: false,
+  },
+  {
     href: "/careers",
-    icon: Briefcase,
+    icon: BriefcaseIcon,
     isImage: false,
     alt: "careers",
     name: "Careers",
@@ -176,11 +190,27 @@ export const socialLinks = [
     isOutside: false,
   },
   {
+    href: "/ambassador",
+    icon: UsersIcon,
+    isImage: false,
+    alt: 'ambassador',
+    name: 'Ambassador',
+    isOutside: false,
+  },
+  {
     href: SUI_SENTINEL_AUDIT_REPORT_URL,
-    icon: Shield,
+    icon: ShieldCheckIcon,
     isImage: false,
     alt: "Audit Report",
     name: "Audit Report",
+    isOutside: true,
+  },
+  {
+    href: "/pdfs/pitch_deck.pdf",
+    icon: PresentationChartBarIcon,
+    isImage: false,
+    alt: "Pitch Deck",
+    name: "Pitch Deck",
     isOutside: true,
   },
 ];

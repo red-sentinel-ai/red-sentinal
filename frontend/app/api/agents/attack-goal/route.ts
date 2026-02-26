@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { RED_TEAM_API_URL } from '@/constants'
+import { APP_NETWORK, RED_TEAM_API_URL } from '@/constants'
 
 export const dynamic = 'force-dynamic'
 
@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Agent ID is required' }, { status: 400 })
     }
 
-    const response = await fetch(`${RED_TEAM_API_URL}sentinels/${agentId}/public`, {
+    const response = await fetch(`${RED_TEAM_API_URL}${APP_NETWORK}/sentinels/${agentId}/public`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

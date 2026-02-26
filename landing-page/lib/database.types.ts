@@ -923,6 +923,95 @@ export type Database = {
           },
         ]
       }
+      rh_proposal_choices: {
+        Row: {
+          created_at: string
+          id: number
+          order_index: number
+          percentage: number
+          proposal_id: number
+          text: string
+          vote_count: number
+        }
+        Insert: {
+          created_at?: string
+          id?: never
+          order_index?: number
+          percentage?: number
+          proposal_id: number
+          text: string
+          vote_count?: number
+        }
+        Update: {
+          created_at?: string
+          id?: never
+          order_index?: number
+          percentage?: number
+          proposal_id?: number
+          text?: string
+          vote_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rh_proposal_choices_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "rh_proposals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rh_proposals: {
+        Row: {
+          author: string
+          created_at: string
+          description: string
+          eligibility_requirements: string[]
+          end_date: string
+          hide_vote_count: boolean
+          id: number
+          is_private_voting: boolean
+          start_date: string
+          status: string
+          title: string
+          updated_at: string
+          vote_count: number
+          vote_visibility: string
+        }
+        Insert: {
+          author: string
+          created_at?: string
+          description: string
+          eligibility_requirements?: string[]
+          end_date: string
+          hide_vote_count?: boolean
+          id?: never
+          is_private_voting?: boolean
+          start_date: string
+          status?: string
+          title: string
+          updated_at?: string
+          vote_count?: number
+          vote_visibility?: string
+        }
+        Update: {
+          author?: string
+          created_at?: string
+          description?: string
+          eligibility_requirements?: string[]
+          end_date?: string
+          hide_vote_count?: boolean
+          id?: never
+          is_private_voting?: boolean
+          start_date?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          vote_count?: number
+          vote_visibility?: string
+        }
+        Relationships: []
+      }
       rh_rewards_activity: {
         Row: {
           completed_at: string | null
@@ -1081,6 +1170,45 @@ export type Database = {
           zk_passport_id?: string | null
         }
         Relationships: []
+      }
+      rh_votes: {
+        Row: {
+          choice_id: number
+          created_at: string
+          id: number
+          proposal_id: number
+          voter_address: string
+        }
+        Insert: {
+          choice_id: number
+          created_at?: string
+          id?: never
+          proposal_id: number
+          voter_address: string
+        }
+        Update: {
+          choice_id?: number
+          created_at?: string
+          id?: never
+          proposal_id?: number
+          voter_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rh_votes_choice_id_fkey"
+            columns: ["choice_id"]
+            isOneToOne: false
+            referencedRelation: "rh_proposal_choices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rh_votes_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "rh_proposals"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       rh_whitelist_addresses: {
         Row: {
@@ -1327,6 +1455,45 @@ export type Database = {
         }
         Relationships: []
       }
+      ss_demo_requests: {
+        Row: {
+          company_name: string
+          created_at: string | null
+          email: string
+          first_name: string
+          id: string
+          join_beta: boolean | null
+          last_name: string
+          message: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          company_name: string
+          created_at?: string | null
+          email: string
+          first_name: string
+          id?: string
+          join_beta?: boolean | null
+          last_name: string
+          message?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          company_name?: string
+          created_at?: string | null
+          email?: string
+          first_name?: string
+          id?: string
+          join_beta?: boolean | null
+          last_name?: string
+          message?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       ss_feature_requests: {
         Row: {
           agent_id: number
@@ -1529,6 +1696,8 @@ export type Database = {
           avatar_url: string | null
           created_at: string | null
           display_name: string | null
+          email: string | null
+          email_notifications: boolean | null
           id: string
           lifetime_points: number | null
           rewards_tier: string | null
@@ -1541,6 +1710,8 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string | null
           display_name?: string | null
+          email?: string | null
+          email_notifications?: boolean | null
           id?: string
           lifetime_points?: number | null
           rewards_tier?: string | null
@@ -1553,6 +1724,8 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string | null
           display_name?: string | null
+          email?: string | null
+          email_notifications?: boolean | null
           id?: string
           lifetime_points?: number | null
           rewards_tier?: string | null

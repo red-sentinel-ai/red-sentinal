@@ -19,7 +19,7 @@ import {
 } from '@mysten/dapp-kit'
 import { formatAddress } from '@mysten/sui/utils'
 import { SuiClient, getFullnodeUrl } from '@mysten/sui/client'
-import { APP_NETWORK, SUI_FAUCET_URL } from '@/constants'
+import { APP_NETWORK } from '@/constants'
 import Image from 'next/image'
 
 export const client = new SuiClient({ url: getFullnodeUrl(APP_NETWORK) })
@@ -138,18 +138,6 @@ export const ConnectButton = () => {
           <span>Disconnect</span>
         </DropdownMenuItem>
 
-        <DropdownMenuSeparator className="bg-gray-200" />
-
-        <DropdownMenuItem asChild>
-          <a
-            href={SUI_FAUCET_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex items-center justify-center gap-2 rounded-full border border-gray-200 px-4 py-2 text-sm text-blue-600 transition-colors hover:bg-blue-50"
-          >
-            Get SUI from Faucet
-          </a>
-        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )

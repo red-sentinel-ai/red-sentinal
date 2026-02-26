@@ -42,23 +42,23 @@ export function EarnWhileDefendingSection() {
         className="relative z-10"
       >
         <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium leading-snug text-black">
-          Earn While Defending Sentinels. Turn your{' '}
-          <span className="text-[#C871FF]">Prompt engineering skills into SUI/USDC rewards. </span>
-          Every successful defense strengthens AI and your wallet.
+          Skill-Based Income for AI Red Teamers. Turn your{' '}
+          <span className="text-[#C871FF]">
+            prompt engineering expertise into SUI/USDC rewards.{' '}
+          </span>
+          Every successful attack pays instantly. No delays, no disputes, pure meritocracy.
         </h2>
+        <p className="mt-6 text-lg md:text-xl text-[#5F5C5C] max-w-4xl">
+          Unlike bug bounties that take weeks to process, Sui Sentinel settles rewards on-chain the
+          moment your exploit is verified. Your skills, your profits, your schedule.
+        </p>
         <div className="mt-10 flex gap-4">
-          <Link
-            href={SUI_SENTINEL_APP_URL}
-            target="_blank"
-          >
+          <Link href={SUI_SENTINEL_APP_URL} target="_blank">
             <button className="btn btn-black md:w-[260px] px-6">Start Earning Now</button>
           </Link>
 
-           <Link
-            href={SUI_SENTINEL_X_URL}
-            target="_blank"
-          >
-            <button className="btn btn-outline px-6 font-medium">Support on X</button>
+          <Link href={SUI_SENTINEL_X_URL} target="_blank">
+            <button className="btn btn-outline px-6 font-medium">Follow on X</button>
           </Link>
         </div>
       </motion.div>

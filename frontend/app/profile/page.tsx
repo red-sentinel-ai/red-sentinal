@@ -18,6 +18,7 @@ import { useUserProfile, useUpdateAvatar } from '@/hooks/profile/useUserProfile'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 import { SENTINEL_GIFS, USER_IMAGES } from '@/constants/asset_paths'
 import { useSentinelBalance } from '@/hooks/rewards/useSentinelBalance'
+import { SENTINEL_TOKEN_EXPLORER_URL } from '@/constants'
 
 const PROFILE_TABS = {
   AGENTS: 'agents',
@@ -59,8 +60,8 @@ export default function ProfilePage() {
   if (!account?.address) {
     return (
       <ConnectPrompt
-        title="Welcome User"
-        subtitle="Connect your wallet to see your activities"
+        title="Join the Red Team"
+        subtitle="Connect your wallet to track your attacks, manage Sentinels, and claim rewards"
         theme="defender"
       />
     )
@@ -110,7 +111,12 @@ export default function ProfilePage() {
               </h1>
               <p className="mb-3 mt-1 font-medium text-[#5E5E5E]">@{profile?.username}</p>
 
-              <div className="mb-5 flex min-h-10 w-fit items-center justify-center gap-2 rounded-xl bg-white px-2 py-1">
+              <Link
+                href={SENTINEL_TOKEN_EXPLORER_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mb-5 flex min-h-10 w-fit items-center justify-center gap-2 rounded-xl bg-white px-2 py-1 transition-opacity hover:opacity-80"
+              >
                 <Image
                   src="/icons/dollar_coin.png"
                   width={24}
@@ -120,9 +126,9 @@ export default function ProfilePage() {
                 />
                 <span className="text-sm font-medium sm:text-base">
                   Sentinel Balance:{' '}
-                  <span className="text-[#F632F3]">{sentinelBalance} SENTINEL</span>
+                  <span className="text-[#F632F3] underline">{sentinelBalance} SENTINEL</span>
                 </span>
-              </div>
+              </Link>
 
               <button
                 onClick={() => setIsEditModalOpen(true)}

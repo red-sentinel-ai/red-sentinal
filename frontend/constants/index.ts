@@ -1,5 +1,4 @@
-import { FileText, Github, Shield } from 'lucide-react'
-import { ChartDataPoint } from '@/components/charts/PrizePoolChartModal'
+import {  FileText, Github, Handshake, Presentation, Shield } from 'lucide-react'
 
 export const INDEXER_BASE_URL = process.env.NEXT_PUBLIC_INDEXER_BASE_URL || 'http://localhost:4000'
 
@@ -17,6 +16,7 @@ export const SUI_SENTINEL_X_USERNAME = 'suisentinal'
 export const SUI_SENTINEL_GITHUB_URL = 'https://github.com/sui-sentinel/contracts'
 export const SUI_SENTINEL_TELEGRAM_URL = 'https://t.me/suisentinel'
 export const SUI_SENTINEL_AUDIT_REPORT_URL = '/pdfs/audit_final.pdf'
+export const SUI_SENTINEL_AMBASSADOR_URL = "https://www.suisentinel.xyz/ambassador"
 
 
 export const SUI_SENTINEL_DEFENDER_REWARDS_DOCS_URL = `${SUI_SENTINEL_DOCS_URL}/incentives/defender-rewards`
@@ -25,38 +25,39 @@ export const SLUSH_BASE_URL = 'https://my.slush.app/browse/'
 
 export const TEXT_COPIES = {
   leaderboard: {
-    heading: 'Leaderboard',
+    heading: 'Red Team Leaderboard',
     subheading:
-      "Discover agents created over time, active agents and check how both hackers who cracked systems and agent's creators have earned SUI rewards",
+      "Track top AI red teamers, undefeated Sentinels, and SUI rewards earned. See who's dominating the trustless security economy.",
   },
   attack: {
-    heading: 'Choose your opponent',
-    subheading: 'Trick one of these agents into sending you all their SUI',
+    heading: 'Choose Your Target',
+    subheading: 'Pick a Sentinel, break its defenses with prompt engineering, and claim the bounty. Every verified exploit pays instantly.',
   },
 }
 
-export const SUI_FAUCET_URL = 'https://faucet.sui.io/'
 export const LOCAL_API_PATH = 'http://18.213.79.225:3000'
 export const RED_TEAM_API_URL = `https://redteam.suisentinel.xyz/`
+export const SUI_SENTINEL_API_URL = 'https://api.suisentinel.xyz'
 export const APP_NETWORK: 'mainnet' | 'testnet' = process.env.NEXT_PUBLIC_APP_NETWORK === 'testnet' ? 'testnet' : 'mainnet'
 
 export const SUI_TESTNET_CONFIG = {
-  APP_PACKAGE_ID: '0xe52429a171fc8d4ac6cea09b0d2f8891feb32e70577dfb16ecf9883bcc2e7eb2',
+  APP_PACKAGE_ID: '0x69615c3a87ad8288e78cc4c6482d2e5921ce71bf56ba56ba757b01ac439cea76',
   MODULE_NAME: 'sentinel',
   OTW_NAME: 'SENTINEL',
-  AGENT_REGISTRY: '0x33e55f1c671fa5177c1b47c60909b87963f55f0ae4df164c4bec279527f30a91',
-  ENCLAVE_OBJECT_ID: '0x7b48146b5b8ff2f75c26e1a826cd778654ae4dccc49790c7279d240be264986c',
-  PROTOCOL_CONFIG_OBJECT_ID: '0x2b7a0a34973bb8ea41de60e7631cedc58210c417a1de776b5208afba94598fc5',
+  AGENT_REGISTRY: '0x29e941ef8ab71e09d23336f34c7535983586e071eee107f927e3dcffa8cb8fbe',
+  ENCLAVE_OBJECT_ID: '0x667e7657ad509710c42291d36e0a6d96c0f00db0469a8d94120d9d0ff137752d',
+  PROTOCOL_CONFIG_OBJECT_ID: '0x168ce294a3b3ca3456f505ae0fd58fe0bbe660725b7fce41c3263f3aade0094d',
   AGENT_OBJECT_IDS: [''],
   SENTINEL_COIN_TYPE: "0xb0a3b08be99cb5becf1787e565cdd027edc40791df89ca4a603ba7d1575b21e9::sentinel::SENTINEL",
 }
+
 
 export const SUI_MAINNET_CONFIG = {
   APP_PACKAGE_ID: '0x88b83f36dafcd5f6dcdcf1d2cb5889b03f61264ab3cee9cae35db7aa940a21b7',
   MODULE_NAME: 'sentinel',
   OTW_NAME: 'SENTINEL',
   AGENT_REGISTRY: '0xc47564f5f14c12b31e0dfa1a3dc99a6380a1edf8929c28cb0eaa3359c8db36ac',
-  ENCLAVE_OBJECT_ID: '0x290bfc0d72e2407df3ab75fac390132abb621272ed0425ddd4183de4e2c2c7b3',
+  ENCLAVE_OBJECT_ID: '0xfb1261aeb9583514cb1341a548a5ec12d1231bd96af22215f1792617a93e1213',
   PROTOCOL_CONFIG_OBJECT_ID: '0x2fa4fa4a1dd0498612304635ff9334e1b922e78af325000e9d9c0e88adea459f',
   AGENT_OBJECT_IDS: [''],
   SENTINEL_COIN_TYPE: "0x66aaa74fecd25cb19b7576e101b25fd3a844e6b9f678421429d0d49d55e0fca0::sentinel::SENTINEL",
@@ -140,12 +141,28 @@ export const socialLinks = [
     name: 'Blog',
     isOutside: true,
   },
+    {
+    href: SUI_SENTINEL_AMBASSADOR_URL,
+    icon: Handshake,
+    isImage: false,
+    alt: 'ambassador',
+    name: 'Ambassador',
+    isOutside: true,
+  },
   {
     href: SUI_SENTINEL_AUDIT_REPORT_URL,
     icon: Shield,
     isImage: false,
     alt: 'Audit Report',
     name: 'Audit Report',
+    isOutside: true,
+  },
+    {
+    href: "/pdfs/pitch_deck.pdf",
+    icon: Presentation,
+    isImage: false,
+    alt: "Pitch Deck",
+    name: "Pitch Deck",
     isOutside: true,
   },
 ]
@@ -184,4 +201,5 @@ export const PROVIDER_MODELS: Record<string, string[]> = {
     'us.meta.llama3-2-90b-instruct-v1:0',
     'us.meta.llama3-3-70b-instruct-v1:0',
   ],
+  custom: [],
 }

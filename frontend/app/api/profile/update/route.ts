@@ -9,6 +9,8 @@ export async function PUT(request: NextRequest) {
     const walletAddress = formData.get('walletAddress') as string
     const username = formData.get('username') as string
     const displayName = formData.get('displayName') as string
+    const email = formData.get('email') as string | null
+    const emailNotifications = formData.get('emailNotifications') === 'true'
     const imageFile = formData.get('imageFile') as File | null
     const imageUrl = formData.get('imageUrl') as string | null
 
@@ -56,6 +58,8 @@ export async function PUT(request: NextRequest) {
     const updateData: { [key: string]: unknown } = {
       username: username,
       display_name: displayName,
+      email: email || null,
+      email_notifications: emailNotifications,
       rewards_updated_at: new Date().toISOString(),
     }
 
