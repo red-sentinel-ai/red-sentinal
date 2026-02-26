@@ -18,6 +18,7 @@ import { ChatMessage } from './ChatMessage'
 import { useTokenCount } from '@/hooks/useTokenCount'
 import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
 import { JuryResponseModal } from './JuryResponseModal'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export interface ChatMessage {
   id: string
@@ -57,6 +58,7 @@ export default function ChatInterface({
 }: ChatInterfaceProps) {
   const [promptInput, setPromptInput] = useState('')
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
+  const [activeTab, setActiveTab] = useState<'global' | 'mine'>('global')
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const account = useCurrentAccount()
@@ -103,6 +105,23 @@ export default function ChatInterface({
 
     return null
   }, [chatMessages])
+
+  const displayedMessages = useMemo(() => {
+    if (activeTab === 'global') return chatMessages
+    if (!account?.address) return []
+    const filtered: ChatMessage[] = []
+    for (let i = 0; i < chatMessages.length; i++) {
+      const msg = chatMessages[i]
+      if (msg.type === 'user' && msg.sender === account.address) {
+        filtered.push(msg)
+        if (chatMessages[i + 1]?.type === 'agent') {
+          filtered.push(chatMessages[i + 1])
+          i++
+        }
+      }
+    }
+    return filtered
+  }, [chatMessages, activeTab, account?.address])
 
   const adjustTextareaHeight = () => {
     const textarea = textareaRef.current
@@ -204,11 +223,31 @@ export default function ChatInterface({
         onClose={() => setIsJuryModalOpen(false)}
         response={selectedJuryResponse}
       />
+
+      <div className="px-3 py-2 sm:px-6">
+        <Tabs value={activeTab} onValueChange={v => setActiveTab(v as 'global' | 'mine')}>
+          <TabsList className="h-auto rounded-md border border-gray-200 bg-gray-100 p-[2px]">
+            <TabsTrigger
+              value="global"
+              className="rounded-md border-b-0 py-1 sm:px-4 data-[state=active]:border-b-0 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+            >
+              Global Chat
+            </TabsTrigger>
+            <TabsTrigger
+              value="mine"
+              className="rounded-md border-b-0 py-1 sm:px-4 data-[state=active]:border-b-0 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+            >
+              My Chat
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
+
       <div
         ref={chatContainerRef}
         className="max-h-[calc(100vh-210px)] flex-1 space-y-4 overflow-y-auto p-3 sm:space-y-6 sm:p-6"
       >
-        {chatMessages.length === 0 && !eventsLoading && (
+        {displayedMessages.length === 0 && !eventsLoading && (
           <div className="py-8 text-center text-gray-500 sm:py-12">
             <Image
               src="/icons/exclamation.png"
@@ -217,17 +256,32 @@ export default function ChatInterface({
               alt="exclamation"
               className="mx-auto mb-4 opacity-70"
             />
-            <p className="text-base sm:text-lg">No messages yet. Start attacking the agent!</p>
-            <p className="mt-2 px-4 text-xs opacity-75 sm:text-sm">
-              Try to break through their defenses with clever prompts.
-            </p>
+            {activeTab === 'mine' ? (
+              <>
+                <p className="text-base sm:text-lg">
+                  {account?.address ? "You haven't attacked yet." : 'Connect your wallet to see your chats.'}
+                </p>
+                <p className="mt-2 px-4 text-xs opacity-75 sm:text-sm">
+                  {account?.address
+                    ? 'Submit a prompt to start your attack!'
+                    : 'Your messages will appear here once connected.'}
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="text-base sm:text-lg">No messages yet. Start attacking the agent!</p>
+                <p className="mt-2 px-4 text-xs opacity-75 sm:text-sm">
+                  Try to break through their defenses with clever prompts.
+                </p>
+              </>
+            )}
           </div>
         )}
 
         <AnimatePresence>
-          {chatMessages.map((message, index) => {
+          {displayedMessages.map((message, index) => {
             const isWinningUserPrompt =
-              message.type === 'user' && chatMessages[index + 1]?.isSuccess === true
+              message.type === 'user' && displayedMessages[index + 1]?.isSuccess === true
             return (
               <ChatMessage
                 key={message.id}
