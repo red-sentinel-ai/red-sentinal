@@ -19,7 +19,7 @@ export const Header = () => {
   return (
     <header
       className={clsx(
-        'fixed left-0 right-0 top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-xl transition-all duration-300'
+        'fixed left-0 right-0 top-0 z-50 w-full bg-transparent transition-all duration-300 md:border-b md:border-gray-200 md:bg-white/80 md:backdrop-blur-xl'
       )}
     >
       <div className="hidden h-11 items-center justify-center bg-gradient-to-r from-black/15 to-[rgba(102,102,102,0.2)] p-2 text-center text-xs text-black md:flex md:text-base">

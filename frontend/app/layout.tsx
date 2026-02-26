@@ -273,7 +273,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <NextTopLoader color="#000000" showSpinner={false} />
           <main className="flex-grow">{children}</main>
           <Footer />
-          <ToastContainer />
+          <ToastContainer
+            position="top-right"
+            autoClose={4000}
+            hideProgressBar={false}
+            newestOnTop={true}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+            className="!top-20"
+          />
         </Providers>
         <Analytics />
       </body>
