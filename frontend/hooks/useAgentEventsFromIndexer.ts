@@ -11,7 +11,7 @@ export interface PromptConsumedEvent {
   agent_response: string
   score: number
   jury_response?: string
-  timestamp?: string
+  timestampMs?: string
   tx_digest?: string
 }
 
@@ -20,7 +20,7 @@ export interface AgentDefeatedEvent {
   winner: string
   score: number
   amount_won: string
-  timestamp?: string
+  timestampMs?: string
   tx_digest?: string
 }
 
