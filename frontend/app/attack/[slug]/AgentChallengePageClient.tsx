@@ -211,6 +211,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
         {apiResponse && txnHash && (
           <AttackStatusModal
+            key={txnHash}
             apiResponse={apiResponse}
             showResultModal={showResultModal}
             setShowResultModal={setShowResultModal}
@@ -271,6 +272,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
       {apiResponse && txnHash && (
         <AttackStatusModal
+          key={txnHash}
           apiResponse={apiResponse}
           showResultModal={showResultModal}
           setShowResultModal={setShowResultModal}

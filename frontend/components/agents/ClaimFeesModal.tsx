@@ -1,3 +1,5 @@
+import { useQueryClient } from '@tanstack/react-query'
+import { useCurrentAccount } from '@mysten/dapp-kit'
 import { useUpdateAgent } from '@/hooks/agents/useUpdateAgent'
 import { AgentUpdateDialog } from './AgentUpdateDialog'
 import { MIST_PER_SUI } from '@/constants'
@@ -18,13 +20,20 @@ export const ClaimFeesModal = ({
   accumulatedFees,
 }: ClaimFeesModalProps) => {
   const { claimFees, isLoading } = useUpdateAgent()
+  const queryClient = useQueryClient()
+  const account = useCurrentAccount()
 
   const feesInSui = accumulatedFees / Number(MIST_PER_SUI)
   const hasFees = accumulatedFees > 0
 
   const handleClaim = () => {
     if (!hasFees) return
-    claimFees(agentId, agentObjectId, onClose)
+    claimFees(agentId, agentObjectId, () => {
+      onClose()
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ['agents-by-owner', account?.address] })
+      }, 3000)
+    })
   }
 
   return (
