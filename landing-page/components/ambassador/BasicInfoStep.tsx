@@ -107,23 +107,6 @@ export default function BasicInfoStep({
       </div>
 
       <div>
-        <label htmlFor="discord_username" className="block text-2xl font-medium">
-          Discord Username <span className="text-red-500">*</span>
-        </label>
-        <input
-          type="text"
-          id="discord_username"
-          {...register('discord_username')}
-          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3 text-xl"
-          disabled={disabled}
-          placeholder="username#1234"
-        />
-        {errors.discord_username && (
-          <p className="mt-1 text-sm text-red-600">{errors.discord_username.message}</p>
-        )}
-      </div>
-
-      <div>
         <label htmlFor="timezone" className="block text-2xl font-medium">
           Time Zone <span className="text-red-500">*</span>
         </label>
