@@ -172,20 +172,20 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   }
 
   const ReadMoreModal = () => (
-    <div className="absolute inset-0 flex flex-col overflow-hidden duration-200 animate-in fade-in">
+    <div className="ios-scroll absolute inset-0 flex flex-col overflow-hidden duration-200 animate-in fade-in">
       <div className="flex shrink-0 items-center justify-between py-6 md:py-8">
         <h2 className="text-2xl font-medium">Instructions</h2>
-        <button onClick={() => setIsReadMoreOpen(false)} className="p-2">
+        <button onClick={() => setIsReadMoreOpen(false)} className="touch-manipulation p-2">
           <X size={24} />
         </button>
       </div>
 
-      <div className="overflow-y-auto whitespace-pre-wrap px-1">
+      <div className="ios-scroll overflow-y-auto whitespace-pre-wrap px-1">
         {agent.prompt || 'No instructions available.'}
       </div>
 
-      <div className="shrink-0 pb-12 pt-8">
-        <button onClick={() => setIsReadMoreOpen(false)} className="btn btn-black">
+      <div className="shrink-0 pb-safe pt-8">
+        <button onClick={() => setIsReadMoreOpen(false)} className="btn btn-black touch-manipulation">
           CLOSE
         </button>
       </div>
@@ -266,10 +266,10 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   }
 
   return (
-    <div className="flex h-screen flex-col bg-white pt-16">
+    <div className="ios-scroll flex h-[100dvh] flex-col bg-white pt-16">
       <MobileAgentHeader agentName={agent.agent_name} onInfoClick={() => setIsSidebarOpen(true)} />
 
-      <div className="min-h-0 flex-1">
+      <div className="min-h-0 flex-1 overflow-hidden">
         <ChatInterface
           agent={agent}
           agentEvents={agentEvents}
@@ -297,7 +297,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
               animate={{ x: '0%' }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="fixed bottom-0 left-0 top-0 z-50 w-[85%] max-w-sm overflow-y-auto bg-gray-50 shadow-2xl"
+              className="ios-scroll fixed bottom-0 left-0 top-0 z-50 w-[85%] max-w-sm overflow-y-auto bg-gray-50 shadow-2xl"
             >
               <AgentSidebar
                 agent={agent}

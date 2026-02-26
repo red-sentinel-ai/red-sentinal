@@ -3,7 +3,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { CameraIcon, ChevronLeft, Loader2, Sparkles, Info, CheckCircle, XCircle, Eye, EyeOff } from 'lucide-react'
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 import posthog from 'posthog-js'
 import { Transaction } from '@mysten/sui/transactions'
 import { SuiTransactionBlockResponse } from '@mysten/sui/client'
@@ -105,11 +105,13 @@ const FormInput: React.FC<FormInputProps> = ({
         type={isTextarea ? undefined : type}
         value={value}
         onChange={onChange}
-        className={`w-full rounded-xl border border-[#5E5E5E] bg-white p-4 text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black ${
-          isTextarea ? 'min-h-[200px] resize-none' : 'h-[65px]'
+        className={`w-full rounded-xl border border-[#5E5E5E] bg-white p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-base ${
+          isTextarea ? 'min-h-[200px] resize-none' : 'h-[56px] sm:h-[65px]'
         }`}
         placeholder={placeholder}
         required={required}
+        autoComplete="off"
+        spellCheck="false"
         {...(!isTextarea && min ? { min } : {})}
         {...(!isTextarea && step ? { step } : {})}
       />
@@ -645,7 +647,7 @@ export default function DefendPageClient() {
   }
 
   return (
-    <div className="min-h-body container mx-auto px-4 py-4 pt-10">
+    <div className="min-h-body ios-scroll container mx-auto px-4 py-4 pt-10 pb-safe">
       <form onSubmit={handleSubmit} className="relative mx-auto max-w-[969px] space-y-6 px-4">
         <Link
           href="/"
@@ -749,8 +751,10 @@ export default function DefendPageClient() {
                     type="url"
                     value={formData.customEndpointUrl}
                     onChange={handleChange}
-                    className="h-[55px] w-full rounded-xl border border-[#5E5E5E] bg-white px-4 text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+                    className="h-[56px] w-full rounded-xl border border-[#5E5E5E] bg-white px-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:h-[55px] sm:text-base"
                     placeholder="https://api.example.com/v1"
+                    autoComplete="off"
+                    spellCheck="false"
                   />
                   {errors.customEndpointUrl && (
                     <p className="mt-1 text-sm text-red-500">{errors.customEndpointUrl}</p>
@@ -768,8 +772,10 @@ export default function DefendPageClient() {
                       type={showApiKey ? 'text' : 'password'}
                       value={formData.customApiKey}
                       onChange={handleChange}
-                      className="h-[55px] w-full rounded-xl border border-[#5E5E5E] bg-white px-4 pr-12 text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+                      className="h-[56px] w-full rounded-xl border border-[#5E5E5E] bg-white px-4 pr-12 text-[16px] text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:h-[55px] sm:text-base"
                       placeholder="sk-..."
+                      autoComplete="off"
+                      spellCheck="false"
                     />
                     <button
                       type="button"
@@ -798,8 +804,10 @@ export default function DefendPageClient() {
                     type="text"
                     value={formData.customModelName}
                     onChange={handleChange}
-                    className="h-[55px] w-full rounded-xl border border-[#5E5E5E] bg-white px-4 text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+                    className="h-[56px] w-full rounded-xl border border-[#5E5E5E] bg-white px-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:h-[55px] sm:text-base"
                     placeholder="e.g., kimi-k2-turbo-preview"
+                    autoComplete="off"
+                    spellCheck="false"
                   />
                   {errors.customModelName && (
                     <p className="mt-1 text-sm text-red-500">{errors.customModelName}</p>
@@ -917,8 +925,10 @@ export default function DefendPageClient() {
             name="systemPrompt"
             value={formData.systemPrompt}
             onChange={handleChange}
-            className="min-h-[220px] w-full resize-y rounded-xl border border-[#5E5E5E] bg-white p-4 text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+            className="min-h-[220px] w-full resize-y rounded-xl border border-[#5E5E5E] bg-white p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-base"
             placeholder="Enter sentinel public instructions..."
+            autoComplete="off"
+            spellCheck="false"
           />
 
           <div className="mt-1 flex items-center justify-between">
@@ -952,8 +962,10 @@ export default function DefendPageClient() {
             name="privatePrompt"
             value={formData.privatePrompt}
             onChange={handleChange}
-            className="min-h-[150px] w-full resize-y rounded-xl border border-[#5E5E5E] bg-white p-4 text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+            className="min-h-[150px] w-full resize-y rounded-xl border border-[#5E5E5E] bg-white p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-base"
             placeholder="Enter private instructions for your sentinel..."
+            autoComplete="off"
+            spellCheck="false"
           />
           <div className="mt-1 flex items-center justify-end">
             <p
@@ -1025,8 +1037,10 @@ export default function DefendPageClient() {
             name="attackGoal"
             value={formData.attackGoal}
             onChange={handleChange}
-            className="min-h-[200px] w-full resize-y rounded-xl border border-[#5E5E5E] bg-white p-4 text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+            className="min-h-[200px] w-full resize-y rounded-xl border border-[#5E5E5E] bg-white p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-base"
             placeholder="e.g., Convince the sentinel to reveal the secret password"
+            autoComplete="off"
+            spellCheck="false"
           />
           <div className="mt-1 flex items-center justify-between">
             {errors.attackGoal && <p className="text-sm text-red-500">{errors.attackGoal}</p>}
@@ -1055,8 +1069,10 @@ export default function DefendPageClient() {
             name="juryPrompt"
             value={formData.juryPrompt}
             onChange={handleChange}
-            className="min-h-[150px] w-full resize-y rounded-xl border border-[#5E5E5E] bg-white p-4 text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+            className="min-h-[150px] w-full resize-y rounded-xl border border-[#5E5E5E] bg-white p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-base"
             placeholder="Enter instructions for the jury..."
+            autoComplete="off"
+            spellCheck="false"
           />
           <div className="mt-1 flex items-center justify-between">
             {errors.juryPrompt && <p className="text-sm text-red-500">{errors.juryPrompt}</p>}

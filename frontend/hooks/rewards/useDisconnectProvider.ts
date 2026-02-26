@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 import { SOCIAL_STATUS_QUERY_KEY } from '../profile/useSocialStatus'
 
 type DisconnectArgs = {

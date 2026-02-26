@@ -2,7 +2,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { Copy, Twitter, X } from 'lucide-react'
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 import { Dialog } from '@/components/Dialog'
 
 export interface FundSuccessModalProps {

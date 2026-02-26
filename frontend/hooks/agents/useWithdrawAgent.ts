@@ -3,7 +3,7 @@ import { Transaction } from '@mysten/sui/transactions'
 import { useSignAndExecuteTransaction, useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 import { MIST_PER_SUI, SUI_CONFIG } from '@/constants'
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
 import { AGENT_DETAILS_QUERY_KEY } from './useAgentBySlug'
 
