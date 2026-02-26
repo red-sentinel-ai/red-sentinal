@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { APP_NETWORK, SUI_SENTINEL_API_URL } from '@/constants'
 
 export const AGENT_EVENTS_FROM_INDEXER_QUERY_KEY = 'agentEventsFromIndexer'
 
@@ -37,7 +38,7 @@ interface DefeatEventsApiResponse {
   result: AgentDefeatedEvent[]
 }
 
-const INDEXER_API_BASE_URL = 'https://api.suisentinel.xyz/agents/mainnet'
+const INDEXER_API_BASE_URL = `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}`
 
 async function fetchPromptsConsumed(agentId: string): Promise<PromptConsumedEvent[]> {
   const response = await fetch(`${INDEXER_API_BASE_URL}/${agentId}/prompts_consumed`)
