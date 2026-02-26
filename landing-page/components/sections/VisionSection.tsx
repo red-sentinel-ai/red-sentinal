@@ -56,11 +56,11 @@ export function VisionSection() {
               the AI era. We battle-test the models that will soon underpin the decentralized world.
             </p>
             <p className="text-lg md:text-xl leading-relaxed mb-8">
-              Our mission is to empower the pioneers of this new world - the{' '}
+              Our mission is to empower the pioneers of this new world: the{' '}
               <span className="font-semibold">prompt engineers</span>, the{' '}
               <span className="font-semibold">AI whisperers</span>, the{' '}
               <span className="font-semibold">digital architects</span>
-               - and to ensure the future of on-chain AI is robust, secure, and trustworthy.
+              and to ensure the future of on-chain AI is robust, secure, and trustworthy.
             </p>
 
             <div className="flex max-w-[400px] mx-auto mb-8">

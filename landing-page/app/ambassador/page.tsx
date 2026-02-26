@@ -405,7 +405,7 @@ function AmbassadorPageContent() {
 
                 <div>
                   <h2 className="text-[32px] font-medium mb-6">
-                    Section {currentStep} - {STEP_TITLES[currentStep - 1]}
+                    Section {currentStep}: {STEP_TITLES[currentStep - 1]}
                   </h2>
 
                   <form onSubmit={(e) => e.preventDefault()}>

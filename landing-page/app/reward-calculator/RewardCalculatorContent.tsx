@@ -66,7 +66,7 @@ export function RewardCalculatorContent() {
 
   return (
     <div className="min-h-screen relative overflow-hidden font-[family-name:var(--font-satoshi)]">
-      {/* Background Image - Zoomed out to show logo */}
+      {/* Background Image (Zoomed out to show logo) */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110 origin-center"
         style={{ backgroundImage: "url('/img/background_without_logo.png')" }}
@@ -91,7 +91,7 @@ export function RewardCalculatorContent() {
 
           {/* Grid Layout */}
           <div className="grid lg:grid-cols-2 gap-6">
-            {/* Left Column - Form */}
+            {/* Left Column (Form) */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -175,7 +175,7 @@ export function RewardCalculatorContent() {
               </div>
             </motion.div>
 
-            {/* Right Column - Rewards Cards */}
+            {/* Right Column (Rewards Cards) */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
