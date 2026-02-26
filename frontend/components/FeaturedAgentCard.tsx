@@ -13,6 +13,7 @@ import { AgentDropdown } from './agents/AgentCardDropdown'
 import { useWithdrawAgentModal } from '@/hooks/agents/useWithdrawAgentModal'
 import { formatDuration } from '@/lib/utils'
 import { PrizePoolChangeDisplay } from './agents/PrizePoolChangeDisplay'
+import { ClaimFeesModal } from './agents/ClaimFeesModal'
 
 type FeaturedAgentCardProps = {
   agent: AgentDetails
@@ -36,6 +37,7 @@ export const FeaturedAgentCard = ({
 
   const [isWithdrawalLocked, setIsWithdrawalLocked] = useState(true)
   const [timeRemaining, setTimeRemaining] = useState('')
+  const [isClaimFeesModalOpen, setIsClaimFeesModalOpen] = useState(false)
 
   const hasNoBalance = Number(agent.total_balance) === 0
 
@@ -215,11 +217,29 @@ export const FeaturedAgentCard = ({
               </button>
             </div>
           )}
+          {fromProfile && isOwner && (
+            <button
+              onClick={e => {
+                e.stopPropagation()
+                setIsClaimFeesModalOpen(true)
+              }}
+              className="btn btn-outline w-full px-2 py-1.5 text-[10px] sm:px-4 sm:py-2.5 sm:text-sm"
+            >
+              Claim Fees
+            </button>
+          )}
         </div>
 
         <Modal onSuccess={() => console.log('Funded successfully!')} />
         <WithdrawModal onSuccess={() => console.log('Withdrew successfully!')} />
         <FeatureModal />
+        <ClaimFeesModal
+          open={isClaimFeesModalOpen}
+          onClose={() => setIsClaimFeesModalOpen(false)}
+          agentId={agent.agent_id}
+          agentObjectId={agent.agent_object_id}
+          accumulatedFees={agent.accumulated_fees}
+        />
       </div>
     </motion.div>
   )
