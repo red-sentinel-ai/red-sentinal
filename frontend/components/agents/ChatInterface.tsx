@@ -224,16 +224,16 @@ export default function ChatInterface({
 
       <div className="px-3 py-2 sm:px-6">
         <Tabs value={activeTab} onValueChange={v => setActiveTab(v as 'global' | 'mine')}>
-          <TabsList className="h-auto rounded-lg border border-gray-200 bg-gray-100 p-1">
+          <TabsList className="h-auto rounded-md border border-gray-200 bg-gray-100 p-[2px]">
             <TabsTrigger
               value="global"
-              className="rounded-md border-b-0 px-4 py-1.5 data-[state=active]:border-b-0 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+              className="rounded-md border-b-0 py-1 sm:px-4 data-[state=active]:border-b-0 data-[state=active]:bg-white data-[state=active]:shadow-sm"
             >
               Global Chat
             </TabsTrigger>
             <TabsTrigger
               value="mine"
-              className="rounded-md border-b-0 px-4 py-1.5 data-[state=active]:border-b-0 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+              className="rounded-md border-b-0 py-1 sm:px-4 data-[state=active]:border-b-0 data-[state=active]:bg-white data-[state=active]:shadow-sm"
             >
               My Chat
             </TabsTrigger>
