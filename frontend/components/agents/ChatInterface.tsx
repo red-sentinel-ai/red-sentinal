@@ -37,6 +37,7 @@ export interface ChatMessage {
 interface ChatInterfaceProps {
   agent: AgentDetails
   agentEvents: AgentEvents
+  eventsLoading?: boolean
   apiResponse: ConsumePromptApiResponse | null
   onSendMessage: (prompt: string) => Promise<void>
   isSubmitting: boolean
@@ -47,6 +48,7 @@ interface ChatInterfaceProps {
 export default function ChatInterface({
   agent,
   agentEvents,
+  eventsLoading,
   apiResponse,
   onSendMessage,
   isSubmitting,
@@ -206,7 +208,7 @@ export default function ChatInterface({
         ref={chatContainerRef}
         className="max-h-[calc(100vh-210px)] flex-1 space-y-4 overflow-y-auto p-3 sm:space-y-6 sm:p-6"
       >
-        {chatMessages.length === 0 && (
+        {chatMessages.length === 0 && !eventsLoading && (
           <div className="py-8 text-center text-gray-500 sm:py-12">
             <Image
               src="/icons/exclamation.png"
