@@ -10,7 +10,11 @@ import type { ConsumePromptApiResponse } from '@/types'
 import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from '@/components/ui'
 import { useConsumePrompt } from '@/hooks/useConsumePrompt'
 import { useAgentBySlug } from '@/hooks/agents/useAgentBySlug'
-import { AgentEvents, useAgentEvents } from '@/hooks/useAgentEvents'
+import {
+  useAgentEventsFromIndexer,
+  AGENT_EVENTS_FROM_INDEXER_QUERY_KEY,
+  type AgentEventsFromIndexer,
+} from '@/hooks/useAgentEventsFromIndexer'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
 import ChatInterface from '@/components/agents/ChatInterface'
 import { AgentSidebar } from '@/components/agents/AgentSidebar'
@@ -18,11 +22,66 @@ import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { MobileAgentHeader } from './MobileAgentHeader'
 import { Loader2, X } from 'lucide-react'
 
+// Transform indexer events to match the legacy AgentEvents format expected by child components
+// Events are sorted by timestamp in ascending order (oldest first) so most recent appears last in chat
+function transformEventsForCompatibility(events: AgentEventsFromIndexer): {
+  agentDefeated: Array<{ parsedJson: { agent_id: string; winner: string; amount_won: string } }>
+  promptConsumed: Array<{
+    id: { txDigest: string }
+    timestampMs: string
+    parsedJson: {
+      agent_id: string
+      sender: string
+      message: string
+      agent_response: string
+      success: boolean
+      score: number
+      amount: string
+      jury_response?: string
+    }
+  }>
+} {
+  // Sort prompt consumed events by timestamp ascending (oldest first) so recent messages appear last
+  const sortedPromptConsumed = [...events.promptConsumed].sort((a, b) => {
+    const timeA = a.timestamp ? new Date(a.timestamp).getTime() : 0
+    const timeB = b.timestamp ? new Date(b.timestamp).getTime() : 0
+    return timeA - timeB
+  })
+
+  return {
+    agentDefeated: events.agentDefeated.map(event => ({
+      parsedJson: {
+        agent_id: event.agent_id,
+        winner: event.winner,
+        amount_won: event.amount_won,
+      },
+    })),
+    promptConsumed: sortedPromptConsumed.map(event => ({
+      id: {
+        txDigest: event.tx_digest || '',
+      },
+      timestampMs: event.timestamp || Date.now().toString(),
+      parsedJson: {
+        agent_id: event.agent_id,
+        sender: event.sender,
+        message: event.message,
+        agent_response: event.agent_response,
+        success: event.success,
+        score: event.score,
+        amount: event.amount,
+        jury_response: event.jury_response,
+      },
+    })),
+  }
+}
+
 export default function AgentChallengePage({ slug }: { slug: string }) {
   const account = useCurrentAccount()
   const queryClient = useQueryClient()
-  const { events: allEvents, refetch: refetchEvents } = useAgentEvents()
   const { data: agent, isLoading, error, refetch } = useAgentBySlug(slug)
+  const { events: indexerEvents, refetch: refetchEvents } = useAgentEventsFromIndexer(
+    agent?.agent_id
+  )
 
   const [isReadMoreOpen, setIsReadMoreOpen] = useState(false)
 
@@ -80,17 +139,10 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const isMobile = useMediaQuery('(max-width: 768px)')
 
-  const agentEvents: AgentEvents = useMemo(() => {
+  const agentEvents = useMemo(() => {
     if (!agent) return { agentDefeated: [], promptConsumed: [] }
-    return {
-      agentDefeated: allEvents.agentDefeated.filter(
-        e => e.parsedJson.agent_id === `${agent.agent_id}`
-      ),
-      promptConsumed: allEvents.promptConsumed.filter(
-        e => e.parsedJson.agent_id === `${agent.agent_id}`
-      ),
-    }
-  }, [agent, allEvents])
+    return transformEventsForCompatibility(indexerEvents)
+  }, [agent, indexerEvents])
 
   const handleSendMessage = async (prompt: string) => {
     if (!account?.address) {
