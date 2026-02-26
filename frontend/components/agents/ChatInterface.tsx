@@ -217,14 +217,14 @@ export default function ChatInterface({
   }
 
   return (
-    <div className="flex h-full flex-1 flex-col justify-between pb-6 text-black">
+    <div className="flex h-full flex-1 flex-col justify-between pb-2 sm:pb-6 text-black">
       <JuryResponseModal
         isOpen={isJuryModalOpen}
         onClose={() => setIsJuryModalOpen(false)}
         response={selectedJuryResponse}
       />
 
-      <div className="px-3 py-2 sm:px-6">
+      <div className="px-3 py-1.5 sm:px-6 sm:py-2">
         <Tabs value={activeTab} onValueChange={v => setActiveTab(v as 'global' | 'mine')}>
           <TabsList className="h-auto rounded-md border border-gray-200 bg-gray-100 p-[2px]">
             <TabsTrigger
@@ -245,10 +245,10 @@ export default function ChatInterface({
 
       <div
         ref={chatContainerRef}
-        className="ios-scroll max-h-[calc(100vh-210px)] flex-1 space-y-4 overflow-y-auto p-3 sm:space-y-6 sm:p-6"
+        className="ios-scroll max-h-[calc(100vh-180px)] flex-1 space-y-3 overflow-y-auto p-2 sm:max-h-[calc(100vh-210px)] sm:space-y-6 sm:p-6"
       >
         {displayedMessages.length === 0 && !eventsLoading && (
-          <div className="py-8 text-center text-gray-500 sm:py-12">
+          <div className="py-6 text-center text-gray-500 sm:py-12">
             <Image
               src="/icons/exclamation.png"
               width={60}
@@ -357,42 +357,44 @@ export default function ChatInterface({
         <div>
           <form onSubmit={handleSubmit} className="relative">
             <div className="relative">
-              <div className="relative z-10 w-full overflow-hidden rounded-2xl border border-gray-300 bg-white transition-all duration-200 focus-within:ring-1 focus-within:ring-black">
-                <textarea
-                  ref={textareaRef}
-                  value={promptInput}
-                  onChange={e => {
-                    setPromptInput(e.target.value)
-                    countTokens(e.target.value)
-                  }}
-                  className="min-h-[56px] w-full resize-none border-none bg-transparent p-3 text-[16px] leading-relaxed text-black outline-none placeholder:text-gray-400 focus:ring-0 sm:min-h-[60px] sm:p-4 sm:text-base"
-                  disabled={isSubmitting}
-                  placeholder="Craft your attack prompt..."
-                  rows={1}
-                  style={{ overflow: 'hidden' }}
-                  autoComplete="off"
-                  spellCheck="false"
-                  onKeyDown={e => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault()
-                      handleSubmit(e)
-                    }
-                  }}
-                />
+              {/* Premium mobile-like chat input container */}
+              <div className="relative z-10 w-full overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-lg transition-all duration-200 focus-within:border-gray-400 focus-within:shadow-xl sm:rounded-2xl sm:border-gray-300">
+                <div className="relative">
+                  <textarea
+                    ref={textareaRef}
+                    value={promptInput}
+                    onChange={e => {
+                      setPromptInput(e.target.value)
+                      countTokens(e.target.value)
+                    }}
+                    className="min-h-[80px] w-full resize-none border-none bg-transparent p-3 pr-12 pb-9 text-[15px] leading-relaxed text-black outline-none placeholder:text-gray-400 focus:ring-0 sm:min-h-[100px] sm:p-4 sm:pr-14 sm:pb-10 sm:text-base"
+                    disabled={isSubmitting}
+                    placeholder="Craft your attack prompt..."
+                    rows={1}
+                    style={{ overflow: 'hidden' }}
+                    autoComplete="off"
+                    spellCheck="false"
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault()
+                        handleSubmit(e)
+                      }
+                    }}
+                  />
 
-                <div className="flex flex-col gap-2 bg-white px-3 pb-2 sm:flex-row sm:items-center sm:justify-between sm:px-4 sm:pb-3">
+                  {/* Token count - bottom right corner */}
                   <div
                     className={clsx(
-                      'rounded bg-[#D9D9D9] px-2 py-1 text-xs',
-                      tokenCount > ATTACK_PROMPT_MAX_TOKENS ? 'text-red-500' : 'text-black'
+                      'absolute bottom-2 right-16 text-[10px] font-medium tracking-wide sm:bottom-3 sm:right-[72px]',
+                      tokenCount > ATTACK_PROMPT_MAX_TOKENS ? 'text-red-500' : 'text-gray-400'
                     )}
                   >
                     <span className={clsx({ 'animate-pulse': isTokenCountDebouncing })}>
-                      Tokens: {tokenCount} / {ATTACK_PROMPT_MAX_TOKENS}
+                      {tokenCount}/{ATTACK_PROMPT_MAX_TOKENS}
                     </span>
                   </div>
 
-                  {/* Desktop: Small circular button */}
+                  {/* Desktop: Circular send button */}
                   <button
                     type="submit"
                     disabled={
@@ -400,22 +402,22 @@ export default function ChatInterface({
                       promptInput.length === 0 ||
                       tokenCount > ATTACK_PROMPT_MAX_TOKENS
                     }
-                    className="hidden h-10 w-10 items-center justify-center rounded-full bg-black text-white shadow-lg transition-all duration-200 hover:bg-gray-800 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 sm:flex"
+                    className="absolute bottom-3 right-3 hidden h-11 w-11 items-center justify-center rounded-full bg-black text-white shadow-md transition-all duration-200 hover:bg-gray-800 hover:shadow-lg hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 sm:flex"
                   >
                     {isSubmitting ? (
                       <Loader2 className="h-5 w-5 animate-spin" />
                     ) : (
                       <Image
                         src="/icons/top-arrow.svg"
-                        width={24}
-                        height={24}
-                        alt="top arrow"
+                        width={22}
+                        height={22}
+                        alt="send"
                         className="invert filter"
                       />
                     )}
                   </button>
 
-                  {/* Mobile: Full-width button */}
+                  {/* Mobile: Floating send button */}
                   <button
                     type="submit"
                     disabled={
@@ -423,30 +425,26 @@ export default function ChatInterface({
                       promptInput.length === 0 ||
                       tokenCount > ATTACK_PROMPT_MAX_TOKENS
                     }
-                    className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-black px-4 text-sm font-semibold text-white shadow-lg transition-all duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 sm:hidden touch-manipulation"
+                    className="absolute bottom-2 right-2 flex h-10 w-10 items-center justify-center rounded-full bg-black text-white shadow-md transition-all duration-200 hover:bg-gray-800 active:scale-90 disabled:cursor-not-allowed disabled:opacity-50 sm:hidden touch-manipulation"
                   >
                     {isSubmitting ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        <span>Attacking...</span>
-                      </>
+                      <Loader2 className="h-4 w-4 animate-spin" />
                     ) : (
-                      <>
-                        <span>Send Attack</span>
-                        <Image
-                          src="/icons/top-arrow.svg"
-                          width={16}
-                          height={16}
-                          alt="send"
-                          className="invert filter"
-                        />
-                      </>
+                      <Image
+                        src="/icons/top-arrow.svg"
+                        width={18}
+                        height={18}
+                        alt="send"
+                        className="invert filter"
+                      />
                     )}
                   </button>
                 </div>
               </div>
 
-              <div className="pointer-events-none absolute left-1/2 top-1/2 z-0 w-[100%] -translate-x-1/2 -translate-y-1/2 rounded-[12px] bg-[#F49BEE]/90 blur-[4px] sm:min-h-[120px]"></div>
+              {/* Premium gradient glow effect */}
+              <div className="pointer-events-none absolute -inset-1 z-0 rounded-[20px] bg-gradient-to-r from-purple-500/30 via-pink-500/30 to-purple-500/30 opacity-60 blur-lg transition-opacity duration-300 group-focus-within:opacity-100 sm:rounded-[16px]"></div>
+              <div className="pointer-events-none absolute left-1/2 top-1/2 z-0 w-[95%] -translate-x-1/2 -translate-y-1/2 rounded-[16px] bg-[#F49BEE]/80 blur-md sm:min-h-[100px]"></div>
             </div>
 
             {submitError && (
