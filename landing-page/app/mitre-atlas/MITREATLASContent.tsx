@@ -29,7 +29,7 @@ const tactics = [
       'Identify input/output boundaries',
     ],
     howWeHelp:
-      'Our platform provides a legitimate arena for reconnaissance—defenders see exactly what information attackers can gather and how it might be exploited.',
+      'Our platform provides a legitimate arena for reconnaissance. Defenders see exactly what information attackers can gather and how it might be exploited.',
   },
   {
     id: 'TA2',
@@ -43,7 +43,7 @@ const tactics = [
       'Build automated attack frameworks',
     ],
     howWeHelp:
-      'The Sui Sentinel community continuously develops and tests new attack techniques—successful methods become part of the collective knowledge base.',
+      'The Sui Sentinel community continuously develops and tests new attack techniques. Successful methods become part of the collective knowledge base.',
   },
   {
     id: 'TA3',
@@ -56,7 +56,7 @@ const tactics = [
       'Bypassing input validation',
     ],
     howWeHelp:
-      'Attackers attempt various initial access techniques against your Sentinel—every successful method is documented so you can strengthen defenses.',
+      'Attackers attempt various initial access techniques against your Sentinel. Every successful method is documented so you can strengthen defenses.',
   },
   {
     id: 'TA4',
@@ -83,7 +83,7 @@ const tactics = [
       'Output collection for model stealing',
     ],
     howWeHelp:
-      'Our community attempts data extraction and membership inference—if your model leaks training data, you will know before malicious actors exploit it.',
+      'Our community attempts data extraction and membership inference. If your model leaks training data, you will know before malicious actors exploit it.',
   },
   {
     id: 'TA6',
@@ -97,7 +97,7 @@ const tactics = [
       'Mapping safety boundary locations',
     ],
     howWeHelp:
-      'Continuous attacks map your AI&apos;s behavior boundaries—defenders receive detailed logs of what attackers discovered and how.',
+      'Continuous attacks map your AI&apos;s behavior boundaries. Defenders receive detailed logs of what attackers discovered and how.',
   },
   {
     id: 'TA7',
@@ -110,7 +110,7 @@ const tactics = [
       'Multi-turn context manipulation',
     ],
     howWeHelp:
-      'The core of our platform—attackers specialize in evading defenses, giving you real-world data on filter effectiveness.',
+      'At the core of our platform, attackers specialize in evading defenses and give you real-world data on filter effectiveness.',
   },
   {
     id: 'TA8',
@@ -123,7 +123,7 @@ const tactics = [
       'Emotional manipulation',
     ],
     howWeHelp:
-      'Our red teamers are creative social engineers—testing if your AI can be manipulated through persuasion rather than technical exploits.',
+      'Our red teamers are creative social engineers, testing whether your AI can be manipulated through persuasion rather than technical exploits.',
   },
 ]
 
@@ -141,7 +141,7 @@ const faqs = [
   {
     question: 'What is the difference between ATLAS and OWASP LLM Top 10?',
     answer:
-      'OWASP LLM Top 10 focuses on application security risks specific to LLM-based applications. ATLAS is broader, covering the full spectrum of adversarial ML attacks including model extraction, data poisoning, and traditional ML attacks beyond just language models. They complement each other—OWASP for app security, ATLAS for adversarial threat modeling.',
+      'OWASP LLM Top 10 focuses on application security risks specific to LLM-based applications. ATLAS is broader, covering the full spectrum of adversarial ML attacks including model extraction, data poisoning, and traditional ML attacks beyond just language models. They complement each other: OWASP for app security, ATLAS for adversarial threat modeling.',
   },
   {
     question: 'Can Sui Sentinel test all ATLAS techniques?',
@@ -204,7 +204,7 @@ export function MITREATLASContent() {
               </p>
               <p className="text-lg text-[#5F5C5C] mb-6">
                 Modeled after the industry-standard MITRE ATT&CK framework, ATLAS specifically
-                addresses the unique threat landscape of machine learning and AI systems—from data
+                addresses the unique threat landscape of machine learning and AI systems, from data
                 poisoning to model extraction to adversarial examples.
               </p>
               <div className="flex items-center gap-2 text-[#C871FF]">
@@ -381,7 +381,7 @@ export function MITREATLASContent() {
                   },
                   {
                     aspect: 'Attacker Perspective',
-                    atlas: 'Yes - attack lifecycle focused',
+                    atlas: 'Yes, attack lifecycle focused',
                     owasp: 'Risk-focused, defender-oriented',
                   },
                 ].map((row, index) => (

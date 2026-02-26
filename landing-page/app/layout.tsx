@@ -62,10 +62,10 @@ export const metadata: Metadata = {
     siteName: 'Sui Sentinel',
     images: [
       {
-        url: '/og-image-v4.png',
+        url: '/og-image-v5.png',
         width: 1200,
         height: 630,
-        alt: 'Sui Sentinel - Crowdsourced AI Red Teaming Platform',
+        alt: 'Sui Sentinel: Crowdsourced AI Red Teaming Platform',
       },
     ],
     locale: 'en_US',
@@ -77,7 +77,7 @@ export const metadata: Metadata = {
     description:
       'The first crowdsource AI red teaming platform. Attack AI systems → get paid instantly in SUI/USDC. Deploy Sentinels → get battle-tested.',
     creator: `@${SUI_SENTINEL_X_USERNAME}`,
-    images: ['/og-image-v4.png'],
+    images: ['/og-image-v5.png'],
   },
   alternates: {
     canonical: SUI_SENTINEL_LANDING_PAGE_URL,
@@ -141,7 +141,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       'Bounty Rewards in SUI/USDC',
     ],
     url: SUI_SENTINEL_APP_URL,
-    screenshot: `${SUI_SENTINEL_LANDING_PAGE_URL}/og-image-v4.png`,
+    screenshot: `${SUI_SENTINEL_LANDING_PAGE_URL}/og-image-v5.png`,
   }
 
   // WebSite Schema with Search
@@ -186,7 +186,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         name: 'Why is Sui Sentinel on blockchain?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Blockchain enables trustless verification of attacks through TEE (Trusted Execution Environment) attestations and instant settlement of rewards. Neither party can dispute outcomes or delay payments — the protocol enforces everything transparently on-chain.',
+          text: 'Blockchain enables trustless verification of attacks through TEE (Trusted Execution Environment) attestations and instant settlement of rewards. Neither party can dispute outcomes or delay payments; the protocol enforces everything transparently on-chain.',
         },
       },
     ],

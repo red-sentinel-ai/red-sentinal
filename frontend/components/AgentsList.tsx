@@ -11,7 +11,7 @@ import { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { MIST_PER_SUI } from '@/constants'
 import { PrizePoolChangeDisplay } from './agents/PrizePoolChangeDisplay'
 
-type SortField = 'balance' | 'costPerMessage' | 'totalAttacks' | null
+type SortField = 'balance' | 'costPerMessage' | 'totalAttacks' | 'agentId' | 'change7d' | null
 type SortDirection = 'asc' | 'desc'
 
 export enum TabType {
@@ -30,7 +30,7 @@ export const AgentsList = ({
   onRefreshAgent: () => void
 }) => {
   const router = useRouter()
-  const [sortField, setSortField] = useState<SortField>(null)
+  const [sortField, setSortField] = useState<SortField>('balance')
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
 
   const handleSort = (field: SortField) => {
@@ -46,6 +46,11 @@ export const AgentsList = ({
     if (!agents || !sortField) return agents
 
     return [...agents].sort((a, b) => {
+      if (sortField === 'agentId') {
+        const cmp = a.agent_id.localeCompare(b.agent_id, undefined, { numeric: true })
+        return sortDirection === 'asc' ? cmp : -cmp
+      }
+
       let valueA: number
       let valueB: number
 
@@ -55,6 +60,13 @@ export const AgentsList = ({
       } else if (sortField === 'costPerMessage') {
         valueA = Number(a.cost_per_message)
         valueB = Number(b.cost_per_message)
+      } else if (sortField === 'change7d') {
+        // null percentage means "New" agent — treat as +Infinity so it sorts highest
+        valueA = a.prizePoolHistory?.change7d.percentage ?? Infinity
+        valueB = b.prizePoolHistory?.change7d.percentage ?? Infinity
+        // agents with no history at all sort last
+        if (!a.prizePoolHistory) valueA = -Infinity
+        if (!b.prizePoolHistory) valueB = -Infinity
       } else {
         valueA = a.total_attacks || 0
         valueB = b.total_attacks || 0
@@ -98,8 +110,12 @@ export const AgentsList = ({
               <div className="col-span-1 grid grid-cols-12 items-center">
                 <p className="col-span-12 pr-1">#</p>
               </div>
-              <div className="col-span-1 flex items-center">
-                <p className="">Agent Id</p>
+              <div
+                className="col-span-1 flex cursor-pointer items-center hover:text-gray-600"
+                onClick={() => handleSort('agentId')}
+              >
+                Agent Id
+                <SortIcon field="agentId" />
               </div>
 
               <div className="col-span-2 ps-4">Name</div>
@@ -124,7 +140,13 @@ export const AgentsList = ({
                 Attacks
                 <SortIcon field="totalAttacks" />
               </div>
-              <div className="col-span-2 ps-4">Change (7d)</div>
+              <div
+                className="col-span-2 flex cursor-pointer items-center ps-4 hover:text-gray-600"
+                onClick={() => handleSort('change7d')}
+              >
+                Change (7d)
+                <SortIcon field="change7d" />
+              </div>
               <div className="col-span-1">Status</div>
               <div className="col-span-2 ps-4">Actions</div>
             </div>

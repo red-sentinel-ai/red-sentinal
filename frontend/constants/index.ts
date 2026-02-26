@@ -1,4 +1,4 @@
-import {  FileText, Github, Handshake, Presentation, Shield } from 'lucide-react'
+import { FileText, Github, Handshake, Presentation, Shield, Calculator } from 'lucide-react'
 
 export const INDEXER_BASE_URL = process.env.NEXT_PUBLIC_INDEXER_BASE_URL || 'http://localhost:4000'
 
@@ -18,6 +18,7 @@ export const SUI_SENTINEL_TELEGRAM_URL = 'https://t.me/suisentinel'
 export const SUI_SENTINEL_AUDIT_REPORT_URL = '/pdfs/audit_final.pdf'
 export const SUI_SENTINEL_AMBASSADOR_URL = "https://www.suisentinel.xyz/ambassador"
 
+export const REWARD_CALCULATOR_URL = "https://www.suisentinel.xyz/reward-calculator"
 
 export const SUI_SENTINEL_DEFENDER_REWARDS_DOCS_URL = `${SUI_SENTINEL_DOCS_URL}/incentives/defender-rewards`
 
@@ -141,7 +142,7 @@ export const socialLinks = [
     name: 'Blog',
     isOutside: true,
   },
-    {
+  {
     href: SUI_SENTINEL_AMBASSADOR_URL,
     icon: Handshake,
     isImage: false,
@@ -157,12 +158,20 @@ export const socialLinks = [
     name: 'Audit Report',
     isOutside: true,
   },
-    {
+  {
     href: "/pdfs/pitch_deck.pdf",
     icon: Presentation,
     isImage: false,
     alt: "Pitch Deck",
     name: "Pitch Deck",
+    isOutside: true,
+  },
+  {
+    href: REWARD_CALCULATOR_URL,
+    icon: Calculator,
+    isImage: false,
+    alt: "Reward Calculator",
+    name: "Reward Calculator",
     isOutside: true,
   },
 ]

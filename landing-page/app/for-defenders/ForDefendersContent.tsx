@@ -121,7 +121,7 @@ export function ForDefendersContent() {
             </h1>
             <p className="text-lg md:text-xl text-[#5F5C5C] max-w-2xl mb-8">
               Do not wait for a breach to discover your AI&apos;s weaknesses. Deploy a Sentinel, set
-              a bounty, and let ethical hackers battle-test your defenses—continuously.
+              a bounty, and let ethical hackers battle-test your defenses continuously.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link href={SUI_SENTINEL_APP_URL} target="_blank">
@@ -207,7 +207,7 @@ export function ForDefendersContent() {
               <AlertTriangle className="w-6 h-6 text-amber-600 shrink-0 mt-1" />
               <p className="text-amber-800 text-left">
                 You are shipping AI agents that can access data, make decisions, and take
-                actions—without knowing how they&apos;ll behave under attack. Traditional security
+                actions without knowing how they&apos;ll behave under attack. Traditional security
                 tools do not work on AI. Penetration testing is a snapshot, not continuous
                 protection.
               </p>
@@ -401,9 +401,14 @@ export function ForDefendersContent() {
             <p className="text-lg text-[#5F5C5C] mb-8 max-w-2xl mx-auto">
               The only question is whether you will find vulnerabilities first, or attackers will.
             </p>
-            <Link href={SUI_SENTINEL_APP_URL} target="_blank">
-              <button className="btn btn-black px-8">Start Securing Your AI</button>
-            </Link>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link href={SUI_SENTINEL_APP_URL} target="_blank">
+                <button className="btn btn-black px-8">Start Securing Your AI</button>
+              </Link>
+              <Link href="/reward-calculator">
+                <button className="btn btn-outline px-8">Calculate Your Rewards</button>
+              </Link>
+            </div>
           </motion.div>
         </div>
       </section>

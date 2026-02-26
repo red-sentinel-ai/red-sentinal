@@ -83,7 +83,7 @@ export const RewardsHistory = () => {
                     initial={{ opacity: 0, y: 5 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    className="grid grid-cols-1 items-center gap-y-2 px-4 py-4 transition-colors hover:bg-gray-50 md:grid-cols-12 md:gap-y-0 md:px-6"
+                    className="grid grid-cols-1 items-center gap-2 px-4 py-4 transition-colors hover:bg-gray-50 md:grid-cols-12 md:gap-y-0 md:px-6"
                   >
                     <div className="order-1 col-span-6 md:order-1 md:col-span-3">
                       <span className="inline-block text-sm font-bold text-[#F632F3]">

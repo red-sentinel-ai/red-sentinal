@@ -87,7 +87,7 @@ export function ManifestoSection() {
                   As Professor <span className="underline">Stuart Russell</span> explains: imagine a
                   chain-link fence stretching 1,000 square miles with a trillion adjustable
                   parameters. We made quintillions of random adjustments until behavior looked
-                  right. We don’t understand what’s inside. We just know it works — until it
+                  right. We don’t understand what’s inside. We just know it works until it
                   doesn’t.
                 </p>
                 <div></div>

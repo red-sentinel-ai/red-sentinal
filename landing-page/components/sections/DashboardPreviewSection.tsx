@@ -29,7 +29,7 @@ export function DashboardPreviewSection() {
           </h2>
           <p className="text-lg text-[#5F5C5C] max-w-2xl mx-auto mb-8">
             Get real-time visibility into your AI security posture. Monitor attacks, track
-            resilience scores, and manage vulnerabilities—all in one place.
+            resilience scores, and manage vulnerabilities, all in one place.
           </p>
           <Link
             href="/book-a-demo"
@@ -40,7 +40,7 @@ export function DashboardPreviewSection() {
           </Link>
         </motion.div>
 
-        {/* Dashboard Preview - Framed */}
+        {/* Dashboard Preview (Framed) */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -64,7 +64,7 @@ export function DashboardPreviewSection() {
 
           {/* Dashboard Container with fixed height and scroll */}
           <div className="relative bg-[#FAFAFA] rounded-b-2xl border border-gray-200 shadow-2xl shadow-gray-200/50 overflow-hidden">
-            {/* Scaled/Contained Dashboard - No navbar in preview */}
+            {/* Scaled/Contained Dashboard (No navbar in preview) */}
             <div className="h-[600px] overflow-y-auto overflow-x-hidden">
               <div className="min-h-full">
                 <AdvancedDashboard showNavbar={false} />

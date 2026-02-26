@@ -48,20 +48,6 @@ export default function Web3IdentityStep({ form, disabled }: Web3IdentityStepPro
       </div>
 
       <div>
-        <label htmlFor="discord_id" className="block text-2xl font-medium">
-          Discord ID
-        </label>
-        <input
-          type="text"
-          id="discord_id"
-          {...register('discord_id')}
-          className="mt-1 block w-full rounded-md border border-[#5E5E5E] bg-white min-h-16 focus:border-black p-3 text-xl"
-          disabled={disabled}
-          placeholder="123456789012345678"
-        />
-      </div>
-
-      <div>
         <label htmlFor="github_url" className="block text-2xl font-medium">
           GitHub Profile <span className="text-gray-400">(Optional)</span>
         </label>
