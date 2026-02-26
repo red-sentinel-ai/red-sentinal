@@ -224,7 +224,7 @@ export default function ChatInterface({
         response={selectedJuryResponse}
       />
 
-      <div className="px-3 py-1.5 sm:px-6 sm:py-2">
+      <div className="px-3 pt-1 pb-1 sm:px-6 sm:py-2">
         <Tabs value={activeTab} onValueChange={v => setActiveTab(v as 'global' | 'mine')}>
           <TabsList className="h-auto rounded-md border border-gray-200 bg-gray-100 p-[2px]">
             <TabsTrigger
@@ -245,7 +245,7 @@ export default function ChatInterface({
 
       <div
         ref={chatContainerRef}
-        className="ios-scroll max-h-[calc(100vh-180px)] flex-1 space-y-3 overflow-y-auto p-2 sm:max-h-[calc(100vh-210px)] sm:space-y-6 sm:p-6"
+        className="ios-scroll max-h-[calc(100vh-160px)] flex-1 space-y-2 overflow-y-auto p-2 pt-1 sm:max-h-[calc(100vh-210px)] sm:space-y-6 sm:p-6"
       >
         {displayedMessages.length === 0 && !eventsLoading && (
           <div className="py-6 text-center text-gray-500 sm:py-12">

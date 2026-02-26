@@ -3,7 +3,7 @@ import { Transaction } from '@mysten/sui/transactions'
 import { useSignAndExecuteTransaction, useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 import { MIST_PER_SUI, SUI_CONFIG } from '@/constants'
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 
 const GAS_BUDGET = 1_000_000
 const GAS_OBJECT_MIN_BALANCE = BigInt(GAS_BUDGET) * BigInt(2)

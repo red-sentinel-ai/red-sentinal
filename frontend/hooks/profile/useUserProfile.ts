@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useCurrentAccount } from '@mysten/dapp-kit'
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 import type { Tables } from '@/lib/database.types'
 
 type UserProfile = Tables<'ss_users'>

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { SlotReel } from './SlotReel'
 import { useClaimReward } from '@/hooks/rewards/useClaimReward'

@@ -1,9 +1,8 @@
 import type { Metadata, Viewport } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import NextTopLoader from 'nextjs-toploader'
-import { ToastContainer } from 'react-toastify'
+import { Toaster } from 'sonner'
 import localFont from 'next/font/local'
-import 'react-toastify/dist/ReactToastify.css'
 
 import './globals.css'
 import { Providers } from './providers'
@@ -273,18 +272,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <NextTopLoader color="#000000" showSpinner={false} />
           <main className="flex-grow">{children}</main>
           <Footer />
-          <ToastContainer
+          <Toaster
             position="top-right"
-            autoClose={4000}
-            hideProgressBar={false}
-            newestOnTop={true}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="light"
-            className="!top-20"
+            toastOptions={{
+              style: {
+                background: '#fff',
+                border: '1px solid rgba(0,0,0,0.08)',
+                borderRadius: '12px',
+                padding: '12px 16px',
+                fontSize: '14px',
+                fontWeight: '500',
+                boxShadow: '0 4px 24px -2px rgba(0,0,0,0.1)',
+              },
+            }}
+            mobileOffset={{ top: 80, right: 16 }}
           />
         </Providers>
         <Analytics />
