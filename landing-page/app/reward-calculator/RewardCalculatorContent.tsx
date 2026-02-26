@@ -198,13 +198,14 @@ export function RewardCalculatorContent() {
                     <span className="text-sm text-black/70">Pool Growth (50%)</span>
                     <span className="text-sm font-bold text-[#9AFFC0] bg-black/80 px-2 py-0.5 rounded">
                       +{formatNumber(rewards.poolGrowth)}
+                      <span className="text-xs"> SUI</span>
                     </span>
                   </div>
                   <div className="flex justify-between items-center py-3 bg-gradient-to-r from-[#A06BFF]/20 to-[#A06BFF]/10 rounded-xl px-4">
                     <span className="text-sm font-bold text-black">Your Earnings (40%)</span>
                     <span className="text-xl font-bold text-black">
                       {formatNumber(rewards.defenderSuiEarnings)}{' '}
-                      <span className="text-xs text-black/50">SUI</span>
+                      <span className="text-xs text-[#F445AB]">SUI</span>
                     </span>
                   </div>
                 </div>
