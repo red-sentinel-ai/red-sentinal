@@ -30,7 +30,7 @@ export const AgentsList = ({
   onRefreshAgent: () => void
 }) => {
   const router = useRouter()
-  const [sortField, setSortField] = useState<SortField>(null)
+  const [sortField, setSortField] = useState<SortField>('balance')
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
 
   const handleSort = (field: SortField) => {

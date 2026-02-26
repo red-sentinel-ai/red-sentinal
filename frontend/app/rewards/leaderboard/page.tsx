@@ -1,11 +1,13 @@
 import { RewardsLeaderboard } from '@/components/rewards/RewardsLeaderboard'
+import { SUI_SENTINEL_APP_URL } from '@/constants'
 
 export const metadata = {
-  title: 'Sui Sentinel Leaderboard',
-  description: 'Top performers in the Sui Sentinel',
+  title: 'SENTINEL Token Leaderboard | Sui Sentinel',
+  description: 'Top SENTINEL token earners in the Sui Sentinel ecosystem. Ranked by total tokens earned through missions and on-chain activity.',
   openGraph: {
-    title: 'Sui Sentinel Leaderboard',
-    description: 'Top performers in the Sui Sentinel',
+    title: 'SENTINEL Token Leaderboard | Sui Sentinel',
+    description: 'Top SENTINEL token earners in the Sui Sentinel ecosystem.',
+    url: `${SUI_SENTINEL_APP_URL}rewards/leaderboard`,
     images: [
       {
         url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/rewards/leaderboard/og`,
@@ -17,16 +19,12 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Sui Sentinel Leaderboard',
-    description: 'Top performers in the Sui Sentinel',
+    title: 'SENTINEL Token Leaderboard | Sui Sentinel',
+    description: 'Top SENTINEL token earners in the Sui Sentinel ecosystem.',
     images: `${process.env.NEXT_PUBLIC_BASE_URL}/api/rewards/leaderboard/og`,
   },
 }
 
 export default function Leaderboard() {
-  return (
-    <div className="container mx-auto p-3 md:p-6">
-      <RewardsLeaderboard pointsSymbol={'SENTINEL'} />
-    </div>
-  )
+  return <RewardsLeaderboard pointsSymbol="SENTINEL" />
 }
