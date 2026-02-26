@@ -45,10 +45,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <QueryClientProvider client={queryClient}>
         <SuiClientProvider networks={networks} defaultNetwork={APP_NETWORK}>
           <WalletProvider autoConnect theme={lightTheme}>
-            <div>
+            <div className="flex flex-col">
               {/* <LaunchMainnetBanner /> */}
               <Header />
-              <div className="mt-[128px]"></div>
+              <div className="mt-[72px] md:mt-[88px]"></div>
               <ProfileInitializer />
               {children}
               <FeedbackButton />

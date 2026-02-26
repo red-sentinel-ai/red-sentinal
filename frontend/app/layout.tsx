@@ -252,7 +252,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body
-        className={`${satoshi.className} bg-no-repeat text-black`}
+        className={`${satoshi.className} flex min-h-screen flex-col bg-no-repeat text-black`}
         style={{
           backgroundImage: `
       url('/img/hero_bg.png'),
@@ -270,7 +270,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       >
         <Providers>
           <NextTopLoader color="#000000" showSpinner={false} />
-          <main className="flex-grow">{children}</main>
+          <main className="w-full flex-grow">{children}</main>
           <Footer />
           <Toaster
             position="top-right"

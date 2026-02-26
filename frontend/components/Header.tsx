@@ -108,14 +108,22 @@ export const Header = () => {
         </Link>
       </div>
       {menuOpen && (
-        <div className="px-4 pb-4 xl:hidden">
-          <div className="border-t border-gray-200 py-4">
-            <MenuItems menuOpen={menuOpen} onItemClick={() => setMenuOpen(false)} />
+        <>
+          {/* Backdrop overlay */}
+          <div 
+            className="fixed inset-0 top-[72px] z-40 bg-black/20 backdrop-blur-sm xl:hidden"
+            onClick={() => setMenuOpen(false)}
+          />
+          {/* Mobile menu */}
+          <div className="absolute left-0 right-0 top-full z-50 border-b border-gray-200 bg-white/95 px-4 pb-6 pt-2 shadow-lg backdrop-blur-xl xl:hidden">
+            <div className="border-t border-gray-200 py-4">
+              <MenuItems menuOpen={menuOpen} onItemClick={() => setMenuOpen(false)} />
+            </div>
+            <div className="mt-4 flex justify-center">
+              <ConnectButton />
+            </div>
           </div>
-          <div className="mt-4 flex justify-center">
-            <ConnectButton />
-          </div>
-        </div>
+        </>
       )}
     </header>
   )
