@@ -1,5 +1,5 @@
 import { signIn } from 'next-auth/react'
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 
 export const handleConnectTwitter = async (
   walletAddress: string | undefined,

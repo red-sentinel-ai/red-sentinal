@@ -226,20 +226,6 @@ export const AgentsList = ({
                           <PrizePoolChangeDisplay prizePoolHistory={agent.prizePoolHistory} variant="list" />
                         </div>
                       </div>
-                      <div className="flex gap-3 border-t border-gray-700/50 pt-2 text-xs">
-                        <button
-                          onClick={e => handleRefresh(e)}
-                          className="text-blue-400 hover:text-blue-300"
-                        >
-                          Refresh
-                        </button>
-                        <button
-                          onClick={() => router.push(`/attack/${agent.agent_path}`)}
-                          className="text-red-500 hover:text-red-400"
-                        >
-                          Attack
-                        </button>
-                      </div>
                     </div>
 
                     <div className="hidden items-center md:grid md:grid-cols-12">

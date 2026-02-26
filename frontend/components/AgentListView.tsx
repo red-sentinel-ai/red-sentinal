@@ -14,7 +14,7 @@ export const AgentListView = () => {
 
   return (
     <div className="mx-auto max-w-[1560px] px-2 py-4 md:px-8 md:py-16">
-      <div className="mb-8 md:mb-20">
+      <div className="mb-4 md:mb-20">
         <h1 className="hidden text-center text-2xl font-bold uppercase sm:text-4xl md:block md:text-[48px]" id="leaderboard">
           Choose Your Target
         </h1>
@@ -32,15 +32,15 @@ export const AgentListView = () => {
       ) : (
         <>
           {featuredAgents.length > 0 && (
-            <div className="mb-16">
-              <div className="mb-8">
-                <h2 className="mb-2 text-2xl font-medium md:text-[32px]">Featured AI Sentinels</h2>
-                <p className="text-[#5E5E5E]">Elite AI agents waiting to be challenged. High stakes, bigger rewards.</p>
+            <div className="mb-8 md:mb-16">
+              <div className="mb-4 md:mb-8">
+                <h2 className="mb-2 text-xl font-medium md:text-[32px]">Featured AI Sentinels</h2>
+                <p className="text-sm text-[#5E5E5E] md:text-base">Elite AI agents waiting to be challenged. High stakes, bigger rewards.</p>
               </div>
 
               <AnimatePresence mode="wait">
                 <motion.div
-                  className="mx-auto grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+                  className="mx-auto grid grid-cols-1 gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-3"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3 }}
@@ -61,10 +61,10 @@ export const AgentListView = () => {
       )}
 
       <div>
-        <div className="mb-6 flex flex-col items-center justify-between md:flex-row">
+        <div className="mb-3 md:mb-6 flex flex-col items-center justify-between md:flex-row">
           <div>
-            <h2 className="text-xl font-medium md:text-[32px]">All AI Sentinels</h2>
-            <p className="text-sm text-[#5E5E5E] mt-1">Browse all active targets. Find your perfect challenge.</p>
+            <h2 className="text-lg font-medium md:text-[32px]">All AI Sentinels</h2>
+            <p className="text-xs text-[#5E5E5E] mt-0.5 md:text-sm md:mt-1">Browse all active targets. Find your perfect challenge.</p>
           </div>
         </div>
       </div>
