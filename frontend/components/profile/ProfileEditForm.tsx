@@ -26,6 +26,8 @@ export function ProfileEditForm({ onSuccess, profile, selectedImage }: ProfileEd
   })
   const [username, setUsername] = useState('')
   const [displayName, setDisplayName] = useState('')
+  const [email, setEmail] = useState('')
+  const [emailNotifications, setEmailNotifications] = useState(false)
   const [debouncedUsername] = useDebounce(username, 500)
 
   const [isChecking, setIsChecking] = useState(false)
@@ -35,6 +37,8 @@ export function ProfileEditForm({ onSuccess, profile, selectedImage }: ProfileEd
     if (profile) {
       setUsername(profile.username || '')
       setDisplayName(profile.display_name || '')
+      setEmail(profile.email || '')
+      setEmailNotifications(profile.email_notifications ?? false)
     }
   }, [profile])
 
@@ -62,6 +66,8 @@ export function ProfileEditForm({ onSuccess, profile, selectedImage }: ProfileEd
     const formData = new FormData()
     formData.append('displayName', displayName)
     formData.append('username', username)
+    formData.append('email', email)
+    formData.append('emailNotifications', String(emailNotifications))
 
     if (selectedImage) {
       if (selectedImage.isCustom && selectedImage.file) {
@@ -105,6 +111,29 @@ export function ProfileEditForm({ onSuccess, profile, selectedImage }: ProfileEd
           URL-friendly, lowercase letters, numbers, and underscores only.
         </p>
       </div>
+
+      <div>
+        <label className="mb-2 block text-base font-medium">Email</label>
+        <input
+          type="email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          placeholder="you@example.com"
+          className="w-full rounded-xl border border-[#5E5E5E] bg-white p-3"
+        />
+      </div>
+
+      <label className="flex cursor-pointer items-center gap-3">
+        <input
+          type="checkbox"
+          checked={emailNotifications}
+          onChange={e => setEmailNotifications(e.target.checked)}
+          className="h-5 w-5 rounded border-[#5E5E5E] accent-black"
+        />
+        <span className="text-sm text-[#5E5E5E]">
+          Receive emails when new sentinels are deployed
+        </span>
+      </label>
 
       <button
         type="submit"

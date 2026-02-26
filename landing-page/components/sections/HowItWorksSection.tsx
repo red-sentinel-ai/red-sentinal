@@ -5,10 +5,7 @@ import Image from 'next/image'
 
 export function HowItWorksSection() {
   return (
-    <section
-      id="how-it-works"
-      className="relative"
-    >
+    <section id="how-it-works" className="relative">
       <div className="vertical-line left-4"></div>
       <div className="vertical-line right-4"></div>
       <div className="py-24 relative text-black bg-[#F7F9FF] z-10">
@@ -22,11 +19,13 @@ export function HowItWorksSection() {
           >
             <div className="badge-pink mb-8"> • how it works </div>
             <h2 className="text-3xl md:text-[48px] font-medium mb-4">
-              Sui Sentinel&apos;s <span className="text-[#C871FF]">Gamified AI</span> Security
+              The <span className="text-[#C871FF]">Trustless</span> Red Teaming Flywheel
             </h2>
             <p className="max-w-3xl mx-auto text-lg md:text-[20px]">
-              Attack, defend, and evolve in an ecosystem where every move strengthens the network
-              and earns real rewards for mastery.
+              Attackers pay per message. That fee funds bigger bounties, rewards defenders, and
+              sustains the protocol. Every failed attack grows the prize pool, attracting more
+              attackers, generating more security data, making defenders stronger. A
+              self-reinforcing system that gets more valuable with scale.
             </p>
           </motion.div>
           <div className="relative z-10">

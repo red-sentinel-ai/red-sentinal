@@ -1,16 +1,18 @@
 import { SuiClient } from '@mysten/sui/client'
-import type { AgentDetails } from '@/hooks/agents/useAllAgents'
-import { SUI_CONFIG } from '@/constants'
 
-export const fetchAgentDetailsViaObject = async (
+interface OnChainAgentDetails {
+  cost_per_message: number
+  prompt: string
+  balance: number
+  last_funded_timestamp: string
+  accumulated_fees: number
+  is_defeated: boolean
+}
+
+export const fetchAgentOnChainDetails = async (
   client: SuiClient,
   agentObjectId: string
-): Promise<
-  Pick<
-    AgentDetails,
-    'cost_per_message' | 'system_prompt' | 'balance' | 'last_funded_timestamp' | 'accumulated_fees'
-  >
-> => {
+): Promise<OnChainAgentDetails> => {
   try {
     const response = await client.getObject({
       id: agentObjectId,
@@ -27,77 +29,21 @@ export const fetchAgentDetailsViaObject = async (
 
     return {
       cost_per_message: Number(fields.cost_per_message),
-      system_prompt: fields.system_prompt,
+      prompt: fields.system_prompt,
       balance: Number(fields.balance),
       last_funded_timestamp: fields.last_funded_timestamp || '0',
       accumulated_fees: Number(fields.accumulated_fees || 0),
+      is_defeated: fields.is_defeated || false,
     }
   } catch (error) {
     console.error(`Error fetching on-chain details for ${agentObjectId}:`, error)
     return {
       cost_per_message: 0,
-      system_prompt: 'Error fetching on-chain data.',
+      prompt: 'Error fetching on-chain data.',
       balance: 0,
       last_funded_timestamp: '0',
       accumulated_fees: 0,
+      is_defeated: false,
     }
-  }
-}
-
-export async function getDefeatedAgentIds(client: SuiClient): Promise<Set<string>> {
-  const packageId = SUI_CONFIG.APP_PACKAGE_ID
-  const moduleName = SUI_CONFIG.MODULE_NAME
-
-  try {
-    const defeatedEvents = await client.queryEvents({
-      query: {
-        MoveEventType: `${packageId}::${moduleName}::AgentDefeated`,
-      },
-      limit: 100,
-      order: 'descending',
-    })
-
-    const defeatedIds = defeatedEvents.data.map((event: any) => event.parsedJson.agent_id)
-    return new Set(defeatedIds)
-  } catch (error) {
-    console.error('Error fetching defeated agent events:', error)
-    return new Set()
-  }
-}
-
-export async function getAttackCountsPerAgent(client: SuiClient): Promise<Map<string, number>> {
-  const packageId = SUI_CONFIG.APP_PACKAGE_ID
-  const moduleName = SUI_CONFIG.MODULE_NAME
-  const attackCounts = new Map<string, number>()
-
-  try {
-    let cursor: { txDigest: string; eventSeq: string } | null | undefined = null
-    let hasMore = true
-
-    while (hasMore) {
-      const response = await client.queryEvents({
-        query: {
-          MoveEventType: `${packageId}::${moduleName}::PromptConsumed`,
-        },
-        limit: 50,
-        order: 'descending',
-        ...(cursor && { cursor }),
-      })
-
-      for (const event of response.data) {
-        const agentId = (event as any).parsedJson?.agent_id
-        if (agentId) {
-          attackCounts.set(agentId, (attackCounts.get(agentId) || 0) + 1)
-        }
-      }
-
-      hasMore = response.hasNextPage
-      cursor = response.nextCursor
-    }
-
-    return attackCounts
-  } catch (error) {
-    console.error('Error fetching attack counts:', error)
-    return attackCounts
   }
 }

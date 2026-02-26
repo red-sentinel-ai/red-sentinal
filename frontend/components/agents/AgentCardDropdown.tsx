@@ -14,6 +14,8 @@ import { UpdateCostModal } from './UpdateCostModal'
 import { ClaimFeesModal } from './ClaimFeesModal'
 import { MIST_PER_SUI } from '@/constants'
 
+const PROMPT_UPDATE_WINDOW_MS = 10_800_000
+
 interface AgentDropdownProps {
   isOwner: boolean
   isFeatured: boolean
@@ -23,6 +25,7 @@ interface AgentDropdownProps {
   currentPrompt?: string
   currentCost?: number
   accumulatedFees?: number
+  createdAt?: string
 }
 
 export const AgentDropdown = ({
@@ -34,10 +37,15 @@ export const AgentDropdown = ({
   currentPrompt,
   currentCost,
   accumulatedFees = 0,
+  createdAt,
 }: AgentDropdownProps) => {
   const [isPromptModalOpen, setIsPromptModalOpen] = useState(false)
   const [isCostModalOpen, setIsCostModalOpen] = useState(false)
   const [isClaimModalOpen, setIsClaimModalOpen] = useState(false)
+
+  const isUpdateWindowExpired = createdAt
+    ? Date.now() - Number(createdAt) > PROMPT_UPDATE_WINDOW_MS
+    : false
 
   const handleOpenFeatureModal = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -59,9 +67,11 @@ export const AgentDropdown = ({
     setIsClaimModalOpen(true)
   }
 
+  const hasItems = !isFeatured || isOwner
+
   return (
     <>
-      <div className="absolute right-2 top-2 z-20">
+      {hasItems && <div className="absolute right-2 top-2 z-20">
         <DropdownMenu>
           <DropdownMenuTrigger className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-sm outline-none backdrop-blur-sm transition-colors hover:bg-white">
             <MoreVertical className="h-5 w-5 text-gray-700" />
@@ -78,11 +88,21 @@ export const AgentDropdown = ({
               <>
                 {!isFeatured && <DropdownMenuSeparator />}
 
-                <DropdownMenuItem onClick={handleOpenPromptModal} className="cursor-pointer gap-2">
+                <DropdownMenuItem
+                  onClick={handleOpenPromptModal}
+                  className="cursor-pointer gap-2"
+                  disabled={isUpdateWindowExpired}
+                  title={isUpdateWindowExpired ? 'Updates are only allowed within 3 hours of launch' : undefined}
+                >
                   <Edit className="h-4 w-4" />
                   Update Instructions
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleOpenCostModal} className="cursor-pointer gap-2">
+                <DropdownMenuItem
+                  onClick={handleOpenCostModal}
+                  className="cursor-pointer gap-2"
+                  disabled={isUpdateWindowExpired}
+                  title={isUpdateWindowExpired ? 'Updates are only allowed within 3 hours of launch' : undefined}
+                >
                   <DollarSign className="h-4 w-4" />
                   Update Attack Fee
                 </DropdownMenuItem>
@@ -100,7 +120,7 @@ export const AgentDropdown = ({
             )}
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
+      </div>}
 
       {isOwner && (
         <>
