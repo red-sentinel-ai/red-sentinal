@@ -12,7 +12,6 @@ import { useConsumePrompt } from '@/hooks/useConsumePrompt'
 import { useAgentBySlug } from '@/hooks/agents/useAgentBySlug'
 import {
   useAgentEventsFromIndexer,
-  AGENT_EVENTS_FROM_INDEXER_QUERY_KEY,
   type AgentEventsFromIndexer,
 } from '@/hooks/useAgentEventsFromIndexer'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
@@ -43,8 +42,8 @@ function transformEventsForCompatibility(events: AgentEventsFromIndexer): {
 } {
   // Sort prompt consumed events by timestamp ascending (oldest first) so recent messages appear last
   const sortedPromptConsumed = [...events.promptConsumed].sort((a, b) => {
-    const timeA = a.timestamp ? new Date(a.timestamp).getTime() : 0
-    const timeB = b.timestamp ? new Date(b.timestamp).getTime() : 0
+    const timeA = a.timestampMs ? Number.parseInt(a.timestampMs) : 0
+    const timeB = b.timestampMs ? Number.parseInt(b.timestampMs) : 0
     return timeA - timeB
   })
 
@@ -60,7 +59,7 @@ function transformEventsForCompatibility(events: AgentEventsFromIndexer): {
       id: {
         txDigest: event.tx_digest || '',
       },
-      timestampMs: event.timestamp || Date.now().toString(),
+      timestampMs: event.timestampMs || Date.now().toString(),
       parsedJson: {
         agent_id: event.agent_id,
         sender: event.sender,
