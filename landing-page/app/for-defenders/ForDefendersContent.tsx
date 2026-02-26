@@ -401,9 +401,14 @@ export function ForDefendersContent() {
             <p className="text-lg text-[#5F5C5C] mb-8 max-w-2xl mx-auto">
               The only question is whether you will find vulnerabilities first, or attackers will.
             </p>
-            <Link href={SUI_SENTINEL_APP_URL} target="_blank">
-              <button className="btn btn-black px-8">Start Securing Your AI</button>
-            </Link>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link href={SUI_SENTINEL_APP_URL} target="_blank">
+                <button className="btn btn-black px-8">Start Securing Your AI</button>
+              </Link>
+              <Link href="/reward-calculator">
+                <button className="btn btn-outline px-8">Calculate Your Rewards</button>
+              </Link>
+            </div>
           </motion.div>
         </div>
       </section>
