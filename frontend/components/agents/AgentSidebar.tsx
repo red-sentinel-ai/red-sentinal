@@ -17,7 +17,7 @@ import {
 } from 'lucide-react'
 import { formatAddress } from '@mysten/sui/utils'
 import { QRCodeSVG } from 'qrcode.react'
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import {
   DEFAULT_PROFILE_URL,

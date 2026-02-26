@@ -1,9 +1,8 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import NextTopLoader from 'nextjs-toploader'
-import { ToastContainer } from 'react-toastify'
+import { Toaster } from 'sonner'
 import localFont from 'next/font/local'
-import 'react-toastify/dist/ReactToastify.css'
 
 import './globals.css'
 import { Providers } from './providers'
@@ -18,6 +17,15 @@ const satoshi = localFont({
   variable: '--font-satoshi',
   display: 'swap',
 })
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: 'cover',
+  themeColor: '#ffffff',
+}
 
 export const metadata: Metadata = {
   metadataBase: new URL(SUI_SENTINEL_APP_URL),
@@ -244,7 +252,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body
-        className={`${satoshi.className} bg-no-repeat text-black`}
+        className={`${satoshi.className} flex min-h-screen flex-col bg-no-repeat text-black`}
         style={{
           backgroundImage: `
       url('/img/hero_bg.png'),
@@ -262,9 +270,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       >
         <Providers>
           <NextTopLoader color="#000000" showSpinner={false} />
-          <main className="flex-grow">{children}</main>
+          <main className="w-full flex-grow">{children}</main>
           <Footer />
-          <ToastContainer />
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              style: {
+                background: '#fff',
+                border: '1px solid rgba(0,0,0,0.08)',
+                borderRadius: '12px',
+                padding: '12px 16px',
+                fontSize: '14px',
+                fontWeight: '500',
+                boxShadow: '0 4px 24px -2px rgba(0,0,0,0.1)',
+              },
+            }}
+            mobileOffset={{ top: 80, right: 16 }}
+          />
         </Providers>
         <Analytics />
       </body>
