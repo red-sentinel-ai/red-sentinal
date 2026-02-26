@@ -374,7 +374,7 @@ export function ManifestoModal({ isOpen, onClose }: ManifestoModalProps) {
                             <li>When defenders build resilient sentinels, they get rewarded</li>
                             <li>
                               When vulnerabilities are found, they&apos;re discovered in controlled
-                              arenas - not in production where costs could be catastrophic
+                              arenas, not in production where costs could be catastrophic
                             </li>
                           </ul>
                           <p className="my-6">
@@ -526,7 +526,7 @@ export function ManifestoModal({ isOpen, onClose }: ManifestoModalProps) {
                           <p className="my-6">
                             <strong className="font-semibold">Clarity is courage.</strong> Now that
                             you understand what&apos;s at stake, now that you see where the default
-                            path leads, now that you know there&apos;s an alternative - what will you
+                            path leads, now that you know there&apos;s an alternative, what will you
                             do?
                           </p>
                           <p className="my-6">
@@ -542,7 +542,7 @@ export function ManifestoModal({ isOpen, onClose }: ManifestoModalProps) {
                             The future isn&apos;t inevitable. It&apos;s a choice we make together.
                           </p>
                           <p className="my-6">
-                            Sui Sentinel is that choice - where economic incentives align with human
+                            Sui Sentinel is that choice, where economic incentives align with human
                             survival, where competitive dynamics drive safety instead of
                             recklessness, and where we prove that humans can remain in control of
                             the intelligence we create.

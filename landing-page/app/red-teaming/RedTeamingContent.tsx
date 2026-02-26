@@ -750,7 +750,7 @@ export function RedTeamingContent() {
         </div>
       </section>
 
-      {/* Attack Types - Colorful Cards Style */}
+      {/* Attack Types (Colorful Cards Style) */}
       <section className="py-24 relative bg-[#F7F9FF]">
         <div className="vertical-line left-4"></div>
         <div className="vertical-line right-4"></div>
@@ -900,7 +900,7 @@ export function RedTeamingContent() {
                 />
               </svg>
               <span className="font-medium relative z-10">
-                The cycle repeats - stronger each time
+                The cycle repeats, stronger each time
               </span>
             </div>
           </motion.div>
@@ -1032,7 +1032,7 @@ export function RedTeamingContent() {
         </div>
       </section>
 
-      {/* CTA Section - Colorful Card Style */}
+      {/* CTA Section (Colorful Card Style) */}
       <section className="py-24 relative bg-[#F7F9FF]">
         <div className="vertical-line left-4"></div>
         <div className="vertical-line right-4"></div>

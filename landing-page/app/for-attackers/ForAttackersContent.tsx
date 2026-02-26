@@ -30,7 +30,7 @@ const steps = [
     icon: BoltIcon,
     title: 'Pay & Attack',
     description:
-      'Pay the attack fee (goes to the bounty pool + defender + protocol). You get a session with the AI. Use prompt engineering, jailbreaks - whatever works.',
+      'Pay the attack fee (goes to the bounty pool + defender + protocol). You get a session with the AI. Use prompt engineering and jailbreaks, whatever works.',
     gradient: 'bg-gradient-to-b from-[#F6BCE1] via-[#FFFFFF] to-[#FCC3E2]',
     borderColor: 'border-[#F632F3]',
     circleImage: '/img/the_awaking_circles.png',
@@ -157,7 +157,7 @@ function TargetIcon({ className }: { className?: string }) {
 export function ForAttackersContent() {
   return (
     <div className="text-black">
-      {/* Hero Section - Light background with gradient */}
+      {/* Hero Section (Light background with gradient) */}
       <section className="relative min-h-[80vh] flex items-center bg-[#F7F9FF] overflow-hidden">
         <div className="vertical-line left-4"></div>
         <div className="vertical-line right-4"></div>
@@ -174,7 +174,7 @@ export function ForAttackersContent() {
             </h1>
             <p className="text-lg md:text-xl text-[#5F5C5C] max-w-2xl mb-8">
               Your prompt injection skills are valuable. Put them to work, break AI systems
-              ethically, and earn real rewards - verified on-chain, paid instantly.
+              ethically, and earn real rewards, verified on-chain and paid instantly.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link href={SUI_SENTINEL_APP_URL} target="_blank">
@@ -263,7 +263,7 @@ export function ForAttackersContent() {
             <p className="text-lg text-[#5F5C5C]">
               Companies are deploying AI agents with millions in their vaults, and they are begging
               to be tested. While they sleep, you can break their defenses and walk away with
-              crypto - legally, ethically, instantly.
+              crypto, legally, ethically, and instantly.
             </p>
           </motion.div>
         </div>
@@ -311,7 +311,7 @@ export function ForAttackersContent() {
         </div>
       </section>
 
-      {/* Leaderboard Preview - Styled as colorful table */}
+      {/* Leaderboard Preview (Styled as colorful table) */}
       <section className="py-24 relative">
         <div className="vertical-line left-4"></div>
         <div className="vertical-line right-4"></div>

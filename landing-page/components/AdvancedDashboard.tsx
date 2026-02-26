@@ -298,7 +298,7 @@ export function AdvancedDashboard({ showNavbar = true }: { showNavbar?: boolean 
 
   return (
     <div className="w-full min-h-screen bg-[#FAFAFA] text-gray-900 font-sans">
-      {/* Enterprise Dashboard Navbar - Can be hidden in preview mode */}
+      {/* Enterprise Dashboard Navbar (Can be hidden in preview mode) */}
       {showNavbar && (
         <nav className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-xl">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
