@@ -10,7 +10,8 @@ import Link from 'next/link'
 import { ConnectButton } from './ConnectButton'
 import { APP_NETWORK } from '@/constants'
 
-const HEADER_LOGO = APP_NETWORK === 'testnet' ? '/icons/logo_large_testnet.svg' : '/icons/logo_large.svg'
+const HEADER_LOGO =
+  APP_NETWORK === 'testnet' ? '/icons/logo_large_testnet.svg' : '/icons/logo_large.svg'
 const HEADER_LOGO_SMALL = '/icons/logo-sm.svg'
 
 export const Header = () => {
@@ -110,8 +111,8 @@ export const Header = () => {
       {menuOpen && (
         <>
           {/* Backdrop overlay */}
-          <div 
-            className="fixed inset-0 top-[72px] z-40 bg-black/20 backdrop-blur-sm xl:hidden"
+          <div
+            className="fixed inset-0 top-[72px] z-40 bg-black/20 backdrop-blur-sm md:top-[140px] xl:hidden"
             onClick={() => setMenuOpen(false)}
           />
           {/* Mobile menu */}
