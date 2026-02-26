@@ -29,7 +29,7 @@ export function DashboardPreviewSection() {
           </h2>
           <p className="text-lg text-[#5F5C5C] max-w-2xl mx-auto mb-8">
             Get real-time visibility into your AI security posture. Monitor attacks, track
-            resilience scores, and manage vulnerabilities—all in one place.
+            resilience scores, and manage vulnerabilities - all in one place.
           </p>
           <Link
             href="/book-a-demo"

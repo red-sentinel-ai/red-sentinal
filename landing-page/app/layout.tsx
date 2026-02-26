@@ -186,7 +186,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         name: 'Why is Sui Sentinel on blockchain?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Blockchain enables trustless verification of attacks through TEE (Trusted Execution Environment) attestations and instant settlement of rewards. Neither party can dispute outcomes or delay payments — the protocol enforces everything transparently on-chain.',
+          text: 'Blockchain enables trustless verification of attacks through TEE (Trusted Execution Environment) attestations and instant settlement of rewards. Neither party can dispute outcomes or delay payments  -  the protocol enforces everything transparently on-chain.',
         },
       },
     ],
