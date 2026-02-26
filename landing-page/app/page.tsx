@@ -11,6 +11,7 @@ import { AuditSection } from '@/components/sections/AuditSection'
 import { ManifestoSection } from '@/components/sections/ManifestoSection'
 import { SocialProofSection } from '@/components/sections/SocialProofSection'
 import { DemoVideoSection } from '@/components/sections/DemoVideoSection'
+import { DashboardPreviewSection } from '@/components/sections/DashboardPreviewSection'
 
 export default function LandingPage() {
   return (
@@ -21,6 +22,7 @@ export default function LandingPage() {
       <VulnerabilitySection />
       <HowItWorksSection />
       <DemoVideoSection />
+      <DashboardPreviewSection />
       <OfferingsSection />
       <EarnWhileDefendingSection />
       <WhyChooseUsSection />
