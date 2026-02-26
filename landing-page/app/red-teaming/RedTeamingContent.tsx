@@ -900,7 +900,7 @@ export function RedTeamingContent() {
                 />
               </svg>
               <span className="font-medium relative z-10">
-                The cycle repeats—stronger each time
+                The cycle repeats - stronger each time
               </span>
             </div>
           </motion.div>

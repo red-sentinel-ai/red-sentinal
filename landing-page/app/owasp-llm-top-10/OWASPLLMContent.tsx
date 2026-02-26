@@ -87,7 +87,7 @@ const owaspItems = [
       'Attackers extract system prompts, instructions, or configuration details that should remain confidential.',
     direct: true,
     howWeTest:
-      'Our community attempts various prompt extraction techniques—encoding tricks, social engineering, and iterative probing—to see if your system prompt leaks.',
+      'Our community attempts various prompt extraction techniques - encoding tricks, social engineering, and iterative probing - to see if your system prompt leaks.',
   },
   {
     id: 'LLM08',

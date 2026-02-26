@@ -46,7 +46,7 @@ export const defenderSteps = [
     icon: Target,
     title: "Craft Your Defense",
     description:
-      "This is where your skill shines. Write a robust system prompt—the AI's rules—to make it impervious to manipulation. The better the prompt, the stronger the defense.",
+      "This is where your skill shines. Write a robust system prompt - the AI's rules - to make it impervious to manipulation. The better the prompt, the stronger the defense.",
   },
   {
     icon: Coins,
