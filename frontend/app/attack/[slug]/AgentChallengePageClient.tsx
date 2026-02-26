@@ -57,7 +57,7 @@ function transformEventsForCompatibility(events: AgentEventsFromIndexer): {
     })),
     promptConsumed: sortedPromptConsumed.map(event => ({
       id: {
-        txDigest: event.tx_digest || '',
+        txDigest: event.txDigest || '',
       },
       timestampMs: event.timestampMs || Date.now().toString(),
       parsedJson: {
@@ -73,6 +73,7 @@ function transformEventsForCompatibility(events: AgentEventsFromIndexer): {
     })),
   }
 }
+
 
 export default function AgentChallengePage({ slug }: { slug: string }) {
   const account = useCurrentAccount()
