@@ -40,6 +40,10 @@
   --border: #e2e8f0;
   --input: #e2e8f0;
   --ring: #94a3b8;
+
+  /* Mobile optimization: Prevent double-tap zoom delay */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 @layer base {
@@ -92,6 +96,69 @@
 
 html {
   scroll-behavior: smooth;
+  /* Mobile: Prevent horizontal scroll bounce */
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+}
+
+/* Mobile-optimized touch interactions */
+@layer utilities {
+  /* Prevent double-tap zoom on buttons and interactive elements */
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+  
+  /* Smooth scrolling with momentum on iOS */
+  .scroll-smooth-mobile {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Mobile-safe area insets for notched devices */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 0);
+  }
+  
+  /* iOS-style momentum scrolling container */
+  .ios-scroll {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+}
+
+/* Mobile input optimizations */
+@layer base {
+  /* Prevent zoom on focus in iOS Safari (font-size must be >= 16px) */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="url"],
+  textarea {
+    font-size: 16px;
+    touch-action: manipulation;
+  }
+  
+  /* Disable text selection on UI elements (not inputs) */
+  button, 
+  [role="button"],
+  .no-select {
+    user-select: none;
+    -webkit-user-select: none;
+  }
 }
 
 html body[data-scroll-locked] {
