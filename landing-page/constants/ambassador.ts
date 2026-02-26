@@ -63,4 +63,15 @@ export const TIMEZONES = [
   { value: 'UTC+13:00', label: '(UTC+13:00) Nuku\'alofa' },
 ] as const
 
-export const AMBASSADOR_INTRO_TEXT = `The Sui Sentinel Ambassador Program is designed to bring together builders, educators, and community leaders who are passionate about strengthening the Sui ecosystem. As an ambassador, you will help grow awareness, protect the community through education, and represent Sui Sentinel across social platforms, regions, and on-chain spaces. We’re looking for proactive individuals who can create impact through content, community support, research, events, or technical contributions — and who believe in transparency, security, and long-term ecosystem growth. If you’re ready to contribute, lead, and help safeguard the future of Sui, apply below.`
+export const AMBASSADOR_INTRO_TEXT = `Sui Sentinel Ambassador Program Early Access
+
+We're onboarding our first wave of ambassadors and we want to be upfront about where we are:
+
+1. Full reward structure is still being finalized
+2. Current compensation: Sentinel tokens based on contribution
+3. Tokens launching soon, early ambassadors rewarded accordingly
+4. No payment promises yet, but no fine print either
+
+What we're looking for right now are people motivated by the mission, helping make AI security accessible, growing the Sui Sentinel community, and getting enterprise teams on the platform.
+
+If that's you, we'd love to hear from you.`

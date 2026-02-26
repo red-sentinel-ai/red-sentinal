@@ -62,12 +62,10 @@ function AmbassadorPageContent() {
       preferred_name: '',
       email: '',
       country: '',
-      discord_username: '',
       timezone: '',
       telegram_username: '',
       sui_wallet_address: '',
       twitter_url: '',
-      discord_id: '',
       github_url: '',
       other_web3_profiles: '',
       roles: [],
@@ -406,8 +404,8 @@ function AmbassadorPageContent() {
                 </div>
 
                 <div>
-                  <h2 className="text-[32px] font-medium mb-6 uppercase">
-                    SECTION {currentStep} — {STEP_TITLES[currentStep - 1]}
+                  <h2 className="text-[32px] font-medium mb-6">
+                    Section {currentStep}: {STEP_TITLES[currentStep - 1]}
                   </h2>
 
                   <form onSubmit={(e) => e.preventDefault()}>

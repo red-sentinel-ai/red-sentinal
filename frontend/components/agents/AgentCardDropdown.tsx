@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { MoreVertical, Star, Edit, DollarSign, Wallet } from 'lucide-react'
+import { MoreVertical, Star, Edit, DollarSign } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { UpdatePromptModal } from './UpdatePromptModal'
 import { UpdateCostModal } from './UpdateCostModal'
-import { ClaimFeesModal } from './ClaimFeesModal'
 import { MIST_PER_SUI } from '@/constants'
 
 const PROMPT_UPDATE_WINDOW_MS = 10_800_000
@@ -36,12 +35,10 @@ export const AgentDropdown = ({
   openFeatureModal,
   currentPrompt,
   currentCost,
-  accumulatedFees = 0,
   createdAt,
 }: AgentDropdownProps) => {
   const [isPromptModalOpen, setIsPromptModalOpen] = useState(false)
   const [isCostModalOpen, setIsCostModalOpen] = useState(false)
-  const [isClaimModalOpen, setIsClaimModalOpen] = useState(false)
 
   const isUpdateWindowExpired = createdAt
     ? Date.now() - Number(createdAt) > PROMPT_UPDATE_WINDOW_MS
@@ -60,11 +57,6 @@ export const AgentDropdown = ({
   const handleOpenCostModal = (e: React.MouseEvent) => {
     e.stopPropagation()
     setIsCostModalOpen(true)
-  }
-
-  const handleOpenClaimModal = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    setIsClaimModalOpen(true)
   }
 
   const hasItems = !isFeatured || isOwner
@@ -106,16 +98,6 @@ export const AgentDropdown = ({
                   <DollarSign className="h-4 w-4" />
                   Update Attack Fee
                 </DropdownMenuItem>
-
-                <DropdownMenuSeparator />
-
-                <DropdownMenuItem
-                  onClick={handleOpenClaimModal}
-                  className="cursor-pointer gap-2 font-medium text-green-600 focus:bg-green-50 focus:text-green-700"
-                >
-                  <Wallet className="h-4 w-4" />
-                  Claim Fees
-                </DropdownMenuItem>
               </>
             )}
           </DropdownMenuContent>
@@ -137,13 +119,6 @@ export const AgentDropdown = ({
             agentId={agentId}
             agentObjectId={agentObjectId}
             currentCost={currentCost ? currentCost / Number(MIST_PER_SUI) : 0}
-          />
-          <ClaimFeesModal
-            open={isClaimModalOpen}
-            onClose={() => setIsClaimModalOpen(false)}
-            agentId={agentId}
-            agentObjectId={agentObjectId}
-            accumulatedFees={accumulatedFees}
           />
         </>
       )}

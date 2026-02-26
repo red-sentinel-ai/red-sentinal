@@ -32,7 +32,6 @@ export const basicInfoSchema = z.object({
   preferred_name: z.string().optional(),
   email: z.string().email('Please enter a valid email address'),
   country: z.string().min(1, 'Please select your country'),
-  discord_username: z.string().min(2, 'Discord username is required'),
   timezone: z.string().min(1, 'Please select your timezone'),
   telegram_username: z.string().optional(),
 })
@@ -41,7 +40,6 @@ export const basicInfoSchema = z.object({
 export const web3IdentitySchema = z.object({
   sui_wallet_address: z.string().optional(),
   twitter_url: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
-  discord_id: z.string().optional(),
   github_url: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
   other_web3_profiles: z.string().optional(),
 })
