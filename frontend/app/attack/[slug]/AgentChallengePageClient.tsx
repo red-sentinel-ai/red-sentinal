@@ -80,7 +80,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   const account = useCurrentAccount()
   const queryClient = useQueryClient()
   const { data: agent, isLoading, error, refetch } = useAgentBySlug(slug)
-  const { events: indexerEvents, refetch: refetchEvents } = useAgentEventsFromIndexer(
+  const { events: indexerEvents, loading: eventsLoading, refetch: refetchEvents } = useAgentEventsFromIndexer(
     agent?.agent_id
   )
 
@@ -240,6 +240,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
                 <ChatInterface
                   agent={agent}
                   agentEvents={agentEvents}
+                  eventsLoading={eventsLoading}
                   apiResponse={apiResponse}
                   onSendMessage={handleSendMessage}
                   isSubmitting={isSubmitting}
@@ -272,6 +273,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
         <ChatInterface
           agent={agent}
           agentEvents={agentEvents}
+          eventsLoading={eventsLoading}
           apiResponse={apiResponse}
           onSendMessage={handleSendMessage}
           isSubmitting={isSubmitting}
