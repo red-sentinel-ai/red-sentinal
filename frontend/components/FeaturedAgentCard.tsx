@@ -13,6 +13,7 @@ import { AgentDropdown } from './agents/AgentCardDropdown'
 import { useWithdrawAgentModal } from '@/hooks/agents/useWithdrawAgentModal'
 import { formatDuration } from '@/lib/utils'
 import { PrizePoolChangeDisplay } from './agents/PrizePoolChangeDisplay'
+import { ClaimFeesModal } from './agents/ClaimFeesModal'
 
 type FeaturedAgentCardProps = {
   agent: AgentDetails
@@ -24,7 +25,7 @@ type FeaturedAgentCardProps = {
 export const FeaturedAgentCard = ({
   agent,
   index,
-  ctaHeading = 'View Sentinel',
+  ctaHeading = 'Challenge Sentinel',
   fromProfile = false,
 }: FeaturedAgentCardProps) => {
   const { Modal, openModal } = useFundAgentModal()
@@ -36,8 +37,11 @@ export const FeaturedAgentCard = ({
 
   const [isWithdrawalLocked, setIsWithdrawalLocked] = useState(true)
   const [timeRemaining, setTimeRemaining] = useState('')
+  const [isClaimFeesModalOpen, setIsClaimFeesModalOpen] = useState(false)
 
   const hasNoBalance = Number(agent.total_balance) === 0
+  const earnings = Number(agent.accumulated_fees || 0) / MIST_PER_SUI
+  const hasEarnings = earnings > 0
 
   useEffect(() => {
     if (hasNoBalance) {
@@ -149,26 +153,42 @@ export const FeaturedAgentCard = ({
 
         <div className="mb-2 text-center sm:mb-4">
           <div className="mb-1 flex items-center justify-center gap-1 sm:mb-2">
-            <h3 className="truncate text-sm font-medium sm:text-lg lg:text-2xl">{agent.agent_name}</h3>
+            <h3 className="truncate text-sm font-medium sm:text-lg lg:text-2xl">
+              {agent.agent_name}
+            </h3>
             {agent.is_featured && (
-              <Image src="/icons/check-mark.svg" width={20} height={20} alt="checkmark" className="size-4 sm:size-5" />
+              <Image
+                src="/icons/check-mark.svg"
+                width={20}
+                height={20}
+                alt="Verified"
+                className="size-4 sm:size-5"
+              />
             )}
           </div>
           <div className="mx-auto flex max-w-[394px] border-t border-gray-200"></div>
         </div>
 
         <div className="mb-2 space-y-1 text-xs font-medium sm:mb-4 sm:space-y-3 sm:text-base lg:text-xl">
-          <div className="flex flex-col items-start gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
-            <span className="text-[#5E5E5E]">Reward Pool:</span>
-            <div className="flex items-center">
+          <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
+            <span className="text-[#5E5E5E]">Prize Pool:</span>
+            <div className="flex items-center justify-end">
               <span className="mr-1 sm:mr-2">{formatBalance(agent.total_balance)}</span>
               <PrizePoolChangeDisplay prizePoolHistory={agent.prizePoolHistory} variant="card" />
             </div>
           </div>
-          <div className="flex flex-col items-start gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
-            <span className="text-[#5E5E5E]">Message price:</span>
-            <span>{formatCost(agent.cost_per_message)}</span>
+          <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
+            <span className="text-[#5E5E5E]">Message Cost:</span>
+            <span className="text-right">{formatCost(agent.cost_per_message)}</span>
           </div>
+          {fromProfile && isOwner && (
+            <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
+              <span className="text-[#5E5E5E]">Your Earnings:</span>
+              <span className={`text-right ${hasEarnings ? 'font-semibold text-green-600' : ''}`}>
+                {earnings.toFixed(4)} SUI
+              </span>
+            </div>
+          )}
         </div>
 
         {fromProfile && timeRemaining && (
@@ -176,7 +196,7 @@ export const FeaturedAgentCard = ({
             {isWithdrawalLocked ? (
               <span className="font-medium text-yellow-700">{timeRemaining}</span>
             ) : (
-              <span className="font-medium text-green-600">Withdrawal Unlocked</span>
+              <span className="font-medium text-green-600">Ready to Withdraw</span>
             )}
           </div>
         )}
@@ -189,7 +209,7 @@ export const FeaturedAgentCard = ({
             }}
             className="btn btn-black h-9 w-full text-xs sm:h-[62px] sm:text-xl"
           >
-            {fromProfile ? 'View' : ctaHeading}
+            {fromProfile ? 'Manage Sentinel' : ctaHeading}
           </button>
           {fromProfile && (
             <div className="flex gap-1.5 sm:gap-2">
@@ -197,29 +217,55 @@ export const FeaturedAgentCard = ({
                 onClick={() => openModal(agent.agent_object_id, agent.agent_id)}
                 className="btn btn-black w-1/2 px-2 py-1.5 text-[10px] sm:px-4 sm:py-2.5 sm:text-sm"
               >
-                Fund
+                Add Funds
               </button>
               <button
-                onClick={() => openWithdrawModal(agent.agent_object_id, agent.agent_id, Number(agent.total_balance))}
+                onClick={() =>
+                  openWithdrawModal(
+                    agent.agent_object_id,
+                    agent.agent_id,
+                    Number(agent.total_balance)
+                  )
+                }
                 className="btn btn-outline w-1/2 px-2 py-1.5 text-[10px] sm:px-4 sm:py-2.5 sm:text-sm"
                 disabled={isWithdrawalLocked || Number(agent.total_balance) === 0}
                 title={
                   isWithdrawalLocked
                     ? timeRemaining
                     : Number(agent.total_balance) === 0
-                      ? 'Balance is zero'
-                      : 'Withdraw funds'
+                      ? 'No funds available'
+                      : 'Withdraw your funds'
                 }
               >
                 Withdraw
               </button>
             </div>
           )}
+          {fromProfile && isOwner && (
+            <button
+              onClick={e => {
+                e.stopPropagation()
+                setIsClaimFeesModalOpen(true)
+              }}
+              disabled={!hasEarnings}
+              className="btn btn-outline w-full px-2 py-1.5 text-[10px] disabled:opacity-50 sm:px-4 sm:py-2.5 sm:text-sm"
+              title={hasEarnings ? 'Collect your earned fees' : 'No earnings to claim yet'}
+            >
+              {hasEarnings ? `Claim ${earnings.toFixed(2)} SUI` : 'No Earnings Yet'}
+            </button>
+          )}
         </div>
 
         <Modal onSuccess={() => console.log('Funded successfully!')} />
         <WithdrawModal onSuccess={() => console.log('Withdrew successfully!')} />
         <FeatureModal />
+        <ClaimFeesModal
+          open={isClaimFeesModalOpen}
+          onClose={() => setIsClaimFeesModalOpen(false)}
+          agentId={agent.agent_id}
+          agentObjectId={agent.agent_object_id}
+          accumulatedFees={agent.accumulated_fees}
+        />
       </div>
     </motion.div>
   )

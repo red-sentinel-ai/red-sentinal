@@ -9,7 +9,7 @@ import { Button, Badge, Card } from '@/components/ui'
 import { toast } from 'react-toastify'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { useSocialStatus } from '@/hooks/profile/useSocialStatus'
-import { handleConnectDiscord, handleConnectTwitter } from '@/utils/socialConnection'
+import { handleConnectTwitter } from '@/utils/socialConnection'
 import { useDisconnectProvider } from '@/hooks/rewards/useDisconnectProvider'
 
 export function SocialConnectionsSection() {
@@ -23,7 +23,7 @@ export function SocialConnectionsSection() {
   const [disconnectingPlatform, setDisconnectingPlatform] = useState<string | null>(null)
 
   const hasTwitter = socialStatus?.isXConnected || false
-  const hasDiscord = socialStatus?.isDiscordConnected || false
+  // const hasDiscord = socialStatus?.isDiscordConnected || false
 
   useEffect(() => {
     const connected = searchParams.get('connected')
@@ -52,9 +52,7 @@ export function SocialConnectionsSection() {
 
   useEffect(() => {
     if (socialStatus && connectingPlatform) {
-      const isConnected =
-        (connectingPlatform === 'twitter' && socialStatus.isXConnected) ||
-        (connectingPlatform === 'discord' && socialStatus.isDiscordConnected)
+      const isConnected = connectingPlatform === 'twitter' && socialStatus.isXConnected
 
       if (isConnected) {
         setConnectingPlatform(null)
@@ -85,8 +83,10 @@ export function SocialConnectionsSection() {
     )
   }
 
-  const hasAnyConnection = hasTwitter || hasDiscord
-  const connectionCount = (hasTwitter ? 1 : 0) + (hasDiscord ? 1 : 0)
+  const hasAnyConnection = hasTwitter
+
+  // const hasAnyConnection = hasTwitter || hasDiscord
+  // const connectionCount = (hasTwitter ? 1 : 0) + (hasDiscord ? 1 : 0)
 
   return (
     <div className="px-4 md:px-8">
@@ -112,9 +112,11 @@ export function SocialConnectionsSection() {
               <div>
                 <h3 className="text-xl font-medium text-black sm:text-2xl md:text-[32px]">Social Connections</h3>
                 <p className="text-sm text-gray-500 sm:text-base md:text-2xl">
-                  {hasAnyConnection
+                  {hasAnyConnection ? 'X (Twitter) connected' : 'Connect your social accounts'}
+{/* 
+                   {hasAnyConnection
                     ? `${connectionCount} of 2 platforms connected`
-                    : 'Connect your social accounts'}
+                    : 'Connect your social accounts'} */}
                 </p>
               </div>
             </div>
@@ -130,7 +132,7 @@ export function SocialConnectionsSection() {
             )}
           </div>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4">
             <div className="flex flex-col items-start justify-between gap-3 rounded-lg border border-[#5E5E5E] bg-gradient-to-r from-white/45 to-[rgba(249,240,249,0.46)] p-4 sm:flex-row sm:items-center">
               <div className="flex items-center gap-3">
                 <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-[#5E5E5E] md:h-[70px] md:w-[70px]">
@@ -198,7 +200,7 @@ export function SocialConnectionsSection() {
               )}
             </div>
 
-            <div className="flex flex-col items-start justify-between gap-3 rounded-lg border border-[#5E5E5E] bg-gradient-to-r from-white/45 to-[rgba(249,240,249,0.46)] p-4 sm:flex-row sm:items-center">
+            {/* <div className="flex flex-col items-start justify-between gap-3 rounded-lg border border-[#5E5E5E] bg-gradient-to-r from-white/45 to-[rgba(249,240,249,0.46)] p-4 sm:flex-row sm:items-center">
               <div className="flex items-center gap-3">
                 <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-[#5E5E5E] md:h-[70px] md:w-[70px]">
                   <Image
@@ -263,7 +265,7 @@ export function SocialConnectionsSection() {
                   )}
                 </Button>
               )}
-            </div>
+            </div> */}
           </div>
         </div>
       </Card>
