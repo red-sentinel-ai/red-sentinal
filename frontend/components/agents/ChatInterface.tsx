@@ -245,7 +245,7 @@ export default function ChatInterface({
 
       <div
         ref={chatContainerRef}
-        className="max-h-[calc(100vh-210px)] flex-1 space-y-4 overflow-y-auto p-3 sm:space-y-6 sm:p-6"
+        className="ios-scroll max-h-[calc(100vh-210px)] flex-1 space-y-4 overflow-y-auto p-3 sm:space-y-6 sm:p-6"
       >
         {displayedMessages.length === 0 && !eventsLoading && (
           <div className="py-8 text-center text-gray-500 sm:py-12">
@@ -365,11 +365,13 @@ export default function ChatInterface({
                     setPromptInput(e.target.value)
                     countTokens(e.target.value)
                   }}
-                  className="min-h-[50px] w-full resize-none border-none bg-transparent p-3 text-sm text-black outline-none placeholder:text-gray-400 focus:ring-0 sm:min-h-[60px] sm:p-4 sm:text-base"
+                  className="min-h-[56px] w-full resize-none border-none bg-transparent p-3 text-[16px] leading-relaxed text-black outline-none placeholder:text-gray-400 focus:ring-0 sm:min-h-[60px] sm:p-4 sm:text-base"
                   disabled={isSubmitting}
                   placeholder="Craft your attack prompt..."
                   rows={1}
                   style={{ overflow: 'hidden' }}
+                  autoComplete="off"
+                  spellCheck="false"
                   onKeyDown={e => {
                     if (e.key === 'Enter' && !e.shiftKey) {
                       e.preventDefault()
@@ -378,7 +380,7 @@ export default function ChatInterface({
                   }}
                 />
 
-                <div className="flex items-center justify-between bg-white px-3 pb-2 sm:px-4 sm:pb-3">
+                <div className="flex flex-col gap-2 bg-white px-3 pb-2 sm:flex-row sm:items-center sm:justify-between sm:px-4 sm:pb-3">
                   <div
                     className={clsx(
                       'rounded bg-[#D9D9D9] px-2 py-1 text-xs',
@@ -390,6 +392,7 @@ export default function ChatInterface({
                     </span>
                   </div>
 
+                  {/* Desktop: Small circular button */}
                   <button
                     type="submit"
                     disabled={
@@ -397,10 +400,10 @@ export default function ChatInterface({
                       promptInput.length === 0 ||
                       tokenCount > ATTACK_PROMPT_MAX_TOKENS
                     }
-                    className="flex h-8 w-8 items-center justify-center rounded-full bg-black text-white shadow-lg transition-all duration-200 hover:bg-gray-800 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 sm:h-10 sm:w-10"
+                    className="hidden h-10 w-10 items-center justify-center rounded-full bg-black text-white shadow-lg transition-all duration-200 hover:bg-gray-800 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 sm:flex"
                   >
                     {isSubmitting ? (
-                      <Loader2 className="h-4 w-4 animate-spin sm:h-5 sm:w-5" />
+                      <Loader2 className="h-5 w-5 animate-spin" />
                     ) : (
                       <Image
                         src="/icons/top-arrow.svg"
@@ -409,6 +412,35 @@ export default function ChatInterface({
                         alt="top arrow"
                         className="invert filter"
                       />
+                    )}
+                  </button>
+
+                  {/* Mobile: Full-width button */}
+                  <button
+                    type="submit"
+                    disabled={
+                      isSubmitting ||
+                      promptInput.length === 0 ||
+                      tokenCount > ATTACK_PROMPT_MAX_TOKENS
+                    }
+                    className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-black px-4 text-sm font-semibold text-white shadow-lg transition-all duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 sm:hidden touch-manipulation"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span>Attacking...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Send Attack</span>
+                        <Image
+                          src="/icons/top-arrow.svg"
+                          width={16}
+                          height={16}
+                          alt="send"
+                          className="invert filter"
+                        />
+                      </>
                     )}
                   </button>
                 </div>

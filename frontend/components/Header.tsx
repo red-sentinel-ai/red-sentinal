@@ -11,6 +11,7 @@ import { ConnectButton } from './ConnectButton'
 import { APP_NETWORK } from '@/constants'
 
 const HEADER_LOGO = APP_NETWORK === 'testnet' ? '/icons/logo_large_testnet.svg' : '/icons/logo_large.svg'
+const HEADER_LOGO_SMALL = '/icons/logo-sm.svg'
 
 export const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -21,7 +22,7 @@ export const Header = () => {
         'fixed left-0 right-0 top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-xl transition-all duration-300'
       )}
     >
-      <div className="flex h-11 items-center justify-center bg-gradient-to-r from-black/15 to-[rgba(102,102,102,0.2)] p-2 text-center text-xs text-black md:text-base">
+      <div className="hidden h-11 items-center justify-center bg-gradient-to-r from-black/15 to-[rgba(102,102,102,0.2)] p-2 text-center text-xs text-black md:flex md:text-base">
         <h3 className="text-shadow-[0_4px_4px_rgba(0,0,0,0.25)] font-medium">
           Sui Sentinel is fully audited by{' '}
           <a href="https://osec.io/" target="_blank" className="underline">
@@ -32,7 +33,21 @@ export const Header = () => {
       </div>
       <div className="mx-auto flex max-w-full items-center justify-between p-3 py-4 lg:px-8">
         <div className="flex flex-1 items-end gap-2 md:gap-8">
-          <Link className="block flex-shrink-0" href="https://suisentinel.xyz" target="_blank">
+          {/* Mobile: Small logo */}
+          <Link className="block flex-shrink-0 md:hidden" href="/">
+            <div className="relative">
+              <Image
+                src={HEADER_LOGO_SMALL}
+                alt="logo"
+                height={36}
+                width={36}
+                quality={100}
+                style={{ objectFit: 'contain' }}
+              />
+            </div>
+          </Link>
+          {/* Desktop: Full logo */}
+          <Link className="hidden flex-shrink-0 md:block" href="/">
             <div className="relative">
               <Image
                 src={HEADER_LOGO}
@@ -82,7 +97,7 @@ export const Header = () => {
             alt="x"
           />
         </Link> */}
-        <Link href="/profile" className="ms-4 rounded-full bg-white">
+        <Link href="/profile" className="ms-4 hidden rounded-full bg-white xl:block">
           <Image
             src="/icons/default_profile.png"
             width={48}

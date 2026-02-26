@@ -18,7 +18,7 @@ export const FeedbackButton = () => {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-5 right-5 z-40 flex items-center justify-center rounded-full bg-black p-3 text-white shadow-lg transition-all hover:bg-gray-800"
+        className="fixed bottom-5 right-5 z-40 hidden items-center justify-center rounded-full bg-black p-3 text-white shadow-lg transition-all hover:bg-gray-800 md:flex"
         aria-label="Open feedback form"
       >
         <MessageSquare className="h-6 w-6" />
