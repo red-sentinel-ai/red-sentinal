@@ -134,7 +134,7 @@ export default function RoleExperienceStep({ form, disabled }: RoleExperienceSte
           {fields.map((field, index) => (
             <div key={field.id} className="p-4 bg-white rounded-md border border-gray-200 space-y-4">
               <div className="flex justify-between items-start">
-                <span className="text-xl font-medium text-gray-500">Program {index + 1}</span>
+                <span className="text-xl font-medium">Program {index + 1}</span>
                 <button
                   type="button"
                   onClick={() => remove(index)}
@@ -146,7 +146,7 @@ export default function RoleExperienceStep({ form, disabled }: RoleExperienceSte
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">
+                <label className="block text-lg font-medium text-gray-600 mb-1">
                   Project Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -159,7 +159,7 @@ export default function RoleExperienceStep({ form, disabled }: RoleExperienceSte
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">
+                <label className="block text-lg font-medium text-gray-600 mb-1">
                   Role <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -172,7 +172,7 @@ export default function RoleExperienceStep({ form, disabled }: RoleExperienceSte
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">
+                <label className="block text-lg font-medium text-gray-600 mb-1">
                   Duration <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -185,7 +185,7 @@ export default function RoleExperienceStep({ form, disabled }: RoleExperienceSte
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">
+                <label className="block text-lg font-medium text-gray-600 mb-1">
                   Proof Links <span className="text-gray-400">(comma-separated URLs)</span>
                 </label>
                 <input
