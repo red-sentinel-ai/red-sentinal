@@ -94,7 +94,7 @@ export const FundAgentModal = ({
     <Dialog open={open} onClose={handleClose}>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">Add Funds</h2>
+          <h2 className="text-2xl font-bold">Fund Your Sentinel</h2>
           <button
             onClick={handleClose}
             className="text-gray-400 transition-colors hover:text-black"
@@ -104,13 +104,17 @@ export const FundAgentModal = ({
           </button>
         </div>
 
+        <p className="text-gray-600">
+          Add funds to your reward pool to list your sentinel on the attack page. The bigger the bounty, the more attackers you&apos;ll attract.
+        </p>
+
         <div>
           <label className="mb-2 block text-sm font-medium">Amount (SUI)</label>
           <input
             type="number"
             value={amount}
             onChange={handleAmountChange}
-            className="w-full rounded-lg border border-gray-300 bg-white p-3 placeholder:text-gray-400 focus:ring-1 focus:ring-black"
+            className="w-full rounded-lg border border-gray-300 bg-white p-3 placeholder:text-gray-400 focus:ring-1 focus:ring-black [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
             placeholder="0.00"
             min="0"
             step="0.001"
@@ -118,6 +122,10 @@ export const FundAgentModal = ({
           />
           {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
         </div>
+
+        <p className="text-xs text-gray-500">
+          Sentinels with zero balance won&apos;t be visible to attackers.
+        </p>
 
         <button
           onClick={handleFundAgent}

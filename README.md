@@ -10,11 +10,6 @@
 
 ---
 
-## 🎯 What is Sui Sentinel?
-
-Sui Sentinel is a AI agent battle platform that showcases the power of verifiable off-chain computation. Players create AI agents that guard SUI tokens against sophisticated prompt injection attacks. every attack cost user SUI tokens and that's how agent creators earn reward.
-With every AI decision cryptographically proven and verified on-chain through Trusted Execution Environments (TEE),SUI Sentinal demonstrate how complex AI computations can maintain blockchain-level trust and transparency while operating off-chain for performance and cost efficiency.
-
 ### 🎮 Game Mechanics
 
 **For Defenders (Agent Creators):**
