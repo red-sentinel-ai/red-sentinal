@@ -151,7 +151,7 @@ export const AgentsList = ({
               <div className="col-span-2 ps-4">Actions</div>
             </div>
 
-            <AnimatePresence>
+            <AnimatePresence mode="popLayout">
               {sortedAgents.map((agent, idx) => {
                 const balance = (Number(agent.total_balance) / MIST_PER_SUI).toFixed(2)
                 const costPerMessage = (Number(agent.cost_per_message) / MIST_PER_SUI).toFixed(2)
@@ -159,10 +159,10 @@ export const AgentsList = ({
                 return (
                   <motion.div
                     key={agent.agent_id}
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.2, delay: idx * 0.05 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.15 }}
                     className="cursor-pointer rounded-lg border border-black/30 p-3 text-xl backdrop-blur-xl hover:border-black/80"
                     onClick={() => router.push(`/attack/${agent.agent_path}`)}
                   >
