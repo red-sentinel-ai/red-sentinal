@@ -103,10 +103,6 @@ const sections = [
         <h4 className="text-lg font-semibold mb-3">2.4 Platform Activity Data</h4>
         <ul className="list-disc list-inside space-y-2 text-gray-700 mb-6">
           <li>
-            <strong>Rewards & Mission Activity:</strong> Mission type completed, points earned,
-            tweet URLs submitted for verification, and associated transaction hashes.
-          </li>
-          <li>
             <strong>Featured Agent Requests:</strong> Name, email, wallet address, Twitter username,
             Telegram username, and a description submitted when requesting a featured listing.
           </li>
@@ -131,8 +127,7 @@ const sections = [
             message, and whether you wish to join the beta.
           </li>
           <li>
-            <strong>Ambassador Programme:</strong> Full name, preferred name, country, timezone,
-            Discord and Telegram handles, Twitter and GitHub URLs, Sui wallet address, desired
+            <strong>Ambassador Programme:</strong> Full name, preferred name, country, timezone, and Telegram handle, Twitter and GitHub URLs, Sui wallet address, desired
             roles, Web3 experience level, motivation, a 30-day contribution plan, and weekly
             availability.
           </li>
@@ -283,9 +278,8 @@ const sections = [
             Server-side Supabase service role keys are never exposed to the client browser.
           </li>
           <li>
-            Secure file storage with restricted Row-Level Security (RLS) policies applied to all
-            Supabase buckets; agent images, user avatars, and resume files are never publicly
-            enumerable.
+            All data operations go through Next.js server-side API routes. The Supabase service
+            role key is used exclusively on the server and is never exposed to the client.
           </li>
           <li>
             Smart contract security: Sui Sentinel&apos;s contracts are fully audited by{' '}
@@ -335,25 +329,25 @@ const sections = [
             history of on-chain reward claims.
           </li>
           <li>
-            <strong>Job applications:</strong> Retained for up to 12 months after the application
-            process concludes, then deleted.
+            <strong>Job applications:</strong> Retained for as long as reasonably necessary for
+            hiring purposes. You may request deletion at any time.
           </li>
           <li>
             <strong>Manifesto signatures:</strong> Retained indefinitely as a record of community
             support.
           </li>
           <li>
-            <strong>Demo requests & feedback:</strong> Retained for up to 24 months for business
-            development records.
+            <strong>Demo requests & feedback:</strong> Retained for as long as reasonably necessary
+            for business purposes.
           </li>
           <li>
-            <strong>Ambassador applications:</strong> Retained for up to 24 months after
-            submission.
+            <strong>Ambassador applications:</strong> Retained for as long as reasonably necessary
+            after submission.
           </li>
         </ul>
         <p className="text-gray-700 leading-relaxed mt-4">
           You may request deletion of your off-chain personal data at any time by contacting us
-          (see Section 11). Note that on-chain data (wallet addresses, transaction hashes, agent
+          (see Section 10). Note that on-chain data (wallet addresses, transaction hashes, agent
           object IDs) cannot be deleted due to the immutable nature of the blockchain.
         </p>
       </>
@@ -404,19 +398,8 @@ const sections = [
     ),
   },
   {
-    id: 'children',
-    title: "9. Children's Privacy",
-    content: (
-      <p className="text-gray-700 leading-relaxed">
-        Sui Sentinel is not directed at individuals under the age of 18. We do not knowingly collect
-        personal information from minors. If we become aware that a minor has provided us with
-        personal information, we will take steps to delete such information promptly.
-      </p>
-    ),
-  },
-  {
     id: 'changes',
-    title: '10. Changes to This Policy',
+    title: '9. Changes to This Policy',
     content: (
       <p className="text-gray-700 leading-relaxed">
         We may update this Privacy Policy from time to time to reflect changes in our practices or
@@ -428,7 +411,7 @@ const sections = [
   },
   {
     id: 'contact',
-    title: '11. Contact Us',
+    title: '10. Contact Us',
     content: (
       <>
         <p className="text-gray-700 leading-relaxed mb-4">
