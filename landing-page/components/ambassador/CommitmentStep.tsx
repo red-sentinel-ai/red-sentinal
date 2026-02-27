@@ -78,7 +78,8 @@ export default function CommitmentStep({ form, disabled }: CommitmentStepProps) 
           <span className="text-2xl text-gray-700">
             I agree to the{' '}
             <a
-              href="#"
+              href="/code-of-conduct"
+              target="_blank"
               rel="noopener noreferrer"
               className="text-black underline hover:text-gray-600"
             >
