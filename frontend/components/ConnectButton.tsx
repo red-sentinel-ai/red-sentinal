@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Copy, CheckCircle, LogOut, ChevronDown, User, Loader2 } from 'lucide-react'
+import { Copy, CheckCircle, LogOut, ChevronDown, User, Loader2, ArrowLeftRight } from 'lucide-react'
 import posthog from 'posthog-js'
 import {
   DropdownMenu,
@@ -19,7 +19,7 @@ import {
 } from '@mysten/dapp-kit'
 import { formatAddress } from '@mysten/sui/utils'
 import { SuiClient, getFullnodeUrl } from '@mysten/sui/client'
-import { APP_NETWORK } from '@/constants'
+import { APP_NETWORK, SUI_SENTINEL_DOCS_URL } from '@/constants'
 import Image from 'next/image'
 
 export const client = new SuiClient({ url: getFullnodeUrl(APP_NETWORK) })
@@ -115,6 +115,13 @@ export const ConnectButton = () => {
           <DropdownMenuItem className="flex cursor-pointer items-center gap-2 rounded-lg px-4 py-2 transition-colors hover:bg-gray-100">
             <User className="h-4 w-4 text-gray-700" />
             <span className="text-gray-800">Profile</span>
+          </DropdownMenuItem>
+        </Link>
+
+        <Link href={`${SUI_SENTINEL_DOCS_URL}guides/bridging-funds`} target="_blank">
+          <DropdownMenuItem className="flex cursor-pointer items-center gap-2 rounded-lg px-4 py-2 transition-colors hover:bg-gray-100">
+            <ArrowLeftRight className="h-4 w-4 text-gray-700" />
+            <span className="text-gray-800">Bridge Funds</span>
           </DropdownMenuItem>
         </Link>
 
