@@ -65,9 +65,6 @@ const sections = [
           <li>
             <strong>Email notification preference</strong>, controlling whether you receive updates.
           </li>
-          <li>
-            <strong>Rewards points and tier</strong>, accumulated through platform activity.
-          </li>
         </ul>
 
         <h4 className="text-lg font-semibold mb-3">2.2 Social Account Connections</h4>
