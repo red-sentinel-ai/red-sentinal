@@ -28,10 +28,6 @@ export function Footer() {
               on-chain.
             </p>
 
-            <p className="hidden md:block mt-auto py-4 text-white font-medium">
-              <span>© 2025 </span>
-              <span>All Rights Reserved @Cyphronix Software</span>
-            </p>
           </div>
 
           <div className="flex w-full max-w-[280px] sm:max-w-xs md:max-w-none md:flex-1 md:min-w-0 mx-auto items-end justify-center gap-2 mt-8 md:mt-auto order-3 md:order-2">
@@ -112,7 +108,29 @@ export function Footer() {
           </div>
         </div>
 
-        <p className="absolute bottom-1 md:hidden text-white font-medium text-[10px] w-full text-center left-0">
+        <div className="mt-8 pt-4 border-t border-black/10 flex flex-col md:flex-row items-center justify-between gap-2 pb-4">
+          <p className="hidden md:block text-white font-medium text-sm">
+            <span>© 2025 </span>
+            <span>All Rights Reserved @Cyphronix Software</span>
+          </p>
+          <div className="flex items-center gap-4 text-sm">
+            <Link
+              href="/privacy-policy"
+              className="text-black font-medium hover:underline whitespace-nowrap"
+            >
+              Privacy Policy
+            </Link>
+            <span className="text-black/30">|</span>
+            <Link
+              href="/code-of-conduct"
+              className="text-black font-medium hover:underline whitespace-nowrap"
+            >
+              Code of Conduct
+            </Link>
+          </div>
+        </div>
+
+        <p className="md:hidden text-white font-medium text-[10px] w-full text-center pb-2">
           <span>© 2025 </span>
           <span>All Rights Reserved @Cyphronix Software</span>
         </p>
