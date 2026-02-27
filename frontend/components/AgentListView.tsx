@@ -1,16 +1,34 @@
 'use client'
 
+import { useState } from 'react'
 import { AgentsList } from './AgentsList'
 import { motion, AnimatePresence } from 'framer-motion'
 
 import { FeaturedAgentCard } from './FeaturedAgentCard'
 import { FeaturedAgentsSkeleton } from './ui/skeletons/FeaturedAgentsSkeleton'
 import { useAllAgents } from '@/hooks/agents/useAllAgents'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+
+const BIG_BOUNTY_THRESHOLD_MIST = BigInt(20_000_000_000) // 20 SUI
+
+type BountyTab = 'all' | 'big_bounties'
 
 export const AgentListView = () => {
   const { data: allAgents, isPending: isFetchingAllAgents, refetch: refetchAgent } = useAllAgents()
+  const [activeTab, setActiveTab] = useState<BountyTab>('all')
 
   const featuredAgents = allAgents?.filter(agent => agent.is_featured) || []
+
+  const filteredAgents =
+    activeTab === 'big_bounties'
+      ? allAgents?.filter(agent => {
+          try {
+            return BigInt(agent.total_balance) >= BIG_BOUNTY_THRESHOLD_MIST
+          } catch {
+            return false
+          }
+        })
+      : allAgents
 
   return (
     <div className="mx-auto max-w-[1560px] px-2 py-4 md:px-8 md:py-16">
@@ -61,16 +79,33 @@ export const AgentListView = () => {
       )}
 
       <div>
-        <div className="mb-3 md:mb-6 flex flex-col items-center justify-between md:flex-row">
-          <div>
+         <div className="mb-3 md:mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+           <div>
             <h2 className="text-lg font-medium md:text-[32px]">All AI Sentinels</h2>
             <p className="text-xs text-[#5E5E5E] mt-0.5 md:text-sm md:mt-1">Browse all active targets. Find your perfect challenge.</p>
           </div>
+
+          <Tabs value={activeTab} onValueChange={v => setActiveTab(v as BountyTab)}>
+            <TabsList className="h-auto rounded-md border border-gray-200 bg-gray-100 p-[2px]">
+              <TabsTrigger
+                value="big_bounties"
+                className="rounded-md border-b-0 py-1 sm:px-4 data-[state=active]:border-b-0 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+              >
+                Big Bounties
+              </TabsTrigger>
+              <TabsTrigger
+                value="all"
+                className="rounded-md border-b-0 py-1 sm:px-4 data-[state=active]:border-b-0 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+              >
+                All
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
       </div>
 
       <AgentsList
-        agents={allAgents}
+        agents={filteredAgents}
         isFetchingAgents={isFetchingAllAgents}
         onRefreshAgent={refetchAgent}
       />
