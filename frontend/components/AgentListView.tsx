@@ -17,7 +17,7 @@ export const AgentListView = () => {
   const { data: allAgents, isPending: isFetchingAllAgents, refetch: refetchAgent } = useAllAgents()
   const [activeTab, setActiveTab] = useState<BountyTab>('all')
 
-  const featuredAgents = allAgents?.filter(agent => agent.is_featured) || []
+  const featuredAgents = allAgents?.filter(agent => agent.is_featured && agent.state !== 'defeated') || []
 
   const filteredAgents =
     activeTab === 'big_bounties'
