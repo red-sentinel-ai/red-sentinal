@@ -17,6 +17,7 @@ export const SUI_SENTINEL_GITHUB_URL = 'https://github.com/sui-sentinel/contract
 export const SUI_SENTINEL_TELEGRAM_URL = 'https://t.me/suisentinel'
 export const SUI_SENTINEL_AUDIT_REPORT_URL = '/pdfs/audit_final.pdf'
 export const SUI_SENTINEL_AMBASSADOR_URL = "https://www.suisentinel.xyz/ambassador"
+export const SUI_SENTINEL_CHECKOUT_URL = "https://twitter.com/intent/tweet?text=Check+out+%40suisentinal+on+Sui+%F0%9F%9B%A1%EF%B8%8F&hashtags=SuiSentinel";
 
 export const REWARD_CALCULATOR_URL = "https://www.suisentinel.xyz/reward-calculator"
 

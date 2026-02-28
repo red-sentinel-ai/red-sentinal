@@ -11,8 +11,6 @@ import {
   User,
   TrendingDown,
   Loader2,
-  X,
-  CheckCircle,
   ExternalLink,
 } from 'lucide-react'
 import { formatAddress } from '@mysten/sui/utils'
@@ -31,12 +29,15 @@ import { type AgentDetails } from '@/hooks/agents/useAllAgents'
 import { type AgentEvents } from '@/hooks/useAgentEvents'
 import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
 import { DefenderProfile } from './DefenderProfile'
-import { formatDuration, cn } from '@/lib/utils'
+import { formatDuration, cn, buildAgentShareTweetUrl } from '@/lib/utils'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, Button, Skeleton } from '@/components/ui'
 import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
 import { SparklineChart } from '../ui/common/SparklineChart'
 import { useAgentPrizePoolHistory } from '@/hooks/agents/useAgentPrizePoolHistory'
-import { Dialog } from '@/components/Dialog'
+import { SocialMissionModal } from '@/components/rewards/SocialMissionModal'
+import { REWARDS_CONSTANTS } from '@/constants/rewards'
+
+const SHARE_MISSION = REWARDS_CONSTANTS.DEFAULT_MISSIONS.find(m => m.type === 'share_with_hashtag')!
 
 interface AgentSidebarProps {
   agent: AgentDetails
@@ -60,9 +61,6 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
   const [isChartModalOpen, setIsChartModalOpen] = useState(false)
 
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
-  const [tweetLink, setTweetLink] = useState('')
-  const [isVerifying, setIsVerifying] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
   const [attackGoal, setAttackGoal] = useState<string>('')
   const [isLoadingAttackGoal, setIsLoadingAttackGoal] = useState(false)
 
@@ -199,67 +197,6 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
     if (pageUrl) {
       navigator.clipboard.writeText(pageUrl)
       toast.success('Link copied to clipboard!')
-    }
-  }
-
-  const handleShareClick = () => {
-    const text = `I'm challenging ${agent.agent_name} on @${SUI_SENTINEL_X_USERNAME}! 🛡️\n\nThink you can break this AI agent and win the prize pool?\n\nTry it here:`
-    const url = pageUrl || window.location.href
-    const hashtags = 'SuiSentinel,AI,Web3,Sui'
-
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-      text
-    )}&url=${encodeURIComponent(url)}&hashtags=${hashtags}`
-
-    window.open(twitterUrl, '_blank', 'noopener,noreferrer')
-  }
-
-  const handleCloseShareModal = () => {
-    setIsShareModalOpen(false)
-    setIsSubmitted(false)
-    setTweetLink('')
-  }
-
-  const handleVerifyTweet = async () => {
-    if (!tweetLink.trim()) {
-      toast.error('Please paste your tweet link first')
-      return
-    }
-
-    if (!tweetLink.includes('twitter.com') && !tweetLink.includes('x.com')) {
-      toast.error('Please enter a valid X (Twitter) URL')
-      return
-    }
-
-    setIsVerifying(true)
-
-    try {
-      const response = await fetch('/api/rewards/verify-tweet', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          wallet_address: account?.address,
-          tweet_url: tweetLink,
-          agent_name: agent.agent_name,
-          agent_id: agent.agent_id,
-        }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Verification request failed')
-      }
-
-      setIsSubmitted(true)
-      setTweetLink('')
-    } catch (error) {
-      console.error('Submission error:', error)
-      toast.error('Failed to submit tweet for verification')
-    } finally {
-      setIsVerifying(false)
     }
   }
 
@@ -530,19 +467,17 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
         </Button>
 
         <div className="mt-3 border-t border-black/20 pt-3 md:mt-4 md:pt-4 lg:mt-6 lg:pt-6">
-          <div className="mb-1.5 flex items-start justify-between md:mb-2">
-            <h3 className="text-sm font-bold leading-tight text-black md:text-base">Earn SENTINEL Rewards</h3>
-          </div>
-
-          <p className="mb-2 text-xs leading-relaxed text-[#5E5E5E] md:mb-3 md:text-sm lg:mb-4 lg:text-base">
-            Share your Sentinel on X and get real SENTINEL every time you share.
+          <h3 className="mb-1.5 text-sm font-bold leading-tight text-black md:mb-2 md:text-base">
+            Earn Sentinel Tokens
+          </h3>
+          <p className="mb-2 text-xs leading-relaxed text-[#5E5E5E] md:mb-3 md:text-sm">
+            Share about Sui Sentinel on X and earn Sentinel tokens as a reward.
           </p>
-
           <button
             onClick={() => setIsShareModalOpen(true)}
             className="btn btn-black flex h-[36px] w-full items-center justify-center gap-1.5 text-xs font-medium transition-transform active:scale-[0.98] md:h-[38px] md:gap-2 md:text-sm lg:h-[42px] lg:text-base"
           >
-            Share on X & Earn SENTINEL
+            Share on X & Earn Sentinel
           </button>
         </div>
 
@@ -583,84 +518,15 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
         agentName={agent.agent_name}
       />
 
-      <Dialog open={isShareModalOpen} onClose={handleCloseShareModal}>
-        <div className="w-full rounded-xl bg-white text-black md:rounded-2xl">
-          <div className="mb-4 flex items-center justify-between md:mb-6">
-            <div className="flex items-center gap-1.5 md:gap-2">
-              <Image src="/icons/dollar_coin.png" width={20} height={20} alt="dollar coin" className="md:h-6 md:w-6" />
-              <h2 className="text-base font-bold md:text-lg lg:text-xl">Share on X & Earn SENTINEL</h2>
-            </div>
-            <button
-              onClick={handleCloseShareModal}
-              className="text-gray-500 transition-colors hover:text-black"
-            >
-              <X className="h-4 w-4 md:h-5 md:w-5" />
-            </button>
-          </div>
-
-          {isSubmitted ? (
-            <div className="flex flex-col items-center justify-center space-y-3 py-4 text-center duration-300 animate-in fade-in zoom-in md:space-y-4 md:py-6">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100 md:h-16 md:w-16">
-                <CheckCircle className="h-6 w-6 text-green-600 md:h-8 md:w-8" />
-              </div>
-              <div>
-                <h3 className="mb-1.5 text-base font-bold text-black md:mb-2 md:text-lg lg:text-xl">Submission Received!</h3>
-                <p className="mx-auto max-w-xs text-xs text-gray-600 md:text-sm">
-                  Once verified SENTINEL Points will be reflected in your profile.
-                </p>
-              </div>
-              <button onClick={handleCloseShareModal} className="btn btn-black mt-3 w-full text-sm md:mt-4 md:text-base">
-                Close
-              </button>
-            </div>
-          ) : (
-            <div className="space-y-4 md:space-y-6">
-              <div className="relative">
-                <p className="mb-1 text-xs md:text-sm">Step 1</p>
-                <p className="mb-2 text-sm font-medium md:mb-3 md:text-base">
-                  Share about Sentinel on X and earn SENTINEL rewards.
-                </p>
-                <button
-                  onClick={handleShareClick}
-                  className="btn btn-white flex h-[32px] w-full items-center gap-1.5 !border-black px-3 text-sm sm:w-auto md:h-[36px] md:gap-2 md:px-4"
-                >
-                  <Image src="/icons/share.png" width={20} height={20} alt="share" className="md:h-6 md:w-6" />
-                  Share on X
-                </button>
-              </div>
-
-              <div className="border-t border-[#9A9A9A]"></div>
-
-              <div className="relative">
-                <p className="mb-1 text-xs md:text-sm">Step 2</p>
-                <p className="mb-2 text-sm font-medium md:mb-3 md:text-base">Paste Your Tweet Link for Verification</p>
-                <div className="flex flex-col gap-2 sm:flex-row">
-                  <input
-                    value={tweetLink}
-                    onChange={e => setTweetLink(e.target.value)}
-                    placeholder="https://x.com/username/status/..."
-                    className="flex-1 rounded-lg border border-black bg-white px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-black md:px-3 md:py-2 md:text-sm"
-                  />
-                  <button
-                    onClick={handleVerifyTweet}
-                    disabled={isVerifying}
-                    className="btn btn-black h-[32px] whitespace-nowrap px-4 text-sm font-normal disabled:cursor-not-allowed disabled:opacity-70 md:h-[36px] md:px-6 md:text-base"
-                  >
-                    {isVerifying ? (
-                      <>
-                        <Loader2 className="mr-1.5 h-3 w-3 animate-spin md:mr-2" />
-                        Verifying...
-                      </>
-                    ) : (
-                      'Verify Tweet'
-                    )}
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </Dialog>
+      <SocialMissionModal
+        mission={SHARE_MISSION}
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        actionUrlOverride={
+          pageUrl ? buildAgentShareTweetUrl(agent.agent_name, pageUrl, SUI_SENTINEL_X_USERNAME) : undefined
+        }
+        actionLabelOverride={`Share ${agent.agent_name} on X`}
+      />
     </>
   )
 }

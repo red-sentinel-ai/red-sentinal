@@ -5,9 +5,7 @@ export interface RewardsMission {
   name: string
   description: string
   points: number
-  frequency: 'per_occurrence' | 'one_time' | 'daily' | 'weekly'
-  max_per_week?: number
-  max_per_day?: number
+  frequency: 'per_occurrence' | 'one_time' | 'daily'
   enabled: boolean
   requirements?: Record<string, string | number | boolean>
   points_display_format?: string
