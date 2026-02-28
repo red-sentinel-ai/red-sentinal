@@ -17,18 +17,26 @@ export const AgentListView = () => {
   const { data: allAgents, isPending: isFetchingAllAgents, refetch: refetchAgent } = useAllAgents()
   const [activeTab, setActiveTab] = useState<BountyTab>('all')
 
-  const featuredAgents = allAgents?.filter(agent => agent.is_featured && agent.state !== 'defeated') || []
+  const agentsWithBalance = allAgents?.filter(agent => {
+    try {
+      return BigInt(agent.total_balance) > BigInt(0)
+    } catch {
+      return false
+    }
+  })
+
+  const featuredAgents = agentsWithBalance?.filter(agent => agent.is_featured && agent.state !== 'defeated') || []
 
   const filteredAgents =
     activeTab === 'big_bounties'
-      ? allAgents?.filter(agent => {
+      ? agentsWithBalance?.filter(agent => {
           try {
             return BigInt(agent.total_balance) >= BIG_BOUNTY_THRESHOLD_MIST
           } catch {
             return false
           }
         })
-      : allAgents
+      : agentsWithBalance
 
   return (
     <div className="mx-auto max-w-[1560px] px-2 py-4 md:px-8 md:py-16">
