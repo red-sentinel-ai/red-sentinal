@@ -104,10 +104,9 @@ export const FundAgentModal = ({
           </button>
         </div>
 
-        <div className="space-y-2 text-sm text-[#5E5E5E]">
-          <p>Add funds to your reward pool to list your sentinel on the attack page. The bigger the bounty, the more attackers you&apos;ll attract.</p>
-          <p className="font-medium text-black">Sentinels with zero balance won&apos;t be visible to attackers.</p>
-        </div>
+        <p className="text-gray-600">
+          Add funds to your reward pool to list your sentinel on the attack page. The bigger the bounty, the more attackers you&apos;ll attract.
+        </p>
 
         <div>
           <label className="mb-2 block text-sm font-medium">Amount (SUI)</label>
@@ -115,7 +114,7 @@ export const FundAgentModal = ({
             type="number"
             value={amount}
             onChange={handleAmountChange}
-            className="w-full rounded-lg border border-gray-300 bg-white p-3 placeholder:text-gray-400 focus:ring-1 focus:ring-black"
+            className="w-full rounded-lg border border-gray-300 bg-white p-3 placeholder:text-gray-400 focus:ring-1 focus:ring-black [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
             placeholder="0.00"
             min="0"
             step="0.001"
@@ -123,6 +122,10 @@ export const FundAgentModal = ({
           />
           {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
         </div>
+
+        <p className="text-xs text-gray-500">
+          Sentinels with zero balance won&apos;t be visible to attackers.
+        </p>
 
         <button
           onClick={handleFundAgent}
