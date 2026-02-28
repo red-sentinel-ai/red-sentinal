@@ -14,6 +14,11 @@ import { PrizePoolChangeDisplay } from './agents/PrizePoolChangeDisplay'
 type SortField = 'balance' | 'costPerMessage' | 'totalAttacks' | 'agentId' | 'change7d' | null
 type SortDirection = 'asc' | 'desc'
 
+const formatSui = (mist: string) => {
+  const sui = Number(mist) / MIST_PER_SUI
+  return parseFloat(sui.toFixed(4)).toString()
+}
+
 export enum TabType {
   AgentRanking = 'AGENT_RANKING',
   ActiveAgents = 'ACTIVE_AGENTS',
@@ -153,8 +158,8 @@ export const AgentsList = ({
 
             <AnimatePresence mode="popLayout">
               {sortedAgents.map((agent, idx) => {
-                const balance = (Number(agent.total_balance) / MIST_PER_SUI).toFixed(2)
-                const costPerMessage = (Number(agent.cost_per_message) / MIST_PER_SUI).toFixed(2)
+                const balance = formatSui(agent.total_balance)
+                const costPerMessage = formatSui(agent.cost_per_message)
 
                 return (
                   <motion.div
