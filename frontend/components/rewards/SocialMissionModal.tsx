@@ -7,7 +7,7 @@ import { toast } from 'sonner'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { Dialog } from '@/components/Dialog'
 import type { RewardsMission } from '@/types/Rewards'
-import { SUI_SENTINEL_CHECKOUT_URL, SUI_SENTINEL_TELEGRAM_URL, SUI_SENTINEL_X_URL } from '@/constants'
+import { SUI_SENTINEL_CHECKOUT_URL, SUI_SENTINEL_TELEGRAM_URL, SUI_SENTINEL_X_URL, APP_NETWORK } from '@/constants'
 
 interface SocialMissionModalProps {
   mission: RewardsMission | null
@@ -15,6 +15,7 @@ interface SocialMissionModalProps {
   onClose: () => void
   actionUrlOverride?: string
   actionLabelOverride?: string
+  submissionContext?: { agent_path?: string }
 }
 
 const MISSION_CONFIG = {
@@ -70,7 +71,7 @@ const MISSION_CONFIG = {
 
 type MissionType = keyof typeof MISSION_CONFIG
 
-export function SocialMissionModal({ mission, isOpen, onClose, actionUrlOverride, actionLabelOverride }: SocialMissionModalProps) {
+export function SocialMissionModal({ mission, isOpen, onClose, actionUrlOverride, actionLabelOverride, submissionContext }: SocialMissionModalProps) {
   const account = useCurrentAccount()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -177,11 +178,13 @@ export function SocialMissionModal({ mission, isOpen, onClose, actionUrlOverride
       const body: Record<string, string> = {
         wallet_address: account.address,
         mission_type: missionType,
+        network: APP_NETWORK,
       }
       if (twitterUsername.trim()) body.twitter_username = twitterUsername.trim().replace(/^@/, '')
       if (telegramUsername.trim()) body.telegram_username = telegramUsername.trim().replace(/^@/, '')
       if (tweetUrl.trim()) body.tweet_url = tweetUrl.trim()
       if (screenshotUrl) body.screenshot_url = screenshotUrl
+      if (submissionContext?.agent_path) body.agent_path = submissionContext.agent_path
 
       const res = await fetch('/api/rewards/submit-social-mission', {
         method: 'POST',

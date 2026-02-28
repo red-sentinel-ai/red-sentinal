@@ -20,7 +20,7 @@ const MISSION_LABELS: Record<SocialMissionType, string> = {
 
 export async function POST(req: NextRequest) {
   try {
-    const { wallet_address, mission_type, twitter_username, telegram_username, tweet_url, screenshot_url } =
+    const { wallet_address, mission_type, twitter_username, telegram_username, tweet_url, screenshot_url, network, agent_path } =
       await req.json()
 
     if (!wallet_address || !mission_type) {
@@ -78,6 +78,8 @@ export async function POST(req: NextRequest) {
     if (telegram_username) metadata.telegram_username = telegram_username
     if (tweet_url) metadata.tweet_url = tweet_url
     if (screenshot_url) metadata.screenshot_url = screenshot_url
+    if (network) metadata.network = network
+    if (agent_path) metadata.agent_path = agent_path
 
     // Insert record
     const { error: dbError } = await supabaseServiceClient.from('ss_rewards_activity').insert({
