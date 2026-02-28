@@ -526,6 +526,7 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
           pageUrl ? buildAgentShareTweetUrl(agent.agent_name, pageUrl, SUI_SENTINEL_X_USERNAME) : undefined
         }
         actionLabelOverride={`Share ${agent.agent_name} on X`}
+        submissionContext={{ agent_path: `/attack/${agent.agent_path}` }}
       />
     </>
   )
