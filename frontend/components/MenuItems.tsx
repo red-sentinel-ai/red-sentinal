@@ -2,7 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import clsx from 'clsx'
 
-import { SUI_SENTINEL_DOCS_URL } from '@/constants'
+import { SUI_SENTINEL_TELEGRAM_URL, X_URL } from '@/constants'
 
 export const MenuItems = ({
   menuOpen,
@@ -41,7 +41,7 @@ export const MenuItems = ({
         <Link
           className="flex items-center gap-2"
           target="_blank"
-          href={SUI_SENTINEL_DOCS_URL}
+          href={X_URL}
           onClick={onItemClick}
         >
           <BookOpen width={16} />
@@ -60,7 +60,7 @@ export const MenuItems = ({
 
       <li className="xl:ms-auto">
         <Link
-          href={SUI_SENTINEL_DOCS_URL}
+          href={X_URL}
           target="_blank"
           className="btn btn-outline min-h-[50px]! flex h-[50px] items-center justify-center !rounded-[25px] !px-6 text-base font-medium"
         >
@@ -68,21 +68,16 @@ export const MenuItems = ({
           Support on X
         </Link>
       </li>
-      {/* <li>
+      <li>
         <Link
           href={SUI_SENTINEL_TELEGRAM_URL}
           target="_blank"
-          className="flex items-center w-fit gap-3 px-6 py-2 bg-[#0088cc] rounded-full text-white font-medium hover:bg-[#0077b5] transition-colors h-[50px] min-h-[50px]!"
+          className="min-h-[50px]! flex h-[50px] w-fit items-center gap-3 rounded-full bg-[#0088cc] px-6 py-2 font-medium text-white transition-colors hover:bg-[#0077b5]"
           onClick={onItemClick}
         >
-          <Image
-            src="/icons/telegram.png"
-            alt="Telegram"
-            width={20}
-            height={20}
-          />
+          <Image src="/icons/telegram.png" alt="Telegram" width={20} height={20} />
         </Link>
-      </li> */}
+      </li>
     </ul>
   )
 }
