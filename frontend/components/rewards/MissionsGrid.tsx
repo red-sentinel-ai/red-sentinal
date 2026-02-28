@@ -1,10 +1,14 @@
 'use client'
 
+import { useState } from 'react'
 import { Zap, Users } from 'lucide-react'
 import { motion } from 'framer-motion'
 import type { RewardsMission, MissionCompletionCounts } from '@/types/Rewards'
 import { Skeleton } from '@/components/ui'
 import { MissionCard } from './MissionCard'
+import { SocialMissionModal } from './SocialMissionModal'
+
+const SUBMITTABLE_SOCIAL_MISSIONS = ['follow_x', 'retweet', 'share_with_hashtag', 'join_telegram']
 
 interface MissionsGridProps {
   missions: RewardsMission[]
@@ -24,6 +28,14 @@ export function MissionsGrid({
   isLoading,
   pointsSymbol,
 }: MissionsGridProps) {
+  const [selectedMission, setSelectedMission] = useState<RewardsMission | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const handleSubmitMission = (mission: RewardsMission) => {
+    setSelectedMission(mission)
+    setIsModalOpen(true)
+  }
+
   if (isLoading) {
     return (
       <div className="space-y-8">
@@ -107,6 +119,7 @@ export function MissionsGrid({
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {socialMissions.map((mission, index) => {
               const completionCounts = completedMissions[mission.type] || DEFAULT_COMPLETION_COUNTS
+              const isSubmittable = SUBMITTABLE_SOCIAL_MISSIONS.includes(mission.type)
               return (
                 <motion.div
                   key={mission.id}
@@ -119,6 +132,7 @@ export function MissionsGrid({
                     completionCounts={completionCounts}
                     pointsSymbol={pointsSymbol}
                     isCompleted={mission.frequency === 'one_time' && completionCounts.total > 0}
+                    onSubmit={isSubmittable ? () => handleSubmitMission(mission) : undefined}
                   />
                 </motion.div>
               )
@@ -141,6 +155,15 @@ export function MissionsGrid({
           <p className="text-gray-500">Check back later for new missions to complete!</p>
         </motion.div>
       )}
+
+      <SocialMissionModal
+        mission={selectedMission}
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false)
+          setSelectedMission(null)
+        }}
+      />
     </div>
   )
 }

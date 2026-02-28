@@ -214,3 +214,8 @@ export const generateGradientAvatar = (seed: string): string => {
   const base64 = Buffer.from(svg).toString('base64')
   return `data:image/svg+xml;base64,${base64}`
 }
+
+export const buildAgentShareTweetUrl = (agentName: string, pageUrl: string, xUsername: string): string => {
+  const text = `I'm challenging ${agentName} on @${xUsername}! 🛡️\n\nThink you can break this AI agent and win the prize pool?\n\nTry it here: ${pageUrl}`
+  return `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&hashtags=SuiSentinel,Web3,Sui`
+}

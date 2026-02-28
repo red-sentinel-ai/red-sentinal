@@ -10,7 +10,6 @@ const DEFAULT_MISSIONS = [
     category: 'on_chain',
     frequency: 'per_occurrence',
     description: 'Create and launch your own Sentinel to defend your funds and earn fees.',
-    max_per_week: 1,
   },
   {
     id: 'fund_sentinel',
@@ -69,9 +68,8 @@ const DEFAULT_MISSIONS = [
     points: 20,
     enabled: true,
     category: 'social_media',
-    frequency: 'weekly',
+    frequency: 'per_occurrence',
     description: 'Share our content with your followers.',
-    max_per_week: 10,
   },
   {
     id: 'share_with_hashtag',
@@ -80,9 +78,8 @@ const DEFAULT_MISSIONS = [
     points: 30,
     enabled: true,
     category: 'social_media',
-    frequency: 'weekly',
+    frequency: 'per_occurrence',
     description: 'Share our posts with the #SuiSentinel hashtag.',
-    max_per_week: 3,
   },
   {
     id: 'join_telegram',
@@ -93,38 +90,6 @@ const DEFAULT_MISSIONS = [
     category: 'social_media',
     frequency: 'one_time',
     description: 'Join our Telegram community.',
-  },
-  {
-    id: 'telegram_engage',
-    name: 'Engage in Telegram',
-    type: 'telegram_engage',
-    points: 20,
-    enabled: true,
-    category: 'social_media',
-    frequency: 'weekly',
-    description: 'Post in #general channel',
-    max_per_week: 10,
-  },
-  {
-    id: 'join_discord',
-    name: 'Join Sui Sentinel Discord',
-    type: 'join_discord',
-    points: 100,
-    enabled: true,
-    category: 'social_media',
-    frequency: 'one_time',
-    description: 'Join our Discord community.',
-  },
-  {
-    id: 'discord_engage',
-    name: 'Engage in Discord',
-    type: 'discord_engage',
-    points: 20,
-    enabled: true,
-    category: 'social_media',
-    frequency: 'weekly',
-    description: 'Post in our Discord channels',
-    max_per_week: 10,
   },
 ] as RewardsMission[]
 
@@ -138,9 +103,6 @@ export const REWARDS_CONSTANTS = {
     RETWEET: 'retweet',
     SHARE_WITH_HASHTAG: 'share_with_hashtag',
     JOIN_TELEGRAM: 'join_telegram',
-    TELEGRAM_ENGAGE: 'telegram_engage',
-    JOIN_DISCORD: 'join_discord',
-    DISCORD_ENGAGE: 'discord_engage',
   } as const,
 
   TIERS: {

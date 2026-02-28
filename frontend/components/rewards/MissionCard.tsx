@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { Check, Clock, Trophy, Zap, Repeat, Target, Lock, HelpCircle } from 'lucide-react'
+import { Check, Trophy, Zap, Repeat, Target, ExternalLink, HelpCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 import type { MissionCompletionCounts, RewardsMission } from '@/types/Rewards'
@@ -22,6 +22,7 @@ interface MissionCardProps {
   completionCounts: MissionCompletionCounts
   isCompleted: boolean
   pointsSymbol: string
+  onSubmit?: () => void
 }
 
 const getSocialMissionIcon = (missionType: string) => {
@@ -31,7 +32,6 @@ const getSocialMissionIcon = (missionType: string) => {
     case 'share_with_hashtag':
       return <Image src="/icons/x_black.png" width={20} height={20} alt="twitter" />
     case 'join_telegram':
-    case 'telegram_engage':
       return <Image src="/icons/telegram_black.png" width={20} height={20} alt="telegram" />
     default:
       return <Target className="h-6 w-6 text-black" />
@@ -43,13 +43,12 @@ export function MissionCard({
   completionCounts,
   isCompleted,
   pointsSymbol,
+  onSubmit,
 }: MissionCardProps) {
   const isOneTime = mission.frequency === 'one_time'
-  const hasLimit = mission.max_per_week || mission.max_per_day
   const isRepeatable = !isOneTime
   const isSocialMission = mission.category === 'social_media'
   const totalCompletions = completionCounts.total
-  const currentPeriodCompletions = completionCounts.current_period
 
   const getPointsDisplay = () => {
     const format = mission.points_display_format || `+{points} {symbol}`
@@ -93,9 +92,7 @@ export function MissionCard({
         <CardHeader className="p-4">
           <div className="flex flex-1 items-start justify-between">
             <div className="flex w-full items-start gap-3">
-              <div
-                className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border border-gray-200 bg-gray-100`}
-              >
+              <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border border-gray-200 bg-gray-100">
                 {mission.category === 'on_chain' ? (
                   <Zap className="h-6 w-6 text-black" />
                 ) : (
@@ -137,53 +134,29 @@ export function MissionCard({
                   Repeatable
                 </Badge>
               )}
-              {hasLimit && (
-                <Badge className="border border-gray-200 bg-gray-100 text-gray-800">
-                  <Clock className="mr-1 h-3 w-3" />
-                  {mission.max_per_week && `${mission.max_per_week}/week`}
-                  {mission.max_per_day && `${mission.max_per_day}/day`}
-                </Badge>
-              )}
             </div>
             {isSocialMission && (
               <div className="mt-auto">
-                <button
-                  disabled
-                  className="btn btn-outline mt-auto w-full cursor-not-allowed opacity-50"
-                >
-                  <Lock className="h-4 w-4" />
-                  Coming Soon
-                </button>
+                {isCompleted && isOneTime ? (
+                  <button
+                    disabled
+                    className="btn btn-outline mt-auto w-full cursor-not-allowed opacity-60"
+                  >
+                    <Check className="h-4 w-4" />
+                    Already Submitted
+                  </button>
+                ) : (
+                  <button
+                    onClick={onSubmit}
+                    className="btn btn-black mt-auto flex w-full items-center justify-center gap-1.5 transition-transform active:scale-[0.98]"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                    Submit Mission
+                  </button>
+                )}
               </div>
             )}
           </div>
-
-          {isRepeatable &&
-            currentPeriodCompletions > 0 &&
-            (mission.max_per_week || mission.max_per_day) && (
-              <div className="mt-4 border-t border-gray-200 pt-4">
-                <div className="flex items-center gap-2">
-                  <div className="h-1 flex-1 overflow-hidden rounded-full bg-gray-200">
-                    <motion.div
-                      className="h-full bg-black transition-all duration-500"
-                      initial={{ width: 0 }}
-                      animate={{
-                        width: `${Math.min(
-                          (currentPeriodCompletions /
-                            (mission.max_per_week || mission.max_per_day || 1)) *
-                            100,
-                          100
-                        )}%`,
-                      }}
-                    />
-                  </div>
-                  <span className="text-xs text-gray-500">
-                    {currentPeriodCompletions}/{mission.max_per_week || mission.max_per_day}
-                    {mission.max_per_week ? ' this week' : ' today'}
-                  </span>
-                </div>
-              </div>
-            )}
         </CardContent>
       </Card>
     </motion.div>
