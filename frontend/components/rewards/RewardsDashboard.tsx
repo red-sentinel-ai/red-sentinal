@@ -1,14 +1,6 @@
 'use client'
 
-import {
-  Trophy,
-  Target,
-  TrendingUp,
-  Sparkles,
-  ArrowRight,
-  BookOpen,
-  ExternalLink,
-} from 'lucide-react'
+import { Trophy, Target, TrendingUp, ArrowRight, BookOpen, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useCurrentAccount } from '@mysten/dapp-kit'
@@ -20,7 +12,7 @@ import { RewardsHistory } from '@/components/profile/RewardsHistory'
 import { useRewardsMissions } from '@/hooks/rewards/useRewardsMissions'
 import { useSentinelBalance } from '@/hooks/rewards/useSentinelBalance'
 import { REWARDS_CONSTANTS } from '@/constants/rewards'
-import { REWARDS_DOCS_URL, SENTINEL_TOKEN_EXPLORER_URL } from '@/constants'
+import { REWARDS_DOCS_URL } from '@/constants'
 import { ConnectPrompt } from '../ConnectPrompt'
 
 export function RewardsDashboard() {

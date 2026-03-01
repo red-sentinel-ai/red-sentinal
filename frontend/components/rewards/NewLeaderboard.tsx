@@ -19,7 +19,6 @@ import {
   ChevronDown,
   ChevronUp,
   Shield,
-  Sword,
   Info,
   Check,
   Loader2,
