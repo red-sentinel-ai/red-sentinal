@@ -1,31 +1,121 @@
-import { useState, useEffect } from 'react'
+'use client'
 
-// ── BRAND COLORS ─────────────────────────────────────────────────────────────
-const BRAND = {
-  black: '#000000',
-  white: '#FFFFFF',
-  gray: '#EAEAEA',
-  pink: '#F445AB',
-  pulse: '#A06BFF',
-  blue: '#A5DBFD',
-  mint: '#9AFFC0',
+import { useState, useEffect } from 'react'
+import { SUI_SENTINEL_API_URL, APP_NETWORK, MIST_PER_SUI } from '@/constants'
+
+interface StatItemData {
+  id: string
+  label: string
+  value: number
+  prefix: string
+  format: 'compact' | 'integer'
+  accent: 'mint' | 'pink' | 'pulse' | 'blue'
 }
 
-// ── DUMMY DATA — replace with your API calls ──────────────────────────────────
-// accent: one of the brand color keys — gives each stat its own identity
-const STATS = [
-  {
-    id: 'tvl',
-    label: 'Value Secured',
-    value: 248500,
-    prefix: '$',
-    format: 'compact',
-    accent: 'mint',
-  },
+interface LargestBountyWon {
+  agentId: string
+  winner: string
+  amount: string
+  timestamp: string
+}
+
+interface StatsApiResponse {
+  network: string
+  computedAt: string
+  totalAttacks: number
+  totalSentinelsLaunched: number
+  activeSentinels: number
+  defeatedSentinels: number
+  totalBountyWon: string
+  totalSentinelTokensDistributed: number
+  tvl: string
+  largestBountyWon: LargestBountyWon | null
+}
+
+// Convert MIST to SUI and round up to nearest integer
+function mistToSui(mist: string): number {
+  const sui = Number(mist) / MIST_PER_SUI
+  return Math.ceil(sui)
+}
+
+// Fetch stats from API
+async function fetchStats(network: string): Promise<StatsApiResponse> {
+  const response = await fetch(`${SUI_SENTINEL_API_URL}/stats/${network}`)
+  if (!response.ok) {
+    throw new Error('Failed to fetch stats')
+  }
+  return response.json()
+}
+
+// Transform API response to stats array
+function transformStats(data: StatsApiResponse): StatItemData[] {
+  return [
+    {
+      id: 'tvl',
+      label: 'Value Secured',
+      value: mistToSui(data.tvl),
+      prefix: '$',
+      format: 'compact',
+      accent: 'mint',
+    },
+    {
+      id: 'bounties',
+      label: 'Bounties Claimed',
+      value: mistToSui(data.totalBountyWon),
+      prefix: '$',
+      format: 'compact',
+      accent: 'pink',
+    },
+    {
+      id: 'breached',
+      label: 'Sentinels Breached',
+      value: data.defeatedSentinels,
+      prefix: '',
+      format: 'integer',
+      accent: 'pulse',
+    },
+    {
+      id: 'active',
+      label: 'Active Sentinels',
+      value: data.activeSentinels,
+      prefix: '',
+      format: 'integer',
+      accent: 'blue',
+    },
+    {
+      id: 'token',
+      label: '$SENTINEL Distributed',
+      value: data.totalSentinelTokensDistributed,
+      prefix: '',
+      format: 'compact',
+      accent: 'pulse',
+    },
+    {
+      id: 'attacks',
+      label: 'Attacks Launched',
+      value: data.totalAttacks,
+      prefix: '',
+      format: 'compact',
+      accent: 'pink',
+    },
+    {
+      id: 'largest',
+      label: 'Largest Breach',
+      value: data.largestBountyWon ? mistToSui(data.largestBountyWon.amount) : 0,
+      prefix: '$',
+      format: 'compact',
+      accent: 'mint',
+    },
+  ]
+}
+
+// Default stats for loading/error states
+const DEFAULT_STATS: StatItemData[] = [
+  { id: 'tvl', label: 'Value Secured', value: 0, prefix: '$', format: 'compact', accent: 'mint' },
   {
     id: 'bounties',
     label: 'Bounties Claimed',
-    value: 91400,
+    value: 0,
     prefix: '$',
     format: 'compact',
     accent: 'pink',
@@ -33,7 +123,7 @@ const STATS = [
   {
     id: 'breached',
     label: 'Sentinels Breached',
-    value: 34,
+    value: 0,
     prefix: '',
     format: 'integer',
     accent: 'pulse',
@@ -41,7 +131,7 @@ const STATS = [
   {
     id: 'active',
     label: 'Active Sentinels',
-    value: 127,
+    value: 0,
     prefix: '',
     format: 'integer',
     accent: 'blue',
@@ -49,7 +139,7 @@ const STATS = [
   {
     id: 'token',
     label: '$SENTINEL Distributed',
-    value: 4200000,
+    value: 0,
     prefix: '',
     format: 'compact',
     accent: 'pulse',
@@ -57,7 +147,7 @@ const STATS = [
   {
     id: 'attacks',
     label: 'Attacks Launched',
-    value: 18932,
+    value: 0,
     prefix: '',
     format: 'compact',
     accent: 'pink',
@@ -65,15 +155,14 @@ const STATS = [
   {
     id: 'largest',
     label: 'Largest Breach',
-    value: 12400,
+    value: 0,
     prefix: '$',
     format: 'compact',
     accent: 'mint',
   },
 ]
-// ─────────────────────────────────────────────────────────────────────────────
 
-function formatValue(value, format, prefix) {
+function formatValue(value: number, format: 'compact' | 'integer', prefix: string): string {
   let display = ''
   if (format === 'compact') {
     if (value >= 1_000_000) display = (value / 1_000_000).toFixed(1) + 'M'
@@ -85,11 +174,11 @@ function formatValue(value, format, prefix) {
   return `${prefix}${display}`
 }
 
-function useCountUp(target, duration = 1800) {
+function useCountUp(target: number, duration = 1800): number {
   const [count, setCount] = useState(0)
   useEffect(() => {
-    let start = null
-    const raf = timestamp => {
+    let start: number | null = null
+    const raf = (timestamp: number) => {
       if (!start) start = timestamp
       const p = Math.min((timestamp - start) / duration, 1)
       setCount(Math.floor((1 - Math.pow(1 - p, 3)) * target))
@@ -100,198 +189,82 @@ function useCountUp(target, duration = 1800) {
   return count
 }
 
-function StatItem({ stat, index, total }) {
-  const animated = useCountUp(stat.value, 1500 + index * 100)
-  const display = formatValue(animated, stat.format, stat.prefix)
+function StatItem({
+  stat,
+  index,
+  total,
+  isLoading,
+}: {
+  stat: StatItemData
+  index: number
+  total: number
+  isLoading: boolean
+}) {
+  const animated = useCountUp(isLoading ? 0 : stat.value, 1500 + index * 100)
+  const display = isLoading ? '—' : formatValue(animated, stat.format, stat.prefix)
 
   return (
     <div
-      className="stat-item"
+      className={`ssb-item ssb-accent-${stat.accent}`}
       style={{
         animationDelay: `${index * 70}ms`,
         borderRight: index < total - 1 ? '1px solid rgba(234,234,234,0.07)' : 'none',
       }}
     >
-      <span className="stat-value">{display}</span>
-      <span className="stat-label">{stat.label}</span>
-      {/* accent underline sliver */}
-      <span className="stat-underline" />
+      <span className="ssb-value">{display}</span>
+      <span className="ssb-label">{stat.label}</span>
+      <span className="ssb-underline" />
     </div>
   )
 }
 
 export default function SentinelStatsBar() {
+  const [stats, setStats] = useState<StatItemData[]>(DEFAULT_STATS)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    let mounted = true
+
+    const loadStats = async () => {
+      try {
+        setIsLoading(true)
+        const data = await fetchStats(APP_NETWORK)
+        if (mounted) {
+          setStats(transformStats(data))
+        }
+      } catch (error) {
+        console.error('Failed to load stats:', error)
+      } finally {
+        if (mounted) {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    loadStats()
+
+    // Refresh every 60 seconds
+    const interval = setInterval(loadStats, 60000)
+
+    return () => {
+      mounted = false
+      clearInterval(interval)
+    }
+  }, [])
+
   return (
-    <>
-      <style>{`
-        :root {
-          --brand-black: #000000;
-          --brand-white: #FFFFFF;
-          --brand-gray:  #EAEAEA;
-          --brand-pink:  #F445AB;
-          --brand-pulse: #A06BFF;
-          --brand-blue:  #A5DBFD;
-          --brand-mint:  #9AFFC0;
-        }
-
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(8px); }
-          to   { opacity: 1; transform: translateY(0);   }
-        }
-
-        @keyframes livePulse {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(244,69,171,0.6); }
-          50%       { box-shadow: 0 0 0 5px rgba(244,69,171,0);  }
-        }
-
-        @keyframes shimmer {
-          0%   { background-position: -200% center; }
-          100% { background-position:  200% center; }
-        }
-
-        /* ── Bar shell ─────────────────────────────────────── */
-        .ssb-shell {
-          position: relative;
-          width: 100%;
-          background: #000;
-          border-bottom: 1px solid rgba(234,234,234,0.1);
-          overflow: hidden;
-          font-family: 'IBM Plex Mono', monospace;
-        }
-
-        /* top accent stripe — pink→pulse→blue→mint */
-        .ssb-shell::before {
-          content: '';
-          position: absolute;
-          top: 0; left: 0; right: 0;
-          height: 2px;
-          background: linear-gradient(
-            90deg,
-            var(--brand-pink) 0%,
-            var(--brand-pulse) 33%,
-            var(--brand-blue)  66%,
-            var(--brand-mint)  100%
-          );
-          background-size: 200% auto;
-          animation: shimmer 4s linear infinite;
-        }
-
-        .ssb-inner {
-          display: flex;
-          align-items: center;
-          padding: 0 24px;
-          overflow-x: auto;
-          scrollbar-width: none;
-          -webkit-overflow-scrolling: touch;
-        }
-        .ssb-inner::-webkit-scrollbar { display: none; }
-
-        /* ── Live badge ───────────────────────────────────── */
-        .live-badge {
-          display: flex;
-          align-items: center;
-          gap: 7px;
-          padding: 0 20px 0 4px;
-          border-right: 1px solid rgba(234,234,234,0.07);
-          flex-shrink: 0;
-          margin-right: 4px;
-        }
-
-        .live-dot {
-          width: 7px; height: 7px;
-          border-radius: 50%;
-          background: var(--brand-pink);
-          animation: livePulse 2s ease infinite;
-          flex-shrink: 0;
-        }
-
-        .live-text {
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 0.6rem;
-          font-weight: 500;
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-          color: var(--brand-pink);
-        }
-
-        /* ── Stat items ───────────────────────────────────── */
-        .stat-item {
-          position: relative;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 3px;
-          padding: 13px 22px;
-          flex-shrink: 0;
-          cursor: default;
-          animation: fadeUp 0.45s ease both;
-          transition: background 0.2s;
-        }
-
-        .stat-item:hover {
-          background: rgba(234,234,234,0.03);
-        }
-
-        .stat-item:hover .stat-underline {
-          transform: scaleX(1);
-          opacity: 1;
-        }
-
-        .stat-value {
-          font-family: 'Syne', sans-serif;
-          font-size: clamp(1rem, 1.8vw, 1.35rem);
-          font-weight: 800;
-          letter-spacing: -0.01em;
-          color: var(--accent);
-          line-height: 1;
-          white-space: nowrap;
-          /* subtle glow matching accent */
-          text-shadow:
-            0 0 20px color-mix(in srgb, var(--accent) 40%, transparent),
-            0 0 40px color-mix(in srgb, var(--accent) 15%, transparent);
-        }
-
-        .stat-label {
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: clamp(0.52rem, 0.85vw, 0.63rem);
-          font-weight: 400;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          color: rgba(234,234,234,0.35);
-          white-space: nowrap;
-        }
-
-        /* bottom accent underline that slides in on hover */
-        .stat-underline {
-          position: absolute;
-          bottom: 0; left: 20%; right: 20%;
-          height: 1.5px;
-          background: var(--accent);
-          border-radius: 2px;
-          transform: scaleX(0);
-          opacity: 0;
-          transition: transform 0.25s ease, opacity 0.25s ease;
-          transform-origin: center;
-        }
-
-        @media (max-width: 768px) {
-          .ssb-inner { justify-content: flex-start; }
-          .stat-item  { padding: 12px 16px; }
-        }
-      `}</style>
-
-      <div className="ssb-shell">
-        <div className="ssb-inner">
-          <div className="live-badge">
-            <div className="live-dot" />
-            <span className="live-text">Live</span>
-          </div>
-
-          {STATS.map((stat, i) => (
-            <StatItem key={stat.id} stat={stat} index={i} total={STATS.length} />
-          ))}
-        </div>
+    <div className="ssb-shell">
+      <div className="ssb-inner">
+        {stats.map((stat, i) => (
+          <StatItem
+            key={stat.id}
+            stat={stat}
+            index={i}
+            total={stats.length}
+            isLoading={isLoading}
+          />
+        ))}
       </div>
-    </>
+    </div>
   )
 }

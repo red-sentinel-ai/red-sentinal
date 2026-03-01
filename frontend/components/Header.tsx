@@ -20,11 +20,11 @@ export const Header = () => {
   return (
     <header
       className={clsx(
-        'fixed left-0 right-0 top-0 z-50 w-full bg-transparent transition-all duration-300 md:border-b md:border-gray-200 md:bg-white/80 md:backdrop-blur-xl'
+        'fixed left-0 right-0 top-[40px] z-50 w-full bg-transparent transition-all duration-300 md:border-b md:border-gray-200 md:bg-white/80 md:backdrop-blur-xl'
       )}
     >
       <div className="mx-auto flex max-w-full items-center justify-between p-2 lg:px-6">
-        <div className="flex flex-1 items-end gap-2 md:gap-8">
+        <div className="flex flex-1 items-center gap-2 md:gap-8">
           {/* Mobile: Small logo */}
           <Link className="block flex-shrink-0 md:hidden" href="/">
             <div className="relative">
@@ -103,7 +103,7 @@ export const Header = () => {
         <>
           {/* Backdrop overlay */}
           <div
-            className="fixed inset-0 top-[48px] z-40 bg-black/20 backdrop-blur-sm md:top-[52px] xl:hidden"
+            className="fixed inset-0 top-[96px] z-40 bg-black/20 backdrop-blur-sm md:top-[100px] xl:hidden"
             onClick={() => setMenuOpen(false)}
           />
           {/* Mobile menu */}
