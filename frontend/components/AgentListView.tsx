@@ -15,7 +15,7 @@ const BIG_BOUNTY_THRESHOLD_MIST = BigInt(20_000_000_000) // 20 SUI
 type BountyTab = 'all' | 'big_bounties'
 
 export const AgentListView = () => {
-  const { data: allAgents, isPending: isFetchingAllAgents, refetch: refetchAgent } = useAllAgents()
+  const { data: allAgents, isPending: isFetchingAllAgents } = useAllAgents()
   const [activeTab, setActiveTab] = useState<BountyTab>('all')
 
   const agentsWithBalance = allAgents?.filter(agent => {
@@ -122,11 +122,7 @@ export const AgentListView = () => {
         </div>
       </div>
 
-      <AgentsList
-        agents={filteredAgents}
-        isFetchingAgents={isFetchingAllAgents}
-        onRefreshAgent={refetchAgent}
-      />
+      <AgentsList agents={filteredAgents} isFetchingAgents={isFetchingAllAgents} />
       <p className="mt-4 text-xs text-[#5E5E5E]">{TEXT_COPIES.LOW_POOL_BALANCE_HIDDEN_MESSAGE}</p>
     </div>
   )

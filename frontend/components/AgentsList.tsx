@@ -2,7 +2,7 @@
 import { useMemo, useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { RefreshCcw, ArrowUp, ArrowDown } from 'lucide-react'
+import { ArrowUp, ArrowDown } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 
 import { Badge } from '@/components/ui'
@@ -28,11 +28,9 @@ export enum TabType {
 export const AgentsList = ({
   agents,
   isFetchingAgents,
-  onRefreshAgent,
 }: {
   agents: AgentDetails[]
   isFetchingAgents: boolean
-  onRefreshAgent: () => void
 }) => {
   const router = useRouter()
   const [sortField, setSortField] = useState<SortField>('balance')
@@ -92,11 +90,10 @@ export const AgentsList = ({
     )
   }
 
-  const handleRefresh = async (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    onRefreshAgent()
-  }
+  // const handleRefresh = async (e: React.MouseEvent) => {
+  //   e.preventDefault()
+  //   e.stopPropagation()
+  // }
 
   return (
     <AnimatePresence>
