@@ -119,37 +119,37 @@ export const AgentsList = ({
                 className="col-span-1 flex cursor-pointer items-center hover:text-gray-600"
                 onClick={() => handleSort('agentId')}
               >
-                Agent Id
+                ID
                 <SortIcon field="agentId" />
               </div>
 
-              <div className="col-span-2 ps-4">Name</div>
+              <div className="col-span-2 ps-4">Sentinel</div>
               <div
                 className="col-span-1 flex cursor-pointer items-center ps-4 hover:text-gray-600"
                 onClick={() => handleSort('balance')}
               >
-                Balance
+                Bounty Pool
                 <SortIcon field="balance" />
               </div>
               <div
                 className="col-span-1 flex cursor-pointer items-center ps-4 hover:text-gray-600"
                 onClick={() => handleSort('costPerMessage')}
               >
-                Price
+                Cost per Attack
                 <SortIcon field="costPerMessage" />
               </div>
               <div
                 className="col-span-1 flex cursor-pointer items-center ps-4 hover:text-gray-600"
                 onClick={() => handleSort('totalAttacks')}
               >
-                Attacks
+                Total Attacks
                 <SortIcon field="totalAttacks" />
               </div>
               <div
                 className="col-span-2 flex cursor-pointer items-center ps-4 hover:text-gray-600"
                 onClick={() => handleSort('change7d')}
               >
-                Change (7d)
+                7d Activity
                 <SortIcon field="change7d" />
               </div>
               <div className="col-span-1">Status</div>
@@ -228,7 +228,10 @@ export const AgentsList = ({
                         </div>
                         <div>
                           <p className="text-xs text-gray-400">7d Change</p>
-                          <PrizePoolChangeDisplay prizePoolHistory={agent.prizePoolHistory} variant="list" />
+                          <PrizePoolChangeDisplay
+                            prizePoolHistory={agent.prizePoolHistory}
+                            variant="list"
+                          />
                         </div>
                       </div>
                     </div>
@@ -256,7 +259,10 @@ export const AgentsList = ({
                       <div className="col-span-1 ps-4">{agent.total_attacks || 0}</div>
 
                       <div className="col-span-2 ps-4">
-                        <PrizePoolChangeDisplay prizePoolHistory={agent.prizePoolHistory} variant="list" />
+                        <PrizePoolChangeDisplay
+                          prizePoolHistory={agent.prizePoolHistory}
+                          variant="list"
+                        />
                       </div>
 
                       <div className="col-span-1">
@@ -302,10 +308,10 @@ export const AgentsList = ({
                           />
                           Attack
                         </button>
-                        <button onClick={e => handleRefresh(e)} className="badge-outline-black">
+                        {/* <button onClick={e => handleRefresh(e)} className="badge-outline-black">
                           <RefreshCcw width={16} className="mr-1" />
                           Refresh
-                        </button>
+                        </button> */}
                       </div>
                     </div>
                   </motion.div>
