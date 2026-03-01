@@ -555,3 +555,133 @@ body::-webkit-scrollbar-thumb:hover {
     margin-bottom: 8px;
   }
 }
+
+/* ========================================
+   Sentinel Stats Bar (ssb)
+   ======================================== */
+
+.ssb-shell {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  width: 100%;
+  background: #000;
+  border-bottom: 1px solid rgba(234, 234, 234, 0.1);
+  overflow: hidden;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+
+
+.ssb-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ssb-inner::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Stat items ───────────────────────────────────── */
+.ssb-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 4px 16px;
+  flex-shrink: 0;
+  cursor: default;
+  animation: ssb-fadeUp 0.45s ease both;
+  transition: background 0.2s;
+}
+
+.ssb-item:hover {
+  background: rgba(234, 234, 234, 0.03);
+}
+
+.ssb-item:hover .ssb-underline {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+.ssb-value {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(1rem, 1.8vw, 1.35rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--ssb-accent);
+  line-height: 1;
+  white-space: nowrap;
+  text-shadow:
+    0 0 20px color-mix(in srgb, var(--ssb-accent) 40%, transparent),
+    0 0 40px color-mix(in srgb, var(--ssb-accent) 15%, transparent);
+}
+
+.ssb-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: clamp(0.52rem, 0.85vw, 0.63rem);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(234, 234, 234, 0.35);
+  white-space: nowrap;
+}
+
+/* bottom accent underline that slides in on hover */
+.ssb-underline {
+  position: absolute;
+  bottom: 0;
+  left: 20%;
+  right: 20%;
+  height: 1.5px;
+  background: var(--ssb-accent);
+  border-radius: 2px;
+  transform: scaleX(0);
+  opacity: 0;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  transform-origin: center;
+}
+
+/* Accent color variants */
+.ssb-accent-mint {
+  --ssb-accent: #9affc0;
+}
+.ssb-accent-pink {
+  --ssb-accent: #f445ab;
+}
+.ssb-accent-pulse {
+  --ssb-accent: #a06bff;
+}
+.ssb-accent-blue {
+  --ssb-accent: #a5dbfd;
+}
+
+/* Animations */
+@keyframes ssb-fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .ssb-inner {
+    justify-content: flex-start;
+  }
+  .ssb-item {
+    padding: 4px 12px;
+  }
+}
