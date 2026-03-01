@@ -86,6 +86,15 @@ const Footer = () => {
               </a>
               <span className="mx-1">•</span>
               <span>Secured by TEE</span>
+              <span className="mx-1">•</span>
+              <a
+                href="https://osec.io/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline"
+              >
+                Audited by OtterSec
+              </a>
             </div>
             <p className="mb-4 text-xs font-medium text-white sm:text-sm md:text-base">
               <span>© 2025 </span>
