@@ -58,16 +58,16 @@ export interface DefenderEntry {
   username: string
   walletAddress: string
   avatarUrl?: string
-  compositeScore: number         // Weighted composite score (40% TVL, 30% attacks survived, 20% breach rate inverted, 10% active sentinels)
+  compositeScore: number // Weighted composite score (40% TVL, 30% attacks survived, 20% breach rate inverted, 10% active sentinels)
   defenderTier: DefenderTier
-  tvlSui: number                 // Total Value Locked in SUI across all reward pools
-  activeSentinels: number        // Count of currently live Sentinels
+  tvlSui: number // Total Value Locked in SUI across all reward pools
+  activeSentinels: number // Count of currently live Sentinels
   totalSentinelsDeployed: number // All-time created Sentinels (includes inactive)
-  longestSurvivingHours: number  // Hours since deployment of longest-standing unbreached Sentinel
-  totalAttacksSurvived: number   // consume_prompt calls where success=false
-  breachRatePct: number          // (successful attacks / total attacks) * 100
-  totalFeesEarnedSui: number     // Cumulative fees claimed + pending
-  sentinelTokensEarned: number   // $SENTINEL token rewards distributed
+  longestSurvivingHours: number // Hours since deployment of longest-standing unbreached Sentinel
+  totalAttacksSurvived: number // consume_prompt calls where success=false
+  breachRatePct: number // (successful attacks / total attacks) * 100
+  totalFeesEarnedSui: number // Cumulative fees claimed + pending
+  sentinelTokensEarned: number // $SENTINEL token rewards distributed
   isCurrentUser?: boolean
 }
 
@@ -78,14 +78,14 @@ export interface AttackerEntry {
   walletAddress: string
   avatarUrl?: string
   attackerTier: AttackerTier
-  totalBountyWonSui: number      // Sum of all reward pool payouts received
-  successfulBreaches: number     // consume_prompt calls where success=true
-  totalAttacksSent: number       // All consume_prompt calls by this address
-  breachRatePct: number          // (successfulBreaches / totalAttacksSent) * 100
+  totalBountyWonSui: number // Sum of all reward pool payouts received
+  successfulBreaches: number // consume_prompt calls where success=true
+  totalAttacksSent: number // All consume_prompt calls by this address
+  breachRatePct: number // (successfulBreaches / totalAttacksSent) * 100
   largestSingleBountySui: number // Maximum single payout received
-  attackStreakDays: number       // Consecutive days with at least one attack
-  sentinelTokensEarned: number   // Token rewards distributed for attacking
-  lastActiveTimestamp: string    // ISO timestamp of most recent consume_prompt
+  attackStreakDays: number // Consecutive days with at least one attack
+  sentinelTokensEarned: number // Token rewards distributed for attacking
+  lastActiveTimestamp: string // ISO timestamp of most recent consume_prompt
   isCurrentUser?: boolean
 }
 
@@ -447,20 +447,86 @@ function breachRateColor(pct: number) {
 
 // ─── Tier Config ─────────────────────────────────────────────────────────────
 
-const DEFENDER_TIER_CONFIG: Record<DefenderTier, { bg: string; text: string; border: string; dot: string; label: string }> = {
-  Bronze:    { bg: 'bg-amber-50',   text: 'text-amber-700',  border: 'border-amber-200',  dot: 'bg-amber-500',   label: 'Bronze'   },
-  Silver:    { bg: 'bg-slate-100',  text: 'text-slate-600',  border: 'border-slate-300',  dot: 'bg-slate-400',   label: 'Silver'   },
-  Gold:      { bg: 'bg-yellow-50',  text: 'text-yellow-700', border: 'border-yellow-300', dot: 'bg-yellow-500',  label: 'Gold'     },
-  Diamond:   { bg: 'bg-cyan-50',    text: 'text-cyan-700',   border: 'border-cyan-200',   dot: 'bg-cyan-500',    label: 'Diamond'  },
-  Legendary: { bg: 'bg-purple-50',  text: 'text-purple-700', border: 'border-purple-300', dot: 'bg-purple-500',  label: 'Legendary'},
+const DEFENDER_TIER_CONFIG: Record<
+  DefenderTier,
+  { bg: string; text: string; border: string; dot: string; label: string }
+> = {
+  Bronze: {
+    bg: 'bg-amber-50',
+    text: 'text-amber-700',
+    border: 'border-amber-200',
+    dot: 'bg-amber-500',
+    label: 'Bronze',
+  },
+  Silver: {
+    bg: 'bg-slate-100',
+    text: 'text-slate-600',
+    border: 'border-slate-300',
+    dot: 'bg-slate-400',
+    label: 'Silver',
+  },
+  Gold: {
+    bg: 'bg-yellow-50',
+    text: 'text-yellow-700',
+    border: 'border-yellow-300',
+    dot: 'bg-yellow-500',
+    label: 'Gold',
+  },
+  Diamond: {
+    bg: 'bg-cyan-50',
+    text: 'text-cyan-700',
+    border: 'border-cyan-200',
+    dot: 'bg-cyan-500',
+    label: 'Diamond',
+  },
+  Legendary: {
+    bg: 'bg-purple-50',
+    text: 'text-purple-700',
+    border: 'border-purple-300',
+    dot: 'bg-purple-500',
+    label: 'Legendary',
+  },
 }
 
-const ATTACKER_TIER_CONFIG: Record<AttackerTier, { bg: string; text: string; border: string; dot: string; label: string }> = {
-  'Recruit':       { bg: 'bg-gray-100',   text: 'text-gray-600',   border: 'border-gray-300',   dot: 'bg-gray-400',    label: 'Recruit'       },
-  'Hunter':        { bg: 'bg-green-50',   text: 'text-green-700',  border: 'border-green-200',  dot: 'bg-green-500',   label: 'Hunter'        },
-  'Specialist':    { bg: 'bg-blue-50',    text: 'text-blue-700',   border: 'border-blue-200',   dot: 'bg-blue-500',    label: 'Specialist'    },
-  'Elite':         { bg: 'bg-orange-50',  text: 'text-orange-700', border: 'border-orange-200', dot: 'bg-orange-500',  label: 'Elite'         },
-  'Apex Predator': { bg: 'bg-red-50',     text: 'text-red-700',    border: 'border-red-300',    dot: 'bg-red-500',     label: 'Apex Predator' },
+const ATTACKER_TIER_CONFIG: Record<
+  AttackerTier,
+  { bg: string; text: string; border: string; dot: string; label: string }
+> = {
+  Recruit: {
+    bg: 'bg-gray-100',
+    text: 'text-gray-600',
+    border: 'border-gray-300',
+    dot: 'bg-gray-400',
+    label: 'Recruit',
+  },
+  Hunter: {
+    bg: 'bg-green-50',
+    text: 'text-green-700',
+    border: 'border-green-200',
+    dot: 'bg-green-500',
+    label: 'Hunter',
+  },
+  Specialist: {
+    bg: 'bg-blue-50',
+    text: 'text-blue-700',
+    border: 'border-blue-200',
+    dot: 'bg-blue-500',
+    label: 'Specialist',
+  },
+  Elite: {
+    bg: 'bg-orange-50',
+    text: 'text-orange-700',
+    border: 'border-orange-200',
+    dot: 'bg-orange-500',
+    label: 'Elite',
+  },
+  'Apex Predator': {
+    bg: 'bg-red-50',
+    text: 'text-red-700',
+    border: 'border-red-300',
+    dot: 'bg-red-500',
+    label: 'Apex Predator',
+  },
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -468,7 +534,14 @@ const ATTACKER_TIER_CONFIG: Record<AttackerTier, { bg: string; text: string; bor
 function DefenderTierBadge({ tier }: { tier: DefenderTier }) {
   const cfg = DEFENDER_TIER_CONFIG[tier]
   return (
-    <span className={cn('inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold', cfg.bg, cfg.text, cfg.border)}>
+    <span
+      className={cn(
+        'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold',
+        cfg.bg,
+        cfg.text,
+        cfg.border
+      )}
+    >
       <span className={cn('h-1.5 w-1.5 rounded-full', cfg.dot)} />
       {cfg.label}
     </span>
@@ -478,7 +551,14 @@ function DefenderTierBadge({ tier }: { tier: DefenderTier }) {
 function AttackerTierBadge({ tier }: { tier: AttackerTier }) {
   const cfg = ATTACKER_TIER_CONFIG[tier]
   return (
-    <span className={cn('inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold whitespace-nowrap', cfg.bg, cfg.text, cfg.border)}>
+    <span
+      className={cn(
+        'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold',
+        cfg.bg,
+        cfg.text,
+        cfg.border
+      )}
+    >
       <span className={cn('h-1.5 w-1.5 rounded-full', cfg.dot)} />
       {cfg.label}
     </span>
@@ -486,30 +566,39 @@ function AttackerTierBadge({ tier }: { tier: AttackerTier }) {
 }
 
 function RankCell({ rank }: { rank: number }) {
-  if (rank === 1) return (
-    <div className="flex items-center justify-center">
-      <div className="relative">
-        <Crown className="h-6 w-6 text-yellow-500" />
-        <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white bg-yellow-500 text-[9px] font-bold text-white">1</span>
+  if (rank === 1)
+    return (
+      <div className="flex items-center justify-center">
+        <div className="relative">
+          <Crown className="h-6 w-6 text-yellow-500" />
+          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white bg-yellow-500 text-[9px] font-bold text-white">
+            1
+          </span>
+        </div>
       </div>
-    </div>
-  )
-  if (rank === 2) return (
-    <div className="flex items-center justify-center">
-      <div className="relative">
-        <Trophy className="h-5 w-5 text-slate-400" />
-        <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white bg-slate-400 text-[9px] font-bold text-white">2</span>
+    )
+  if (rank === 2)
+    return (
+      <div className="flex items-center justify-center">
+        <div className="relative">
+          <Trophy className="h-5 w-5 text-slate-400" />
+          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white bg-slate-400 text-[9px] font-bold text-white">
+            2
+          </span>
+        </div>
       </div>
-    </div>
-  )
-  if (rank === 3) return (
-    <div className="flex items-center justify-center">
-      <div className="relative">
-        <Medal className="h-5 w-5 text-amber-700" />
-        <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white bg-amber-700 text-[9px] font-bold text-white">3</span>
+    )
+  if (rank === 3)
+    return (
+      <div className="flex items-center justify-center">
+        <div className="relative">
+          <Medal className="h-5 w-5 text-amber-700" />
+          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white bg-amber-700 text-[9px] font-bold text-white">
+            3
+          </span>
+        </div>
       </div>
-    </div>
-  )
+    )
   return (
     <div className="flex items-center justify-center">
       <span className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-gray-50 text-xs font-semibold text-gray-500">
@@ -519,7 +608,15 @@ function RankCell({ rank }: { rank: number }) {
   )
 }
 
-function IdentityCell({ username, walletAddress, avatarUrl }: { username: string; walletAddress: string; avatarUrl?: string }) {
+function IdentityCell({
+  username,
+  walletAddress,
+  avatarUrl,
+}: {
+  username: string
+  walletAddress: string
+  avatarUrl?: string
+}) {
   return (
     <div className="flex min-w-0 items-center gap-3">
       <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full border border-gray-200 bg-gray-100 text-gray-400">
@@ -540,13 +637,20 @@ function IdentityCell({ username, walletAddress, avatarUrl }: { username: string
 
 function SortIcon({ active, dir }: { active: boolean; dir: SortDir }) {
   if (!active) return <ChevronsUpDown className="ml-1 h-3 w-3 text-gray-400" />
-  return dir === 'asc'
-    ? <ArrowUp className="ml-1 h-3 w-3 text-black" />
-    : <ArrowDown className="ml-1 h-3 w-3 text-black" />
+  return dir === 'asc' ? (
+    <ArrowUp className="ml-1 h-3 w-3 text-black" />
+  ) : (
+    <ArrowDown className="ml-1 h-3 w-3 text-black" />
+  )
 }
 
 function ColHeader({
-  label, tooltip, sortKey, currentSort, currentDir, onSort,
+  label,
+  tooltip,
+  sortKey,
+  currentSort,
+  currentDir,
+  onSort,
 }: {
   label: string
   tooltip?: string
@@ -558,7 +662,7 @@ function ColHeader({
   const active = currentSort === sortKey
   return (
     <th
-      className="cursor-pointer select-none px-1 py-3 text-center text-xs font-semibold tracking-wide text-gray-500 hover:text-gray-800 max-w-[100px]"
+      className="max-w-[100px] cursor-pointer select-none px-1 py-3 text-center text-xs font-semibold tracking-wide text-gray-500 hover:text-gray-800"
       onClick={() => onSort(sortKey)}
     >
       <div className="flex items-center gap-1">
@@ -566,9 +670,14 @@ function ColHeader({
         {tooltip && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Info className="h-3 w-3 text-gray-400 hover:text-gray-600" onClick={e => e.stopPropagation()} />
+              <Info
+                className="h-3 w-3 text-gray-400 hover:text-gray-600"
+                onClick={e => e.stopPropagation()}
+              />
             </TooltipTrigger>
-            <TooltipContent><p className="max-w-48 text-xs">{tooltip}</p></TooltipContent>
+            <TooltipContent>
+              <p className="max-w-48 text-xs">{tooltip}</p>
+            </TooltipContent>
           </Tooltip>
         )}
         <SortIcon active={active} dir={currentDir} />
@@ -596,10 +705,16 @@ function ShareButton({ rank, tab }: { rank: number; tab: 'defenders' | 'attacker
           onClick={handleShare}
           className="flex h-7 w-7 items-center justify-center rounded-md border border-gray-200 bg-white text-gray-400 transition-colors hover:border-gray-300 hover:text-gray-700"
         >
-          {copied ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Share2 className="h-3.5 w-3.5" />}
+          {copied ? (
+            <Check className="h-3.5 w-3.5 text-emerald-500" />
+          ) : (
+            <Share2 className="h-3.5 w-3.5" />
+          )}
         </button>
       </TooltipTrigger>
-      <TooltipContent><p className="text-xs">{copied ? 'Copied!' : 'Copy share link'}</p></TooltipContent>
+      <TooltipContent>
+        <p className="text-xs">{copied ? 'Copied!' : 'Copy share link'}</p>
+      </TooltipContent>
     </Tooltip>
   )
 }
@@ -624,9 +739,9 @@ function RewardCalculatorBanner() {
         href={REWARD_CALCULATOR_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex flex-shrink-0 items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-blue-700"
+        className="btn btn-black flex items-center gap-2 text-sm sm:text-base"
       >
-        Open Reward Calculator
+        Reward Calculator
         <ExternalLink className="h-3.5 w-3.5" />
       </Link>
     </div>
@@ -675,19 +790,22 @@ function DefenderCard({ entry }: { entry: DefenderEntry }) {
     : rankColors[entry.rank] || 'border-gray-200 bg-white'
 
   return (
-    <motion.div
-      layout
-      className={cn('rounded-xl border p-4 transition-colors', borderClass)}
-    >
+    <motion.div layout className={cn('rounded-xl border p-4 transition-colors', borderClass)}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           <RankCell rank={entry.rank} />
-          <IdentityCell username={entry.username} walletAddress={entry.walletAddress} avatarUrl={entry.avatarUrl} />
+          <IdentityCell
+            username={entry.username}
+            walletAddress={entry.walletAddress}
+            avatarUrl={entry.avatarUrl}
+          />
         </div>
         <div className="flex flex-col items-end gap-1.5">
           <DefenderTierBadge tier={entry.defenderTier} />
           {entry.isCurrentUser && (
-            <span className="rounded-full border border-blue-200 bg-blue-100 px-2 py-0.5 text-[10px] font-semibold text-blue-700">You</span>
+            <span className="rounded-full border border-blue-200 bg-blue-100 px-2 py-0.5 text-[10px] font-semibold text-blue-700">
+              You
+            </span>
           )}
         </div>
       </div>
@@ -715,13 +833,27 @@ function DefenderCard({ entry }: { entry: DefenderEntry }) {
               {[
                 { label: 'Active Sentinels', value: entry.activeSentinels },
                 { label: 'Deployed (all-time)', value: entry.totalSentinelsDeployed },
-                { label: 'Longest Surviving', value: formatSurvivalTime(entry.longestSurvivingHours) },
+                {
+                  label: 'Longest Surviving',
+                  value: formatSurvivalTime(entry.longestSurvivingHours),
+                },
                 { label: 'Attacks Survived', value: entry.totalAttacksSurvived.toLocaleString() },
-                { label: 'Breach Rate', value: `${entry.breachRatePct}%`, colorClass: breachRateColor(entry.breachRatePct) },
+                {
+                  label: 'Breach Rate',
+                  value: `${entry.breachRatePct}%`,
+                  colorClass: breachRateColor(entry.breachRatePct),
+                },
                 { label: 'Fees Earned', value: `${formatSui(entry.totalFeesEarnedSui)} SUI` },
-                { label: '$SENTINEL Earned', value: entry.sentinelTokensEarned.toLocaleString(), span: true },
+                {
+                  label: '$SENTINEL Earned',
+                  value: entry.sentinelTokensEarned.toLocaleString(),
+                  span: true,
+                },
               ].map(({ label, value, colorClass, span }) => (
-                <div key={label} className={cn('rounded-lg bg-gray-50 px-3 py-2', span && 'col-span-2')}>
+                <div
+                  key={label}
+                  className={cn('rounded-lg bg-gray-50 px-3 py-2', span && 'col-span-2')}
+                >
                   <p className="text-[10px] uppercase tracking-wide text-gray-500">{label}</p>
                   <p className={cn('text-sm font-semibold text-gray-900', colorClass)}>{value}</p>
                 </div>
@@ -736,7 +868,15 @@ function DefenderCard({ entry }: { entry: DefenderEntry }) {
           onClick={() => setExpanded(v => !v)}
           className="flex items-center gap-1 text-xs font-medium text-gray-500 hover:text-gray-800"
         >
-          {expanded ? <><ChevronUp className="h-3.5 w-3.5" /> Show less</> : <><ChevronDown className="h-3.5 w-3.5" /> Show more</>}
+          {expanded ? (
+            <>
+              <ChevronUp className="h-3.5 w-3.5" /> Show less
+            </>
+          ) : (
+            <>
+              <ChevronDown className="h-3.5 w-3.5" /> Show more
+            </>
+          )}
         </button>
         <div className="flex items-center gap-2">
           <Link
@@ -773,12 +913,18 @@ function AttackerCard({ entry }: { entry: AttackerEntry }) {
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           <RankCell rank={entry.rank} />
-          <IdentityCell username={entry.username} walletAddress={entry.walletAddress} avatarUrl={entry.avatarUrl} />
+          <IdentityCell
+            username={entry.username}
+            walletAddress={entry.walletAddress}
+            avatarUrl={entry.avatarUrl}
+          />
         </div>
         <div className="flex flex-col items-end gap-1.5">
           <AttackerTierBadge tier={entry.attackerTier} />
           {entry.isCurrentUser && (
-            <span className="rounded-full border border-blue-200 bg-blue-100 px-2 py-0.5 text-[10px] font-semibold text-blue-700">You</span>
+            <span className="rounded-full border border-blue-200 bg-blue-100 px-2 py-0.5 text-[10px] font-semibold text-blue-700">
+              You
+            </span>
           )}
         </div>
       </div>
@@ -786,7 +932,9 @@ function AttackerCard({ entry }: { entry: AttackerEntry }) {
       <div className="mt-3 grid grid-cols-2 gap-2">
         <div className="rounded-lg bg-gray-50 px-3 py-2">
           <p className="text-[10px] uppercase tracking-wide text-gray-500">Bounty Won</p>
-          <p className="text-sm font-bold text-gray-900">{formatSui(entry.totalBountyWonSui)} SUI</p>
+          <p className="text-sm font-bold text-gray-900">
+            {formatSui(entry.totalBountyWonSui)} SUI
+          </p>
         </div>
         <div className="rounded-lg bg-gray-50 px-3 py-2">
           <p className="text-[10px] uppercase tracking-wide text-gray-500">Breaches</p>
@@ -805,9 +953,19 @@ function AttackerCard({ entry }: { entry: AttackerEntry }) {
             <div className="mt-2 grid grid-cols-2 gap-2">
               {[
                 { label: 'Total Attacks', value: entry.totalAttacksSent.toLocaleString() },
-                { label: 'Breach Rate', value: `${entry.breachRatePct}%`, colorClass: entry.breachRatePct > 10 ? 'text-emerald-600' : undefined },
-                { label: 'Largest Bounty', value: `${formatSui(entry.largestSingleBountySui)} SUI` },
-                { label: 'Attack Streak', value: entry.attackStreakDays > 0 ? `🔥 ${entry.attackStreakDays}d` : '—' },
+                {
+                  label: 'Breach Rate',
+                  value: `${entry.breachRatePct}%`,
+                  colorClass: entry.breachRatePct > 10 ? 'text-emerald-600' : undefined,
+                },
+                {
+                  label: 'Largest Bounty',
+                  value: `${formatSui(entry.largestSingleBountySui)} SUI`,
+                },
+                {
+                  label: 'Attack Streak',
+                  value: entry.attackStreakDays > 0 ? `🔥 ${entry.attackStreakDays}d` : '—',
+                },
                 { label: '$SENTINEL Earned', value: entry.sentinelTokensEarned.toLocaleString() },
                 { label: 'Last Active', value: formatTimeAgo(entry.lastActiveTimestamp) },
               ].map(({ label, value, colorClass }) => (
@@ -826,7 +984,15 @@ function AttackerCard({ entry }: { entry: AttackerEntry }) {
           onClick={() => setExpanded(v => !v)}
           className="flex items-center gap-1 text-xs font-medium text-gray-500 hover:text-gray-800"
         >
-          {expanded ? <><ChevronUp className="h-3.5 w-3.5" /> Show less</> : <><ChevronDown className="h-3.5 w-3.5" /> Show more</>}
+          {expanded ? (
+            <>
+              <ChevronUp className="h-3.5 w-3.5" /> Show less
+            </>
+          ) : (
+            <>
+              <ChevronDown className="h-3.5 w-3.5" /> Show more
+            </>
+          )}
         </button>
         <ShareButton rank={entry.rank} tab="attackers" />
       </div>
@@ -862,23 +1028,74 @@ function DefendersTable({ entries }: { entries: DefenderEntry[] }) {
 
   return (
     <div className="overflow-x-auto rounded-xl border border-gray-200">
-      <table className="min-w-[1380px] w-full border-collapse text-sm">
+      <table className="w-full min-w-[1380px] border-collapse text-sm">
         <thead>
           <tr className="border-b border-gray-200 bg-gray-50">
-            <th className="w-14 px-3 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">#</th>
-            <th className="min-w-[200px] px-1 py-3 text-xs font-semibold tracking-wide text-gray-500">Defender</th>
-            <ColHeader label="Composite Score" tooltip="Composite Defender Score: 40% TVL + 30% Attacks Survived + 20% Breach Resilience + 10% Active Sentinels" sortKey="compositeScore" {...colProps} />
+            <th className="w-14 px-3 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
+              #
+            </th>
+            <th className="min-w-[200px] px-1 py-3 text-xs font-semibold tracking-wide text-gray-500">
+              Defender
+            </th>
+            <ColHeader
+              label="Composite Score"
+              tooltip="Composite Defender Score: 40% TVL + 30% Attacks Survived + 20% Breach Resilience + 10% Active Sentinels"
+              sortKey="compositeScore"
+              {...colProps}
+            />
             <ColHeader label="Tier" sortKey="defenderTier" {...colProps} />
-            <ColHeader label="Fees Earned(SUI)" tooltip="Cumulative fees claimed + pending in SUI" sortKey="totalFeesEarnedSui" {...colProps} />
-            <ColHeader label="$SENTINEL Rewards" tooltip="SENTINEL token rewards distributed" sortKey="sentinelTokensEarned" {...colProps} />
-            <ColHeader label="TVL (SUI)" tooltip="Total Value Locked across all active reward pools" sortKey="tvlSui" {...colProps} />
-          
-            <ColHeader label="Longest Surviving" tooltip="Days + hours since deployment of the longest-standing unbreached Sentinel" sortKey="longestSurvivingHours" {...colProps} />
-            <ColHeader label="Attacks Survived" tooltip="Total consume_prompt calls where success=false" sortKey="totalAttacksSurvived" {...colProps} />
-            <ColHeader label="Breach Rate" tooltip="Percentage of attacks that successfully breached a Sentinel" sortKey="breachRatePct" {...colProps} />
-            <ColHeader label="Active Sentinels" tooltip="Currently live Sentinels" sortKey="activeSentinels" {...colProps} />
-            <ColHeader label="Total Sentinels" tooltip="All-time Sentinels created, including inactive ones" sortKey="totalSentinelsDeployed" {...colProps} />
-            <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Actions</th>
+            <ColHeader
+              label="Fees Earned(SUI)"
+              tooltip="Cumulative fees claimed + pending in SUI"
+              sortKey="totalFeesEarnedSui"
+              {...colProps}
+            />
+            <ColHeader
+              label="$SENTINEL Rewards"
+              tooltip="SENTINEL token rewards distributed"
+              sortKey="sentinelTokensEarned"
+              {...colProps}
+            />
+            <ColHeader
+              label="TVL (SUI)"
+              tooltip="Total Value Locked across all active reward pools"
+              sortKey="tvlSui"
+              {...colProps}
+            />
+
+            <ColHeader
+              label="Longest Surviving"
+              tooltip="Days + hours since deployment of the longest-standing unbreached Sentinel"
+              sortKey="longestSurvivingHours"
+              {...colProps}
+            />
+            <ColHeader
+              label="Attacks Survived"
+              tooltip="Total consume_prompt calls where success=false"
+              sortKey="totalAttacksSurvived"
+              {...colProps}
+            />
+            <ColHeader
+              label="Breach Rate"
+              tooltip="Percentage of attacks that successfully breached a Sentinel"
+              sortKey="breachRatePct"
+              {...colProps}
+            />
+            <ColHeader
+              label="Active Sentinels"
+              tooltip="Currently live Sentinels"
+              sortKey="activeSentinels"
+              {...colProps}
+            />
+            <ColHeader
+              label="Total Sentinels"
+              tooltip="All-time Sentinels created, including inactive ones"
+              sortKey="totalSentinelsDeployed"
+              {...colProps}
+            />
+            <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
@@ -887,17 +1104,18 @@ function DefendersTable({ entries }: { entries: DefenderEntry[] }) {
             const rowBg = entry.isCurrentUser
               ? 'bg-blue-50/60 hover:bg-blue-50'
               : isTop3
-              ? 'bg-white hover:bg-gray-50/80'
-              : 'bg-white hover:bg-gray-50/60'
-            const leftBorder = entry.rank === 1
-              ? 'border-l-2 border-l-yellow-400'
-              : entry.rank === 2
-              ? 'border-l-2 border-l-slate-400'
-              : entry.rank === 3
-              ? 'border-l-2 border-l-amber-600'
-              : entry.isCurrentUser
-              ? 'border-l-2 border-l-blue-400'
-              : ''
+                ? 'bg-white hover:bg-gray-50/80'
+                : 'bg-white hover:bg-gray-50/60'
+            const leftBorder =
+              entry.rank === 1
+                ? 'border-l-2 border-l-yellow-400'
+                : entry.rank === 2
+                  ? 'border-l-2 border-l-slate-400'
+                  : entry.rank === 3
+                    ? 'border-l-2 border-l-amber-600'
+                    : entry.isCurrentUser
+                      ? 'border-l-2 border-l-blue-400'
+                      : ''
 
             return (
               <motion.tr
@@ -912,20 +1130,30 @@ function DefendersTable({ entries }: { entries: DefenderEntry[] }) {
                 </td>
                 <td className="px-3 py-3">
                   <div className="flex flex-col gap-1">
-                    <IdentityCell username={entry.username} walletAddress={entry.walletAddress} avatarUrl={entry.avatarUrl} />
+                    <IdentityCell
+                      username={entry.username}
+                      walletAddress={entry.walletAddress}
+                      avatarUrl={entry.avatarUrl}
+                    />
                     {entry.isCurrentUser && (
-                      <span className="ml-12 w-fit rounded-full border border-blue-200 bg-blue-100 px-2 py-0.5 text-[10px] font-semibold text-blue-700">You</span>
+                      <span className="ml-12 w-fit rounded-full border border-blue-200 bg-blue-100 px-2 py-0.5 text-[10px] font-semibold text-blue-700">
+                        You
+                      </span>
                     )}
                   </div>
                 </td>
                 <td className="px-3 py-3">
-                  <span className="font-bold text-gray-900">{entry.compositeScore.toLocaleString()}</span>
+                  <span className="font-bold text-gray-900">
+                    {entry.compositeScore.toLocaleString()}
+                  </span>
                 </td>
                 <td className="px-3 py-3">
                   <DefenderTierBadge tier={entry.defenderTier} />
                 </td>
                 <td className="px-3 py-3 text-gray-700">{formatSui(entry.totalFeesEarnedSui)}</td>
-                <td className="px-3 py-3 font-medium text-purple-700">{entry.sentinelTokensEarned.toLocaleString()}</td>
+                <td className="px-3 py-3 font-medium text-purple-700">
+                  {entry.sentinelTokensEarned.toLocaleString()}
+                </td>
                 <td className="px-3 py-3">
                   <div className="flex items-center gap-1.5">
                     <span className="font-medium text-gray-900">{formatSui(entry.tvlSui)}</span>
@@ -941,13 +1169,19 @@ function DefendersTable({ entries }: { entries: DefenderEntry[] }) {
                           <Calculator className="h-3 w-3" />
                         </Link>
                       </TooltipTrigger>
-                      <TooltipContent><p className="text-xs">Estimate earnings in Reward Calculator</p></TooltipContent>
+                      <TooltipContent>
+                        <p className="text-xs">Estimate earnings in Reward Calculator</p>
+                      </TooltipContent>
                     </Tooltip>
                   </div>
                 </td>
-              
-                <td className="px-3 py-3 font-mono text-xs text-gray-700">{formatSurvivalTime(entry.longestSurvivingHours)}</td>
-                <td className="px-3 py-3 font-medium text-gray-900">{entry.totalAttacksSurvived.toLocaleString()}</td>
+
+                <td className="px-3 py-3 font-mono text-xs text-gray-700">
+                  {formatSurvivalTime(entry.longestSurvivingHours)}
+                </td>
+                <td className="px-3 py-3 font-medium text-gray-900">
+                  {entry.totalAttacksSurvived.toLocaleString()}
+                </td>
                 <td className={cn('px-3 py-3 font-semibold', breachRateColor(entry.breachRatePct))}>
                   {entry.breachRatePct.toFixed(1)}%
                 </td>
@@ -993,21 +1227,62 @@ function AttackersTable({ entries }: { entries: AttackerEntry[] }) {
 
   return (
     <div className="overflow-x-auto rounded-xl border border-gray-200">
-      <table className="min-w-[1200px] w-full border-collapse text-sm">
+      <table className="w-full min-w-[1200px] border-collapse text-sm">
         <thead>
           <tr className="border-b border-gray-200 bg-gray-50">
-            <th className="w-14 px-3 py-3 text-center text-xs font-semibold tracking-wide text-gray-500">#</th>
-            <th className="min-w-[200px] px-3 py-3 text-xs font-semibold tracking-wide text-gray-500">Attacker</th>
+            <th className="w-14 px-3 py-3 text-center text-xs font-semibold tracking-wide text-gray-500">
+              #
+            </th>
+            <th className="min-w-[200px] px-3 py-3 text-xs font-semibold tracking-wide text-gray-500">
+              Attacker
+            </th>
             <ColHeader label="Tier" sortKey="attackerTier" {...colProps} />
-            <ColHeader label="Total Bounty Won" tooltip="Sum of all reward pool payouts received in SUI" sortKey="totalBountyWonSui" {...colProps} />
-            <ColHeader label="Total Attacks" tooltip="All consume_prompt calls by this address" sortKey="totalAttacksSent" {...colProps} />
-            <ColHeader label="Successful Attacks" tooltip="consume_prompt calls where success=true" sortKey="successfulBreaches" {...colProps} />
-            <ColHeader label="Breach Rate" tooltip="Breaches / Total Attacks × 100" sortKey="breachRatePct" {...colProps} />
-            <ColHeader label="Largest Bounty" tooltip="Maximum single payout received in SUI" sortKey="largestSingleBountySui" {...colProps} />
-            <ColHeader label="Streak" tooltip="Consecutive days with at least one attack sent" sortKey="attackStreakDays" {...colProps} />
-            <ColHeader label="$SENTINEL" tooltip="SENTINEL token rewards distributed for attacking" sortKey="sentinelTokensEarned" {...colProps} />
+            <ColHeader
+              label="Total Bounty Won"
+              tooltip="Sum of all reward pool payouts received in SUI"
+              sortKey="totalBountyWonSui"
+              {...colProps}
+            />
+            <ColHeader
+              label="Total Attacks"
+              tooltip="All consume_prompt calls by this address"
+              sortKey="totalAttacksSent"
+              {...colProps}
+            />
+            <ColHeader
+              label="Successful Attacks"
+              tooltip="consume_prompt calls where success=true"
+              sortKey="successfulBreaches"
+              {...colProps}
+            />
+            <ColHeader
+              label="Breach Rate"
+              tooltip="Breaches / Total Attacks × 100"
+              sortKey="breachRatePct"
+              {...colProps}
+            />
+            <ColHeader
+              label="Largest Bounty"
+              tooltip="Maximum single payout received in SUI"
+              sortKey="largestSingleBountySui"
+              {...colProps}
+            />
+            <ColHeader
+              label="Streak"
+              tooltip="Consecutive days with at least one attack sent"
+              sortKey="attackStreakDays"
+              {...colProps}
+            />
+            <ColHeader
+              label="$SENTINEL"
+              tooltip="SENTINEL token rewards distributed for attacking"
+              sortKey="sentinelTokensEarned"
+              {...colProps}
+            />
             <ColHeader label="Last Active" sortKey="lastActiveTimestamp" {...colProps} />
-            <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Actions</th>
+            <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
@@ -1016,17 +1291,18 @@ function AttackersTable({ entries }: { entries: AttackerEntry[] }) {
             const rowBg = entry.isCurrentUser
               ? 'bg-blue-50/60 hover:bg-blue-50'
               : isTop3
-              ? 'bg-white hover:bg-gray-50/80'
-              : 'bg-white hover:bg-gray-50/60'
-            const leftBorder = entry.rank === 1
-              ? 'border-l-2 border-l-yellow-400'
-              : entry.rank === 2
-              ? 'border-l-2 border-l-slate-400'
-              : entry.rank === 3
-              ? 'border-l-2 border-l-amber-600'
-              : entry.isCurrentUser
-              ? 'border-l-2 border-l-blue-400'
-              : ''
+                ? 'bg-white hover:bg-gray-50/80'
+                : 'bg-white hover:bg-gray-50/60'
+            const leftBorder =
+              entry.rank === 1
+                ? 'border-l-2 border-l-yellow-400'
+                : entry.rank === 2
+                  ? 'border-l-2 border-l-slate-400'
+                  : entry.rank === 3
+                    ? 'border-l-2 border-l-amber-600'
+                    : entry.isCurrentUser
+                      ? 'border-l-2 border-l-blue-400'
+                      : ''
 
             return (
               <motion.tr
@@ -1036,23 +1312,48 @@ function AttackersTable({ entries }: { entries: AttackerEntry[] }) {
                 transition={{ delay: i * 0.03 }}
                 className={cn('transition-colors', rowBg, leftBorder)}
               >
-                <td className="px-3 py-3 text-center"><RankCell rank={entry.rank} /></td>
+                <td className="px-3 py-3 text-center">
+                  <RankCell rank={entry.rank} />
+                </td>
                 <td className="px-3 py-3">
                   <div className="flex flex-col gap-1">
-                    <IdentityCell username={entry.username} walletAddress={entry.walletAddress} avatarUrl={entry.avatarUrl} />
+                    <IdentityCell
+                      username={entry.username}
+                      walletAddress={entry.walletAddress}
+                      avatarUrl={entry.avatarUrl}
+                    />
                     {entry.isCurrentUser && (
-                      <span className="ml-12 w-fit rounded-full border border-blue-200 bg-blue-100 px-2 py-0.5 text-[10px] font-semibold text-blue-700">You</span>
+                      <span className="ml-12 w-fit rounded-full border border-blue-200 bg-blue-100 px-2 py-0.5 text-[10px] font-semibold text-blue-700">
+                        You
+                      </span>
                     )}
                   </div>
                 </td>
-                <td className="px-3 py-3"><AttackerTierBadge tier={entry.attackerTier} /></td>
-                <td className="px-3 py-3 font-bold text-gray-900">{formatSui(entry.totalBountyWonSui)} SUI</td>
-                <td className="px-3 py-3 text-gray-700">{entry.totalAttacksSent.toLocaleString()}</td>
+                <td className="px-3 py-3">
+                  <AttackerTierBadge tier={entry.attackerTier} />
+                </td>
+                <td className="px-3 py-3 font-bold text-gray-900">
+                  {formatSui(entry.totalBountyWonSui)} SUI
+                </td>
+                <td className="px-3 py-3 text-gray-700">
+                  {entry.totalAttacksSent.toLocaleString()}
+                </td>
                 <td className="px-3 py-3 font-medium text-gray-900">{entry.successfulBreaches}</td>
-                <td className={cn('px-3 py-3 font-semibold', entry.breachRatePct > 10 ? 'text-emerald-600' : entry.breachRatePct > 5 ? 'text-amber-600' : 'text-gray-700')}>
+                <td
+                  className={cn(
+                    'px-3 py-3 font-semibold',
+                    entry.breachRatePct > 10
+                      ? 'text-emerald-600'
+                      : entry.breachRatePct > 5
+                        ? 'text-amber-600'
+                        : 'text-gray-700'
+                  )}
+                >
                   {entry.breachRatePct.toFixed(1)}%
                 </td>
-                <td className="px-3 py-3 text-gray-700">{formatSui(entry.largestSingleBountySui)} SUI</td>
+                <td className="px-3 py-3 text-gray-700">
+                  {formatSui(entry.largestSingleBountySui)} SUI
+                </td>
                 <td className="px-3 py-3">
                   {entry.attackStreakDays > 0 ? (
                     <span className="inline-flex items-center gap-1 font-semibold text-orange-600">
@@ -1063,9 +1364,15 @@ function AttackersTable({ entries }: { entries: AttackerEntry[] }) {
                     <span className="text-gray-400">—</span>
                   )}
                 </td>
-                <td className="px-3 py-3 font-medium text-purple-700">{entry.sentinelTokensEarned.toLocaleString()}</td>
-                <td className="px-3 py-3 text-gray-500">{formatTimeAgo(entry.lastActiveTimestamp)}</td>
-                <td className="px-3 py-3"><ShareButton rank={entry.rank} tab="attackers" /></td>
+                <td className="px-3 py-3 font-medium text-purple-700">
+                  {entry.sentinelTokensEarned.toLocaleString()}
+                </td>
+                <td className="px-3 py-3 text-gray-500">
+                  {formatTimeAgo(entry.lastActiveTimestamp)}
+                </td>
+                <td className="px-3 py-3">
+                  <ShareButton rank={entry.rank} tab="attackers" />
+                </td>
               </motion.tr>
             )
           })}
@@ -1149,7 +1456,13 @@ export function NewLeaderboard() {
   }, [attackersQuery])
 
   const defenderTiers: DefenderTier[] = ['Bronze', 'Silver', 'Gold', 'Diamond', 'Legendary']
-  const attackerTiers: AttackerTier[] = ['Recruit', 'Hunter', 'Specialist', 'Elite', 'Apex Predator']
+  const attackerTiers: AttackerTier[] = [
+    'Recruit',
+    'Hunter',
+    'Specialist',
+    'Elite',
+    'Apex Predator',
+  ]
 
   return (
     <div className="min-h-body pb-16 pt-20">
@@ -1215,7 +1528,9 @@ export function NewLeaderboard() {
                     onClick={() => setDefenderTierFilter('')}
                     className={cn(
                       'rounded-full border px-3 py-1.5 text-xs font-medium transition-colors',
-                      defenderTierFilter === '' ? 'border-black bg-black text-white' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                      defenderTierFilter === ''
+                        ? 'border-black bg-black text-white'
+                        : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
                     )}
                   >
                     All Tiers
@@ -1229,7 +1544,9 @@ export function NewLeaderboard() {
                         onClick={() => setDefenderTierFilter(active ? '' : tier)}
                         className={cn(
                           'rounded-full border px-3 py-1.5 text-xs font-medium transition-colors',
-                          active ? `${cfg.bg} ${cfg.text} ${cfg.border}` : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                          active
+                            ? `${cfg.bg} ${cfg.text} ${cfg.border}`
+                            : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
                         )}
                       >
                         {tier}
@@ -1245,8 +1562,10 @@ export function NewLeaderboard() {
                   <EmptyState message="Failed to load defenders. Please try again." />
                 ) : defendersQuery.isLoading ? (
                   <div className="overflow-x-auto rounded-xl border border-gray-200">
-                    <table className="min-w-[1380px] w-full border-collapse text-sm">
-                      <tbody><SkeletonRows cols={13} /></tbody>
+                    <table className="w-full min-w-[1380px] border-collapse text-sm">
+                      <tbody>
+                        <SkeletonRows cols={13} />
+                      </tbody>
                     </table>
                   </div>
                 ) : allDefenders.length > 0 ? (
@@ -1262,7 +1581,10 @@ export function NewLeaderboard() {
                   <EmptyState message="Failed to load defenders. Please try again." />
                 ) : defendersQuery.isLoading ? (
                   Array.from({ length: 3 }).map((_, i) => (
-                    <div key={i} className="animate-pulse rounded-xl border border-gray-200 bg-white p-4">
+                    <div
+                      key={i}
+                      className="animate-pulse rounded-xl border border-gray-200 bg-white p-4"
+                    >
                       <div className="mb-3 flex items-center gap-3">
                         <div className="h-8 w-8 rounded-full bg-gray-100" />
                         <div className="flex-1 space-y-1.5">
@@ -1284,7 +1606,10 @@ export function NewLeaderboard() {
               </div>
 
               {defendersQuery.hasNextPage && (
-                <LoadMoreButton onClick={handleLoadMoreDefenders} isLoading={defendersQuery.isFetchingNextPage} />
+                <LoadMoreButton
+                  onClick={handleLoadMoreDefenders}
+                  isLoading={defendersQuery.isFetchingNextPage}
+                />
               )}
 
               <p className="mt-4 text-center text-xs text-gray-400">
@@ -1310,7 +1635,9 @@ export function NewLeaderboard() {
                     onClick={() => setAttackerTierFilter('')}
                     className={cn(
                       'rounded-full border px-3 py-1.5 text-xs font-medium transition-colors',
-                      attackerTierFilter === '' ? 'border-black bg-black text-white' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                      attackerTierFilter === ''
+                        ? 'border-black bg-black text-white'
+                        : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
                     )}
                   >
                     All Tiers
@@ -1324,7 +1651,9 @@ export function NewLeaderboard() {
                         onClick={() => setAttackerTierFilter(active ? '' : tier)}
                         className={cn(
                           'rounded-full border px-3 py-1.5 text-xs font-medium transition-colors',
-                          active ? `${cfg.bg} ${cfg.text} ${cfg.border}` : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                          active
+                            ? `${cfg.bg} ${cfg.text} ${cfg.border}`
+                            : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
                         )}
                       >
                         {tier}
@@ -1340,8 +1669,10 @@ export function NewLeaderboard() {
                   <EmptyState message="Failed to load attackers. Please try again." />
                 ) : attackersQuery.isLoading ? (
                   <div className="overflow-x-auto rounded-xl border border-gray-200">
-                    <table className="min-w-[1200px] w-full border-collapse text-sm">
-                      <tbody><SkeletonRows cols={11} /></tbody>
+                    <table className="w-full min-w-[1200px] border-collapse text-sm">
+                      <tbody>
+                        <SkeletonRows cols={11} />
+                      </tbody>
                     </table>
                   </div>
                 ) : allAttackers.length > 0 ? (
@@ -1357,7 +1688,10 @@ export function NewLeaderboard() {
                   <EmptyState message="Failed to load attackers. Please try again." />
                 ) : attackersQuery.isLoading ? (
                   Array.from({ length: 3 }).map((_, i) => (
-                    <div key={i} className="animate-pulse rounded-xl border border-gray-200 bg-white p-4">
+                    <div
+                      key={i}
+                      className="animate-pulse rounded-xl border border-gray-200 bg-white p-4"
+                    >
                       <div className="mb-3 flex items-center gap-3">
                         <div className="h-8 w-8 rounded-full bg-gray-100" />
                         <div className="flex-1 space-y-1.5">
@@ -1379,7 +1713,10 @@ export function NewLeaderboard() {
               </div>
 
               {attackersQuery.hasNextPage && (
-                <LoadMoreButton onClick={handleLoadMoreAttackers} isLoading={attackersQuery.isFetchingNextPage} />
+                <LoadMoreButton
+                  onClick={handleLoadMoreAttackers}
+                  isLoading={attackersQuery.isFetchingNextPage}
+                />
               )}
 
               <p className="mt-4 text-center text-xs text-gray-400">
