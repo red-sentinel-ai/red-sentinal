@@ -105,7 +105,8 @@ export const FundAgentModal = ({
         </div>
 
         <p className="text-gray-600">
-          Add funds to your reward pool to list your sentinel on the attack page. The bigger the bounty, the more attackers you&apos;ll attract.
+          Add funds to your reward pool to list your sentinel on the attack page. The bigger the
+          bounty, the more attackers you&apos;ll attract.
         </p>
 
         <div>
@@ -124,7 +125,7 @@ export const FundAgentModal = ({
         </div>
 
         <p className="text-xs text-gray-500">
-          Sentinels with zero balance won&apos;t be visible to attackers.
+          Sentinels with less than 0.1 SUI balance won&apos;t be visible to attackers.
         </p>
 
         <button
