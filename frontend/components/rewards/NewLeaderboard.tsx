@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import {
   Trophy,
   Crown,
@@ -22,9 +22,11 @@ import {
   Sword,
   Info,
   Check,
+  Loader2,
 } from 'lucide-react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useCurrentAccount } from '@mysten/dapp-kit'
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
@@ -37,6 +39,8 @@ import {
   SUI_SENTINEL_AUDIT_REPORT_URL,
   SUI_SENTINEL_APP_URL,
 } from '@/constants'
+import { useDefendersLeaderboard, mapApiDefender } from '@/hooks/rewards/useDefendersLeaderboard'
+import { useAttackersLeaderboard, mapApiAttacker } from '@/hooks/rewards/useAttackersLeaderboard'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 // TODO: Replace with actual API response types when endpoints are ready.
@@ -1071,48 +1075,78 @@ function AttackersTable({ entries }: { entries: AttackerEntry[] }) {
   )
 }
 
+// ─── Skeleton Row ────────────────────────────────────────────────────────────
+
+function SkeletonRows({ cols }: { cols: number }) {
+  return (
+    <>
+      {Array.from({ length: 5 }).map((_, i) => (
+        <tr key={i} className="animate-pulse border-b border-gray-100">
+          {Array.from({ length: cols }).map((__, j) => (
+            <td key={j} className="px-3 py-4">
+              <div className="h-4 rounded bg-gray-100" />
+            </td>
+          ))}
+        </tr>
+      ))}
+    </>
+  )
+}
+
+function LoadMoreButton({ onClick, isLoading }: { onClick: () => void; isLoading: boolean }) {
+  return (
+    <div className="mt-4 flex justify-center">
+      <button
+        onClick={onClick}
+        disabled={isLoading}
+        className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-5 py-2 text-sm font-medium text-gray-600 transition-colors hover:border-gray-300 hover:text-gray-900 disabled:opacity-50"
+      >
+        {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+        Load more
+      </button>
+    </div>
+  )
+}
+
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export function NewLeaderboard() {
+  const account = useCurrentAccount()
+  const connectedWallet = account?.address
+
   const [defenderSearch, setDefenderSearch] = useState('')
   const [attackerSearch, setAttackerSearch] = useState('')
   const [defenderTierFilter, setDefenderTierFilter] = useState<DefenderTier | ''>('')
   const [attackerTierFilter, setAttackerTierFilter] = useState<AttackerTier | ''>('')
 
-  const filteredDefenders = useMemo(() => {
-    return DUMMY_DEFENDERS.filter(e => {
-      const matchesSearch =
-        !defenderSearch ||
-        e.username.toLowerCase().includes(defenderSearch.toLowerCase()) ||
-        e.walletAddress.toLowerCase().includes(defenderSearch.toLowerCase())
-      const matchesTier = !defenderTierFilter || e.defenderTier === defenderTierFilter
-      return matchesSearch && matchesTier
-    })
-  }, [defenderSearch, defenderTierFilter])
+  const defendersQuery = useDefendersLeaderboard(25, defenderSearch, defenderTierFilter)
+  const attackersQuery = useAttackersLeaderboard(25, attackerSearch, attackerTierFilter)
 
-  const filteredAttackers = useMemo(() => {
-    return DUMMY_ATTACKERS.filter(e => {
-      const matchesSearch =
-        !attackerSearch ||
-        e.username.toLowerCase().includes(attackerSearch.toLowerCase()) ||
-        e.walletAddress.toLowerCase().includes(attackerSearch.toLowerCase())
-      const matchesTier = !attackerTierFilter || e.attackerTier === attackerTierFilter
-      return matchesSearch && matchesTier
-    })
-  }, [attackerSearch, attackerTierFilter])
-
-  // Pin current user to top
-  const pinnedDefenders = useMemo(() => {
-    const currentUser = filteredDefenders.find(e => e.isCurrentUser)
-    const rest = filteredDefenders.filter(e => !e.isCurrentUser)
+  const allDefenders = useMemo(() => {
+    const entries = (defendersQuery.data?.pages ?? []).flatMap(p =>
+      p.defenders.map(d => mapApiDefender(d, connectedWallet))
+    )
+    const currentUser = entries.find(e => e.isCurrentUser)
+    const rest = entries.filter(e => !e.isCurrentUser)
     return currentUser ? [currentUser, ...rest] : rest
-  }, [filteredDefenders])
+  }, [defendersQuery.data, connectedWallet])
 
-  const pinnedAttackers = useMemo(() => {
-    const currentUser = filteredAttackers.find(e => e.isCurrentUser)
-    const rest = filteredAttackers.filter(e => !e.isCurrentUser)
+  const allAttackers = useMemo(() => {
+    const entries = (attackersQuery.data?.pages ?? []).flatMap(p =>
+      p.attackers.map(a => mapApiAttacker(a, connectedWallet))
+    )
+    const currentUser = entries.find(e => e.isCurrentUser)
+    const rest = entries.filter(e => !e.isCurrentUser)
     return currentUser ? [currentUser, ...rest] : rest
-  }, [filteredAttackers])
+  }, [attackersQuery.data, connectedWallet])
+
+  const handleLoadMoreDefenders = useCallback(() => {
+    defendersQuery.fetchNextPage()
+  }, [defendersQuery])
+
+  const handleLoadMoreAttackers = useCallback(() => {
+    attackersQuery.fetchNextPage()
+  }, [attackersQuery])
 
   const defenderTiers: DefenderTier[] = ['Bronze', 'Silver', 'Gold', 'Diamond', 'Legendary']
   const attackerTiers: AttackerTier[] = ['Recruit', 'Hunter', 'Specialist', 'Elite', 'Apex Predator']
@@ -1207,8 +1241,16 @@ export function NewLeaderboard() {
 
               {/* Desktop Table */}
               <div className="hidden md:block">
-                {pinnedDefenders.length > 0 ? (
-                  <DefendersTable entries={pinnedDefenders} />
+                {defendersQuery.isError ? (
+                  <EmptyState message="Failed to load defenders. Please try again." />
+                ) : defendersQuery.isLoading ? (
+                  <div className="overflow-x-auto rounded-xl border border-gray-200">
+                    <table className="min-w-[1380px] w-full border-collapse text-sm">
+                      <tbody><SkeletonRows cols={13} /></tbody>
+                    </table>
+                  </div>
+                ) : allDefenders.length > 0 ? (
+                  <DefendersTable entries={allDefenders} />
                 ) : (
                   <EmptyState message="No defenders match your filters." />
                 )}
@@ -1216,15 +1258,37 @@ export function NewLeaderboard() {
 
               {/* Mobile Cards */}
               <div className="space-y-3 md:hidden">
-                {pinnedDefenders.length > 0 ? (
-                  pinnedDefenders.map(entry => <DefenderCard key={entry.userId} entry={entry} />)
+                {defendersQuery.isError ? (
+                  <EmptyState message="Failed to load defenders. Please try again." />
+                ) : defendersQuery.isLoading ? (
+                  Array.from({ length: 3 }).map((_, i) => (
+                    <div key={i} className="animate-pulse rounded-xl border border-gray-200 bg-white p-4">
+                      <div className="mb-3 flex items-center gap-3">
+                        <div className="h-8 w-8 rounded-full bg-gray-100" />
+                        <div className="flex-1 space-y-1.5">
+                          <div className="h-3.5 w-32 rounded bg-gray-100" />
+                          <div className="h-3 w-24 rounded bg-gray-100" />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="h-14 rounded-lg bg-gray-100" />
+                        <div className="h-14 rounded-lg bg-gray-100" />
+                      </div>
+                    </div>
+                  ))
+                ) : allDefenders.length > 0 ? (
+                  allDefenders.map(entry => <DefenderCard key={entry.userId} entry={entry} />)
                 ) : (
                   <EmptyState message="No defenders match your filters." />
                 )}
               </div>
 
+              {defendersQuery.hasNextPage && (
+                <LoadMoreButton onClick={handleLoadMoreDefenders} isLoading={defendersQuery.isFetchingNextPage} />
+              )}
+
               <p className="mt-4 text-center text-xs text-gray-400">
-                Sorted by Composite Defender Score by default · Scores update every 60 seconds
+                Sorted by Composite Defender Score · Scores recompute every 5 minutes
               </p>
             </TabsContent>
 
@@ -1272,8 +1336,16 @@ export function NewLeaderboard() {
 
               {/* Desktop Table */}
               <div className="hidden md:block">
-                {pinnedAttackers.length > 0 ? (
-                  <AttackersTable entries={pinnedAttackers} />
+                {attackersQuery.isError ? (
+                  <EmptyState message="Failed to load attackers. Please try again." />
+                ) : attackersQuery.isLoading ? (
+                  <div className="overflow-x-auto rounded-xl border border-gray-200">
+                    <table className="min-w-[1200px] w-full border-collapse text-sm">
+                      <tbody><SkeletonRows cols={11} /></tbody>
+                    </table>
+                  </div>
+                ) : allAttackers.length > 0 ? (
+                  <AttackersTable entries={allAttackers} />
                 ) : (
                   <EmptyState message="No attackers match your filters." />
                 )}
@@ -1281,15 +1353,37 @@ export function NewLeaderboard() {
 
               {/* Mobile Cards */}
               <div className="space-y-3 md:hidden">
-                {pinnedAttackers.length > 0 ? (
-                  pinnedAttackers.map(entry => <AttackerCard key={entry.userId} entry={entry} />)
+                {attackersQuery.isError ? (
+                  <EmptyState message="Failed to load attackers. Please try again." />
+                ) : attackersQuery.isLoading ? (
+                  Array.from({ length: 3 }).map((_, i) => (
+                    <div key={i} className="animate-pulse rounded-xl border border-gray-200 bg-white p-4">
+                      <div className="mb-3 flex items-center gap-3">
+                        <div className="h-8 w-8 rounded-full bg-gray-100" />
+                        <div className="flex-1 space-y-1.5">
+                          <div className="h-3.5 w-32 rounded bg-gray-100" />
+                          <div className="h-3 w-24 rounded bg-gray-100" />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="h-14 rounded-lg bg-gray-100" />
+                        <div className="h-14 rounded-lg bg-gray-100" />
+                      </div>
+                    </div>
+                  ))
+                ) : allAttackers.length > 0 ? (
+                  allAttackers.map(entry => <AttackerCard key={entry.userId} entry={entry} />)
                 ) : (
                   <EmptyState message="No attackers match your filters." />
                 )}
               </div>
 
+              {attackersQuery.hasNextPage && (
+                <LoadMoreButton onClick={handleLoadMoreAttackers} isLoading={attackersQuery.isFetchingNextPage} />
+              )}
+
               <p className="mt-4 text-center text-xs text-gray-400">
-                Sorted by Total Bounty Won by default · Data refreshes every 60 seconds
+                Sorted by Total Bounty Won · Data recomputes every 5 minutes
               </p>
             </TabsContent>
           </Tabs>
