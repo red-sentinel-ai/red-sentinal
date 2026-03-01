@@ -8,6 +8,7 @@ interface StatItemData {
   label: string
   value: number
   prefix: string
+  suffix: string
   format: 'compact' | 'integer'
   accent: 'mint' | 'pink' | 'pulse' | 'blue'
 }
@@ -54,7 +55,8 @@ function transformStats(data: StatsApiResponse): StatItemData[] {
       id: 'tvl',
       label: 'Value Secured',
       value: mistToSui(data.tvl),
-      prefix: '$',
+      prefix: '',
+      suffix: ' SUI',
       format: 'compact',
       accent: 'mint',
     },
@@ -62,7 +64,8 @@ function transformStats(data: StatsApiResponse): StatItemData[] {
       id: 'bounties',
       label: 'Bounties Claimed',
       value: mistToSui(data.totalBountyWon),
-      prefix: '$',
+      prefix: '',
+      suffix: ' SUI',
       format: 'compact',
       accent: 'pink',
     },
@@ -71,6 +74,7 @@ function transformStats(data: StatsApiResponse): StatItemData[] {
       label: 'Sentinels Breached',
       value: data.defeatedSentinels,
       prefix: '',
+      suffix: '',
       format: 'integer',
       accent: 'pulse',
     },
@@ -79,6 +83,7 @@ function transformStats(data: StatsApiResponse): StatItemData[] {
       label: 'Active Sentinels',
       value: data.activeSentinels,
       prefix: '',
+      suffix: '',
       format: 'integer',
       accent: 'blue',
     },
@@ -87,6 +92,7 @@ function transformStats(data: StatsApiResponse): StatItemData[] {
       label: '$SENTINEL Distributed',
       value: data.totalSentinelTokensDistributed,
       prefix: '',
+      suffix: '',
       format: 'compact',
       accent: 'pulse',
     },
@@ -95,6 +101,7 @@ function transformStats(data: StatsApiResponse): StatItemData[] {
       label: 'Attacks Launched',
       value: data.totalAttacks,
       prefix: '',
+      suffix: '',
       format: 'compact',
       accent: 'pink',
     },
@@ -102,7 +109,8 @@ function transformStats(data: StatsApiResponse): StatItemData[] {
       id: 'largest',
       label: 'Largest Breach',
       value: data.largestBountyWon ? mistToSui(data.largestBountyWon.amount) : 0,
-      prefix: '$',
+      prefix: '',
+      suffix: ' SUI',
       format: 'compact',
       accent: 'mint',
     },
@@ -111,12 +119,13 @@ function transformStats(data: StatsApiResponse): StatItemData[] {
 
 // Default stats for loading/error states
 const DEFAULT_STATS: StatItemData[] = [
-  { id: 'tvl', label: 'Value Secured', value: 0, prefix: '$', format: 'compact', accent: 'mint' },
+  { id: 'tvl', label: 'Value Secured', value: 0, prefix: '', suffix: ' SUI', format: 'compact', accent: 'mint' },
   {
     id: 'bounties',
     label: 'Bounties Claimed',
     value: 0,
-    prefix: '$',
+    prefix: '',
+    suffix: ' SUI',
     format: 'compact',
     accent: 'pink',
   },
@@ -125,6 +134,7 @@ const DEFAULT_STATS: StatItemData[] = [
     label: 'Sentinels Breached',
     value: 0,
     prefix: '',
+    suffix: '',
     format: 'integer',
     accent: 'pulse',
   },
@@ -133,6 +143,7 @@ const DEFAULT_STATS: StatItemData[] = [
     label: 'Active Sentinels',
     value: 0,
     prefix: '',
+    suffix: '',
     format: 'integer',
     accent: 'blue',
   },
@@ -141,6 +152,7 @@ const DEFAULT_STATS: StatItemData[] = [
     label: '$SENTINEL Distributed',
     value: 0,
     prefix: '',
+    suffix: '',
     format: 'compact',
     accent: 'pulse',
   },
@@ -149,6 +161,7 @@ const DEFAULT_STATS: StatItemData[] = [
     label: 'Attacks Launched',
     value: 0,
     prefix: '',
+    suffix: '',
     format: 'compact',
     accent: 'pink',
   },
@@ -156,13 +169,14 @@ const DEFAULT_STATS: StatItemData[] = [
     id: 'largest',
     label: 'Largest Breach',
     value: 0,
-    prefix: '$',
+    prefix: '',
+    suffix: ' SUI',
     format: 'compact',
     accent: 'mint',
   },
 ]
 
-function formatValue(value: number, format: 'compact' | 'integer', prefix: string): string {
+function formatValue(value: number, format: 'compact' | 'integer', prefix: string, suffix: string): string {
   let display = ''
   if (format === 'compact') {
     if (value >= 1_000_000) display = (value / 1_000_000).toFixed(1) + 'M'
@@ -171,7 +185,7 @@ function formatValue(value: number, format: 'compact' | 'integer', prefix: strin
   } else {
     display = value.toLocaleString()
   }
-  return `${prefix}${display}`
+  return `${prefix}${display}${suffix}`
 }
 
 function useCountUp(target: number, duration = 1800): number {
@@ -201,7 +215,7 @@ function StatItem({
   isLoading: boolean
 }) {
   const animated = useCountUp(isLoading ? 0 : stat.value, 1500 + index * 100)
-  const display = isLoading ? '—' : formatValue(animated, stat.format, stat.prefix)
+  const display = isLoading ? '—' : formatValue(animated, stat.format, stat.prefix, stat.suffix)
 
   return (
     <div
