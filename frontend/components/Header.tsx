@@ -23,7 +23,7 @@ export const Header = () => {
         'fixed left-0 right-0 top-0 z-50 w-full bg-transparent transition-all duration-300 md:border-b md:border-gray-200 md:bg-white/80 md:backdrop-blur-xl'
       )}
     >
-      <div className="mx-auto flex max-w-full items-center justify-between p-3 py-4 lg:px-8">
+      <div className="mx-auto flex max-w-full items-center justify-between p-2 lg:px-6">
         <div className="flex flex-1 items-end gap-2 md:gap-8">
           {/* Mobile: Small logo */}
           <Link className="block flex-shrink-0 md:hidden" href="/">
@@ -92,8 +92,8 @@ export const Header = () => {
         <Link href="/profile" className="ms-4 hidden rounded-full bg-white xl:block">
           <Image
             src="/icons/default_profile.png"
-            width={48}
-            height={48}
+            width={32}
+            height={32}
             alt="profile"
             className="mix-blend-luminosity"
           />
@@ -103,12 +103,12 @@ export const Header = () => {
         <>
           {/* Backdrop overlay */}
           <div
-            className="fixed inset-0 top-[72px] z-40 bg-black/20 backdrop-blur-sm md:top-[140px] xl:hidden"
+            className="fixed inset-0 top-[48px] z-40 bg-black/20 backdrop-blur-sm md:top-[52px] xl:hidden"
             onClick={() => setMenuOpen(false)}
           />
           {/* Mobile menu */}
           <div className="absolute left-0 right-0 top-full z-50 border-b border-gray-200 bg-white/95 px-4 pb-6 pt-2 shadow-lg backdrop-blur-xl xl:hidden">
-            <div className="border-t border-gray-200 py-4">
+            <div className="border-t border-gray-200">
               <MenuItems menuOpen={menuOpen} onItemClick={() => setMenuOpen(false)} />
             </div>
             <div className="mt-4 flex justify-center">

@@ -68,7 +68,7 @@ export const MenuItems = ({
           Support on X
         </Link>
       </li>
-      <li>
+      {/* <li>
         <Link
           href={SUI_SENTINEL_TELEGRAM_URL}
           target="_blank"
@@ -77,7 +77,7 @@ export const MenuItems = ({
         >
           <Image src="/icons/telegram.png" alt="Telegram" width={20} height={20} />
         </Link>
-      </li>
+      </li> */}
     </ul>
   )
 }
