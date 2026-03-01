@@ -7,7 +7,6 @@ import { PostHogProvider as PHProvider } from 'posthog-js/react'
 import { SuiClientProvider, WalletProvider, lightTheme } from '@mysten/dapp-kit'
 import { getFullnodeUrl } from '@mysten/sui/client'
 import { Header } from '@/components/Header'
-import SentinelStatsBar from '@/components/statbar/StatBar'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ProfileInitializer } from '@/components/profile/ProfileInitializer'
 import { FeedbackButton } from '@/components/feedback/FeedbackButton'
@@ -48,7 +47,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
           <WalletProvider autoConnect theme={lightTheme}>
             <div className="flex flex-col">
               {/* <LaunchMainnetBanner /> */}
-              <SentinelStatsBar />
               <Header />
               <div className="mt-[96px] md:mt-[100px]"></div>
               <ProfileInitializer />

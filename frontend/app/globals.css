@@ -107,13 +107,13 @@ html {
   .touch-manipulation {
     touch-action: manipulation;
   }
-  
+
   /* Smooth scrolling with momentum on iOS */
   .scroll-smooth-mobile {
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
   }
-  
+
   /* Hide scrollbar but keep functionality */
   .scrollbar-hide {
     -ms-overflow-style: none;
@@ -122,7 +122,7 @@ html {
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
-  
+
   /* Mobile-safe area insets for notched devices */
   .pb-safe {
     padding-bottom: env(safe-area-inset-bottom, 0);
@@ -130,7 +130,7 @@ html {
   .pt-safe {
     padding-top: env(safe-area-inset-top, 0);
   }
-  
+
   /* iOS-style momentum scrolling container */
   .ios-scroll {
     -webkit-overflow-scrolling: touch;
@@ -141,20 +141,20 @@ html {
 /* Mobile input optimizations */
 @layer base {
   /* Prevent zoom on focus in iOS Safari (font-size must be >= 16px) */
-  input[type="text"],
-  input[type="email"],
-  input[type="password"],
-  input[type="number"],
-  input[type="tel"],
-  input[type="url"],
+  input[type='text'],
+  input[type='email'],
+  input[type='password'],
+  input[type='number'],
+  input[type='tel'],
+  input[type='url'],
   textarea {
     font-size: 16px;
     touch-action: manipulation;
   }
-  
+
   /* Disable text selection on UI elements (not inputs) */
-  button, 
-  [role="button"],
+  button,
+  [role='button'],
   .no-select {
     user-select: none;
     -webkit-user-select: none;
@@ -568,12 +568,10 @@ body::-webkit-scrollbar-thumb:hover {
   z-index: 60;
   width: 100%;
   background: #000;
-  border-bottom: 1px solid rgba(234, 234, 234, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   overflow: hidden;
   font-family: 'IBM Plex Mono', monospace;
 }
-
-
 
 .ssb-inner {
   display: flex;
@@ -595,8 +593,8 @@ body::-webkit-scrollbar-thumb:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1px;
-  padding: 4px 16px;
+  gap: 0px;
+  padding: 1px 10px;
   flex-shrink: 0;
   cursor: default;
   animation: ssb-fadeUp 0.45s ease both;
@@ -614,24 +612,21 @@ body::-webkit-scrollbar-thumb:hover {
 
 .ssb-value {
   font-family: 'Syne', sans-serif;
-  font-size: clamp(1rem, 1.8vw, 1.35rem);
-  font-weight: 800;
+  font-size: clamp(0.95rem, 1.1vw, 1rem);
+  font-weight: 600;
   letter-spacing: -0.01em;
   color: var(--ssb-accent);
-  line-height: 1;
+  line-height: 1.2;
   white-space: nowrap;
-  text-shadow:
-    0 0 20px color-mix(in srgb, var(--ssb-accent) 40%, transparent),
-    0 0 40px color-mix(in srgb, var(--ssb-accent) 15%, transparent);
 }
 
 .ssb-label {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: clamp(0.52rem, 0.85vw, 0.63rem);
-  font-weight: 400;
-  letter-spacing: 0.1em;
+  font-size: clamp(0.35rem, 0.5vw, 0.45rem);
+  font-weight: 500;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: rgba(234, 234, 234, 0.35);
+  color: rgba(255, 255, 255, 0.8);
   white-space: nowrap;
 }
 
@@ -646,7 +641,9 @@ body::-webkit-scrollbar-thumb:hover {
   border-radius: 2px;
   transform: scaleX(0);
   opacity: 0;
-  transition: transform 0.25s ease, opacity 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
   transform-origin: center;
 }
 
@@ -682,6 +679,6 @@ body::-webkit-scrollbar-thumb:hover {
     justify-content: flex-start;
   }
   .ssb-item {
-    padding: 4px 12px;
+    padding: 1px 8px;
   }
 }
