@@ -108,49 +108,48 @@ export const AgentsList = ({
           <LeaderboardSkeleton />
         ) : (
           <div className="flex flex-col gap-1">
-            <div className="mb-2 hidden rounded-lg border border-[#5E5E5E] p-3 text-2xl font-medium backdrop-blur-xl hover:border-black/80 md:grid md:grid-cols-12">
-              <div className="col-span-1 grid grid-cols-12 items-center">
-                <p className="col-span-12 pr-1">#</p>
+            <div className="mb-2 hidden rounded-lg border border-[#5E5E5E] p-3 text-lg font-medium backdrop-blur-xl hover:border-black/80 md:grid md:grid-cols-12 md:gap-4">
+              <div className="col-span-1 flex items-center">
+                <span>#</span>
               </div>
               <div
                 className="col-span-1 flex cursor-pointer items-center hover:text-gray-600"
                 onClick={() => handleSort('agentId')}
               >
-                ID
+                <span>ID</span>
                 <SortIcon field="agentId" />
               </div>
-
-              <div className="col-span-2 ps-4">Sentinel</div>
+              <div className="col-span-2 flex items-center">Sentinel</div>
               <div
-                className="col-span-1 flex cursor-pointer items-center ps-4 hover:text-gray-600"
+                className="col-span-2 flex cursor-pointer items-center hover:text-gray-600"
                 onClick={() => handleSort('balance')}
               >
-                Bounty Pool
+                <span>Bounty Pool</span>
                 <SortIcon field="balance" />
               </div>
               <div
-                className="col-span-1 flex cursor-pointer items-center ps-4 hover:text-gray-600"
+                className="col-span-2 flex cursor-pointer items-center hover:text-gray-600"
                 onClick={() => handleSort('costPerMessage')}
               >
-                Cost per Attack
+                <span>Cost per Attack</span>
                 <SortIcon field="costPerMessage" />
               </div>
               <div
-                className="col-span-1 flex cursor-pointer items-center ps-4 hover:text-gray-600"
+                className="col-span-1 flex cursor-pointer items-center hover:text-gray-600"
                 onClick={() => handleSort('totalAttacks')}
               >
-                Total Attacks
+                <span>Attacks</span>
                 <SortIcon field="totalAttacks" />
               </div>
               <div
-                className="col-span-2 flex cursor-pointer items-center ps-4 hover:text-gray-600"
+                className="col-span-1 flex cursor-pointer items-center hover:text-gray-600"
                 onClick={() => handleSort('change7d')}
               >
-                7d Activity
+                <span>7d Activity</span>
                 <SortIcon field="change7d" />
               </div>
-              <div className="col-span-1">Status</div>
-              <div className="col-span-2 ps-4">Actions</div>
+              <div className="col-span-1 flex items-center justify-end">Status</div>
+              <div className="col-span-1 flex items-center justify-end">Actions</div>
             </div>
 
             <AnimatePresence mode="popLayout">
@@ -176,8 +175,8 @@ export const AgentsList = ({
                           {agent.is_featured && (
                             <Image
                               src="/icons/check-mark.svg"
-                              width={16}
-                              height={16}
+                              width={14}
+                              height={14}
                               alt="checkmark"
                             />
                           )}
@@ -233,14 +232,14 @@ export const AgentsList = ({
                       </div>
                     </div>
 
-                    <div className="hidden items-center md:grid md:grid-cols-12">
+                    <div className="hidden items-center md:grid md:grid-cols-12 md:gap-4">
                       <div className="col-span-1 flex items-center">
-                        <p className="pr-1">{idx + 1}</p>
+                        <span>{idx + 1}</span>
                       </div>
-                      <div className="col-span-1 pl-0">{agent.agent_id}</div>
+                      <div className="col-span-1 flex items-center">{agent.agent_id}</div>
 
-                      <div className="col-span-2 flex items-center gap-1 ps-4">
-                        <p className="truncate">{agent.agent_name}</p>
+                      <div className="col-span-2 flex items-center gap-1">
+                        <span className="truncate">{agent.agent_name}</span>
                         {agent.is_featured && (
                           <Image
                             src="/icons/check-mark.svg"
@@ -250,40 +249,39 @@ export const AgentsList = ({
                           />
                         )}
                       </div>
+                      <div className="col-span-2 flex items-center">{`${balance} SUI`}</div>
+                      <div className="col-span-2 flex items-center">{`${costPerMessage} SUI`}</div>
+                      <div className="col-span-1 flex items-center">{agent.total_attacks || 0}</div>
 
-                      <div className="col-span-1 ps-4">{`${balance} SUI`}</div>
-                      <div className="col-span-1 ps-4">{`${costPerMessage} SUI`}</div>
-                      <div className="col-span-1 ps-4">{agent.total_attacks || 0}</div>
-
-                      <div className="col-span-2 ps-4">
+                      <div className="col-span-1 flex items-center">
                         <PrizePoolChangeDisplay
                           prizePoolHistory={agent.prizePoolHistory}
                           variant="list"
                         />
                       </div>
 
-                      <div className="col-span-1">
+                      <div className="col-span-1 flex items-center justify-end">
                         <Badge
                           variant={agent.state === 'active' ? 'secondary' : 'destructive'}
                           className={`${
                             agent.state === 'active'
                               ? 'border-[#1FAD57] bg-[#D1E6DB] text-[#1FAD57]'
                               : 'border-red-500/20 bg-red-500/10 text-red-400'
-                          } rounded-xl text-base`}
+                          } rounded-xl text-sm`}
                         >
                           {agent.state === 'active' ? (
                             <Image
                               src="/icons/shield-green.png"
-                              width={16}
-                              height={16}
+                              width={14}
+                              height={14}
                               alt="shield green"
                               className="mr-1"
                             />
                           ) : (
                             <Image
                               src="/icons/shield-red.png"
-                              width={16}
-                              height={16}
+                              width={14}
+                              height={14}
                               alt="shield red"
                               className="mr-1"
                             />
@@ -291,24 +289,20 @@ export const AgentsList = ({
                           {agent.state === 'active' ? 'Active' : 'Defeated'}
                         </Badge>
                       </div>
-                      <div className="col-span-2 flex items-center gap-4">
+                      <div className="col-span-1 flex items-center justify-end">
                         <button
                           onClick={() => router.push(`/attack/${agent.agent_path}`)}
-                          className="badge-black"
+                          className="badge-black text-sm"
                         >
                           <Image
                             src="/icons/swords-white.png"
-                            width="16"
-                            height="16"
+                            width="14"
+                            height="14"
                             alt="swords"
                             className="mr-1"
                           />
                           Attack
                         </button>
-                        {/* <button onClick={e => handleRefresh(e)} className="badge-outline-black">
-                          <RefreshCcw width={16} className="mr-1" />
-                          Refresh
-                        </button> */}
                       </div>
                     </div>
                   </motion.div>
