@@ -1,4 +1,4 @@
-import { RewardsLeaderboard } from '@/components/rewards/RewardsLeaderboard'
+import { NewLeaderboard } from '@/components/rewards/NewLeaderboard'
 import { SUI_SENTINEL_APP_URL } from '@/constants'
 
 export const metadata = {
@@ -26,5 +26,5 @@ export const metadata = {
 }
 
 export default function Leaderboard() {
-  return <RewardsLeaderboard pointsSymbol="SENTINEL" />
+  return <NewLeaderboard />
 }
