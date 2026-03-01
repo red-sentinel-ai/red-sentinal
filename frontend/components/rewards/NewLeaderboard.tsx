@@ -554,7 +554,7 @@ function ColHeader({
   const active = currentSort === sortKey
   return (
     <th
-      className="cursor-pointer select-none whitespace-nowrap px-3 py-3 text-left text-xs font-semibold tracking-wide text-gray-500 hover:text-gray-800"
+      className="cursor-pointer select-none px-1 py-3 text-center text-xs font-semibold tracking-wide text-gray-500 hover:text-gray-800 max-w-[100px]"
       onClick={() => onSort(sortKey)}
     >
       <div className="flex items-center gap-1">
@@ -862,17 +862,18 @@ function DefendersTable({ entries }: { entries: DefenderEntry[] }) {
         <thead>
           <tr className="border-b border-gray-200 bg-gray-50">
             <th className="w-14 px-3 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">#</th>
-            <th className="min-w-[200px] px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Identity</th>
+            <th className="min-w-[200px] px-1 py-3 text-xs font-semibold tracking-wide text-gray-500">Defender</th>
             <ColHeader label="Composite Score" tooltip="Composite Defender Score: 40% TVL + 30% Attacks Survived + 20% Breach Resilience + 10% Active Sentinels" sortKey="compositeScore" {...colProps} />
             <ColHeader label="Tier" sortKey="defenderTier" {...colProps} />
+            <ColHeader label="Fees Earned(SUI)" tooltip="Cumulative fees claimed + pending in SUI" sortKey="totalFeesEarnedSui" {...colProps} />
+            <ColHeader label="$SENTINEL Rewards" tooltip="SENTINEL token rewards distributed" sortKey="sentinelTokensEarned" {...colProps} />
             <ColHeader label="TVL (SUI)" tooltip="Total Value Locked across all active reward pools" sortKey="tvlSui" {...colProps} />
-            <ColHeader label="Active" tooltip="Currently live Sentinels" sortKey="activeSentinels" {...colProps} />
-            <ColHeader label="Deployed" tooltip="All-time Sentinels created, including inactive ones" sortKey="totalSentinelsDeployed" {...colProps} />
+          
             <ColHeader label="Longest Surviving" tooltip="Days + hours since deployment of the longest-standing unbreached Sentinel" sortKey="longestSurvivingHours" {...colProps} />
             <ColHeader label="Attacks Survived" tooltip="Total consume_prompt calls where success=false" sortKey="totalAttacksSurvived" {...colProps} />
             <ColHeader label="Breach Rate" tooltip="Percentage of attacks that successfully breached a Sentinel" sortKey="breachRatePct" {...colProps} />
-            <ColHeader label="Fees Earned" tooltip="Cumulative fees claimed + pending in SUI" sortKey="totalFeesEarnedSui" {...colProps} />
-            <ColHeader label="$SENTINEL" tooltip="SENTINEL token rewards distributed" sortKey="sentinelTokensEarned" {...colProps} />
+            <ColHeader label="Active Sentinels" tooltip="Currently live Sentinels" sortKey="activeSentinels" {...colProps} />
+            <ColHeader label="Total Sentinels" tooltip="All-time Sentinels created, including inactive ones" sortKey="totalSentinelsDeployed" {...colProps} />
             <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Actions</th>
           </tr>
         </thead>
@@ -919,6 +920,8 @@ function DefendersTable({ entries }: { entries: DefenderEntry[] }) {
                 <td className="px-3 py-3">
                   <DefenderTierBadge tier={entry.defenderTier} />
                 </td>
+                <td className="px-3 py-3 text-gray-700">{formatSui(entry.totalFeesEarnedSui)}</td>
+                <td className="px-3 py-3 font-medium text-purple-700">{entry.sentinelTokensEarned.toLocaleString()}</td>
                 <td className="px-3 py-3">
                   <div className="flex items-center gap-1.5">
                     <span className="font-medium text-gray-900">{formatSui(entry.tvlSui)}</span>
@@ -938,15 +941,14 @@ function DefendersTable({ entries }: { entries: DefenderEntry[] }) {
                     </Tooltip>
                   </div>
                 </td>
-                <td className="px-3 py-3 text-gray-700">{entry.activeSentinels}</td>
-                <td className="px-3 py-3 text-gray-700">{entry.totalSentinelsDeployed}</td>
+              
                 <td className="px-3 py-3 font-mono text-xs text-gray-700">{formatSurvivalTime(entry.longestSurvivingHours)}</td>
                 <td className="px-3 py-3 font-medium text-gray-900">{entry.totalAttacksSurvived.toLocaleString()}</td>
                 <td className={cn('px-3 py-3 font-semibold', breachRateColor(entry.breachRatePct))}>
                   {entry.breachRatePct.toFixed(1)}%
                 </td>
-                <td className="px-3 py-3 text-gray-700">{formatSui(entry.totalFeesEarnedSui)}</td>
-                <td className="px-3 py-3 font-medium text-purple-700">{entry.sentinelTokensEarned.toLocaleString()}</td>
+                <td className="px-3 py-3 text-gray-700">{entry.activeSentinels}</td>
+                <td className="px-3 py-3 text-gray-700">{entry.totalSentinelsDeployed}</td>
                 <td className="px-3 py-3">
                   <ShareButton rank={entry.rank} tab="defenders" />
                 </td>
@@ -990,12 +992,12 @@ function AttackersTable({ entries }: { entries: AttackerEntry[] }) {
       <table className="min-w-[1200px] w-full border-collapse text-sm">
         <thead>
           <tr className="border-b border-gray-200 bg-gray-50">
-            <th className="w-14 px-3 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">#</th>
-            <th className="min-w-[200px] px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Identity</th>
+            <th className="w-14 px-3 py-3 text-center text-xs font-semibold tracking-wide text-gray-500">#</th>
+            <th className="min-w-[200px] px-3 py-3 text-xs font-semibold tracking-wide text-gray-500">Attacker</th>
             <ColHeader label="Tier" sortKey="attackerTier" {...colProps} />
-            <ColHeader label="Bounty Won" tooltip="Sum of all reward pool payouts received in SUI" sortKey="totalBountyWonSui" {...colProps} />
-            <ColHeader label="Breaches" tooltip="consume_prompt calls where success=true" sortKey="successfulBreaches" {...colProps} />
-            <ColHeader label="Attacks Sent" tooltip="All consume_prompt calls by this address" sortKey="totalAttacksSent" {...colProps} />
+            <ColHeader label="Total Bounty Won" tooltip="Sum of all reward pool payouts received in SUI" sortKey="totalBountyWonSui" {...colProps} />
+            <ColHeader label="Total Attacks" tooltip="All consume_prompt calls by this address" sortKey="totalAttacksSent" {...colProps} />
+            <ColHeader label="Successful Attacks" tooltip="consume_prompt calls where success=true" sortKey="successfulBreaches" {...colProps} />
             <ColHeader label="Breach Rate" tooltip="Breaches / Total Attacks × 100" sortKey="breachRatePct" {...colProps} />
             <ColHeader label="Largest Bounty" tooltip="Maximum single payout received in SUI" sortKey="largestSingleBountySui" {...colProps} />
             <ColHeader label="Streak" tooltip="Consecutive days with at least one attack sent" sortKey="attackStreakDays" {...colProps} />
@@ -1041,8 +1043,8 @@ function AttackersTable({ entries }: { entries: AttackerEntry[] }) {
                 </td>
                 <td className="px-3 py-3"><AttackerTierBadge tier={entry.attackerTier} /></td>
                 <td className="px-3 py-3 font-bold text-gray-900">{formatSui(entry.totalBountyWonSui)} SUI</td>
-                <td className="px-3 py-3 font-medium text-gray-900">{entry.successfulBreaches}</td>
                 <td className="px-3 py-3 text-gray-700">{entry.totalAttacksSent.toLocaleString()}</td>
+                <td className="px-3 py-3 font-medium text-gray-900">{entry.successfulBreaches}</td>
                 <td className={cn('px-3 py-3 font-semibold', entry.breachRatePct > 10 ? 'text-emerald-600' : entry.breachRatePct > 5 ? 'text-amber-600' : 'text-gray-700')}>
                   {entry.breachRatePct.toFixed(1)}%
                 </td>
