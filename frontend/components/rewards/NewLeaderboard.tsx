@@ -1176,20 +1176,16 @@ export function NewLeaderboard() {
           <Tabs defaultValue="defenders">
             <TabsList className="mb-6 border-b border-gray-200 bg-transparent pb-0">
               <TabsTrigger value="defenders" className="flex items-center gap-2 px-4 py-2 text-sm">
-                <Shield className="h-4 w-4" />
                 Defenders
               </TabsTrigger>
               <TabsTrigger value="attackers" className="flex items-center gap-2 px-4 py-2 text-sm">
-                <Sword className="h-4 w-4" />
                 Attackers
               </TabsTrigger>
             </TabsList>
 
-            {/* ── Defenders Tab ── */}
             <TabsContent value="defenders">
               <RewardCalculatorBanner />
 
-              {/* Search + Filter */}
               <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
