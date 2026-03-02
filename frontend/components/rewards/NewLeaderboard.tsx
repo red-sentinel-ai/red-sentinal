@@ -37,15 +37,11 @@ import {
   SUI_SENTINEL_GITHUB_URL,
   SUI_SENTINEL_AUDIT_REPORT_URL,
   SUI_SENTINEL_APP_URL,
+  EXPLORER_BASE_URL,
 } from '@/constants'
 import { useDefendersLeaderboard, mapApiDefender } from '@/hooks/rewards/useDefendersLeaderboard'
 import { useAttackersLeaderboard, mapApiAttacker } from '@/hooks/rewards/useAttackersLeaderboard'
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-// TODO: Replace with actual API response types when endpoints are ready.
-// Suggested endpoints:
-//   GET /api/v2/leaderboard/defenders?page=1&limit=25&search=&tier=&period=all
-//   GET /api/v2/leaderboard/attackers?page=1&limit=25&search=&tier=&period=all
+import { formatAddress } from '@mysten/sui/utils'
 
 export type DefenderTier = 'Bronze' | 'Silver' | 'Gold' | 'Diamond' | 'Legendary'
 export type AttackerTier = 'Recruit' | 'Hunter' | 'Specialist' | 'Elite' | 'Apex Predator'
@@ -86,12 +82,6 @@ export interface AttackerEntry {
   sentinelTokensEarned: number // Token rewards distributed for attacking
   lastActiveTimestamp: string // ISO timestamp of most recent consume_prompt
   isCurrentUser?: boolean
-}
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function truncateWallet(address: string) {
-  return `${address.slice(0, 6)}…${address.slice(-4)}`
 }
 
 function formatSui(n: number) {
@@ -304,8 +294,20 @@ function IdentityCell({
         )}
       </div>
       <div className="min-w-0">
-        <p className="truncate text-sm font-semibold text-gray-900">{username}</p>
-        <p className="font-mono text-xs text-gray-400">{truncateWallet(walletAddress)}</p>
+        <Link
+          href={`/u/${username}`}
+          className="truncate text-sm font-semibold text-gray-900 hover:underline"
+        >
+          {username}
+        </Link>
+        <Link
+          href={`${EXPLORER_BASE_URL}/address/${walletAddress}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block font-mono text-xs text-gray-400 hover:underline"
+        >
+          {formatAddress(walletAddress)}
+        </Link>
       </div>
     </div>
   )
@@ -833,22 +835,6 @@ function DefendersTable({ entries }: { entries: DefenderEntry[] }) {
                 <td className="px-3 py-3">
                   <div className="flex items-center gap-1.5">
                     <span className="font-medium text-gray-900">{formatSui(entry.tvlSui)}</span>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Link
-                          href={`${REWARD_CALCULATOR_URL}?poolSize=${entry.tvlSui}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={e => e.stopPropagation()}
-                          className="flex items-center justify-center rounded border border-blue-100 bg-blue-50 p-0.5 text-blue-500 hover:bg-blue-100"
-                        >
-                          <Calculator className="h-3 w-3" />
-                        </Link>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className="text-xs">Estimate earnings in Reward Calculator</p>
-                      </TooltipContent>
-                    </Tooltip>
                   </div>
                 </td>
 
