@@ -63,46 +63,56 @@ export const AgentDropdown = ({
 
   return (
     <>
-      {hasItems && <div className="absolute right-2 top-2 z-20">
-        <DropdownMenu>
-          <DropdownMenuTrigger className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-sm outline-none backdrop-blur-sm transition-colors hover:bg-white">
-            <MoreVertical className="h-5 w-5 text-gray-700" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            {!isFeatured && (
-              <DropdownMenuItem onClick={handleOpenFeatureModal} className="cursor-pointer gap-2">
-                <Star className="h-4 w-4" />
-                Request to Feature
-              </DropdownMenuItem>
-            )}
-
-            {isOwner && (
-              <>
-                {!isFeatured && <DropdownMenuSeparator />}
-
-                <DropdownMenuItem
-                  onClick={handleOpenPromptModal}
-                  className="cursor-pointer gap-2"
-                  disabled={isUpdateWindowExpired}
-                  title={isUpdateWindowExpired ? 'Updates are only allowed within 3 hours of launch' : undefined}
-                >
-                  <Edit className="h-4 w-4" />
-                  Update Instructions
+      {hasItems && (
+        <div className="absolute right-2 top-2 z-20">
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-sm outline-none backdrop-blur-sm transition-colors hover:bg-white">
+              <MoreVertical className="h-5 w-5 text-gray-700" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              {!isFeatured && (
+                <DropdownMenuItem onClick={handleOpenFeatureModal} className="cursor-pointer gap-2">
+                  <Star className="h-4 w-4" />
+                  Request to Feature
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={handleOpenCostModal}
-                  className="cursor-pointer gap-2"
-                  disabled={isUpdateWindowExpired}
-                  title={isUpdateWindowExpired ? 'Updates are only allowed within 3 hours of launch' : undefined}
-                >
-                  <DollarSign className="h-4 w-4" />
-                  Update Attack Fee
-                </DropdownMenuItem>
-              </>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>}
+              )}
+
+              {isOwner && (
+                <>
+                  {!isFeatured && <DropdownMenuSeparator />}
+
+                  <DropdownMenuItem
+                    onClick={handleOpenPromptModal}
+                    className="cursor-pointer gap-2"
+                    disabled={isUpdateWindowExpired}
+                    title={
+                      isUpdateWindowExpired
+                        ? 'Updates are only allowed within 3 hours of launch'
+                        : undefined
+                    }
+                  >
+                    <Edit className="h-4 w-4" />
+                    Update Instructions
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={handleOpenCostModal}
+                    className="cursor-pointer gap-2"
+                    disabled={isUpdateWindowExpired}
+                    title={
+                      isUpdateWindowExpired
+                        ? 'Updates are only allowed within 3 hours of launch'
+                        : undefined
+                    }
+                  >
+                    <DollarSign className="h-4 w-4" />
+                    Update Attack Fee
+                  </DropdownMenuItem>
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      )}
 
       {isOwner && (
         <>

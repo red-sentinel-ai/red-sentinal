@@ -7,27 +7,23 @@ export async function POST(req: Request) {
     const { public_instructions } = body
 
     if (!public_instructions) {
-      return NextResponse.json(
-        { error: 'Public instructions are required' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Public instructions are required' }, { status: 400 })
     }
 
     const response = await fetch(`${RED_TEAM_API_URL}generate-config`, {
-
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer suihero@345',
+        Authorization: 'Bearer suihero@345',
       },
       body: JSON.stringify({
         public_instructions,
-        hidden_instructions : "NA",
+        hidden_instructions: 'NA',
       }),
     })
 
     if (!response.ok) {
-      console.log({response})
+      console.log({ response })
       const errorText = await response.text()
       return NextResponse.json({ error: errorText }, { status: response.status })
     }

@@ -39,9 +39,7 @@ export const useAgentBySlug = (slug?: string) => {
         state: onchain.is_defeated ? 'defeated' : 'active',
         total_attacks: 0,
         agent_path: base.agent_path || '',
-        timestampMs: base.created_at
-          ? String(new Date(base.created_at).getTime())
-          : undefined,
+        timestampMs: base.created_at ? String(new Date(base.created_at).getTime()) : undefined,
         last_funded_timestamp: onchain.last_funded_timestamp,
         accumulated_fees: onchain.accumulated_fees,
       } as AgentDetails

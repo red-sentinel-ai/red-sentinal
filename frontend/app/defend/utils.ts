@@ -18,7 +18,7 @@ export const registerAgentUtil = async (
     creator: creatorAddress,
     model_provider: modelProvider,
     model_name: modelName,
-    private_prompt: privatePrompt || "NA",
+    private_prompt: privatePrompt || 'NA',
     attack_goal: attackGoal,
     jury_prompt: juryPrompt,
   }
