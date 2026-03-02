@@ -27,7 +27,7 @@ export const MenuItems = ({
       </li>
 
       <li>
-        <Link className="block" href="/rewards/leaderboard" onClick={onItemClick}>
+        <Link className="block" href="/leaderboard" onClick={onItemClick}>
           Leaderboard
         </Link>
       </li>
