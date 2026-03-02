@@ -1,14 +1,6 @@
 'use client'
 
-import {
-  Trophy,
-  Target,
-  TrendingUp,
-  Sparkles,
-  ArrowRight,
-  BookOpen,
-  ExternalLink,
-} from 'lucide-react'
+import { Trophy, Target, TrendingUp, ArrowRight, BookOpen, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useCurrentAccount } from '@mysten/dapp-kit'
@@ -20,7 +12,7 @@ import { RewardsHistory } from '@/components/profile/RewardsHistory'
 import { useRewardsMissions } from '@/hooks/rewards/useRewardsMissions'
 import { useSentinelBalance } from '@/hooks/rewards/useSentinelBalance'
 import { REWARDS_CONSTANTS } from '@/constants/rewards'
-import { REWARDS_DOCS_URL, SENTINEL_TOKEN_EXPLORER_URL } from '@/constants'
+import { REWARDS_DOCS_URL } from '@/constants'
 import { ConnectPrompt } from '../ConnectPrompt'
 
 export function RewardsDashboard() {
@@ -65,7 +57,8 @@ export function RewardsDashboard() {
                     Rewards Launching Soon
                   </h2>
                   <p className="text-lg text-gray-600">
-                    Complete missions, earn SENTINEL tokens, and unlock exclusive perks. The rewards program is being finalized.
+                    Complete missions, earn SENTINEL tokens, and unlock exclusive perks. The rewards
+                    program is being finalized.
                   </p>
                   {missionsData?.message && (
                     <p className="mt-4 rounded-lg border border-gray-200 bg-white p-3 text-sm text-gray-500">
@@ -92,18 +85,19 @@ export function RewardsDashboard() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <a href={SENTINEL_TOKEN_EXPLORER_URL} target="_blank" rel="noopener noreferrer">
+              {/* <a href={SENTINEL_TOKEN_EXPLORER_URL} target="_blank" rel="noopener noreferrer">
                 <motion.div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-100 px-4 py-2 transition-colors hover:bg-blue-200">
                   <Sparkles className="h-4 w-4 text-blue-600" />
-                  <span className="text-sm font-medium text-blue-800">Sui Sentinel Tokens</span>
+                  <span className="text-sm font-medium">Sui Sentinel Tokens</span>
                   <ExternalLink className="h-3 w-3 text-blue-600 opacity-60" />
                 </motion.div>
-              </a>
+              </a> */}
               <h1 className="mb-4 text-3xl font-bold uppercase text-black sm:text-4xl md:text-5xl">
                 Earn While You Hack
               </h1>
               <p className="mx-auto mb-6 max-w-2xl text-base text-gray-600 sm:text-xl">
-                Complete missions, climb the leaderboard, and unlock SENTINEL token rewards. Every attack, defense, and referral counts.
+                Complete missions, climb the leaderboard, and unlock SENTINEL token rewards. Every
+                attack, defense, and referral counts.
               </p>
               <div className="mb-4 flex items-center justify-center gap-4">
                 <Link href={REWARDS_DOCS_URL} target="_blank" rel="noopener noreferrer">

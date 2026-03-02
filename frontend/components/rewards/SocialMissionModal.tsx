@@ -7,7 +7,12 @@ import { toast } from 'sonner'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { Dialog } from '@/components/Dialog'
 import type { RewardsMission } from '@/types/Rewards'
-import { SUI_SENTINEL_CHECKOUT_URL, SUI_SENTINEL_TELEGRAM_URL, SUI_SENTINEL_X_URL, APP_NETWORK } from '@/constants'
+import {
+  SUI_SENTINEL_CHECKOUT_URL,
+  SUI_SENTINEL_TELEGRAM_URL,
+  SUI_SENTINEL_X_URL,
+  APP_NETWORK,
+} from '@/constants'
 
 interface SocialMissionModalProps {
   mission: RewardsMission | null
@@ -26,7 +31,11 @@ const MISSION_CONFIG = {
     instructions: 'Follow @suisentinal on X to earn Sentinel tokens.',
     actionLabel: 'Follow on X',
     actionUrl: SUI_SENTINEL_X_URL,
-    usernameField: { label: 'Your Twitter/X Username', placeholder: '@yourusername', required: true },
+    usernameField: {
+      label: 'Your Twitter/X Username',
+      placeholder: '@yourusername',
+      required: true,
+    },
     tweetUrlField: null,
     telegramField: null,
     submitHint: 'Enter your Twitter/X username so we can verify you followed us.',
@@ -38,10 +47,19 @@ const MISSION_CONFIG = {
     instructions: 'Retweet any post from @suisentinal and paste the URL of your retweet.',
     actionLabel: 'Go to @suisentinal',
     actionUrl: SUI_SENTINEL_X_URL,
-    usernameField: { label: 'Your Twitter/X Username', placeholder: '@yourusername', required: false },
-    tweetUrlField: { label: 'Your Retweet URL', placeholder: 'https://x.com/yourusername/status/...', required: true },
+    usernameField: {
+      label: 'Your Twitter/X Username',
+      placeholder: '@yourusername',
+      required: false,
+    },
+    tweetUrlField: {
+      label: 'Your Retweet URL',
+      placeholder: 'https://x.com/yourusername/status/...',
+      required: true,
+    },
     telegramField: null,
-    submitHint: 'Paste the URL of your retweet. Optionally add your username for faster verification.',
+    submitHint:
+      'Paste the URL of your retweet. Optionally add your username for faster verification.',
   },
   share_with_hashtag: {
     title: 'Share with #SuiSentinel',
@@ -50,8 +68,16 @@ const MISSION_CONFIG = {
     instructions: 'Post about Sui Sentinel with #SuiSentinel and paste the URL of your tweet.',
     actionLabel: 'Post on X',
     actionUrl: SUI_SENTINEL_CHECKOUT_URL,
-    usernameField: { label: 'Your Twitter/X Username', placeholder: '@yourusername', required: false },
-    tweetUrlField: { label: 'Your Tweet URL', placeholder: 'https://x.com/yourusername/status/...', required: true },
+    usernameField: {
+      label: 'Your Twitter/X Username',
+      placeholder: '@yourusername',
+      required: false,
+    },
+    tweetUrlField: {
+      label: 'Your Tweet URL',
+      placeholder: 'https://x.com/yourusername/status/...',
+      required: true,
+    },
     telegramField: null,
     submitHint: 'Paste the URL of your tweet containing #SuiSentinel.',
   },
@@ -64,14 +90,25 @@ const MISSION_CONFIG = {
     actionUrl: SUI_SENTINEL_TELEGRAM_URL,
     usernameField: null,
     tweetUrlField: null,
-    telegramField: { label: 'Your Telegram Username', placeholder: '@yourusername', required: true },
+    telegramField: {
+      label: 'Your Telegram Username',
+      placeholder: '@yourusername',
+      required: true,
+    },
     submitHint: 'Enter your Telegram username so we can verify you joined the group.',
   },
 } as const
 
 type MissionType = keyof typeof MISSION_CONFIG
 
-export function SocialMissionModal({ mission, isOpen, onClose, actionUrlOverride, actionLabelOverride, submissionContext }: SocialMissionModalProps) {
+export function SocialMissionModal({
+  mission,
+  isOpen,
+  onClose,
+  actionUrlOverride,
+  actionLabelOverride,
+  submissionContext,
+}: SocialMissionModalProps) {
   const account = useCurrentAccount()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -151,7 +188,11 @@ export function SocialMissionModal({ mission, isOpen, onClose, actionUrlOverride
       toast.error('Please enter the tweet URL')
       return
     }
-    if (config.tweetUrlField?.required && !tweetUrl.includes('twitter.com') && !tweetUrl.includes('x.com')) {
+    if (
+      config.tweetUrlField?.required &&
+      !tweetUrl.includes('twitter.com') &&
+      !tweetUrl.includes('x.com')
+    ) {
       toast.error('Please enter a valid X (Twitter) URL')
       return
     }
@@ -181,7 +222,8 @@ export function SocialMissionModal({ mission, isOpen, onClose, actionUrlOverride
         network: APP_NETWORK,
       }
       if (twitterUsername.trim()) body.twitter_username = twitterUsername.trim().replace(/^@/, '')
-      if (telegramUsername.trim()) body.telegram_username = telegramUsername.trim().replace(/^@/, '')
+      if (telegramUsername.trim())
+        body.telegram_username = telegramUsername.trim().replace(/^@/, '')
       if (tweetUrl.trim()) body.tweet_url = tweetUrl.trim()
       if (screenshotUrl) body.screenshot_url = screenshotUrl
       if (submissionContext?.agent_path) body.agent_path = submissionContext.agent_path
@@ -211,10 +253,19 @@ export function SocialMissionModal({ mission, isOpen, onClose, actionUrlOverride
       <div className="w-full rounded-xl bg-white text-black md:rounded-2xl">
         <div className="mb-4 flex items-center justify-between md:mb-6">
           <div className="flex items-center gap-1.5 md:gap-2">
-            <Image src={config.icon} width={20} height={20} alt={config.iconAlt} className="md:h-6 md:w-6" />
+            <Image
+              src={config.icon}
+              width={20}
+              height={20}
+              alt={config.iconAlt}
+              className="md:h-6 md:w-6"
+            />
             <h2 className="text-base font-bold md:text-lg">{config.title}</h2>
           </div>
-          <button onClick={handleClose} className="text-gray-500 transition-colors hover:text-black">
+          <button
+            onClick={handleClose}
+            className="text-gray-500 transition-colors hover:text-black"
+          >
             <X className="h-4 w-4 md:h-5 md:w-5" />
           </button>
         </div>
@@ -233,7 +284,10 @@ export function SocialMissionModal({ mission, isOpen, onClose, actionUrlOverride
                 verified.
               </p>
             </div>
-            <button onClick={handleClose} className="btn btn-black mt-3 w-full text-sm md:mt-4 md:text-base">
+            <button
+              onClick={handleClose}
+              className="btn btn-black mt-3 w-full text-sm md:mt-4 md:text-base"
+            >
               Close
             </button>
           </div>
@@ -315,7 +369,8 @@ export function SocialMissionModal({ mission, isOpen, onClose, actionUrlOverride
 
                 <div>
                   <label className="mb-1 block text-xs font-medium text-gray-700 md:text-sm">
-                    Screenshot <span className="text-gray-400">(optional — helpful for mobile)</span>
+                    Screenshot{' '}
+                    <span className="text-gray-400">(optional — helpful for mobile)</span>
                   </label>
                   <div
                     onClick={() => fileInputRef.current?.click()}
@@ -349,8 +404,12 @@ export function SocialMissionModal({ mission, isOpen, onClose, actionUrlOverride
                     ) : (
                       <>
                         <Upload className="mb-1.5 h-5 w-5 text-gray-400 md:h-6 md:w-6" />
-                        <p className="text-xs text-gray-500 md:text-sm">Click to upload screenshot</p>
-                        <p className="text-[10px] text-gray-400 md:text-xs">PNG, JPG, GIF or WebP up to 5MB</p>
+                        <p className="text-xs text-gray-500 md:text-sm">
+                          Click to upload screenshot
+                        </p>
+                        <p className="text-[10px] text-gray-400 md:text-xs">
+                          PNG, JPG, GIF or WebP up to 5MB
+                        </p>
                       </>
                     )}
                   </div>

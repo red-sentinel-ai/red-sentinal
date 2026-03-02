@@ -6,7 +6,7 @@ export const LandingPage = () => {
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        className="relative mx-auto w-full max-w-[1900px] px-4"
+        className="relative mx-auto w-full max-w-[1900px] px-4 pt-8 md:pt-12"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
@@ -62,7 +62,9 @@ export const LandingPage = () => {
               </div>
 
               <div className="my-2 flex items-center justify-center gap-2">
-                <p className="text-base font-medium leading-normal md:text-lg lg:text-[2rem]">DEFEND</p>
+                <p className="text-base font-medium leading-normal md:text-lg lg:text-[2rem]">
+                  DEFEND
+                </p>
               </div>
 
               <div className="mx-auto flex max-w-[280px] md:max-w-[394px]">
@@ -120,7 +122,9 @@ export const LandingPage = () => {
               </div>
 
               <div className="my-2 flex items-center justify-center gap-2">
-                <p className="text-base font-medium leading-normal md:text-lg lg:text-[2rem]">ATTACK</p>
+                <p className="text-base font-medium leading-normal md:text-lg lg:text-[2rem]">
+                  ATTACK
+                </p>
               </div>
 
               <div className="mx-auto flex max-w-[280px] md:max-w-[394px]">

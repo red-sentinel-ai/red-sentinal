@@ -185,7 +185,15 @@ export const useWithdrawAgent = (options: UseWithdrawAgentOptions = {}) => {
         setIsLoading(false)
       }
     },
-    [account?.address, agentCaps, signAndExecuteTransaction, onSuccess, onError, showToasts, queryClient]
+    [
+      account?.address,
+      agentCaps,
+      signAndExecuteTransaction,
+      onSuccess,
+      onError,
+      showToasts,
+      queryClient,
+    ]
   )
 
   const reset = useCallback(() => {

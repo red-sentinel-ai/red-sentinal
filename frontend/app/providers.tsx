@@ -48,7 +48,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
             <div className="flex flex-col">
               {/* <LaunchMainnetBanner /> */}
               <Header />
-              <div className="mt-[72px] md:mt-[140px]"></div>
+              <div className="mt-[96px] md:mt-[100px]"></div>
               <ProfileInitializer />
               {children}
               <FeedbackButton />

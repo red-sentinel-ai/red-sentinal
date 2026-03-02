@@ -107,13 +107,13 @@ html {
   .touch-manipulation {
     touch-action: manipulation;
   }
-  
+
   /* Smooth scrolling with momentum on iOS */
   .scroll-smooth-mobile {
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
   }
-  
+
   /* Hide scrollbar but keep functionality */
   .scrollbar-hide {
     -ms-overflow-style: none;
@@ -122,7 +122,7 @@ html {
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
-  
+
   /* Mobile-safe area insets for notched devices */
   .pb-safe {
     padding-bottom: env(safe-area-inset-bottom, 0);
@@ -130,7 +130,7 @@ html {
   .pt-safe {
     padding-top: env(safe-area-inset-top, 0);
   }
-  
+
   /* iOS-style momentum scrolling container */
   .ios-scroll {
     -webkit-overflow-scrolling: touch;
@@ -141,20 +141,20 @@ html {
 /* Mobile input optimizations */
 @layer base {
   /* Prevent zoom on focus in iOS Safari (font-size must be >= 16px) */
-  input[type="text"],
-  input[type="email"],
-  input[type="password"],
-  input[type="number"],
-  input[type="tel"],
-  input[type="url"],
+  input[type='text'],
+  input[type='email'],
+  input[type='password'],
+  input[type='number'],
+  input[type='tel'],
+  input[type='url'],
   textarea {
     font-size: 16px;
     touch-action: manipulation;
   }
-  
+
   /* Disable text selection on UI elements (not inputs) */
-  button, 
-  [role="button"],
+  button,
+  [role='button'],
   .no-select {
     user-select: none;
     -webkit-user-select: none;
@@ -553,5 +553,132 @@ body::-webkit-scrollbar-thumb:hover {
   .Toastify__toast {
     border-radius: 10px;
     margin-bottom: 8px;
+  }
+}
+
+/* ========================================
+   Sentinel Stats Bar (ssb)
+   ======================================== */
+
+.ssb-shell {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  width: 100%;
+  background: #000;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.ssb-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ssb-inner::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Stat items ───────────────────────────────────── */
+.ssb-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0px;
+  padding: 1px 10px;
+  flex-shrink: 0;
+  cursor: default;
+  animation: ssb-fadeUp 0.45s ease both;
+  transition: background 0.2s;
+}
+
+.ssb-item:hover {
+  background: rgba(234, 234, 234, 0.03);
+}
+
+.ssb-item:hover .ssb-underline {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+.ssb-value {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(0.95rem, 1.1vw, 1rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ssb-accent);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.ssb-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: clamp(0.35rem, 0.5vw, 0.45rem);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+  white-space: nowrap;
+}
+
+/* bottom accent underline that slides in on hover */
+.ssb-underline {
+  position: absolute;
+  bottom: 0;
+  left: 20%;
+  right: 20%;
+  height: 1.5px;
+  background: var(--ssb-accent);
+  border-radius: 2px;
+  transform: scaleX(0);
+  opacity: 0;
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
+  transform-origin: center;
+}
+
+/* Accent color variants */
+.ssb-accent-mint {
+  --ssb-accent: #9affc0;
+}
+.ssb-accent-pink {
+  --ssb-accent: #f445ab;
+}
+.ssb-accent-pulse {
+  --ssb-accent: #a06bff;
+}
+.ssb-accent-blue {
+  --ssb-accent: #a5dbfd;
+}
+
+/* Animations */
+@keyframes ssb-fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .ssb-inner {
+    justify-content: flex-start;
+  }
+  .ssb-item {
+    padding: 1px 8px;
   }
 }

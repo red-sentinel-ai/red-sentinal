@@ -16,10 +16,9 @@ export const SUI_SENTINEL_X_USERNAME = 'suisentinal'
 export const SUI_SENTINEL_GITHUB_URL = 'https://github.com/sui-sentinel/contracts'
 export const SUI_SENTINEL_TELEGRAM_URL = 'https://t.me/suisentinel'
 export const SUI_SENTINEL_AUDIT_REPORT_URL = '/pdfs/audit_final.pdf'
-export const SUI_SENTINEL_AMBASSADOR_URL = "https://www.suisentinel.xyz/ambassador"
+export const SUI_SENTINEL_AMBASSADOR_URL = 'https://www.suisentinel.xyz/ambassador'
 export const SUI_SENTINEL_CHECKOUT_URL = "https://twitter.com/intent/tweet?text=Check+out+%40suisentinal+on+Sui+%F0%9F%9B%A1%EF%B8%8F&hashtags=SuiSentinel";
-
-export const REWARD_CALCULATOR_URL = "https://www.suisentinel.xyz/reward-calculator"
+export const REWARD_CALCULATOR_URL = 'https://www.suisentinel.xyz/reward-calculator'
 
 export const SUI_SENTINEL_DEFENDER_REWARDS_DOCS_URL = `${SUI_SENTINEL_DOCS_URL}/incentives/defender-rewards`
 
@@ -33,14 +32,16 @@ export const TEXT_COPIES = {
   },
   attack: {
     heading: 'Choose Your Target',
-    subheading: 'Pick a Sentinel, break its defenses with prompt engineering, and claim the bounty. Every verified exploit pays instantly.',
+    subheading:
+      'Pick a Sentinel, break its defenses with prompt engineering, and claim the bounty. Every verified exploit pays instantly.',
   },
 }
 
 export const LOCAL_API_PATH = 'https://tee.suisentinel.xyz'
 export const RED_TEAM_API_URL = `https://redteam.suisentinel.xyz/`
 export const SUI_SENTINEL_API_URL = 'https://api.suisentinel.xyz'
-export const APP_NETWORK: 'mainnet' | 'testnet' = process.env.NEXT_PUBLIC_APP_NETWORK === 'testnet' ? 'testnet' : 'mainnet'
+export const APP_NETWORK: 'mainnet' | 'testnet' =
+  process.env.NEXT_PUBLIC_APP_NETWORK === 'testnet' ? 'testnet' : 'mainnet'
 
 export const SUI_TESTNET_CONFIG = {
   APP_PACKAGE_ID: '0x69615c3a87ad8288e78cc4c6482d2e5921ce71bf56ba56ba757b01ac439cea76',
@@ -50,9 +51,9 @@ export const SUI_TESTNET_CONFIG = {
   ENCLAVE_OBJECT_ID: '0x667e7657ad509710c42291d36e0a6d96c0f00db0469a8d94120d9d0ff137752d',
   PROTOCOL_CONFIG_OBJECT_ID: '0x168ce294a3b3ca3456f505ae0fd58fe0bbe660725b7fce41c3263f3aade0094d',
   AGENT_OBJECT_IDS: [''],
-  SENTINEL_COIN_TYPE: "0xb0a3b08be99cb5becf1787e565cdd027edc40791df89ca4a603ba7d1575b21e9::sentinel::SENTINEL",
+  SENTINEL_COIN_TYPE:
+    '0xb0a3b08be99cb5becf1787e565cdd027edc40791df89ca4a603ba7d1575b21e9::sentinel::SENTINEL',
 }
-
 
 export const SUI_MAINNET_CONFIG = {
   APP_PACKAGE_ID: '0x88b83f36dafcd5f6dcdcf1d2cb5889b03f61264ab3cee9cae35db7aa940a21b7',
@@ -62,24 +63,26 @@ export const SUI_MAINNET_CONFIG = {
   ENCLAVE_OBJECT_ID: '0xfb1261aeb9583514cb1341a548a5ec12d1231bd96af22215f1792617a93e1213',
   PROTOCOL_CONFIG_OBJECT_ID: '0x2fa4fa4a1dd0498612304635ff9334e1b922e78af325000e9d9c0e88adea459f',
   AGENT_OBJECT_IDS: [''],
-  SENTINEL_COIN_TYPE: "0x66aaa74fecd25cb19b7576e101b25fd3a844e6b9f678421429d0d49d55e0fca0::sentinel::SENTINEL",
+  SENTINEL_COIN_TYPE:
+    '0x66aaa74fecd25cb19b7576e101b25fd3a844e6b9f678421429d0d49d55e0fca0::sentinel::SENTINEL',
 }
-
-
 
 export const SUI_CONFIG = APP_NETWORK === 'mainnet' ? SUI_MAINNET_CONFIG : SUI_TESTNET_CONFIG
 
-export const EXPLORER_BASE_URL = APP_NETWORK === 'mainnet' ? 'https://suivision.xyz' : 'https://testnet.suivision.xyz'
+export const EXPLORER_BASE_URL =
+  APP_NETWORK === 'mainnet' ? 'https://suivision.xyz' : 'https://testnet.suivision.xyz'
 
 export const SENTINEL_TOKEN_EXPLORER_URL = `${EXPLORER_BASE_URL}/coin/${SUI_CONFIG.SENTINEL_COIN_TYPE}`
 export const MIST_PER_SUI = 1_000_000_000
-export const SUIVISION_TXBLOCK_URL = APP_NETWORK === 'mainnet' ? 'https://suivision.xyz/txblock/' : 'https://testnet.suivision.xyz/txblock/'
+export const SUIVISION_TXBLOCK_URL =
+  APP_NETWORK === 'mainnet'
+    ? 'https://suivision.xyz/txblock/'
+    : 'https://testnet.suivision.xyz/txblock/'
 export const PROJECT_GITHUB_URL = 'https://github.com/satyambnsal/sui-sentinal'
 export const NAUTILUS_URL = 'https://github.com/MystenLabs/nautilus'
 export const YOUTUBE_VIDEO_URL = 'https://www.youtube.com/watch?v=U3qMdgSGASI'
 export const X_URL = 'https://x.com/suisentinal'
 const BLOG_URL = 'https://www.suisentinel.xyz/blog'
-
 
 export const PROJECT_DISCORD_URL = 'https://discord.gg'
 
@@ -97,7 +100,6 @@ export const SOCIAL_MEDIA_URLS = {
 
 //TODO: Add the correct docs url
 export const REWARDS_DOCS_URL = 'https://docs.suisentinel.xyz/incentives/rewards-program/'
-
 
 //NOTE: Add Ankita's wallet here and keep this thing in our internal documentation as well.
 export const TEAM_MEMBER_WALLETS = [
@@ -160,19 +162,19 @@ export const socialLinks = [
     isOutside: true,
   },
   {
-    href: "/pdfs/pitch_deck.pdf",
+    href: '/pdfs/pitch_deck.pdf',
     icon: Presentation,
     isImage: false,
-    alt: "Pitch Deck",
-    name: "Pitch Deck",
+    alt: 'Pitch Deck',
+    name: 'Pitch Deck',
     isOutside: true,
   },
   {
     href: REWARD_CALCULATOR_URL,
     icon: Calculator,
     isImage: false,
-    alt: "Reward Calculator",
-    name: "Reward Calculator",
+    alt: 'Reward Calculator',
+    name: 'Reward Calculator',
     isOutside: true,
   },
 ]

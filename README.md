@@ -329,3 +329,40 @@ This project is licensed under the APACHE License - see the LICENSE file for det
 1636703322293403648
 
 Enforce cost per message in TEE
+
+## Brand Kit
+```
+### Base Colors
+
+Black: #000000
+White: #FFFFFF
+Gray: #EAEAEA
+
+### Primary Brand Colors
+
+Sentinel Pink: #F445AB
+Sentinel Pulse: #A06BFF
+Sentinel Blue: #A5DBFD
+Sentinel Mint: #9AFFC0
+
+```
+
+```
+{
+  "network": "mainnet",
+  "computedAt": "2026-03-01T20:00:00.157Z",
+  "totalAttacks": 336,
+  "totalSentinelsLaunched": 119,
+  "activeSentinels": 116,
+  "defeatedSentinels": 3,
+  "totalBountyWon": "16670000000",
+  "totalSentinelTokensDistributed": 957706,
+  "tvl": "331730500000",
+  "largestBountyWon": {
+    "agentId": "88",
+    "winner": "0x3cdbb8e8b9e5d1f1bc945e1f3d9a3ba757db658e4bf59abd861d8e8c6da0634d",
+    "amount": "9990000000",
+    "timestamp": "1772109224227"
+  }
+}
+```
