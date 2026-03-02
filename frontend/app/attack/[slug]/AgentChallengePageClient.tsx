@@ -75,14 +75,15 @@ function transformEventsForCompatibility(events: AgentEventsFromIndexer): {
   }
 }
 
-
 export default function AgentChallengePage({ slug }: { slug: string }) {
   const account = useCurrentAccount()
   const queryClient = useQueryClient()
   const { data: agent, isLoading, error, refetch } = useAgentBySlug(slug)
-  const { events: indexerEvents, loading: eventsLoading, refetch: refetchEvents } = useAgentEventsFromIndexer(
-    agent?.agent_id
-  )
+  const {
+    events: indexerEvents,
+    loading: eventsLoading,
+    refetch: refetchEvents,
+  } = useAgentEventsFromIndexer(agent?.agent_id)
 
   const [isReadMoreOpen, setIsReadMoreOpen] = useState(false)
 
@@ -184,8 +185,11 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
         {agent.prompt || 'No instructions available.'}
       </div>
 
-      <div className="shrink-0 pb-safe pt-8">
-        <button onClick={() => setIsReadMoreOpen(false)} className="btn btn-black touch-manipulation">
+      <div className="pb-safe shrink-0 pt-8">
+        <button
+          onClick={() => setIsReadMoreOpen(false)}
+          className="btn btn-black touch-manipulation"
+        >
           CLOSE
         </button>
       </div>

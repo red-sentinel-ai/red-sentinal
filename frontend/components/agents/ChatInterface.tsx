@@ -217,25 +217,25 @@ export default function ChatInterface({
   }
 
   return (
-    <div className="flex h-full flex-1 flex-col justify-between pb-2 sm:pb-6 text-black">
+    <div className="flex h-full flex-1 flex-col justify-between pb-2 text-black sm:pb-6">
       <JuryResponseModal
         isOpen={isJuryModalOpen}
         onClose={() => setIsJuryModalOpen(false)}
         response={selectedJuryResponse}
       />
 
-      <div className="px-3 pt-1 pb-1 sm:px-6 sm:py-2">
+      <div className="px-3 pb-1 pt-1 sm:px-6 sm:py-2">
         <Tabs value={activeTab} onValueChange={v => setActiveTab(v as 'global' | 'mine')}>
           <TabsList className="h-auto rounded-md border border-gray-200 bg-gray-100 p-[2px]">
             <TabsTrigger
               value="global"
-              className="rounded-md border-b-0 py-1 sm:px-4 data-[state=active]:border-b-0 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+              className="rounded-md border-b-0 py-1 data-[state=active]:border-b-0 data-[state=active]:bg-white data-[state=active]:shadow-sm sm:px-4"
             >
               Global Chat
             </TabsTrigger>
             <TabsTrigger
               value="mine"
-              className="rounded-md border-b-0 py-1 sm:px-4 data-[state=active]:border-b-0 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+              className="rounded-md border-b-0 py-1 data-[state=active]:border-b-0 data-[state=active]:bg-white data-[state=active]:shadow-sm sm:px-4"
             >
               My Chat
             </TabsTrigger>
@@ -259,7 +259,9 @@ export default function ChatInterface({
             {activeTab === 'mine' ? (
               <>
                 <p className="text-base sm:text-lg">
-                  {account?.address ? "You haven't attacked yet." : 'Connect your wallet to see your chats.'}
+                  {account?.address
+                    ? "You haven't attacked yet."
+                    : 'Connect your wallet to see your chats.'}
                 </p>
                 <p className="mt-2 px-4 text-xs opacity-75 sm:text-sm">
                   {account?.address
@@ -367,7 +369,7 @@ export default function ChatInterface({
                       setPromptInput(e.target.value)
                       countTokens(e.target.value)
                     }}
-                    className="min-h-[80px] w-full resize-none border-none bg-transparent p-3 pr-12 pb-9 text-[15px] leading-relaxed text-black outline-none placeholder:text-gray-400 focus:ring-0 sm:min-h-[100px] sm:p-4 sm:pr-14 sm:pb-10 sm:text-base"
+                    className="min-h-[80px] w-full resize-none border-none bg-transparent p-3 pb-9 pr-12 text-[15px] leading-relaxed text-black outline-none placeholder:text-gray-400 focus:ring-0 sm:min-h-[100px] sm:p-4 sm:pb-10 sm:pr-14 sm:text-base"
                     disabled={isSubmitting}
                     placeholder="Craft your attack prompt..."
                     rows={1}
@@ -402,7 +404,7 @@ export default function ChatInterface({
                       promptInput.length === 0 ||
                       tokenCount > ATTACK_PROMPT_MAX_TOKENS
                     }
-                    className="absolute bottom-3 right-3 hidden h-11 w-11 items-center justify-center rounded-full bg-black text-white shadow-md transition-all duration-200 hover:bg-gray-800 hover:shadow-lg hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 sm:flex"
+                    className="absolute bottom-3 right-3 hidden h-11 w-11 items-center justify-center rounded-full bg-black text-white shadow-md transition-all duration-200 hover:scale-105 hover:bg-gray-800 hover:shadow-lg active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 sm:flex"
                   >
                     {isSubmitting ? (
                       <Loader2 className="h-5 w-5 animate-spin" />
@@ -425,7 +427,7 @@ export default function ChatInterface({
                       promptInput.length === 0 ||
                       tokenCount > ATTACK_PROMPT_MAX_TOKENS
                     }
-                    className="absolute bottom-2 right-2 flex h-10 w-10 items-center justify-center rounded-full bg-black text-white shadow-md transition-all duration-200 hover:bg-gray-800 active:scale-90 disabled:cursor-not-allowed disabled:opacity-50 sm:hidden touch-manipulation"
+                    className="absolute bottom-2 right-2 flex h-10 w-10 touch-manipulation items-center justify-center rounded-full bg-black text-white shadow-md transition-all duration-200 hover:bg-gray-800 active:scale-90 disabled:cursor-not-allowed disabled:opacity-50 sm:hidden"
                   >
                     {isSubmitting ? (
                       <Loader2 className="h-4 w-4 animate-spin" />

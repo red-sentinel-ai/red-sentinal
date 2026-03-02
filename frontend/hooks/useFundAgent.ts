@@ -304,15 +304,7 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
         setIsLoading(false)
       }
     },
-    [
-      account?.address,
-      client,
-      signAndExecuteTransaction,
-      onSuccess,
-      onError,
-      showToasts,
-      agentCaps,
-    ]
+    [account?.address, client, signAndExecuteTransaction, onSuccess, onError, showToasts, agentCaps]
   )
 
   const reset = useCallback(() => {

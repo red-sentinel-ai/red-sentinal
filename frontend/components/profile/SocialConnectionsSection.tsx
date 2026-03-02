@@ -93,9 +93,17 @@ export function SocialConnectionsSection() {
       {!hasAnyConnection && (
         <div className="mb-6 rounded-lg border border-[#5E5E5E] bg-gradient-to-r from-white/45 to-[rgba(255,158,244,0.46)] p-3 sm:mb-10 sm:p-4">
           <div className="flex items-start gap-3">
-            <Image src="/icons/star-badge-black.png" width={35} height={35} alt="star badge" className="flex-shrink-0" />
+            <Image
+              src="/icons/star-badge-black.png"
+              width={35}
+              height={35}
+              alt="star badge"
+              className="flex-shrink-0"
+            />
             <div>
-              <p className="text-lg font-medium sm:text-2xl">Connect your socials to unlock rewards</p>
+              <p className="text-lg font-medium sm:text-2xl">
+                Connect your socials to unlock rewards
+              </p>
               <p className="mt-1 text-sm text-[#5E5E5E] sm:text-base">
                 Connect at least one social account to access the rewards program and exclusive
                 benefits.
@@ -110,10 +118,12 @@ export function SocialConnectionsSection() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div>
-                <h3 className="text-xl font-medium text-black sm:text-2xl md:text-[32px]">Social Connections</h3>
+                <h3 className="text-xl font-medium text-black sm:text-2xl md:text-[32px]">
+                  Social Connections
+                </h3>
                 <p className="text-sm text-gray-500 sm:text-base md:text-2xl">
                   {hasAnyConnection ? 'X (Twitter) connected' : 'Connect your social accounts'}
-{/* 
+                  {/* 
                    {hasAnyConnection
                     ? `${connectionCount} of 2 platforms connected`
                     : 'Connect your social accounts'} */}

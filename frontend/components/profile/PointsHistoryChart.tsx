@@ -40,12 +40,9 @@ export const PointsHistoryChart = ({ history }: PointsHistoryChartProps) => {
     const thirtyDaysAgo = subDays(now, 30)
 
     const firstActivityDate =
-      sortedHistory.length > 0
-        ? new Date(parseInt(sortedHistory[0].timestampMs))
-        : thirtyDaysAgo
+      sortedHistory.length > 0 ? new Date(parseInt(sortedHistory[0].timestampMs)) : thirtyDaysAgo
 
-    const startDate =
-      firstActivityDate > thirtyDaysAgo ? firstActivityDate : thirtyDaysAgo
+    const startDate = firstActivityDate > thirtyDaysAgo ? firstActivityDate : thirtyDaysAgo
 
     // Generate all days in range
     const days = eachDayOfInterval({
@@ -117,10 +114,7 @@ export const PointsHistoryChart = ({ history }: PointsHistoryChartProps) => {
 
       <div className="h-[280px] w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart
-            data={chartData}
-            margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
-          >
+          <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id="pointsGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#F632F3" stopOpacity={0.3} />

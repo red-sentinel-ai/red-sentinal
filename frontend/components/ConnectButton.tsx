@@ -144,7 +144,6 @@ export const ConnectButton = () => {
           <LogOut className="h-4 w-4" />
           <span>Disconnect</span>
         </DropdownMenuItem>
-
       </DropdownMenuContent>
     </DropdownMenu>
   )

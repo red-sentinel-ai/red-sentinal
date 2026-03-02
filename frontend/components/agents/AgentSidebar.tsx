@@ -32,7 +32,14 @@ import { type AgentEvents } from '@/hooks/useAgentEvents'
 import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
 import { DefenderProfile } from './DefenderProfile'
 import { formatDuration, cn } from '@/lib/utils'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, Button, Skeleton } from '@/components/ui'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+  Button,
+  Skeleton,
+} from '@/components/ui'
 import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
 import { SparklineChart } from '../ui/common/SparklineChart'
 import { useAgentPrizePoolHistory } from '@/hooks/agents/useAgentPrizePoolHistory'
@@ -275,7 +282,7 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
           </Link>
         </div>
 
-        <div className="my-2 w-full rounded-lg border border-gray-600/50 bg-gradient-to-r from-[#F7F3FC] to-[#FFFEFF] px-3 py-2 text-xs shadow-md md:my-4 md:rounded-xl md:px-4 md:py-[10px] md:shadow-lg sm:text-sm">
+        <div className="my-2 w-full rounded-lg border border-gray-600/50 bg-gradient-to-r from-[#F7F3FC] to-[#FFFEFF] px-3 py-2 text-xs shadow-md sm:text-sm md:my-4 md:rounded-xl md:px-4 md:py-[10px] md:shadow-lg">
           <div className="flex items-center gap-2 md:gap-4">
             <div className="h-8 w-8 shrink-0 grow-0 basis-auto overflow-hidden rounded-full md:h-10 md:w-10">
               <Image
@@ -303,20 +310,26 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
 
         <div className="flex flex-col gap-3 py-2 md:gap-4 md:py-3 lg:gap-6 lg:py-4">
           {isLoadingAttackGoal ? (
-          <div className="flex flex-col gap-1.5 border border-black/20 rounded-md p-2 md:gap-2 md:p-3">
-              <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">Attack Goal</h3>
+            <div className="flex flex-col gap-1.5 rounded-md border border-black/20 p-2 md:gap-2 md:p-3">
+              <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">
+                Attack Goal
+              </h3>
               <Skeleton className="h-4 w-full bg-gray-200 md:h-5" />
               <Skeleton className="h-4 w-3/4 bg-gray-200 md:h-5" />
             </div>
           ) : attackGoal ? (
-          <div className="flex flex-col gap-1.5 border border-black/20 rounded-md p-2 md:gap-2 md:p-3">
-              <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">Attack Goal</h3>
+            <div className="flex flex-col gap-1.5 rounded-md border border-black/20 p-2 md:gap-2 md:p-3">
+              <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">
+                Attack Goal
+              </h3>
               <p className="text-sm font-semibold md:text-base">{attackGoal}</p>
             </div>
           ) : null}
 
           <div className="flex flex-col gap-1 md:gap-2">
-            <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">Sentinel Object Id</h3>
+            <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">
+              Sentinel Object Id
+            </h3>
             <Link
               href={`${EXPLORER_BASE_URL}/object/${agent.agent_object_id}`}
               target="_blank"
@@ -332,8 +345,12 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
             <div className="flex justify-between gap-2">
               {agent.model_provider && (
                 <div className="flex flex-col gap-1 md:gap-2">
-                  <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">LLM Provider</h3>
-                  <p className="text-sm font-semibold capitalize md:text-base">{agent.model_provider}</p>
+                  <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">
+                    LLM Provider
+                  </h3>
+                  <p className="text-sm font-semibold capitalize md:text-base">
+                    {agent.model_provider}
+                  </p>
                 </div>
               )}
 
@@ -358,12 +375,16 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
               <h3 className="flex items-center gap-1 text-xs font-medium uppercase text-[#5E5E5E] md:gap-1.5 md:text-sm">
                 Total Bounty Won
               </h3>
-              <p className="inline-block text-lg font-semibold md:text-xl lg:text-2xl">{bountyWonAmount} SUI</p>
+              <p className="inline-block text-lg font-semibold md:text-xl lg:text-2xl">
+                {bountyWonAmount} SUI
+              </p>
             </div>
           ) : (
             <div className="flex flex-col gap-1 md:gap-2">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">Prize pool</h3>
+                <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">
+                  Prize pool
+                </h3>
                 {!isLoadingChart && prizePoolData && prizePoolData.history.length > 0 && (
                   <div
                     className={cn(
@@ -431,7 +452,9 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
           )}
 
           <div className="flex flex-col gap-1 md:gap-2">
-            <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">Message Price</h3>
+            <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">
+              Message Price
+            </h3>
             <p className="inline-block text-lg font-semibold md:text-xl lg:text-2xl">
               {(Number(agent.cost_per_message) / MIST_PER_SUI).toFixed(4)} SUI
             </p>
@@ -440,7 +463,9 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
           {!isDrained && (
             <div className="flex flex-col gap-1 md:gap-2">
               <div className="flex items-center gap-1">
-                <h3 className="text-xs font-semibold uppercase text-black/70 md:text-sm">Active Since</h3>
+                <h3 className="text-xs font-semibold uppercase text-black/70 md:text-sm">
+                  Active Since
+                </h3>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild className="cursor-help">
@@ -467,7 +492,9 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
 
           {isOwner && !isDrained && (
             <div className="flex flex-col gap-1 md:gap-2">
-              <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">Withdrawal Lock</h3>
+              <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">
+                Withdrawal Lock
+              </h3>
               {timeRemaining ? (
                 <p
                   className={cn(
@@ -487,7 +514,9 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
 
         <div className="z-20 mt-2 flex flex-col rounded-xl p-0 text-xs md:mt-4 md:text-sm">
           <div className="flex flex-col gap-1.5 md:gap-2">
-            <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">Instructions</h3>
+            <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">
+              Instructions
+            </h3>
             <p
               ref={instructionsRef}
               className="line-clamp-4 whitespace-pre-wrap text-[11px] font-medium transition-all duration-300 md:text-xs"
@@ -511,12 +540,20 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
           <div className="border-t border-t-black/20"></div>
           <div className="flex justify-between">
             <div className="flex flex-col gap-1 md:gap-2">
-              <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">Total Participants</h3>
-              <p className="inline-block text-center text-lg font-semibold md:text-xl lg:text-2xl">{totalParticipants}</p>
+              <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">
+                Total Participants
+              </h3>
+              <p className="inline-block text-center text-lg font-semibold md:text-xl lg:text-2xl">
+                {totalParticipants}
+              </p>
             </div>
             <div className="flex flex-col gap-1 text-center md:gap-2">
-              <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">Break Attempts</h3>
-              <p className="inline-block text-lg font-semibold md:text-xl lg:text-2xl">{breakAttempts}</p>
+              <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">
+                Break Attempts
+              </h3>
+              <p className="inline-block text-lg font-semibold md:text-xl lg:text-2xl">
+                {breakAttempts}
+              </p>
             </div>
           </div>
         </div>
@@ -531,7 +568,9 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
 
         <div className="mt-3 border-t border-black/20 pt-3 md:mt-4 md:pt-4 lg:mt-6 lg:pt-6">
           <div className="mb-1.5 flex items-start justify-between md:mb-2">
-            <h3 className="text-sm font-bold leading-tight text-black md:text-base">Earn SENTINEL Rewards</h3>
+            <h3 className="text-sm font-bold leading-tight text-black md:text-base">
+              Earn SENTINEL Rewards
+            </h3>
           </div>
 
           <p className="mb-2 text-xs leading-relaxed text-[#5E5E5E] md:mb-3 md:text-sm lg:mb-4 lg:text-base">
@@ -587,8 +626,16 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
         <div className="w-full rounded-xl bg-white text-black md:rounded-2xl">
           <div className="mb-4 flex items-center justify-between md:mb-6">
             <div className="flex items-center gap-1.5 md:gap-2">
-              <Image src="/icons/dollar_coin.png" width={20} height={20} alt="dollar coin" className="md:h-6 md:w-6" />
-              <h2 className="text-base font-bold md:text-lg lg:text-xl">Share on X & Earn SENTINEL</h2>
+              <Image
+                src="/icons/dollar_coin.png"
+                width={20}
+                height={20}
+                alt="dollar coin"
+                className="md:h-6 md:w-6"
+              />
+              <h2 className="text-base font-bold md:text-lg lg:text-xl">
+                Share on X & Earn SENTINEL
+              </h2>
             </div>
             <button
               onClick={handleCloseShareModal}
@@ -604,12 +651,17 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
                 <CheckCircle className="h-6 w-6 text-green-600 md:h-8 md:w-8" />
               </div>
               <div>
-                <h3 className="mb-1.5 text-base font-bold text-black md:mb-2 md:text-lg lg:text-xl">Submission Received!</h3>
+                <h3 className="mb-1.5 text-base font-bold text-black md:mb-2 md:text-lg lg:text-xl">
+                  Submission Received!
+                </h3>
                 <p className="mx-auto max-w-xs text-xs text-gray-600 md:text-sm">
                   Once verified SENTINEL Points will be reflected in your profile.
                 </p>
               </div>
-              <button onClick={handleCloseShareModal} className="btn btn-black mt-3 w-full text-sm md:mt-4 md:text-base">
+              <button
+                onClick={handleCloseShareModal}
+                className="btn btn-black mt-3 w-full text-sm md:mt-4 md:text-base"
+              >
                 Close
               </button>
             </div>
@@ -624,7 +676,13 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
                   onClick={handleShareClick}
                   className="btn btn-white flex h-[32px] w-full items-center gap-1.5 !border-black px-3 text-sm sm:w-auto md:h-[36px] md:gap-2 md:px-4"
                 >
-                  <Image src="/icons/share.png" width={20} height={20} alt="share" className="md:h-6 md:w-6" />
+                  <Image
+                    src="/icons/share.png"
+                    width={20}
+                    height={20}
+                    alt="share"
+                    className="md:h-6 md:w-6"
+                  />
                   Share on X
                 </button>
               </div>
@@ -633,7 +691,9 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
 
               <div className="relative">
                 <p className="mb-1 text-xs md:text-sm">Step 2</p>
-                <p className="mb-2 text-sm font-medium md:mb-3 md:text-base">Paste Your Tweet Link for Verification</p>
+                <p className="mb-2 text-sm font-medium md:mb-3 md:text-base">
+                  Paste Your Tweet Link for Verification
+                </p>
                 <div className="flex flex-col gap-2 sm:flex-row">
                   <input
                     value={tweetLink}
