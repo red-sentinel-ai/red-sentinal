@@ -54,7 +54,9 @@ export const DefenderProfile = ({ ownerAddress, profile, isLoading }: DefenderPr
         </div>
         <div className="min-w-0">
           {username && (
-            <p className="truncate text-sm font-semibold text-black group-hover:underline md:text-base">{username}</p>
+            <p className="truncate text-sm font-semibold text-black group-hover:underline md:text-base">
+              {username}
+            </p>
           )}
           <div
             className="flex items-center gap-1 font-mono text-xs text-gray-500 md:gap-1.5 md:text-sm"

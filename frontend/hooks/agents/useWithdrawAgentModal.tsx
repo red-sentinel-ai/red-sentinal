@@ -5,7 +5,10 @@ import React, { useState } from 'react'
 interface UseWithdrawAgentModalReturn {
   openModal: (agentObjectId: string, agentId: string, agentBalanceInMist: number) => void
   Modal: React.FC<
-    Omit<WithdrawAgentModalProps, 'open' | 'onClose' | 'agentObjectId' | 'agentId' | 'agentBalanceInMist'>
+    Omit<
+      WithdrawAgentModalProps,
+      'open' | 'onClose' | 'agentObjectId' | 'agentId' | 'agentBalanceInMist'
+    >
   >
 }
 
@@ -30,7 +33,10 @@ export function useWithdrawAgentModal(): UseWithdrawAgentModalReturn {
   }
 
   const Modal: React.FC<
-    Omit<WithdrawAgentModalProps, 'open' | 'onClose' | 'agentObjectId' | 'agentId' | 'agentBalanceInMist'>
+    Omit<
+      WithdrawAgentModalProps,
+      'open' | 'onClose' | 'agentObjectId' | 'agentId' | 'agentBalanceInMist'
+    >
   > = props => (
     <WithdrawAgentModal
       open={isOpen}

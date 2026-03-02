@@ -27,7 +27,7 @@ export const TruncatedText = ({ text, limit = 200 }: TruncatedTextProps) => {
         {isExpanded ? text : `${text.slice(0, limit)}...`}
       </div>
       <button
-        onClick={(e) => {
+        onClick={e => {
           e.stopPropagation()
           setIsExpanded(!isExpanded)
         }}

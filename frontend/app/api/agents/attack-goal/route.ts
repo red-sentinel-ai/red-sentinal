@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
 
     if (!response.ok) {
       console.error(`Failed to fetch attack goal for agent ${agentId}: ${response.statusText}`)
-       return NextResponse.json({ attack_goal: null }, { status: 200 })
+      return NextResponse.json({ attack_goal: null }, { status: 200 })
     }
 
     const data = await response.json()

@@ -13,10 +13,10 @@ export const MobileAgentHeader = ({ agentName, onInfoClick }: MobileAgentHeaderP
 
   return (
     <div className="flex flex-shrink-0 items-center justify-between border-b border-gray-200 bg-white px-3 py-2">
-      <div className="flex items-center gap-2 min-w-0 flex-1">
+      <div className="flex min-w-0 flex-1 items-center gap-2">
         <button
           onClick={() => router.push('/attack')}
-          className="flex-shrink-0 rounded-full p-2 text-gray-600 transition-colors hover:bg-gray-100 active:bg-gray-200 touch-manipulation"
+          className="flex-shrink-0 touch-manipulation rounded-full p-2 text-gray-600 transition-colors hover:bg-gray-100 active:bg-gray-200"
           aria-label="Go back"
         >
           <ArrowLeft className="h-5 w-5" />

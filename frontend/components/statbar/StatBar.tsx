@@ -119,7 +119,15 @@ function transformStats(data: StatsApiResponse): StatItemData[] {
 
 // Default stats for loading/error states
 const DEFAULT_STATS: StatItemData[] = [
-  { id: 'tvl', label: 'Value Secured', value: 0, prefix: '', suffix: ' SUI', format: 'compact', accent: 'mint' },
+  {
+    id: 'tvl',
+    label: 'Value Secured',
+    value: 0,
+    prefix: '',
+    suffix: ' SUI',
+    format: 'compact',
+    accent: 'mint',
+  },
   {
     id: 'bounties',
     label: 'Bounties Claimed',
@@ -176,7 +184,12 @@ const DEFAULT_STATS: StatItemData[] = [
   },
 ]
 
-function formatValue(value: number, format: 'compact' | 'integer', prefix: string, suffix: string): string {
+function formatValue(
+  value: number,
+  format: 'compact' | 'integer',
+  prefix: string,
+  suffix: string
+): string {
   let display = ''
   if (format === 'compact') {
     if (value >= 1_000_000) display = (value / 1_000_000).toFixed(1) + 'M'

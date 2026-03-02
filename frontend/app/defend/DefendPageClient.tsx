@@ -2,7 +2,17 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { CameraIcon, ChevronLeft, Loader2, Sparkles, Info, CheckCircle, XCircle, Eye, EyeOff } from 'lucide-react'
+import {
+  CameraIcon,
+  ChevronLeft,
+  Loader2,
+  Sparkles,
+  Info,
+  CheckCircle,
+  XCircle,
+  Eye,
+  EyeOff,
+} from 'lucide-react'
 import { toast } from 'sonner'
 import posthog from 'posthog-js'
 import { Transaction } from '@mysten/sui/transactions'
@@ -270,7 +280,7 @@ export default function DefendPageClient() {
   const [fundedAmount, setFundedAmount] = useState('')
   const handleProviderChange = (provider: string) => {
     const isCustom = provider === 'custom'
-    const defaultModelForProvider = isCustom ? '' : (PROVIDER_MODELS[provider]?.[0] || DEFAULT_MODEL)
+    const defaultModelForProvider = isCustom ? '' : PROVIDER_MODELS[provider]?.[0] || DEFAULT_MODEL
 
     setFormData(prev => ({
       ...prev,
@@ -545,7 +555,10 @@ export default function DefendPageClient() {
       payload.append('owner', account!.address)
       payload.append('digest', result.digest.toString())
       payload.append('model_provider', formData.llmProvider)
-      payload.append('model_name', formData.llmProvider === 'custom' ? formData.customModelName : formData.llmModel)
+      payload.append(
+        'model_name',
+        formData.llmProvider === 'custom' ? formData.customModelName : formData.llmModel
+      )
 
       if (agentImage) {
         payload.append('image', agentImage)
@@ -647,7 +660,7 @@ export default function DefendPageClient() {
   }
 
   return (
-    <div className="min-h-body ios-scroll container mx-auto px-4 py-4 pt-10 pb-safe">
+    <div className="min-h-body ios-scroll pb-safe container mx-auto px-4 py-4 pt-10">
       <form onSubmit={handleSubmit} className="relative mx-auto max-w-[969px] space-y-6 px-4">
         <Link
           href="/"
@@ -659,7 +672,9 @@ export default function DefendPageClient() {
 
         <div className="flex flex-col-reverse items-center gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="text-center sm:text-left">
-            <h1 className="mb-3 text-3xl font-medium sm:text-4xl md:text-5xl">Deploy Your Sentinel</h1>
+            <h1 className="mb-3 text-3xl font-medium sm:text-4xl md:text-5xl">
+              Deploy Your Sentinel
+            </h1>
             <p className="text-base font-medium text-[#5E5E5E] sm:text-xl">
               Launch an AI agent. Let the world try to break it. Earn from every attack.
             </p>
@@ -740,9 +755,7 @@ export default function DefendPageClient() {
             ) : (
               <div className="flex min-w-[200px] flex-1 flex-col gap-4">
                 <div>
-                  <label className="block text-[18px] font-medium text-black">
-                    Endpoint URL
-                  </label>
+                  <label className="block text-[18px] font-medium text-black">Endpoint URL</label>
                   <p className="mb-2 text-[14px] text-[#5E5E5E]">
                     OpenAI-compatible API endpoint URL
                   </p>
@@ -763,9 +776,7 @@ export default function DefendPageClient() {
 
                 <div>
                   <label className="block text-[18px] font-medium text-black">API Key</label>
-                  <p className="mb-2 text-[14px] text-[#5E5E5E]">
-                    Your API key for authentication
-                  </p>
+                  <p className="mb-2 text-[14px] text-[#5E5E5E]">Your API key for authentication</p>
                   <div className="relative">
                     <input
                       name="customApiKey"
@@ -782,11 +793,7 @@ export default function DefendPageClient() {
                       onClick={() => setShowApiKey(!showApiKey)}
                       className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                     >
-                      {showApiKey ? (
-                        <EyeOff className="h-5 w-5" />
-                      ) : (
-                        <Eye className="h-5 w-5" />
-                      )}
+                      {showApiKey ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                     </button>
                   </div>
                   {errors.customApiKey && (
@@ -1092,7 +1099,11 @@ export default function DefendPageClient() {
           {account?.address ? (
             <button
               type="submit"
-              disabled={isLoading || tokenCount > SYSTEM_PROMPT_MAX_TOKENS || (formData.llmProvider === 'custom' && !customProviderValidated)}
+              disabled={
+                isLoading ||
+                tokenCount > SYSTEM_PROMPT_MAX_TOKENS ||
+                (formData.llmProvider === 'custom' && !customProviderValidated)
+              }
               className="flex h-[65px] w-full items-center justify-center gap-3 rounded-xl bg-black text-xl font-medium text-white transition-colors hover:bg-black/90 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isLoading ? (
