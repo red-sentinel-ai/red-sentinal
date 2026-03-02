@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { APP_NETWORK, SUI_SENTINEL_API_URL } from '@/constants'
 
-export const AGENT_EVENTS_FROM_INDEXER_QUERY_KEY = 'agentEventsFromIndexer'
+export const AGENT_EVENTS_FROM_API_QUERY_KEY = 'agentEventsFromApi'
 
 export interface PromptConsumedEvent {
   agent_id: string
@@ -38,10 +38,10 @@ interface DefeatEventsApiResponse {
   result: AgentDefeatedEvent[]
 }
 
-const INDEXER_API_BASE_URL = `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}`
+const ALL_AGENTS_ENDPOINT_URI = `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}`
 
 async function fetchPromptsConsumed(agentId: string): Promise<PromptConsumedEvent[]> {
-  const response = await fetch(`${INDEXER_API_BASE_URL}/${agentId}/prompts_consumed`)
+  const response = await fetch(`${ALL_AGENTS_ENDPOINT_URI}/${agentId}/prompts_consumed`)
   if (!response.ok) {
     throw new Error(`Failed to fetch prompts consumed: ${response.statusText}`)
   }
@@ -50,7 +50,7 @@ async function fetchPromptsConsumed(agentId: string): Promise<PromptConsumedEven
 }
 
 async function fetchDefeatEvents(agentId: string): Promise<AgentDefeatedEvent[]> {
-  const response = await fetch(`${INDEXER_API_BASE_URL}/${agentId}/defeat_events`)
+  const response = await fetch(`${ALL_AGENTS_ENDPOINT_URI}/${agentId}/defeat_events`)
   if (!response.ok) {
     throw new Error(`Failed to fetch defeat events: ${response.statusText}`)
   }
@@ -66,7 +66,7 @@ export function useAgentEventsFromIndexer(agentId?: string) {
     error,
     refetch,
   } = useQuery<AgentEventsFromIndexer, Error>({
-    queryKey: [AGENT_EVENTS_FROM_INDEXER_QUERY_KEY, agentId],
+    queryKey: [AGENT_EVENTS_FROM_API_QUERY_KEY, agentId],
     queryFn: async () => {
       if (!agentId) {
         return { agentDefeated: [], promptConsumed: [] }
