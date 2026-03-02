@@ -404,11 +404,11 @@ function RewardCalculatorBanner() {
     <div className="mb-4 flex flex-col items-start justify-between gap-3 rounded-xl border border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50 px-5 py-4 sm:flex-row sm:items-center">
       <div className="flex items-start gap-3">
         <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100">
-          <Calculator className="h-5 w-5 text-blue-600" />
+          <Calculator className="h-5 w-5" />
         </div>
         <div>
-          <p className="text-sm font-semibold text-blue-900">Estimate your defender earnings</p>
-          <p className="mt-0.5 text-xs text-blue-600">
+          <p className="text-sm font-semibold">Estimate your defender earnings</p>
+          <p className="mt-0.5 text-xs">
             Use our Reward Calculator to project returns based on pool size and attack volume.
           </p>
         </div>
@@ -430,9 +430,13 @@ function RewardCalculatorBanner() {
 
 function DocsQuickLinks() {
   const links = [
-    { label: 'How Scoring Works', href: `${SUI_SENTINEL_DOCS_URL}leaderboard`, icon: BookOpen },
+    {
+      label: 'How Scoring Works',
+      href: `${SUI_SENTINEL_DOCS_URL}how-it-works/leaderboard-and-scoring`,
+      icon: BookOpen,
+    },
     { label: 'Reward Calculator', href: REWARD_CALCULATOR_URL, icon: Calculator },
-    { label: 'Audit Report', href: SUI_SENTINEL_AUDIT_REPORT_URL, icon: Shield },
+    { label: 'Audit Report', href: SUI_SENTINEL_AUDIT_REPORT_URL },
     { label: 'Smart Contracts', href: SUI_SENTINEL_GITHUB_URL, icon: Github },
   ]
   return (
@@ -445,7 +449,7 @@ function DocsQuickLinks() {
           rel="noopener noreferrer"
           className="flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900"
         >
-          <Icon className="h-3.5 w-3.5" />
+          {Icon && <Icon className="h-3.5 w-3.5 text-gray-400" />}
           {label}
           <ExternalLink className="h-2.5 w-2.5 opacity-50" />
         </Link>
