@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { APP_NETWORK, INDEXER_BASE_URL } from '@/constants'
+import { APP_NETWORK, SUI_SENTINEL_API_URL } from '@/constants'
 import { RewardsHistoryResponse } from '@/types/Rewards'
 
 export const useRecipientRewards = (
@@ -11,7 +11,7 @@ export const useRecipientRewards = (
     queryFn: async (): Promise<RewardsHistoryResponse> => {
       if (!recipient) throw new Error('Recipient address is required')
 
-      const url = `${INDEXER_BASE_URL}/rewards/${network}/${recipient}?page=1&limit=50`
+      const url = `${SUI_SENTINEL_API_URL}/rewards/${network}/${recipient}?page=1&limit=50`
 
       const response = await fetch(url)
 

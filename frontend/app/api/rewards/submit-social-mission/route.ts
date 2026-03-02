@@ -6,7 +6,7 @@ import {
   ADMIN_API_TOKEN,
 } from '@/constants'
 
-const VALID_MISSION_TYPES = ['follow_x', 'retweet', 'share_with_hashtag', 'join_telegram'] as const
+const VALID_MISSION_TYPES = ['follow_x', 'retweet', 'share_with_hashtag', 'join_telegram', 'share_content'] as const
 type SocialMissionType = (typeof VALID_MISSION_TYPES)[number]
 
 const ONE_TIME_MISSIONS: SocialMissionType[] = ['follow_x', 'join_telegram']
@@ -16,6 +16,7 @@ const MISSION_LABELS: Record<SocialMissionType, string> = {
   retweet: 'Retweet a Sui Sentinel post',
   share_with_hashtag: 'Share with #SuiSentinel',
   join_telegram: 'Join Sui Sentinel Telegram',
+  share_content: 'Share Sui Sentinel Content',
 }
 
 export async function POST(req: NextRequest) {
@@ -82,34 +83,83 @@ export async function POST(req: NextRequest) {
     if (agent_path) metadata.agent_path = agent_path
 
     // Insert record
-    const { error: dbError } = await supabaseServiceClient.from('ss_rewards_activity').insert({
-      user_id: user.id,
-      mission_type: missionType,
-      points_earned: 0,
-      metadata,
-      completed_at: new Date().toISOString(),
-    })
+    const { data: insertedActivity, error: dbError } = await supabaseServiceClient
+      .from('ss_rewards_activity')
+      .insert({
+        user_id: user.id,
+        mission_type: missionType,
+        points_earned: 0,
+        metadata,
+        completed_at: new Date().toISOString(),
+      })
+      .select()
+      .single()
 
-    if (dbError) {
+    if (dbError || !insertedActivity) {
       console.error('DB Insert Error:', dbError)
       return NextResponse.json({ error: 'Failed to save submission' }, { status: 500 })
     }
 
-    // Send Telegram notification to admin
+    // Send enhanced Telegram notification to admin with inline action buttons
     if (ADMIN_API_TOKEN) {
-      const proofLines: string[] = []
-      if (twitter_username) proofLines.push(`*Twitter*: @${twitter_username}`)
-      if (telegram_username) proofLines.push(`*Telegram*: @${telegram_username}`)
-      if (tweet_url) proofLines.push(`*Tweet URL*: ${tweet_url}`)
-      if (screenshot_url) proofLines.push(`*Screenshot*: ${screenshot_url}`)
+      const submissionId = insertedActivity.id
+      const backendApiUrl = process.env.BACKEND_API_URL || 'https://api.suisentinel.xyz'
 
-      const message =
-        `📋 *New Social Mission Submission*\n\n` +
-        `*Mission*: ${MISSION_LABELS[missionType]}\n` +
-        `*User*: ${user.username || 'Unknown'}\n` +
-        `*Wallet*: \`${wallet_address}\`\n` +
-        (proofLines.length ? proofLines.join('\n') + '\n' : '') +
-        `\nReview in admin portal and send Sentinel tokens.`
+      // Build message sections
+      const messageParts: string[] = [
+        '🔔 *New Social Mission Submission*\n',
+        `━━━━━━━━━━━━━━━━━━━━━━`,
+        `📝 *Mission*: ${MISSION_LABELS[missionType]}`,
+        `👤 *User*: ${user.username || 'Unknown'}`,
+        `💼 *Wallet*: \`${wallet_address}\``,
+        `🆔 *Submission ID*: \`${submissionId}\``,
+        `🌐 *Network*: ${network || 'testnet'}`,
+      ]
+
+      // Add proof details with clickable links
+      if (twitter_username) {
+        messageParts.push(`🐦 *Twitter*: [@${twitter_username}](https://twitter.com/${twitter_username})`)
+      }
+      if (telegram_username) {
+        messageParts.push(`📱 *Telegram*: @${telegram_username}`)
+      }
+      if (tweet_url) {
+        // Make the URL clickable
+        messageParts.push(`🔗 *Tweet*: [View Tweet](${tweet_url})`)
+      }
+      if (screenshot_url) {
+        // Make screenshot clickable
+        messageParts.push(`📸 *Screenshot*: [View Image](${screenshot_url})`)
+      }
+
+      messageParts.push(`━━━━━━━━━━━━━━━━━━━━━━`)
+      messageParts.push(`⏰ *Submitted*: ${new Date().toLocaleString('en-US', { timeZone: 'UTC' })} UTC`)
+
+      const message = messageParts.join('\n')
+
+      // Create inline keyboard with action buttons
+      const inlineKeyboard = {
+        inline_keyboard: [
+          [
+            {
+              text: '✅ Approve & Reward',
+              callback_data: `approve:${submissionId}:${network || 'testnet'}`,
+              url: `${backendApiUrl}/rewards/social-missions/approve`
+            },
+            {
+              text: '❌ Reject',
+              callback_data: `reject:${submissionId}:${network || 'testnet'}`,
+              url: `${backendApiUrl}/rewards/social-missions/reject`
+            }
+          ],
+          [
+            {
+              text: '📊 View All Pending',
+              url: `${backendApiUrl}/rewards/social-missions/pending`
+            }
+          ]
+        ]
+      }
 
       await fetch(TELEGRAM_NOTIFICATION_API, {
         method: 'POST',
@@ -120,6 +170,8 @@ export async function POST(req: NextRequest) {
         body: JSON.stringify({
           message,
           groupId: SUI_SENTINEL_ALERTS_TELEGRAM_GROUP_ID,
+          parse_mode: 'Markdown',
+          reply_markup: inlineKeyboard,
         }),
       }).catch(err => console.error('Telegram notification failed:', err))
     }

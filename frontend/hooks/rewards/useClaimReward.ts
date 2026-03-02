@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
-import { APP_NETWORK, INDEXER_BASE_URL } from '@/constants'
+import { APP_NETWORK, SUI_SENTINEL_API_URL } from '@/constants'
 
 interface ClaimTokensResponse {
   claimed: boolean
@@ -20,7 +20,7 @@ export const useClaimReward = () => {
     }): Promise<ClaimTokensResponse> => {
       if (!recipient) throw new Error('Recipient address is required')
 
-      const url = `${INDEXER_BASE_URL}/claim-tokens/${network}/${recipient}`
+      const url = `${SUI_SENTINEL_API_URL}/claim-tokens/${network}/${recipient}`
 
       const response = await fetch(url, {
         method: 'GET',
