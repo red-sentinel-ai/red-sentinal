@@ -1,14 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useCurrentAccount } from '@mysten/dapp-kit'
-import { Loader2, Twitter, TrendingUp, Sparkles, Clock } from 'lucide-react'
+import { Loader2, TrendingUp, Sparkles, Clock } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatDistanceToNow } from 'date-fns'
 import { SlotMachine } from '@/components/slot-machine/SlotMachine'
 import { SpinHistory } from './SpinHistory'
 import { SpinFeed } from './SpinFeed'
 import { useUserBoosters, useSpinHistory } from '@/hooks/rewards/useBoosters'
+import { useClaimReward } from '@/hooks/rewards/useClaimReward'
 import type { Booster, SpinResponse } from '@/types'
 import { BOOSTER_TIERS, SUI_SENTINEL_X_USERNAME } from '@/constants'
 
@@ -19,8 +20,37 @@ export const BoosterRewards = () => {
   const [lastSpinResult, setLastSpinResult] = useState<SpinResponse | null>(null)
   const [passFilter, setPassFilter] = useState<'active' | 'expired'>('active')
 
-  const { data: boostersData, isLoading: isLoadingBoosters } = useUserBoosters(account?.address)
+  const {
+    data: boostersData,
+    isLoading: isLoadingBoosters,
+    refetch: refetchBoosters,
+  } = useUserBoosters(account?.address)
   const { data: spinHistoryData, isLoading: isLoadingHistory } = useSpinHistory(account?.address)
+  const { mutateAsync: claimReward } = useClaimReward()
+
+  // Auto-claim pending rewards when component mounts
+  useEffect(() => {
+    const claimPendingRewards = async () => {
+      if (!account?.address) return
+
+      try {
+        const result = await claimReward({ recipient: account.address })
+        if (result.claimed && result.boosterAwarded) {
+          toast.success(
+            `🎉 ${result.boosterAwarded.tier} Spin Pass Claimed! ${result.boosterAwarded.multiplier}x Multiplier`,
+            { duration: 5000 }
+          )
+          // Refetch boosters to show the new one
+          refetchBoosters()
+        }
+      } catch {
+        // Silent fail - user can manually retry later
+        console.log('No pending rewards to claim')
+      }
+    }
+
+    claimPendingRewards()
+  }, [account?.address])
 
   const activeBoosters = boostersData?.boosters.filter(b => b.status === 'active') || []
   const expiredBoosters = boostersData?.boosters.filter(b => b.status === 'expired') || []
@@ -129,8 +159,7 @@ export const BoosterRewards = () => {
                   htmlFor="shareTwitter"
                   className="flex items-center gap-1 text-sm text-gray-700"
                 >
-                  <Twitter className="h-4 w-4" />
-                  Share to Twitter for +100 SENTINEL bonus
+                  Share to Twitter/X for +100 SENTINEL bonus
                 </label>
               </div>
 

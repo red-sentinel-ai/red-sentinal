@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { User, Folder, Activity, Loader2, Camera, Gift, BarChart3 } from 'lucide-react'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 
@@ -29,7 +30,9 @@ const PROFILE_TABS = {
 
 type ProfileTabValue = (typeof PROFILE_TABS)[keyof typeof PROFILE_TABS]
 
-export default function ProfilePage() {
+function ProfileContent() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState<ProfileTabValue>(PROFILE_TABS.AGENTS)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isImagePickerOpen, setIsImagePickerOpen] = useState(false)
@@ -42,8 +45,20 @@ export default function ProfilePage() {
     onSuccess: () => setIsImagePickerOpen(false),
   })
 
+  // Initialize tab from URL on mount
+  useEffect(() => {
+    const tabParam = searchParams.get('tab')
+    if (tabParam && Object.values(PROFILE_TABS).includes(tabParam as ProfileTabValue)) {
+      setActiveTab(tabParam as ProfileTabValue)
+    }
+  }, [searchParams])
+
   const handleTabChange = (value: string) => {
     setActiveTab(value as ProfileTabValue)
+    // Update URL without full page reload
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('tab', value)
+    router.push(`/profile?${params.toString()}`, { scroll: false })
   }
 
   const handleImageSelect = (img: { url: string; isCustom: boolean; file?: File | null }) => {
@@ -236,5 +251,19 @@ export default function ProfilePage() {
         disableGifs={true}
       />
     </>
+  )
+}
+
+export default function ProfilePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-body flex items-center justify-center">
+          <Loader2 className="h-10 w-10 animate-spin text-black" />
+        </div>
+      }
+    >
+      <ProfileContent />
+    </Suspense>
   )
 }
