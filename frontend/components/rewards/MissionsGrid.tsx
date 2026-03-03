@@ -51,12 +51,12 @@ export function MissionsGrid({
     )
   }
 
-  const onChainMissions = missions.filter(m => m.category === 'on_chain')
+  // const onChainMissions = missions.filter(m => m.category === 'on_chain')
   const socialMissions = missions.filter(m => m.category === 'social_media')
 
   return (
     <div className="space-y-12">
-      {onChainMissions.length > 0 && (
+      {/* {onChainMissions.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -96,7 +96,7 @@ export function MissionsGrid({
             })}
           </div>
         </motion.div>
-      )}
+      )} */}
 
       {socialMissions.length > 0 && (
         <motion.div
