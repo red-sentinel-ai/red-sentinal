@@ -155,7 +155,7 @@ export default function ProfilePage() {
               )}
             </div>
           </div>
-          <div className="mb-12">
+          <div className="mb-6">
             <SocialConnectionsSectionWrapper />
           </div>
 
