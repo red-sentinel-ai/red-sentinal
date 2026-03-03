@@ -3,20 +3,23 @@ import Image from 'next/image'
 import { toast } from 'sonner'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { SlotReel } from './SlotReel'
-import { useClaimReward } from '@/hooks/rewards/useClaimReward'
+import { useSpinBooster } from '@/hooks/rewards/useBoosters'
+import type { Booster, SpinResponse } from '@/types'
 
 interface SlotMachineProps {
-  onWin?: (amount: number) => void
+  booster: Booster | null
+  onWin?: (spinResponse: SpinResponse) => void
   onError?: (error: string) => void
+  shareToTwitter?: boolean
 }
 
-export const SlotMachine = ({ onWin, onError }: SlotMachineProps) => {
+export const SlotMachine = ({ booster, onWin, onError, shareToTwitter = false }: SlotMachineProps) => {
   const account = useCurrentAccount()
   const [isSpinning, setIsSpinning] = useState(false)
   const [hasWon, setHasWon] = useState(false)
   const [result, setResult] = useState<number[]>([4, 5, 4])
 
-  const { mutateAsync: claimTokens, isPending } = useClaimReward()
+  const { mutateAsync: spinBooster, isPending } = useSpinBooster()
 
   const spinAudioRef = useRef<HTMLAudioElement | null>(null)
   const clickAudioRef = useRef<HTMLAudioElement | null>(null)
@@ -49,15 +52,24 @@ export const SlotMachine = ({ onWin, onError }: SlotMachineProps) => {
       return
     }
 
+    if (!booster) {
+      toast.error('Please select a booster first')
+      return
+    }
+
     spinAudioRef.current?.play().catch(e => console.error('Audio play failed', e))
 
     setIsSpinning(true)
 
     try {
-      const data = await claimTokens({ recipient: account.address })
+      const data = await spinBooster({
+        walletAddress: account.address,
+        boosterId: booster._id,
+        shareToTwitter,
+      })
 
-      if (data.transferSuccess && data.rewardAmount) {
-        const digits = String(data.rewardAmount).padStart(3, '0').slice(-3).split('').map(Number)
+      if (data.success && data.spin.finalAmount) {
+        const digits = String(data.spin.finalAmount).padStart(3, '0').slice(-3).split('').map(Number)
 
         setResult(digits)
         setIsSpinning(false)
@@ -66,25 +78,23 @@ export const SlotMachine = ({ onWin, onError }: SlotMachineProps) => {
 
         setTimeout(() => {
           if (onWin) {
-            onWin(data.rewardAmount)
+            onWin(data)
           }
         }, 1500)
       } else {
-        toast.error('Spin failed. No rewards available or transfer failed.')
+        toast.error('Spin failed. Please try again.')
         setIsSpinning(false)
         stopSpinSound()
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Spin failed', error)
       setIsSpinning(false)
       stopSpinSound()
 
       const errorMessage = error?.message || 'Failed to spin'
 
-      if (errorMessage.includes('No unclaimed rewards')) {
-        if (onError) {
-          onError(errorMessage)
-        }
+      if (onError) {
+        onError(errorMessage)
       } else {
         toast.error(errorMessage)
       }
@@ -112,7 +122,7 @@ export const SlotMachine = ({ onWin, onError }: SlotMachineProps) => {
       <div className="absolute bottom-[90px] left-[31px] z-20 h-[51px] w-[150px] overflow-hidden">
         <button
           onClick={handleSpin}
-          disabled={isSpinning || isPending || hasWon}
+          disabled={isSpinning || isPending || hasWon || !booster}
           className="group transition-transform duration-100 active:translate-y-[14px] disabled:cursor-not-allowed disabled:opacity-80"
         >
           <Image

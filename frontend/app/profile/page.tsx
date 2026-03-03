@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { UserActivity } from '@/components/profile/UserActivity'
 import { UserAgents } from '@/components/profile/UserAgents'
 import { UserStats } from '@/components/profile/UserStats'
-import { RewardsHistory } from '@/components/profile/RewardsHistory'
+import { BoosterRewards } from '@/components/rewards/BoosterRewards'
 import { ConnectPrompt } from '@/components/ConnectPrompt'
 import { EditProfileModal } from '@/components/profile/EditProfileModal'
 import { SocialConnectionsSectionWrapper } from '@/components/profile/SocialConnectionsSectionWrapper'
@@ -211,9 +211,7 @@ export default function ProfilePage() {
                 </TabsContent>
 
                 <TabsContent value={PROFILE_TABS.REWARDS}>
-                  <div className="max-w-5xl">
-                    <RewardsHistory />
-                  </div>
+                  <BoosterRewards />
                 </TabsContent>
               </div>
             </Tabs>

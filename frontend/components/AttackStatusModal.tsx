@@ -9,9 +9,12 @@ import { useWindowSize } from 'react-use'
 import { Dialog } from '@/components/Dialog'
 import { TruncatedText } from '@/components/TruncatedText'
 import { ConsumePromptApiResponse } from '@/types'
-import { SUIVISION_TXBLOCK_URL } from '@/constants'
+import { SUIVISION_TXBLOCK_URL, BOOSTER_TIERS } from '@/constants'
 import { cn } from '@/lib/utils'
-import { SlotMachine } from './slot-machine/SlotMachine'
+import { useClaimReward } from '@/hooks/rewards/useClaimReward'
+import { useCurrentAccount } from '@mysten/dapp-kit'
+import { useEffect } from 'react'
+import { toast } from 'sonner'
 
 type AttackStatusModalProps = {
   apiResponse: ConsumePromptApiResponse
@@ -27,9 +30,10 @@ export const AttackStatusModal = ({
   txnHash,
 }: AttackStatusModalProps) => {
   const { width, height } = useWindowSize()
+  const account = useCurrentAccount()
   const [isExplanationOpen, setIsExplanationOpen] = useState(true)
-  const [rewardAmount, setRewardAmount] = useState<number | null>(null)
-  const [isSlotAvailable, setIsSlotAvailable] = useState(true)
+  const [awardedBooster, setAwardedBooster] = useState<any>(null)
+  const [isClaiming, setIsClaiming] = useState(false)
 
   const success = apiResponse?.response.data.success
   const originalScore = apiResponse?.response.data.score || 0
@@ -37,17 +41,31 @@ export const AttackStatusModal = ({
   const explanation = apiResponse?.response.data.agent_response
   const juryResponse = apiResponse?.response.data.jury_response
 
-  const handleSlotWin = (amount: number) => {
-    setRewardAmount(amount)
-  }
+  const { mutateAsync: claimTokens } = useClaimReward()
 
-  const handleSlotError = (errorMsg: string) => {
-    if (errorMsg.includes('No unclaimed rewards')) {
-      setIsSlotAvailable(false)
-    } else {
-      console.error('Slot Machine Error:', errorMsg)
+  useEffect(() => {
+    const claimBooster = async () => {
+      if (!showResultModal || !account?.address || isClaiming || awardedBooster) return
+
+      setIsClaiming(true)
+      try {
+        const data = await claimTokens({ recipient: account.address })
+        if (data.claimed && data.boosterAwarded) {
+          setAwardedBooster(data.boosterAwarded)
+          toast.success(
+            `${data.boosterAwarded.tier} Booster awarded! Check your profile to spin it.`
+          )
+        }
+      } catch (error: any) {
+        console.error('Failed to claim booster:', error)
+        // Silent fail - user can still see their attack result
+      } finally {
+        setIsClaiming(false)
+      }
     }
-  }
+
+    claimBooster()
+  }, [showResultModal, account?.address])
 
   return (
     <Dialog
@@ -160,7 +178,7 @@ export const AttackStatusModal = ({
           <div className="mb-6 h-[1px] w-full bg-[#E5E5E5]" />
 
           <div className="relative flex min-h-[420px] flex-col items-center justify-center bg-gradient-to-b from-white to-pink-50/30 px-6 pb-8">
-            {rewardAmount !== null && (
+            {awardedBooster && (
               <div className="pointer-events-none absolute inset-0 z-50 overflow-hidden">
                 <Confetti
                   width={width}
@@ -173,7 +191,7 @@ export const AttackStatusModal = ({
             )}
 
             <AnimatePresence mode="wait">
-              {isSlotAvailable ? (
+              {true ? (
                 <motion.div
                   key="slot-section"
                   initial={{ opacity: 0 }}
@@ -181,31 +199,62 @@ export const AttackStatusModal = ({
                   exit={{ opacity: 0 }}
                   className="relative z-10 flex w-full flex-col items-center"
                 >
-                  {!rewardAmount && (
-                    <div className="mb-6 text-center text-xl font-medium">
-                      <p>
-                        The SENTINEL grants you a{' '}
-                        <span className="font-bold text-[#F632F3]">bonus spin</span>.
-                      </p>
-                      <p className="text-lg text-black">Try your luck!</p>
-                    </div>
-                  )}
-
-                  <SlotMachine onWin={handleSlotWin} onError={handleSlotError} />
-
-                  {rewardAmount !== null && (
+                  {awardedBooster ? (
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="mt-6 text-center"
+                      className="w-full max-w-md rounded-xl border-2 border-black bg-gradient-to-br from-purple-50 to-pink-50 p-6 text-center"
                     >
-                      <h3 className="mb-2 text-3xl font-bold text-black">Congratulations!</h3>
-                      <p className="mb-6 text-lg text-[#5E5E5E]">
-                        You won{' '}
-                        <span className="font-bold text-[#F046D6]">{rewardAmount} SENTINEL</span>{' '}
-                        tokens!
-                      </p>
+                      <div className="mb-4 flex items-center justify-center gap-2">
+                        <span className="text-4xl">
+                          {BOOSTER_TIERS[awardedBooster.tier as keyof typeof BOOSTER_TIERS]
+                            ?.color || '🎁'}
+                        </span>
+                        <div>
+                          <h3 className="text-2xl font-bold text-black">
+                            {awardedBooster.tier} Booster Awarded!
+                          </h3>
+                          <p className="text-lg text-gray-600">
+                            {awardedBooster.multiplier}x Multiplier
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="mb-4 rounded-lg bg-white/50 p-4">
+                        <p className="text-sm text-gray-700">
+                          Potential Reward:{' '}
+                          <span className="font-bold text-[#F632F3]">
+                            {BOOSTER_TIERS[
+                              awardedBooster.tier as keyof typeof BOOSTER_TIERS
+                            ]?.minReward.toLocaleString()}{' '}
+                            -{' '}
+                            {BOOSTER_TIERS[
+                              awardedBooster.tier as keyof typeof BOOSTER_TIERS
+                            ]?.maxReward.toLocaleString()}{' '}
+                            SENTINEL
+                          </span>
+                        </p>
+                        <p className="mt-2 text-xs text-gray-500">
+                          Expires: {new Date(awardedBooster.expiresAt).toLocaleDateString()}
+                        </p>
+                      </div>
+
+                      <Link
+                        href="/profile?tab=rewards"
+                        className="inline-block rounded-lg bg-black px-6 py-3 font-semibold text-white transition-transform hover:scale-105"
+                      >
+                        Go to Profile to Spin
+                      </Link>
                     </motion.div>
+                  ) : isClaiming ? (
+                    <div className="text-center">
+                      <div className="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-black"></div>
+                      <p className="text-gray-600">Claiming your booster...</p>
+                    </div>
+                  ) : (
+                    <div className="text-center text-gray-600">
+                      <p>No booster available at this time</p>
+                    </div>
                   )}
                 </motion.div>
               ) : (
