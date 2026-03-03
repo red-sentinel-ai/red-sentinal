@@ -1,20 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
-import { X, Check, ChevronDown, ChevronUp, Swords } from 'lucide-react'
+import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import Confetti from 'react-confetti'
 import { useWindowSize } from 'react-use'
 import { Dialog } from '@/components/Dialog'
 import { TruncatedText } from '@/components/TruncatedText'
 import { ConsumePromptApiResponse } from '@/types'
-import { SUIVISION_TXBLOCK_URL, BOOSTER_TIERS } from '@/constants'
+import { SUIVISION_TXBLOCK_URL } from '@/constants'
 import { cn } from '@/lib/utils'
-import { useClaimReward } from '@/hooks/rewards/useClaimReward'
-import { useCurrentAccount } from '@mysten/dapp-kit'
-import { useEffect } from 'react'
-import { toast } from 'sonner'
 
 type AttackStatusModalProps = {
   apiResponse: ConsumePromptApiResponse
@@ -30,10 +26,8 @@ export const AttackStatusModal = ({
   txnHash,
 }: AttackStatusModalProps) => {
   const { width, height } = useWindowSize()
-  const account = useCurrentAccount()
   const [isExplanationOpen, setIsExplanationOpen] = useState(true)
-  const [awardedBooster, setAwardedBooster] = useState<any>(null)
-  const [isClaiming, setIsClaiming] = useState(false)
+  const [showConfetti, setShowConfetti] = useState(false)
 
   const success = apiResponse?.response.data.success
   const originalScore = apiResponse?.response.data.score || 0
@@ -41,31 +35,14 @@ export const AttackStatusModal = ({
   const explanation = apiResponse?.response.data.agent_response
   const juryResponse = apiResponse?.response.data.jury_response
 
-  const { mutateAsync: claimTokens } = useClaimReward()
-
-  useEffect(() => {
-    const claimBooster = async () => {
-      if (!showResultModal || !account?.address || isClaiming || awardedBooster) return
-
-      setIsClaiming(true)
-      try {
-        const data = await claimTokens({ recipient: account.address })
-        if (data.claimed && data.boosterAwarded) {
-          setAwardedBooster(data.boosterAwarded)
-          toast.success(
-            `${data.boosterAwarded.tier} Booster awarded! Check your profile to spin it.`
-          )
-        }
-      } catch (error: any) {
-        console.error('Failed to claim booster:', error)
-        // Silent fail - user can still see their attack result
-      } finally {
-        setIsClaiming(false)
-      }
+  // Trigger confetti animation when modal opens
+  React.useEffect(() => {
+    if (showResultModal) {
+      setShowConfetti(true)
+      const timer = setTimeout(() => setShowConfetti(false), 5000)
+      return () => clearTimeout(timer)
     }
-
-    claimBooster()
-  }, [showResultModal, account?.address])
+  }, [showResultModal])
 
   return (
     <Dialog
@@ -82,10 +59,10 @@ export const AttackStatusModal = ({
       >
         <button
           onClick={() => setShowResultModal(false)}
-          className="absolute right-5 top-5 z-20 rounded-full p-1 text-black transition-colors hover:bg-gray-100"
+          className="absolute right-5 top-5 z-20 flex h-8 w-8 items-center justify-center rounded-full text-2xl leading-none text-black transition-colors hover:bg-gray-100"
           aria-label="Close modal"
         >
-          <X className="h-5 w-5" />
+          ×
         </button>
 
         <div className="flex-shrink-0 p-6 pb-0">
@@ -96,11 +73,7 @@ export const AttackStatusModal = ({
                 success ? 'bg-[#1FAD57]' : 'bg-[#D32F2F]'
               )}
             >
-              {success ? (
-                <Check className="h-5 w-5 stroke-[3px] text-white" />
-              ) : (
-                <span className="text-lg font-bold text-white">!</span>
-              )}
+              <span className="text-lg font-bold text-white">{success ? '✓' : '!'}</span>
             </div>
             <div>
               <h2 className="text-xl font-bold leading-tight text-black">
@@ -120,7 +93,7 @@ export const AttackStatusModal = ({
         <div className="min-h-0 flex-1 overflow-y-auto">
           <div className="px-8 pb-4">
             <div className="mb-4 flex items-center">
-              <Swords className="mr-2 h-5 w-5 fill-black text-black" />
+              <span className="mr-2 text-base">⚔️</span>
               <span className="text-[15px] font-medium text-black">
                 Your Attack Score: <span className="text-sm font-bold">{score}/100</span>
               </span>
@@ -140,11 +113,9 @@ export const AttackStatusModal = ({
                 className="group flex w-full items-center justify-between text-left"
               >
                 <h3 className="text-[15px] font-medium text-black">Explanation</h3>
-                {isExplanationOpen ? (
-                  <ChevronUp className="h-4 w-4 text-gray-500 transition-colors group-hover:text-black" />
-                ) : (
-                  <ChevronDown className="h-4 w-4 text-gray-500 transition-colors group-hover:text-black" />
-                )}
+                <span className="text-gray-500 transition-colors group-hover:text-black">
+                  {isExplanationOpen ? '▲' : '▼'}
+                </span>
               </button>
 
               <AnimatePresence initial={false}>
@@ -178,7 +149,7 @@ export const AttackStatusModal = ({
           <div className="mb-6 h-[1px] w-full bg-[#E5E5E5]" />
 
           <div className="relative flex min-h-[420px] flex-col items-center justify-center bg-gradient-to-b from-white to-pink-50/30 px-6 pb-8">
-            {awardedBooster && (
+            {showConfetti && (
               <div className="pointer-events-none absolute inset-0 z-50 overflow-hidden">
                 <Confetti
                   width={width}
@@ -190,82 +161,48 @@ export const AttackStatusModal = ({
               </div>
             )}
 
-            <AnimatePresence mode="wait">
-              {true ? (
-                <motion.div
-                  key="slot-section"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="relative z-10 flex w-full flex-col items-center"
-                >
-                  {awardedBooster ? (
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="w-full max-w-md rounded-xl border-2 border-black bg-gradient-to-br from-purple-50 to-pink-50 p-6 text-center"
-                    >
-                      <div className="mb-4 flex items-center justify-center gap-2">
-                        <span className="text-4xl">
-                          {BOOSTER_TIERS[awardedBooster.tier as keyof typeof BOOSTER_TIERS]
-                            ?.color || '🎁'}
-                        </span>
-                        <div>
-                          <h3 className="text-2xl font-bold text-black">
-                            {awardedBooster.tier} Booster Awarded!
-                          </h3>
-                          <p className="text-lg text-gray-600">
-                            {awardedBooster.multiplier}x Multiplier
-                          </p>
-                        </div>
-                      </div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="relative z-10 w-full max-w-md text-center"
+            >
+              <div className="mb-6 inline-block">
+                <Image
+                  src="/img/slot_machine_1x.png"
+                  alt="Slot machine"
+                  width={96}
+                  height={126}
+                  className="h-24 w-24"
+                />
+              </div>
 
-                      <div className="mb-4 rounded-lg bg-white/50 p-4">
-                        <p className="text-sm text-gray-700">
-                          Potential Reward:{' '}
-                          <span className="font-bold text-[#F632F3]">
-                            {BOOSTER_TIERS[
-                              awardedBooster.tier as keyof typeof BOOSTER_TIERS
-                            ]?.minReward.toLocaleString()}{' '}
-                            -{' '}
-                            {BOOSTER_TIERS[
-                              awardedBooster.tier as keyof typeof BOOSTER_TIERS
-                            ]?.maxReward.toLocaleString()}{' '}
-                            SENTINEL
-                          </span>
-                        </p>
-                        <p className="mt-2 text-xs text-gray-500">
-                          Expires: {new Date(awardedBooster.expiresAt).toLocaleDateString()}
-                        </p>
-                      </div>
+              <h3 className="mb-3 text-2xl font-bold text-black">Free Spin Pass Received!</h3>
 
-                      <Link
-                        href="/profile?tab=rewards"
-                        className="inline-block rounded-lg bg-black px-6 py-3 font-semibold text-white transition-transform hover:scale-105"
-                      >
-                        Go to Profile to Spin
-                      </Link>
-                    </motion.div>
-                  ) : isClaiming ? (
-                    <div className="text-center">
-                      <div className="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-black"></div>
-                      <p className="text-gray-600">Claiming your booster...</p>
-                    </div>
-                  ) : (
-                    <div className="text-center text-gray-600">
-                      <p>No booster available at this time</p>
-                    </div>
-                  )}
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="empty"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-sm italic text-gray-400"
-                ></motion.div>
-              )}
-            </AnimatePresence>
+              <p className="mb-6 text-base text-gray-600">
+                You&apos;ve received a free spin pass for your attack!
+                <br />
+                Use your pass to WIN SENTINEL tokens from your profile rewards tab.
+              </p>
+
+              <div className="mb-6 rounded-xl border-2 border-dashed border-[#F632F3] bg-gradient-to-br from-purple-50/50 to-pink-50/50 p-4">
+                <p className="text-sm font-medium text-gray-700">
+                  🎁 Spin passes may contain boosters with up to{' '}
+                  <span className="font-bold text-[#F632F3]">100x multipliers</span>
+                </p>
+              </div>
+
+              <Link
+                href="/profile?tab=rewards"
+                className="inline-block w-full rounded-lg bg-black px-6 py-4 font-semibold text-white transition-transform hover:scale-105"
+              >
+                Go to Profile → Spin Now
+              </Link>
+
+              <p className="mt-4 text-xs text-gray-500">
+                Passes are automatically available in your profile
+              </p>
+            </motion.div>
           </div>
         </div>
       </motion.div>
