@@ -62,6 +62,9 @@
   .animate-marquee2 {
     animation: marquee2 25s linear infinite;
   }
+  .pause-animation:hover {
+    animation-play-state: paused;
+  }
   .min-h-body {
     min-height: 100vh;
   }

@@ -90,7 +90,7 @@ export function SocialConnectionsSection() {
 
   return (
     <div className="px-4 md:px-8">
-      {!hasAnyConnection && (
+      {/* {!hasAnyConnection && (
         <div className="mb-4 rounded-lg border border-[#5E5E5E] bg-gradient-to-r from-white/45 to-[rgba(255,158,244,0.46)] p-3 sm:mb-6">
           <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-2">
@@ -113,7 +113,7 @@ export function SocialConnectionsSection() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       <Card className="border-[#5E5E5E] bg-transparent bg-gradient-to-r from-white/45 to-[rgba(249,241,248,0.45)] p-4">
         <div className="space-y-3">
@@ -121,11 +121,11 @@ export function SocialConnectionsSection() {
             <div className="flex items-center gap-2">
               <div>
                 <h3 className="text-lg font-medium text-black sm:text-xl">
-                  Social Connections
+                  Connect your socials to unlock rewards
                 </h3>
-                <p className="text-xs text-gray-500 sm:text-sm">
+                {/* <p className="text-xs text-gray-500 sm:text-sm">
                   {hasAnyConnection ? 'X (Twitter) connected' : 'Connect your social accounts'}
-                </p>
+                </p> */}
               </div>
             </div>
 

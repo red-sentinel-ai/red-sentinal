@@ -8,6 +8,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { SlotMachine } from '@/components/slot-machine/SlotMachine'
 import { BoosterStats } from './BoosterStats'
 import { SpinHistory } from './SpinHistory'
+import { SpinFeed } from './SpinFeed'
 import { useUserBoosters, useSpinHistory } from '@/hooks/rewards/useBoosters'
 import type { Booster, SpinResponse } from '@/types'
 import { BOOSTER_TIERS, SUI_SENTINEL_X_USERNAME } from '@/constants'
@@ -17,11 +18,14 @@ export const BoosterRewards = () => {
   const [selectedBooster, setSelectedBooster] = useState<Booster | null>(null)
   const [shareToTwitter, setShareToTwitter] = useState(false)
   const [lastSpinResult, setLastSpinResult] = useState<SpinResponse | null>(null)
+  const [passFilter, setPassFilter] = useState<'active' | 'expired'>('active')
 
   const { data: boostersData, isLoading: isLoadingBoosters } = useUserBoosters(account?.address)
   const { data: spinHistoryData, isLoading: isLoadingHistory } = useSpinHistory(account?.address)
 
   const activeBoosters = boostersData?.boosters.filter(b => b.status === 'active') || []
+  const expiredBoosters = boostersData?.boosters.filter(b => b.status === 'expired') || []
+  const displayedBoosters = passFilter === 'active' ? activeBoosters : expiredBoosters
 
   const handleSelectBooster = (booster: Booster) => {
     setSelectedBooster(booster)
@@ -67,13 +71,17 @@ export const BoosterRewards = () => {
 
   return (
     <div className="space-y-6">
-      {boostersData?.stats && <BoosterStats stats={boostersData.stats} />}
+      {/* {boostersData?.stats && <BoosterStats stats={boostersData.stats} />} */}
 
       {/* Main Layout: Slot Machine + Spin Passes */}
       <div className="grid gap-6 lg:grid-cols-[1fr_400px] xl:grid-cols-[1fr_450px]">
         {/* Left: Slot Machine Section */}
-        <div className="rounded-xl border border-gray-200 bg-white p-6 md:p-8">
-          <h2 className="mb-16 text-center text-xl font-bold md:text-3xl">Select a Spin Pass</h2>
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+          {/* Live Feed Ticker */}
+          <SpinFeed />
+
+          <div className="p-6 md:p-8">
+            <h2 className="mb-16 text-center text-xl font-bold md:text-3xl">Select a Spin Pass</h2>
 
           <div className="mb-6 py-6 md:py-8 lg:py-12">
             <SlotMachine
@@ -170,25 +178,57 @@ export const BoosterRewards = () => {
             )}
           </div>
         </div>
+        </div>
 
         {/* Right: Spin Passes List */}
-        <div className="rounded-xl border border-gray-200 bg-white p-4">
-          <h3 className="mb-4 text-lg font-semibold">
-            Active Spin Passes ({activeBoosters.length})
-          </h3>
-
-          {activeBoosters.length === 0 ? (
-            <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 p-8 text-center">
-              <Sparkles className="mb-4 h-12 w-12 text-gray-400" />
-              <h4 className="mb-2 text-lg font-semibold">No Active Spin Passes</h4>
-              <p className="text-sm text-gray-600">
-                Complete attacks, missions, or social tasks to earn Spin Passes
-              </p>
+        <div className="flex h-[700px] flex-col rounded-xl border border-gray-200 bg-white">
+          <div className="flex-shrink-0 border-b border-gray-200 p-4 pb-0">
+            <div className="mb-3 flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Spin Passes</h3>
             </div>
-          ) : (
-            <div className="max-h-[600px] overflow-y-auto pr-2">
+
+            {/* Tabs */}
+            <div className="flex gap-1 border-b border-gray-200">
+              <button
+                onClick={() => setPassFilter('active')}
+                className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  passFilter === 'active'
+                    ? 'border-b-2 border-black text-black'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                Active ({activeBoosters.length})
+              </button>
+              <button
+                onClick={() => setPassFilter('expired')}
+                className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  passFilter === 'expired'
+                    ? 'border-b-2 border-black text-black'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                Expired ({expiredBoosters.length})
+              </button>
+            </div>
+          </div>
+
+          {/* Scrollable content */}
+          <div className="flex-1 overflow-y-auto p-4">
+            {displayedBoosters.length === 0 ? (
+              <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 p-8 text-center">
+                <Sparkles className="mb-4 h-12 w-12 text-gray-400" />
+                <h4 className="mb-2 text-lg font-semibold">
+                  No {passFilter === 'active' ? 'Active' : 'Expired'} Spin Passes
+                </h4>
+                <p className="text-sm text-gray-600">
+                  {passFilter === 'active'
+                    ? 'Complete attacks, missions, or social tasks to earn Spin Passes'
+                    : 'Expired passes will appear here'}
+                </p>
+              </div>
+            ) : (
               <div className="grid grid-cols-2 gap-3">
-                {activeBoosters.map(booster => {
+                {displayedBoosters.map(booster => {
                   const tierInfo = BOOSTER_TIERS[booster.tier]
                   const isExpiringSoon =
                     new Date(booster.expiresAt).getTime() - Date.now() < 24 * 60 * 60 * 1000
@@ -197,8 +237,11 @@ export const BoosterRewards = () => {
                   return (
                     <button
                       key={booster._id}
-                      onClick={() => handleSelectBooster(booster)}
-                      className={`group relative overflow-hidden rounded-lg border-2 p-3 text-left transition-all hover:scale-105 ${
+                      onClick={() => passFilter === 'active' && handleSelectBooster(booster)}
+                      disabled={passFilter === 'expired'}
+                      className={`group relative overflow-hidden rounded-lg border-2 p-3 text-left transition-all ${
+                        passFilter === 'active' ? 'hover:scale-105' : 'opacity-60 cursor-not-allowed'
+                      } ${
                         isSelected
                           ? 'border-black bg-black text-white shadow-lg'
                           : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-md'
@@ -262,8 +305,8 @@ export const BoosterRewards = () => {
                   )
                 })}
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 
