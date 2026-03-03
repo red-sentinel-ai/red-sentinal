@@ -25,9 +25,9 @@ export const BoostersList = ({ boosters, selectedBooster, onSelectBooster }: Boo
   }
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-xl font-semibold">Active Boosters ({boosters.length})</h3>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="space-y-3">
+      <h3 className="text-lg font-semibold">Active Boosters ({boosters.length})</h3>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {boosters.map(booster => {
           const tierInfo = BOOSTER_TIERS[booster.tier]
           const isExpiringSoon = new Date(booster.expiresAt).getTime() - Date.now() < 24 * 60 * 60 * 1000
@@ -37,7 +37,7 @@ export const BoostersList = ({ boosters, selectedBooster, onSelectBooster }: Boo
             <button
               key={booster._id}
               onClick={() => onSelectBooster(booster)}
-              className={`group relative overflow-hidden rounded-xl border-2 p-4 text-left transition-all hover:scale-105 ${
+              className={`group relative overflow-hidden rounded-lg border-2 p-3 text-left transition-all hover:scale-105 ${
                 isSelected
                   ? 'border-black bg-black text-white shadow-lg'
                   : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-md'
@@ -45,27 +45,27 @@ export const BoostersList = ({ boosters, selectedBooster, onSelectBooster }: Boo
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <div className="mb-2 flex items-center gap-2">
-                    <span className="text-2xl">{tierInfo.color}</span>
+                  <div className="mb-1.5 flex items-center gap-1.5">
+                    <span className="text-xl">{tierInfo.color}</span>
                     <div>
                       <h4
-                        className={`font-semibold ${isSelected ? 'text-white' : tierInfo.textColor}`}
+                        className={`text-sm font-semibold ${isSelected ? 'text-white' : tierInfo.textColor}`}
                       >
                         {tierInfo.name}
                       </h4>
-                      <p className={`text-sm ${isSelected ? 'text-gray-200' : 'text-gray-600'}`}>
+                      <p className={`text-xs ${isSelected ? 'text-gray-200' : 'text-gray-600'}`}>
                         {booster.multiplier}x Multiplier
                       </p>
                     </div>
                   </div>
 
-                  <div className={`mb-3 text-xs ${isSelected ? 'text-gray-300' : 'text-gray-500'}`}>
+                  <div className={`mb-2 text-[10px] ${isSelected ? 'text-gray-300' : 'text-gray-500'}`}>
                     Reward Range: {tierInfo.minReward.toLocaleString()} -{' '}
                     {tierInfo.maxReward.toLocaleString()} SENTINEL
                   </div>
 
                   <div
-                    className={`flex items-center gap-1 text-xs ${
+                    className={`flex items-center gap-0.5 text-[10px] ${
                       isExpiringSoon
                         ? isSelected
                           ? 'text-yellow-300'
@@ -75,7 +75,7 @@ export const BoostersList = ({ boosters, selectedBooster, onSelectBooster }: Boo
                           : 'text-gray-500'
                     }`}
                   >
-                    <Clock className="h-3 w-3" />
+                    <Clock className="h-2.5 w-2.5" />
                     <span>
                       {isExpiringSoon && '⚠️ '}
                       Expires {formatDistanceToNow(new Date(booster.expiresAt), { addSuffix: true })}
@@ -85,8 +85,8 @@ export const BoostersList = ({ boosters, selectedBooster, onSelectBooster }: Boo
               </div>
 
               {isSelected && (
-                <div className="absolute right-2 top-2">
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-black">
+                <div className="absolute right-1.5 top-1.5">
+                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs text-black">
                     ✓
                   </div>
                 </div>
