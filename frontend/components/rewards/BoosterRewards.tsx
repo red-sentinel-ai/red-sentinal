@@ -6,7 +6,6 @@ import { Loader2, Twitter, TrendingUp, Sparkles, Clock } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatDistanceToNow } from 'date-fns'
 import { SlotMachine } from '@/components/slot-machine/SlotMachine'
-import { BoosterStats } from './BoosterStats'
 import { SpinHistory } from './SpinHistory'
 import { SpinFeed } from './SpinFeed'
 import { useUserBoosters, useSpinHistory } from '@/hooks/rewards/useBoosters'
@@ -83,101 +82,101 @@ export const BoosterRewards = () => {
           <div className="p-6 md:p-8">
             <h2 className="mb-16 text-center text-xl font-bold md:text-3xl">Select a Spin Pass</h2>
 
-          <div className="mb-6 py-6 md:py-8 lg:py-12">
-            <SlotMachine
-              booster={selectedBooster}
-              onWin={handleSpinWin}
-              shareToTwitter={shareToTwitter}
-            />
-          </div>
+            <div className="mb-6 py-6 md:py-8 lg:py-12">
+              <SlotMachine
+                booster={selectedBooster}
+                onWin={handleSpinWin}
+                shareToTwitter={shareToTwitter}
+              />
+            </div>
 
-          {selectedBooster ? (
-            <div className="mx-auto mb-4 max-w-md rounded-lg border-2 border-black bg-black p-3 text-white">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl">{BOOSTER_TIERS[selectedBooster.tier].color}</span>
-                  <div>
-                    <h4 className="font-semibold">
-                      {BOOSTER_TIERS[selectedBooster.tier].name} Spin Pass
-                    </h4>
-                    <p className="text-xs text-gray-200">
-                      {selectedBooster.multiplier}x Multiplier
-                    </p>
+            {selectedBooster ? (
+              <div className="mx-auto mb-4 max-w-md rounded-lg border-2 border-black bg-black p-3 text-white">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">{BOOSTER_TIERS[selectedBooster.tier].color}</span>
+                    <div>
+                      <h4 className="font-semibold">
+                        {BOOSTER_TIERS[selectedBooster.tier].name} Spin Pass
+                      </h4>
+                      <p className="text-xs text-gray-200">
+                        {selectedBooster.multiplier}x Multiplier
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div className="text-right text-xs text-gray-300">
-                  {BOOSTER_TIERS[selectedBooster.tier].minReward.toLocaleString()} -{' '}
-                  {BOOSTER_TIERS[selectedBooster.tier].maxReward.toLocaleString()}
+                  <div className="text-right text-xs text-gray-300">
+                    {BOOSTER_TIERS[selectedBooster.tier].minReward.toLocaleString()} -{' '}
+                    {BOOSTER_TIERS[selectedBooster.tier].maxReward.toLocaleString()}
+                  </div>
                 </div>
               </div>
-            </div>
-          ) : (
-            <div className="mx-auto mb-4 max-w-md rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-3 text-center">
-              <p className="text-sm text-gray-600">Select a Spin Pass below to start</p>
-            </div>
-          )}
-
-          <div className="mx-auto max-w-md">
-            <div className="mb-4 mt-8 flex items-center justify-center gap-2">
-              <input
-                type="checkbox"
-                id="shareTwitter"
-                checked={shareToTwitter}
-                onChange={e => setShareToTwitter(e.target.checked)}
-                className="h-4 w-4 rounded border-gray-300"
-              />
-              <label
-                htmlFor="shareTwitter"
-                className="flex items-center gap-1 text-sm text-gray-700"
-              >
-                <Twitter className="h-4 w-4" />
-                Share to Twitter for +100 SENTINEL bonus
-              </label>
-            </div>
-
-            {lastSpinResult && (
-              <div className="rounded-lg border border-green-200 bg-green-50 p-3">
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="flex items-center gap-2 text-green-800">
-                    <TrendingUp className="h-4 w-4" />
-                    <span className="text-sm font-semibold">
-                      Won {lastSpinResult.spin.finalAmount.toLocaleString()} SENTINEL
-                    </span>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-1.5 text-[10px] text-gray-600">
-                    <span>Base: {lastSpinResult.spin.baseAmount}</span>
-                    <span>•</span>
-                    <span>{lastSpinResult.spin.multiplier}x</span>
-                    {lastSpinResult.spin.streakBonus > 0 && (
-                      <>
-                        <span>•</span>
-                        <span className="text-orange-600">
-                          +{lastSpinResult.spin.streakBonus}% Streak
-                        </span>
-                      </>
-                    )}
-                    {lastSpinResult.luckyHour && (
-                      <>
-                        <span>•</span>
-                        <span className="text-green-600">
-                          +{lastSpinResult.spin.luckyHourBonus}% Lucky
-                        </span>
-                      </>
-                    )}
-                    {lastSpinResult.spin.shareBonus > 0 && (
-                      <>
-                        <span>•</span>
-                        <span className="text-blue-600">
-                          +{lastSpinResult.spin.shareBonus} Share
-                        </span>
-                      </>
-                    )}
-                  </div>
-                </div>
+            ) : (
+              <div className="mx-auto mb-4 max-w-md rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-3 text-center">
+                <p className="text-sm text-gray-600">Select a Spin Pass below to start</p>
               </div>
             )}
+
+            <div className="mx-auto max-w-md">
+              <div className="mb-4 mt-8 flex items-center justify-center gap-2">
+                <input
+                  type="checkbox"
+                  id="shareTwitter"
+                  checked={shareToTwitter}
+                  onChange={e => setShareToTwitter(e.target.checked)}
+                  className="h-4 w-4 rounded border-gray-300"
+                />
+                <label
+                  htmlFor="shareTwitter"
+                  className="flex items-center gap-1 text-sm text-gray-700"
+                >
+                  <Twitter className="h-4 w-4" />
+                  Share to Twitter for +100 SENTINEL bonus
+                </label>
+              </div>
+
+              {lastSpinResult && (
+                <div className="rounded-lg border border-green-200 bg-green-50 p-3">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex items-center gap-2 text-green-800">
+                      <TrendingUp className="h-4 w-4" />
+                      <span className="text-sm font-semibold">
+                        Won {lastSpinResult.spin.finalAmount.toLocaleString()} SENTINEL
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-1.5 text-[10px] text-gray-600">
+                      <span>Base: {lastSpinResult.spin.baseAmount}</span>
+                      <span>•</span>
+                      <span>{lastSpinResult.spin.multiplier}x</span>
+                      {lastSpinResult.spin.streakBonus > 0 && (
+                        <>
+                          <span>•</span>
+                          <span className="text-orange-600">
+                            +{lastSpinResult.spin.streakBonus}% Streak
+                          </span>
+                        </>
+                      )}
+                      {lastSpinResult.luckyHour && (
+                        <>
+                          <span>•</span>
+                          <span className="text-green-600">
+                            +{lastSpinResult.spin.luckyHourBonus}% Lucky
+                          </span>
+                        </>
+                      )}
+                      {lastSpinResult.spin.shareBonus > 0 && (
+                        <>
+                          <span>•</span>
+                          <span className="text-blue-600">
+                            +{lastSpinResult.spin.shareBonus} Share
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
         </div>
 
         {/* Right: Spin Passes List */}
@@ -240,7 +239,9 @@ export const BoosterRewards = () => {
                       onClick={() => passFilter === 'active' && handleSelectBooster(booster)}
                       disabled={passFilter === 'expired'}
                       className={`group relative overflow-hidden rounded-lg border-2 p-3 text-left transition-all ${
-                        passFilter === 'active' ? 'hover:scale-105' : 'opacity-60 cursor-not-allowed'
+                        passFilter === 'active'
+                          ? 'hover:scale-105'
+                          : 'cursor-not-allowed opacity-60'
                       } ${
                         isSelected
                           ? 'border-black bg-black text-white shadow-lg'
