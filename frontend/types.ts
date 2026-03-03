@@ -29,3 +29,92 @@ export type ConsumePromptApiResponse = {
 }
 
 export type AgentStatus = 'active' | 'defeated'
+
+// Booster Types
+export type BoosterTier = 'COMMON' | 'UNCOMMON' | 'RARE' | 'EPIC' | 'LEGENDARY' | 'MYTHIC' | 'DIVINE'
+export type BoosterStatus = 'active' | 'redeemed' | 'expired'
+export type BoosterSource =
+  | 'ATTACK_SCORE_0_69'
+  | 'ATTACK_SCORE_70_89'
+  | 'ATTACK_SCORE_90_99'
+  | 'ATTACK_SCORE_100'
+  | 'SOCIAL_MISSION'
+  | 'QUEST'
+  | 'REFERRAL'
+  | 'OTHER'
+
+export interface TierInfo {
+  name: string
+  minReward: number
+  maxReward: number
+}
+
+export interface Booster {
+  _id: string
+  tier: BoosterTier
+  multiplier: number
+  source: BoosterSource
+  status: BoosterStatus
+  earnedAt: string
+  expiresAt: string
+  tierInfo: TierInfo
+  redeemedAt?: string
+}
+
+export interface BoosterStats {
+  active: number
+  redeemed: number
+  expired: number
+  totalEarned: number
+}
+
+export interface BoostersResponse {
+  boosters: Booster[]
+  stats: BoosterStats
+}
+
+export interface SpinStreak {
+  currentStreak: number
+  streakBonus: number
+}
+
+export interface SpinResult {
+  baseAmount: number
+  multiplier: number
+  boostedAmount: number
+  streakBonus: number
+  luckyHourBonus: number
+  bonusAmount: number
+  shareBonus: number
+  firstSpinBonus: boolean
+  finalAmount: number
+  transferDigest: string
+}
+
+export interface SpinResponse {
+  success: boolean
+  spin: SpinResult
+  streak: SpinStreak
+  luckyHour: boolean
+}
+
+export interface SpinRequest {
+  walletAddress: string
+  boosterId: string
+  shareToTwitter: boolean
+}
+
+export interface SpinHistoryItem {
+  _id: string
+  walletAddress: string
+  boosterId: string
+  baseAmount: number
+  multiplier: number
+  finalAmount: number
+  streakBonus: number
+  luckyHourBonus: number
+  shareBonus: number
+  firstSpinBonus: boolean
+  transferDigest: string
+  spunAt: string
+}

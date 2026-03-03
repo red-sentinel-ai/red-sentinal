@@ -99,6 +99,82 @@ export const SOCIAL_MEDIA_URLS = {
 //TODO: Add the correct docs url
 export const REWARDS_DOCS_URL = 'https://docs.suisentinel.xyz/incentives/rewards-program/'
 
+// Booster System Constants
+export const BOOSTER_TIERS = {
+  COMMON: {
+    name: 'Common',
+    multiplier: 1,
+    minReward: 100,
+    maxReward: 1000,
+    color: '⚪',
+    bgColor: 'bg-gray-100',
+    textColor: 'text-gray-700',
+    expirationDays: 7,
+  },
+  UNCOMMON: {
+    name: 'Uncommon',
+    multiplier: 2,
+    minReward: 200,
+    maxReward: 2000,
+    color: '🟢',
+    bgColor: 'bg-green-100',
+    textColor: 'text-green-700',
+    expirationDays: 7,
+  },
+  RARE: {
+    name: 'Rare',
+    multiplier: 5,
+    minReward: 500,
+    maxReward: 5000,
+    color: '🔵',
+    bgColor: 'bg-blue-100',
+    textColor: 'text-blue-700',
+    expirationDays: 14,
+  },
+  EPIC: {
+    name: 'Epic',
+    multiplier: 10,
+    minReward: 1000,
+    maxReward: 10000,
+    color: '🟣',
+    bgColor: 'bg-purple-100',
+    textColor: 'text-purple-700',
+    expirationDays: 14,
+  },
+  LEGENDARY: {
+    name: 'Legendary',
+    multiplier: 25,
+    minReward: 2500,
+    maxReward: 25000,
+    color: '🟠',
+    bgColor: 'bg-orange-100',
+    textColor: 'text-orange-700',
+    expirationDays: 30,
+  },
+  MYTHIC: {
+    name: 'Mythic',
+    multiplier: 50,
+    minReward: 5000,
+    maxReward: 50000,
+    color: '🔴',
+    bgColor: 'bg-red-100',
+    textColor: 'text-red-700',
+    expirationDays: 30,
+  },
+  DIVINE: {
+    name: 'Divine',
+    multiplier: 100,
+    minReward: 10000,
+    maxReward: 100000,
+    color: '🌟',
+    bgColor: 'bg-yellow-100',
+    textColor: 'text-yellow-700',
+    expirationDays: 60,
+  },
+} as const
+
+export type BoosterTierKey = keyof typeof BOOSTER_TIERS
+
 //NOTE: Add Ankita's wallet here and keep this thing in our internal documentation as well.
 export const TEAM_MEMBER_WALLETS = [
   '0xe4e8af19c2943fc2e3cbefa2fca9149985fc3b3c3d9dd312902b2c26dc600d95',

@@ -1,12 +1,23 @@
 import { useMutation } from '@tanstack/react-query'
 import { APP_NETWORK, SUI_SENTINEL_API_URL } from '@/constants'
 
+interface BoosterAwarded {
+  tier: string
+  multiplier: number
+  expiresAt: string
+  boosterId: string
+}
+
 interface ClaimTokensResponse {
   claimed: boolean
-  rewardAmount: number
-  transferDigest: string | null
-  transferError: string | null
-  transferSuccess: boolean
+  boosterAwarded?: BoosterAwarded
+  sentinelOwnerReward?: number
+  message?: string
+  // Legacy fields (kept for backward compatibility)
+  rewardAmount?: number
+  transferDigest?: string | null
+  transferError?: string | null
+  transferSuccess?: boolean
 }
 
 export const useClaimReward = () => {
