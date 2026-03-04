@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useCurrentAccount } from '@mysten/dapp-kit'
-import { Loader2, TrendingUp, Sparkles, Clock } from 'lucide-react'
+import { Loader2, TrendingUp, Sparkles, Clock, RefreshCw } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatDistanceToNow } from 'date-fns'
 import { SlotMachine } from '@/components/slot-machine/SlotMachine'
@@ -19,6 +19,7 @@ export const BoosterRewards = () => {
   const [shareToTwitter, setShareToTwitter] = useState(false)
   const [lastSpinResult, setLastSpinResult] = useState<SpinResponse | null>(null)
   const [passFilter, setPassFilter] = useState<'active' | 'expired'>('active')
+  const [isRefreshing, setIsRefreshing] = useState(false)
 
   const {
     data: boostersData,
@@ -88,6 +89,30 @@ export const BoosterRewards = () => {
     const twitterUrl = `https://twitter.com/intent/tweet?text=${tweetText}`
 
     window.open(twitterUrl, '_blank', 'noopener,noreferrer')
+  }
+
+  const handleManualRefresh = async () => {
+    if (!account?.address || isRefreshing) return
+
+    setIsRefreshing(true)
+    try {
+      const result = await claimReward({ recipient: account.address })
+      if (result.claimed && result.boosterAwarded) {
+        toast.success(
+          `🎉 ${result.boosterAwarded.tier} Spin Pass Claimed! ${result.boosterAwarded.multiplier}x Multiplier`,
+          { duration: 5000 }
+        )
+        // Refetch boosters to show the new one
+        await refetchBoosters()
+      } else {
+        toast.info('No pending rewards to claim at this time')
+      }
+    } catch (error) {
+      toast.error('Failed to refresh rewards. Please try again.')
+      console.error('Manual refresh error:', error)
+    } finally {
+      setIsRefreshing(false)
+    }
   }
 
   if (isLoadingBoosters) {
@@ -213,6 +238,15 @@ export const BoosterRewards = () => {
           <div className="flex-shrink-0 border-b border-gray-200 p-4 pb-0">
             <div className="mb-3 flex items-center justify-between">
               <h3 className="text-lg font-semibold">Spin Passes</h3>
+              <button
+                onClick={handleManualRefresh}
+                disabled={isRefreshing}
+                className="flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition-all hover:bg-gray-50 hover:border-gray-400 disabled:cursor-not-allowed disabled:opacity-50"
+                title="Refresh to claim pending rewards"
+              >
+                <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+                <span>{isRefreshing ? 'Checking...' : 'Refresh'}</span>
+              </button>
             </div>
 
             {/* Tabs */}
