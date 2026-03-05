@@ -15,13 +15,13 @@ export const metadata: Metadata = {
     'AI security incentives',
   ],
   alternates: {
-    canonical: `${SUI_SENTINEL_APP_URL}rewards`,
+    canonical: `${SUI_SENTINEL_APP_URL}/rewards`,
   },
   openGraph: {
     title: 'Earn Rewards | SENTINEL Token Missions',
     description:
       'Complete missions, earn SENTINEL tokens, and unlock exclusive perks. Every action in the ecosystem counts.',
-    url: `${SUI_SENTINEL_APP_URL}rewards`,
+    url: `${SUI_SENTINEL_APP_URL}/rewards`,
   },
 }
 

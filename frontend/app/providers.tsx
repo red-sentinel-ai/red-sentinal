@@ -4,6 +4,7 @@ import '@mysten/dapp-kit/dist/index.css'
 import React, { useState, useEffect } from 'react'
 import posthog from 'posthog-js'
 import { PostHogProvider as PHProvider } from 'posthog-js/react'
+import { SessionProvider } from 'next-auth/react'
 import { SuiClientProvider, WalletProvider, lightTheme } from '@mysten/dapp-kit'
 import { getFullnodeUrl } from '@mysten/sui/client'
 import { Header } from '@/components/Header'
@@ -42,20 +43,22 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <PHProvider client={posthog}>
-      <QueryClientProvider client={queryClient}>
-        <SuiClientProvider networks={networks} defaultNetwork={APP_NETWORK}>
-          <WalletProvider autoConnect theme={lightTheme}>
-            <div className="flex flex-col">
-              {/* <LaunchMainnetBanner /> */}
-              <Header />
-              <div className="mt-[96px] md:mt-[100px]"></div>
-              <ProfileInitializer />
-              {children}
-              <FeedbackButton />
-            </div>
-          </WalletProvider>
-        </SuiClientProvider>
-      </QueryClientProvider>
+      <SessionProvider>
+        <QueryClientProvider client={queryClient}>
+          <SuiClientProvider networks={networks} defaultNetwork={APP_NETWORK}>
+            <WalletProvider autoConnect theme={lightTheme}>
+              <div className="flex flex-col">
+                {/* <LaunchMainnetBanner /> */}
+                <Header />
+                <div className="mt-[96px] md:mt-[100px]"></div>
+                <ProfileInitializer />
+                {children}
+                <FeedbackButton />
+              </div>
+            </WalletProvider>
+          </SuiClientProvider>
+        </QueryClientProvider>
+      </SessionProvider>
     </PHProvider>
   )
 }

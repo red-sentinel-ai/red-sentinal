@@ -9,10 +9,10 @@ export const metadata = {
     title: 'Leaderboard | Sui Sentinel',
     description:
       'Rankings for the top defenders and attackers on Sui Sentinel. See who has the most resilient AI Sentinels, the most breaches, and the biggest bounties won — all verified on-chain.',
-    url: `${SUI_SENTINEL_APP_URL}leaderboard`,
+    url: `${SUI_SENTINEL_APP_URL}/leaderboard`,
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/leaderboard/og`,
+        url: `${SUI_SENTINEL_APP_URL}/api/leaderboard/og`,
         width: 1200,
         height: 630,
         alt: 'Sui Sentinel Leaderboard',
@@ -24,7 +24,7 @@ export const metadata = {
     title: 'Leaderboard | Sui Sentinel',
     description:
       'Rankings for the top defenders and attackers on Sui Sentinel. See who has the most resilient AI Sentinels, the most breaches, and the biggest bounties won, all verified on-chain.',
-    images: `${process.env.NEXT_PUBLIC_BASE_URL}/api/leaderboard/og`,
+    images: `${SUI_SENTINEL_APP_URL}/api/leaderboard/og`,
   },
 }
 

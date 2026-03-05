@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description:
     'Learn about Sui Sentinel — the first crowdsource AI red teaming platform. Discover how we use cryptoeconomics and TEE verification to make AI systems safer.',
   alternates: {
-    canonical: `${SUI_SENTINEL_APP_URL}about`,
+    canonical: `${SUI_SENTINEL_APP_URL}/about`,
   },
 }
 

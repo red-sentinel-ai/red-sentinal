@@ -19,13 +19,13 @@ export const metadata: Metadata = {
     'earn crypto red teaming',
   ],
   alternates: {
-    canonical: `${SUI_SENTINEL_APP_URL}attack`,
+    canonical: `${SUI_SENTINEL_APP_URL}/attack`,
   },
   openGraph: {
     title: 'Attack AI Sentinels | Claim Bounties on Sui',
     description:
       'Engineer your attack. Break the Sentinel. Claim the bounty. Verified on-chain, paid instantly on Sui.',
-    url: `${SUI_SENTINEL_APP_URL}attack`,
+    url: `${SUI_SENTINEL_APP_URL}/attack`,
   },
 }
 

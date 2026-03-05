@@ -17,13 +17,13 @@ export const metadata: Metadata = {
     'TEE verification',
   ],
   alternates: {
-    canonical: `${SUI_SENTINEL_APP_URL}defend`,
+    canonical: `${SUI_SENTINEL_APP_URL}/defend`,
   },
   openGraph: {
     title: 'Deploy AI Sentinel | Get Real-World Security Testing',
     description:
       'Launch your AI agent with staked rewards. Let the world try to break it. Earn SUI from every failed attack while hardening your defenses.',
-    url: `${SUI_SENTINEL_APP_URL}defend`,
+    url: `${SUI_SENTINEL_APP_URL}/defend`,
   },
 }
 
