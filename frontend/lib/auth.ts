@@ -16,9 +16,56 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.TWITTER_CLIENT_SECRET!,
       version: '2.0',
       authorization: {
-        url: "https://twitter.com/i/oauth2/authorize",
+        url: 'https://twitter.com/i/oauth2/authorize',
         params: {
-          scope: "users.read tweet.read offline.access",
+          scope: 'users.read tweet.read offline.access',
+        },
+      },
+      userinfo: {
+        url: 'https://api.twitter.com/2/users/me',
+        params: {
+          'user.fields': 'id,username',
+        },
+        async request({ tokens }) {
+          // Retry logic for 503 errors
+          const maxRetries = 3
+          let lastError: Error | null = null
+
+          for (let i = 0; i < maxRetries; i++) {
+            try {
+              const response = await fetch(
+                'https://api.twitter.com/2/users/me?user.fields=id,username',
+                {
+                  headers: {
+                    Authorization: `Bearer ${tokens.access_token}`,
+                  },
+                }
+              )
+
+              if (response.ok) {
+                return await response.json()
+              }
+
+              // If 503, wait and retry
+              if (response.status === 503 && i < maxRetries - 1) {
+                console.log(`Twitter userinfo 503 error, retry ${i + 1}/${maxRetries}`)
+                await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000)) // Exponential backoff
+                continue
+              }
+
+              throw new Error(`Twitter API returned ${response.status}: ${response.statusText}`)
+            } catch (error) {
+              lastError = error as Error
+              if (i < maxRetries - 1) {
+                console.log(`Twitter userinfo request failed, retry ${i + 1}/${maxRetries}:`, error)
+                await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000))
+              }
+            }
+          }
+
+          // If all retries failed, throw the last error
+          console.error('Twitter userinfo failed after all retries:', lastError)
+          throw lastError || new Error('Twitter userinfo request failed')
         },
       },
     }),
