@@ -160,7 +160,8 @@ export const CONTENT_MISSIONS: EarnMission[] = [
   {
     id: 'written_article',
     title: 'Written Article',
-    description: 'Write a comprehensive article about Sui Sentinel on Medium, Mirror, or your blog.',
+    description:
+      'Write a comprehensive article about Sui Sentinel on Medium, Mirror, or your blog.',
     boosterTier: 'LEGENDARY',
     multiplier: 25,
     requirements: {
@@ -229,20 +230,6 @@ export const CONTENT_MISSIONS: EarnMission[] = [
 
 export const COMMUNITY_MISSIONS: EarnMission[] = [
   {
-    id: 'join_discord',
-    title: 'Join Discord',
-    description: 'Join the Sui Sentinel Discord server and verify your membership.',
-    boosterTier: 'COMMON',
-    multiplier: 1,
-    requirements: {
-      lifetimeLimit: 1,
-      description: 'One-time mission',
-    },
-    rewardRange: { min: 100, max: 1000 },
-    submissionType: 'verify',
-    category: 'community',
-  },
-  {
     id: 'join_telegram',
     title: 'Join Telegram',
     description: 'Join the Sui Sentinel Telegram group and verify your membership.',
@@ -255,21 +242,6 @@ export const COMMUNITY_MISSIONS: EarnMission[] = [
     rewardRange: { min: 100, max: 1000 },
     submissionType: 'verify',
     category: 'community',
-  },
-  {
-    id: 'helpful_answer',
-    title: 'Helpful Answer in Discord',
-    description: 'Moderators reward helpful community members who assist others.',
-    boosterTier: 'UNCOMMON',
-    multiplier: 2,
-    requirements: {
-      description: 'Verified by moderators',
-    },
-    rewardRange: { min: 200, max: 2000 },
-    submissionType: 'verify',
-    category: 'community',
-    isAutoDetected: true,
-    helpText: 'Help others in Discord and mods will reward you automatically.',
   },
   {
     id: 'report_bug',
@@ -302,41 +274,41 @@ export const COMMUNITY_MISSIONS: EarnMission[] = [
 // Referral reward tables from plan.md
 
 export const REFERRAL_REWARDS: ReferralReward[] = [
-  {
-    action: 'Signs up + connects wallet',
-    userBooster: '2x Uncommon',
-    newUserBooster: '2x Uncommon',
-  },
-  {
-    action: 'Completes first attack',
-    userBooster: '10x Epic',
-    newUserBooster: '5x Rare',
-  },
-  {
-    action: 'Deploys first Sentinel',
-    userBooster: '25x Legendary',
-    newUserBooster: '10x Epic + 1K SENTINEL',
-  },
-  {
-    action: 'Referred Sentinel survives 7 days',
-    userBooster: '25x Legendary',
-    newUserBooster: '—',
-  },
-  {
-    action: 'Referred user breaches a Sentinel',
-    userBooster: '10x Epic',
-    newUserBooster: '—',
-  },
-  {
-    action: 'Referred defender deposits 100+ SUI',
-    userBooster: '50x Mythic',
-    newUserBooster: '—',
-  },
-  {
-    action: 'Referred defender deposits 1,000+ SUI',
-    userBooster: '100x Divine',
-    newUserBooster: '—',
-  },
+  // {
+  //   action: 'Signs up + connects wallet',
+  //   userBooster: '2x Uncommon',
+  //   newUserBooster: '2x Uncommon',
+  // },
+  // {
+  //   action: 'Completes first attack',
+  //   userBooster: '10x Epic',
+  //   newUserBooster: '5x Rare',
+  // },
+  // {
+  //   action: 'Deploys first Sentinel',
+  //   userBooster: '25x Legendary',
+  //   newUserBooster: '10x Epic + 1K SENTINEL',
+  // },
+  // {
+  //   action: 'Referred Sentinel survives 7 days',
+  //   userBooster: '25x Legendary',
+  //   newUserBooster: '—',
+  // },
+  // {
+  //   action: 'Referred user breaches a Sentinel',
+  //   userBooster: '10x Epic',
+  //   newUserBooster: '—',
+  // },
+  // {
+  //   action: 'Referred defender deposits 100+ SUI',
+  //   userBooster: '50x Mythic',
+  //   newUserBooster: '—',
+  // },
+  // {
+  //   action: 'Referred defender deposits 1,000+ SUI',
+  //   userBooster: '100x Divine',
+  //   newUserBooster: '—',
+  // },
 ]
 
 export const REFERRAL_TIER_PROGRESS: ReferralTierProgress[] = [
