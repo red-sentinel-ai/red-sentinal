@@ -25,7 +25,7 @@ export function BoosterTierCard({ tier, index }: BoosterTierCardProps) {
 
   return (
     <motion.div
-      className="flex-shrink-0 w-64 snap-center"
+      className="w-64 flex-shrink-0 snap-center"
       initial={{ opacity: 0, x: 20 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
@@ -41,7 +41,9 @@ export function BoosterTierCard({ tier, index }: BoosterTierCardProps) {
 
           {/* Multiplier Badge */}
           <div className={`mb-3 inline-flex w-fit rounded-lg px-3 py-1.5 ${tier.bgColor}`}>
-            <span className={`text-sm font-bold ${tier.textColor}`}>{tier.multiplier}x Booster</span>
+            <span className={`text-sm font-bold ${tier.textColor}`}>
+              {tier.multiplier}x Booster
+            </span>
           </div>
 
           {/* Spin Range */}

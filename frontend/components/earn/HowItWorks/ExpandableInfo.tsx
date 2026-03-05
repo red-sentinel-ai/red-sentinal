@@ -101,20 +101,11 @@ export function ExpandableInfo() {
                     {section.id === 'lucky-hour' && (
                       <div className="space-y-2 text-sm text-gray-700">
                         <p>
-                          Lucky Hours are randomly selected each day. During these special hours, all
-                          spins receive a <strong className="text-black">+20% bonus</strong>.
+                          Lucky Hours are randomly selected each day. During these special hours,
+                          all spins receive a <strong className="text-black">+20% bonus</strong>.
                         </p>
                         <p>
                           Lucky Hours are announced in our{' '}
-                          <a
-                            href="https://discord.gg/suisentinel"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 underline hover:text-blue-700"
-                          >
-                            Discord
-                          </a>{' '}
-                          and{' '}
                           <a
                             href="https://t.me/suisentinel"
                             target="_blank"
@@ -132,9 +123,10 @@ export function ExpandableInfo() {
                       <div className="text-sm text-gray-700">
                         <p>
                           Your first spin of each day is guaranteed a{' '}
-                          <strong className="text-black">minimum base of 300 SENTINEL</strong> instead
-                          of the standard 100 minimum. This applies before your booster multiplier, so
-                          a 10x Epic booster on your first spin guarantees at least 3,000 SENTINEL.
+                          <strong className="text-black">minimum base of 300 SENTINEL</strong>{' '}
+                          instead of the standard 100 minimum. This applies before your booster
+                          multiplier, so a 10x Epic booster on your first spin guarantees at least
+                          3,000 SENTINEL.
                         </p>
                       </div>
                     )}

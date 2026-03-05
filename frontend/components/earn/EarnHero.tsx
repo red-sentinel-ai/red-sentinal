@@ -1,5 +1,4 @@
 'use client'
-
 import { motion } from 'framer-motion'
 import { TrendingUp, Target, Trophy, Loader2 } from 'lucide-react'
 import Link from 'next/link'
@@ -49,7 +48,8 @@ export function EarnHero() {
           Every Action Earns SENTINEL
         </h1>
         <p className="mx-auto mb-10 max-w-2xl text-base text-gray-600 sm:text-xl md:mb-12">
-          Complete missions, attack Sentinels, and create content to earn Spin Passes. Use your passes at the slot machine to win SENTINEL tokens.
+          Complete missions, defend or attack Sentinels, and create content to earn Spin Passes. Use
+          your passes at the slot machine to win SENTINEL tokens.
         </p>
 
         {/* Stats Cards */}
@@ -97,7 +97,7 @@ export function EarnHero() {
 
         {/* CTA Button */}
         {account ? (
-          <Link href="/rewards">
+          <Link href="/profile?tab=rewards">
             <motion.button
               className="btn btn-black px-8 py-3 text-base md:text-lg"
               whileHover={{ scale: 1.05 }}

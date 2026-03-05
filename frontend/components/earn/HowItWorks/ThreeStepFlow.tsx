@@ -9,7 +9,7 @@ const STEPS = [
     icon: Gift,
     title: 'Earn Spin Passes',
     description:
-      'Complete social missions, attack Sentinels, create content, or refer friends to earn Spin Passes. Each pass has a booster tier ranging from 1x to 100x.',
+      'Complete social missions, defend or attack Sentinels, create content, or refer friends to earn Spin Passes. Each pass has a booster tier ranging from 1x to 100x.',
     iconBg: 'bg-blue-100',
     iconColor: 'text-blue-600',
   },
@@ -17,7 +17,7 @@ const STEPS = [
     icon: Sparkles,
     title: 'Spin to Multiply',
     description:
-      "Use your Spin Pass at the slot machine. Base range is 100–1,000 SENTINEL, multiplied by your pass's booster tier. A 25x Legendary Spin Pass? That's 2,500–25,000 SENTINEL.",
+      "Use your Spin Pass at the slot machine. Base range is 100-1,000 SENTINEL, multiplied by your pass's booster tier. A 25x Legendary Spin Pass? That's 2,500-25,000 SENTINEL.",
     iconBg: 'bg-purple-100',
     iconColor: 'text-purple-600',
   },

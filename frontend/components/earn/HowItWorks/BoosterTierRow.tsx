@@ -12,12 +12,12 @@ export function BoosterTierRow() {
         Spin Pass Booster Tiers
       </h3>
       <p className="mb-6 text-center text-gray-600">
-        Seven booster tiers from Common to Divine - higher tiers multiply your rewards
+        Seven booster tiers from Common to Divine, higher tiers multiply your rewards
       </p>
 
       {/* Horizontal Scrollable Container */}
       <div className="relative -mx-4 px-4 sm:mx-0 sm:px-0">
-        <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 scrollbar-hide sm:grid sm:grid-cols-2 sm:overflow-visible md:grid-cols-3 lg:grid-cols-4">
+        <div className="scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 sm:grid sm:grid-cols-2 sm:overflow-visible md:grid-cols-3 lg:grid-cols-4">
           {tiers.map((tier, index) => (
             <BoosterTierCard key={tier.name} tier={tier} index={index} />
           ))}

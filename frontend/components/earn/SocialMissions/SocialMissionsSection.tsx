@@ -6,14 +6,10 @@ import { AlertCircle, Info } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui'
 import { MissionTabNav, type MissionTab } from './MissionTabNav'
 import { MissionList } from './MissionList'
-import { ReferralSection } from './ReferralSection'
+// import { ReferralSection } from './ReferralSection'
 import { BugReportForm } from './BugReportForm'
 import { SocialMissionModal } from '@/components/rewards/SocialMissionModal'
-import {
-  TWITTER_MISSIONS,
-  CONTENT_MISSIONS,
-  COMMUNITY_MISSIONS,
-} from '@/lib/earn-utils'
+import { TWITTER_MISSIONS, CONTENT_MISSIONS, COMMUNITY_MISSIONS } from '@/lib/earn-utils'
 import type { EarnMission } from '@/types/Earn'
 import type { RewardsMission } from '@/types/Rewards'
 
@@ -96,7 +92,9 @@ export function SocialMissionsSection() {
                 <div className="flex gap-3">
                   <Info className="h-5 w-5 flex-shrink-0 text-blue-600" />
                   <div>
-                    <p className="font-medium text-blue-900">Content Submissions Reviewed Within 48 Hours</p>
+                    <p className="font-medium text-blue-900">
+                      Content Submissions Reviewed Within 48 Hours
+                    </p>
                     <p className="text-sm text-blue-700">
                       Quality content that accurately represents Sui Sentinel earns Spin Passes.
                     </p>
@@ -111,10 +109,10 @@ export function SocialMissionsSection() {
                 <div className="flex gap-3">
                   <AlertCircle className="h-5 w-5 flex-shrink-0 text-purple-600" />
                   <div>
-                    <p className="font-medium text-purple-900">Helpful Discord Members Rewarded</p>
+                    <p className="font-medium text-purple-900">Helpful Telegram Members Rewarded</p>
                     <p className="text-sm text-purple-700">
-                      Help others in Discord and our moderators will award you with 2x Uncommon Spin Passes
-                      automatically.
+                      Help others in Discord and our moderators will award you with 2x Uncommon Spin
+                      Passes automatically.
                     </p>
                   </div>
                 </div>
@@ -122,11 +120,11 @@ export function SocialMissionsSection() {
             )}
 
             {/* Tab Content */}
-            {activeTab === 'referrals' ? (
+            {/* {activeTab === 'referrals' ? (
               <ReferralSection />
-            ) : (
-              <MissionList missions={missions} onMissionSubmit={handleMissionSubmit} />
-            )}
+            ) : ( */}
+            <MissionList missions={missions} onMissionSubmit={handleMissionSubmit} />
+            {/* )} */}
           </CardContent>
         </Card>
       </div>
@@ -140,7 +138,6 @@ export function SocialMissionsSection() {
           setSelectedMission(null)
         }}
       />
-
       <BugReportForm
         isOpen={isBugFormOpen}
         onClose={() => setIsBugFormOpen(false)}
