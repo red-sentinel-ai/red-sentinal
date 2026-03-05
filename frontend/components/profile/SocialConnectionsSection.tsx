@@ -194,7 +194,7 @@ export function SocialConnectionsSection() {
                   }}
                   size="sm"
                   disabled={connectingPlatform === 'twitter'}
-                  className="btn btn-outline flex h-8 w-[85px] items-center gap-1 text-xs sm:h-9 sm:text-sm"
+                  className="btn btn-outline flex h-8 min-w-[85px] items-center gap-1 text-xs sm:h-9 sm:text-sm"
                 >
                   {connectingPlatform === 'twitter' ? (
                     <>
