@@ -21,11 +21,9 @@ export function EarnMissionCard({
   isAuthenticated,
   userStatus = 'available',
   completedToday = 0,
-  completedTotal = 0,
   onSubmit,
 }: EarnMissionCardProps) {
   const tierInfo = BOOSTER_TIERS[mission.boosterTier]
-  const isAvailable = userStatus === 'available' && isAuthenticated
   const isPending = userStatus === 'pending'
   const isCompleted = userStatus === 'completed'
   const isLimitReached = userStatus === 'limit_reached'

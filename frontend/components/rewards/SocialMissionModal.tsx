@@ -36,7 +36,7 @@ const MISSION_CONFIG = {
       placeholder: '@yourusername',
       required: true,
     },
-    tweetUrlField: null,
+    contentLinkField: null,
     telegramField: null,
     submitHint: 'Enter your Twitter/X username so we can verify you followed us.',
   },
@@ -52,7 +52,7 @@ const MISSION_CONFIG = {
       placeholder: '@yourusername',
       required: false,
     },
-    tweetUrlField: {
+    contentLinkField: {
       label: 'Your Retweet URL',
       placeholder: 'https://x.com/yourusername/status/...',
       required: true,
@@ -73,7 +73,7 @@ const MISSION_CONFIG = {
       placeholder: '@yourusername',
       required: false,
     },
-    tweetUrlField: {
+    contentLinkField: {
       label: 'Your Tweet URL',
       placeholder: 'https://x.com/yourusername/status/...',
       required: true,
@@ -89,13 +89,33 @@ const MISSION_CONFIG = {
     actionLabel: 'Join Telegram',
     actionUrl: SUI_SENTINEL_TELEGRAM_URL,
     usernameField: null,
-    tweetUrlField: null,
+    contentLinkField: null,
     telegramField: {
       label: 'Your Telegram Username',
       placeholder: '@yourusername',
       required: true,
     },
     submitHint: 'Enter your Telegram username so we can verify you joined the group.',
+  },
+  share_content: {
+    title: 'Share Sui Sentinel Content',
+    icon: '/icons/x_black.png',
+    iconAlt: 'Share',
+    instructions: 'Create content about Sui Sentinel (article, video, thread, etc.) and share the link.',
+    actionLabel: 'Create Content',
+    actionUrl: SUI_SENTINEL_X_URL,
+    usernameField: {
+      label: 'Your Username (optional)',
+      placeholder: '@yourusername',
+      required: false,
+    },
+    contentLinkField: {
+      label: 'Content Link',
+      placeholder: 'https://... (tweet, article, video, etc.)',
+      required: true,
+    },
+    telegramField: null,
+    submitHint: 'Paste the link to your content about Sui Sentinel (can be a tweet, article, video, etc.).',
   },
 } as const
 
@@ -114,7 +134,7 @@ export function SocialMissionModal({
 
   const [twitterUsername, setTwitterUsername] = useState('')
   const [telegramUsername, setTelegramUsername] = useState('')
-  const [tweetUrl, setTweetUrl] = useState('')
+  const [contentLink, setContentLink] = useState('')
   const [screenshotFile, setScreenshotFile] = useState<File | null>(null)
   const [screenshotPreview, setScreenshotPreview] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -127,7 +147,7 @@ export function SocialMissionModal({
   const handleClose = () => {
     setTwitterUsername('')
     setTelegramUsername('')
-    setTweetUrl('')
+    setContentLink('')
     setScreenshotFile(null)
     setScreenshotPreview(null)
     setIsSubmitted(false)
@@ -184,20 +204,12 @@ export function SocialMissionModal({
     if (!missionType || !config) return
 
     // Validation
-    if (config.tweetUrlField?.required && !tweetUrl.trim()) {
-      toast.error('Please enter the tweet URL')
-      return
-    }
-    if (
-      config.tweetUrlField?.required &&
-      !tweetUrl.includes('twitter.com') &&
-      !tweetUrl.includes('x.com')
-    ) {
-      toast.error('Please enter a valid X (Twitter) URL')
+    if (config.contentLinkField?.required && !contentLink.trim()) {
+      toast.error('Please enter the content link')
       return
     }
     if (config.usernameField?.required && !twitterUsername.trim()) {
-      toast.error('Please enter your Twitter/X username')
+      toast.error('Please enter your username')
       return
     }
     if (config.telegramField?.required && !telegramUsername.trim()) {
@@ -221,10 +233,10 @@ export function SocialMissionModal({
         mission_type: missionType,
         network: APP_NETWORK,
       }
-      if (twitterUsername.trim()) body.twitter_username = twitterUsername.trim().replace(/^@/, '')
+      if (twitterUsername.trim()) body.username = twitterUsername.trim().replace(/^@/, '')
       if (telegramUsername.trim())
         body.telegram_username = telegramUsername.trim().replace(/^@/, '')
-      if (tweetUrl.trim()) body.tweet_url = tweetUrl.trim()
+      if (contentLink.trim()) body.content_link = contentLink.trim()
       if (screenshotUrl) body.screenshot_url = screenshotUrl
       if (submissionContext?.agent_path) body.agent_path = submissionContext.agent_path
 
@@ -348,20 +360,20 @@ export function SocialMissionModal({
                   </div>
                 )}
 
-                {config.tweetUrlField && (
+                {config.contentLinkField && (
                   <div>
                     <label className="mb-1 block text-xs font-medium text-gray-700 md:text-sm">
-                      {config.tweetUrlField.label}{' '}
-                      {config.tweetUrlField.required ? (
+                      {config.contentLinkField.label}{' '}
+                      {config.contentLinkField.required ? (
                         <span className="text-red-500">*</span>
                       ) : (
                         <span className="text-gray-400">(optional)</span>
                       )}
                     </label>
                     <input
-                      value={tweetUrl}
-                      onChange={e => setTweetUrl(e.target.value)}
-                      placeholder={config.tweetUrlField.placeholder}
+                      value={contentLink}
+                      onChange={e => setContentLink(e.target.value)}
+                      placeholder={config.contentLinkField.placeholder}
                       className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs focus:border-black focus:outline-none focus:ring-1 focus:ring-black md:text-sm"
                     />
                   </div>
