@@ -1,4 +1,4 @@
-import type { BoosterTier } from './index'
+import type { BoosterTier } from '../types'
 
 export interface PublicStats {
   totalDistributed: number
