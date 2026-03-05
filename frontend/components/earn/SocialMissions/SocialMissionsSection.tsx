@@ -9,6 +9,7 @@ import { MissionList } from './MissionList'
 // import { ReferralSection } from './ReferralSection'
 import { BugReportForm } from './BugReportForm'
 import { SocialMissionModal } from '@/components/rewards/SocialMissionModal'
+import { ContentSubmissionModal } from './ContentSubmissionModal'
 import { TWITTER_MISSIONS, CONTENT_MISSIONS, COMMUNITY_MISSIONS } from '@/lib/earn-utils'
 import type { EarnMission } from '@/types/Earn'
 import type { RewardsMission } from '@/types/Rewards'
@@ -17,6 +18,7 @@ export function SocialMissionsSection() {
   const [activeTab, setActiveTab] = useState<MissionTab>('twitter')
   const [selectedMission, setSelectedMission] = useState<EarnMission | null>(null)
   const [isMissionModalOpen, setIsMissionModalOpen] = useState(false)
+  const [isContentModalOpen, setIsContentModalOpen] = useState(false)
   const [isBugFormOpen, setIsBugFormOpen] = useState(false)
   const [isCriticalBug, setIsCriticalBug] = useState(false)
 
@@ -25,8 +27,12 @@ export function SocialMissionsSection() {
       // Open bug report form
       setIsCriticalBug(mission.id === 'report_critical')
       setIsBugFormOpen(true)
+    } else if (mission.submissionType === 'url') {
+      // Open content submission modal for URL-based submissions
+      setSelectedMission(mission)
+      setIsContentModalOpen(true)
     } else {
-      // Open social mission modal for URL/verify submissions
+      // Open social mission modal for verify submissions (follow_x, join_telegram)
       setSelectedMission(mission)
       setIsMissionModalOpen(true)
     }
@@ -135,6 +141,14 @@ export function SocialMissionsSection() {
         isOpen={isMissionModalOpen}
         onClose={() => {
           setIsMissionModalOpen(false)
+          setSelectedMission(null)
+        }}
+      />
+      <ContentSubmissionModal
+        mission={selectedMission}
+        isOpen={isContentModalOpen}
+        onClose={() => {
+          setIsContentModalOpen(false)
           setSelectedMission(null)
         }}
       />

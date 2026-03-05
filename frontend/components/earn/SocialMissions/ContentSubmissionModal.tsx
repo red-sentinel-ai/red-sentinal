@@ -109,8 +109,7 @@ export function ContentSubmissionModal({ mission, isOpen, onClose }: ContentSubm
         }
       }
 
-      // TODO: Replace with actual API endpoint when ready
-      // For now, we'll use the existing social mission endpoint
+      // Submit to the social mission endpoint
       const res = await fetch('/api/rewards/submit-social-mission', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -118,7 +117,7 @@ export function ContentSubmissionModal({ mission, isOpen, onClose }: ContentSubm
           wallet_address: account.address,
           mission_type: mission.id,
           network: 'testnet',
-          tweet_url: contentUrl, // Using tweet_url field for generic URL
+          content_link: contentUrl,
           description: description.trim() || undefined,
           screenshot_url: screenshotUrl || undefined,
         }),
@@ -216,7 +215,7 @@ export function ContentSubmissionModal({ mission, isOpen, onClose }: ContentSubm
                 Create your {contentTypeInfo.type} about Sui Sentinel
               </p>
               <p className="text-xs text-gray-500">
-                Share accurate information and showcase the platform's features
+                Share accurate information and showcase the platform&apos;s features
               </p>
             </div>
 

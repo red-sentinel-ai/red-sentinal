@@ -161,53 +161,14 @@ export const CONTENT_MISSIONS: EarnMission[] = [
     id: 'written_article',
     title: 'Written Article',
     description:
-      'Write a comprehensive article about Sui Sentinel on Medium, Mirror, or your blog.',
+      'Write a comprehensive article about Sui Sentinel on X, Substack, Medium, or your own blog.',
     boosterTier: 'LEGENDARY',
     multiplier: 25,
     requirements: {
       minCharacters: 800,
-      description: 'Published on Medium/Mirror/blog, 800+ words',
+      description: 'Published on X/Substack/Medium, 800+ words',
     },
     rewardRange: { min: 2500, max: 25000 },
-    submissionType: 'url',
-    category: 'content',
-  },
-  {
-    id: 'infographic',
-    title: 'Infographic',
-    description: 'Design an original infographic explaining Sui Sentinel concepts.',
-    boosterTier: 'EPIC',
-    multiplier: 10,
-    requirements: {
-      description: 'Original design, clear and informative',
-    },
-    rewardRange: { min: 1000, max: 10000 },
-    submissionType: 'url',
-    category: 'content',
-  },
-  {
-    id: 'meme_contest',
-    title: 'Meme Contest Winner',
-    description: 'Submit memes during contest periods - community voted winners receive rewards.',
-    boosterTier: 'EPIC',
-    multiplier: 10,
-    requirements: {
-      description: 'Contest periods only, community voted',
-    },
-    rewardRange: { min: 1000, max: 10000 },
-    submissionType: 'url',
-    category: 'content',
-  },
-  {
-    id: 'translation',
-    title: 'Full Documentation Translation',
-    description: 'Translate the complete Sui Sentinel documentation to another language.',
-    boosterTier: 'MYTHIC',
-    multiplier: 50,
-    requirements: {
-      description: 'Native speaker, complete translation required',
-    },
-    rewardRange: { min: 5000, max: 50000 },
     submissionType: 'url',
     category: 'content',
   },
@@ -322,8 +283,6 @@ export const REFERRAL_TIER_PROGRESS: ReferralTierProgress[] = [
 
 export const ATTACKER_REWARDS: AttackerReward[] = [
   { action: 'Complete any attack', booster: '5x Rare', sentinelRange: '500 – 5,000' },
-  { action: 'Attack score 70–89', booster: '7x Rare+', sentinelRange: '700 – 7,000' },
-  { action: 'Attack score 90–99', booster: '10x Epic', sentinelRange: '1,000 – 10,000' },
   {
     action: 'Successful breach (score 100)',
     booster: '15x Epic+',

@@ -8,7 +8,7 @@ import { Skeleton } from '@/components/ui'
 import { MissionCard } from './MissionCard'
 import { SocialMissionModal } from './SocialMissionModal'
 
-const SUBMITTABLE_SOCIAL_MISSIONS = ['follow_x', 'retweet', 'share_with_hashtag', 'join_telegram']
+const SUBMITTABLE_SOCIAL_MISSIONS = ['follow_x', 'retweet', 'share_with_hashtag', 'join_telegram', 'share_content']
 
 interface MissionsGridProps {
   missions: RewardsMission[]
