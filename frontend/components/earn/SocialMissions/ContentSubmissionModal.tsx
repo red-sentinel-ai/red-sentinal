@@ -154,7 +154,7 @@ export function ContentSubmissionModal({ mission, isOpen, onClose }: ContentSubm
   const contentTypeInfo = getContentTypeInfo()
 
   return (
-    <Dialog open={isOpen} onClose={handleClose}>
+    <Dialog open={isOpen} onClose={handleClose} disableBackdropClick className="max-w-[600px]">
       <div className="w-full rounded-xl bg-white text-black md:rounded-2xl">
         <div className="mb-4 flex items-center justify-between md:mb-6">
           <div className="flex items-center gap-2">
