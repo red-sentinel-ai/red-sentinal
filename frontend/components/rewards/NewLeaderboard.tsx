@@ -367,7 +367,7 @@ function ShareButton({ rank, tab }: { rank: number; tab: 'defenders' | 'attacker
   const [copied, setCopied] = useState(false)
 
   const handleShare = async () => {
-    const url = `${SUI_SENTINEL_APP_URL}leaderboard?rank=${rank}&tab=${tab}`
+    const url = `${SUI_SENTINEL_APP_URL}/leaderboard?rank=${rank}&tab=${tab}`
     try {
       await navigator.clipboard.writeText(url)
       setCopied(true)
