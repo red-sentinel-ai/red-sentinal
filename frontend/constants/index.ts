@@ -175,6 +175,65 @@ export const BOOSTER_TIERS = {
 
 export type BoosterTierKey = keyof typeof BOOSTER_TIERS
 
+// Map tiers to actual project assets
+export const getTierAsset = (name: string) => {
+  switch (name.toLowerCase()) {
+    case 'common':
+      return '/icons/shield-green.png'
+    case 'uncommon':
+      return '/icons/swords.png'
+    case 'rare':
+      return '/icons/star-badge-black.png'
+    case 'epic':
+      return '/icons/dollar_coin.png'
+    case 'legendary':
+      return '/icons/crown.png'
+    case 'mythic':
+      return '/icons/rocket.png'
+    case 'divine':
+      return '/img/trophy.png'
+    default:
+      return '/icons/star-badge-black.png'
+  }
+}
+
+// Re-map the theme colors based on specific palette for the gradients and borders
+export const getTierStyleConfig = (name: string) => {
+  const baseConfig = 'bg-gradient-to-b via-[#FFFFFF] flex flex-col items-center text-center relative overflow-hidden group hover:shadow-lg transition-all duration-300 justify-center'
+  
+  switch (name.toLowerCase()) {
+    case 'common': 
+      return `${baseConfig} from-[#C3ECE6] to-[#CCF0ED] border-[#049414] border-2`
+    case 'uncommon': 
+      return `${baseConfig} from-[#E5CCEF] to-[#F1CFEF] border-[#C532F6] border-2`
+    case 'rare': 
+      return `${baseConfig} from-[#F2EFCC] to-[#DDE6A9] border-[#947204] border-2`
+    case 'epic': 
+      return `${baseConfig} from-[#F6BCE1] to-[#FCC3E2] border-[#F632F3] border-2`
+    case 'legendary': 
+      return `${baseConfig} from-[#F6BCE1] to-[#FCC3E2] border-[#F632F3] border-2`
+    case 'mythic': 
+      return `${baseConfig} from-[#E5CCEF] to-[#F1CFEF] border-[#C532F6] border-2`
+    case 'divine': 
+      return `${baseConfig} from-[#C3ECE6] to-[#CCF0ED] border-[#049414] border-2`
+    default:
+      return `${baseConfig} from-[#C3ECE6] to-[#CCF0ED] border-[#049414] border-2`
+  }
+}
+
+export const getTierTextConfig = (name: string) => {
+  switch (name.toLowerCase()) {
+    case 'common': return 'text-[#049414]' 
+    case 'uncommon': return 'text-[#C532F6]' 
+    case 'rare': return 'text-[#947204]' 
+    case 'epic': return 'text-[#F632F3]' 
+    case 'legendary': return 'text-[#F632F3]' 
+    case 'mythic': return 'text-[#C532F6]' 
+    case 'divine': return 'text-[#049414]' 
+    default: return 'text-[#049414]'
+  }
+}
+
 //NOTE: Add Ankita's wallet here and keep this thing in our internal documentation as well.
 export const TEAM_MEMBER_WALLETS = [
   '0xe4e8af19c2943fc2e3cbefa2fca9149985fc3b3c3d9dd312902b2c26dc600d95',
