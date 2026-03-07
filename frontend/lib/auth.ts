@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { NextAuthOptions } from 'next-auth'
 import DiscordProvider from 'next-auth/providers/discord'
 import TwitterProvider from 'next-auth/providers/twitter'
@@ -12,62 +12,10 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.DISCORD_CLIENT_SECRET!,
     }),
     TwitterProvider({
+      // For OAuth 1.0a, use "API Key" and "API Key Secret" from Twitter Portal
       clientId: process.env.TWITTER_CLIENT_ID!,
       clientSecret: process.env.TWITTER_CLIENT_SECRET!,
-      version: '2.0',
-      authorization: {
-        url: 'https://twitter.com/i/oauth2/authorize',
-        params: {
-          scope: 'users.read tweet.read offline.access',
-        },
-      },
-      userinfo: {
-        url: 'https://api.twitter.com/2/users/me',
-        params: {
-          'user.fields': 'id,username',
-        },
-        async request({ tokens }) {
-          // Retry logic for 503 errors
-          const maxRetries = 3
-          let lastError: Error | null = null
-
-          for (let i = 0; i < maxRetries; i++) {
-            try {
-              const response = await fetch(
-                'https://api.twitter.com/2/users/me?user.fields=id,username',
-                {
-                  headers: {
-                    Authorization: `Bearer ${tokens.access_token}`,
-                  },
-                }
-              )
-
-              if (response.ok) {
-                return await response.json()
-              }
-
-              // If 503, wait and retry
-              if (response.status === 503 && i < maxRetries - 1) {
-                console.log(`Twitter userinfo 503 error, retry ${i + 1}/${maxRetries}`)
-                await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000)) // Exponential backoff
-                continue
-              }
-
-              throw new Error(`Twitter API returned ${response.status}: ${response.statusText}`)
-            } catch (error) {
-              lastError = error as Error
-              if (i < maxRetries - 1) {
-                console.log(`Twitter userinfo request failed, retry ${i + 1}/${maxRetries}:`, error)
-                await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000))
-              }
-            }
-          }
-
-          // If all retries failed, throw the last error
-          console.error('Twitter userinfo failed after all retries:', lastError)
-          throw lastError || new Error('Twitter userinfo request failed')
-        },
-      },
+      // version: '2.0' is removed to default to OAuth 1.0a
     }),
   ],
   session: {
@@ -76,21 +24,15 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ account, profile }) {
       try {
-        console.log('SignIn callback triggered')
-        console.log('Provider:', account?.provider)
-
         if (account && profile) {
-          // Get wallet address from cookies
           const cookieStore = await cookies()
           const walletAddress = cookieStore.get('pending_wallet_address')?.value
 
           if (walletAddress) {
             await saveSocialConnection(walletAddress, account.provider, profile)
-            // Clean up the cookie
             cookieStore.delete('pending_wallet_address')
           }
         }
-
         return true
       } catch (error) {
         console.error('Error in signIn callback:', error)
@@ -99,17 +41,13 @@ export const authOptions: NextAuthOptions = {
     },
 
     async jwt({ token, account, profile }) {
-      // New sign-in
       if (account && profile) {
-        // Make sure connectedProviders always starts as array
         token.connectedProviders = token.connectedProviders || []
 
-        // Add new provider if not already there
         if (!token.connectedProviders.includes(account.provider)) {
           token.connectedProviders.push(account.provider)
         }
 
-        // Store provider-specific data
         const providerKey = `${account.provider}Data`
         token[providerKey] = {
           id: getPlatformUserId(profile, account.provider),
@@ -118,26 +56,17 @@ export const authOptions: NextAuthOptions = {
           connectedAt: new Date().toISOString(),
         }
       }
-
       return token
     },
 
     async session({ session, token }) {
-      // Pass all provider info to session
-      session.connectedProviders = token.connectedProviders || []
+      session.connectedProviders = (token.connectedProviders as string[]) || []
       session.walletAddress = token.walletAddress
       session.hasTwitter = session.connectedProviders.includes('twitter')
       session.hasDiscord = session.connectedProviders.includes('discord')
 
-      // Add provider-specific data
-      if (token.twitterData) {
-        session.twitterData = token.twitterData
-      }
-      if (token.discordData) {
-        session.discordData = token.discordData
-      }
-
-      console.log('Session providers:', session.connectedProviders)
+      if (token.twitterData) session.twitterData = token.twitterData
+      if (token.discordData) session.discordData = token.discordData
 
       return session
     },
@@ -147,19 +76,23 @@ export const authOptions: NextAuthOptions = {
   },
 }
 
+/**
+ * Updated Helpers for OAuth 1.0a Compatibility
+ */
 function getPlatformUserId(profile: any, provider: string): string {
   if (provider === 'twitter') {
-    return profile.data?.id || ''
+    // 1.0a uses id_str; 2.0 uses data.id
+    return profile.id_str || profile.id?.toString() || profile.data?.id || ''
   } else if (provider === 'discord') {
     return profile.id || profile.sub || ''
   }
-  return profile.id || profile.sub || profile.data?.id || ''
+  return profile.id || profile.sub || ''
 }
 
-// Helper functions
 function getUsername(profile: any, provider: string): string {
   if (provider === 'twitter') {
-    return profile.data?.username || profile.data?.name || 'Unknown'
+    // 1.0a uses screen_name; 2.0 uses data.username
+    return profile.screen_name || profile.data?.username || profile.name || 'Unknown'
   } else if (provider === 'discord') {
     return profile.username || profile.name || 'Unknown'
   }
@@ -168,7 +101,8 @@ function getUsername(profile: any, provider: string): string {
 
 function getAvatarUrl(profile: any, provider: string): string | null {
   if (provider === 'twitter') {
-    return profile.data?.profile_image_url || null
+    // 1.0a uses profile_image_url_https; 2.0 uses data.profile_image_url
+    return profile.profile_image_url_https || profile.profile_image_url || profile.data?.profile_image_url || null
   } else if (provider === 'discord') {
     return profile.image || profile.avatar_url || null
   }
@@ -177,14 +111,11 @@ function getAvatarUrl(profile: any, provider: string): string | null {
 
 async function saveSocialConnection(walletAddress: string, provider: string, profile: any) {
   try {
-    const platformUserId: string = getPlatformUserId(profile, provider)
-    const platformUsername: string = getUsername(profile, provider)
-    const platformAvatarUrl: string | null = getAvatarUrl(profile, provider)
+    const platformUserId = getPlatformUserId(profile, provider)
+    const platformUsername = getUsername(profile, provider)
+    const platformAvatarUrl = getAvatarUrl(profile, provider)
 
-    if (!platformUserId) {
-      console.error('Could not extract platform user ID from profile:', profile)
-      return
-    }
+    if (!platformUserId) return
 
     const { data: user, error: userError } = await supabaseServiceClient
       .from('ss_users')
@@ -192,14 +123,9 @@ async function saveSocialConnection(walletAddress: string, provider: string, pro
       .contains('wallet_addresses', [walletAddress])
       .single()
 
-    if (userError || !user) {
-      console.error(
-        `Auth Error: User profile for wallet ${walletAddress} not found. This should not happen if the get-or-create flow on wallet connect is working.`
-      )
-      return
-    }
+    if (userError || !user) return
 
-    const { error: upsertError } = await supabaseServiceClient.from('ss_social_connections').upsert(
+    await supabaseServiceClient.from('ss_social_connections').upsert(
       {
         user_id: user.id,
         platform: provider,
@@ -207,25 +133,8 @@ async function saveSocialConnection(walletAddress: string, provider: string, pro
         platform_username: platformUsername,
         platform_avatar_url: platformAvatarUrl,
       },
-      {
-        onConflict: 'user_id,platform',
-      }
+      { onConflict: 'user_id,platform' }
     )
-
-    if (upsertError) {
-      throw upsertError
-    }
-
-    console.log(`Successfully upserted ${provider} connection for user ${user.id}`)
-
-    if (platformAvatarUrl && user.avatar_url && user.avatar_url.startsWith('data:image/svg+xml')) {
-      await supabaseServiceClient
-        .from('ss_users')
-        .update({ avatar_url: platformAvatarUrl })
-        .eq('id', user.id)
-
-      console.log(`Updated avatar for user ${user.id} with ${provider} avatar.`)
-    }
   } catch (error) {
     console.error('Error in saveSocialConnection:', error)
   }
