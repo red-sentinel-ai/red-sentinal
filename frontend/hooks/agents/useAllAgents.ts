@@ -41,7 +41,7 @@ export const useAllAgents = () => {
     queryKey: [ALL_AGENTS_QUERY_KEY],
     queryFn: async () => {
       const res = await fetch(
-        `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}?limit=200&include_prize_pool=true`
+        `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}?limit=50&include_prize_pool=true`
       )
       if (!res.ok) {
         throw new Error('Failed to fetch agents')
