@@ -67,8 +67,8 @@ export const useAllAgents = (
       if (sortField) {
         // Map frontend sort field names to API field names
         const apiSortField = sortField === 'change7d' ? 'prize_pool_change_7d' : sortField
-        params.append('sort_by', apiSortField)
-        params.append('sort_order', sortDirection)
+        params.append('sortBy', apiSortField)
+        params.append('sortDirection', sortDirection)
       }
 
       const res = await fetch(
