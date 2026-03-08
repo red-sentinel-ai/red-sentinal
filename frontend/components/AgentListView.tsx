@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { FeaturedAgentCard } from './FeaturedAgentCard'
 import { FeaturedAgentsSkeleton } from './ui/skeletons/FeaturedAgentsSkeleton'
 import { useAllAgents } from '@/hooks/agents/useAllAgents'
+import { useFeaturedAgents } from '@/hooks/agents/useFeaturedAgents'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { TEXT_COPIES } from '@/constants/text_copies'
 
@@ -16,29 +17,19 @@ type BountyTab = 'all' | 'big_bounties'
 
 export const AgentListView = () => {
   const { data: allAgents, isPending: isFetchingAllAgents } = useAllAgents()
+  const { data: featuredAgents, isPending: isFetchingFeaturedAgents } = useFeaturedAgents()
   const [activeTab, setActiveTab] = useState<BountyTab>('all')
-
-  const agentsWithBalance = allAgents?.filter(agent => {
-    try {
-      return BigInt(agent.total_balance) > BigInt(0.1 * 1_000_000_000) // Filter out agents with balance <= 0.1 SUI
-    } catch {
-      return false
-    }
-  })
-
-  const featuredAgents =
-    agentsWithBalance?.filter(agent => agent.is_featured && agent.state !== 'defeated') || []
 
   const filteredAgents =
     activeTab === 'big_bounties'
-      ? agentsWithBalance?.filter(agent => {
+      ? allAgents?.filter(agent => {
           try {
             return BigInt(agent.total_balance) >= BIG_BOUNTY_THRESHOLD_MIST
           } catch {
             return false
           }
         })
-      : agentsWithBalance
+      : allAgents
 
   return (
     <div className="mx-auto max-w-[1560px] px-2 py-4 md:px-8 md:py-16">
@@ -59,7 +50,7 @@ export const AgentListView = () => {
         </p>
       </div>
 
-      {isFetchingAllAgents ? (
+      {isFetchingFeaturedAgents ? (
         <FeaturedAgentsSkeleton />
       ) : (
         <>
