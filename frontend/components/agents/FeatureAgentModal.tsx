@@ -17,7 +17,7 @@ import { FeatureRequestSuccessState } from './FeatureRequestSuccessState'
 export interface FeatureAgentModalProps {
   open: boolean
   onClose: () => void
-  agentId: number
+  agentId: string
 }
 
 export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalProps) => {
@@ -69,7 +69,7 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
         email_id: form.email,
         wallet_address: address,
         description: form.description,
-        agent_id: agentId,
+        agent_id: parseInt(agentId, 10),
         telegram_username: form.telegram_username || undefined,
         twitter_username: form.twitter_username || undefined,
         status: 'pending',

@@ -20,6 +20,10 @@ type FeaturedAgentCardProps = {
   index: number
   ctaHeading?: string
   fromProfile?: boolean
+  // Optional modal callbacks - when provided, component won't create its own modal instances
+  onFund?: (agentObjectId: string, agentId: string) => void
+  onWithdraw?: (agentObjectId: string, agentId: string, balance: number) => void
+  onFeature?: (agentId: string) => void
 }
 
 export const FeaturedAgentCard = ({
@@ -27,12 +31,26 @@ export const FeaturedAgentCard = ({
   index,
   ctaHeading = 'Challenge Sentinel',
   fromProfile = false,
+  onFund,
+  onWithdraw,
+  onFeature,
 }: FeaturedAgentCardProps) => {
-  const { Modal, openModal } = useFundAgentModal()
-  const { Modal: WithdrawModal, openModal: openWithdrawModal } = useWithdrawAgentModal()
+  // Only create modal instances if callbacks not provided (for backward compatibility)
+  const fundModal = useFundAgentModal()
+  const withdrawModal = useWithdrawAgentModal()
+  const featureModal = useFeatureAgentModal()
+  
+  // Use provided callbacks or fall back to local modal instances
+  const openFundModal = onFund || fundModal.openModal
+  const openWithdrawModal = onWithdraw || withdrawModal.openModal
+  const openFeatureModal = onFeature || featureModal.openModal
+  
+  const Modal = fundModal.Modal
+  const WithdrawModal = withdrawModal.Modal
+  const FeatureModal = featureModal.Modal
+  
   const router = useRouter()
   const account = useCurrentAccount()
-  const { Modal: FeatureModal, openModal: openFeatureModal } = useFeatureAgentModal()
   const isOwner = account?.address === agent.creator
 
   const [isWithdrawalLocked, setIsWithdrawalLocked] = useState(true)
@@ -214,7 +232,7 @@ export const FeaturedAgentCard = ({
           {fromProfile && (
             <div className="flex gap-1.5 sm:gap-2">
               <button
-                onClick={() => openModal(agent.agent_object_id, agent.agent_id)}
+                onClick={() => openFundModal(agent.agent_object_id, agent.agent_id)}
                 className="btn btn-black w-1/2 px-2 py-1.5 text-[10px] sm:px-4 sm:py-2.5 sm:text-sm"
               >
                 Add Funds
@@ -256,9 +274,10 @@ export const FeaturedAgentCard = ({
           )}
         </div>
 
-        <Modal onSuccess={() => console.log('Funded successfully!')} />
-        <WithdrawModal onSuccess={() => console.log('Withdrew successfully!')} />
-        <FeatureModal />
+        {/* Only render modals if using local instances (callbacks not provided) */}
+        {!onFund && <Modal onSuccess={() => console.log('Funded successfully!')} />}
+        {!onWithdraw && <WithdrawModal onSuccess={() => console.log('Withdrew successfully!')} />}
+        {!onFeature && <FeatureModal />}
         <ClaimFeesModal
           open={isClaimFeesModalOpen}
           onClose={() => setIsClaimFeesModalOpen(false)}

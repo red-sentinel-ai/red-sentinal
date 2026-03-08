@@ -4,9 +4,9 @@ import { FeatureAgentModal, FeatureAgentModalProps } from '@/components/agents/F
 
 export function useFeatureAgentModal() {
   const [isOpen, setIsOpen] = useState(false)
-  const [agentId, setAgentId] = useState<number | null>(null)
+  const [agentId, setAgentId] = useState<string | null>(null)
 
-  const openModal = (agentId: number) => {
+  const openModal = (agentId: string) => {
     setAgentId(agentId)
     setIsOpen(true)
   }
@@ -17,7 +17,7 @@ export function useFeatureAgentModal() {
   }
 
   const Modal: React.FC<Omit<FeatureAgentModalProps, 'open' | 'onClose' | 'agentId'>> = props => (
-    <FeatureAgentModal open={isOpen} onClose={closeModal} agentId={agentId!} {...props} />
+    <FeatureAgentModal open={isOpen} onClose={closeModal} agentId={agentId || ''} {...props} />
   )
 
   return {

@@ -12,6 +12,9 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { TEXT_COPIES } from '@/constants/text_copies'
 import { Loader2 } from 'lucide-react'
+import { useFundAgentModal } from '@/hooks/useFundAgentModal'
+import { useWithdrawAgentModal } from '@/hooks/agents/useWithdrawAgentModal'
+import { useFeatureAgentModal } from '@/hooks/useFeatureAgentModal'
 
 const BIG_BOUNTY_THRESHOLD_MIST = BigInt(20_000_000_000) // 20 SUI
 
@@ -19,8 +22,13 @@ type BountyTab = 'all' | 'big_bounties'
 
 export const AgentListView = () => {
   const [activeTab, setActiveTab] = useState<BountyTab>('all')
-  const [sortField, setSortField] = useState<SortField>('balance')
+  const [sortField, setSortField] = useState<SortField>('total_balance')
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
+  
+  // Single instance of modals at parent level to avoid duplicate hook calls
+  const { Modal: FundModal, openModal: openFundModal } = useFundAgentModal()
+  const { Modal: WithdrawModal, openModal: openWithdrawModal } = useWithdrawAgentModal()
+  const { Modal: FeatureModal, openModal: openFeatureModal } = useFeatureAgentModal()
   
   const {
     data: allAgentsData,
@@ -103,6 +111,9 @@ export const AgentListView = () => {
                       agent={agent}
                       index={index}
                       ctaHeading="Attack Sentinel"
+                      onFund={openFundModal}
+                      onWithdraw={openWithdrawModal}
+                      onFeature={openFeatureModal}
                     />
                   ))}
                 </motion.div>
@@ -170,6 +181,11 @@ export const AgentListView = () => {
       )}
       
       <p className="mt-4 text-xs text-[#5E5E5E]">{TEXT_COPIES.LOW_POOL_BALANCE_HIDDEN_MESSAGE}</p>
+      
+      {/* Single instance of modals - prevents duplicate hook calls */}
+      <FundModal onSuccess={() => console.log('Funded successfully!')} />
+      <WithdrawModal onSuccess={() => console.log('Withdrew successfully!')} />
+      <FeatureModal />
     </div>
   )
 }
