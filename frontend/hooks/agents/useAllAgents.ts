@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 import { SUI_SENTINEL_API_URL, APP_NETWORK } from '@/constants'
 
 export interface PrizePoolHistory {
@@ -34,25 +34,69 @@ export interface AgentDetails {
   accumulated_fees?: number
 }
 
-export const ALL_AGENTS_QUERY_KEY = 'allAgents'
+export type SortField = 'total_balance' | 'cost_per_message' | 'total_attacks' | 'agent_id' | 'change7d' | null
+export type SortDirection = 'asc' | 'desc'
 
-export const useAllAgents = () => {
-  return useQuery<AgentDetails[], Error>({
-    queryKey: [ALL_AGENTS_QUERY_KEY],
-    queryFn: async () => {
+export const ALL_AGENTS_QUERY_KEY = 'allAgents'
+export const AGENTS_LIMIT = 20
+
+interface AgentsResponse {
+  agents: AgentDetails[]
+  total: number
+  hasMore: boolean
+}
+
+export const useAllAgents = (
+  sortField: SortField = 'total_balance',
+  sortDirection: SortDirection = 'desc'
+) => {
+  return useInfiniteQuery<AgentsResponse, Error>({
+    queryKey: [ALL_AGENTS_QUERY_KEY, sortField, sortDirection],
+    queryFn: async ({ pageParam }) => {
+      const offset = pageParam as number
+
+      // Build query params
+      const params = new URLSearchParams({
+        limit: String(AGENTS_LIMIT),
+        offset: String(offset),
+        include_prize_pool: 'true',
+        min_balance: '1000000000',
+      })
+
+      // Add sort params if provided
+      if (sortField) {
+        // Map frontend sort field names to API field names
+        const apiSortField = sortField === 'change7d' ? 'prize_pool_change_7d' : sortField
+        params.append('sort_by', apiSortField)
+        params.append('sort_order', sortDirection)
+      }
+
       const res = await fetch(
-        `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}?limit=50&include_prize_pool=true&min_balance=1000000000`
+        `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}?${params.toString()}`
       )
+
       if (!res.ok) {
         throw new Error('Failed to fetch agents')
       }
-      const { agents } = await res.json()
-      return agents.map((agent: AgentDetails) => ({
+
+      const data = await res.json()
+      const agents = data.agents.map((agent: AgentDetails) => ({
         ...agent,
         agent_path: agent.agent_name
           ? agent.agent_name.toLowerCase().replace(/\s+/g, '_')
           : agent.agent_object_id,
       }))
+
+      return {
+        agents,
+        total: data.total || agents.length,
+        hasMore: agents.length === AGENTS_LIMIT,
+      }
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      if (!lastPage.hasMore) return undefined
+      return allPages.length * AGENTS_LIMIT
     },
     staleTime: 60 * 1000,
   })

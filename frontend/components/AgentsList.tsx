@@ -1,18 +1,14 @@
 'use client'
-import { useMemo, useState } from 'react'
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { ArrowUp, ArrowDown } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 
 import { Badge } from '@/components/ui'
 import { LeaderboardSkeleton } from './ui/skeletons/LeaderboardSkeleton'
-import { AgentDetails } from '@/hooks/agents/useAllAgents'
+import { AgentDetails, SortField, SortDirection } from '@/hooks/agents/useAllAgents'
 import { MIST_PER_SUI } from '@/constants'
 import { PrizePoolChangeDisplay } from './agents/PrizePoolChangeDisplay'
-
-type SortField = 'balance' | 'costPerMessage' | 'totalAttacks' | 'agentId' | 'change7d' | null
-type SortDirection = 'asc' | 'desc'
+import Image from 'next/image'
 
 const formatSui = (mist: string) => {
   const sui = Number(mist) / MIST_PER_SUI
@@ -25,59 +21,22 @@ export enum TabType {
   TopAttackers = 'TOP_ATTACKERS',
 }
 
+interface AgentsListProps {
+  agents: AgentDetails[]
+  isFetchingAgents: boolean
+  sortField: SortField
+  sortDirection: SortDirection
+  onSort: (field: SortField) => void
+}
+
 export const AgentsList = ({
   agents,
   isFetchingAgents,
-}: {
-  agents: AgentDetails[]
-  isFetchingAgents: boolean
-}) => {
+  sortField,
+  sortDirection,
+  onSort,
+}: AgentsListProps) => {
   const router = useRouter()
-  const [sortField, setSortField] = useState<SortField>('balance')
-  const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
-
-  const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      setSortDirection(prev => (prev === 'asc' ? 'desc' : 'asc'))
-    } else {
-      setSortField(field)
-      setSortDirection('desc')
-    }
-  }
-
-  const sortedAgents = useMemo(() => {
-    if (!agents || !sortField) return agents
-
-    return [...agents].sort((a, b) => {
-      if (sortField === 'agentId') {
-        const cmp = a.agent_id.localeCompare(b.agent_id, undefined, { numeric: true })
-        return sortDirection === 'asc' ? cmp : -cmp
-      }
-
-      let valueA: number
-      let valueB: number
-
-      if (sortField === 'balance') {
-        valueA = Number(a.total_balance)
-        valueB = Number(b.total_balance)
-      } else if (sortField === 'costPerMessage') {
-        valueA = Number(a.cost_per_message)
-        valueB = Number(b.cost_per_message)
-      } else if (sortField === 'change7d') {
-        // null percentage means "New" agent — treat as +Infinity so it sorts highest
-        valueA = a.prizePoolHistory?.change7d.percentage ?? Infinity
-        valueB = b.prizePoolHistory?.change7d.percentage ?? Infinity
-        // agents with no history at all sort last
-        if (!a.prizePoolHistory) valueA = -Infinity
-        if (!b.prizePoolHistory) valueB = -Infinity
-      } else {
-        valueA = a.total_attacks || 0
-        valueB = b.total_attacks || 0
-      }
-
-      return sortDirection === 'asc' ? valueA - valueB : valueB - valueA
-    })
-  }, [agents, sortField, sortDirection])
 
   const SortIcon = ({ field }: { field: SortField }) => {
     if (sortField !== field) {
@@ -89,11 +48,6 @@ export const AgentsList = ({
       <ArrowDown className="ml-1 h-4 w-4" />
     )
   }
-
-  // const handleRefresh = async (e: React.MouseEvent) => {
-  //   e.preventDefault()
-  //   e.stopPropagation()
-  // }
 
   return (
     <AnimatePresence>
@@ -114,36 +68,36 @@ export const AgentsList = ({
               </div>
               <div
                 className="col-span-1 flex cursor-pointer items-center hover:text-gray-600"
-                onClick={() => handleSort('agentId')}
+                onClick={() => onSort('agent_id')}
               >
                 <span>ID</span>
-                <SortIcon field="agentId" />
+                <SortIcon field="agent_id" />
               </div>
               <div className="col-span-2 flex items-center">Sentinel</div>
               <div
                 className="col-span-2 flex cursor-pointer items-center hover:text-gray-600"
-                onClick={() => handleSort('balance')}
+                onClick={() => onSort('total_balance')}
               >
                 <span>Bounty Pool</span>
-                <SortIcon field="balance" />
+                <SortIcon field="total_balance" />
               </div>
               <div
                 className="col-span-2 flex cursor-pointer items-center hover:text-gray-600"
-                onClick={() => handleSort('costPerMessage')}
+                onClick={() => onSort('cost_per_message')}
               >
                 <span>Cost per Attack</span>
-                <SortIcon field="costPerMessage" />
+                <SortIcon field="cost_per_message" />
               </div>
               <div
                 className="col-span-1 flex cursor-pointer items-center hover:text-gray-600"
-                onClick={() => handleSort('totalAttacks')}
+                onClick={() => onSort('total_attacks')}
               >
                 <span>Attacks</span>
-                <SortIcon field="totalAttacks" />
+                <SortIcon field="total_attacks" />
               </div>
               <div
                 className="col-span-1 flex cursor-pointer items-center hover:text-gray-600"
-                onClick={() => handleSort('change7d')}
+                onClick={() => onSort('change7d')}
               >
                 <span>7d Activity</span>
                 <SortIcon field="change7d" />
@@ -153,7 +107,7 @@ export const AgentsList = ({
             </div>
 
             <AnimatePresence mode="popLayout">
-              {sortedAgents.map((agent, idx) => {
+              {agents.map((agent, idx) => {
                 const balance = formatSui(agent.total_balance)
                 const costPerMessage = formatSui(agent.cost_per_message)
 
