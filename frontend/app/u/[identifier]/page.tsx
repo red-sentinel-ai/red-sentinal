@@ -11,7 +11,7 @@ import { APP_NETWORK, EXPLORER_BASE_URL, SUI_SENTINEL_API_URL } from '@/constant
 // Here we didn't used the useAgentsByOwner because it's a server components and good for SEO, if we want to use useAgentsByOwner hook, we will need to convert it to client component
 async function fetchAgentsByCreator(walletAddress: string): Promise<AgentDetails[]> {
   const res = await fetch(
-    `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}?creator=${walletAddress}&limit=200&include_prize_pool=true`
+    `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}?creator=${walletAddress}&limit=50&include_prize_pool=true`
   )
   if (!res.ok) return []
 
