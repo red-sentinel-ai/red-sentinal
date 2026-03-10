@@ -1,31 +1,18 @@
-import { useQuery } from '@tanstack/react-query'
 import type { PublicStats } from '@/types/Earn'
-import { APP_NETWORK } from '@/constants'
+import { usePlatformStats } from '@/hooks/stats/usePlatformStats'
 
-// Mock data for now - will be replaced when API is ready
-const MOCK_STATS: PublicStats = {
-  totalDistributed: 12_450_000,
-  activeMissions: 14,
-  biggestSpinThisWeek: 97_800,
-}
+export function usePublicStats(): { data: PublicStats | undefined; isLoading: boolean } {
+  const { data, isLoading } = usePlatformStats()
 
-async function fetchPublicStats(): Promise<PublicStats> {
-  // TODO: Replace with real API call when endpoint is ready
-  // const response = await fetch(`${API_URL}/stats/${APP_NETWORK}/rewards`)
-  // if (!response.ok) throw new Error('Failed to fetch public stats')
-  // return response.json()
+  if (!data) return { data: undefined, isLoading }
 
-  // For now, return mock data
-  return new Promise(resolve => {
-    setTimeout(() => resolve(MOCK_STATS), 500)
-  })
-}
-
-export function usePublicStats() {
-  return useQuery({
-    queryKey: ['public-stats', APP_NETWORK],
-    queryFn: fetchPublicStats,
-    staleTime: 60_000, // 1 minute
-    refetchInterval: 60_000, // Refetch every minute
-  })
+  return {
+    isLoading,
+    data: {
+      totalDistributed: data.totalSentinelTokensDistributed,
+      // activeMissions and biggestSpinThisWeek don't have backend endpoints yet
+      activeMissions: 14,
+      biggestSpinThisWeek: 0,
+    },
+  }
 }

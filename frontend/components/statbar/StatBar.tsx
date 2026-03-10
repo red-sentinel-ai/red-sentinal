@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { SUI_SENTINEL_API_URL, APP_NETWORK, MIST_PER_SUI } from '@/constants'
+import { usePlatformStats, mistToSui } from '@/hooks/stats/usePlatformStats'
+import type { PlatformStatsResponse } from '@/hooks/stats/usePlatformStats'
 
 interface StatItemData {
   id: string
@@ -13,43 +14,8 @@ interface StatItemData {
   accent: 'mint' | 'pink' | 'pulse' | 'blue'
 }
 
-interface LargestBountyWon {
-  agentId: string
-  winner: string
-  amount: string
-  timestamp: string
-}
-
-interface StatsApiResponse {
-  network: string
-  computedAt: string
-  totalAttacks: number
-  totalSentinelsLaunched: number
-  activeSentinels: number
-  defeatedSentinels: number
-  totalBountyWon: string
-  totalSentinelTokensDistributed: number
-  tvl: string
-  largestBountyWon: LargestBountyWon | null
-}
-
-// Convert MIST to SUI and round up to nearest integer
-function mistToSui(mist: string): number {
-  const sui = Number(mist) / MIST_PER_SUI
-  return Math.ceil(sui)
-}
-
-// Fetch stats from API
-async function fetchStats(network: string): Promise<StatsApiResponse> {
-  const response = await fetch(`${SUI_SENTINEL_API_URL}/stats/${network}`)
-  if (!response.ok) {
-    throw new Error('Failed to fetch stats')
-  }
-  return response.json()
-}
-
 // Transform API response to stats array
-function transformStats(data: StatsApiResponse): StatItemData[] {
+function transformStats(data: PlatformStatsResponse): StatItemData[] {
   return [
     {
       id: 'tvl',
@@ -246,38 +212,8 @@ function StatItem({
 }
 
 export default function SentinelStatsBar() {
-  const [stats, setStats] = useState<StatItemData[]>(DEFAULT_STATS)
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    let mounted = true
-
-    const loadStats = async () => {
-      try {
-        setIsLoading(true)
-        const data = await fetchStats(APP_NETWORK)
-        if (mounted) {
-          setStats(transformStats(data))
-        }
-      } catch (error) {
-        console.error('Failed to load stats:', error)
-      } finally {
-        if (mounted) {
-          setIsLoading(false)
-        }
-      }
-    }
-
-    loadStats()
-
-    // Refresh every 60 seconds
-    const interval = setInterval(loadStats, 60000)
-
-    return () => {
-      mounted = false
-      clearInterval(interval)
-    }
-  }, [])
+  const { data: apiData, isLoading } = usePlatformStats()
+  const stats = apiData ? transformStats(apiData) : DEFAULT_STATS
 
   return (
     <div className="ssb-shell">
