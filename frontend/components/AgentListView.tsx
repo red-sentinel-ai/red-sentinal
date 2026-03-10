@@ -6,39 +6,65 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 import { FeaturedAgentCard } from './FeaturedAgentCard'
 import { FeaturedAgentsSkeleton } from './ui/skeletons/FeaturedAgentsSkeleton'
-import { useAllAgents } from '@/hooks/agents/useAllAgents'
+import { useAllAgents, SortField, SortDirection } from '@/hooks/agents/useAllAgents'
+import { useFeaturedAgents } from '@/hooks/agents/useFeaturedAgents'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Button } from '@/components/ui/button'
 import { TEXT_COPIES } from '@/constants/text_copies'
+import { Loader2 } from 'lucide-react'
+import { useFundAgentModal } from '@/hooks/useFundAgentModal'
+import { useWithdrawAgentModal } from '@/hooks/agents/useWithdrawAgentModal'
+import { useFeatureAgentModal } from '@/hooks/useFeatureAgentModal'
 
 const BIG_BOUNTY_THRESHOLD_MIST = BigInt(20_000_000_000) // 20 SUI
 
 type BountyTab = 'all' | 'big_bounties'
 
 export const AgentListView = () => {
-  const { data: allAgents, isPending: isFetchingAllAgents } = useAllAgents()
   const [activeTab, setActiveTab] = useState<BountyTab>('all')
+  const [sortField, setSortField] = useState<SortField>('total_balance')
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
+  
+  // Single instance of modals at parent level to avoid duplicate hook calls
+  const { Modal: FundModal, openModal: openFundModal } = useFundAgentModal()
+  const { Modal: WithdrawModal, openModal: openWithdrawModal } = useWithdrawAgentModal()
+  const { Modal: FeatureModal, openModal: openFeatureModal } = useFeatureAgentModal()
+  
+  const {
+    data: allAgentsData,
+    isPending: isFetchingAllAgents,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useAllAgents(sortField, sortDirection)
+  
+  const { data: featuredAgents, isPending: isFetchingFeaturedAgents } = useFeaturedAgents()
 
-  const agentsWithBalance = allAgents?.filter(agent => {
-    try {
-      return BigInt(agent.total_balance) > BigInt(0.1 * 1_000_000_000) // Filter out agents with balance <= 0.1 SUI
-    } catch {
-      return false
-    }
-  })
+  // Flatten all pages of agents
+  const allAgents = allAgentsData?.pages.flatMap(page => page.agents) || []
 
-  const featuredAgents =
-    agentsWithBalance?.filter(agent => agent.is_featured && agent.state !== 'defeated') || []
+  const activeFeaturedAgents =
+    featuredAgents?.filter(agent => agent.state !== 'defeated') || []
 
   const filteredAgents =
     activeTab === 'big_bounties'
-      ? agentsWithBalance?.filter(agent => {
+      ? allAgents?.filter(agent => {
           try {
             return BigInt(agent.total_balance) >= BIG_BOUNTY_THRESHOLD_MIST
           } catch {
             return false
           }
         })
-      : agentsWithBalance
+      : allAgents
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection(prev => (prev === 'asc' ? 'desc' : 'asc'))
+    } else {
+      setSortField(field)
+      setSortDirection('desc')
+    }
+  }
 
   return (
     <div className="mx-auto max-w-[1560px] px-2 py-4 md:px-8 md:py-16">
@@ -59,11 +85,11 @@ export const AgentListView = () => {
         </p>
       </div>
 
-      {isFetchingAllAgents ? (
+      {isFetchingFeaturedAgents ? (
         <FeaturedAgentsSkeleton />
       ) : (
         <>
-          {featuredAgents.length > 0 && (
+          {activeFeaturedAgents?.length > 0 && (
             <div className="mb-8 md:mb-16">
               <div className="mb-4 md:mb-8">
                 <h2 className="mb-2 text-xl font-medium md:text-[32px]">Featured Sentinels</h2>
@@ -79,12 +105,15 @@ export const AgentListView = () => {
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {featuredAgents.map((agent, index) => (
+                  {activeFeaturedAgents.map((agent, index) => (
                     <FeaturedAgentCard
                       key={agent.agent_id}
                       agent={agent}
                       index={index}
                       ctaHeading="Attack Sentinel"
+                      onFund={openFundModal}
+                      onWithdraw={openWithdrawModal}
+                      onFeature={openFeatureModal}
                     />
                   ))}
                 </motion.div>
@@ -122,8 +151,41 @@ export const AgentListView = () => {
         </div>
       </div>
 
-      <AgentsList agents={filteredAgents} isFetchingAgents={isFetchingAllAgents} />
+      <AgentsList
+        agents={filteredAgents}
+        isFetchingAgents={isFetchingAllAgents}
+        sortField={sortField}
+        sortDirection={sortDirection}
+        onSort={handleSort}
+      />
+      
+      {/* Load More Button */}
+      {hasNextPage && !isFetchingAllAgents && (
+        <div className="mt-6 flex justify-center">
+          <Button
+            onClick={() => fetchNextPage()}
+            disabled={isFetchingNextPage}
+            variant="outline"
+            className="min-w-[200px]"
+          >
+            {isFetchingNextPage ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Loading...
+              </>
+            ) : (
+              'Load More'
+            )}
+          </Button>
+        </div>
+      )}
+      
       <p className="mt-4 text-xs text-[#5E5E5E]">{TEXT_COPIES.LOW_POOL_BALANCE_HIDDEN_MESSAGE}</p>
+      
+      {/* Single instance of modals - prevents duplicate hook calls */}
+      <FundModal onSuccess={() => console.log('Funded successfully!')} />
+      <WithdrawModal onSuccess={() => console.log('Withdrew successfully!')} />
+      <FeatureModal />
     </div>
   )
 }

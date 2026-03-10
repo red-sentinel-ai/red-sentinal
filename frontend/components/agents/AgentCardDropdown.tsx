@@ -20,7 +20,7 @@ interface AgentDropdownProps {
   isFeatured: boolean
   agentId: string
   agentObjectId: string
-  openFeatureModal: (agentId: number) => void
+  openFeatureModal: (agentId: string) => void
   currentPrompt?: string
   currentCost?: number
   accumulatedFees?: number
@@ -46,7 +46,7 @@ export const AgentDropdown = ({
 
   const handleOpenFeatureModal = (e: React.MouseEvent) => {
     e.stopPropagation()
-    openFeatureModal(Number(agentId))
+    openFeatureModal(agentId)
   }
 
   const handleOpenPromptModal = (e: React.MouseEvent) => {
