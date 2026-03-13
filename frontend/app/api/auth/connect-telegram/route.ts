@@ -2,55 +2,46 @@ import { NextResponse } from 'next/server'
 import { createHmac, createHash } from 'crypto'
 import { supabaseServiceClient } from '@/db/config/server'
 
-type TelegramAuthData = {
-  id: number
-  first_name?: string
-  last_name?: string
-  username?: string
-  photo_url?: string
-  auth_date: number
-  hash: string
-}
-
-function verifyTelegramHash(data: TelegramAuthData): boolean {
+function verifyTelegramHash(params: URLSearchParams): boolean {
   const botToken = process.env.TELEGRAM_BOT_TOKEN
   if (!botToken) return false
 
-  const { hash, ...rest } = data
+  const hash = params.get('hash')
+  if (!hash) return false
 
-  // Build the data check string: sorted key=value pairs joined by \n
-  const dataCheckString = Object.entries(rest)
+  const dataCheckString = Array.from(params.entries())
+    .filter(([key]) => key !== 'hash' && key !== 'wallet')
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([key, value]) => `${key}=${value}`)
     .join('\n')
 
-  // secret_key = SHA256(bot_token)
   const secretKey = createHash('sha256').update(botToken).digest()
   const expectedHash = createHmac('sha256', secretKey).update(dataCheckString).digest('hex')
 
   return expectedHash === hash
 }
 
-export async function POST(request: Request) {
+export async function GET(request: Request) {
+  const url = new URL(request.url)
+  const params = url.searchParams
+
   try {
-    const body = await request.json()
-    const { telegramData, walletAddress } = body as {
-      telegramData: TelegramAuthData
-      walletAddress: string
+    const walletAddress = params.get('wallet')
+    const id = params.get('id')
+    const hash = params.get('hash')
+    const auth_date = params.get('auth_date')
+
+    if (!walletAddress || !id || !hash || !auth_date) {
+      return NextResponse.redirect(new URL('/profile?error=telegram-auth', url.origin))
     }
 
-    if (!telegramData || !walletAddress) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
-    }
-
-    // Reject auth data older than 10 minutes
-    const authAge = Math.floor(Date.now() / 1000) - telegramData.auth_date
+    const authAge = Math.floor(Date.now() / 1000) - parseInt(auth_date)
     if (authAge > 600) {
-      return NextResponse.json({ error: 'Telegram auth data has expired' }, { status: 400 })
+      return NextResponse.redirect(new URL('/profile?error=telegram-auth', url.origin))
     }
 
-    if (!verifyTelegramHash(telegramData)) {
-      return NextResponse.json({ error: 'Invalid Telegram auth signature' }, { status: 401 })
+    if (!verifyTelegramHash(params)) {
+      return NextResponse.redirect(new URL('/profile?error=telegram-auth', url.origin))
     }
 
     const { data: user, error: userError } = await supabaseServiceClient
@@ -60,28 +51,27 @@ export async function POST(request: Request) {
       .single()
 
     if (userError || !user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+      return NextResponse.redirect(new URL('/profile?error=telegram-auth', url.origin))
     }
 
-    const username =
-      telegramData.username ||
-      [telegramData.first_name, telegramData.last_name].filter(Boolean).join(' ') ||
-      `user_${telegramData.id}`
+    const username = params.get('username') ||
+      [params.get('first_name'), params.get('last_name')].filter(Boolean).join(' ') ||
+      `user_${id}`
 
     await supabaseServiceClient.from('ss_social_connections').upsert(
       {
         user_id: user.id,
         platform: 'telegram',
-        platform_user_id: String(telegramData.id),
+        platform_user_id: id,
         platform_username: username,
-        platform_avatar_url: telegramData.photo_url || null,
+        platform_avatar_url: params.get('photo_url') || null,
       },
       { onConflict: 'user_id,platform' }
     )
 
-    return NextResponse.json({ success: true })
+    return NextResponse.redirect(new URL('/profile?connected=Telegram', url.origin))
   } catch (error) {
-    console.error('Error connecting Telegram:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    console.error('Telegram callback error:', error)
+    return NextResponse.redirect(new URL('/profile?error=telegram-auth', url.origin))
   }
 }
