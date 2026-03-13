@@ -11,8 +11,8 @@ export async function GET(
 
     return NextResponse.json({
       wallet_address: result.wallet_address,
-      isXConnected: result.isXConnected,
-      isDiscordConnected: result.isDiscordConnected,
+      isGoogleConnected: result.isGoogleConnected,
+      isTelegramConnected: result.isTelegramConnected,
     })
   } catch (error) {
     console.error('Error fetching social status:', error)
