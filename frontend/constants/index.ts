@@ -14,7 +14,8 @@ export const SUI_SENTINEL_GITHUB_URL = 'https://github.com/sui-sentinel/contract
 export const SUI_SENTINEL_TELEGRAM_URL = 'https://t.me/suisentinel'
 export const SUI_SENTINEL_AUDIT_REPORT_URL = '/pdfs/audit_final.pdf'
 export const SUI_SENTINEL_AMBASSADOR_URL = 'https://www.suisentinel.xyz/ambassador'
-export const SUI_SENTINEL_CHECKOUT_URL = "https://twitter.com/intent/tweet?text=Check+out+%40suisentinal+on+Sui+%F0%9F%9B%A1%EF%B8%8F&hashtags=SuiSentinel";
+export const SUI_SENTINEL_CHECKOUT_URL =
+  'https://twitter.com/intent/tweet?text=Check+out+%40suisentinal+on+Sui+%F0%9F%9B%A1%EF%B8%8F&hashtags=SuiSentinel'
 export const REWARD_CALCULATOR_URL = 'https://www.suisentinel.xyz/reward-calculator'
 
 export const SUI_SENTINEL_DEFENDER_REWARDS_DOCS_URL = `${SUI_SENTINEL_DOCS_URL}/incentives/defender-rewards`
@@ -36,7 +37,8 @@ export const TEXT_COPIES = {
 
 export const LOCAL_API_PATH = 'https://tee.suisentinel.xyz'
 export const RED_TEAM_API_URL = `https://redteam.suisentinel.xyz/`
-export const SUI_SENTINEL_API_URL = process.env.NEXT_PUBLIC_SUI_SENTINEL_API_URL || 'https://api.suisentinel.xyz'
+export const SUI_SENTINEL_API_URL =
+  process.env.NEXT_PUBLIC_SUI_SENTINEL_API_URL || 'https://api.suisentinel.xyz'
 
 export const APP_NETWORK: 'mainnet' | 'testnet' =
   process.env.NEXT_PUBLIC_APP_NETWORK === 'testnet' ? 'testnet' : 'mainnet'
@@ -289,3 +291,8 @@ export const PROVIDER_MODELS: Record<string, string[]> = {
   ],
   custom: [],
 }
+
+export const SUI_CLOCK_OBJECT_ID =
+  '0x0000000000000000000000000000000000000000000000000000000000000006'
+export const SUI_RANDOM_OBJECT_ID =
+  '0x0000000000000000000000000000000000000000000000000000000000000008'

@@ -29,6 +29,7 @@ import {
   SUI_CONFIG,
   SUI_SENTINEL_DOCS_URL,
   SYSTEM_PROMPT_MAX_TOKENS,
+  SUI_CLOCK_OBJECT_ID,
 } from '@/constants'
 import { SENTINEL_GIFS, SENTINEL_IMAGES } from '@/constants/asset_paths'
 import { hexToVector } from '@/lib/utils'
@@ -40,7 +41,6 @@ import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
 import { useTokenCount } from '@/hooks/useTokenCount'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 import { FundSuccessModal } from '@/components/FundSuccessModal'
-import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 import { CustomDropdown } from '@/components/ui/common/CustomDropdown'
 import { RewardsConditions } from '@/components/defend/RewardsConditions'
 import { useEffect } from 'react'

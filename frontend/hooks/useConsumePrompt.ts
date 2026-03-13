@@ -1,14 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useCallback } from 'react'
 import { Transaction } from '@mysten/sui/transactions'
 import { useSignAndExecuteTransaction, useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
-import { SUI_CONFIG } from '@/constants'
+import { SUI_CONFIG, SUI_CLOCK_OBJECT_ID, SUI_RANDOM_OBJECT_ID } from '@/constants'
 import { toast } from 'sonner'
 import { ConsumePromptApiResponse } from '@/types'
 import { hexToVector } from '@/lib/utils'
 import { type AgentDetails } from './agents/useAllAgents'
 import { SuiTransactionBlockResponse, SuiObjectResponse } from '@mysten/sui/client'
-import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 
 const GAS_BUDGET = 50_000_000
 
@@ -102,7 +100,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         tx.object(agentDetails.agent_object_id),
         tx.object(SUI_CONFIG.PROTOCOL_CONFIG_OBJECT_ID),
         paymentCoin,
-        tx.object('0x8'),
+        tx.object(SUI_RANDOM_OBJECT_ID),
         tx.object(SUI_CLOCK_OBJECT_ID),
       ],
     })
