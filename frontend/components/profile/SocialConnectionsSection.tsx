@@ -12,15 +12,6 @@ import { useSocialStatus } from '@/hooks/profile/useSocialStatus'
 import { handleConnectGoogle } from '@/utils/socialConnection'
 import { useDisconnectProvider } from '@/hooks/rewards/useDisconnectProvider'
 
-type TelegramAuthData = {
-  id: number
-  first_name?: string
-  last_name?: string
-  username?: string
-  photo_url?: string
-  auth_date: number
-  hash: string
-}
 
 function GoogleIcon() {
   return (
@@ -77,7 +68,8 @@ export function SocialConnectionsSection() {
     if (connected) {
       const provider = connected.toLowerCase()
 
-      if (address && provider === 'google') {
+      if (provider === 'google' && address) {
+        // Google: save using active NextAuth session
         fetch('/api/auth/save-social-connection', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -86,17 +78,19 @@ export function SocialConnectionsSection() {
           .then(res => res.json())
           .then(data => {
             if (data.success) {
-              toast.success(`${connected} connected successfully!`)
+              toast.success('Google connected successfully!')
               refetch()
-              posthog.capture('social_account_connected', {
-                platform: provider,
-                wallet_address: address,
-              })
+              posthog.capture('social_account_connected', { platform: provider, wallet_address: address })
             } else {
               toast.error(`Connected but failed to save: ${data.error}`)
             }
           })
           .catch(() => toast.error('Failed to save connection'))
+      } else if (provider === 'telegram') {
+        // Telegram: already saved server-side in the callback route
+        toast.success('Telegram connected successfully!')
+        refetch()
+        posthog.capture('social_account_connected', { platform: provider, wallet_address: address })
       }
 
       setConnectingPlatform(null)
@@ -121,51 +115,23 @@ export function SocialConnectionsSection() {
     }
   }, [isDisconnecting, disconnectingPlatform])
 
-  // Inject hidden Telegram Login Widget — reruns when the container div actually mounts
+  // Inject Telegram Login Widget (data-auth-url redirect approach)
   useEffect(() => {
-    if (hasTelegram || !telegramBotName || !telegramContainerRef.current) return
+    if (hasTelegram || !telegramBotName || !address || !telegramContainerRef.current) return
 
     telegramContainerRef.current.innerHTML = ''
 
-    ;(window as any).onTelegramAuth = async (telegramData: TelegramAuthData) => {
-      if (!address) {
-        toast.error('Please connect your wallet first')
-        return
-      }
-      setConnectingPlatform('telegram')
-      try {
-        const res = await fetch('/api/auth/connect-telegram', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ telegramData, walletAddress: address }),
-        })
-        if (!res.ok) {
-          const err = await res.json()
-          throw new Error(err.error || 'Failed to connect')
-        }
-        toast.success('Telegram connected successfully!')
-        posthog.capture('social_account_connected', { platform: 'telegram', wallet_address: address })
-        refetch()
-      } catch (err: any) {
-        toast.error(`Failed to connect Telegram: ${err.message}`)
-      } finally {
-        setConnectingPlatform(null)
-      }
-    }
+    const authUrl = `${window.location.origin}/api/auth/connect-telegram?wallet=${encodeURIComponent(address)}`
 
     const script = document.createElement('script')
-    script.src = 'https://telegram.org/js/telegram-widget.js?22'
+    script.src = 'https://telegram.org/js/telegram-widget.js?23'
     script.setAttribute('data-telegram-login', telegramBotName)
     script.setAttribute('data-size', 'medium')
-    script.setAttribute('data-onauth', 'onTelegramAuth(user)')
+    script.setAttribute('data-auth-url', authUrl)
     script.setAttribute('data-request-access', 'write')
     script.async = true
     telegramContainerRef.current.appendChild(script)
-
-    return () => {
-      delete (window as any).onTelegramAuth
-    }
-  }, [hasTelegram, telegramBotName, address, refetch, telegramContainerReady])
+  }, [hasTelegram, telegramBotName, address, telegramContainerReady])
 
 
   if (isLoading) {
