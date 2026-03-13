@@ -6,12 +6,12 @@ import posthog from 'posthog-js'
 import { PostHogProvider as PHProvider } from 'posthog-js/react'
 import { SessionProvider } from 'next-auth/react'
 import { SuiClientProvider, WalletProvider, lightTheme } from '@mysten/dapp-kit'
-import { getFullnodeUrl } from '@mysten/sui/client'
 import { Header } from '@/components/Header'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ProfileInitializer } from '@/components/profile/ProfileInitializer'
 import { FeedbackButton } from '@/components/feedback/FeedbackButton'
 import { APP_NETWORK } from '@/constants'
+import { getFullnodeUrl } from '@/utils/sui'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(

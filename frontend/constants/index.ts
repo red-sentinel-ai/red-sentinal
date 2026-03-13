@@ -1,4 +1,5 @@
 import { FileText, Github, Handshake, Presentation, Shield, Calculator } from 'lucide-react'
+export { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 export const supabaseUrl = process.env.SUPABASE_URL || ''
 export const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || ''
 export const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
@@ -292,7 +293,7 @@ export const PROVIDER_MODELS: Record<string, string[]> = {
   custom: [],
 }
 
-export const SUI_CLOCK_OBJECT_ID =
-  '0x0000000000000000000000000000000000000000000000000000000000000006'
+// export const SUI_CLOCK_OBJECT_ID =
+//   '0x0000000000000000000000000000000000000000000000000000000000000006'
 export const SUI_RANDOM_OBJECT_ID =
   '0x0000000000000000000000000000000000000000000000000000000000000008'

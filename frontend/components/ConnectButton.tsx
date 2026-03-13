@@ -18,11 +18,15 @@ import {
   ConnectButton as SuiConnectButton,
 } from '@mysten/dapp-kit'
 import { formatAddress } from '@mysten/sui/utils'
-import { SuiClient, getFullnodeUrl } from '@mysten/sui/client'
+import { SuiGrpcClient } from '@mysten/sui/grpc'
 import { APP_NETWORK, SUI_SENTINEL_DOCS_URL } from '@/constants'
 import Image from 'next/image'
+import { getFullnodeUrl } from '@/utils/sui'
 
-export const client = new SuiClient({ url: getFullnodeUrl(APP_NETWORK) })
+export const client = new SuiGrpcClient({
+  network: APP_NETWORK,
+  baseUrl: getFullnodeUrl(APP_NETWORK),
+})
 
 export const ConnectButton = () => {
   const account = useCurrentAccount()

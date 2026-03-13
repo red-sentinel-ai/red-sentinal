@@ -14,7 +14,7 @@
   "dependencies": {
     "@mysten/bcs": "^1.6.1",
     "@mysten/dapp-kit": "^0.16.4",
-    "@mysten/sui": "^1.30.0",
+    "@mysten/sui": "^2.7.0",
     "@mysten/wallet-standard": "^0.15.1",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-slot": "^1.1.2",
@@ -57,9 +57,6 @@
     "tailwindcss-animate": "^1.0.7",
     "tiktoken": "^1.0.20",
     "use-debounce": "^10.0.4"
-  },
-  "overrides": {
-    "@mysten/sui": "^1.30.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

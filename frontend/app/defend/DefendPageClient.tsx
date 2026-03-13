@@ -591,7 +591,7 @@ export default function DefendPageClient() {
         tx.pure.string(agentDetails.response.data.system_prompt),
         tx.pure.vector('u8', sigVector),
         tx.object(SUI_CONFIG.ENCLAVE_OBJECT_ID),
-        tx.object(SUI_CLOCK_OBJECT_ID),
+        tx.object.clock(),
       ],
     })
 
