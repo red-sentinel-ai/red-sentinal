@@ -64,6 +64,30 @@ export default function ChatInterface({
   const account = useCurrentAccount()
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
 
+  const [isAttackPaused, setIsAttackPaused] = useState(false)
+
+  useEffect(() => {
+    const unlock = Number(agent.unlock_timestamp)
+
+    if (!unlock || unlock === 0) {
+      setIsAttackPaused(false)
+      return
+    }
+
+    const check = () => {
+      const locked = Date.now() < unlock
+      setIsAttackPaused(!locked)
+      return locked
+    }
+
+    if (check()) {
+      const interval = setInterval(() => {
+        if (!check()) clearInterval(interval)
+      }, 60000)
+      return () => clearInterval(interval)
+    }
+  }, [agent.unlock_timestamp])
+
   const [isJuryModalOpen, setIsJuryModalOpen] = useState(false)
   const [selectedJuryResponse, setSelectedJuryResponse] = useState('')
 
@@ -324,7 +348,17 @@ export default function ChatInterface({
         </AnimatePresence>
       </div>
 
-      {isAgentDrained ? (
+      {isAttackPaused ? (
+        <div className="border-t border-gray-200 bg-amber-50 p-4">
+          <div className="w-full text-center">
+            <h3 className="text-lg font-bold text-amber-700">Attacks Paused</h3>
+            <p className="text-xs text-amber-600">
+              The owner&apos;s lock period has expired and they can currently withdraw funds. Attacks
+              will resume once the sentinel is re-funded.
+            </p>
+          </div>
+        </div>
+      ) : isAgentDrained ? (
         <div className="border-t border-gray-200 bg-gray-50 p-4">
           <div className="w-full text-center">
             <h3 className="text-lg font-bold text-red-600">This Sentinel is Drained</h3>
