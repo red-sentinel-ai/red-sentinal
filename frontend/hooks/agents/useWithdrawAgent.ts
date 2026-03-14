@@ -5,7 +5,7 @@ import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 import { MIST_PER_SUI, SUI_CONFIG } from '@/constants'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
-import { AGENT_DETAILS_QUERY_KEY } from './useAgentBySlug'
+import { AGENT_DETAILS_FULL_QUERY_KEY } from './useAgentDetails'
 
 interface UseWithdrawAgentOptions {
   onSuccess?: (result: any) => void
@@ -146,7 +146,7 @@ export const useWithdrawAgent = (options: UseWithdrawAgentOptions = {}) => {
                   queryKey: ['agents-by-owner', account?.address],
                 })
                 queryClient.invalidateQueries({
-                  queryKey: [AGENT_DETAILS_QUERY_KEY],
+                  queryKey: [AGENT_DETAILS_FULL_QUERY_KEY],
                 })
 
                 onSuccess?.(result)

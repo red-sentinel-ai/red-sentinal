@@ -266,7 +266,6 @@ export const ADMIN_API_TOKEN = process.env.ADMIN_API_TOKEN
 
 export const WITHDRAWAL_LOCK_MS = 1_209_600_000 // 14 days in milliseconds
 
-export const AGENT_PRIZE_POOL_HISTORY_QUERY_KEY = 'agentPrizePoolHistory'
 
 export const PROVIDER_MODELS: Record<string, string[]> = {
   openai: ['gpt-4o', 'gpt-4.1', 'gpt-4o-mini', 'gpt-3.5-turbo'],
