@@ -58,6 +58,7 @@ export const FeaturedAgentCard = ({
   const [isClaimFeesModalOpen, setIsClaimFeesModalOpen] = useState(false)
 
   const hasNoBalance = Number(agent.total_balance) === 0
+  const isAttackPaused = !isWithdrawalLocked && Number(agent.unlock_timestamp) > 0
   const earnings = Number(agent.accumulated_fees || 0) / MIST_PER_SUI
   const hasEarnings = earnings > 0
 
@@ -216,6 +217,11 @@ export const FeaturedAgentCard = ({
             ) : (
               <span className="font-medium text-green-600">Ready to Withdraw</span>
             )}
+          </div>
+        )}
+        {fromProfile && isOwner && isAttackPaused && (
+          <div className="mb-2 rounded-md border border-amber-200 bg-amber-50 px-2 py-1 text-center text-[10px] text-amber-700 sm:mb-4 sm:text-xs">
+            Attacks are paused, add funds to resume
           </div>
         )}
 

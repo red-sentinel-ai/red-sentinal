@@ -24,6 +24,11 @@ export const useAgentBySlug = (slug?: string) => {
       const base = await res.json()
       const onchain = await fetchAgentOnChainDetails(client, base.object_id)
 
+      const WITHDRAWAL_LOCK_PERIOD_MS = 14 * 24 * 60 * 60 * 1000
+      const lastFunded = Number(onchain.last_funded_timestamp)
+      const unlock_timestamp = lastFunded > 0 ? String(lastFunded + WITHDRAWAL_LOCK_PERIOD_MS) : '0'
+      console.log({unlock_timestamp})
+
       return {
         agent_id: String(base.agent_id),
         agent_name: base.agent_name,
@@ -41,6 +46,7 @@ export const useAgentBySlug = (slug?: string) => {
         agent_path: base.agent_path || '',
         timestampMs: base.created_at ? String(new Date(base.created_at).getTime()) : undefined,
         last_funded_timestamp: onchain.last_funded_timestamp,
+        unlock_timestamp,
         accumulated_fees: onchain.accumulated_fees,
       } as AgentDetails
     },
