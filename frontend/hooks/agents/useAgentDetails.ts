@@ -44,8 +44,14 @@ export function useAgentDetails(slug?: string) {
   return useQuery<AgentDetailsFull>({
     queryKey: [AGENT_DETAILS_FULL_QUERY_KEY, slug, APP_NETWORK],
     queryFn: async () => {
+      let normalizedSlug: string
+      try {
+        normalizedSlug = decodeURIComponent(slug!)
+      } catch {
+        normalizedSlug = slug!
+      }
       const res = await fetch(
-        `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}/details?agent_path=${encodeURIComponent(slug!)}`
+        `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}/details?agent_path=${encodeURIComponent(normalizedSlug)}`
       )
       if (!res.ok) {
         const err = await res.json().catch(() => ({}))
