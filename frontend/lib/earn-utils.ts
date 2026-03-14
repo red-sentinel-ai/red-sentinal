@@ -4,9 +4,6 @@ import type {
   ReferralTierProgress,
   AttackerReward,
   DefenderReward,
-  DurationMultiplier,
-  DefenseMultiplier,
-  MilestoneBooster,
 } from '@/types/Earn'
 import { SUI_SENTINEL_APP_URL } from '@/constants'
 
@@ -310,56 +307,17 @@ export const ATTACKER_REWARDS: AttackerReward[] = [
 
 export const DEFENDER_DIRECT_REWARDS: DefenderReward[] = [
   { action: 'Deploy a Sentinel', reward: '1,000 SENTINEL' },
-  { action: 'Deposit SUI to Sentinel', reward: '5,000 SENTINEL × SUI amount' },
 ]
 
-export const DURATION_MULTIPLIERS: DurationMultiplier[] = [
-  { duration: '0–7 days', multiplier: '1.0x' },
-  { duration: '8–30 days', multiplier: '1.25x' },
-  { duration: '31–90 days', multiplier: '1.5x' },
-  { duration: '91–180 days', multiplier: '2.0x' },
-  { duration: '180+ days', multiplier: '2.5x' },
-]
-
-export const DEFENSE_MULTIPLIERS: DefenseMultiplier[] = [
-  { condition: 'Base', multiplier: '1.0x' },
-  { condition: '25+ attacks survived', multiplier: '1.15x' },
-  { condition: '100+ attacks survived', multiplier: '1.3x' },
-  { condition: '7-day undefeated', multiplier: '1.2x' },
-  { condition: '30-day undefeated', multiplier: '1.5x' },
-  { condition: 'Resilience score 80+', multiplier: '1.35x' },
-  { condition: 'Resilience score 95+', multiplier: '1.75x' },
-]
-
-export const MILESTONE_BOOSTERS: MilestoneBooster[] = [
-  { milestone: 'Survive 100 attacks', booster: '10x Epic', sentinelRange: '1,000 – 10,000' },
-  { milestone: 'Survive 500 attacks', booster: '25x Legendary', sentinelRange: '2,500 – 25,000' },
-  { milestone: 'Survive 1,000 attacks', booster: '50x Mythic', sentinelRange: '5,000 – 50,000' },
-  {
-    milestone: '7-day undefeated streak',
-    booster: '10x Epic',
-    sentinelRange: '1,000 – 10,000',
-  },
-  {
-    milestone: '30-day undefeated streak',
-    booster: '50x Mythic',
-    sentinelRange: '5,000 – 50,000',
-  },
-  {
-    milestone: '90-day undefeated streak',
-    booster: '100x Divine',
-    sentinelRange: '10,000 – 100,000',
-  },
-  {
-    milestone: 'Top 10 leaderboard (first time)',
-    booster: '25x Legendary',
-    sentinelRange: '2,500 – 25,000',
-  },
-  {
-    milestone: '#1 defender of month',
-    booster: '100x Divine',
-    sentinelRange: '10,000 – 100,000',
-  },
+export const DEFENDER_FUNDING_BOOSTERS = [
+  { minSui: '0 – 1 SUI',    booster: 'Rare (5x)',           range: '500 – 5,000' },
+  { minSui: '5 SUI',        booster: 'Epic (10x)',          range: '1,000 – 10,000' },
+  { minSui: '10 SUI',       booster: 'Legendary (25x)',     range: '2,500 – 25,000' },
+  { minSui: '25 SUI',       booster: 'Mythic (50x)',        range: '5,000 – 50,000' },
+  { minSui: '50 SUI',       booster: 'Divine (100x)',       range: '10,000 – 100,000' },
+  { minSui: '100 SUI',      booster: 'Celestial (250x)',    range: '25,000 – 250,000' },
+  { minSui: '500 SUI',      booster: 'Eternal (500x)',      range: '50,000 – 500,000' },
+  { minSui: '1,000 SUI',    booster: 'Transcendent (1000x)', range: '100,000 – 1,000,000' },
 ]
 
 // Streak bonus data
