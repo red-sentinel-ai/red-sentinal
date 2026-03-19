@@ -65,7 +65,7 @@ export function EarnMissionCard({
             : 'border-gray-200 bg-white hover:border-gray-300'
         }`}
       >
-        <CardContent className="flex flex-col p-5">
+        <CardContent className="flex flex-col p-5 h-full">
           {/* Header: Booster Badge */}
           <div className="mb-4 flex items-start justify-between gap-2">
             <div className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 ${tierInfo.bgColor}`}>
