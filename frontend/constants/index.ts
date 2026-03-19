@@ -171,6 +171,36 @@ export const BOOSTER_TIERS = {
     textColor: 'text-yellow-700',
     expirationDays: 60,
   },
+  CELESTIAL: {
+    name: 'Celestial',
+    multiplier: 250,
+    minReward: 25000,
+    maxReward: 250000,
+    color: '💎',
+    bgColor: 'bg-cyan-100',
+    textColor: 'text-cyan-700',
+    expirationDays: 60,
+  },
+  ETERNAL: {
+    name: 'Eternal',
+    multiplier: 500,
+    minReward: 50000,
+    maxReward: 500000,
+    color: '♾️',
+    bgColor: 'bg-indigo-100',
+    textColor: 'text-indigo-700',
+    expirationDays: 90,
+  },
+  TRANSCENDENT: {
+    name: 'Transcendent',
+    multiplier: 1000,
+    minReward: 100000,
+    maxReward: 1000000,
+    color: '👑',
+    bgColor: 'bg-amber-100',
+    textColor: 'text-amber-700',
+    expirationDays: 90,
+  },
 } as const
 
 export type BoosterTierKey = keyof typeof BOOSTER_TIERS
@@ -192,6 +222,12 @@ export const getTierAsset = (name: string) => {
       return '/icons/rocket.png'
     case 'divine':
       return '/img/trophy.png'
+    case 'celestial':
+      return '/icons/star-badge-black.png'
+    case 'eternal':
+      return '/icons/rocket.png'
+    case 'transcendent':
+      return '/icons/crown.png'
     default:
       return '/icons/star-badge-black.png'
   }
@@ -200,22 +236,28 @@ export const getTierAsset = (name: string) => {
 // Re-map the theme colors based on specific palette for the gradients and borders
 export const getTierStyleConfig = (name: string) => {
   const baseConfig = 'bg-gradient-to-b via-[#FFFFFF] flex flex-col items-center text-center relative overflow-hidden group hover:shadow-lg transition-all duration-300 justify-center'
-  
+
   switch (name.toLowerCase()) {
-    case 'common': 
+    case 'common':
       return `${baseConfig} from-[#C3ECE6] to-[#CCF0ED] border-[#049414] border-2`
-    case 'uncommon': 
+    case 'uncommon':
       return `${baseConfig} from-[#E5CCEF] to-[#F1CFEF] border-[#C532F6] border-2`
-    case 'rare': 
+    case 'rare':
       return `${baseConfig} from-[#F2EFCC] to-[#DDE6A9] border-[#947204] border-2`
-    case 'epic': 
+    case 'epic':
       return `${baseConfig} from-[#F6BCE1] to-[#FCC3E2] border-[#F632F3] border-2`
-    case 'legendary': 
+    case 'legendary':
       return `${baseConfig} from-[#F6BCE1] to-[#FCC3E2] border-[#F632F3] border-2`
-    case 'mythic': 
+    case 'mythic':
       return `${baseConfig} from-[#E5CCEF] to-[#F1CFEF] border-[#C532F6] border-2`
-    case 'divine': 
+    case 'divine':
       return `${baseConfig} from-[#C3ECE6] to-[#CCF0ED] border-[#049414] border-2`
+    case 'celestial':
+      return `${baseConfig} from-[#B8EEFF] to-[#9EE5F8] border-[#0098C7] border-2`
+    case 'eternal':
+      return `${baseConfig} from-[#C8BFFF] to-[#B8ADFF] border-[#4930D6] border-2`
+    case 'transcendent':
+      return `${baseConfig} from-[#FDEEA0] to-[#FAE070] border-[#C8A000] border-2`
     default:
       return `${baseConfig} from-[#C3ECE6] to-[#CCF0ED] border-[#049414] border-2`
   }
@@ -229,7 +271,10 @@ export const getTierTextConfig = (name: string) => {
     case 'epic': return 'text-[#F632F3]' 
     case 'legendary': return 'text-[#F632F3]' 
     case 'mythic': return 'text-[#C532F6]' 
-    case 'divine': return 'text-[#049414]' 
+    case 'divine': return 'text-[#049414]'
+    case 'celestial': return 'text-[#0098C7]'
+    case 'eternal': return 'text-[#4930D6]'
+    case 'transcendent': return 'text-[#A08200]'
     default: return 'text-[#049414]'
   }
 }

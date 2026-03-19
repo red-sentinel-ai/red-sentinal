@@ -12,7 +12,7 @@ export function BoosterTierRow() {
         Spin Pass Booster Tiers
       </h3>
       <p className="mb-8 text-center text-gray-600">
-        Seven booster tiers from Common to Divine, higher tiers multiply your rewards
+        Ten booster tiers from Common to Transcendent, higher tiers multiply your rewards
       </p>
 
       {/* Horizontal Scrollable Container on Mobile, Grid on Desktop */}

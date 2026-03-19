@@ -6,6 +6,7 @@ import { useCurrentAccount } from '@mysten/dapp-kit'
 import { Card, CardContent } from '@/components/ui'
 import { usePublicStats } from '@/hooks/earn/usePublicStats'
 import { formatNumber } from '@/lib/earn-utils'
+import { SENTINEL_TOKEN_EXPLORER_URL } from '@/constants'
 
 export function EarnHero() {
   const account = useCurrentAccount()
@@ -49,7 +50,16 @@ export function EarnHero() {
         </h1>
         <p className="mx-auto mb-10 max-w-2xl text-base text-gray-600 sm:text-xl md:mb-12">
           Complete missions, defend or attack Sentinels, and create content to earn Spin Passes. Use
-          your passes at the slot machine to win SENTINEL tokens.
+          your passes at the slot machine to win{' '}
+          <Link
+            href={SENTINEL_TOKEN_EXPLORER_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-black underline underline-offset-2 hover:opacity-70 transition-opacity"
+          >
+            SENTINEL tokens
+          </Link>
+          .
         </p>
 
         {/* Stats Cards */}
