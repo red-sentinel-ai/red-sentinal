@@ -24,7 +24,6 @@ import {
   useSuiClient,
 } from '@mysten/dapp-kit'
 import {
-  MIST_PER_SUI,
   PROVIDER_MODELS,
   SUI_CONFIG,
   SUI_SENTINEL_DOCS_URL,
@@ -482,7 +481,7 @@ export default function DefendPageClient() {
 
     const fee = parseFloat(formData.feePerMessage)
     if (isNaN(fee) || fee < 0.1) {
-      newErrors.feePerMessage = 'Fee must be greater than 0.1 SUI'
+      newErrors.feePerMessage = 'Fee must be greater than 0.1 USDC'
     }
 
     if (!formData.attackGoal.trim()) {
@@ -527,7 +526,7 @@ export default function DefendPageClient() {
   ) => {
     const agentObject = result?.objectChanges?.find(
       (obj: any) =>
-        obj.objectType === `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Agent`
+        obj.objectType === `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Agent<0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC>`
     )
 
     if (agentObject) {
@@ -636,7 +635,7 @@ export default function DefendPageClient() {
         return
       }
 
-      const feePerMessage = parseFloat(formData.feePerMessage) * MIST_PER_SUI
+      const feePerMessage = parseFloat(formData.feePerMessage) * 1_000_000 // USDC has 6 decimals
       const isCustomProvider = formData.llmProvider === 'custom'
       const agentDetails = await registerAgentUtil(
         formData.systemPrompt,
@@ -870,8 +869,8 @@ export default function DefendPageClient() {
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-1">
           <FormInput
-            label="Fee Per Message (SUI)"
-            subLabel="You earn this fee whenever users interact with your Sentinel. Minimum 0.1 SUI."
+            label="Fee Per Message (USDC)"
+            subLabel="You earn this fee whenever users interact with your Sentinel. Minimum 0.1 USDC."
             name="feePerMessage"
             value={formData.feePerMessage}
             onChange={handleChange}

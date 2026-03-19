@@ -2,11 +2,12 @@ import { useState, useCallback, useEffect } from 'react'
 import { Transaction } from '@mysten/sui/transactions'
 import { useSignAndExecuteTransaction, useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
-import { MIST_PER_SUI, SUI_CONFIG } from '@/constants'
+import { SUI_CONFIG } from '@/constants'
 import { toast } from 'sonner'
 
-const GAS_BUDGET = 1_000_000
-const GAS_OBJECT_MIN_BALANCE = BigInt(GAS_BUDGET) * BigInt(2)
+const USDC_COIN_TYPE =
+  '0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC'
+const USDC_DECIMALS = 1_000_000 // 6 decimal places
 
 interface UseFundAgentOptions {
   onSuccess?: (result: any) => void
@@ -17,7 +18,7 @@ interface UseFundAgentOptions {
 interface FundAgentParams {
   agentObjectId: string
   agentId: string // The agent_id string to match with AgentCap
-  amount: number // Amount in SUI
+  amount: number // Amount in USDC
 }
 
 interface AgentCap {
@@ -118,143 +119,74 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
       setError(null)
 
       try {
-        // Get user's SUI coins
+        // Get user's USDC coins
         const coins = await client.getCoins({
           owner: account.address,
-          coinType: '0x2::sui::SUI',
+          coinType: USDC_COIN_TYPE,
           limit: 100,
         })
 
         if (!coins.data.length) {
-          throw new Error('No SUI coins found in wallet')
+          throw new Error('No USDC coins found in wallet')
         }
 
-        const amountInMist = BigInt(Math.floor(amount * MIST_PER_SUI))
-        const totalNeeded = amountInMist + GAS_OBJECT_MIN_BALANCE
+        const amountInBaseUnits = BigInt(Math.floor(amount * USDC_DECIMALS))
 
         // Sort coins by balance (largest first)
         const sortedCoins = coins.data.sort((a, b) => Number(b.balance) - Number(a.balance))
 
-        // Calculate total available balance
         const totalAvailable = sortedCoins.reduce(
           (sum, coin) => sum + BigInt(coin.balance),
           BigInt(0)
         )
-        console.log('Amount needed (SUI):', amount)
-        console.log('Gas needed (SUI):', Number(GAS_OBJECT_MIN_BALANCE) / MIST_PER_SUI)
-        console.log('Total needed (SUI):', Number(totalNeeded) / MIST_PER_SUI)
-        console.log('Total available (SUI):', Number(totalAvailable) / MIST_PER_SUI)
+        console.log('Amount needed (USDC):', amount)
+        console.log('Total available (USDC):', Number(totalAvailable) / USDC_DECIMALS)
 
-        if (totalAvailable < totalNeeded) {
+        if (totalAvailable < amountInBaseUnits) {
           throw new Error(
-            `Insufficient SUI balance. Need ${amount} SUI + gas fees, have ${
-              Number(totalAvailable) / MIST_PER_SUI
-            } SUI`
+            `Insufficient USDC balance. Need ${amount} USDC, have ${
+              Number(totalAvailable) / USDC_DECIMALS
+            } USDC`
           )
         }
 
-        // Create transaction
+        // Create transaction — gas is paid in SUI automatically, no gas/payment merging needed
         const tx = new Transaction()
 
-        const largestCoin = sortedCoins[0]
-        const largestBalance = BigInt(largestCoin.balance)
-
-        if (largestBalance >= totalNeeded) {
-          console.log('✅ Using single coin for both payment and gas')
-
-          const [paymentCoin] = tx.splitCoins(tx.gas, [tx.pure.u64(amountInMist)])
-
-          tx.setGasPayment([
-            {
-              objectId: largestCoin.coinObjectId,
-              version: largestCoin.version,
-              digest: largestCoin.digest,
-            },
-          ])
-
-          // Call fund_agent with AgentCap
-          tx.moveCall({
-            target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::fund_agent`,
-            arguments: [
-              tx.object(agentObjectId),
-              tx.object(agentCap.id), // AgentCap reference
-              paymentCoin,
-              tx.object(SUI_CLOCK_OBJECT_ID),
-            ],
-          })
-        } else {
-          console.log('📋 Need multiple coins - using merge strategy')
-
-          const selectedCoins = []
-          let runningTotal = BigInt(0)
-
-          for (const coin of sortedCoins) {
-            selectedCoins.push(coin)
-            runningTotal += BigInt(coin.balance)
-            if (runningTotal >= totalNeeded) break
-          }
-
-          console.log(
-            `Merging ${selectedCoins.length} coins with total: ${
-              Number(runningTotal) / MIST_PER_SUI
-            } SUI`
-          )
-
-          if (selectedCoins.length === 1) {
-            const singleCoin = selectedCoins[0]
-            const [paymentCoin] = tx.splitCoins(singleCoin.coinObjectId, [
-              tx.pure.u64(amountInMist),
-            ])
-
-            tx.setGasPayment([
-              {
-                objectId: singleCoin.coinObjectId,
-                version: singleCoin.version,
-                digest: singleCoin.digest,
-              },
-            ])
-
-            tx.moveCall({
-              target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::fund_agent`,
-              arguments: [
-                tx.object(agentObjectId),
-                tx.object(agentCap.id), // AgentCap reference
-                paymentCoin,
-                tx.object(SUI_CLOCK_OBJECT_ID),
-              ],
-            })
-          } else {
-            const primaryCoin = selectedCoins[0]
-            const coinsToMerge = selectedCoins.slice(1)
-
-            tx.mergeCoins(
-              primaryCoin.coinObjectId,
-              coinsToMerge.map(coin => coin.coinObjectId)
-            )
-
-            const [paymentCoin] = tx.splitCoins(primaryCoin.coinObjectId, [
-              tx.pure.u64(amountInMist),
-            ])
-
-            tx.setGasPayment([
-              {
-                objectId: primaryCoin.coinObjectId,
-                version: primaryCoin.version,
-                digest: primaryCoin.digest,
-              },
-            ])
-
-            tx.moveCall({
-              target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::fund_agent`,
-              arguments: [
-                tx.object(agentObjectId),
-                tx.object(agentCap.id), // AgentCap reference
-                paymentCoin,
-                tx.object(SUI_CLOCK_OBJECT_ID),
-              ],
-            })
-          }
+        // Select the minimum coins needed to cover the amount
+        const selectedCoins: typeof sortedCoins = []
+        let runningTotal = BigInt(0)
+        for (const coin of sortedCoins) {
+          selectedCoins.push(coin)
+          runningTotal += BigInt(coin.balance)
+          if (runningTotal >= amountInBaseUnits) break
         }
+
+        let paymentCoin
+        if (selectedCoins.length === 1) {
+          ;[paymentCoin] = tx.splitCoins(tx.object(selectedCoins[0].coinObjectId), [
+            tx.pure.u64(amountInBaseUnits),
+          ])
+        } else {
+          console.log(`📋 Merging ${selectedCoins.length} USDC coins`)
+          const primaryCoinRef = tx.object(selectedCoins[0].coinObjectId)
+          tx.mergeCoins(
+            primaryCoinRef,
+            selectedCoins.slice(1).map(c => tx.object(c.coinObjectId))
+          )
+          ;[paymentCoin] = tx.splitCoins(primaryCoinRef, [tx.pure.u64(amountInBaseUnits)])
+        }
+
+        tx.moveCall({
+          target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::fund_agent`,
+          typeArguments: [USDC_COIN_TYPE],
+          arguments: [
+            tx.object(agentObjectId),
+            tx.object(agentCap.id),
+            paymentCoin,
+            tx.object(SUI_CLOCK_OBJECT_ID),
+          ],
+        })
 
         // Execute transaction
         return new Promise((resolve, reject) => {
@@ -266,7 +198,7 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
                 setLastResult(result)
 
                 if (showToasts) {
-                  toast.success(`Successfully funded agent with ${amount} SUI`)
+                  toast.success(`Successfully funded agent with ${amount} USDC`)
                 }
 
                 onSuccess?.(result)
