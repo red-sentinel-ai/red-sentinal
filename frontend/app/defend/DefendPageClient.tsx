@@ -582,9 +582,12 @@ export default function DefendPageClient() {
 
     tx.moveCall({
       target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::register_agent`,
+      typeArguments: [
+        '0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC',
+      ],
       arguments: [
         tx.object(SUI_CONFIG.AGENT_REGISTRY),
-        tx.object(SUI_CONFIG.PROTOCOL_CONFIG_OBJECT_ID),
+        tx.object(SUI_CONFIG.PROTOCOL_CONFIG_ID),
         tx.pure.string(agentDetails.response.data.agent_id),
         tx.pure.u64(agentDetails.response.timestamp_ms),
         tx.pure.u64(agentDetails.response.data.cost_per_message),
