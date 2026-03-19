@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Lightbulb, Target, Trophy } from 'lucide-react'
+import { Lightbulb, Target } from 'lucide-react'
 
 interface NavItem {
   id: string
@@ -13,7 +13,6 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { id: 'how-it-works', label: 'How It Works', icon: Lightbulb },
   { id: 'missions', label: 'Missions', icon: Target },
-  { id: 'platform-rewards', label: 'Rewards Reference', icon: Trophy },
 ]
 
 export function StickyTabNav() {
