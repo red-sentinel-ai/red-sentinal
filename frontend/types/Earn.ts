@@ -6,7 +6,7 @@ export interface PublicStats {
   biggestSpinThisWeek: number
 }
 
-export type MissionCategory = 'twitter' | 'content' | 'community' | 'referral'
+export type MissionCategory = 'twitter' | 'content' | 'community' | 'referral' | 'defender' | 'attacker'
 export type MissionSubmissionType = 'url' | 'verify' | 'form'
 export type MissionStatus = 'available' | 'pending' | 'completed' | 'limit_reached'
 

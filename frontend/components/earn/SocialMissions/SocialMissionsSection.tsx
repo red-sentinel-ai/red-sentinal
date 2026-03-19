@@ -10,7 +10,7 @@ import { MissionList } from './MissionList'
 import { BugReportForm } from './BugReportForm'
 import { SocialMissionModal } from '@/components/rewards/SocialMissionModal'
 import { ContentSubmissionModal } from './ContentSubmissionModal'
-import { TWITTER_MISSIONS, CONTENT_MISSIONS, COMMUNITY_MISSIONS } from '@/lib/earn-utils'
+import { TWITTER_MISSIONS, CONTENT_MISSIONS, COMMUNITY_MISSIONS, DEFENDER_MISSIONS, ATTACKER_MISSIONS } from '@/lib/earn-utils'
 import type { EarnMission } from '@/types/Earn'
 import type { RewardsMission } from '@/types/Rewards'
 
@@ -56,12 +56,14 @@ export function SocialMissionsSection() {
     switch (activeTab) {
       case 'twitter':
         return TWITTER_MISSIONS
+      case 'defender':
+        return DEFENDER_MISSIONS
+      case 'attacker':
+        return ATTACKER_MISSIONS
       case 'content':
         return CONTENT_MISSIONS
       case 'community':
         return COMMUNITY_MISSIONS
-      case 'referrals':
-        return []
       default:
         return []
     }
@@ -80,10 +82,10 @@ export function SocialMissionsSection() {
           className="mb-12 text-center"
         >
           <h2 className="mb-4 text-3xl font-bold uppercase text-black sm:text-4xl">
-            Social Missions
+            Missions
           </h2>
           <p className="mx-auto max-w-2xl text-base text-gray-600 md:text-lg">
-            Complete social tasks and submit proof to earn Spin Passes with booster multipliers
+            Attack, defend, create content, and engage with the community to earn Spin Passes
           </p>
         </motion.div>
 
@@ -91,6 +93,34 @@ export function SocialMissionsSection() {
           <CardContent className="p-6 md:p-8">
             {/* Tab Navigation */}
             <MissionTabNav activeTab={activeTab} onTabChange={setActiveTab} />
+
+            {activeTab === 'defender' && (
+              <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4">
+                <div className="flex gap-3">
+                  <Info className="h-5 w-5 flex-shrink-0 text-blue-600" />
+                  <div>
+                    <p className="font-medium text-blue-900">Rewards Are Auto-Detected On-Chain</p>
+                    <p className="text-sm text-blue-700">
+                      Deploy or fund your Sentinel and booster passes are awarded automatically, no submission needed.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'attacker' && (
+              <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4">
+                <div className="flex gap-3">
+                  <Info className="h-5 w-5 flex-shrink-0 text-red-600" />
+                  <div>
+                    <p className="font-medium text-red-900">Rewards Are Auto-Detected On-Chain</p>
+                    <p className="text-sm text-red-700">
+                      Attack any Sentinel and your booster passes are awarded automatically based on your result.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Content Review Banner (Content Tab) */}
             {activeTab === 'content' && (
