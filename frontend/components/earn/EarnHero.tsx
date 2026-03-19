@@ -30,10 +30,11 @@ export function EarnHero() {
     },
     {
       icon: Trophy,
-      label: 'Biggest Spin This Week',
-      value: stats?.biggestSpinThisWeek || 0,
+      label: 'Total Spins',
+      value: stats?.totalSpins || 0,
       iconBg: 'bg-orange-100',
       iconColor: 'text-orange-600',
+      format: (val: number) => val.toLocaleString(),
     },
   ]
 
