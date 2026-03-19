@@ -113,20 +113,6 @@ export const TWITTER_MISSIONS: EarnMission[] = [
 
 export const CONTENT_MISSIONS: EarnMission[] = [
   {
-    id: 'explainer_thread',
-    title: 'Explainer Thread',
-    description: 'Create a detailed explainer thread about Sui Sentinel features.',
-    boosterTier: 'EPIC',
-    multiplier: 10,
-    requirements: {
-      minCharacters: 500,
-      description: '5+ tweets, accurate information required',
-    },
-    rewardRange: { min: 1000, max: 10000 },
-    submissionType: 'url',
-    category: 'content',
-  },
-  {
     id: 'short_video',
     title: 'Short Video (< 2 min)',
     description: 'Create a short video showcasing Sui Sentinel.',
