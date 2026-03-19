@@ -3,7 +3,6 @@ import { EarnHero } from '@/components/earn/EarnHero'
 import { StickyTabNav } from '@/components/earn/StickyTabNav'
 import { HowItWorksSection } from '@/components/earn/HowItWorks/HowItWorksSection'
 import { SocialMissionsSection } from '@/components/earn/SocialMissions/SocialMissionsSection'
-import { PlatformRewardsSection } from '@/components/earn/PlatformRewards/PlatformRewardsSection'
 import { SUI_SENTINEL_APP_URL } from '@/constants'
 
 export const metadata: Metadata = {
@@ -37,7 +36,6 @@ export default function EarnPage() {
       <StickyTabNav />
       <HowItWorksSection />
       <SocialMissionsSection />
-      <PlatformRewardsSection />
     </div>
   )
 }

@@ -1,22 +1,23 @@
 'use client'
 
-import { Users, Megaphone, MessageCircle, UserPlus } from 'lucide-react'
+import { Megaphone, MessageCircle, Shield, Swords } from 'lucide-react'
 import Image from 'next/image'
 
-export type MissionTab = 'twitter' | 'content' | 'community' | 'referrals'
+export type MissionTab = 'twitter' | 'defender' | 'attacker' | 'content' | 'community'
 
 interface TabItem {
   id: MissionTab
   label: string
-  icon: typeof Users
+  icon: typeof Shield
   iconSrc?: string
 }
 
 const TABS: TabItem[] = [
-  { id: 'twitter', label: 'Twitter/X', icon: Users, iconSrc: '/icons/x_black.png' },
+  { id: 'twitter', label: 'Twitter/X', icon: Shield, iconSrc: '/icons/x_black.png' },
+  { id: 'defender', label: 'Defender', icon: Shield },
+  { id: 'attacker', label: 'Attacker', icon: Swords },
   { id: 'content', label: 'Content Creation', icon: Megaphone },
   { id: 'community', label: 'Community', icon: MessageCircle },
-  { id: 'referrals', label: 'Referrals', icon: UserPlus },
 ]
 
 interface MissionTabNavProps {
