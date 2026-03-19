@@ -12,6 +12,10 @@ import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 
 const GAS_BUDGET = 50_000_000
 
+const USDC_COIN_TYPE =
+  '0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC'
+const USDC_DECIMALS = 1_000_000 // 6 decimal places
+
 // Define response types
 
 interface UseConsumePromptOptions {
@@ -74,29 +78,83 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
       throw new Error('ProtocolConfig Object ID is not set in constants.')
     }
 
-    const costInMist = BigInt(agentDetails.cost_per_message)
+    // Fetch live attack_count from chain to compute dynamic effective cost.
+    // The contract charges base_cost * (10000 + attack_count * 100) / 10000.
+    const BASIS_POINTS = BigInt(10000)
+    const FEE_INCREASE_BPS = BigInt(100) // 1% per attack
+    const MAX_FEE_MULTIPLIER_BPS = BigInt(30000) // 3x cap
 
-    // Check if user has enough balance
-    const balance = await client.getBalance({
+    let attackCount = BigInt(0)
+    try {
+      const agentObj = await client.getObject({
+        id: agentDetails.agent_object_id,
+        options: { showContent: true },
+      })
+      const agentFields = (agentObj.data?.content as any)?.fields
+      attackCount = BigInt(agentFields?.attack_count || 0)
+      console.log('Current attack_count:', attackCount.toString())
+    } catch (err) {
+      console.error('Failed to fetch agent attack_count, using 0:', err)
+    }
+
+    const rawMultiplier = BASIS_POINTS + attackCount * FEE_INCREASE_BPS
+    const multiplier =
+      rawMultiplier > MAX_FEE_MULTIPLIER_BPS ? MAX_FEE_MULTIPLIER_BPS : rawMultiplier
+    const costInBaseUnits =
+      (BigInt(agentDetails.cost_per_message) * multiplier) / BASIS_POINTS
+
+    console.log(
+      `Effective cost: ${Number(costInBaseUnits) / USDC_DECIMALS} USDC (attack #${attackCount + BigInt(1)})`
+    )
+
+    // Fetch USDC coins and check balance
+    const usdcCoins = await client.getCoins({
       owner: account.address,
-      coinType: '0x2::sui::SUI',
+      coinType: USDC_COIN_TYPE,
+      limit: 100,
     })
 
-    const totalBalance = BigInt(balance.totalBalance)
-    const gasBuffer = BigInt(GAS_BUDGET)
-    const totalNeeded = costInMist + gasBuffer
+    if (!usdcCoins.data.length) {
+      throw new Error('No USDC coins found in wallet')
+    }
 
-    if (totalBalance < totalNeeded) {
-      throw new Error(`Insufficient balance. Need ${agentDetails.cost_per_message} MIST + gas fees`)
+    const sortedCoins = usdcCoins.data.sort((a, b) => Number(b.balance) - Number(a.balance))
+    const totalAvailable = sortedCoins.reduce((sum, coin) => sum + BigInt(coin.balance), BigInt(0))
+
+    if (totalAvailable < costInBaseUnits) {
+      throw new Error(
+        `Insufficient USDC balance. Need ${Number(costInBaseUnits) / USDC_DECIMALS} USDC, have ${Number(totalAvailable) / USDC_DECIMALS} USDC`
+      )
     }
 
     const tx = new Transaction()
 
-    // Split payment amount from gas coin
-    const [paymentCoin] = tx.splitCoins(tx.gas, [tx.pure.u64(costInMist)])
+    // Select minimum coins needed, merge if necessary, then split exact amount
+    const selectedCoins: typeof sortedCoins = []
+    let runningTotal = BigInt(0)
+    for (const coin of sortedCoins) {
+      selectedCoins.push(coin)
+      runningTotal += BigInt(coin.balance)
+      if (runningTotal >= costInBaseUnits) break
+    }
+
+    let paymentCoin
+    if (selectedCoins.length === 1) {
+      ;[paymentCoin] = tx.splitCoins(tx.object(selectedCoins[0].coinObjectId), [
+        tx.pure.u64(costInBaseUnits),
+      ])
+    } else {
+      const primaryCoinRef = tx.object(selectedCoins[0].coinObjectId)
+      tx.mergeCoins(
+        primaryCoinRef,
+        selectedCoins.slice(1).map(c => tx.object(c.coinObjectId))
+      )
+      ;[paymentCoin] = tx.splitCoins(primaryCoinRef, [tx.pure.u64(costInBaseUnits)])
+    }
 
     const [attackTicket] = tx.moveCall({
       target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::request_attack`,
+      typeArguments: [USDC_COIN_TYPE],
       arguments: [
         tx.object(SUI_CONFIG.AGENT_REGISTRY),
         tx.object(agentDetails.agent_object_id),
@@ -117,24 +175,72 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         {
           onSuccess: async result => {
             onAttackRequestSuccess?.(result)
+            console.log({ result })
 
-            const attackObjectChange = result.objectChanges?.find(
-              (obj: any) => obj.type === 'created' && obj.objectType.endsWith('::sentinel::Attack')
-            ) as { objectId: string } | undefined
+            // Some nodes return incomplete objectChanges (confirmedLocalExecution: false).
+            // Use a fallback chain to find the Attack object ID.
+            let attackObjectId: string | null = null
 
-            if (!attackObjectChange) {
-              return reject(new Error('Failed to create Attack ticket object.'))
+            // 1. Try objectChanges from the executeTransactionBlock response
+            const attackFromChanges = result.objectChanges?.find(
+              (obj: any) => obj.type === 'created' && obj.objectType.includes('::sentinel::Attack')
+            )
+            if (attackFromChanges) {
+              attackObjectId = (attackFromChanges as any).objectId
             }
 
-            const attackObjectId = attackObjectChange.objectId
-
-            // Wait 1 second (1000ms) for the RPC node to index the new object's content
+            // Wait for the RPC node to index the transaction
             await new Promise(resolve => setTimeout(resolve, 1000))
+
+            // 2. If not found, fetch the full tx block by digest (more complete response)
+            if (!attackObjectId) {
+              try {
+                const txBlock = await client.getTransactionBlock({
+                  digest: result.digest,
+                  options: { showObjectChanges: true },
+                })
+                const attackFromTx = txBlock.objectChanges?.find(
+                  (obj: any) =>
+                    obj.type === 'created' && obj.objectType.includes('::sentinel::Attack')
+                )
+                if (attackFromTx) {
+                  attackObjectId = (attackFromTx as any).objectId
+                }
+              } catch (err) {
+                console.error('Error fetching tx block by digest:', err)
+              }
+            }
+
+            // 3. Last resort: query owned Attack objects filtered by agent_id
+            if (!attackObjectId) {
+              try {
+                const ownedAttacks = await client.getOwnedObjects({
+                  owner: account.address,
+                  filter: {
+                    StructType: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Attack<${USDC_COIN_TYPE}>`,
+                  },
+                  options: { showContent: true },
+                })
+                const match = ownedAttacks.data.find(obj => {
+                  const fields = (obj.data?.content as any)?.fields
+                  return fields?.agent_id === agentDetails.agent_id
+                })
+                if (match?.data?.objectId) {
+                  attackObjectId = match.data.objectId
+                }
+              } catch (err) {
+                console.error('Error querying owned Attack objects:', err)
+              }
+            }
+
+            if (!attackObjectId) {
+              return reject(new Error('Failed to create Attack ticket object.'))
+            }
 
             let objectResponse: SuiObjectResponse | null = null
             try {
               objectResponse = await client.getObject({
-                id: attackObjectId,
+                id: attackObjectId!,
                 options: { showContent: true },
               })
               console.log({ objectResponse, attackObjectId })
@@ -155,7 +261,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
               return reject(new Error('Failed to retrieve nonce from Attack ticket.'))
             }
 
-            resolve({ objectId: attackObjectId, nonce: nonce as string })
+            resolve({ objectId: attackObjectId!, nonce: nonce as string })
           },
           onError: txError => {
             console.error('Attack request transaction failed:', txError)
@@ -213,6 +319,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
 
     tx.moveCall({
       target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::consume_prompt`,
+      typeArguments: [USDC_COIN_TYPE],
       arguments: [
         tx.object(SUI_CONFIG.AGENT_REGISTRY), // registry: &AgentRegistry
         tx.object(SUI_CONFIG.PROTOCOL_CONFIG_ID),
