@@ -64,17 +64,6 @@ export interface ReferralData {
   tier: ReferralTier
 }
 
-export interface ReferralReward {
-  action: string
-  userBooster: string
-  newUserBooster: string
-}
-
-export interface ReferralTierProgress {
-  minReferrals: number
-  bonus: string
-}
-
 export interface AttackerReward {
   action: string
   booster: string

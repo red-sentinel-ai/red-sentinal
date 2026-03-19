@@ -1,7 +1,5 @@
 import type {
   EarnMission,
-  ReferralReward,
-  ReferralTierProgress,
   AttackerReward,
   DefenderReward,
 } from '@/types/Earn'
@@ -228,55 +226,6 @@ export const COMMUNITY_MISSIONS: EarnMission[] = [
     category: 'community',
   },
 ]
-
-// Referral reward tables from plan.md
-
-export const REFERRAL_REWARDS: ReferralReward[] = [
-  // {
-  //   action: 'Signs up + connects wallet',
-  //   userBooster: '2x Uncommon',
-  //   newUserBooster: '2x Uncommon',
-  // },
-  // {
-  //   action: 'Completes first attack',
-  //   userBooster: '10x Epic',
-  //   newUserBooster: '5x Rare',
-  // },
-  // {
-  //   action: 'Deploys first Sentinel',
-  //   userBooster: '25x Legendary',
-  //   newUserBooster: '10x Epic + 1K SENTINEL',
-  // },
-  // {
-  //   action: 'Referred Sentinel survives 7 days',
-  //   userBooster: '25x Legendary',
-  //   newUserBooster: '—',
-  // },
-  // {
-  //   action: 'Referred user breaches a Sentinel',
-  //   userBooster: '10x Epic',
-  //   newUserBooster: '—',
-  // },
-  // {
-  //   action: 'Referred defender deposits 100+ SUI',
-  //   userBooster: '50x Mythic',
-  //   newUserBooster: '—',
-  // },
-  // {
-  //   action: 'Referred defender deposits 1,000+ SUI',
-  //   userBooster: '100x Divine',
-  //   newUserBooster: '—',
-  // },
-]
-
-export const REFERRAL_TIER_PROGRESS: ReferralTierProgress[] = [
-  { minReferrals: 10, bonus: '+25%' },
-  { minReferrals: 50, bonus: '+50%' },
-  { minReferrals: 100, bonus: '+100% (2x)' },
-  { minReferrals: 500, bonus: '+200% (3x)' },
-]
-
-// Platform rewards data from plan.md
 
 export const ATTACKER_REWARDS: AttackerReward[] = [
   { action: 'Complete any attack', booster: '5x Rare', sentinelRange: '500 – 5,000' },
