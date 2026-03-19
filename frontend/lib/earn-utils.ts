@@ -299,19 +299,27 @@ export const ATTACKER_REWARDS: AttackerReward[] = [
 ]
 
 export const DEFENDER_DIRECT_REWARDS: DefenderReward[] = [
-  { action: 'Deploy a Sentinel', reward: '1,000 SENTINEL' },
+  { action: 'Deploy a Sentinel', reward: 'Common Spin Pass' },
 ]
 
 export const DEFENDER_FUNDING_BOOSTERS = [
-  { minSui: '0 – 1 SUI',    booster: 'Rare (5x)',           range: '500 – 5,000' },
-  { minSui: '5 SUI',        booster: 'Epic (10x)',          range: '1,000 – 10,000' },
-  { minSui: '10 SUI',       booster: 'Legendary (25x)',     range: '2,500 – 25,000' },
-  { minSui: '25 SUI',       booster: 'Mythic (50x)',        range: '5,000 – 50,000' },
-  { minSui: '50 SUI',       booster: 'Divine (100x)',       range: '10,000 – 100,000' },
-  { minSui: '100 SUI',      booster: 'Celestial (250x)',    range: '25,000 – 250,000' },
-  { minSui: '500 SUI',      booster: 'Eternal (500x)',      range: '50,000 – 500,000' },
-  { minSui: '1,000 SUI',    booster: 'Transcendent (1000x)', range: '100,000 – 1,000,000' },
-]
+  { minSui: '0 – 1 SUI',  minSuiValue: 0,    tier: 'RARE',          booster: 'Rare (5x)',              range: '500 – 5,000' },
+  { minSui: '5 SUI',      minSuiValue: 5,    tier: 'EPIC',          booster: 'Epic (10x)',             range: '1,000 – 10,000' },
+  { minSui: '10 SUI',     minSuiValue: 10,   tier: 'LEGENDARY',     booster: 'Legendary (25x)',        range: '2,500 – 25,000' },
+  { minSui: '25 SUI',     minSuiValue: 25,   tier: 'MYTHIC',        booster: 'Mythic (50x)',           range: '5,000 – 50,000' },
+  { minSui: '50 SUI',     minSuiValue: 50,   tier: 'DIVINE',        booster: 'Divine (100x)',          range: '10,000 – 100,000' },
+  { minSui: '100 SUI',    minSuiValue: 100,  tier: 'CELESTIAL',     booster: 'Celestial (250x)',       range: '25,000 – 250,000' },
+  { minSui: '500 SUI',    minSuiValue: 500,  tier: 'ETERNAL',       booster: 'Eternal (500x)',         range: '50,000 – 500,000' },
+  { minSui: '1,000 SUI',  minSuiValue: 1000, tier: 'TRANSCENDENT',  booster: 'Transcendent (1000x)',   range: '100,000 – 1,000,000' },
+] as const
+
+export function getDefenderBoosterTier(amountInSui: number): string {
+  const sorted = [...DEFENDER_FUNDING_BOOSTERS].sort((a, b) => b.minSuiValue - a.minSuiValue)
+  for (const row of sorted) {
+    if (amountInSui >= row.minSuiValue) return row.tier
+  }
+  return 'RARE'
+}
 
 // Streak bonus data
 export const DAILY_STREAK_BONUSES = [
