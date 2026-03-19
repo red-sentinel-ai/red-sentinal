@@ -11,8 +11,6 @@ interface EarnMissionCardProps {
   mission: EarnMission
   isAuthenticated: boolean
   userStatus?: MissionStatus
-  completedToday?: number
-  completedTotal?: number
   onSubmit?: () => void
 }
 
@@ -20,7 +18,6 @@ export function EarnMissionCard({
   mission,
   isAuthenticated,
   userStatus = 'available',
-  completedToday = 0,
   onSubmit,
 }: EarnMissionCardProps) {
   const tierInfo = BOOSTER_TIERS[mission.boosterTier]
@@ -51,21 +48,6 @@ export function EarnMissionCard({
           Limit Reached
         </Badge>
       )
-    return null
-  }
-
-  const showLimitInfo = () => {
-    const { dailyLimit, lifetimeLimit } = mission.requirements
-    if (dailyLimit) {
-      return (
-        <p className="text-xs text-gray-500">
-          {completedToday}/{dailyLimit} completed today
-        </p>
-      )
-    }
-    if (lifetimeLimit && lifetimeLimit === 1) {
-      return <p className="text-xs text-gray-500">One-time mission</p>
-    }
     return null
   }
 
@@ -116,8 +98,6 @@ export function EarnMissionCard({
             </p>
           </div>
 
-          {/* Limit Info */}
-          {showLimitInfo()}
 
           {/* Help Text for Auto-Detected */}
           {mission.helpText && (

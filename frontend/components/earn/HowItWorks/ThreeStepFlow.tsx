@@ -9,7 +9,7 @@ const STEPS = [
     icon: Gift,
     title: 'Earn Spin Passes',
     description:
-      'Complete social missions, defend or attack Sentinels, create content, or refer friends to earn Spin Passes. Each pass has a booster tier ranging from 1x to 100x.',
+      'Complete social missions, defend or attack Sentinels, create content, or refer friends to earn Spin Passes. Each pass has a booster tier ranging from 1x to 1000x.',
     iconBg: 'bg-blue-100',
     iconColor: 'text-blue-600',
   },

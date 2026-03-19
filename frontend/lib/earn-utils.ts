@@ -285,12 +285,6 @@ export const ATTACKER_REWARDS: AttackerReward[] = [
     booster: '15x Epic+',
     sentinelRange: '1,500 – 15,000 + SUI Prize',
   },
-  { action: 'First attack ever', booster: '5x Rare', sentinelRange: '500 – 5,000' },
-  {
-    action: 'First Blood (first to breach new Sentinel)',
-    booster: '25x Legendary',
-    sentinelRange: '2,500 – 25,000',
-  },
   {
     action: 'Streak Breaker (break 14+ day undefeated)',
     booster: '25x Legendary',
@@ -301,8 +295,7 @@ export const ATTACKER_REWARDS: AttackerReward[] = [
     booster: '50x Mythic',
     sentinelRange: '5,000 – 50,000',
   },
-  { action: 'Daily 5 attacks', booster: '5x Rare', sentinelRange: '500 – 5,000' },
-  { action: 'Weekly 25 attacks', booster: '10x Epic', sentinelRange: '1,000 – 10,000' },
+  { action: 'Dynamic', booster: '-', sentinelRange: 'Based on Sentinel Attack Fee and Total Previous Attempt' },
 ]
 
 export const DEFENDER_DIRECT_REWARDS: DefenderReward[] = [
