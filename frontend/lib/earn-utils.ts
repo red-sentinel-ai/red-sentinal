@@ -413,6 +413,13 @@ export const ATTACKER_MISSIONS: EarnMission[] = [
   },
 ]
 
+export const ACTIVE_MISSIONS_COUNT =
+  TWITTER_MISSIONS.length +
+  CONTENT_MISSIONS.length +
+  COMMUNITY_MISSIONS.length +
+  DEFENDER_MISSIONS.length +
+  ATTACKER_MISSIONS.length
+
 export const DEFENDER_FUNDING_BOOSTERS = [
   { minSui: '0 – 1 SUI',  minSuiValue: 0,    tier: 'RARE',          booster: 'Rare (5x)',              range: '500 – 5,000' },
   { minSui: '5 SUI',      minSuiValue: 5,    tier: 'EPIC',          booster: 'Epic (10x)',             range: '1,000 – 10,000' },

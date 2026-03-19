@@ -1,18 +1,23 @@
 import type { PublicStats } from '@/types/Earn'
 import { usePlatformStats } from '@/hooks/stats/usePlatformStats'
+import { useSpinFeed } from '@/hooks/rewards/useSpinFeed'
+import { ACTIVE_MISSIONS_COUNT } from '@/lib/earn-utils'
 
 export function usePublicStats(): { data: PublicStats | undefined; isLoading: boolean } {
-  const { data, isLoading } = usePlatformStats()
+  const { data: platformData, isLoading: platformLoading } = usePlatformStats()
+  const { data: spinData, isLoading: spinLoading } = useSpinFeed()
+  console.log({spinData})
 
-  if (!data) return { data: undefined, isLoading }
+  const isLoading = platformLoading || spinLoading
+
+  if (!platformData) return { data: undefined, isLoading }
 
   return {
     isLoading,
     data: {
-      totalDistributed: data.totalSentinelTokensDistributed,
-      // activeMissions and biggestSpinThisWeek don't have backend endpoints yet
-      activeMissions: 14,
-      biggestSpinThisWeek: 0,
+      totalDistributed: platformData.totalSentinelTokensDistributed,
+      activeMissions: ACTIVE_MISSIONS_COUNT,
+      totalSpins: spinData?.total ?? spinData?.spins.length ?? 0,
     },
   }
 }

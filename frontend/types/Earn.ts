@@ -3,7 +3,7 @@ import type { BoosterTier } from '../types'
 export interface PublicStats {
   totalDistributed: number
   activeMissions: number
-  biggestSpinThisWeek: number
+  totalSpins: number
 }
 
 export type MissionCategory = 'twitter' | 'content' | 'community' | 'referral' | 'defender' | 'attacker'
