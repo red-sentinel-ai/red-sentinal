@@ -51,7 +51,7 @@ export function DefenderRewards() {
 
           {/* Funding Booster Tiers */}
           <div className="mb-6">
-            <h4 className="mb-1 font-semibold text-black">Fund Your Sentinel — Booster Coupons</h4>
+            <h4 className="mb-1 font-semibold text-black">Fund Your Sentinel And Get Booster Coupons</h4>
             <p className="mb-3 text-xs text-gray-500">
               Every time you add funds to your sentinel, you receive a booster coupon. Spin it to claim your Sentinel tokens.
             </p>

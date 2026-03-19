@@ -47,7 +47,7 @@ export function AttackerRewards() {
             </table>
           </div>
 
-          <Link href="/attack">
+          <Link href="/attack" className="flex-1">
             <button className="btn btn-black flex w-full items-center justify-center gap-2 md:w-auto">
               <Swords className="h-4 w-4" />
               Start Attacking
