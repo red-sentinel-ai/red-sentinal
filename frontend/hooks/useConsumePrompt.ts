@@ -70,7 +70,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
     if (!account?.address) {
       throw new Error('Wallet not connected')
     }
-    if (!SUI_CONFIG.PROTOCOL_CONFIG_OBJECT_ID) {
+    if (!SUI_CONFIG.PROTOCOL_CONFIG_ID) {
       throw new Error('ProtocolConfig Object ID is not set in constants.')
     }
 
@@ -100,7 +100,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
       arguments: [
         tx.object(SUI_CONFIG.AGENT_REGISTRY),
         tx.object(agentDetails.agent_object_id),
-        tx.object(SUI_CONFIG.PROTOCOL_CONFIG_OBJECT_ID),
+        tx.object(SUI_CONFIG.PROTOCOL_CONFIG_ID),
         paymentCoin,
         tx.object('0x8'),
         tx.object(SUI_CLOCK_OBJECT_ID),
@@ -215,7 +215,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
       target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::consume_prompt`,
       arguments: [
         tx.object(SUI_CONFIG.AGENT_REGISTRY), // registry: &AgentRegistry
-        tx.object(SUI_CONFIG.PROTOCOL_CONFIG_OBJECT_ID),
+        tx.object(SUI_CONFIG.PROTOCOL_CONFIG_ID),
         tx.object(agentObjectId), // agent: &mut Agent
         tx.pure.bool(apiData.data.success), // success: bool
         tx.pure.string(apiData.data.agent_response), // explanation: String,
