@@ -16,6 +16,10 @@ export interface FundAgentModalProps {
   /** Optional callback when funding is successful, receives the amount */
   onSuccess?: (amount: string) => void
   agentId: string | null
+  /** Token to fund with (defaults to USDC) */
+  coinType?: string
+  tokenSymbol?: string
+  tokenDecimals?: number
 }
 
 export const FundAgentModal = ({
@@ -24,6 +28,9 @@ export const FundAgentModal = ({
   agentObjectId,
   onSuccess,
   agentId,
+  coinType = '0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC',
+  tokenSymbol = 'USDC',
+  tokenDecimals = 6,
 }: FundAgentModalProps) => {
   const [amount, setAmount] = useState('')
   const [error, setError] = useState('')
@@ -54,7 +61,7 @@ export const FundAgentModal = ({
     }
 
     if (numAmount < 0.001) {
-      setError('Minimum amount is 0.001 SUI')
+      setError(`Minimum amount is 0.001 ${tokenSymbol}`)
       return false
     }
 
@@ -65,7 +72,14 @@ export const FundAgentModal = ({
     if (!validateAmount()) return
 
     try {
-      await fundAgent({ agentObjectId, amount: +amount, agentId })
+      await fundAgent({
+        agentObjectId,
+        amount: +amount,
+        agentId,
+        coinType,
+        decimals: tokenDecimals,
+        symbol: tokenSymbol,
+      })
 
       posthog.capture('sentinel_funded', {
         agent_object_id: agentObjectId,
@@ -110,7 +124,7 @@ export const FundAgentModal = ({
         </p>
 
         <div>
-          <label className="mb-2 block text-sm font-medium">Amount (SUI)</label>
+          <label className="mb-2 block text-sm font-medium">Amount ({tokenSymbol})</label>
           <input
             type="number"
             value={amount}
@@ -125,7 +139,7 @@ export const FundAgentModal = ({
         </div>
 
         <p className="text-xs text-gray-500">
-          Sentinels with less than 0.1 SUI balance won&apos;t be visible to attackers.
+          Sentinels with less than 0.1 {tokenSymbol} balance won&apos;t be visible to attackers.
         </p>
 
         <button
