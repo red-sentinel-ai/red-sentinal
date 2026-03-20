@@ -75,38 +75,14 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
 
     const isNewContract = !!agentDetails.coin_type
 
-    const BASIS_POINTS = BigInt(10000)
-    const FEE_INCREASE_BPS = BigInt(100) // 1% per attack
-    const MAX_FEE_MULTIPLIER_BPS = BigInt(30000) // 3x cap
-
-    let attackCount = BigInt(0)
-    if (isNewContract) {
-      try {
-        const agentObj = await client.getObject({
-          id: agentDetails.agent_object_id,
-          options: { showContent: true },
-        })
-        const agentFields = (agentObj.data?.content as any)?.fields
-        attackCount = BigInt(agentFields?.attack_count || 0)
-        console.log('Current attack_count:', attackCount.toString())
-      } catch (err) {
-        console.error('Failed to fetch agent attack_count, using 0:', err)
-      }
-    }
-
-    const rawMultiplier = BASIS_POINTS + attackCount * FEE_INCREASE_BPS
-    const multiplier =
-      rawMultiplier > MAX_FEE_MULTIPLIER_BPS ? MAX_FEE_MULTIPLIER_BPS : rawMultiplier
-    const costInBaseUnits = isNewContract
-      ? (BigInt(agentDetails.cost_per_message) * multiplier) / BASIS_POINTS
-      : BigInt(agentDetails.cost_per_message)
+    // Use backend-computed current price (based on indexed PromptConsumed event count).
+    // Falls back to the base cost for legacy agents or if the field is missing.
+    const costInBaseUnits = BigInt(
+      agentDetails.current_cost_per_message ?? agentDetails.cost_per_message
+    )
 
     const token = getTokenForCoinType(agentDetails.coin_type)
     const tokenDivisor = Math.pow(10, token.decimals)
-
-    console.log(
-      `Effective cost: ${Number(costInBaseUnits) / tokenDivisor} ${token.symbol} (attack #${attackCount + BigInt(1)})`
-    )
 
     const tx = new Transaction()
     let paymentCoin
