@@ -234,8 +234,8 @@ export function SocialConnectionsSection() {
               )}
             </div>
 
-            {/* Connect Telegram */}
-            <div className="flex flex-col items-start justify-between gap-2 rounded-lg border border-[#5E5E5E] bg-gradient-to-r from-white/45 to-[rgba(249,240,249,0.46)] p-3 sm:flex-row sm:items-center">
+            {/* Connect Telegram - temporarily hidden, pending debug */}
+            {false && <div className="flex flex-col items-start justify-between gap-2 rounded-lg border border-[#5E5E5E] bg-gradient-to-r from-white/45 to-[rgba(249,240,249,0.46)] p-3 sm:flex-row sm:items-center">
               <div className="flex items-center gap-2">
                 <div className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-[#5E5E5E] sm:h-10 sm:w-10">
                   <Image
@@ -300,7 +300,7 @@ export function SocialConnectionsSection() {
                   />
                 </div>
               )}
-            </div>
+            </div>}
           </div>
         </div>
       </Card>
