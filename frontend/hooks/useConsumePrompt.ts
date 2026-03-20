@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useCallback } from 'react'
 import { Transaction } from '@mysten/sui/transactions'
 import { useSignAndExecuteTransaction, useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
-import { SUI_CONFIG } from '@/constants'
+import { SUI_COIN_TYPE, SUI_CONFIG, getTokenForCoinType } from '@/constants'
 import { toast } from 'sonner'
 import { ConsumePromptApiResponse } from '@/types'
 import { hexToVector } from '@/lib/utils'
@@ -70,42 +69,117 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
     if (!account?.address) {
       throw new Error('Wallet not connected')
     }
-    if (!SUI_CONFIG.PROTOCOL_CONFIG_OBJECT_ID) {
+    if (!SUI_CONFIG.PROTOCOL_CONFIG_ID) {
       throw new Error('ProtocolConfig Object ID is not set in constants.')
     }
 
-    const costInMist = BigInt(agentDetails.cost_per_message)
+    const isNewContract = !!agentDetails.coin_type
 
-    // Check if user has enough balance
-    const balance = await client.getBalance({
-      owner: account.address,
-      coinType: '0x2::sui::SUI',
-    })
+    const BASIS_POINTS = BigInt(10000)
+    const FEE_INCREASE_BPS = BigInt(100) // 1% per attack
+    const MAX_FEE_MULTIPLIER_BPS = BigInt(30000) // 3x cap
 
-    const totalBalance = BigInt(balance.totalBalance)
-    const gasBuffer = BigInt(GAS_BUDGET)
-    const totalNeeded = costInMist + gasBuffer
-
-    if (totalBalance < totalNeeded) {
-      throw new Error(`Insufficient balance. Need ${agentDetails.cost_per_message} MIST + gas fees`)
+    let attackCount = BigInt(0)
+    if (isNewContract) {
+      try {
+        const agentObj = await client.getObject({
+          id: agentDetails.agent_object_id,
+          options: { showContent: true },
+        })
+        const agentFields = (agentObj.data?.content as any)?.fields
+        attackCount = BigInt(agentFields?.attack_count || 0)
+        console.log('Current attack_count:', attackCount.toString())
+      } catch (err) {
+        console.error('Failed to fetch agent attack_count, using 0:', err)
+      }
     }
 
-    const tx = new Transaction()
+    const rawMultiplier = BASIS_POINTS + attackCount * FEE_INCREASE_BPS
+    const multiplier =
+      rawMultiplier > MAX_FEE_MULTIPLIER_BPS ? MAX_FEE_MULTIPLIER_BPS : rawMultiplier
+    const costInBaseUnits = isNewContract
+      ? (BigInt(agentDetails.cost_per_message) * multiplier) / BASIS_POINTS
+      : BigInt(agentDetails.cost_per_message)
 
-    // Split payment amount from gas coin
-    const [paymentCoin] = tx.splitCoins(tx.gas, [tx.pure.u64(costInMist)])
+    const token = getTokenForCoinType(agentDetails.coin_type)
+    const tokenDivisor = Math.pow(10, token.decimals)
+
+    console.log(
+      `Effective cost: ${Number(costInBaseUnits) / tokenDivisor} ${token.symbol} (attack #${attackCount + BigInt(1)})`
+    )
+
+    const tx = new Transaction()
+    let paymentCoin
+
+    if (token.coinType === SUI_COIN_TYPE) {
+      // SUI is the gas coin — split directly from tx.gas
+      ;[paymentCoin] = tx.splitCoins(tx.gas, [tx.pure.u64(costInBaseUnits)])
+    } else {
+      // Non-SUI token — fetch from wallet
+      const coins = await client.getCoins({
+        owner: account.address,
+        coinType: token.coinType,
+        limit: 100,
+      })
+
+      if (!coins.data.length) {
+        throw new Error(`No ${token.symbol} coins found in wallet`)
+      }
+
+      const sortedCoins = coins.data.sort((a, b) => Number(b.balance) - Number(a.balance))
+      const totalAvailable = sortedCoins.reduce(
+        (sum, coin) => sum + BigInt(coin.balance),
+        BigInt(0)
+      )
+
+      if (totalAvailable < costInBaseUnits) {
+        throw new Error(
+          `Insufficient ${token.symbol} balance. Need ${Number(costInBaseUnits) / tokenDivisor} ${token.symbol}, have ${Number(totalAvailable) / tokenDivisor} ${token.symbol}`
+        )
+      }
+
+      // Select minimum coins needed, merge if necessary, then split exact amount
+      const selectedCoins: typeof sortedCoins = []
+      let runningTotal = BigInt(0)
+      for (const coin of sortedCoins) {
+        selectedCoins.push(coin)
+        runningTotal += BigInt(coin.balance)
+        if (runningTotal >= costInBaseUnits) break
+      }
+
+      if (selectedCoins.length === 1) {
+        ;[paymentCoin] = tx.splitCoins(tx.object(selectedCoins[0].coinObjectId), [
+          tx.pure.u64(costInBaseUnits),
+        ])
+      } else {
+        const primaryCoinRef = tx.object(selectedCoins[0].coinObjectId)
+        tx.mergeCoins(
+          primaryCoinRef,
+          selectedCoins.slice(1).map(c => tx.object(c.coinObjectId))
+        )
+        ;[paymentCoin] = tx.splitCoins(primaryCoinRef, [tx.pure.u64(costInBaseUnits)])
+      }
+    }
+
+    // Route to the correct package: new agents use APP_PACKAGE_ID, old agents use LEGACY
+    const packageId = isNewContract
+      ? SUI_CONFIG.APP_PACKAGE_ID
+      : (SUI_CONFIG.LEGACY_APP_PACKAGE_ID || SUI_CONFIG.APP_PACKAGE_ID)
 
     const [attackTicket] = tx.moveCall({
-      target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::request_attack`,
+      target: `${packageId}::${SUI_CONFIG.MODULE_NAME}::request_attack`,
+      // Old contract had no type parameters; new contract is generic over the coin type
+      ...(isNewContract && { typeArguments: [token.coinType] }),
       arguments: [
         tx.object(SUI_CONFIG.AGENT_REGISTRY),
         tx.object(agentDetails.agent_object_id),
-        tx.object(SUI_CONFIG.PROTOCOL_CONFIG_OBJECT_ID),
+        tx.object(SUI_CONFIG.PROTOCOL_CONFIG_ID),
         paymentCoin,
         tx.object('0x8'),
         tx.object(SUI_CLOCK_OBJECT_ID),
       ],
     })
+    console.log({attackTicket})
 
     tx.transferObjects([attackTicket], tx.pure.address(account.address))
 
@@ -118,34 +192,66 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
           onSuccess: async result => {
             onAttackRequestSuccess?.(result)
 
-            const attackObjectChange = result.objectChanges?.find(
-              (obj: any) => obj.type === 'created' && obj.objectType.endsWith('::sentinel::Attack')
-            ) as { objectId: string } | undefined
+            // Fast path: objectChanges (works when node has locally executed the tx)
+            let attackObjectId: string | null =
+              (result.objectChanges?.find(
+                (obj: any) => obj.type === 'created' && (obj as any).objectType?.includes('::sentinel::Attack')
+              ) as any)?.objectId ?? null
 
-            if (!attackObjectChange) {
+            // Fallback: poll getOwnedObjects — queries current chain state directly.
+            // Try both APP and LEGACY package IDs since the type origin may differ across upgrades.
+            if (!attackObjectId) {
+              const legacyId = SUI_CONFIG.LEGACY_APP_PACKAGE_ID || SUI_CONFIG.APP_PACKAGE_ID
+              const structTypes = isNewContract
+                ? [
+                    `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Attack<${token.coinType}>`,
+                    `${legacyId}::${SUI_CONFIG.MODULE_NAME}::Attack<${token.coinType}>`,
+                  ]
+                : [`${legacyId}::${SUI_CONFIG.MODULE_NAME}::Attack`]
+
+              for (let attempt = 0; attempt < 5 && !attackObjectId; attempt++) {
+                await new Promise(resolve => setTimeout(resolve, 1500))
+                for (const structType of structTypes) {
+                  try {
+                    const { data } = await client.getOwnedObjects({
+                      owner: account.address,
+                      filter: { StructType: structType },
+                      options: { showContent: true },
+                    })
+                    const match = data.find(
+                      obj => (obj.data?.content as any)?.fields?.agent_id === agentDetails.agent_id
+                    )
+                    if (match?.data?.objectId) {
+                      attackObjectId = match.data.objectId
+                      break
+                    }
+                  } catch {
+                    // ignore, retry next attempt
+                  }
+                }
+              }
+            }
+
+            if (!attackObjectId) {
               return reject(new Error('Failed to create Attack ticket object.'))
             }
 
-            const attackObjectId = attackObjectChange.objectId
-
-            // Wait 1 second (1000ms) for the RPC node to index the new object's content
-            await new Promise(resolve => setTimeout(resolve, 1000))
-
             let objectResponse: SuiObjectResponse | null = null
-            try {
-              objectResponse = await client.getObject({
-                id: attackObjectId,
-                options: { showContent: true },
-              })
-              console.log({ objectResponse, attackObjectId })
-            } catch (error) {
-              console.error('Error fetching object after sleep', error)
-              return reject(new Error('Failed to fetch Attack ticket after 1s delay.'))
+            for (let attempt = 0; attempt < 5; attempt++) {
+              try {
+                objectResponse = await client.getObject({
+                  id: attackObjectId!,
+                  options: { showContent: true },
+                })
+                if (objectResponse?.data?.content?.dataType === 'moveObject') break
+              } catch {
+                // ignore, retry
+              }
+              await new Promise(resolve => setTimeout(resolve, 1000))
             }
 
             if (objectResponse?.data?.content?.dataType !== 'moveObject') {
-              console.error('Failed to fetch object content after 1s delay.', objectResponse)
-              return reject(new Error('Failed to fetch Attack ticket content after 1s delay.'))
+              return reject(new Error('Failed to fetch Attack ticket content.'))
             }
 
             const fields = (objectResponse.data.content as any).fields
@@ -155,7 +261,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
               return reject(new Error('Failed to retrieve nonce from Attack ticket.'))
             }
 
-            resolve({ objectId: attackObjectId, nonce: nonce as string })
+            resolve({ objectId: attackObjectId!, nonce: nonce as string })
           },
           onError: txError => {
             console.error('Attack request transaction failed:', txError)
@@ -211,11 +317,17 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
     // Extract data from API response
     const { response: apiData } = apiResponse
 
+    const isNewContract = !!agentDetails.coin_type
+    const packageId = isNewContract
+      ? SUI_CONFIG.APP_PACKAGE_ID
+      : (SUI_CONFIG.LEGACY_APP_PACKAGE_ID || SUI_CONFIG.APP_PACKAGE_ID)
+
     tx.moveCall({
-      target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::consume_prompt`,
+      target: `${packageId}::${SUI_CONFIG.MODULE_NAME}::consume_prompt`,
+      ...(isNewContract && { typeArguments: [getTokenForCoinType(agentDetails.coin_type).coinType] }),
       arguments: [
         tx.object(SUI_CONFIG.AGENT_REGISTRY), // registry: &AgentRegistry
-        tx.object(SUI_CONFIG.PROTOCOL_CONFIG_OBJECT_ID),
+        tx.object(SUI_CONFIG.PROTOCOL_CONFIG_ID),
         tx.object(agentObjectId), // agent: &mut Agent
         tx.pure.bool(apiData.data.success), // success: bool
         tx.pure.string(apiData.data.agent_response), // explanation: String,
@@ -330,6 +442,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         setCurrentStep('')
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       account?.address,
       signAndExecuteTransaction,
@@ -337,6 +450,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
       onError,
       onAttackRequestSuccess,
       onApiSuccess,
+      onComplete,
       showToasts,
       client,
     ]

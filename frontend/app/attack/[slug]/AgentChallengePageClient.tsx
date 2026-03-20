@@ -6,7 +6,7 @@ import { useCurrentAccount } from '@mysten/dapp-kit'
 import { useQueryClient } from '@tanstack/react-query'
 import posthog from 'posthog-js'
 
-import { MIST_PER_SUI , APP_NETWORK } from '@/constants'
+import { APP_NETWORK, getTokenForCoinType } from '@/constants'
 import type { ConsumePromptApiResponse } from '@/types'
 import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from '@/components/ui'
 import { AgentChallengePageSkeleton } from '@/components/ui/skeletons/AgentChallengePageSkeleton'
@@ -61,13 +61,13 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
           is_successful: isWinner,
           attack_score: apiResponse.response.data.score,
           tx_digest: transactionResult.digest,
-          cost_to_attack: agent ? Number(agent.cost_per_message) / MIST_PER_SUI : 0,
+          cost_to_attack: agent ? Number(agent.cost_per_message) / Math.pow(10, getTokenForCoinType(agent.coin_type).decimals) : 0,
         })
 
         if (isWinner) {
           posthog.capture('sentinel_defeated', {
             agent_id: agent?.agent_id,
-            prize_pool_won: agent ? Number(agent.total_balance) / MIST_PER_SUI : 0,
+            prize_pool_won: agent ? Number(agent.total_balance) / Math.pow(10, getTokenForCoinType(agent.coin_type).decimals) : 0,
             winner_address: account?.address,
           })
         }
