@@ -8,19 +8,13 @@ import { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { useFundAgentModal } from '@/hooks/useFundAgentModal'
 import { useFeatureAgentModal } from '@/hooks/useFeatureAgentModal'
 import { useCurrentAccount } from '@mysten/dapp-kit'
-import { SUPPORTED_TOKENS } from '@/constants'
+import { getTokenForCoinType } from '@/constants'
 import { AgentDropdown } from './agents/AgentCardDropdown'
 import { useWithdrawAgentModal } from '@/hooks/agents/useWithdrawAgentModal'
 import { formatDuration } from '@/lib/utils'
 import { PrizePoolChangeDisplay } from './agents/PrizePoolChangeDisplay'
 import { ClaimFeesModal } from './agents/ClaimFeesModal'
 
-const SUI_DEFAULT_TOKEN = { coinType: '0x2::sui::SUI', symbol: 'SUI', decimals: 9 }
-
-function getTokenInfoForAgent(coinType?: string) {
-  if (!coinType) return SUI_DEFAULT_TOKEN
-  return SUPPORTED_TOKENS.find(t => t.coinType === coinType) ?? SUI_DEFAULT_TOKEN
-}
 
 type FeaturedAgentCardProps = {
   agent: AgentDetails
@@ -64,7 +58,7 @@ export const FeaturedAgentCard = ({
   const [timeRemaining, setTimeRemaining] = useState('')
   const [isClaimFeesModalOpen, setIsClaimFeesModalOpen] = useState(false)
 
-  const token = getTokenInfoForAgent(agent.coin_type)
+  const token = getTokenForCoinType(agent.coin_type)
   const tokenDivisor = Math.pow(10, token.decimals)
 
   const hasNoBalance = Number(agent.total_balance) === 0
@@ -249,7 +243,7 @@ export const FeaturedAgentCard = ({
             <div className="flex gap-1.5 sm:gap-2">
               <button
                 onClick={() => {
-                  const token = getTokenInfoForAgent(agent.coin_type)
+                  const token = getTokenForCoinType(agent.coin_type)
                   openFundModal(agent.agent_object_id, agent.agent_id, token.coinType, token.symbol, token.decimals)
                 }}
                 className="btn btn-black w-1/2 px-2 py-1.5 text-[10px] sm:px-4 sm:py-2.5 sm:text-sm"

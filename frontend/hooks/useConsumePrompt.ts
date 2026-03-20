@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useCallback } from 'react'
 import { Transaction } from '@mysten/sui/transactions'
 import { useSignAndExecuteTransaction, useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
-import { SUI_CONFIG } from '@/constants'
+import { SUI_COIN_TYPE, SUI_CONFIG, getTokenForCoinType } from '@/constants'
 import { toast } from 'sonner'
 import { ConsumePromptApiResponse } from '@/types'
 import { hexToVector } from '@/lib/utils'
@@ -11,10 +10,6 @@ import { SuiTransactionBlockResponse, SuiObjectResponse } from '@mysten/sui/clie
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 
 const GAS_BUDGET = 50_000_000
-
-const USDC_COIN_TYPE =
-  '0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC'
-const USDC_DECIMALS = 1_000_000 // 6 decimal places
 
 // Define response types
 
@@ -78,83 +73,103 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
       throw new Error('ProtocolConfig Object ID is not set in constants.')
     }
 
-    // Fetch live attack_count from chain to compute dynamic effective cost.
-    // The contract charges base_cost * (10000 + attack_count * 100) / 10000.
+    const isNewContract = !!agentDetails.coin_type
+
     const BASIS_POINTS = BigInt(10000)
     const FEE_INCREASE_BPS = BigInt(100) // 1% per attack
     const MAX_FEE_MULTIPLIER_BPS = BigInt(30000) // 3x cap
 
     let attackCount = BigInt(0)
-    try {
-      const agentObj = await client.getObject({
-        id: agentDetails.agent_object_id,
-        options: { showContent: true },
-      })
-      const agentFields = (agentObj.data?.content as any)?.fields
-      attackCount = BigInt(agentFields?.attack_count || 0)
-      console.log('Current attack_count:', attackCount.toString())
-    } catch (err) {
-      console.error('Failed to fetch agent attack_count, using 0:', err)
+    if (isNewContract) {
+      try {
+        const agentObj = await client.getObject({
+          id: agentDetails.agent_object_id,
+          options: { showContent: true },
+        })
+        const agentFields = (agentObj.data?.content as any)?.fields
+        attackCount = BigInt(agentFields?.attack_count || 0)
+        console.log('Current attack_count:', attackCount.toString())
+      } catch (err) {
+        console.error('Failed to fetch agent attack_count, using 0:', err)
+      }
     }
 
     const rawMultiplier = BASIS_POINTS + attackCount * FEE_INCREASE_BPS
     const multiplier =
       rawMultiplier > MAX_FEE_MULTIPLIER_BPS ? MAX_FEE_MULTIPLIER_BPS : rawMultiplier
-    const costInBaseUnits =
-      (BigInt(agentDetails.cost_per_message) * multiplier) / BASIS_POINTS
+    const costInBaseUnits = isNewContract
+      ? (BigInt(agentDetails.cost_per_message) * multiplier) / BASIS_POINTS
+      : BigInt(agentDetails.cost_per_message)
+
+    const token = getTokenForCoinType(agentDetails.coin_type)
+    const tokenDivisor = Math.pow(10, token.decimals)
 
     console.log(
-      `Effective cost: ${Number(costInBaseUnits) / USDC_DECIMALS} USDC (attack #${attackCount + BigInt(1)})`
+      `Effective cost: ${Number(costInBaseUnits) / tokenDivisor} ${token.symbol} (attack #${attackCount + BigInt(1)})`
     )
 
-    // Fetch USDC coins and check balance
-    const usdcCoins = await client.getCoins({
-      owner: account.address,
-      coinType: USDC_COIN_TYPE,
-      limit: 100,
-    })
-
-    if (!usdcCoins.data.length) {
-      throw new Error('No USDC coins found in wallet')
-    }
-
-    const sortedCoins = usdcCoins.data.sort((a, b) => Number(b.balance) - Number(a.balance))
-    const totalAvailable = sortedCoins.reduce((sum, coin) => sum + BigInt(coin.balance), BigInt(0))
-
-    if (totalAvailable < costInBaseUnits) {
-      throw new Error(
-        `Insufficient USDC balance. Need ${Number(costInBaseUnits) / USDC_DECIMALS} USDC, have ${Number(totalAvailable) / USDC_DECIMALS} USDC`
-      )
-    }
-
     const tx = new Transaction()
-
-    // Select minimum coins needed, merge if necessary, then split exact amount
-    const selectedCoins: typeof sortedCoins = []
-    let runningTotal = BigInt(0)
-    for (const coin of sortedCoins) {
-      selectedCoins.push(coin)
-      runningTotal += BigInt(coin.balance)
-      if (runningTotal >= costInBaseUnits) break
-    }
-
     let paymentCoin
-    if (selectedCoins.length === 1) {
-      ;[paymentCoin] = tx.splitCoins(tx.object(selectedCoins[0].coinObjectId), [
-        tx.pure.u64(costInBaseUnits),
-      ])
+
+    if (token.coinType === SUI_COIN_TYPE) {
+      // SUI is the gas coin — split directly from tx.gas
+      ;[paymentCoin] = tx.splitCoins(tx.gas, [tx.pure.u64(costInBaseUnits)])
     } else {
-      const primaryCoinRef = tx.object(selectedCoins[0].coinObjectId)
-      tx.mergeCoins(
-        primaryCoinRef,
-        selectedCoins.slice(1).map(c => tx.object(c.coinObjectId))
+      // Non-SUI token — fetch from wallet
+      const coins = await client.getCoins({
+        owner: account.address,
+        coinType: token.coinType,
+        limit: 100,
+      })
+
+      if (!coins.data.length) {
+        throw new Error(`No ${token.symbol} coins found in wallet`)
+      }
+
+      const sortedCoins = coins.data.sort((a, b) => Number(b.balance) - Number(a.balance))
+      const totalAvailable = sortedCoins.reduce(
+        (sum, coin) => sum + BigInt(coin.balance),
+        BigInt(0)
       )
-      ;[paymentCoin] = tx.splitCoins(primaryCoinRef, [tx.pure.u64(costInBaseUnits)])
+
+      if (totalAvailable < costInBaseUnits) {
+        throw new Error(
+          `Insufficient ${token.symbol} balance. Need ${Number(costInBaseUnits) / tokenDivisor} ${token.symbol}, have ${Number(totalAvailable) / tokenDivisor} ${token.symbol}`
+        )
+      }
+
+      // Select minimum coins needed, merge if necessary, then split exact amount
+      const selectedCoins: typeof sortedCoins = []
+      let runningTotal = BigInt(0)
+      for (const coin of sortedCoins) {
+        selectedCoins.push(coin)
+        runningTotal += BigInt(coin.balance)
+        if (runningTotal >= costInBaseUnits) break
+      }
+
+      if (selectedCoins.length === 1) {
+        ;[paymentCoin] = tx.splitCoins(tx.object(selectedCoins[0].coinObjectId), [
+          tx.pure.u64(costInBaseUnits),
+        ])
+      } else {
+        const primaryCoinRef = tx.object(selectedCoins[0].coinObjectId)
+        tx.mergeCoins(
+          primaryCoinRef,
+          selectedCoins.slice(1).map(c => tx.object(c.coinObjectId))
+        )
+        ;[paymentCoin] = tx.splitCoins(primaryCoinRef, [tx.pure.u64(costInBaseUnits)])
+      }
     }
+
+    // Route to the correct package: new agents use APP_PACKAGE_ID, old agents use LEGACY
+    const packageId = isNewContract
+      ? SUI_CONFIG.APP_PACKAGE_ID
+      : (SUI_CONFIG.LEGACY_APP_PACKAGE_ID || SUI_CONFIG.APP_PACKAGE_ID)
 
     const [attackTicket] = tx.moveCall({
-      target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::request_attack`,
-      typeArguments: [USDC_COIN_TYPE],
+      target: `${packageId}::${SUI_CONFIG.MODULE_NAME}::request_attack`,
+      // Old contract had no type parameters; new contract is generic over the coin type
+      ...(isNewContract && { typeArguments: [token.coinType] }),
       arguments: [
         tx.object(SUI_CONFIG.AGENT_REGISTRY),
         tx.object(agentDetails.agent_object_id),
@@ -164,6 +179,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         tx.object(SUI_CLOCK_OBJECT_ID),
       ],
     })
+    console.log({attackTicket})
 
     tx.transferObjects([attackTicket], tx.pure.address(account.address))
 
@@ -175,61 +191,44 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         {
           onSuccess: async result => {
             onAttackRequestSuccess?.(result)
-            console.log({ result })
 
-            // Some nodes return incomplete objectChanges (confirmedLocalExecution: false).
-            // Use a fallback chain to find the Attack object ID.
-            let attackObjectId: string | null = null
+            // Fast path: objectChanges (works when node has locally executed the tx)
+            let attackObjectId: string | null =
+              (result.objectChanges?.find(
+                (obj: any) => obj.type === 'created' && (obj as any).objectType?.includes('::sentinel::Attack')
+              ) as any)?.objectId ?? null
 
-            // 1. Try objectChanges from the executeTransactionBlock response
-            const attackFromChanges = result.objectChanges?.find(
-              (obj: any) => obj.type === 'created' && obj.objectType.includes('::sentinel::Attack')
-            )
-            if (attackFromChanges) {
-              attackObjectId = (attackFromChanges as any).objectId
-            }
-
-            // Wait for the RPC node to index the transaction
-            await new Promise(resolve => setTimeout(resolve, 1000))
-
-            // 2. If not found, fetch the full tx block by digest (more complete response)
+            // Fallback: poll getOwnedObjects — queries current chain state directly.
+            // Try both APP and LEGACY package IDs since the type origin may differ across upgrades.
             if (!attackObjectId) {
-              try {
-                const txBlock = await client.getTransactionBlock({
-                  digest: result.digest,
-                  options: { showObjectChanges: true },
-                })
-                const attackFromTx = txBlock.objectChanges?.find(
-                  (obj: any) =>
-                    obj.type === 'created' && obj.objectType.includes('::sentinel::Attack')
-                )
-                if (attackFromTx) {
-                  attackObjectId = (attackFromTx as any).objectId
-                }
-              } catch (err) {
-                console.error('Error fetching tx block by digest:', err)
-              }
-            }
+              const legacyId = SUI_CONFIG.LEGACY_APP_PACKAGE_ID || SUI_CONFIG.APP_PACKAGE_ID
+              const structTypes = isNewContract
+                ? [
+                    `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Attack<${token.coinType}>`,
+                    `${legacyId}::${SUI_CONFIG.MODULE_NAME}::Attack<${token.coinType}>`,
+                  ]
+                : [`${legacyId}::${SUI_CONFIG.MODULE_NAME}::Attack`]
 
-            // 3. Last resort: query owned Attack objects filtered by agent_id
-            if (!attackObjectId) {
-              try {
-                const ownedAttacks = await client.getOwnedObjects({
-                  owner: account.address,
-                  filter: {
-                    StructType: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Attack<${USDC_COIN_TYPE}>`,
-                  },
-                  options: { showContent: true },
-                })
-                const match = ownedAttacks.data.find(obj => {
-                  const fields = (obj.data?.content as any)?.fields
-                  return fields?.agent_id === agentDetails.agent_id
-                })
-                if (match?.data?.objectId) {
-                  attackObjectId = match.data.objectId
+              for (let attempt = 0; attempt < 5 && !attackObjectId; attempt++) {
+                await new Promise(resolve => setTimeout(resolve, 1500))
+                for (const structType of structTypes) {
+                  try {
+                    const { data } = await client.getOwnedObjects({
+                      owner: account.address,
+                      filter: { StructType: structType },
+                      options: { showContent: true },
+                    })
+                    const match = data.find(
+                      obj => (obj.data?.content as any)?.fields?.agent_id === agentDetails.agent_id
+                    )
+                    if (match?.data?.objectId) {
+                      attackObjectId = match.data.objectId
+                      break
+                    }
+                  } catch {
+                    // ignore, retry next attempt
+                  }
                 }
-              } catch (err) {
-                console.error('Error querying owned Attack objects:', err)
               }
             }
 
@@ -238,20 +237,21 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
             }
 
             let objectResponse: SuiObjectResponse | null = null
-            try {
-              objectResponse = await client.getObject({
-                id: attackObjectId!,
-                options: { showContent: true },
-              })
-              console.log({ objectResponse, attackObjectId })
-            } catch (error) {
-              console.error('Error fetching object after sleep', error)
-              return reject(new Error('Failed to fetch Attack ticket after 1s delay.'))
+            for (let attempt = 0; attempt < 5; attempt++) {
+              try {
+                objectResponse = await client.getObject({
+                  id: attackObjectId!,
+                  options: { showContent: true },
+                })
+                if (objectResponse?.data?.content?.dataType === 'moveObject') break
+              } catch {
+                // ignore, retry
+              }
+              await new Promise(resolve => setTimeout(resolve, 1000))
             }
 
             if (objectResponse?.data?.content?.dataType !== 'moveObject') {
-              console.error('Failed to fetch object content after 1s delay.', objectResponse)
-              return reject(new Error('Failed to fetch Attack ticket content after 1s delay.'))
+              return reject(new Error('Failed to fetch Attack ticket content.'))
             }
 
             const fields = (objectResponse.data.content as any).fields
@@ -317,9 +317,14 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
     // Extract data from API response
     const { response: apiData } = apiResponse
 
+    const isNewContract = !!agentDetails.coin_type
+    const packageId = isNewContract
+      ? SUI_CONFIG.APP_PACKAGE_ID
+      : (SUI_CONFIG.LEGACY_APP_PACKAGE_ID || SUI_CONFIG.APP_PACKAGE_ID)
+
     tx.moveCall({
-      target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::consume_prompt`,
-      typeArguments: [USDC_COIN_TYPE],
+      target: `${packageId}::${SUI_CONFIG.MODULE_NAME}::consume_prompt`,
+      ...(isNewContract && { typeArguments: [getTokenForCoinType(agentDetails.coin_type).coinType] }),
       arguments: [
         tx.object(SUI_CONFIG.AGENT_REGISTRY), // registry: &AgentRegistry
         tx.object(SUI_CONFIG.PROTOCOL_CONFIG_ID),
@@ -437,6 +442,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         setCurrentStep('')
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       account?.address,
       signAndExecuteTransaction,
@@ -444,6 +450,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
       onError,
       onAttackRequestSuccess,
       onApiSuccess,
+      onComplete,
       showToasts,
       client,
     ]
