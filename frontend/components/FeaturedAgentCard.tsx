@@ -14,6 +14,7 @@ import { useWithdrawAgentModal } from '@/hooks/agents/useWithdrawAgentModal'
 import { formatDuration } from '@/lib/utils'
 import { PrizePoolChangeDisplay } from './agents/PrizePoolChangeDisplay'
 import { ClaimFeesModal } from './agents/ClaimFeesModal'
+import { TokenAmount } from './ui/common/TokenAmount'
 
 
 type FeaturedAgentCardProps = {
@@ -196,19 +197,19 @@ export const FeaturedAgentCard = ({
           <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
             <span className="text-[#5E5E5E]">Prize Pool:</span>
             <div className="flex items-center justify-end">
-              <span className="mr-1 sm:mr-2">{formatTokenAmount(agent.total_balance, token.decimals, token.symbol)}</span>
+              <span className="mr-1 sm:mr-2"><TokenAmount rawAmount={agent.total_balance} token={token} precision={4} /></span>
               <PrizePoolChangeDisplay prizePoolHistory={agent.prizePoolHistory} variant="card" />
             </div>
           </div>
           <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
             <span className="text-[#5E5E5E]">Message Cost:</span>
-            <span className="text-right">{formatTokenAmount(agent.cost_per_message, token.decimals, token.symbol)}</span>
+            <span className="text-right"><TokenAmount rawAmount={agent.cost_per_message} token={token} precision={4} /></span>
           </div>
           {fromProfile && isOwner && (
             <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
               <span className="text-[#5E5E5E]">Your Earnings:</span>
               <span className={`text-right ${hasEarnings ? 'font-semibold text-green-600' : ''}`}>
-                {earnings.toFixed(4)} {token.symbol}
+                <TokenAmount rawAmount={agent.accumulated_fees || 0} token={token} precision={4} />
               </span>
             </div>
           )}
@@ -282,7 +283,11 @@ export const FeaturedAgentCard = ({
               className="btn btn-outline w-full px-2 py-1.5 text-[10px] disabled:opacity-50 sm:px-4 sm:py-2.5 sm:text-sm"
               title={hasEarnings ? 'Collect your earned fees' : 'No earnings to claim yet'}
             >
-              {hasEarnings ? `Claim ${earnings.toFixed(2)} ${token.symbol}` : 'No Earnings Yet'}
+              {hasEarnings ? (
+                <span className="inline-flex items-center gap-1">
+                  Claim <TokenAmount rawAmount={agent.accumulated_fees || 0} token={token} precision={2} iconSize={16} />
+                </span>
+              ) : 'No Earnings Yet'}
             </button>
           )}
         </div>
@@ -303,6 +308,3 @@ export const FeaturedAgentCard = ({
   )
 }
 
-const formatTokenAmount = (amount: string, decimals = 9, symbol = 'SUI') => {
-  return (Number(amount) / Math.pow(10, decimals)).toFixed(4) + ' ' + symbol
-}
