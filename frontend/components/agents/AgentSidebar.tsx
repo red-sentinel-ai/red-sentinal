@@ -339,8 +339,18 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
               Message Price
             </h3>
             <p className="inline-block text-lg font-semibold md:text-xl lg:text-2xl">
-              <TokenAmount rawAmount={agent.cost_per_message} token={agentToken} precision={4} iconSize={20} />
+              <TokenAmount
+                rawAmount={agent.current_cost_per_message ?? agent.cost_per_message}
+                token={agentToken}
+                precision={4}
+                iconSize={20}
+              />
             </p>
+            {agent.current_cost_per_message && agent.current_cost_per_message !== agent.cost_per_message && (
+              <p className="text-[10px] text-gray-400 md:text-xs flex items-center gap-1">
+                <span>Base:</span> <TokenAmount rawAmount={agent.cost_per_message} token={agentToken} precision={4} iconSize={10} />
+              </p>
+            )}
           </div>
 
           {!isDrained && (
