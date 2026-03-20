@@ -60,7 +60,7 @@ export const SUI_TOKEN: SupportedToken = {
   name: 'Sui',
   coinType: SUI_COIN_TYPE,
   decimals: 9,
-  icon: '/icons/tokens/sui.svg',
+  icon: '/icons/tokens/sui.png',
 }
 
 export const TESTNET_SUPPORTED_TOKENS: SupportedToken[] = [
@@ -69,7 +69,7 @@ export const TESTNET_SUPPORTED_TOKENS: SupportedToken[] = [
     name: 'USD Coin',
     coinType: '0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC',
     decimals: 6,
-    icon: '/icons/tokens/usdc.svg',
+    icon: '/icons/tokens/usdc.png',
   },
   SUI_TOKEN,
 ]
