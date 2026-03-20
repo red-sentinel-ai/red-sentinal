@@ -10,8 +10,6 @@ import {
   TrendingUp,
   User,
   TrendingDown,
-  Loader2,
-  ExternalLink,
 } from 'lucide-react'
 import { formatAddress } from '@mysten/sui/utils'
 import { QRCodeSVG } from 'qrcode.react'
@@ -25,8 +23,7 @@ import {
   WITHDRAWAL_LOCK_MS,
   SUI_SENTINEL_X_USERNAME,
 } from '@/constants'
-import { type AgentDetails } from '@/hooks/agents/useAllAgents'
-import { type AgentEvents } from '@/hooks/useAgentEvents'
+import type { AgentDetailsFull } from '@/hooks/agents/useAgentDetails'
 import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
 import { DefenderProfile } from './DefenderProfile'
 import { formatDuration, cn, buildAgentShareTweetUrl } from '@/lib/utils'
@@ -36,23 +33,20 @@ import {
   TooltipProvider,
   TooltipTrigger,
   Button,
-  Skeleton,
 } from '@/components/ui'
 import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
 import { SparklineChart } from '../ui/common/SparklineChart'
-import { useAgentPrizePoolHistory } from '@/hooks/agents/useAgentPrizePoolHistory'
 import { SocialMissionModal } from '@/components/rewards/SocialMissionModal'
 import { REWARDS_CONSTANTS } from '@/constants/rewards'
 
 const SHARE_MISSION = REWARDS_CONSTANTS.DEFAULT_MISSIONS.find(m => m.type === 'share_with_hashtag')!
 
 interface AgentSidebarProps {
-  agent: AgentDetails
-  agentEvents: AgentEvents
+  agent: AgentDetailsFull
   onReadMore?: () => void
 }
 
-export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarProps) => {
+export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
   const [activeSince, setActiveSince] = useState({
     days: 0,
     hours: 0,
@@ -66,58 +60,28 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
   const [deepLinkUrl, setDeepLinkUrl] = useState('')
   const [timeRemaining, setTimeRemaining] = useState<string | null>(null)
   const [isChartModalOpen, setIsChartModalOpen] = useState(false)
-
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
-  const [attackGoal, setAttackGoal] = useState<string>('')
-  const [isLoadingAttackGoal, setIsLoadingAttackGoal] = useState(false)
 
   const account = useCurrentAccount()
   const isOwner = account?.address === agent.creator
 
-  const { data: prizePoolData, isLoading: isLoadingChart } = useAgentPrizePoolHistory(
-    agent.agent_id
-  )
+  const prizePoolData = agent.prizePoolHistory ?? null
 
   const { data: userProfilesMap, isLoading: isLoadingProfile } = useUserProfiles([agent.creator])
   const defenderProfile = userProfilesMap?.[agent.creator]
 
   useEffect(() => {
-    const fetchAttackGoal = async () => {
-      setIsLoadingAttackGoal(true)
-      try {
-        const response = await fetch(`/api/agents/attack-goal?agent_id=${agent.agent_id}`)
-        if (response.ok) {
-          const data = await response.json()
-          if (data.attack_goal) {
-            setAttackGoal(data.attack_goal)
-          }
-        }
-      } catch (error) {
-        console.error('Failed to fetch attack goal', error)
-      } finally {
-        setIsLoadingAttackGoal(false)
-      }
-    }
-
-    if (agent.agent_id) {
-      fetchAttackGoal()
-    }
-  }, [agent.agent_id])
-
-  useEffect(() => {
     const currentUrl = window.location.href
     setPageUrl(currentUrl)
-
     const encodedUrl = encodeURIComponent(currentUrl)
     setDeepLinkUrl(SLUSH_BASE_URL + encodedUrl)
   }, [])
 
-  const isDrained = agentEvents.agentDefeated.length > 0
-  const bountyWonEvent = isDrained ? agentEvents.agentDefeated[0] : null
-  const bountyWonAmount = bountyWonEvent
-    ? (Number(bountyWonEvent.parsedJson.amount_won) / MIST_PER_SUI).toFixed(2)
+  const isDrained = agent.state === 'defeated'
+  const bountyWonAmount = agent.winner
+    ? (Number(agent.winner.amount_won) / MIST_PER_SUI).toFixed(2)
     : '0.00'
-  const winnerAddress = bountyWonEvent ? bountyWonEvent.parsedJson.winner : null
+  const winnerAddress = agent.winner?.address ?? null
 
   useEffect(() => {
     if (!agent.timestampMs || isDrained) return
@@ -195,11 +159,6 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
     }
   }, [agent.prompt])
 
-  const breakAttempts = agentEvents.promptConsumed.length
-  const totalParticipants = new Set(
-    agentEvents.promptConsumed.map(event => event.parsedJson.sender)
-  ).size
-
   const handleCopyLink = () => {
     if (pageUrl) {
       navigator.clipboard.writeText(pageUrl)
@@ -246,22 +205,14 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
         </div>
 
         <div className="flex flex-col gap-3 py-2 md:gap-4 md:py-3 lg:gap-6 lg:py-4">
-          {isLoadingAttackGoal ? (
+          {agent.attack_goal && (
             <div className="flex flex-col gap-1.5 rounded-md border border-black/20 p-2 md:gap-2 md:p-3">
               <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">
                 Attack Goal
               </h3>
-              <Skeleton className="h-4 w-full bg-gray-200 md:h-5" />
-              <Skeleton className="h-4 w-3/4 bg-gray-200 md:h-5" />
+              <p className="text-sm font-semibold md:text-base">{agent.attack_goal}</p>
             </div>
-          ) : attackGoal ? (
-            <div className="flex flex-col gap-1.5 rounded-md border border-black/20 p-2 md:gap-2 md:p-3">
-              <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">
-                Attack Goal
-              </h3>
-              <p className="text-sm font-semibold md:text-base">{attackGoal}</p>
-            </div>
-          ) : null}
+          )}
 
           <div className="flex flex-col gap-1 md:gap-2">
             <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">
@@ -322,7 +273,7 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
                 <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">
                   Prize pool
                 </h3>
-                {!isLoadingChart && prizePoolData && prizePoolData.history.length > 0 && (
+                {prizePoolData && prizePoolData.history.length > 0 && (
                   <div
                     className={cn(
                       'flex items-center gap-1 text-[10px] font-medium md:text-xs',
@@ -346,17 +297,11 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
                 <p className="inline-block text-lg font-semibold md:text-xl lg:text-2xl">
                   {(Number(agent.total_balance) / MIST_PER_SUI).toFixed(2)} SUI
                 </p>
-                {isLoadingChart ? (
-                  <div className="flex h-[24px] w-[80px] items-center justify-center md:h-[30px] md:w-[100px]">
-                    <Loader2 className="h-3 w-3 animate-spin md:h-4 md:w-4" />
-                  </div>
-                ) : (
-                  <div>
-                    <SparklineChart data={prizePoolData?.history.map(p => p.value) || []} />
-                  </div>
-                )}
+                <div>
+                  <SparklineChart data={prizePoolData?.history.map(p => p.value) || []} />
+                </div>
               </div>
-              {!isLoadingChart && prizePoolData && prizePoolData.history.length > 0 && (
+              {prizePoolData && prizePoolData.history.length > 0 && (
                 <Button
                   onClick={() => setIsChartModalOpen(true)}
                   className="mt-1.5 w-full border border-[#558EB4]/50 bg-transparent text-xs font-semibold text-[#558EB4] transition-colors duration-300 hover:bg-[#558EB4]/20 hover:text-black md:mt-2 md:text-sm"
@@ -365,13 +310,14 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
                   See Growth Chart
                 </Button>
               )}
-              {!isLoadingChart && (!prizePoolData || prizePoolData.history.length === 0) && (
+              {(!prizePoolData || prizePoolData.history.length === 0) && (
                 <p className="mt-1.5 text-center text-[10px] text-gray-500 md:mt-2 md:text-xs">
                   No prize pool history available.
                 </p>
               )}
             </div>
           )}
+
           {isDrained && winnerAddress && (
             <div className="flex flex-col gap-1 md:gap-2">
               <h3 className="flex items-center gap-1 text-xs font-medium uppercase text-[#5E5E5E] md:gap-1.5 md:text-sm">
@@ -466,7 +412,6 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
                 onClick={onReadMore}
                 className="mt-2 flex w-fit items-center gap-1.5 self-end text-[10px] font-bold uppercase tracking-wide text-[#5E5E5E] transition-opacity hover:opacity-80 md:mt-3 md:gap-2 md:text-xs"
               >
-                <ExternalLink size={10} strokeWidth={2.5} className="md:h-3 md:w-3" />
                 Read All
               </button>
             )}
@@ -481,7 +426,7 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
                 Total Participants
               </h3>
               <p className="inline-block text-center text-lg font-semibold md:text-xl lg:text-2xl">
-                {totalParticipants}
+                {agent.participants_count}
               </p>
             </div>
             <div className="flex flex-col gap-1 text-center md:gap-2">
@@ -489,7 +434,7 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
                 Break Attempts
               </h3>
               <p className="inline-block text-lg font-semibold md:text-xl lg:text-2xl">
-                {breakAttempts}
+                {agent.total_attacks}
               </p>
             </div>
           </div>
@@ -551,7 +496,7 @@ export const AgentSidebar = ({ agent, agentEvents, onReadMore }: AgentSidebarPro
       <PrizePoolChartModal
         open={isChartModalOpen}
         onClose={() => setIsChartModalOpen(false)}
-        data={prizePoolData?.history || []}
+        data={prizePoolData?.history.map(p => ({ time: new Date(p.time), value: p.value })) || []}
         agentName={agent.agent_name}
       />
 
