@@ -1,89 +1,32 @@
 'use client'
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
+import { X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { useQueryClient } from '@tanstack/react-query'
 import posthog from 'posthog-js'
 
-import { AGENT_PRIZE_POOL_HISTORY_QUERY_KEY, MIST_PER_SUI } from '@/constants'
+import { MIST_PER_SUI , APP_NETWORK } from '@/constants'
 import type { ConsumePromptApiResponse } from '@/types'
 import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from '@/components/ui'
+import { AgentChallengePageSkeleton } from '@/components/ui/skeletons/AgentChallengePageSkeleton'
 import { useConsumePrompt } from '@/hooks/useConsumePrompt'
-import { useAgentBySlug } from '@/hooks/agents/useAgentBySlug'
-import {
-  useAgentEventsFromIndexer,
-  type AgentEventsFromIndexer,
-} from '@/hooks/useAgentEventsFromIndexer'
+import { useAgentDetails, AGENT_DETAILS_FULL_QUERY_KEY } from '@/hooks/agents/useAgentDetails'
+import { useAgentChatHistory, AGENT_CHAT_QUERY_KEY } from '@/hooks/agents/useAgentChatHistory'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
 import ChatInterface from '@/components/agents/ChatInterface'
 import { AgentSidebar } from '@/components/agents/AgentSidebar'
-import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { MobileAgentHeader } from './MobileAgentHeader'
-import { X } from 'lucide-react'
-import { AgentChallengePageSkeleton } from '@/components/ui/skeletons/AgentChallengePageSkeleton'
-
-// Transform indexer events to match the legacy AgentEvents format expected by child components
-// Events are sorted by timestamp in ascending order (oldest first) so most recent appears last in chat
-function transformEventsForCompatibility(events: AgentEventsFromIndexer): {
-  agentDefeated: Array<{ parsedJson: { agent_id: string; winner: string; amount_won: string } }>
-  promptConsumed: Array<{
-    id: { txDigest: string }
-    timestampMs: string
-    parsedJson: {
-      agent_id: string
-      sender: string
-      message: string
-      agent_response: string
-      success: boolean
-      score: number
-      amount: string
-      jury_response?: string
-    }
-  }>
-} {
-  // Sort prompt consumed events by timestamp ascending (oldest first) so recent messages appear last
-  const sortedPromptConsumed = [...events.promptConsumed].sort((a, b) => {
-    const timeA = a.timestampMs ? Number.parseInt(a.timestampMs) : 0
-    const timeB = b.timestampMs ? Number.parseInt(b.timestampMs) : 0
-    return timeA - timeB
-  })
-
-  return {
-    agentDefeated: events.agentDefeated.map(event => ({
-      parsedJson: {
-        agent_id: event.agent_id,
-        winner: event.winner,
-        amount_won: event.amount_won,
-      },
-    })),
-    promptConsumed: sortedPromptConsumed.map(event => ({
-      id: {
-        txDigest: event.txDigest || '',
-      },
-      timestampMs: event.timestampMs || Date.now().toString(),
-      parsedJson: {
-        agent_id: event.agent_id,
-        sender: event.sender,
-        message: event.message,
-        agent_response: event.agent_response,
-        success: event.success,
-        score: event.score,
-        amount: event.amount,
-        jury_response: event.jury_response,
-      },
-    })),
-  }
-}
 
 export default function AgentChallengePage({ slug }: { slug: string }) {
   const account = useCurrentAccount()
   const queryClient = useQueryClient()
-  const { data: agent, isLoading, error, refetch } = useAgentBySlug(slug)
-  const {
-    events: indexerEvents,
-    loading: eventsLoading,
-    refetch: refetchEvents,
-  } = useAgentEventsFromIndexer(agent?.agent_id)
+
+  const { data: agent, isLoading, error, refetch } = useAgentDetails(slug)
+  const { data: chat, isLoading: chatLoading, refetch: refetchChat } = useAgentChatHistory(
+    agent?.agent_id
+  )
 
   const [isReadMoreOpen, setIsReadMoreOpen] = useState(false)
 
@@ -96,16 +39,16 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
       setApiResponse(apiResponse)
       setTxnHash(transactionResult.digest)
       setShowResultModal(true)
-      refetch()
 
       setTimeout(() => {
-        refetchEvents()
-
-        if (agent) {
-          queryClient.invalidateQueries({
-            queryKey: [AGENT_PRIZE_POOL_HISTORY_QUERY_KEY, agent.agent_id],
-          })
-        }
+        refetch()
+        refetchChat()
+        queryClient.invalidateQueries({
+          queryKey: [AGENT_DETAILS_FULL_QUERY_KEY, slug, APP_NETWORK],
+        })
+        queryClient.invalidateQueries({
+          queryKey: [AGENT_CHAT_QUERY_KEY, agent?.agent_id, APP_NETWORK],
+        })
       }, 1000)
 
       if (account?.address && agent) {
@@ -140,11 +83,6 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const isMobile = useMediaQuery('(max-width: 768px)')
-
-  const agentEvents = useMemo(() => {
-    if (!agent) return { agentDefeated: [], promptConsumed: [] }
-    return transformEventsForCompatibility(indexerEvents)
-  }, [agent, indexerEvents])
 
   const handleSendMessage = async (prompt: string) => {
     if (!account?.address) {
@@ -231,7 +169,6 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
           <ResizablePanel defaultSize={25} minSize={20} maxSize={40} className="bg-gray-50/50">
             <AgentSidebar
               agent={agent}
-              agentEvents={agentEvents}
               onReadMore={() => setIsReadMoreOpen(true)}
             />
           </ResizablePanel>
@@ -243,8 +180,8 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
               ) : (
                 <ChatInterface
                   agent={agent}
-                  agentEvents={agentEvents}
-                  eventsLoading={eventsLoading}
+                  chatEvents={chat?.messages ?? []}
+                  eventsLoading={chatLoading}
                   apiResponse={apiResponse}
                   onSendMessage={handleSendMessage}
                   isSubmitting={isSubmitting}
@@ -276,8 +213,8 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
       <div className="min-h-0 flex-1 overflow-hidden">
         <ChatInterface
           agent={agent}
-          agentEvents={agentEvents}
-          eventsLoading={eventsLoading}
+          chatEvents={chat?.messages ?? []}
+          eventsLoading={chatLoading}
           apiResponse={apiResponse}
           onSendMessage={handleSendMessage}
           isSubmitting={isSubmitting}
@@ -305,7 +242,6 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
             >
               <AgentSidebar
                 agent={agent}
-                agentEvents={agentEvents}
                 onReadMore={() => {
                   setIsSidebarOpen(false)
                   setIsReadMoreOpen(true)
