@@ -17,8 +17,8 @@ import { toast } from 'sonner'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import {
   DEFAULT_PROFILE_URL,
-  MIST_PER_SUI,
   EXPLORER_BASE_URL,
+  getTokenForCoinType,
   SLUSH_BASE_URL,
   WITHDRAWAL_LOCK_MS,
   SUI_SENTINEL_X_USERNAME,
@@ -77,9 +77,12 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
     setDeepLinkUrl(SLUSH_BASE_URL + encodedUrl)
   }, [])
 
+  const agentToken = getTokenForCoinType(agent.coin_type)
+  const tokenDivisor = Math.pow(10, agentToken.decimals)
+
   const isDrained = agent.state === 'defeated'
   const bountyWonAmount = agent.winner
-    ? (Number(agent.winner.amount_won) / MIST_PER_SUI).toFixed(2)
+    ? (Number(agent.winner.amount_won) / tokenDivisor).toFixed(2)
     : '0.00'
   const winnerAddress = agent.winner?.address ?? null
 
@@ -264,7 +267,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
                 Total Bounty Won
               </h3>
               <p className="inline-block text-lg font-semibold md:text-xl lg:text-2xl">
-                {bountyWonAmount} SUI
+                {bountyWonAmount} {agentToken.symbol}
               </p>
             </div>
           ) : (
@@ -295,7 +298,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
               </div>
               <div className="flex items-end justify-between gap-2 md:gap-4">
                 <p className="inline-block text-lg font-semibold md:text-xl lg:text-2xl">
-                  {(Number(agent.total_balance) / MIST_PER_SUI).toFixed(2)} SUI
+                  {(Number(agent.total_balance) / tokenDivisor).toFixed(2)} {agentToken.symbol}
                 </p>
                 <div>
                   <SparklineChart data={prizePoolData?.history.map(p => p.value) || []} />
@@ -339,7 +342,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
               Message Price
             </h3>
             <p className="inline-block text-lg font-semibold md:text-xl lg:text-2xl">
-              {(Number(agent.cost_per_message) / MIST_PER_SUI).toFixed(4)} SUI
+              {(Number(agent.cost_per_message) / tokenDivisor).toFixed(4)} {agentToken.symbol}
             </p>
           </div>
 

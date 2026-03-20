@@ -14,7 +14,8 @@ export const SUI_SENTINEL_GITHUB_URL = 'https://github.com/sui-sentinel/contract
 export const SUI_SENTINEL_TELEGRAM_URL = 'https://t.me/suisentinel'
 export const SUI_SENTINEL_AUDIT_REPORT_URL = '/pdfs/audit_final.pdf'
 export const SUI_SENTINEL_AMBASSADOR_URL = 'https://www.suisentinel.xyz/ambassador'
-export const SUI_SENTINEL_CHECKOUT_URL = "https://twitter.com/intent/tweet?text=Check+out+%40suisentinal+on+Sui+%F0%9F%9B%A1%EF%B8%8F&hashtags=SuiSentinel";
+export const SUI_SENTINEL_CHECKOUT_URL =
+  'https://twitter.com/intent/tweet?text=Check+out+%40suisentinal+on+Sui+%F0%9F%9B%A1%EF%B8%8F&hashtags=SuiSentinel'
 export const REWARD_CALCULATOR_URL = 'https://www.suisentinel.xyz/reward-calculator'
 
 export const SUI_SENTINEL_DEFENDER_REWARDS_DOCS_URL = `${SUI_SENTINEL_DOCS_URL}/incentives/defender-rewards`
@@ -36,7 +37,8 @@ export const TEXT_COPIES = {
 
 export const LOCAL_API_PATH = 'https://tee.suisentinel.xyz'
 export const RED_TEAM_API_URL = `https://redteam.suisentinel.xyz/`
-export const SUI_SENTINEL_API_URL = process.env.NEXT_PUBLIC_SUI_SENTINEL_API_URL || 'https://api.suisentinel.xyz'
+export const SUI_SENTINEL_API_URL =
+  process.env.NEXT_PUBLIC_SUI_SENTINEL_API_URL || 'https://api.suisentinel.xyz'
 
 export const APP_NETWORK: 'mainnet' | 'testnet' =
   process.env.NEXT_PUBLIC_APP_NETWORK === 'testnet' ? 'testnet' : 'mainnet'
@@ -49,9 +51,18 @@ export type SupportedToken = {
   decimals: number
   icon: string // path relative to /public
 }
-export const SUI_COIN_TYPE = '0x2::sui::SUI';
+export const SUI_COIN_TYPE = '0x2::sui::SUI'
 
 // Tokens supported on testnet (new multi-token contract)
+
+export const SUI_TOKEN: SupportedToken = {
+  symbol: 'SUI',
+  name: 'Sui',
+  coinType: SUI_COIN_TYPE,
+  decimals: 9,
+  icon: '/icons/tokens/sui.svg',
+}
+
 export const TESTNET_SUPPORTED_TOKENS: SupportedToken[] = [
   {
     symbol: 'USDC',
@@ -60,13 +71,7 @@ export const TESTNET_SUPPORTED_TOKENS: SupportedToken[] = [
     decimals: 6,
     icon: '/icons/tokens/usdc.svg',
   },
-  {
-    symbol: 'SUI',
-    name: 'Sui',
-    coinType: SUI_COIN_TYPE,
-    decimals: 9,
-    icon: '/icons/tokens/sui.svg',
-  },
+  SUI_TOKEN,
 ]
 
 // Tokens supported on mainnet (update when new multi-token contract is deployed to mainnet)
@@ -77,33 +82,37 @@ export const MAINNET_SUPPORTED_TOKENS: SupportedToken[] = [
 export const SUPPORTED_TOKENS: SupportedToken[] =
   APP_NETWORK === 'mainnet' ? MAINNET_SUPPORTED_TOKENS : TESTNET_SUPPORTED_TOKENS
 
-export const SUI_TESTNET_CONFIG = {
-  "CLOCK_OBJECT_ID": "0x6",
-  "GAS_BUDGET": 100000000,
-  "PCR0": "b8715f9f324b7e608ba265c3b43a2bc95bc93cd9b9129f4ad45edfe7fa548028179fe76e0977e3244a32778badd09690",
-  "PCR1": "b8715f9f324b7e608ba265c3b43a2bc95bc93cd9b9129f4ad45edfe7fa548028179fe76e0977e3244a32778badd09690",
-  "PCR2": "21b9efbc184807662e966d34f390821309eeac6802309798826296bf3e8bec7c10edb30948c90ba67310f7b964fc500a",
-  "ENCLAVE_URL": "http://18.213.79.225:3000",
-  "MODULE_NAME": "sentinel",
-  "OTW_NAME": "SENTINEL",
-  "ENCLAVE_PACKAGE_ID": "0x736191670533a779d92b03118ec56a14c4db9b23e40f485057ec914ed57160c5",
-  "CAP_OBJECT_ID": "0x70e303336c878c0bff94105209105ec6a1ca06aad76639c33703523737b28861",
-  "ENCLAVE_CONFIG_OBJECT_ID": "0x31a85bab115cdca750c684f3f6104b2f5a3759285cd9503b094b9d62323f2e9d",
-  // New multi-token package (Mar 2026 deployment)
-  "APP_PACKAGE_ID": "0x671e644f0a34a79d56d9bac8d2aaf867438b6ac1ee80fd8b02bae8549f938fac",
-  // Old testnet package (single-token, pre-multi-token upgrade Mar 2026)
-  "LEGACY_APP_PACKAGE_ID": "0x69615c3a87ad8288e78cc4c6482d2e5921ce71bf56ba56ba757b01ac439cea76",
-  "AGENT_REGISTRY": "0x35f145190fdf2c7a56567311fa410a77e926123ee444d0287344751ebb497f43",
-  "PROTOCOL_CONFIG_ID": "0x6eb409209a37e395e63736a09dac7969eda573cc053aa32fc779474e552a3821",
-  "ENCLAVE_OBJECT_ID": "0x16e09a9b11ac6367bd29e55c30a18356cae5104fb9062f96e625607391c5ee12",
-  "TOKENS_TO_WHITELIST": [
-    "0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC",
-    SUI_COIN_TYPE
-  ],
-  "SENTINEL_COIN_TYPE": "0xb0a3b08be99cb5becf1787e565cdd027edc40791df89ca4a603ba7d1575b21e9::sentinel::SENTINEL",
+export function getTokenForCoinType(coinType?: string): SupportedToken {
+  if (!coinType) return SUI_TOKEN
+  return SUPPORTED_TOKENS.find(t => t.coinType === coinType) ?? SUI_TOKEN
 }
 
-
+export const SUI_TESTNET_CONFIG = {
+  CLOCK_OBJECT_ID: '0x6',
+  GAS_BUDGET: 100000000,
+  PCR0: 'b8715f9f324b7e608ba265c3b43a2bc95bc93cd9b9129f4ad45edfe7fa548028179fe76e0977e3244a32778badd09690',
+  PCR1: 'b8715f9f324b7e608ba265c3b43a2bc95bc93cd9b9129f4ad45edfe7fa548028179fe76e0977e3244a32778badd09690',
+  PCR2: '21b9efbc184807662e966d34f390821309eeac6802309798826296bf3e8bec7c10edb30948c90ba67310f7b964fc500a',
+  ENCLAVE_URL: 'http://18.213.79.225:3000',
+  MODULE_NAME: 'sentinel',
+  OTW_NAME: 'SENTINEL',
+  ENCLAVE_PACKAGE_ID: '0x736191670533a779d92b03118ec56a14c4db9b23e40f485057ec914ed57160c5',
+  CAP_OBJECT_ID: '0x70e303336c878c0bff94105209105ec6a1ca06aad76639c33703523737b28861',
+  ENCLAVE_CONFIG_OBJECT_ID: '0x31a85bab115cdca750c684f3f6104b2f5a3759285cd9503b094b9d62323f2e9d',
+  // New multi-token package (Mar 2026 deployment)
+  APP_PACKAGE_ID: '0x671e644f0a34a79d56d9bac8d2aaf867438b6ac1ee80fd8b02bae8549f938fac',
+  // Old testnet package (single-token, pre-multi-token upgrade Mar 2026)
+  LEGACY_APP_PACKAGE_ID: '0x69615c3a87ad8288e78cc4c6482d2e5921ce71bf56ba56ba757b01ac439cea76',
+  AGENT_REGISTRY: '0x35f145190fdf2c7a56567311fa410a77e926123ee444d0287344751ebb497f43',
+  PROTOCOL_CONFIG_ID: '0x6eb409209a37e395e63736a09dac7969eda573cc053aa32fc779474e552a3821',
+  ENCLAVE_OBJECT_ID: '0x16e09a9b11ac6367bd29e55c30a18356cae5104fb9062f96e625607391c5ee12',
+  TOKENS_TO_WHITELIST: [
+    '0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC',
+    SUI_COIN_TYPE,
+  ],
+  SENTINEL_COIN_TYPE:
+    '0xb0a3b08be99cb5becf1787e565cdd027edc40791df89ca4a603ba7d1575b21e9::sentinel::SENTINEL',
+}
 
 export const SUI_MAINNET_CONFIG = {
   // This is the current (legacy, single-token) mainnet package.
@@ -320,7 +329,6 @@ export const SUI_SENTINEL_ALERTS_TELEGRAM_GROUP_ID =
 export const ADMIN_API_TOKEN = process.env.ADMIN_API_TOKEN
 
 export const WITHDRAWAL_LOCK_MS = 1_209_600_000 // 14 days in milliseconds
-
 
 export const PROVIDER_MODELS: Record<string, string[]> = {
   openai: ['gpt-4o', 'gpt-4.1', 'gpt-4o-mini', 'gpt-3.5-turbo'],
