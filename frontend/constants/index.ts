@@ -41,6 +41,42 @@ export const SUI_SENTINEL_API_URL = process.env.NEXT_PUBLIC_SUI_SENTINEL_API_URL
 export const APP_NETWORK: 'mainnet' | 'testnet' =
   process.env.NEXT_PUBLIC_APP_NETWORK === 'testnet' ? 'testnet' : 'mainnet'
 
+// Supported token type — single source of truth for all token metadata
+export type SupportedToken = {
+  symbol: string
+  name: string
+  coinType: string
+  decimals: number
+  icon: string // path relative to /public
+}
+export const SUI_COIN_TYPE = '0x2::sui::SUI';
+
+// Tokens supported on testnet (new multi-token contract)
+export const TESTNET_SUPPORTED_TOKENS: SupportedToken[] = [
+  {
+    symbol: 'USDC',
+    name: 'USD Coin',
+    coinType: '0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC',
+    decimals: 6,
+    icon: '/icons/tokens/usdc.svg',
+  },
+  {
+    symbol: 'SUI',
+    name: 'Sui',
+    coinType: SUI_COIN_TYPE,
+    decimals: 9,
+    icon: '/icons/tokens/sui.svg',
+  },
+]
+
+// Tokens supported on mainnet (update when new multi-token contract is deployed to mainnet)
+export const MAINNET_SUPPORTED_TOKENS: SupportedToken[] = [
+  // TODO: add mainnet tokens once the multi-token contract is deployed to mainnet
+]
+
+export const SUPPORTED_TOKENS: SupportedToken[] =
+  APP_NETWORK === 'mainnet' ? MAINNET_SUPPORTED_TOKENS : TESTNET_SUPPORTED_TOKENS
+
 export const SUI_TESTNET_CONFIG = {
   "CLOCK_OBJECT_ID": "0x6",
   "GAS_BUDGET": 100000000,
@@ -53,12 +89,16 @@ export const SUI_TESTNET_CONFIG = {
   "ENCLAVE_PACKAGE_ID": "0x736191670533a779d92b03118ec56a14c4db9b23e40f485057ec914ed57160c5",
   "CAP_OBJECT_ID": "0x70e303336c878c0bff94105209105ec6a1ca06aad76639c33703523737b28861",
   "ENCLAVE_CONFIG_OBJECT_ID": "0x31a85bab115cdca750c684f3f6104b2f5a3759285cd9503b094b9d62323f2e9d",
+  // New multi-token package (Mar 2026 deployment)
   "APP_PACKAGE_ID": "0x671e644f0a34a79d56d9bac8d2aaf867438b6ac1ee80fd8b02bae8549f938fac",
+  // Old testnet package (single-token, pre-multi-token upgrade Mar 2026)
+  "LEGACY_APP_PACKAGE_ID": "0x69615c3a87ad8288e78cc4c6482d2e5921ce71bf56ba56ba757b01ac439cea76",
   "AGENT_REGISTRY": "0x35f145190fdf2c7a56567311fa410a77e926123ee444d0287344751ebb497f43",
   "PROTOCOL_CONFIG_ID": "0x6eb409209a37e395e63736a09dac7969eda573cc053aa32fc779474e552a3821",
   "ENCLAVE_OBJECT_ID": "0x16e09a9b11ac6367bd29e55c30a18356cae5104fb9062f96e625607391c5ee12",
   "TOKENS_TO_WHITELIST": [
-    "0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC"
+    "0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC",
+    SUI_COIN_TYPE
   ],
   "SENTINEL_COIN_TYPE": "0xb0a3b08be99cb5becf1787e565cdd027edc40791df89ca4a603ba7d1575b21e9::sentinel::SENTINEL",
 }
@@ -66,7 +106,11 @@ export const SUI_TESTNET_CONFIG = {
 
 
 export const SUI_MAINNET_CONFIG = {
+  // This is the current (legacy, single-token) mainnet package.
+  // When the multi-token contract is deployed to mainnet, move this to LEGACY_APP_PACKAGE_ID
+  // and set APP_PACKAGE_ID to the new package.
   APP_PACKAGE_ID: '0x88b83f36dafcd5f6dcdcf1d2cb5889b03f61264ab3cee9cae35db7aa940a21b7',
+  LEGACY_APP_PACKAGE_ID: '', // populated when new mainnet contract is deployed
   MODULE_NAME: 'sentinel',
   OTW_NAME: 'SENTINEL',
   AGENT_REGISTRY: '0xc47564f5f14c12b31e0dfa1a3dc99a6380a1edf8929c28cb0eaa3359c8db36ac',
