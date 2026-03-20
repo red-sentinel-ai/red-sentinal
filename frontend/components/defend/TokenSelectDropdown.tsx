@@ -27,7 +27,7 @@ export function TokenSelectDropdown({ tokens, selected, onSelect }: TokenSelectD
       </span>
 
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
+        <DropdownMenuTrigger asChild className='mt-auto'>
           <button
             type="button"
             className="flex h-[56px] w-full items-center justify-between rounded-xl border border-[#5E5E5E] bg-white px-4 transition-colors hover:border-black focus:outline-none sm:h-[65px]"
