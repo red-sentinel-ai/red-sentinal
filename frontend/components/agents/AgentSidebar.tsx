@@ -36,6 +36,7 @@ import {
 } from '@/components/ui'
 import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
 import { SparklineChart } from '../ui/common/SparklineChart'
+import { TokenAmount } from '../ui/common/TokenAmount'
 import { SocialMissionModal } from '@/components/rewards/SocialMissionModal'
 import { REWARDS_CONSTANTS } from '@/constants/rewards'
 
@@ -78,12 +79,8 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
   }, [])
 
   const agentToken = getTokenForCoinType(agent.coin_type)
-  const tokenDivisor = Math.pow(10, agentToken.decimals)
 
   const isDrained = agent.state === 'defeated'
-  const bountyWonAmount = agent.winner
-    ? (Number(agent.winner.amount_won) / tokenDivisor).toFixed(2)
-    : '0.00'
   const winnerAddress = agent.winner?.address ?? null
 
   useEffect(() => {
@@ -267,7 +264,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
                 Total Bounty Won
               </h3>
               <p className="inline-block text-lg font-semibold md:text-xl lg:text-2xl">
-                {bountyWonAmount} {agentToken.symbol}
+                <TokenAmount rawAmount={agent.winner?.amount_won || 0} token={agentToken} precision={2} iconSize={20} />
               </p>
             </div>
           ) : (
@@ -298,7 +295,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
               </div>
               <div className="flex items-end justify-between gap-2 md:gap-4">
                 <p className="inline-block text-lg font-semibold md:text-xl lg:text-2xl">
-                  {(Number(agent.total_balance) / tokenDivisor).toFixed(2)} {agentToken.symbol}
+                  <TokenAmount rawAmount={agent.total_balance} token={agentToken} precision={2} iconSize={20} />
                 </p>
                 <div>
                   <SparklineChart data={prizePoolData?.history.map(p => p.value) || []} />
@@ -342,7 +339,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
               Message Price
             </h3>
             <p className="inline-block text-lg font-semibold md:text-xl lg:text-2xl">
-              {(Number(agent.cost_per_message) / tokenDivisor).toFixed(4)} {agentToken.symbol}
+              <TokenAmount rawAmount={agent.cost_per_message} token={agentToken} precision={4} iconSize={20} />
             </p>
           </div>
 
