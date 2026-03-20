@@ -2,12 +2,9 @@ import { useState, useCallback, useEffect } from 'react'
 import { Transaction } from '@mysten/sui/transactions'
 import { useSignAndExecuteTransaction, useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
-import { SUI_CONFIG } from '@/constants'
+import { SUI_COIN_TYPE, SUI_CONFIG } from '@/constants'
 import { toast } from 'sonner'
 
-const USDC_COIN_TYPE =
-  '0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC'
-const USDC_DECIMALS = 1_000_000 // 6 decimal places
 
 interface UseFundAgentOptions {
   onSuccess?: (result: any) => void
@@ -18,7 +15,10 @@ interface UseFundAgentOptions {
 interface FundAgentParams {
   agentObjectId: string
   agentId: string // The agent_id string to match with AgentCap
-  amount: number // Amount in USDC
+  amount: number
+  coinType?: string // defaults to USDC
+  decimals?: number // defaults to 6
+  symbol?: string // defaults to 'USDC'
 }
 
 interface AgentCap {
@@ -90,8 +90,15 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
   }, [fetchAgentCaps])
 
   const fundAgent = useCallback(
-    async ({ agentObjectId, agentId, amount }: FundAgentParams) => {
-      console.log({ agentObjectId, agentId, amount })
+    async ({
+      agentObjectId,
+      agentId,
+      amount,
+      coinType = '0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC',
+      decimals = 6,
+      symbol = 'USDC',
+    }: FundAgentParams) => {
+      console.log({ agentObjectId, agentId, amount, coinType })
       if (!account?.address) {
         const errorMsg = 'Wallet not connected'
         setError(errorMsg)
@@ -119,67 +126,73 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
       setError(null)
 
       try {
-        // Get user's USDC coins
-        const coins = await client.getCoins({
-          owner: account.address,
-          coinType: USDC_COIN_TYPE,
-          limit: 100,
-        })
-
-        if (!coins.data.length) {
-          throw new Error('No USDC coins found in wallet')
-        }
-
-        const amountInBaseUnits = BigInt(Math.floor(amount * USDC_DECIMALS))
-
-        // Sort coins by balance (largest first)
-        const sortedCoins = coins.data.sort((a, b) => Number(b.balance) - Number(a.balance))
-
-        const totalAvailable = sortedCoins.reduce(
-          (sum, coin) => sum + BigInt(coin.balance),
-          BigInt(0)
-        )
-        console.log('Amount needed (USDC):', amount)
-        console.log('Total available (USDC):', Number(totalAvailable) / USDC_DECIMALS)
-
-        if (totalAvailable < amountInBaseUnits) {
-          throw new Error(
-            `Insufficient USDC balance. Need ${amount} USDC, have ${
-              Number(totalAvailable) / USDC_DECIMALS
-            } USDC`
-          )
-        }
+        const amountInBaseUnits = BigInt(Math.floor(amount * Math.pow(10, decimals)))
 
         // Create transaction — gas is paid in SUI automatically, no gas/payment merging needed
         const tx = new Transaction()
 
-        // Select the minimum coins needed to cover the amount
-        const selectedCoins: typeof sortedCoins = []
-        let runningTotal = BigInt(0)
-        for (const coin of sortedCoins) {
-          selectedCoins.push(coin)
-          runningTotal += BigInt(coin.balance)
-          if (runningTotal >= amountInBaseUnits) break
-        }
-
         let paymentCoin
-        if (selectedCoins.length === 1) {
-          ;[paymentCoin] = tx.splitCoins(tx.object(selectedCoins[0].coinObjectId), [
-            tx.pure.u64(amountInBaseUnits),
-          ])
+        if (coinType === SUI_COIN_TYPE) {
+          // SUI is the gas coin — split directly from tx.gas
+          ;[paymentCoin] = tx.splitCoins(tx.gas, [tx.pure.u64(amountInBaseUnits)])
         } else {
-          console.log(`📋 Merging ${selectedCoins.length} USDC coins`)
-          const primaryCoinRef = tx.object(selectedCoins[0].coinObjectId)
-          tx.mergeCoins(
-            primaryCoinRef,
-            selectedCoins.slice(1).map(c => tx.object(c.coinObjectId))
+          // Non-SUI token (e.g. USDC) — fetch coins from wallet
+          const coins = await client.getCoins({
+            owner: account.address,
+            coinType,
+            limit: 100,
+          })
+
+          if (!coins.data.length) {
+            throw new Error(`No ${symbol} coins found in wallet`)
+          }
+
+          const sortedCoins = coins.data.sort((a, b) => Number(b.balance) - Number(a.balance))
+          const totalAvailable = sortedCoins.reduce(
+            (sum, coin) => sum + BigInt(coin.balance),
+            BigInt(0)
           )
-          ;[paymentCoin] = tx.splitCoins(primaryCoinRef, [tx.pure.u64(amountInBaseUnits)])
+          console.log(`Amount needed (${symbol}):`, amount)
+          console.log(
+            `Total available (${symbol}):`,
+            Number(totalAvailable) / Math.pow(10, decimals)
+          )
+
+          if (totalAvailable < amountInBaseUnits) {
+            throw new Error(
+              `Insufficient ${symbol} balance. Need ${amount} ${symbol}, have ${
+                Number(totalAvailable) / Math.pow(10, decimals)
+              } ${symbol}`
+            )
+          }
+
+          // Select minimum coins needed to cover the amount
+          const selectedCoins: typeof sortedCoins = []
+          let runningTotal = BigInt(0)
+          for (const coin of sortedCoins) {
+            selectedCoins.push(coin)
+            runningTotal += BigInt(coin.balance)
+            if (runningTotal >= amountInBaseUnits) break
+          }
+
+          if (selectedCoins.length === 1) {
+            ;[paymentCoin] = tx.splitCoins(tx.object(selectedCoins[0].coinObjectId), [
+              tx.pure.u64(amountInBaseUnits),
+            ])
+          } else {
+            console.log(`📋 Merging ${selectedCoins.length} ${symbol} coins`)
+            const primaryCoinRef = tx.object(selectedCoins[0].coinObjectId)
+            tx.mergeCoins(
+              primaryCoinRef,
+              selectedCoins.slice(1).map(c => tx.object(c.coinObjectId))
+            )
+            ;[paymentCoin] = tx.splitCoins(primaryCoinRef, [tx.pure.u64(amountInBaseUnits)])
+          }
         }
 
         tx.moveCall({
           target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::fund_agent`,
-          typeArguments: [USDC_COIN_TYPE],
+          typeArguments: [coinType],
           arguments: [
             tx.object(agentObjectId),
             tx.object(agentCap.id),
@@ -198,7 +211,7 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
                 setLastResult(result)
 
                 if (showToasts) {
-                  toast.success(`Successfully funded agent with ${amount} USDC`)
+                  toast.success(`Successfully funded agent with ${amount} ${symbol}`)
                 }
 
                 onSuccess?.(result)
