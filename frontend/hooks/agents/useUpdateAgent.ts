@@ -3,7 +3,7 @@ import { Transaction } from '@mysten/sui/transactions'
 import { useSignAndExecuteTransaction, useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 import { toast } from 'sonner'
-import { SUI_CONFIG, getTokenForCoinType } from '@/constants'
+import { SUI_CONFIG, SUI_LEGACY_CONFIG, getTokenForCoinType } from '@/constants'
 
 export const useUpdateAgent = () => {
   const client = useSuiClient()
@@ -17,9 +17,8 @@ export const useUpdateAgent = () => {
       if (!account?.address) return null
 
       const isNewContract = !!coinType
-      const pkgId = isNewContract
-        ? SUI_CONFIG.APP_PACKAGE_ID
-        : (SUI_CONFIG.LEGACY_APP_PACKAGE_ID || SUI_CONFIG.APP_PACKAGE_ID)
+      const contractConfig = isNewContract ? SUI_CONFIG : SUI_LEGACY_CONFIG
+      const pkgId = contractConfig.APP_PACKAGE_ID || SUI_CONFIG.APP_PACKAGE_ID
 
       let cursor = null
       let hasNextPage = true
@@ -104,9 +103,8 @@ export const useUpdateAgent = () => {
   const updatePrompt = useCallback(
     (agentId: string, agentObjectId: string, newPrompt: string, coinType: string | undefined, onSuccess?: () => void) => {
       const isNewContract = !!coinType
-      const packageId = isNewContract
-        ? SUI_CONFIG.APP_PACKAGE_ID
-        : (SUI_CONFIG.LEGACY_APP_PACKAGE_ID || SUI_CONFIG.APP_PACKAGE_ID)
+      const contractConfig = isNewContract ? SUI_CONFIG : SUI_LEGACY_CONFIG
+      const packageId = contractConfig.APP_PACKAGE_ID || SUI_CONFIG.APP_PACKAGE_ID
       const token = getTokenForCoinType(coinType)
 
       executeUpdate(
@@ -134,9 +132,8 @@ export const useUpdateAgent = () => {
   const updateCost = useCallback(
     (agentId: string, agentObjectId: string, newCost: number, coinType: string | undefined, onSuccess?: () => void) => {
       const isNewContract = !!coinType
-      const packageId = isNewContract
-        ? SUI_CONFIG.APP_PACKAGE_ID
-        : (SUI_CONFIG.LEGACY_APP_PACKAGE_ID || SUI_CONFIG.APP_PACKAGE_ID)
+      const contractConfig = isNewContract ? SUI_CONFIG : SUI_LEGACY_CONFIG
+      const packageId = contractConfig.APP_PACKAGE_ID || SUI_CONFIG.APP_PACKAGE_ID
       const token = getTokenForCoinType(coinType)
       const costInBaseUnits = BigInt(Math.floor(newCost * Math.pow(10, token.decimals)))
 
@@ -165,9 +162,8 @@ export const useUpdateAgent = () => {
   const claimFees = useCallback(
     (agentId: string, agentObjectId: string, coinType: string | undefined, onSuccess?: () => void) => {
       const isNewContract = !!coinType
-      const packageId = isNewContract
-        ? SUI_CONFIG.APP_PACKAGE_ID
-        : (SUI_CONFIG.LEGACY_APP_PACKAGE_ID || SUI_CONFIG.APP_PACKAGE_ID)
+      const contractConfig = isNewContract ? SUI_CONFIG : SUI_LEGACY_CONFIG
+      const packageId = contractConfig.APP_PACKAGE_ID || SUI_CONFIG.APP_PACKAGE_ID
       const token = getTokenForCoinType(coinType)
 
       executeUpdate(
