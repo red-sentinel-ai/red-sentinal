@@ -10,6 +10,7 @@ interface UpdatePromptModalProps {
   agentId: string
   agentObjectId: string
   currentPrompt?: string
+  coinType?: string
 }
 
 export const UpdatePromptModal = ({
@@ -18,6 +19,7 @@ export const UpdatePromptModal = ({
   agentId,
   agentObjectId,
   currentPrompt = '',
+  coinType,
 }: UpdatePromptModalProps) => {
   const [prompt, setPrompt] = useState(currentPrompt)
   const { updatePrompt, isLoading } = useUpdateAgent()
@@ -25,7 +27,7 @@ export const UpdatePromptModal = ({
 
   const handleUpdate = () => {
     if (tokenCount > SYSTEM_PROMPT_MAX_TOKENS) return
-    updatePrompt(agentId, agentObjectId, prompt, onClose)
+    updatePrompt(agentId, agentObjectId, prompt, coinType, onClose)
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {

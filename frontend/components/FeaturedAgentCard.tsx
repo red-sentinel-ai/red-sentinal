@@ -171,6 +171,7 @@ export const FeaturedAgentCard = ({
               openFeatureModal={openFeatureModal}
               accumulatedFees={agent.accumulated_fees}
               createdAt={agent.timestampMs}
+              coinType={agent.coin_type}
             />
           </div>
         </div>
@@ -302,6 +303,7 @@ export const FeaturedAgentCard = ({
           agentId={agent.agent_id}
           agentObjectId={agent.agent_object_id}
           accumulatedFees={agent.accumulated_fees}
+          coinType={agent.coin_type}
         />
       </div>
     </motion.div>
