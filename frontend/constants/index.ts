@@ -87,6 +87,7 @@ export function getTokenForCoinType(coinType?: string): SupportedToken {
   return SUPPORTED_TOKENS.find(t => t.coinType === coinType) ?? SUI_TOKEN
 }
 
+// New multi-token contract (Mar 2026 testnet deployment)
 export const SUI_TESTNET_CONFIG = {
   CLOCK_OBJECT_ID: '0x6',
   GAS_BUDGET: 100000000,
@@ -99,10 +100,7 @@ export const SUI_TESTNET_CONFIG = {
   ENCLAVE_PACKAGE_ID: '0x736191670533a779d92b03118ec56a14c4db9b23e40f485057ec914ed57160c5',
   CAP_OBJECT_ID: '0x70e303336c878c0bff94105209105ec6a1ca06aad76639c33703523737b28861',
   ENCLAVE_CONFIG_OBJECT_ID: '0x31a85bab115cdca750c684f3f6104b2f5a3759285cd9503b094b9d62323f2e9d',
-  // New multi-token package (Mar 2026 deployment)
   APP_PACKAGE_ID: '0x671e644f0a34a79d56d9bac8d2aaf867438b6ac1ee80fd8b02bae8549f938fac',
-  // Old testnet package (single-token, pre-multi-token upgrade Mar 2026)
-  LEGACY_APP_PACKAGE_ID: '0x69615c3a87ad8288e78cc4c6482d2e5921ce71bf56ba56ba757b01ac439cea76',
   AGENT_REGISTRY: '0x35f145190fdf2c7a56567311fa410a77e926123ee444d0287344751ebb497f43',
   PROTOCOL_CONFIG_ID: '0x6eb409209a37e395e63736a09dac7969eda573cc053aa32fc779474e552a3821',
   ENCLAVE_OBJECT_ID: '0x16e09a9b11ac6367bd29e55c30a18356cae5104fb9062f96e625607391c5ee12',
@@ -114,12 +112,22 @@ export const SUI_TESTNET_CONFIG = {
     '0xb0a3b08be99cb5becf1787e565cdd027edc40791df89ca4a603ba7d1575b21e9::sentinel::SENTINEL',
 }
 
+// Legacy single-token testnet contract (pre-Mar 2026 deployment)
+export const SUI_TESTNET_LEGACY_CONFIG = {
+  CLOCK_OBJECT_ID: '0x6',
+  MODULE_NAME: 'sentinel',
+  OTW_NAME: 'SENTINEL',
+  APP_PACKAGE_ID: '0x69615c3a87ad8288e78cc4c6482d2e5921ce71bf56ba56ba757b01ac439cea76',
+  AGENT_REGISTRY: '0x29e941ef8ab71e09d23336f34c7535983586e071eee107f927e3dcffa8cb8fbe',
+  PROTOCOL_CONFIG_ID: '0x168ce294a3b3ca3456f505ae0fd58fe0bbe660725b7fce41c3263f3aade0094d',
+  ENCLAVE_OBJECT_ID: '0x667e7657ad509710c42291d36e0a6d96c0f00db0469a8d94120d9d0ff137752d',
+  SENTINEL_COIN_TYPE:
+    '0xb0a3b08be99cb5becf1787e565cdd027edc40791df89ca4a603ba7d1575b21e9::sentinel::SENTINEL',
+}
+
+// Current mainnet contract (single-token; becomes "legacy" when multi-token contract is deployed)
 export const SUI_MAINNET_CONFIG = {
-  // This is the current (legacy, single-token) mainnet package.
-  // When the multi-token contract is deployed to mainnet, move this to LEGACY_APP_PACKAGE_ID
-  // and set APP_PACKAGE_ID to the new package.
   APP_PACKAGE_ID: '0x88b83f36dafcd5f6dcdcf1d2cb5889b03f61264ab3cee9cae35db7aa940a21b7',
-  LEGACY_APP_PACKAGE_ID: '', // populated when new mainnet contract is deployed
   MODULE_NAME: 'sentinel',
   OTW_NAME: 'SENTINEL',
   AGENT_REGISTRY: '0xc47564f5f14c12b31e0dfa1a3dc99a6380a1edf8929c28cb0eaa3359c8db36ac',
@@ -129,7 +137,19 @@ export const SUI_MAINNET_CONFIG = {
     '0x66aaa74fecd25cb19b7576e101b25fd3a844e6b9f678421429d0d49d55e0fca0::sentinel::SENTINEL',
 }
 
+export const SUI_MAINNET_LEGACY_CONFIG = {
+  MODULE_NAME: 'sentinel',
+  APP_PACKAGE_ID: '',
+  AGENT_REGISTRY: '',
+  PROTOCOL_CONFIG_ID: '',
+  ENCLAVE_OBJECT_ID: '',
+  SENTINEL_COIN_TYPE: '',
+}
+
 export const SUI_CONFIG = APP_NETWORK === 'mainnet' ? SUI_MAINNET_CONFIG : SUI_TESTNET_CONFIG
+// Legacy config for agents deployed before the multi-token upgrade
+export const SUI_LEGACY_CONFIG =
+  APP_NETWORK === 'mainnet' ? SUI_MAINNET_LEGACY_CONFIG : SUI_TESTNET_LEGACY_CONFIG
 
 export const EXPLORER_BASE_URL =
   APP_NETWORK === 'mainnet' ? 'https://suivision.xyz' : 'https://testnet.suivision.xyz'

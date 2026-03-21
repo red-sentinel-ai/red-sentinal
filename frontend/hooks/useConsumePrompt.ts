@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 import { Transaction } from '@mysten/sui/transactions'
 import { useSignAndExecuteTransaction, useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
-import { SUI_COIN_TYPE, SUI_CONFIG, getTokenForCoinType } from '@/constants'
+import { SUI_COIN_TYPE, SUI_CONFIG, SUI_LEGACY_CONFIG, getTokenForCoinType } from '@/constants'
 import { toast } from 'sonner'
 import { ConsumePromptApiResponse } from '@/types'
 import { hexToVector } from '@/lib/utils'
@@ -84,6 +84,11 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
     const token = getTokenForCoinType(agentDetails.coin_type)
     const tokenDivisor = Math.pow(10, token.decimals)
 
+    // Each contract deployment has its own shared objects — must use the matching set.
+    const contractConfig = isNewContract ? SUI_CONFIG : SUI_LEGACY_CONFIG
+    const agentRegistry = contractConfig.AGENT_REGISTRY || SUI_CONFIG.AGENT_REGISTRY
+    const protocolConfigId = contractConfig.PROTOCOL_CONFIG_ID || SUI_CONFIG.PROTOCOL_CONFIG_ID
+
     const tx = new Transaction()
     let paymentCoin
 
@@ -137,19 +142,16 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
       }
     }
 
-    // Route to the correct package: new agents use APP_PACKAGE_ID, old agents use LEGACY
-    const packageId = isNewContract
-      ? SUI_CONFIG.APP_PACKAGE_ID
-      : (SUI_CONFIG.LEGACY_APP_PACKAGE_ID || SUI_CONFIG.APP_PACKAGE_ID)
+    const packageId = contractConfig.APP_PACKAGE_ID || SUI_CONFIG.APP_PACKAGE_ID
 
     const [attackTicket] = tx.moveCall({
       target: `${packageId}::${SUI_CONFIG.MODULE_NAME}::request_attack`,
       // Old contract had no type parameters; new contract is generic over the coin type
       ...(isNewContract && { typeArguments: [token.coinType] }),
       arguments: [
-        tx.object(SUI_CONFIG.AGENT_REGISTRY),
+        tx.object(agentRegistry),
         tx.object(agentDetails.agent_object_id),
-        tx.object(SUI_CONFIG.PROTOCOL_CONFIG_ID),
+        tx.object(protocolConfigId),
         paymentCoin,
         tx.object('0x8'),
         tx.object(SUI_CLOCK_OBJECT_ID),
@@ -175,15 +177,10 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
               ) as any)?.objectId ?? null
 
             // Fallback: poll getOwnedObjects — queries current chain state directly.
-            // Try both APP and LEGACY package IDs since the type origin may differ across upgrades.
             if (!attackObjectId) {
-              const legacyId = SUI_CONFIG.LEGACY_APP_PACKAGE_ID || SUI_CONFIG.APP_PACKAGE_ID
               const structTypes = isNewContract
-                ? [
-                    `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Attack<${token.coinType}>`,
-                    `${legacyId}::${SUI_CONFIG.MODULE_NAME}::Attack<${token.coinType}>`,
-                  ]
-                : [`${legacyId}::${SUI_CONFIG.MODULE_NAME}::Attack`]
+                ? [`${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Attack<${token.coinType}>`]
+                : [`${SUI_LEGACY_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Attack`]
 
               for (let attempt = 0; attempt < 5 && !attackObjectId; attempt++) {
                 await new Promise(resolve => setTimeout(resolve, 1500))
@@ -294,16 +291,18 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
     const { response: apiData } = apiResponse
 
     const isNewContract = !!agentDetails.coin_type
-    const packageId = isNewContract
-      ? SUI_CONFIG.APP_PACKAGE_ID
-      : (SUI_CONFIG.LEGACY_APP_PACKAGE_ID || SUI_CONFIG.APP_PACKAGE_ID)
+    const contractConfig = isNewContract ? SUI_CONFIG : SUI_LEGACY_CONFIG
+    const packageId = contractConfig.APP_PACKAGE_ID || SUI_CONFIG.APP_PACKAGE_ID
+    const agentRegistry = contractConfig.AGENT_REGISTRY || SUI_CONFIG.AGENT_REGISTRY
+    const protocolConfigId = contractConfig.PROTOCOL_CONFIG_ID || SUI_CONFIG.PROTOCOL_CONFIG_ID
+    const enclaveObjectId = contractConfig.ENCLAVE_OBJECT_ID || SUI_CONFIG.ENCLAVE_OBJECT_ID
 
     tx.moveCall({
       target: `${packageId}::${SUI_CONFIG.MODULE_NAME}::consume_prompt`,
       ...(isNewContract && { typeArguments: [getTokenForCoinType(agentDetails.coin_type).coinType] }),
       arguments: [
-        tx.object(SUI_CONFIG.AGENT_REGISTRY), // registry: &AgentRegistry
-        tx.object(SUI_CONFIG.PROTOCOL_CONFIG_ID),
+        tx.object(agentRegistry),
+        tx.object(protocolConfigId),
         tx.object(agentObjectId), // agent: &mut Agent
         tx.pure.bool(apiData.data.success), // success: bool
         tx.pure.string(apiData.data.agent_response), // explanation: String,
@@ -313,7 +312,7 @@ export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
         tx.pure.u8(apiData.data.score), // score: u8
         tx.pure.u64(apiData.timestamp_ms), // timestamp_ms: u64
         tx.pure.vector('u8', sigVector), // sig: &vector<u8>
-        tx.object(SUI_CONFIG.ENCLAVE_OBJECT_ID), // enclave: &Enclave<T>
+        tx.object(enclaveObjectId), // enclave: &Enclave<T>
         tx.object(attackObjectId), // attack: &mut Attack,
         tx.object(SUI_CLOCK_OBJECT_ID),
       ],
