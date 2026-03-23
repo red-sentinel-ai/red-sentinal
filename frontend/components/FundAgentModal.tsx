@@ -1,10 +1,12 @@
 'use client'
 import React, { useState } from 'react'
+import Image from 'next/image'
 import { Loader2, X } from 'lucide-react'
 import posthog from 'posthog-js'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { Dialog } from '@/components/Dialog'
 import { useFundAgent } from '@/hooks/useFundAgent'
+import { getTokenForCoinType } from '@/constants'
 
 export interface FundAgentModalProps {
   /** Whether the modal is open */
@@ -35,6 +37,7 @@ export const FundAgentModal = ({
   const [amount, setAmount] = useState('')
   const [error, setError] = useState('')
   const account = useCurrentAccount()
+  const token = getTokenForCoinType(coinType)
 
   const { fundAgent, isLoading } = useFundAgent()
 
@@ -124,7 +127,11 @@ export const FundAgentModal = ({
         </p>
 
         <div>
-          <label className="mb-2 block text-sm font-medium">Amount ({tokenSymbol})</label>
+          <label className="mb-2 flex items-center gap-1.5 text-sm font-medium">
+            Amount
+            <Image src={token.icon} alt={tokenSymbol} width={16} height={16} className="rounded-full" />
+            {tokenSymbol}
+          </label>
           <input
             type="number"
             value={amount}
@@ -138,8 +145,10 @@ export const FundAgentModal = ({
           {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
         </div>
 
-        <p className="text-xs text-gray-500">
-          Sentinels with less than 0.1 {tokenSymbol} balance won&apos;t be visible to attackers.
+        <p className="flex items-center gap-1 text-xs text-gray-500">
+          Sentinels with less than 0.1
+          <Image src={token.icon} alt={tokenSymbol} width={12} height={12} className="rounded-full" />
+          {tokenSymbol} balance won&apos;t be visible to attackers.
         </p>
 
         <button
