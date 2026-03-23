@@ -76,7 +76,99 @@ export const TESTNET_SUPPORTED_TOKENS: SupportedToken[] = [
 
 // Tokens supported on mainnet (update when new multi-token contract is deployed to mainnet)
 export const MAINNET_SUPPORTED_TOKENS: SupportedToken[] = [
-  // TODO: add mainnet tokens once the multi-token contract is deployed to mainnet
+  SUI_TOKEN,
+  {
+    symbol: 'USDC',
+    name: 'USD Coin',
+    coinType: '0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC',
+    decimals: 6,
+    icon: '/icons/tokens/usdc.png',
+  },
+  {
+    symbol: 'USDT',
+    name: 'Tether USD',
+    coinType: '0x375f70cf2ae4c00bf37117d0c85a2c71545e6ee05c4a5c7d282cd66a4504b068::usdt::USDT',
+    decimals: 6,
+    icon: '/icons/tokens/usdt.png',
+  },
+  {
+    symbol: 'MAGMA',
+    name: 'Magma',
+    coinType: '0x9f854b3ad20f8161ec0886f15f4a1752bf75d22261556f14cc8d3a1c5d50e529::magma::MAGMA',
+    decimals: 9,
+    icon: '/icons/tokens/magma.png',
+  },
+  {
+    symbol: 'USDSUI',
+    name: 'USD SUI',
+    coinType: '0x44f838219cf67b058f3b37907b655f226153c18e33dfcd0da559a844fea9b1c1::usdsui::USDSUI',
+    decimals: 6,
+    icon: '/icons/tokens/usdsui.png',
+  },
+  {
+    symbol: 'DEEP',
+    name: 'DeepBook',
+    coinType: '0xdeeb7a4662eec9f2f3def03fb937a663dddaa2e215b8078a284d026b7946c270::deep::DEEP',
+    decimals: 6,
+    icon: '/icons/tokens/deep.png',
+  },
+  {
+    symbol: 'WAL',
+    name: 'Walrus',
+    coinType: '0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL',
+    decimals: 9,
+    icon: '/icons/tokens/wal.png',
+  },
+  {
+    symbol: 'XBTC',
+    name: 'Wrapped BTC',
+    coinType: '0x876a4b7bce8aeaef60464c11f4026903e9afacab79b9b142686158aa86560b50::xbtc::XBTC',
+    decimals: 8,
+    icon: '/icons/tokens/xbtc.png',
+  },
+  {
+    symbol: 'SENTINEL',
+    name: 'Sentinel',
+    coinType:
+      '0x66aaa74fecd25cb19b7576e101b25fd3a844e6b9f678421429d0d49d55e0fca0::sentinel::SENTINEL',
+    decimals: 0,
+    icon: '/icons/tokens/sentinel.png',
+  },
+  {
+    symbol: 'BLUE',
+    name: 'Blue',
+    coinType: '0xe1b45a0e641b9955a20aa0ad1c1f4ad86aad8afb07296d4085e349a50e90bdca::blue::BLUE',
+    decimals: 9,
+    icon: '/icons/tokens/blue.png',
+  },
+  {
+    symbol: 'CETUS',
+    name: 'Cetus Protocol',
+    coinType: '0x06864a6f921804860930db6ddbe2e16acdf8504495ea7481637a1c8b9a8fe54b::cetus::CETUS',
+    decimals: 9,
+    icon: '/icons/tokens/cetus.png',
+  },
+  {
+    symbol: 'BUCK',
+    name: 'Bucket USD',
+    coinType: '0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2::buck::BUCK',
+    decimals: 9,
+    icon: '/icons/tokens/buck.png',
+  },
+  {
+    symbol: 'stSUI',
+    name: 'Staked SUI',
+    coinType: '0xd1b72982e40348d069bb1ff701e634c117bb5f741f44dff91e472d3b01461e55::stsui::STSUI',
+    decimals: 9,
+    icon: '/icons/tokens/stsui.png',
+  },
+  {
+    symbol: 'ETH',
+    name: 'Ethereum',
+    coinType: '0xd0e89b2af5e4910726fbcd8b8dd37bb79b29e5f83f7491bca830e94f7f226d29::eth::ETH',
+    decimals: 8,
+    icon: '/icons/tokens/eth.png',
+  },
 ]
 
 export const SUPPORTED_TOKENS: SupportedToken[] =
@@ -138,39 +230,39 @@ export const SUI_MAINNET_LEGACY_CONFIG = {
 }
 
 export const SUI_MAINNET_CONFIG = {
-  "PCR0": "b8715f9f324b7e608ba265c3b43a2bc95bc93cd9b9129f4ad45edfe7fa548028179fe76e0977e3244a32778badd09690",
-  "PCR1": "b8715f9f324b7e608ba265c3b43a2bc95bc93cd9b9129f4ad45edfe7fa548028179fe76e0977e3244a32778badd09690",
-  "PCR2": "21b9efbc184807662e966d34f390821309eeac6802309798826296bf3e8bec7c10edb30948c90ba67310f7b964fc500a",
-  "ENCLAVE_URL": "http://18.213.79.225:3000",
-  "MODULE_NAME": "sentinel",
-  "OTW_NAME": "SENTINEL",
-  "ENCLAVE_PACKAGE_ID": "0xb72c98cf27aed91d45c723a5a9e082181f610ceda1cd3ebb782b23daece1de48",
-  "CAP_OBJECT_ID": "0xd7d7b9e12a89abecf62aee0dda6cb7aee29811a80253feaca017bfdf76d422b1",
-  "ENCLAVE_CONFIG_OBJECT_ID": "0xf2b24aeba75f0c02af1e83711253dc4c61f60707c6a3536c89a5aca63e9f1cba",
-  "APP_PACKAGE_ID": "0x07135ba3b4cdddcb27df1eabf4ed04159daefd79c93877a6e4f7af944b3ce730",
-  "AGENT_REGISTRY": "0x193844ff9edfcdfddcbb6ab2f2c93bb2c615fcbd883bc2cbceaa83146280d534",
-  "PROTOCOL_CONFIG_ID": "0xb2743e785b8e0dbcdadeec77e51593702299e4c51d9a326ef20b4f66cfee28ce",
-  "ENCLAVE_OBJECT_ID": "0xc52dcc7d86fee5a54413823bfd1cc1d26e0e416cd2e11399fa66772854f775f8",
-  "CLOCK_OBJECT_ID": "0x6",
-  "GAS_BUDGET": 100000000,
-  "TOKENS_TO_WHITELIST": [
-    "0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC",
-    "0x375f70cf2ae4c00bf37117d0c85a2c71545e6ee05c4a5c7d282cd66a4504b068::usdt::USDT",
-    "0x9f854b3ad20f8161ec0886f15f4a1752bf75d22261556f14cc8d3a1c5d50e529::magma::MAGMA",
-    "0x44f838219cf67b058f3b37907b655f226153c18e33dfcd0da559a844fea9b1c1::usdsui::USDSUI",
-    "0xdeeb7a4662eec9f2f3def03fb937a663dddaa2e215b8078a284d026b7946c270::deep::DEEP",
-    "0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL",
-    "0x876a4b7bce8aeaef60464c11f4026903e9afacab79b9b142686158aa86560b50::xbtc::XBTC",
-    "0x66aaa74fecd25cb19b7576e101b25fd3a844e6b9f678421429d0d49d55e0fca0::sentinel::SENTINEL",
-    "0xe1b45a0e641b9955a20aa0ad1c1f4ad86aad8afb07296d4085e349a50e90bdca::blue::BLUE",
-    "0x06864a6f921804860930db6ddbe2e16acdf8504495ea7481637a1c8b9a8fe54b::cetus::CETUS",
-    "0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2::buck::BUCK",
-    "0xd1b72982e40348d069bb1ff701e634c117bb5f741f44dff91e472d3b01461e55::stsui::STSUI",
-    "0xd0e89b2af5e4910726fbcd8b8dd37bb79b29e5f83f7491bca830e94f7f226d29::eth::ETH"
+  PCR0: 'b8715f9f324b7e608ba265c3b43a2bc95bc93cd9b9129f4ad45edfe7fa548028179fe76e0977e3244a32778badd09690',
+  PCR1: 'b8715f9f324b7e608ba265c3b43a2bc95bc93cd9b9129f4ad45edfe7fa548028179fe76e0977e3244a32778badd09690',
+  PCR2: '21b9efbc184807662e966d34f390821309eeac6802309798826296bf3e8bec7c10edb30948c90ba67310f7b964fc500a',
+  ENCLAVE_URL: 'http://18.213.79.225:3000',
+  MODULE_NAME: 'sentinel',
+  OTW_NAME: 'SENTINEL',
+  ENCLAVE_PACKAGE_ID: '0xb72c98cf27aed91d45c723a5a9e082181f610ceda1cd3ebb782b23daece1de48',
+  CAP_OBJECT_ID: '0xd7d7b9e12a89abecf62aee0dda6cb7aee29811a80253feaca017bfdf76d422b1',
+  ENCLAVE_CONFIG_OBJECT_ID: '0xf2b24aeba75f0c02af1e83711253dc4c61f60707c6a3536c89a5aca63e9f1cba',
+  APP_PACKAGE_ID: '0x07135ba3b4cdddcb27df1eabf4ed04159daefd79c93877a6e4f7af944b3ce730',
+  AGENT_REGISTRY: '0x193844ff9edfcdfddcbb6ab2f2c93bb2c615fcbd883bc2cbceaa83146280d534',
+  PROTOCOL_CONFIG_ID: '0xb2743e785b8e0dbcdadeec77e51593702299e4c51d9a326ef20b4f66cfee28ce',
+  ENCLAVE_OBJECT_ID: '0xc52dcc7d86fee5a54413823bfd1cc1d26e0e416cd2e11399fa66772854f775f8',
+  CLOCK_OBJECT_ID: '0x6',
+  GAS_BUDGET: 100000000,
+  TOKENS_TO_WHITELIST: [
+    '0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC',
+    '0x375f70cf2ae4c00bf37117d0c85a2c71545e6ee05c4a5c7d282cd66a4504b068::usdt::USDT',
+    '0x9f854b3ad20f8161ec0886f15f4a1752bf75d22261556f14cc8d3a1c5d50e529::magma::MAGMA',
+    '0x44f838219cf67b058f3b37907b655f226153c18e33dfcd0da559a844fea9b1c1::usdsui::USDSUI',
+    '0xdeeb7a4662eec9f2f3def03fb937a663dddaa2e215b8078a284d026b7946c270::deep::DEEP',
+    '0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL',
+    '0x876a4b7bce8aeaef60464c11f4026903e9afacab79b9b142686158aa86560b50::xbtc::XBTC',
+    '0x66aaa74fecd25cb19b7576e101b25fd3a844e6b9f678421429d0d49d55e0fca0::sentinel::SENTINEL',
+    '0xe1b45a0e641b9955a20aa0ad1c1f4ad86aad8afb07296d4085e349a50e90bdca::blue::BLUE',
+    '0x06864a6f921804860930db6ddbe2e16acdf8504495ea7481637a1c8b9a8fe54b::cetus::CETUS',
+    '0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2::buck::BUCK',
+    '0xd1b72982e40348d069bb1ff701e634c117bb5f741f44dff91e472d3b01461e55::stsui::STSUI',
+    '0xd0e89b2af5e4910726fbcd8b8dd37bb79b29e5f83f7491bca830e94f7f226d29::eth::ETH',
   ],
-  "SENTINEL_COIN_TYPE": "0x66aaa74fecd25cb19b7576e101b25fd3a844e6b9f678421429d0d49d55e0fca0::sentinel::SENTINEL"
+  SENTINEL_COIN_TYPE:
+    '0x66aaa74fecd25cb19b7576e101b25fd3a844e6b9f678421429d0d49d55e0fca0::sentinel::SENTINEL',
 }
-
 
 export const SUI_CONFIG = APP_NETWORK === 'mainnet' ? SUI_MAINNET_CONFIG : SUI_TESTNET_CONFIG
 // Legacy config for agents deployed before the multi-token upgrade
