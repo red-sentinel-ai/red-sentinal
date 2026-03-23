@@ -113,13 +113,35 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
         return
       }
 
-      // Find the matching AgentCap
-      const agentCap = agentCaps.find(cap => cap.agentId.toString() === agentId.toString())
+      // Find the matching AgentCap — re-fetch first to handle the race condition
+      // where a freshly-deployed agent's cap isn't in stale state yet
+      let caps = agentCaps
+      let agentCap = caps.find(cap => cap.agentId.toString() === agentId.toString())
+      if (!agentCap) {
+        await fetchAgentCaps()
+        // fetchAgentCaps updates state asynchronously, so read directly from the RPC result
+        const objects = await client.getOwnedObjects({
+          owner: account.address,
+          filter: {
+            StructType: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::AgentCap`,
+          },
+          options: { showContent: true, showType: true },
+        })
+        caps = objects.data
+          .filter(obj => obj.data?.content?.dataType === 'moveObject')
+          .map(obj => {
+            const fields = (obj.data?.content as any)?.fields
+            return { id: obj.data?.objectId || '', agentId: fields?.agent_id || '' }
+          })
+          .filter(cap => cap.id && cap.agentId)
+        agentCap = caps.find(cap => cap.agentId.toString() === agentId.toString())
+      }
+
       if (!agentCap) {
         const errorMsg = `You don't own the AgentCap for agent "${agentId}". Only the agent creator can fund it.`
         setError(errorMsg)
         if (showToasts) toast.error(errorMsg)
-        return
+        throw new Error(errorMsg)
       }
 
       setIsLoading(true)
