@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { UpdatePromptModal } from './UpdatePromptModal'
 import { UpdateCostModal } from './UpdateCostModal'
-import { getTokenForCoinType } from '@/constants'
+import { MIST_PER_SUI } from '@/constants'
 
 const PROMPT_UPDATE_WINDOW_MS = 10_800_000
 
@@ -25,7 +25,6 @@ interface AgentDropdownProps {
   currentCost?: number
   accumulatedFees?: number
   createdAt?: string
-  coinType?: string
 }
 
 export const AgentDropdown = ({
@@ -37,7 +36,6 @@ export const AgentDropdown = ({
   currentPrompt,
   currentCost,
   createdAt,
-  coinType,
 }: AgentDropdownProps) => {
   const [isPromptModalOpen, setIsPromptModalOpen] = useState(false)
   const [isCostModalOpen, setIsCostModalOpen] = useState(false)
@@ -124,15 +122,13 @@ export const AgentDropdown = ({
             agentId={agentId}
             agentObjectId={agentObjectId}
             currentPrompt={currentPrompt}
-            coinType={coinType}
           />
           <UpdateCostModal
             open={isCostModalOpen}
             onClose={() => setIsCostModalOpen(false)}
             agentId={agentId}
             agentObjectId={agentObjectId}
-            currentCost={currentCost ? currentCost / Math.pow(10, getTokenForCoinType(coinType).decimals) : 0}
-            coinType={coinType}
+            currentCost={currentCost ? currentCost / Number(MIST_PER_SUI) : 0}
           />
         </>
       )}

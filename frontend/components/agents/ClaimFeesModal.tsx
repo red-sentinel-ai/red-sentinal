@@ -2,8 +2,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { useUpdateAgent } from '@/hooks/agents/useUpdateAgent'
 import { AgentUpdateDialog } from './AgentUpdateDialog'
-import { getTokenForCoinType } from '@/constants'
-import { TokenAmount } from '../ui/common/TokenAmount'
+import { MIST_PER_SUI } from '@/constants'
 
 interface ClaimFeesModalProps {
   open: boolean
@@ -11,7 +10,6 @@ interface ClaimFeesModalProps {
   agentId: string
   agentObjectId: string
   accumulatedFees: number
-  coinType?: string
 }
 
 export const ClaimFeesModal = ({
@@ -20,18 +18,17 @@ export const ClaimFeesModal = ({
   agentId,
   agentObjectId,
   accumulatedFees,
-  coinType,
 }: ClaimFeesModalProps) => {
   const { claimFees, isLoading } = useUpdateAgent()
   const queryClient = useQueryClient()
   const account = useCurrentAccount()
 
-  const token = getTokenForCoinType(coinType)
+  const feesInSui = accumulatedFees / Number(MIST_PER_SUI)
   const hasFees = accumulatedFees > 0
 
   const handleClaim = () => {
     if (!hasFees) return
-    claimFees(agentId, agentObjectId, coinType, () => {
+    claimFees(agentId, agentObjectId, () => {
       onClose()
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey: ['agents-by-owner', account?.address] })
@@ -54,7 +51,11 @@ export const ClaimFeesModal = ({
           Available to Claim
         </span>
         <div className="text-2xl font-extrabold tracking-tight text-black sm:text-4xl">
-          <TokenAmount rawAmount={accumulatedFees} token={token} precision={4} iconSize={24} />
+          {feesInSui.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 4,
+          })}
+          <span className="ml-1 text-sm text-gray-400 sm:text-lg">SUI</span>
         </div>
       </div>
 

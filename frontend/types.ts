@@ -31,7 +31,7 @@ export type ConsumePromptApiResponse = {
 export type AgentStatus = 'active' | 'defeated'
 
 // Booster Types
-export type BoosterTier = 'COMMON' | 'UNCOMMON' | 'RARE' | 'EPIC' | 'LEGENDARY' | 'MYTHIC' | 'DIVINE' | 'CELESTIAL' | 'ETERNAL' | 'TRANSCENDENT'
+export type BoosterTier = 'COMMON' | 'UNCOMMON' | 'RARE' | 'EPIC' | 'LEGENDARY' | 'MYTHIC' | 'DIVINE'
 export type BoosterStatus = 'active' | 'redeemed' | 'expired'
 export type BoosterSource =
   | 'ATTACK_SCORE_0_69'
