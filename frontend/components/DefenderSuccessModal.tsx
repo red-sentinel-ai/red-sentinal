@@ -6,7 +6,6 @@ import Link from 'next/link'
 interface SuccessModalProps {
   open: boolean
   onClose: () => void
-  onAddFunds: () => void
   agentName: string
   transactionDigest: string
   agentPath: string
@@ -15,7 +14,6 @@ interface SuccessModalProps {
 export const SuccessModal: React.FC<SuccessModalProps> = ({
   open,
   onClose,
-  onAddFunds,
   agentName,
   transactionDigest,
   agentPath,
@@ -64,17 +62,11 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
             </Link>
           </div>
 
-          <div className="space-y-4">
-            <button
-              onClick={onAddFunds}
-              className="btn hover:shadow-glow-blue w-full rounded-full bg-gradient-to-r from-[#558EB4] to-[#1388D5] py-3 font-bold text-white shadow-lg transition-all duration-300 hover:from-[#1388D5] hover:to-[#558EB4]"
-            >
-              Add Funds Now
+          <Link href={`/attack/${agentPath}`} className="block w-full">
+            <button className="btn hover:shadow-glow-blue w-full rounded-full bg-gradient-to-r from-[#558EB4] to-[#1388D5] py-3 font-bold text-white shadow-lg transition-all duration-300 hover:from-[#1388D5] hover:to-[#558EB4]">
+              View Agent
             </button>
-            <Link href={`/attack/${agentPath}`} className="block w-full">
-              <button className="btn btn-outline w-full">Skip for Now</button>
-            </Link>
-          </div>
+          </Link>
         </div>
       </motion.div>
     </div>

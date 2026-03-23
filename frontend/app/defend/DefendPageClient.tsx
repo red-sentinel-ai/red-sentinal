@@ -4,14 +4,14 @@ import Link from 'next/link'
 import Image from 'next/image'
 import {
   CameraIcon,
-  ChevronLeft,
-  Loader2,
-  Sparkles,
-  Info,
   CheckCircle,
-  XCircle,
+  ChevronLeft,
   Eye,
   EyeOff,
+  Info,
+  Loader2,
+  Sparkles,
+  XCircle,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import posthog from 'posthog-js'
@@ -26,6 +26,7 @@ import {
 import {
   PROVIDER_MODELS,
   SUPPORTED_TOKENS,
+  SUI_COIN_TYPE,
   SUI_CONFIG,
   SUI_SENTINEL_DOCS_URL,
   SYSTEM_PROMPT_MAX_TOKENS,
@@ -35,16 +36,14 @@ import { SENTINEL_GIFS, SENTINEL_IMAGES } from '@/constants/asset_paths'
 import { hexToVector } from '@/lib/utils'
 import { registerAgentUtil } from './utils'
 import { useAgentObjectNames } from '@/hooks/useAgentObjectNames'
-import { FundAgentModal } from '@/components/FundAgentModal'
 import { SuccessModal } from '@/components/DefenderSuccessModal'
 import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
 import { useTokenCount } from '@/hooks/useTokenCount'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
-import { FundSuccessModal } from '@/components/FundSuccessModal'
-import { TokenSelectDropdown } from '@/components/defend/TokenSelectDropdown'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 import { CustomDropdown } from '@/components/ui/common/CustomDropdown'
 import { RewardsConditions } from '@/components/defend/RewardsConditions'
+import { TokenSelectDropdown } from '@/components/defend/TokenSelectDropdown'
 import { useEffect } from 'react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
@@ -52,6 +51,7 @@ interface FormData {
   agentName: string
   systemPrompt: string
   feePerMessage: string
+  initialBalance: string
   rewardPool: string
   llmProvider: string
   llmModel: string
@@ -226,7 +226,6 @@ export default function DefendPageClient() {
     isDebouncing: isJuryPromptTokenCountDebouncing,
   } = useTokenCount()
   const [imagePickerOpen, setImagePickerOpen] = useState(false)
-  const [agentId, setAgentId] = useState<string | null>(null)
   const [selectedImage, setSelectedImage] = useState<{
     url: string
     isCustom: boolean
@@ -252,6 +251,7 @@ export default function DefendPageClient() {
     agentName: '',
     systemPrompt: '',
     feePerMessage: '',
+    initialBalance: '',
     rewardPool: '',
     llmProvider: DEFAULT_PROVIDER,
     llmModel: DEFAULT_MODEL,
@@ -272,14 +272,10 @@ export default function DefendPageClient() {
   const [customProviderError, setCustomProviderError] = useState<string | null>(null)
   const [showApiKey, setShowApiKey] = useState(false)
 
-  const [deployedAgentObjectId, setDeployedAgentObjectId] = useState<string | null>(null)
   const [deployedAgentPath, setDeployedAgentPath] = useState<string | null>(null)
   const [transactionDigest, setTransactionDigest] = useState('')
 
   const [showSuccessModal, setShowSuccessModal] = useState(false)
-  const [showFundModal, setShowFundModal] = useState(false)
-  const [showFundSuccessModal, setShowFundSuccessModal] = useState(false)
-  const [fundedAmount, setFundedAmount] = useState('')
   const [selectedToken, setSelectedToken] = useState<SupportedToken>(SUPPORTED_TOKENS[0])
   const handleProviderChange = (provider: string) => {
     const isCustom = provider === 'custom'
@@ -377,13 +373,13 @@ export default function DefendPageClient() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
 
-    if (name === 'feePerMessage') {
+    if (name === 'feePerMessage' || name === 'initialBalance') {
       if (value === '') {
-        setFormData(prev => ({ ...prev, feePerMessage: '' }))
+        setFormData(prev => ({ ...prev, [name]: '' }))
       } else {
         const num = parseFloat(value)
         if (!isNaN(num) && num >= 0) {
-          setFormData(prev => ({ ...prev, feePerMessage: value }))
+          setFormData(prev => ({ ...prev, [name]: value }))
         }
       }
     } else {
@@ -411,12 +407,12 @@ export default function DefendPageClient() {
   }
 
   const resetAllState = () => {
-    setDeployedAgentObjectId(null)
     setTransactionDigest('')
     setFormData({
       agentName: '',
       systemPrompt: '',
       feePerMessage: '',
+      initialBalance: '',
       rewardPool: '',
       llmProvider: DEFAULT_PROVIDER,
       llmModel: DEFAULT_MODEL,
@@ -427,7 +423,6 @@ export default function DefendPageClient() {
       customApiKey: '',
       customModelName: '',
     })
-    setFundedAmount('')
     setSelectedImage({
       url: SENTINEL_IMAGES[0],
       isCustom: false,
@@ -439,32 +434,6 @@ export default function DefendPageClient() {
 
   const handleCloseSuccessModal = () => {
     setShowSuccessModal(false)
-    resetAllState()
-  }
-
-  const handleAddFunds = () => {
-    setShowSuccessModal(false)
-    setShowFundModal(true)
-  }
-
-  const handleCloseFundModal = () => {
-    setShowFundModal(false)
-  }
-
-  const handleAbortAndCloseFundModal = () => {
-    handleCloseFundModal()
-    resetAllState()
-  }
-
-  const handleFundSuccess = (amount: string) => {
-    toast.success('Sentinel funded successfully!')
-    setFundedAmount(amount)
-    handleCloseFundModal()
-    setShowFundSuccessModal(true)
-  }
-
-  const handleCloseFundSuccessModal = () => {
-    setShowFundSuccessModal(false)
     resetAllState()
   }
 
@@ -485,7 +454,12 @@ export default function DefendPageClient() {
 
     const fee = parseFloat(formData.feePerMessage)
     if (isNaN(fee) || fee < 0.1) {
-      newErrors.feePerMessage = `Fee must be greater than 0.1 ${selectedToken.symbol}`
+      newErrors.feePerMessage = `Fee must be at least 0.1 ${selectedToken.symbol}`
+    }
+
+    const balance = parseFloat(formData.initialBalance)
+    if (isNaN(balance) || balance < selectedToken.minimumAmount) {
+      newErrors.initialBalance = `Minimum initial balance is ${selectedToken.minimumAmount} ${selectedToken.symbol}`
     }
 
     if (!formData.attackGoal.trim()) {
@@ -536,7 +510,6 @@ export default function DefendPageClient() {
     if (agentObject) {
       const agentObjectId = (agentObject as any).objectId
       await addAgentObjectIdWithName(`${agentObjectId} ${agentName}`)
-      setDeployedAgentObjectId(agentObjectId)
       setTransactionDigest(result.digest.toString())
       setShowSuccessModal(true)
 
@@ -583,6 +556,55 @@ export default function DefendPageClient() {
     const tx = new Transaction()
     const sigVector = hexToVector(agentDetails.signature)
 
+    const initialAmountRaw = BigInt(
+      Math.floor(parseFloat(formData.initialBalance) * Math.pow(10, selectedToken.decimals))
+    )
+
+    let initialFundCoin
+    if (selectedToken.coinType === SUI_COIN_TYPE) {
+      ;[initialFundCoin] = tx.splitCoins(tx.gas, [tx.pure.u64(initialAmountRaw)])
+    } else {
+      const coins = await client.getCoins({
+        owner: account!.address,
+        coinType: selectedToken.coinType,
+        limit: 100,
+      })
+
+      if (!coins.data.length) {
+        throw new Error(`No ${selectedToken.symbol} coins found in wallet`)
+      }
+
+      const sortedCoins = coins.data.sort((a, b) => Number(b.balance) - Number(a.balance))
+      const totalAvailable = sortedCoins.reduce((sum, coin) => sum + BigInt(coin.balance), BigInt(0))
+
+      if (totalAvailable < initialAmountRaw) {
+        throw new Error(
+          `Insufficient ${selectedToken.symbol} balance. Need ${formData.initialBalance} ${selectedToken.symbol}, have ${Number(totalAvailable) / Math.pow(10, selectedToken.decimals)} ${selectedToken.symbol}`
+        )
+      }
+
+      const selectedCoins: typeof sortedCoins = []
+      let runningTotal = BigInt(0)
+      for (const coin of sortedCoins) {
+        selectedCoins.push(coin)
+        runningTotal += BigInt(coin.balance)
+        if (runningTotal >= initialAmountRaw) break
+      }
+
+      if (selectedCoins.length === 1) {
+        ;[initialFundCoin] = tx.splitCoins(tx.object(selectedCoins[0].coinObjectId), [
+          tx.pure.u64(initialAmountRaw),
+        ])
+      } else {
+        const primaryCoinRef = tx.object(selectedCoins[0].coinObjectId)
+        tx.mergeCoins(
+          primaryCoinRef,
+          selectedCoins.slice(1).map(c => tx.object(c.coinObjectId))
+        )
+        ;[initialFundCoin] = tx.splitCoins(primaryCoinRef, [tx.pure.u64(initialAmountRaw)])
+      }
+    }
+
     tx.moveCall({
       target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::register_agent`,
       typeArguments: [selectedToken.coinType],
@@ -593,6 +615,7 @@ export default function DefendPageClient() {
         tx.pure.u64(agentDetails.response.timestamp_ms),
         tx.pure.u64(agentDetails.response.data.cost_per_message),
         tx.pure.string(agentDetails.response.data.system_prompt),
+        initialFundCoin,
         tx.pure.vector('u8', sigVector),
         tx.object(SUI_CONFIG.ENCLAVE_OBJECT_ID),
         tx.object(SUI_CLOCK_OBJECT_ID),
@@ -652,7 +675,6 @@ export default function DefendPageClient() {
           ? { apiBaseUrl: formData.customEndpointUrl, apiKey: formData.customApiKey }
           : undefined
       )
-      setAgentId(agentDetails.response.data.agent_id)
       await createAgentTransaction(agentDetails)
     } catch (error) {
       console.error('Deployment error:', error)
@@ -869,41 +891,6 @@ export default function DefendPageClient() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <FormInput
-            label={`Fee Per Message (${selectedToken.symbol})`}
-            subLabel={`You earn this fee whenever users interact with your Sentinel. Minimum 0.1 ${selectedToken.symbol}.`}
-            name="feePerMessage"
-            value={formData.feePerMessage}
-            onChange={handleChange}
-            error={errors.feePerMessage}
-            type="number"
-            placeholder="0.00"
-            step="0.1"
-            className="h-full"
-          />
-          <TokenSelectDropdown
-            tokens={SUPPORTED_TOKENS}
-            selected={selectedToken}
-            onSelect={setSelectedToken}
-          />
-
-          {/* <FormInput
-            label="Reward Pool"
-            rightElement={
-              <div className="text-gray-400 cursor-pointer hover:text-gray-600">
-                <Info className="w-4 h-4" />
-              </div>
-            }
-            subLabel="Add minimum of 1 SUI"
-            name="rewardPool"
-            value={formData.rewardPool}
-            onChange={handleChange}
-            type="number"
-            placeholder=""
-            className="h-full"
-          /> */}
-        </div>
 
         <div className="flex flex-col gap-2">
           <div className="mb-1 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
@@ -1102,6 +1089,55 @@ export default function DefendPageClient() {
           </div>
         </div>
 
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="flex flex-col gap-2">
+            <div>
+              <label className="text-[20px] font-medium leading-tight text-black">
+                Initial Balance
+              </label>
+              <span className="mt-1 block text-[16px] font-normal text-[#5E5E5E]">
+                Minimum {selectedToken.minimumAmount} {selectedToken.symbol} required to deploy.
+              </span>
+            </div>
+            <div className="flex h-[56px] overflow-hidden rounded-xl border border-[#5E5E5E] bg-white transition-all focus-within:border-black focus-within:ring-1 focus-within:ring-black sm:h-[65px] mt-auto">
+              <input
+                name="initialBalance"
+                type="number"
+                value={formData.initialBalance}
+                onChange={handleChange}
+                className="h-full flex-1 bg-transparent px-4 text-[16px] text-black placeholder-gray-400 focus:outline-none"
+                placeholder="0.00"
+                step="0.1"
+                min={selectedToken.minimumAmount.toString()}
+                autoComplete="off"
+              />
+              <div className="flex shrink-0 items-center border-l border-[#5E5E5E]">
+                <TokenSelectDropdown
+                  tokens={SUPPORTED_TOKENS}
+                  selected={selectedToken}
+                  onSelect={setSelectedToken}
+                />
+              </div>
+            </div>
+            {errors.initialBalance && (
+              <p className="mt-1 text-sm text-red-500">{errors.initialBalance}</p>
+            )}
+          </div>
+
+          <FormInput
+            label={`Fee Per Message (${selectedToken.symbol})`}
+            subLabel={`You earn this fee whenever users interact with your Sentinel. Minimum 0.1 ${selectedToken.symbol}.`}
+            name="feePerMessage"
+            value={formData.feePerMessage}
+            onChange={handleChange}
+            error={errors.feePerMessage}
+            type="number"
+            placeholder="0.00"
+            step="0.1"
+            className="h-full"
+          />
+        </div>
+
         <RewardsConditions />
 
         <div className="pb-20 pt-2">
@@ -1144,31 +1180,9 @@ export default function DefendPageClient() {
       <SuccessModal
         open={showSuccessModal}
         onClose={handleCloseSuccessModal}
-        onAddFunds={handleAddFunds}
         agentName={formData.agentName}
         transactionDigest={transactionDigest}
         agentPath={deployedAgentPath}
-      />
-
-      {deployedAgentObjectId && (
-        <FundAgentModal
-          open={showFundModal}
-          onClose={handleAbortAndCloseFundModal}
-          agentObjectId={deployedAgentObjectId}
-          agentId={agentId}
-          onSuccess={handleFundSuccess}
-          coinType={selectedToken.coinType}
-          tokenSymbol={selectedToken.symbol}
-          tokenDecimals={selectedToken.decimals}
-        />
-      )}
-
-      <FundSuccessModal
-        open={showFundSuccessModal}
-        onClose={handleCloseFundSuccessModal}
-        agentName={formData.agentName}
-        prizePoolAmount={fundedAmount}
-        sentinelId={deployedAgentObjectId}
       />
     </div>
   )
