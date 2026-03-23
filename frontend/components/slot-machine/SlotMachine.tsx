@@ -79,8 +79,8 @@ export const SlotMachine = ({
         shareToTwitter,
       })
 
-      if (data.success && data.spin.finalAmount) {
-        const digits = String(data.spin.finalAmount)
+      if (data.success && data.spin.baseAmount) {
+        const digits = String(data.spin.baseAmount)
           .padStart(3, '0')
           .slice(-3)
           .split('')

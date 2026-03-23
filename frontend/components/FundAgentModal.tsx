@@ -1,21 +1,26 @@
 'use client'
 import React, { useState } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
 import { Loader2, X } from 'lucide-react'
 import posthog from 'posthog-js'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { Dialog } from '@/components/Dialog'
 import { useFundAgent } from '@/hooks/useFundAgent'
+import { getTokenForCoinType } from '@/constants'
+import { getDefenderBoosterTier } from '@/lib/earn-utils'
+import { BoosterPassBadge } from '@/components/BoosterPassBadge'
 
 export interface FundAgentModalProps {
-  /** Whether the modal is open */
   open: boolean
-  /** Callback when the modal should close */
   onClose: () => void
-  /** Agent object ID to fund */
   agentObjectId: string
-  /** Optional callback when funding is successful, receives the amount */
   onSuccess?: (amount: string) => void
   agentId: string | null
+  /** Token to fund with (defaults to USDC) */
+  coinType?: string
+  tokenSymbol?: string
+  tokenDecimals?: number
 }
 
 export const FundAgentModal = ({
@@ -24,40 +29,29 @@ export const FundAgentModal = ({
   agentObjectId,
   onSuccess,
   agentId,
+  coinType = '0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC',
+  tokenSymbol = 'USDC',
+  tokenDecimals = 6,
 }: FundAgentModalProps) => {
   const [amount, setAmount] = useState('')
   const [error, setError] = useState('')
+  const [funded, setFunded] = useState(false)
+  const [fundedTier, setFundedTier] = useState('')
   const account = useCurrentAccount()
+  const token = getTokenForCoinType(coinType)
 
   const { fundAgent, isLoading } = useFundAgent()
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setAmount(value)
-
-    if (error) {
-      setError('')
-    }
+    setAmount(e.target.value)
+    if (error) setError('')
   }
 
   const validateAmount = (): boolean => {
-    const numAmount = parseFloat(amount)
-
-    if (!amount.trim()) {
-      setError('Amount is required')
-      return false
-    }
-
-    if (isNaN(numAmount) || numAmount <= 0) {
-      setError('Amount must be a positive number')
-      return false
-    }
-
-    if (numAmount < 0.001) {
-      setError('Minimum amount is 0.001 SUI')
-      return false
-    }
-
+    const num = parseFloat(amount)
+    if (!amount.trim()) { setError('Amount is required'); return false }
+    if (isNaN(num) || num <= 0) { setError('Amount must be a positive number'); return false }
+    if (num < 0.001) { setError('Minimum amount is 0.001 SUI'); return false }
     return true
   }
 
@@ -65,84 +59,135 @@ export const FundAgentModal = ({
     if (!validateAmount()) return
 
     try {
-      await fundAgent({ agentObjectId, amount: +amount, agentId })
+      await fundAgent({
+        agentObjectId,
+        amount: +amount,
+        agentId,
+        coinType,
+        decimals: tokenDecimals,
+        symbol: tokenSymbol,
+      })
 
       posthog.capture('sentinel_funded', {
         agent_object_id: agentObjectId,
         amount_sui: parseFloat(amount),
-        funder_address: account?.address, // You might need to grab this via useCurrentAccount inside this component
+        funder_address: account?.address,
       })
 
+      const tier = getDefenderBoosterTier(parseFloat(amount))
+      setFundedTier(tier)
+      setFunded(true)
       onSuccess?.(amount)
-
       setAmount('')
       setError('')
     } catch (err) {
       console.error('Funding error:', err)
-      const message = err instanceof Error ? err.message : 'Failed to fund agent'
-      setError(message)
+      setError(err instanceof Error ? err.message : 'Failed to fund agent')
     }
   }
 
   const handleClose = () => {
     setAmount('')
     setError('')
+    setFunded(false)
+    setFundedTier('')
     onClose()
   }
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">Fund Your Sentinel</h2>
-          <button
+      {funded ? (
+        <div className="space-y-5 text-center">
+          <div className="flex items-center justify-between">
+            <span className="w-6" />
+            <h2 className="flex-grow text-center text-xl font-bold">Sentinel Funded!</h2>
+            <button onClick={handleClose} className="text-gray-400 transition-colors hover:text-black">
+              <X className="h-6 w-6" />
+            </button>
+          </div>
+
+          <div className="flex flex-col items-center gap-3">
+            <Image
+              src="/img/slot_machine_1x.png"
+              alt="Slot machine"
+              width={56}
+              height={74}
+              className="h-14 w-14"
+            />
+            <p className="font-semibold text-black">Free Spin Pass Received!</p>
+            <BoosterPassBadge tierKey={fundedTier} mode="received" />
+            <p className="text-xs text-gray-500">
+              Use it to WIN SENTINEL tokens from your profile rewards tab.
+            </p>
+          </div>
+
+          <Link
+            href="/profile?tab=rewards"
             onClick={handleClose}
-            className="text-gray-400 transition-colors hover:text-black"
-            disabled={isLoading}
+            className="inline-block w-full rounded-lg bg-black px-5 py-3 text-sm font-semibold text-white transition-transform hover:scale-105"
           >
-            <X className="h-6 w-6" />
+            Go to Profile → Spin Now
+          </Link>
+        </div>
+      ) : (
+        <div className="space-y-5">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold">Fund Your Sentinel</h2>
+            <button
+              onClick={handleClose}
+              className="text-gray-400 transition-colors hover:text-black"
+              disabled={isLoading}
+            >
+              <X className="h-6 w-6" />
+            </button>
+          </div>
+
+          <p className="text-gray-600">
+            Add funds to your reward pool to list your sentinel on the attack page. The bigger the
+            bounty, the more attackers you&apos;ll attract.
+          </p>
+
+          <div>
+            <label className="mb-2 flex items-center gap-1.5 text-sm font-medium">
+              Amount
+              <Image src={token.icon} alt={tokenSymbol} width={16} height={16} className="rounded-full" />
+              {tokenSymbol}
+            </label>
+            <input
+              type="number"
+              value={amount}
+              onChange={handleAmountChange}
+              className="w-full rounded-lg border border-gray-300 bg-white p-3 placeholder:text-gray-400 focus:ring-1 focus:ring-black [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              placeholder="0.00"
+              min="0"
+              step="0.001"
+              disabled={isLoading}
+            />
+            {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+          </div>
+
+          <p className="flex items-center gap-1 text-xs text-gray-500">
+            Sentinels with less than 0.1
+            <Image src={token.icon} alt={tokenSymbol} width={12} height={12} className="rounded-full" />
+            {tokenSymbol} balance won&apos;t be visible to attackers.
+          </p>
+
+          <button
+            onClick={handleFundAgent}
+            disabled={isLoading || !amount.trim()}
+            className="btn btn-black flex w-full items-center justify-center disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Adding Funds...
+              </>
+            ) : (
+              'Add Funds'
+            )}
           </button>
         </div>
-
-        <p className="text-gray-600">
-          Add funds to your reward pool to list your sentinel on the attack page. The bigger the
-          bounty, the more attackers you&apos;ll attract.
-        </p>
-
-        <div>
-          <label className="mb-2 block text-sm font-medium">Amount (SUI)</label>
-          <input
-            type="number"
-            value={amount}
-            onChange={handleAmountChange}
-            className="w-full rounded-lg border border-gray-300 bg-white p-3 placeholder:text-gray-400 focus:ring-1 focus:ring-black [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-            placeholder="0.00"
-            min="0"
-            step="0.001"
-            disabled={isLoading}
-          />
-          {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
-        </div>
-
-        <p className="text-xs text-gray-500">
-          Sentinels with less than 0.1 SUI balance won&apos;t be visible to attackers.
-        </p>
-
-        <button
-          onClick={handleFundAgent}
-          disabled={isLoading || !amount.trim()}
-          className="btn btn-black flex w-full items-center justify-center disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Adding Funds...
-            </>
-          ) : (
-            'Add Funds'
-          )}
-        </button>
-      </div>
+      )}
     </Dialog>
   )
 }
