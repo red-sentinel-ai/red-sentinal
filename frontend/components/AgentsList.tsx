@@ -6,10 +6,14 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Badge } from '@/components/ui'
 import { LeaderboardSkeleton } from './ui/skeletons/LeaderboardSkeleton'
 import { AgentDetails, SortField, SortDirection } from '@/hooks/agents/useAllAgents'
-import { getTokenForCoinType } from '@/constants'
+import { MIST_PER_SUI } from '@/constants'
 import { PrizePoolChangeDisplay } from './agents/PrizePoolChangeDisplay'
-import { TokenAmount } from './ui/common/TokenAmount'
 import Image from 'next/image'
+
+const formatSui = (mist: string) => {
+  const sui = Number(mist) / MIST_PER_SUI
+  return parseFloat(sui.toFixed(4)).toString()
+}
 
 export enum TabType {
   AgentRanking = 'AGENT_RANKING',
@@ -104,7 +108,8 @@ export const AgentsList = ({
 
             <AnimatePresence mode="popLayout">
               {agents.map((agent, idx) => {
-                const agentToken = getTokenForCoinType(agent.coin_type)
+                const balance = formatSui(agent.total_balance)
+                const costPerMessage = formatSui(agent.cost_per_message)
 
                 return (
                   <motion.div
@@ -161,11 +166,11 @@ export const AgentsList = ({
                       <div className="grid grid-cols-2 gap-2 text-sm">
                         <div>
                           <p className="text-xs text-gray-400">Reward</p>
-                          <p className="text-sm"><TokenAmount rawAmount={agent.total_balance} token={agentToken} precision={2} /></p>
+                          <p>{`${balance} SUI`}</p>
                         </div>
                         <div>
                           <p className="text-xs text-gray-400">Message Price</p>
-                          <p className="text-sm"><TokenAmount rawAmount={agent.cost_per_message} token={agentToken} precision={2} /></p>
+                          <p>{`${costPerMessage} SUI`}</p>
                         </div>
                         <div>
                           <p className="text-xs text-gray-400">Attacks</p>
@@ -198,8 +203,8 @@ export const AgentsList = ({
                           />
                         )}
                       </div>
-                      <div className="col-span-2 flex items-center"><TokenAmount rawAmount={agent.total_balance} token={agentToken} precision={2} /></div>
-                      <div className="col-span-2 flex items-center"><TokenAmount rawAmount={agent.cost_per_message} token={agentToken} precision={2} /></div>
+                      <div className="col-span-2 flex items-center">{`${balance} SUI`}</div>
+                      <div className="col-span-2 flex items-center">{`${costPerMessage} SUI`}</div>
                       <div className="col-span-1 flex items-center">{agent.total_attacks || 0}</div>
 
                       <div className="col-span-1 flex items-center">

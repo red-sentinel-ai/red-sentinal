@@ -1,12 +1,9 @@
 'use client'
 import React from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { Copy, Twitter, X } from 'lucide-react'
 import { toast } from 'sonner'
 import { Dialog } from '@/components/Dialog'
-import { getDefenderBoosterTier } from '@/lib/earn-utils'
-import { BoosterPassBadge } from '@/components/BoosterPassBadge'
 
 export interface FundSuccessModalProps {
   open: boolean
@@ -24,7 +21,6 @@ export const FundSuccessModal = ({
   sentinelId,
 }: FundSuccessModalProps) => {
   const sentinelUrl = sentinelId ? `${window.location.origin}/attack/${sentinelId}` : ''
-  const boosterTier = getDefenderBoosterTier(parseFloat(prizePoolAmount) || 0)
 
   const handleCopyLink = () => {
     if (!sentinelUrl) return
@@ -48,7 +44,7 @@ export const FundSuccessModal = ({
     >
       <div className="space-y-6 text-center">
         <div className="flex items-center justify-between">
-          <span className="w-6" />
+          <span className="w-6" /> {/* Spacer to center the title */}
           <h2 className="flex-grow text-center text-2xl font-bold">
             Your Sentinel is Live and Ready for Battle!
           </h2>
@@ -94,24 +90,15 @@ export const FundSuccessModal = ({
           </Link>
         </div>
 
-        <div className="flex flex-col items-center gap-2 border-t border-gray-100 pt-4">
-          <div className="flex items-center gap-3">
-            <Image
-              src="/img/slot_machine_1x.png"
-              alt="Slot machine"
-              width={32}
-              height={42}
-              className="h-8 w-8"
-            />
-            <BoosterPassBadge tierKey={boosterTier} mode="received" />
-          </div>
-          <Link
-            href="/profile?tab=rewards"
-            onClick={onClose}
-            className="text-xs font-medium text-black underline underline-offset-2 hover:opacity-70"
-          >
-            Go to Profile → Spin Now
-          </Link>
+        <div className="space-y-2 text-xs text-gray-500">
+          <p>
+            Earn 30% of every attack fee when challengers test your Sentinel. The more attacks, the
+            more you earn!
+          </p>
+          <p>
+            Coming soon: Add NFTs or USDC to your prize pool and earn $SENTINEL rewards for active
+            Sentinels!
+          </p>
         </div>
       </div>
     </Dialog>

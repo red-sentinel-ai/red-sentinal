@@ -3,7 +3,7 @@ import { Transaction } from '@mysten/sui/transactions'
 import { useSignAndExecuteTransaction, useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 import { toast } from 'sonner'
-import { SUI_CONFIG, SUI_LEGACY_CONFIG, getTokenForCoinType } from '@/constants'
+import { MIST_PER_SUI, SUI_CONFIG } from '@/constants'
 
 export const useUpdateAgent = () => {
   const client = useSuiClient()
@@ -13,12 +13,8 @@ export const useUpdateAgent = () => {
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction()
 
   const getAgentCap = useCallback(
-    async (agentId: string, coinType: string | undefined) => {
+    async (agentId: string) => {
       if (!account?.address) return null
-
-      const isNewContract = !!coinType
-      const contractConfig = isNewContract ? SUI_CONFIG : SUI_LEGACY_CONFIG
-      const pkgId = contractConfig.APP_PACKAGE_ID || SUI_CONFIG.APP_PACKAGE_ID
 
       let cursor = null
       let hasNextPage = true
@@ -27,9 +23,11 @@ export const useUpdateAgent = () => {
         const response = await client.getOwnedObjects({
           owner: account.address,
           filter: {
-            StructType: `${pkgId}::${SUI_CONFIG.MODULE_NAME}::AgentCap`,
+            StructType: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::AgentCap`,
           },
-          options: { showContent: true },
+          options: {
+            showContent: true,
+          },
           cursor,
         })
 
@@ -43,7 +41,9 @@ export const useUpdateAgent = () => {
           )
         })
 
-        if (foundCap) return foundCap.data?.objectId
+        if (foundCap) {
+          return foundCap.data?.objectId
+        }
 
         hasNextPage = response.hasNextPage
         cursor = response.nextCursor
@@ -57,7 +57,6 @@ export const useUpdateAgent = () => {
   const executeUpdate = useCallback(
     async (
       agentId: string,
-      coinType: string | undefined,
       buildTransaction: (tx: Transaction, capId: string) => void,
       successMessage: string,
       onSuccess?: () => void
@@ -69,7 +68,7 @@ export const useUpdateAgent = () => {
 
       setIsLoading(true)
       try {
-        const capId = await getAgentCap(agentId, coinType)
+        const capId = await getAgentCap(agentId)
         if (!capId) {
           throw new Error('You do not own the Capability for this Agent')
         }
@@ -101,19 +100,12 @@ export const useUpdateAgent = () => {
   )
 
   const updatePrompt = useCallback(
-    (agentId: string, agentObjectId: string, newPrompt: string, coinType: string | undefined, onSuccess?: () => void) => {
-      const isNewContract = !!coinType
-      const contractConfig = isNewContract ? SUI_CONFIG : SUI_LEGACY_CONFIG
-      const packageId = contractConfig.APP_PACKAGE_ID || SUI_CONFIG.APP_PACKAGE_ID
-      const token = getTokenForCoinType(coinType)
-
+    (agentId: string, agentObjectId: string, newPrompt: string, onSuccess?: () => void) => {
       executeUpdate(
         agentId,
-        coinType,
         (tx, capId) => {
           tx.moveCall({
-            target: `${packageId}::${SUI_CONFIG.MODULE_NAME}::update_agent_prompt`,
-            ...(isNewContract && { typeArguments: [token.coinType] }),
+            target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::update_agent_prompt`,
             arguments: [
               tx.object(agentObjectId),
               tx.object(capId),
@@ -130,24 +122,18 @@ export const useUpdateAgent = () => {
   )
 
   const updateCost = useCallback(
-    (agentId: string, agentObjectId: string, newCost: number, coinType: string | undefined, onSuccess?: () => void) => {
-      const isNewContract = !!coinType
-      const contractConfig = isNewContract ? SUI_CONFIG : SUI_LEGACY_CONFIG
-      const packageId = contractConfig.APP_PACKAGE_ID || SUI_CONFIG.APP_PACKAGE_ID
-      const token = getTokenForCoinType(coinType)
-      const costInBaseUnits = BigInt(Math.floor(newCost * Math.pow(10, token.decimals)))
+    (agentId: string, agentObjectId: string, newCostSui: number, onSuccess?: () => void) => {
+      const costInMist = BigInt(Math.floor(newCostSui * Number(MIST_PER_SUI)))
 
       executeUpdate(
         agentId,
-        coinType,
         (tx, capId) => {
           tx.moveCall({
-            target: `${packageId}::${SUI_CONFIG.MODULE_NAME}::update_agent_cost`,
-            ...(isNewContract && { typeArguments: [token.coinType] }),
+            target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::update_agent_cost`,
             arguments: [
               tx.object(agentObjectId),
               tx.object(capId),
-              tx.pure.u64(costInBaseUnits),
+              tx.pure.u64(costInMist),
               tx.object(SUI_CLOCK_OBJECT_ID),
             ],
           })
@@ -160,19 +146,12 @@ export const useUpdateAgent = () => {
   )
 
   const claimFees = useCallback(
-    (agentId: string, agentObjectId: string, coinType: string | undefined, onSuccess?: () => void) => {
-      const isNewContract = !!coinType
-      const contractConfig = isNewContract ? SUI_CONFIG : SUI_LEGACY_CONFIG
-      const packageId = contractConfig.APP_PACKAGE_ID || SUI_CONFIG.APP_PACKAGE_ID
-      const token = getTokenForCoinType(coinType)
-
+    (agentId: string, agentObjectId: string, onSuccess?: () => void) => {
       executeUpdate(
         agentId,
-        coinType,
         (tx, capId) => {
           tx.moveCall({
-            target: `${packageId}::${SUI_CONFIG.MODULE_NAME}::claim_fees`,
-            ...(isNewContract && { typeArguments: [token.coinType] }),
+            target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::claim_fees`,
             arguments: [tx.object(agentObjectId), tx.object(capId)],
           })
         },

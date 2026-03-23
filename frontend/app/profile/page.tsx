@@ -206,7 +206,7 @@ function ProfileContent() {
                   className="flex items-center gap-2 text-sm sm:text-lg md:text-xl"
                 >
                   <Gift className="h-4 w-4 sm:h-5 sm:w-5" />
-                  <span className="truncate">My Rewards</span>
+                  <span className="truncate">Rewards</span>
                 </TabsTrigger>
               </TabsList>
 

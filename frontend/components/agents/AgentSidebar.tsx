@@ -17,8 +17,8 @@ import { toast } from 'sonner'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import {
   DEFAULT_PROFILE_URL,
+  MIST_PER_SUI,
   EXPLORER_BASE_URL,
-  getTokenForCoinType,
   SLUSH_BASE_URL,
   WITHDRAWAL_LOCK_MS,
   SUI_SENTINEL_X_USERNAME,
@@ -36,7 +36,6 @@ import {
 } from '@/components/ui'
 import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
 import { SparklineChart } from '../ui/common/SparklineChart'
-import { TokenAmount } from '../ui/common/TokenAmount'
 import { SocialMissionModal } from '@/components/rewards/SocialMissionModal'
 import { REWARDS_CONSTANTS } from '@/constants/rewards'
 
@@ -78,9 +77,10 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
     setDeepLinkUrl(SLUSH_BASE_URL + encodedUrl)
   }, [])
 
-  const agentToken = getTokenForCoinType(agent.coin_type)
-
   const isDrained = agent.state === 'defeated'
+  const bountyWonAmount = agent.winner
+    ? (Number(agent.winner.amount_won) / MIST_PER_SUI).toFixed(2)
+    : '0.00'
   const winnerAddress = agent.winner?.address ?? null
 
   useEffect(() => {
@@ -264,7 +264,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
                 Total Bounty Won
               </h3>
               <p className="inline-block text-lg font-semibold md:text-xl lg:text-2xl">
-                <TokenAmount rawAmount={agent.winner?.amount_won || 0} token={agentToken} precision={2} iconSize={20} />
+                {bountyWonAmount} SUI
               </p>
             </div>
           ) : (
@@ -295,7 +295,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
               </div>
               <div className="flex items-end justify-between gap-2 md:gap-4">
                 <p className="inline-block text-lg font-semibold md:text-xl lg:text-2xl">
-                  <TokenAmount rawAmount={agent.total_balance} token={agentToken} precision={2} iconSize={20} />
+                  {(Number(agent.total_balance) / MIST_PER_SUI).toFixed(2)} SUI
                 </p>
                 <div>
                   <SparklineChart data={prizePoolData?.history.map(p => p.value) || []} />
@@ -339,18 +339,8 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
               Message Price
             </h3>
             <p className="inline-block text-lg font-semibold md:text-xl lg:text-2xl">
-              <TokenAmount
-                rawAmount={agent.current_cost_per_message ?? agent.cost_per_message}
-                token={agentToken}
-                precision={4}
-                iconSize={20}
-              />
+              {(Number(agent.cost_per_message) / MIST_PER_SUI).toFixed(4)} SUI
             </p>
-            {agent.current_cost_per_message && agent.current_cost_per_message !== agent.cost_per_message && (
-              <p className="text-[10px] text-gray-400 md:text-xs flex items-center gap-1">
-                <span>Base:</span> <TokenAmount rawAmount={agent.cost_per_message} token={agentToken} precision={4} iconSize={10} />
-              </p>
-            )}
           </div>
 
           {!isDrained && (

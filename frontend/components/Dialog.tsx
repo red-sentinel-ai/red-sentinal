@@ -9,15 +9,12 @@ interface DialogProps {
   /** Dialog content */
   children: React.ReactNode
   className?: string
-  /** Disable closing when clicking outside */
-  disableBackdropClick?: boolean
 }
 
-export const Dialog = ({ open, onClose, children, className, disableBackdropClick = false }: DialogProps) => {
+export const Dialog = ({ open, onClose, children, className }: DialogProps) => {
   if (!open) return null
 
   const handleBackdropClick = (e: React.MouseEvent) => {
-    if (disableBackdropClick) return
     if (e.target === e.currentTarget) {
       e.preventDefault()
       e.stopPropagation()

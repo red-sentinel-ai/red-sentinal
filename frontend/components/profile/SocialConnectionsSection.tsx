@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
 import { Check, X } from 'lucide-react'
@@ -9,32 +9,8 @@ import { Button, Badge, Card } from '@/components/ui'
 import { toast } from 'sonner'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { useSocialStatus } from '@/hooks/profile/useSocialStatus'
-import { handleConnectGoogle } from '@/utils/socialConnection'
+import { handleConnectTwitter } from '@/utils/socialConnection'
 import { useDisconnectProvider } from '@/hooks/rewards/useDisconnectProvider'
-
-
-function GoogleIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-        fill="#4285F4"
-      />
-      <path
-        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-        fill="#34A853"
-      />
-      <path
-        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-        fill="#FBBC05"
-      />
-      <path
-        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-        fill="#EA4335"
-      />
-    </svg>
-  )
-}
 
 export function SocialConnectionsSection() {
   const account = useCurrentAccount()
@@ -45,94 +21,50 @@ export function SocialConnectionsSection() {
 
   const [connectingPlatform, setConnectingPlatform] = useState<string | null>(null)
   const [disconnectingPlatform, setDisconnectingPlatform] = useState<string | null>(null)
-  const telegramContainerRef = useRef<HTMLDivElement>(null)
-  const [telegramContainerReady, setTelegramContainerReady] = useState(false)
 
-  // Callback ref so we know exactly when the container div mounts/unmounts
-  const setTelegramRef = useCallback((node: HTMLDivElement | null) => {
-    telegramContainerRef.current = node
-    setTelegramContainerReady(!!node)
-  }, [])
+  const hasTwitter = socialStatus?.isXConnected || false
+  // const hasDiscord = socialStatus?.isDiscordConnected || false
 
-  const hasGoogle = socialStatus?.isGoogleConnected || false
-  const hasTelegram = socialStatus?.isTelegramConnected || false
-  const hasAnyConnection = hasGoogle || hasTelegram
-
-  const telegramBotName = process.env.NEXT_PUBLIC_TELEGRAM_BOT_NAME
-
-  // Handle Google OAuth callback
   useEffect(() => {
     const connected = searchParams.get('connected')
     const error = searchParams.get('error')
 
     if (connected) {
-      const provider = connected.toLowerCase()
-
-      if (provider === 'google' && address) {
-        // Google: save using active NextAuth session
-        fetch('/api/auth/save-social-connection', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ walletAddress: address, provider }),
-        })
-          .then(res => res.json())
-          .then(data => {
-            if (data.success) {
-              toast.success('Google connected successfully!')
-              refetch()
-              posthog.capture('social_account_connected', { platform: provider, wallet_address: address })
-            } else {
-              toast.error(`Connected but failed to save: ${data.error}`)
-            }
-          })
-          .catch(() => toast.error('Failed to save connection'))
-      } else if (provider === 'telegram') {
-        // Telegram: already saved server-side in the callback route
-        toast.success('Telegram connected successfully!')
-        refetch()
-        posthog.capture('social_account_connected', { platform: provider, wallet_address: address })
-      }
-
-      setConnectingPlatform(null)
+      toast.success(`${connected} connected successfully!`)
+      refetch()
       const url = new URL(window.location.href)
       url.searchParams.delete('connected')
       window.history.replaceState({}, '', url.toString())
+
+      posthog.capture('social_account_connected', {
+        platform: connected.toLowerCase(),
+        wallet_address: address,
+      })
     }
 
     if (error) {
       toast.error('Failed to connect social account')
-      setConnectingPlatform(null)
       const url = new URL(window.location.href)
       url.searchParams.delete('error')
       window.history.replaceState({}, '', url.toString())
     }
-  }, [searchParams, refetch, address])
+  }, [searchParams, refetch])
 
-  // Reset disconnecting state when mutation finishes
+  useEffect(() => {
+    if (socialStatus && connectingPlatform) {
+      const isConnected = connectingPlatform === 'twitter' && socialStatus.isXConnected
+
+      if (isConnected) {
+        setConnectingPlatform(null)
+      }
+    }
+  }, [socialStatus, connectingPlatform])
+
   useEffect(() => {
     if (!isDisconnecting && disconnectingPlatform) {
       setDisconnectingPlatform(null)
     }
   }, [isDisconnecting, disconnectingPlatform])
-
-  // Inject Telegram Login Widget (data-auth-url redirect approach)
-  useEffect(() => {
-    if (hasTelegram || !telegramBotName || !address || !telegramContainerRef.current) return
-
-    telegramContainerRef.current.innerHTML = ''
-
-    const authUrl = `${window.location.origin}/api/auth/connect-telegram?wallet=${encodeURIComponent(address)}`
-
-    const script = document.createElement('script')
-    script.src = 'https://telegram.org/js/telegram-widget.js?23'
-    script.setAttribute('data-telegram-login', telegramBotName)
-    script.setAttribute('data-size', 'medium')
-    script.setAttribute('data-auth-url', authUrl)
-    script.setAttribute('data-request-access', 'write')
-    script.async = true
-    telegramContainerRef.current.appendChild(script)
-  }, [hasTelegram, telegramBotName, address, telegramContainerReady])
-
 
   if (isLoading) {
     return (
@@ -151,14 +83,52 @@ export function SocialConnectionsSection() {
     )
   }
 
+  const hasAnyConnection = hasTwitter
+
+  // const hasAnyConnection = hasTwitter || hasDiscord
+  // const connectionCount = (hasTwitter ? 1 : 0) + (hasDiscord ? 1 : 0)
+
   return (
     <div className="px-4 md:px-8">
+      {/* {!hasAnyConnection && (
+        <div className="mb-4 rounded-lg border border-[#5E5E5E] bg-gradient-to-r from-white/45 to-[rgba(255,158,244,0.46)] p-3 sm:mb-6">
+          <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-2">
+              <Image
+                src="/icons/star-badge-black.png"
+                width={28}
+                height={28}
+                alt="star badge"
+                className="flex-shrink-0"
+              />
+              <div>
+                <p className="text-base font-medium sm:text-lg">
+                  Connect your socials to unlock rewards
+                </p>
+                <p className="mt-0.5 text-xs text-[#5E5E5E] sm:text-sm">
+                  Connect at least one social account to access the rewards program and exclusive
+                  benefits.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )} */}
+
       <Card className="border-[#5E5E5E] bg-transparent bg-gradient-to-r from-white/45 to-[rgba(249,241,248,0.45)] p-4">
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-medium text-black sm:text-xl">
-              Connect your socials to unlock rewards
-            </h3>
+            <div className="flex items-center gap-2">
+              <div>
+                <h3 className="text-lg font-medium text-black sm:text-xl">
+                  Connect your socials to unlock rewards
+                </h3>
+                {/* <p className="text-xs text-gray-500 sm:text-sm">
+                  {hasAnyConnection ? 'X (Twitter) connected' : 'Connect your social accounts'}
+                </p> */}
+              </div>
+            </div>
+
             {hasAnyConnection && (
               <Badge
                 variant="secondary"
@@ -171,36 +141,40 @@ export function SocialConnectionsSection() {
           </div>
 
           <div className="grid grid-cols-1 gap-3">
-            {/* Connect Email (Google) */}
             <div className="flex flex-col items-start justify-between gap-2 rounded-lg border border-[#5E5E5E] bg-gradient-to-r from-white/45 to-[rgba(249,240,249,0.46)] p-3 sm:flex-row sm:items-center">
               <div className="flex items-center gap-2">
                 <div className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-[#5E5E5E] sm:h-10 sm:w-10">
-                  <GoogleIcon />
-                  {hasGoogle && (
+                  <Image
+                    src="/icons/x_black.png"
+                    width={28}
+                    height={28}
+                    alt="X (Twitter)"
+                    className="rounded"
+                  />
+                  {hasTwitter && (
                     <div className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-green-500"></div>
                   )}
                 </div>
                 <div>
-                  <p className="text-sm font-medium sm:text-base">Connect Email</p>
+                  <p className="text-sm font-medium sm:text-base">X (Twitter)</p>
                   <p className="text-xs text-[#5E5E5E]">
-                    {hasGoogle ? 'Connected via Google' : 'Connect via Google'}
+                    {hasTwitter ? 'Connected' : 'Not connected'}
                   </p>
                 </div>
               </div>
 
-              {hasGoogle ? (
+              {hasTwitter ? (
                 <Button
                   onClick={() => {
-                    if (!address) return
-                    setDisconnectingPlatform('google')
-                    disconnect({ provider: 'google', walletAddress: address })
+                    setDisconnectingPlatform('twitter')
+                    disconnect({ provider: 'twitter', walletAddress: address! })
                   }}
                   size="sm"
                   variant="outline"
-                  disabled={disconnectingPlatform === 'google'}
+                  disabled={disconnectingPlatform === 'twitter'}
                   className="flex h-8 min-w-[90px] items-center gap-1 border-red-200 px-2 text-xs text-red-600 hover:border-red-300 hover:bg-red-50 hover:text-red-700 disabled:opacity-50 sm:h-9 sm:text-sm"
                 >
-                  {disconnectingPlatform === 'google' ? (
+                  {disconnectingPlatform === 'twitter' ? (
                     <>
                       <div className="mr-1 h-3 w-3 flex-shrink-0 animate-spin rounded-full border border-black border-t-transparent"></div>
                       Disconnecting...
@@ -215,14 +189,14 @@ export function SocialConnectionsSection() {
               ) : (
                 <Button
                   onClick={() => {
-                    setConnectingPlatform('google')
-                    handleConnectGoogle(address || undefined)
+                    setConnectingPlatform('twitter')
+                    handleConnectTwitter(address || undefined)
                   }}
                   size="sm"
-                  disabled={connectingPlatform === 'google'}
+                  disabled={connectingPlatform === 'twitter'}
                   className="btn btn-outline flex h-8 min-w-[85px] items-center gap-1 text-xs sm:h-9 sm:text-sm"
                 >
-                  {connectingPlatform === 'google' ? (
+                  {connectingPlatform === 'twitter' ? (
                     <>
                       <div className="mr-1 h-3 w-3 flex-shrink-0 animate-spin rounded-full border border-black border-t-transparent"></div>
                       <span>Connecting...</span>
@@ -234,73 +208,72 @@ export function SocialConnectionsSection() {
               )}
             </div>
 
-            {/* Connect Telegram - temporarily hidden, pending debug */}
-            {false && <div className="flex flex-col items-start justify-between gap-2 rounded-lg border border-[#5E5E5E] bg-gradient-to-r from-white/45 to-[rgba(249,240,249,0.46)] p-3 sm:flex-row sm:items-center">
-              <div className="flex items-center gap-2">
-                <div className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-[#5E5E5E] sm:h-10 sm:w-10">
+            {/* <div className="flex flex-col items-start justify-between gap-3 rounded-lg border border-[#5E5E5E] bg-gradient-to-r from-white/45 to-[rgba(249,240,249,0.46)] p-4 sm:flex-row sm:items-center">
+              <div className="flex items-center gap-3">
+                <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-[#5E5E5E] md:h-[70px] md:w-[70px]">
                   <Image
-                    src="/icons/telegram_black.png"
-                    width={24}
-                    height={24}
-                    alt="Telegram"
+                    src="/icons/discord_black.svg"
+                    width={42}
+                    height={42}
+                    alt="Discord"
                     className="rounded"
                   />
-                  {hasTelegram && (
-                    <div className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-green-500"></div>
+                  {hasDiscord && (
+                    <div className="absolute -right-1 -top-1 h-3 w-3 rounded-full border-2 border-white bg-green-500"></div>
                   )}
                 </div>
                 <div>
-                  <p className="text-sm font-medium sm:text-base">Connect Telegram</p>
-                  <p className="text-xs text-[#5E5E5E]">
-                    {hasTelegram ? 'Connected' : 'Not connected'}
+                  <p className="text-lg font-medium sm:text-2xl">Discord</p>
+                  <p className="text-sm text-[#5E5E5E] sm:text-base">
+                    {hasDiscord ? 'Connected' : 'Not connected'}
                   </p>
                 </div>
               </div>
 
-              {hasTelegram ? (
+              {hasDiscord ? (
                 <Button
                   onClick={() => {
-                    if (!address) return
-                    setDisconnectingPlatform('telegram')
-                    disconnect({ provider: 'telegram', walletAddress: address })
+                    setDisconnectingPlatform('discord')
+                    disconnect({ provider: 'discord', walletAddress: address! })
                   }}
                   size="sm"
                   variant="outline"
-                  disabled={disconnectingPlatform === 'telegram'}
-                  className="flex h-8 min-w-[90px] items-center gap-1 border-red-200 px-2 text-xs text-red-600 hover:border-red-300 hover:bg-red-50 hover:text-red-700 disabled:opacity-50 sm:h-9 sm:text-sm"
+                  disabled={disconnectingPlatform === 'discord'}
+                  className="flex h-[40px] min-w-[100px] items-center gap-1 border-red-200 px-2 text-sm text-red-600 hover:border-red-300 hover:bg-red-50 hover:text-red-700 disabled:opacity-50 sm:h-[50px] sm:min-w-[145px] sm:px-3 sm:text-base"
                 >
-                  {disconnectingPlatform === 'telegram' ? (
+                  {disconnectingPlatform === 'discord' ? (
                     <>
-                      <div className="mr-1 h-3 w-3 flex-shrink-0 animate-spin rounded-full border border-black border-t-transparent"></div>
+                      <div className="mr-1 h-4 w-4 flex-shrink-0 animate-spin rounded-full border border-black border-t-transparent"></div>
                       Disconnecting...
                     </>
                   ) : (
                     <>
-                      <X className="mr-1 h-4 w-4" />
+                      <X className="mr-1 h-6 w-6" />
                       Disconnect
                     </>
                   )}
                 </Button>
-              ) : connectingPlatform === 'telegram' ? (
-                <div className="flex h-8 min-w-[85px] items-center justify-center gap-1 text-xs sm:h-9 sm:text-sm">
-                  <div className="h-3 w-3 animate-spin rounded-full border border-black border-t-transparent"></div>
-                  <span>Connecting...</span>
-                </div>
               ) : (
-                <div className="relative">
-                  <Button
-                    size="sm"
-                    className="btn btn-outline flex h-8 min-w-[85px] items-center gap-1 text-xs sm:h-9 sm:text-sm pointer-events-none select-none"
-                  >
-                    Connect
-                  </Button>
-                  <div
-                    ref={setTelegramRef}
-                    className="absolute inset-0 overflow-hidden [&_button]:absolute [&_button]:inset-0 [&_button]:w-full [&_button]:h-full [&_button]:opacity-[0.001] [&_button]:cursor-pointer"
-                  />
-                </div>
+                <Button
+                  onClick={() => {
+                    setConnectingPlatform('discord')
+                    handleConnectDiscord(address || undefined)
+                  }}
+                  size="sm"
+                  disabled={connectingPlatform === 'discord'}
+                  className="btn btn-outline h-[40px] w-[100px] text-sm sm:h-[50px] sm:w-[145px] sm:text-base"
+                >
+                  {connectingPlatform === 'discord' ? (
+                    <>
+                      <div className="mr-1 h-4 w-4 flex-shrink-0 animate-spin rounded-full border border-black border-t-transparent"></div>
+                      Connecting...
+                    </>
+                  ) : (
+                    'Connect'
+                  )}
+                </Button>
               )}
-            </div>}
+            </div> */}
           </div>
         </div>
       </Card>
