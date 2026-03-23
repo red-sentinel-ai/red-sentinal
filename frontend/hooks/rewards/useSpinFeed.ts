@@ -11,6 +11,7 @@ interface SpinFeedItem {
 
 interface SpinFeedResponse {
   spins: SpinFeedItem[]
+  total: number
 }
 
 export const useSpinFeed = (limit: number = 50) => {
