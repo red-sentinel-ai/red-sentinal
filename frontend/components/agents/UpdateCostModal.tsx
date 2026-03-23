@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useUpdateAgent } from '@/hooks/agents/useUpdateAgent'
 import { AgentUpdateDialog } from './AgentUpdateDialog'
+import { getTokenForCoinType } from '@/constants'
 
 interface UpdateCostModalProps {
   open: boolean
@@ -8,6 +9,7 @@ interface UpdateCostModalProps {
   agentId: string
   agentObjectId: string
   currentCost?: number
+  coinType?: string
 }
 
 export const UpdateCostModal = ({
@@ -16,16 +18,18 @@ export const UpdateCostModal = ({
   agentId,
   agentObjectId,
   currentCost = 0,
+  coinType,
 }: UpdateCostModalProps) => {
   const initialCost = currentCost ? currentCost : 0
 
   const [cost, setCost] = useState(initialCost.toString())
   const { updateCost, isLoading } = useUpdateAgent()
+  const token = getTokenForCoinType(coinType)
 
   const handleUpdate = () => {
     const costNum = parseFloat(cost)
     if (isNaN(costNum) || costNum < 0) return
-    updateCost(agentId, agentObjectId, costNum, onClose)
+    updateCost(agentId, agentObjectId, costNum, coinType, onClose)
   }
 
   return (
@@ -38,7 +42,7 @@ export const UpdateCostModal = ({
       confirmText="Update Fee"
       isConfirmDisabled={isLoading || !cost}
     >
-      <label className="mb-2 block text-sm font-medium text-gray-700">Fee per Message (SUI)</label>
+      <label className="mb-2 block text-sm font-medium text-gray-700">Fee per Message ({token.symbol})</label>
       <input
         type="number"
         value={cost}

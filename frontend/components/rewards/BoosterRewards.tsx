@@ -11,7 +11,8 @@ import { SpinFeed } from './SpinFeed'
 import { useUserBoosters, useSpinHistory } from '@/hooks/rewards/useBoosters'
 import { useClaimReward } from '@/hooks/rewards/useClaimReward'
 import type { Booster, SpinResponse } from '@/types'
-import { BOOSTER_TIERS, SUI_SENTINEL_X_USERNAME } from '@/constants'
+import { BOOSTER_TIERS, SUI_SENTINEL_X_USERNAME, getTierAsset, getTierStyleConfig, getTierTextConfig } from '@/constants'
+import Image from 'next/image'
 
 export const BoosterRewards = () => {
   const account = useCurrentAccount()
@@ -295,72 +296,69 @@ export const BoosterRewards = () => {
                   const isExpiringSoon =
                     new Date(booster.expiresAt).getTime() - Date.now() < 24 * 60 * 60 * 1000
                   const isSelected = selectedBooster?._id === booster._id
+                  const assetPath = getTierAsset(tierInfo.name)
+                  const styleClass = getTierStyleConfig(tierInfo.name)
+                  const textColorClass = getTierTextConfig(tierInfo.name)
 
                   return (
                     <button
                       key={booster._id}
                       onClick={() => passFilter === 'active' && handleSelectBooster(booster)}
                       disabled={passFilter === 'expired'}
-                      className={`group relative overflow-hidden rounded-lg border-2 p-3 text-left transition-all ${
+                      className={`w-full min-h-[140px] p-3 rounded-2xl transition-all ${
                         passFilter === 'active'
                           ? 'hover:scale-105'
                           : 'cursor-not-allowed opacity-60'
                       } ${
                         isSelected
-                          ? 'border-black bg-black text-white shadow-lg'
-                          : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-md'
+                          ? 'flex flex-col items-center justify-center text-center relative overflow-hidden border-2 border-black bg-black text-white shadow-lg'
+                          : `${styleClass} rounded-2xl`
                       }`}
                     >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="mb-1.5 flex items-center gap-1.5">
-                            <span className="text-xl">{tierInfo.color}</span>
-                            <div>
-                              <h4
-                                className={`text-sm font-semibold ${isSelected ? 'text-white' : tierInfo.textColor}`}
-                              >
-                                {tierInfo.name} Pass
-                              </h4>
-                              <p
-                                className={`text-xs ${isSelected ? 'text-gray-200' : 'text-gray-600'}`}
-                              >
-                                {booster.multiplier}x
-                              </p>
-                            </div>
-                          </div>
+                      {/* Logo */}
+                      <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-white/80 shadow-sm backdrop-blur-sm mb-2">
+                        <Image
+                          src={assetPath}
+                          alt={`${tierInfo.name} icon`}
+                          width={24}
+                          height={24}
+                          className="object-contain drop-shadow-sm"
+                        />
+                      </div>
 
-                          <div
-                            className={`mb-2 text-[10px] ${isSelected ? 'text-gray-300' : 'text-gray-500'}`}
-                          >
-                            {tierInfo.minReward.toLocaleString()} -{' '}
-                            {tierInfo.maxReward.toLocaleString()}
-                          </div>
+                      {/* Name */}
+                      <h4 className={`text-sm font-black tracking-tight uppercase ${isSelected ? 'text-white' : textColorClass}`}>
+                        {tierInfo.name} Pass
+                      </h4>
 
-                          <div
-                            className={`flex items-center gap-0.5 text-[10px] ${
-                              isExpiringSoon
-                                ? isSelected
-                                  ? 'text-yellow-300'
-                                  : 'text-red-600'
-                                : isSelected
-                                  ? 'text-gray-300'
-                                  : 'text-gray-500'
-                            }`}
-                          >
-                            <Clock className="h-2.5 w-2.5" />
-                            <span>
-                              {isExpiringSoon && '⚠️ '}
-                              {formatDistanceToNow(new Date(booster.expiresAt), {
-                                addSuffix: true,
-                              })}
-                            </span>
-                          </div>
-                        </div>
+                      {/* Multiplier */}
+                      <div className={`mt-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold shadow-sm ${isSelected ? 'bg-white/20 text-white' : 'bg-white/90 text-gray-800'}`}>
+                        <span>⚡</span>
+                        {booster.multiplier}x Booster
+                      </div>
+
+                      {/* Range */}
+                      <div className="mt-2 text-[10px] font-bold leading-tight">
+                        <span className={isSelected ? 'text-gray-300' : 'text-gray-500'}>Sentinels: </span>
+                        <span className={isSelected ? 'text-white' : 'text-gray-900'}>{tierInfo.minReward.toLocaleString()} - {tierInfo.maxReward.toLocaleString()}</span>
+                      </div>
+
+                      {/* Expiration */}
+                      <div className={`mt-2 flex items-center gap-1 text-[10px] font-semibold ${
+                        isExpiringSoon
+                          ? isSelected ? 'text-yellow-300' : 'text-red-600'
+                          : isSelected ? 'text-gray-300' : 'text-gray-600'
+                      }`}>
+                        <Clock className="h-3 w-3" />
+                        <span>
+                          {isExpiringSoon && '⚠️ '}
+                          {formatDistanceToNow(new Date(booster.expiresAt), { addSuffix: true })}
+                        </span>
                       </div>
 
                       {isSelected && (
-                        <div className="absolute right-1.5 top-1.5">
-                          <div className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs text-black">
+                        <div className="absolute right-2 top-2">
+                          <div className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs text-black shadow-sm">
                             ✓
                           </div>
                         </div>
@@ -381,3 +379,4 @@ export const BoosterRewards = () => {
     </div>
   )
 }
+

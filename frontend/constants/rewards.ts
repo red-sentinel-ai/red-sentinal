@@ -91,6 +91,16 @@ const DEFAULT_MISSIONS = [
     frequency: 'one_time',
     description: 'Join our Telegram community.',
   },
+  {
+    id: 'share_content',
+    name: 'Share Sui Sentinel Content',
+    type: 'share_content',
+    points: 50,
+    enabled: true,
+    category: 'social_media',
+    frequency: 'per_occurrence',
+    description: 'Create and share content about Sui Sentinel (article, video, thread, etc.).',
+  },
 ] as RewardsMission[]
 
 export const REWARDS_CONSTANTS = {
@@ -103,6 +113,7 @@ export const REWARDS_CONSTANTS = {
     RETWEET: 'retweet',
     SHARE_WITH_HASHTAG: 'share_with_hashtag',
     JOIN_TELEGRAM: 'join_telegram',
+    SHARE_CONTENT: 'share_content',
   } as const,
 
   TIERS: {
