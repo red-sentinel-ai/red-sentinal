@@ -49,7 +49,8 @@ export type SupportedToken = {
   name: string
   coinType: string
   decimals: number
-  icon: string // path relative to /public
+  icon: string 
+  minimumAmount: number
 }
 export const SUI_COIN_TYPE = '0x2::sui::SUI'
 
@@ -61,6 +62,7 @@ export const SUI_TOKEN: SupportedToken = {
   coinType: SUI_COIN_TYPE,
   decimals: 9,
   icon: '/icons/tokens/sui.png',
+  minimumAmount: 5,
 }
 
 export const TESTNET_SUPPORTED_TOKENS: SupportedToken[] = [
@@ -70,6 +72,7 @@ export const TESTNET_SUPPORTED_TOKENS: SupportedToken[] = [
     coinType: '0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC',
     decimals: 6,
     icon: '/icons/tokens/usdc.png',
+    minimumAmount: 5,
   },
   SUI_TOKEN,
 ]
@@ -83,6 +86,7 @@ export const MAINNET_SUPPORTED_TOKENS: SupportedToken[] = [
     coinType: '0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC',
     decimals: 6,
     icon: '/icons/tokens/usdc.png',
+    minimumAmount: 5,
   },
   {
     symbol: 'USDT',
@@ -90,6 +94,7 @@ export const MAINNET_SUPPORTED_TOKENS: SupportedToken[] = [
     coinType: '0x375f70cf2ae4c00bf37117d0c85a2c71545e6ee05c4a5c7d282cd66a4504b068::usdt::USDT',
     decimals: 6,
     icon: '/icons/tokens/usdt.png',
+    minimumAmount: 5,
   },
   {
     symbol: 'MAGMA',
@@ -97,6 +102,7 @@ export const MAINNET_SUPPORTED_TOKENS: SupportedToken[] = [
     coinType: '0x9f854b3ad20f8161ec0886f15f4a1752bf75d22261556f14cc8d3a1c5d50e529::magma::MAGMA',
     decimals: 9,
     icon: '/icons/tokens/magma.png',
+    minimumAmount: 500,
   },
   {
     symbol: 'USDSUI',
@@ -104,6 +110,7 @@ export const MAINNET_SUPPORTED_TOKENS: SupportedToken[] = [
     coinType: '0x44f838219cf67b058f3b37907b655f226153c18e33dfcd0da559a844fea9b1c1::usdsui::USDSUI',
     decimals: 6,
     icon: '/icons/tokens/usdsui.png',
+    minimumAmount: 5,
   },
   {
     symbol: 'DEEP',
@@ -111,6 +118,7 @@ export const MAINNET_SUPPORTED_TOKENS: SupportedToken[] = [
     coinType: '0xdeeb7a4662eec9f2f3def03fb937a663dddaa2e215b8078a284d026b7946c270::deep::DEEP',
     decimals: 6,
     icon: '/icons/tokens/deep.png',
+    minimumAmount: 500,
   },
   {
     symbol: 'WAL',
@@ -118,6 +126,7 @@ export const MAINNET_SUPPORTED_TOKENS: SupportedToken[] = [
     coinType: '0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL',
     decimals: 9,
     icon: '/icons/tokens/wal.png',
+    minimumAmount: 50,
   },
   {
     symbol: 'XBTC',
@@ -125,6 +134,7 @@ export const MAINNET_SUPPORTED_TOKENS: SupportedToken[] = [
     coinType: '0x876a4b7bce8aeaef60464c11f4026903e9afacab79b9b142686158aa86560b50::xbtc::XBTC',
     decimals: 8,
     icon: '/icons/tokens/xbtc.png',
+    minimumAmount: 0.001,
   },
   {
     symbol: 'SENTINEL',
@@ -133,6 +143,7 @@ export const MAINNET_SUPPORTED_TOKENS: SupportedToken[] = [
       '0x66aaa74fecd25cb19b7576e101b25fd3a844e6b9f678421429d0d49d55e0fca0::sentinel::SENTINEL',
     decimals: 0,
     icon: '/icons/tokens/sentinel.png',
+    minimumAmount: 1000,
   },
   {
     symbol: 'BLUE',
@@ -140,6 +151,7 @@ export const MAINNET_SUPPORTED_TOKENS: SupportedToken[] = [
     coinType: '0xe1b45a0e641b9955a20aa0ad1c1f4ad86aad8afb07296d4085e349a50e90bdca::blue::BLUE',
     decimals: 9,
     icon: '/icons/tokens/blue.png',
+    minimumAmount: 100,
   },
   {
     symbol: 'CETUS',
@@ -147,6 +159,7 @@ export const MAINNET_SUPPORTED_TOKENS: SupportedToken[] = [
     coinType: '0x06864a6f921804860930db6ddbe2e16acdf8504495ea7481637a1c8b9a8fe54b::cetus::CETUS',
     decimals: 9,
     icon: '/icons/tokens/cetus.png',
+    minimumAmount: 100,
   },
   {
     symbol: 'BUCK',
@@ -154,6 +167,7 @@ export const MAINNET_SUPPORTED_TOKENS: SupportedToken[] = [
     coinType: '0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2::buck::BUCK',
     decimals: 9,
     icon: '/icons/tokens/buck.png',
+    minimumAmount: 5,
   },
   {
     symbol: 'stSUI',
@@ -161,6 +175,7 @@ export const MAINNET_SUPPORTED_TOKENS: SupportedToken[] = [
     coinType: '0xd1b72982e40348d069bb1ff701e634c117bb5f741f44dff91e472d3b01461e55::stsui::STSUI',
     decimals: 9,
     icon: '/icons/tokens/stsui.png',
+    minimumAmount: 5,
   },
   {
     symbol: 'ETH',
@@ -168,6 +183,7 @@ export const MAINNET_SUPPORTED_TOKENS: SupportedToken[] = [
     coinType: '0xd0e89b2af5e4910726fbcd8b8dd37bb79b29e5f83f7491bca830e94f7f226d29::eth::ETH',
     decimals: 8,
     icon: '/icons/tokens/eth.png',
+    minimumAmount: 0.005,
   },
 ]
 
