@@ -24,12 +24,11 @@ import {
   useSuiClient,
 } from '@mysten/dapp-kit'
 import {
+  MIST_PER_SUI,
   PROVIDER_MODELS,
-  SUPPORTED_TOKENS,
   SUI_CONFIG,
   SUI_SENTINEL_DOCS_URL,
   SYSTEM_PROMPT_MAX_TOKENS,
-  type SupportedToken,
 } from '@/constants'
 import { SENTINEL_GIFS, SENTINEL_IMAGES } from '@/constants/asset_paths'
 import { hexToVector } from '@/lib/utils'
@@ -41,7 +40,6 @@ import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
 import { useTokenCount } from '@/hooks/useTokenCount'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 import { FundSuccessModal } from '@/components/FundSuccessModal'
-import { TokenSelectDropdown } from '@/components/defend/TokenSelectDropdown'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 import { CustomDropdown } from '@/components/ui/common/CustomDropdown'
 import { RewardsConditions } from '@/components/defend/RewardsConditions'
@@ -280,7 +278,6 @@ export default function DefendPageClient() {
   const [showFundModal, setShowFundModal] = useState(false)
   const [showFundSuccessModal, setShowFundSuccessModal] = useState(false)
   const [fundedAmount, setFundedAmount] = useState('')
-  const [selectedToken, setSelectedToken] = useState<SupportedToken>(SUPPORTED_TOKENS[0])
   const handleProviderChange = (provider: string) => {
     const isCustom = provider === 'custom'
     const defaultModelForProvider = isCustom ? '' : PROVIDER_MODELS[provider]?.[0] || DEFAULT_MODEL
@@ -485,7 +482,7 @@ export default function DefendPageClient() {
 
     const fee = parseFloat(formData.feePerMessage)
     if (isNaN(fee) || fee < 0.1) {
-      newErrors.feePerMessage = `Fee must be greater than 0.1 ${selectedToken.symbol}`
+      newErrors.feePerMessage = 'Fee must be greater than 0.1 SUI'
     }
 
     if (!formData.attackGoal.trim()) {
@@ -530,7 +527,7 @@ export default function DefendPageClient() {
   ) => {
     const agentObject = result?.objectChanges?.find(
       (obj: any) =>
-        obj.objectType === `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Agent<${selectedToken.coinType}>`
+        obj.objectType === `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Agent`
     )
 
     if (agentObject) {
@@ -585,10 +582,9 @@ export default function DefendPageClient() {
 
     tx.moveCall({
       target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::register_agent`,
-      typeArguments: [selectedToken.coinType],
       arguments: [
         tx.object(SUI_CONFIG.AGENT_REGISTRY),
-        tx.object(SUI_CONFIG.PROTOCOL_CONFIG_ID),
+        tx.object(SUI_CONFIG.PROTOCOL_CONFIG_OBJECT_ID),
         tx.pure.string(agentDetails.response.data.agent_id),
         tx.pure.u64(agentDetails.response.timestamp_ms),
         tx.pure.u64(agentDetails.response.data.cost_per_message),
@@ -637,7 +633,7 @@ export default function DefendPageClient() {
         return
       }
 
-      const feePerMessage = parseFloat(formData.feePerMessage) * Math.pow(10, selectedToken.decimals)
+      const feePerMessage = parseFloat(formData.feePerMessage) * MIST_PER_SUI
       const isCustomProvider = formData.llmProvider === 'custom'
       const agentDetails = await registerAgentUtil(
         formData.systemPrompt,
@@ -869,10 +865,10 @@ export default function DefendPageClient() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-1">
           <FormInput
-            label={`Fee Per Message (${selectedToken.symbol})`}
-            subLabel={`You earn this fee whenever users interact with your Sentinel. Minimum 0.1 ${selectedToken.symbol}.`}
+            label="Fee Per Message (SUI)"
+            subLabel="You earn this fee whenever users interact with your Sentinel. Minimum 0.1 SUI."
             name="feePerMessage"
             value={formData.feePerMessage}
             onChange={handleChange}
@@ -881,11 +877,6 @@ export default function DefendPageClient() {
             placeholder="0.00"
             step="0.1"
             className="h-full"
-          />
-          <TokenSelectDropdown
-            tokens={SUPPORTED_TOKENS}
-            selected={selectedToken}
-            onSelect={setSelectedToken}
           />
 
           {/* <FormInput
@@ -1157,9 +1148,6 @@ export default function DefendPageClient() {
           agentObjectId={deployedAgentObjectId}
           agentId={agentId}
           onSuccess={handleFundSuccess}
-          coinType={selectedToken.coinType}
-          tokenSymbol={selectedToken.symbol}
-          tokenDecimals={selectedToken.decimals}
         />
       )}
 

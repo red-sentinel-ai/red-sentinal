@@ -32,8 +32,6 @@ export interface AgentDetails {
   last_funded_timestamp?: string
   unlock_timestamp?: string
   accumulated_fees?: number
-  coin_type?: string
-  current_cost_per_message?: string 
 }
 
 export type SortField = 'total_balance' | 'cost_per_message' | 'total_attacks' | 'agent_id' | 'change7d' | null

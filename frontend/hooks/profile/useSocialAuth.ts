@@ -6,8 +6,11 @@ export function useSocialAuth() {
   return {
     isLoading: status === 'loading',
     isAuthenticated: !!session,
-    hasGoogle: session?.hasGoogle || false,
+    hasTwitter: session?.hasTwitter || false,
+    hasDiscord: session?.hasDiscord || false,
     connectedProviders: session?.connectedProviders || [],
-    googleData: session?.googleData,
+    walletAddress: session?.walletAddress,
+    twitterData: session?.twitterData,
+    discordData: session?.discordData,
   }
 }

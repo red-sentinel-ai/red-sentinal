@@ -1,41 +1,30 @@
 import type { Metadata } from 'next'
-import { EarnHero } from '@/components/earn/EarnHero'
-import { StickyTabNav } from '@/components/earn/StickyTabNav'
-import { HowItWorksSection } from '@/components/earn/HowItWorks/HowItWorksSection'
-import { SocialMissionsSection } from '@/components/earn/SocialMissions/SocialMissionsSection'
+import { RewardsDashboard } from '@/components/rewards/RewardsDashboard'
 import { SUI_SENTINEL_APP_URL } from '@/constants'
 
 export const metadata: Metadata = {
-  title: 'Earn SENTINEL Tokens | Complete Missions & Spin Rewards',
+  title: 'Earn Rewards | SENTINEL Token Missions',
   description:
-    'Complete social missions, attack Sentinels, create content, and spin the slot machine to earn SENTINEL tokens. Comprehensive guide to the Sui Sentinel reward system.',
+    'Complete missions, earn SENTINEL tokens, and climb the leaderboard. Get rewarded for attacking AI Sentinels, defending your agents, and growing the ecosystem.',
   keywords: [
     'SENTINEL token',
+    'AI red team rewards',
     'crypto rewards',
-    'booster rewards',
     'SUI ecosystem',
     'blockchain gaming rewards',
     'AI security incentives',
-    'slot machine rewards',
   ],
   alternates: {
-    canonical: `${SUI_SENTINEL_APP_URL}/earn`,
+    canonical: `${SUI_SENTINEL_APP_URL}/rewards`,
   },
   openGraph: {
-    title: 'Earn SENTINEL Tokens | Complete Missions & Spin Rewards',
+    title: 'Earn Rewards | SENTINEL Token Missions',
     description:
-      'Every action earns SENTINEL. Complete missions, attack Sentinels, and spin the slot machine for instant rewards.',
-    url: `${SUI_SENTINEL_APP_URL}/earn`,
+      'Complete missions, earn SENTINEL tokens, and unlock exclusive perks. Every action in the ecosystem counts.',
+    url: `${SUI_SENTINEL_APP_URL}/rewards`,
   },
 }
 
 export default function RewardsPage() {
-  return (
-    <div className="min-h-body">
-      <EarnHero />
-      <StickyTabNav />
-      <HowItWorksSection />
-      <SocialMissionsSection />
-    </div>
-  )
+  return <RewardsDashboard />
 }

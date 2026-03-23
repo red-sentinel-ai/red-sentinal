@@ -8,14 +8,12 @@ import { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { useFundAgentModal } from '@/hooks/useFundAgentModal'
 import { useFeatureAgentModal } from '@/hooks/useFeatureAgentModal'
 import { useCurrentAccount } from '@mysten/dapp-kit'
-import { getTokenForCoinType } from '@/constants'
+import { MIST_PER_SUI } from '@/constants'
 import { AgentDropdown } from './agents/AgentCardDropdown'
 import { useWithdrawAgentModal } from '@/hooks/agents/useWithdrawAgentModal'
 import { formatDuration } from '@/lib/utils'
 import { PrizePoolChangeDisplay } from './agents/PrizePoolChangeDisplay'
 import { ClaimFeesModal } from './agents/ClaimFeesModal'
-import { TokenAmount } from './ui/common/TokenAmount'
-
 
 type FeaturedAgentCardProps = {
   agent: AgentDetails
@@ -23,7 +21,7 @@ type FeaturedAgentCardProps = {
   ctaHeading?: string
   fromProfile?: boolean
   // Optional modal callbacks - when provided, component won't create its own modal instances
-  onFund?: (agentObjectId: string, agentId: string, coinType?: string, tokenSymbol?: string, tokenDecimals?: number) => void
+  onFund?: (agentObjectId: string, agentId: string) => void
   onWithdraw?: (agentObjectId: string, agentId: string, balance: number) => void
   onFeature?: (agentId: string) => void
 }
@@ -59,12 +57,9 @@ export const FeaturedAgentCard = ({
   const [timeRemaining, setTimeRemaining] = useState('')
   const [isClaimFeesModalOpen, setIsClaimFeesModalOpen] = useState(false)
 
-  const token = getTokenForCoinType(agent.coin_type)
-  const tokenDivisor = Math.pow(10, token.decimals)
-
   const hasNoBalance = Number(agent.total_balance) === 0
   const isAttackPaused = !isWithdrawalLocked && Number(agent.unlock_timestamp) > 0
-  const earnings = Number(agent.accumulated_fees || 0) / tokenDivisor
+  const earnings = Number(agent.accumulated_fees || 0) / MIST_PER_SUI
   const hasEarnings = earnings > 0
 
   useEffect(() => {
@@ -171,7 +166,6 @@ export const FeaturedAgentCard = ({
               openFeatureModal={openFeatureModal}
               accumulatedFees={agent.accumulated_fees}
               createdAt={agent.timestampMs}
-              coinType={agent.coin_type}
             />
           </div>
         </div>
@@ -198,19 +192,19 @@ export const FeaturedAgentCard = ({
           <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
             <span className="text-[#5E5E5E]">Prize Pool:</span>
             <div className="flex items-center justify-end">
-              <span className="mr-1 sm:mr-2"><TokenAmount rawAmount={agent.total_balance} token={token} precision={4} /></span>
+              <span className="mr-1 sm:mr-2">{formatBalance(agent.total_balance)}</span>
               <PrizePoolChangeDisplay prizePoolHistory={agent.prizePoolHistory} variant="card" />
             </div>
           </div>
           <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
             <span className="text-[#5E5E5E]">Message Cost:</span>
-            <span className="text-right"><TokenAmount rawAmount={agent.cost_per_message} token={token} precision={4} /></span>
+            <span className="text-right">{formatCost(agent.cost_per_message)}</span>
           </div>
           {fromProfile && isOwner && (
             <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
               <span className="text-[#5E5E5E]">Your Earnings:</span>
               <span className={`text-right ${hasEarnings ? 'font-semibold text-green-600' : ''}`}>
-                <TokenAmount rawAmount={agent.accumulated_fees || 0} token={token} precision={4} />
+                {earnings.toFixed(4)} SUI
               </span>
             </div>
           )}
@@ -244,10 +238,7 @@ export const FeaturedAgentCard = ({
           {fromProfile && (
             <div className="flex gap-1.5 sm:gap-2">
               <button
-                onClick={() => {
-                  const token = getTokenForCoinType(agent.coin_type)
-                  openFundModal(agent.agent_object_id, agent.agent_id, token.coinType, token.symbol, token.decimals)
-                }}
+                onClick={() => openFundModal(agent.agent_object_id, agent.agent_id)}
                 className="btn btn-black w-1/2 px-2 py-1.5 text-[10px] sm:px-4 sm:py-2.5 sm:text-sm"
               >
                 Add Funds
@@ -284,11 +275,7 @@ export const FeaturedAgentCard = ({
               className="btn btn-outline w-full px-2 py-1.5 text-[10px] disabled:opacity-50 sm:px-4 sm:py-2.5 sm:text-sm"
               title={hasEarnings ? 'Collect your earned fees' : 'No earnings to claim yet'}
             >
-              {hasEarnings ? (
-                <span className="inline-flex items-center gap-1">
-                  Claim <TokenAmount rawAmount={agent.accumulated_fees || 0} token={token} precision={2} iconSize={16} />
-                </span>
-              ) : 'No Earnings Yet'}
+              {hasEarnings ? `Claim ${earnings.toFixed(2)} SUI` : 'No Earnings Yet'}
             </button>
           )}
         </div>
@@ -303,10 +290,16 @@ export const FeaturedAgentCard = ({
           agentId={agent.agent_id}
           agentObjectId={agent.agent_object_id}
           accumulatedFees={agent.accumulated_fees}
-          coinType={agent.coin_type}
         />
       </div>
     </motion.div>
   )
 }
 
+const formatBalance = (balance: string) => {
+  return (Number(balance) / MIST_PER_SUI).toFixed(4) + ' SUI'
+}
+
+const formatCost = (cost: string) => {
+  return (Number(cost) / MIST_PER_SUI).toFixed(4) + ' SUI'
+}

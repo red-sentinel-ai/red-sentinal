@@ -2,8 +2,8 @@ import { useQuery } from '@tanstack/react-query'
 
 export interface SocialStatusResponse {
   wallet_address: string
-  isGoogleConnected: boolean
-  isTelegramConnected: boolean
+  isXConnected: boolean
+  isDiscordConnected: boolean
 }
 
 const fetchSocialStatus = async (walletAddress: string): Promise<SocialStatusResponse> => {
