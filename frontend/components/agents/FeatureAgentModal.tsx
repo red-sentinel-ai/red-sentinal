@@ -78,7 +78,7 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
       setShowSuccessState(true)
       setForm({ name: '', email: '', description: '', twitter_username: '', telegram_username: '' })
       setError('')
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
     } catch (err: any) {
       setError(err.message)
     }
