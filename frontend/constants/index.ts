@@ -181,27 +181,31 @@ export function getTokenForCoinType(coinType?: string): SupportedToken {
 
 // New multi-token contract (Mar 2026 testnet deployment)
 export const SUI_TESTNET_CONFIG = {
-  CLOCK_OBJECT_ID: '0x6',
-  GAS_BUDGET: 100000000,
-  PCR0: 'b8715f9f324b7e608ba265c3b43a2bc95bc93cd9b9129f4ad45edfe7fa548028179fe76e0977e3244a32778badd09690',
-  PCR1: 'b8715f9f324b7e608ba265c3b43a2bc95bc93cd9b9129f4ad45edfe7fa548028179fe76e0977e3244a32778badd09690',
-  PCR2: '21b9efbc184807662e966d34f390821309eeac6802309798826296bf3e8bec7c10edb30948c90ba67310f7b964fc500a',
-  ENCLAVE_URL: 'http://18.213.79.225:3000',
-  MODULE_NAME: 'sentinel',
-  OTW_NAME: 'SENTINEL',
-  ENCLAVE_PACKAGE_ID: '0x736191670533a779d92b03118ec56a14c4db9b23e40f485057ec914ed57160c5',
-  CAP_OBJECT_ID: '0x70e303336c878c0bff94105209105ec6a1ca06aad76639c33703523737b28861',
-  ENCLAVE_CONFIG_OBJECT_ID: '0x31a85bab115cdca750c684f3f6104b2f5a3759285cd9503b094b9d62323f2e9d',
-  APP_PACKAGE_ID: '0x671e644f0a34a79d56d9bac8d2aaf867438b6ac1ee80fd8b02bae8549f938fac',
-  AGENT_REGISTRY: '0x35f145190fdf2c7a56567311fa410a77e926123ee444d0287344751ebb497f43',
-  PROTOCOL_CONFIG_ID: '0x6eb409209a37e395e63736a09dac7969eda573cc053aa32fc779474e552a3821',
-  ENCLAVE_OBJECT_ID: '0x16e09a9b11ac6367bd29e55c30a18356cae5104fb9062f96e625607391c5ee12',
-  TOKENS_TO_WHITELIST: [
-    '0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC',
-    SUI_COIN_TYPE,
+  "CLOCK_OBJECT_ID": "0x6",
+  "GAS_BUDGET": 100000000,
+  "PCR0": "b8715f9f324b7e608ba265c3b43a2bc95bc93cd9b9129f4ad45edfe7fa548028179fe76e0977e3244a32778badd09690",
+  "PCR1": "b8715f9f324b7e608ba265c3b43a2bc95bc93cd9b9129f4ad45edfe7fa548028179fe76e0977e3244a32778badd09690",
+  "PCR2": "21b9efbc184807662e966d34f390821309eeac6802309798826296bf3e8bec7c10edb30948c90ba67310f7b964fc500a",
+  "ENCLAVE_URL": "http://18.213.79.225:3000",
+  "MODULE_NAME": "sentinel",
+  "OTW_NAME": "SENTINEL",
+  "ENCLAVE_PACKAGE_ID": "0xd2d85bb57ad36227a78760e93efb59471732abdd31e72036185093931db9f43a",
+  "CAP_OBJECT_ID": "0x973ddc084736875deae3793252f849f065080043bef1286b05b83d2b98ddf473",
+  "ENCLAVE_CONFIG_OBJECT_ID": "0x6910a8e5b323c309bc57a7774561ed21d7229592147989725117a4155c93c522",
+  "APP_PACKAGE_ID": "0xca4b4cff33186aa91f803ae7db5eaeb2dcf18e54e2a928252672cf5cec46579b",
+  "AGENT_REGISTRY": "0x049f017e995be1d7dc8199f1e54c104f4e998266f97c51275a06321579bf64fa",
+  "PROTOCOL_CONFIG_ID": "0xde773157588021896f2d2d6f5525921a6cb50df7dd7d8024af0b5fcdfb4f70bc",
+  "ENCLAVE_OBJECT_ID": "0x1402ac05cdffc604a2592c9504d9afb1b145879c691daf08ec0df7fc9f013348",
+  "TOKENS_TO_WHITELIST": [
+    "0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC"
   ],
-  SENTINEL_COIN_TYPE:
-    '0xb0a3b08be99cb5becf1787e565cdd027edc40791df89ca4a603ba7d1575b21e9::sentinel::SENTINEL',
+  "SENTINEL_COIN_TYPE": "0xb0a3b08be99cb5becf1787e565cdd027edc40791df89ca4a603ba7d1575b21e9::sentinel::SENTINEL",
+  "MINIMUM_TOKEN_AMOUNTS": [
+    {
+      "type": "0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC",
+      "minimum_token": 5
+    }
+  ]
 }
 
 // Legacy single-token testnet contract (pre-Mar 2026 deployment)
@@ -467,12 +471,12 @@ export const getTierStyleConfig = (name: string) => {
 
 export const getTierTextConfig = (name: string) => {
   switch (name.toLowerCase()) {
-    case 'common': return 'text-[#049414]' 
-    case 'uncommon': return 'text-[#C532F6]' 
-    case 'rare': return 'text-[#947204]' 
-    case 'epic': return 'text-[#F632F3]' 
-    case 'legendary': return 'text-[#F632F3]' 
-    case 'mythic': return 'text-[#C532F6]' 
+    case 'common': return 'text-[#049414]'
+    case 'uncommon': return 'text-[#C532F6]'
+    case 'rare': return 'text-[#947204]'
+    case 'epic': return 'text-[#F632F3]'
+    case 'legendary': return 'text-[#F632F3]'
+    case 'mythic': return 'text-[#C532F6]'
     case 'divine': return 'text-[#049414]'
     case 'celestial': return 'text-[#0098C7]'
     case 'eternal': return 'text-[#4930D6]'
