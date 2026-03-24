@@ -23,6 +23,7 @@ interface PrizePoolChartModalProps {
   onClose: () => void
   data: ChartDataPoint[]
   agentName: string
+  tokenSymbol?: string
 }
 
 interface CustomTooltipProps {
@@ -33,14 +34,15 @@ interface CustomTooltipProps {
     name: string
   }>
   label?: string | number
+  tokenSymbol?: string
 }
 
-const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
+const CustomTooltip = ({ active, payload, label, tokenSymbol = 'SUI' }: CustomTooltipProps) => {
   if (active && payload && payload.length) {
     return (
       <div className="rounded-lg border border-gray-300 bg-white/80 p-3 shadow-lg backdrop-blur-md">
         <p className="text-xs text-gray-500">{format(new Date(label || 0), 'MMM d, yyyy p')}</p>
-        <p className="text-base font-bold text-black">{`${payload[0].value.toFixed(2)} SUI`}</p>
+        <p className="text-base font-bold text-black">{`${payload[0].value.toFixed(2)} ${tokenSymbol}`}</p>
       </div>
     )
   }
@@ -52,6 +54,7 @@ export const PrizePoolChartModal = ({
   onClose,
   data,
   agentName,
+  tokenSymbol = 'SUI',
 }: PrizePoolChartModalProps) => {
   return (
     <Dialog open={open} onClose={onClose} className="max-w-3xl border-gray-200 bg-white p-4 sm:p-6">
@@ -95,7 +98,7 @@ export const PrizePoolChartModal = ({
               tickFormatter={value => `${value}`}
               width={40}
             />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={<CustomTooltip tokenSymbol={tokenSymbol} />} />
             <Area
               type="monotone"
               dataKey="value"
