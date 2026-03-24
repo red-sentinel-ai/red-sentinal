@@ -62,7 +62,7 @@ export const useAllAgents = (
         limit: String(AGENTS_LIMIT),
         offset: String(offset),
         include_prize_pool: 'true',
-        min_balance: '1000000000',
+        min_balance: '1',
       })
 
       // Add sort params if provided
