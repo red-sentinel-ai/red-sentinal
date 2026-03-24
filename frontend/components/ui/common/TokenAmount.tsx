@@ -11,6 +11,13 @@ interface TokenAmountProps {
   iconSize?: number
 }
 
+function formatCompact(value: number, precision: number): string {
+  if (value >= 1_000_000_000) return `${parseFloat((value / 1_000_000_000).toFixed(2))}B`
+  if (value >= 1_000_000) return `${parseFloat((value / 1_000_000).toFixed(2))}M`
+  if (value >= 1_000) return `${parseFloat((value / 1_000).toFixed(2))}K`
+  return value.toFixed(precision)
+}
+
 export function TokenAmount({
   rawAmount,
   token,
@@ -18,7 +25,8 @@ export function TokenAmount({
   className,
   iconSize = 16,
 }: TokenAmountProps) {
-  const displayAmount = (Number(rawAmount) / Math.pow(10, token.decimals)).toFixed(precision)
+  const value = Number(rawAmount) / Math.pow(10, token.decimals)
+  const displayAmount = formatCompact(value, precision)
 
   return (
     <span className={cn('inline-flex items-center gap-1', className)}>
