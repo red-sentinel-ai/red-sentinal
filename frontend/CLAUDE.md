@@ -181,6 +181,18 @@ Never hardcode values that already exist in constants. Always trace back to the 
 - Use `SUI_CONFIG.SENTINEL_COIN_TYPE`, not an inline address string
 - If a value needs to change in the future, it should change in exactly one place
 
+### Extract pure components into their own files
+If a component is purely presentational (takes props, renders UI, no side effects), give it its own file even if it starts small. Inline helper components inside a parent file are harder to find, test, and reuse. The rule of thumb: if you'd name it with a capital letter and it renders JSX, it belongs in its own file under `components/ui/common/` (generic) or the relevant feature folder.
+
+```tsx
+// bad — SubMenuList buried inside DesktopNav.tsx, invisible to other consumers
+function SubMenuList({ items }) { ... }
+export function DesktopNav() { ... }
+
+// good — NavSubMenuList.tsx in components/ui/common/, importable anywhere
+export function NavSubMenuList({ items }) { ... }
+```
+
 ### Avoid dead code
 Before adding logic to a hook (e.g. tier calculation), verify it's actually consumed by a caller. If no caller uses it, don't add it. If it was added and is unused, delete it — dead code is a maintenance burden and misleads future readers.
 
