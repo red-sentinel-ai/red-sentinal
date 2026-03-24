@@ -24,7 +24,7 @@ type FeaturedAgentCardProps = {
   fromProfile?: boolean
   // Optional modal callbacks - when provided, component won't create its own modal instances
   onFund?: (agentObjectId: string, agentId: string, coinType?: string, tokenSymbol?: string, tokenDecimals?: number) => void
-  onWithdraw?: (agentObjectId: string, agentId: string, balance: number) => void
+  onWithdraw?: (agentObjectId: string, agentId: string, balance: number, coinType?: string) => void
   onFeature?: (agentId: string) => void
 }
 
@@ -257,7 +257,8 @@ export const FeaturedAgentCard = ({
                   openWithdrawModal(
                     agent.agent_object_id,
                     agent.agent_id,
-                    Number(agent.total_balance)
+                    Number(agent.total_balance),
+                    agent.coin_type
                   )
                 }
                 className="btn btn-outline w-1/2 px-2 py-1.5 text-[10px] sm:px-4 sm:py-2.5 sm:text-sm"
