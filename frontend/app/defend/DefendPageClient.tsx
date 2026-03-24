@@ -404,7 +404,7 @@ export default function DefendPageClient() {
           <div className="flex flex-col gap-2">
             <div>
               <label className="text-[20px] font-medium leading-tight text-black">
-                Initial Balance
+                Bounty Pool
               </label>
               <span className="mt-1 block text-[16px] font-normal text-[#5E5E5E]">
                 Minimum {selectedToken.minimumAmount} {selectedToken.symbol} required to deploy.
