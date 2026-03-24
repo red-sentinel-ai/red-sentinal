@@ -286,7 +286,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
                       <TrendingDown className="h-2.5 w-2.5 md:h-3 md:w-3" />
                     )}
                     <span>
-                      {isFinite(prizePoolData.change7d.percentage)
+                      {prizePoolData.change7d.percentage != null && isFinite(prizePoolData.change7d.percentage)
                         ? `${prizePoolData.change7d.percentage.toFixed(1)}% (7d)`
                         : 'New'}
                     </span>
@@ -298,7 +298,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
                   <TokenAmount rawAmount={agent.total_balance} token={agentToken} precision={2} iconSize={20} />
                 </p>
                 <div>
-                  <SparklineChart data={prizePoolData?.history.map(p => p.value) || []} />
+                  <SparklineChart data={prizePoolData?.history.map(p => p.value) || []} minValue={0} />
                 </div>
               </div>
               {prizePoolData && prizePoolData.history.length > 0 && (
@@ -508,6 +508,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
         onClose={() => setIsChartModalOpen(false)}
         data={prizePoolData?.history.map(p => ({ time: new Date(p.time), value: p.value })) || []}
         agentName={agent.agent_name}
+        tokenSymbol={agentToken.symbol}
       />
 
       <SocialMissionModal

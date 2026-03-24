@@ -7,6 +7,7 @@ interface SparklineChartProps extends React.SVGProps<SVGSVGElement> {
   strokeWidth?: number
   strokeColor?: string
   gradientId?: string
+  minValue?: number
 }
 
 export const SparklineChart = ({
@@ -16,6 +17,7 @@ export const SparklineChart = ({
   strokeWidth = 2,
   strokeColor = '#1FAD57',
   gradientId = 'sparkline-gradient',
+  minValue,
   ...props
 }: SparklineChartProps) => {
   if (!data || data.length < 2) {
@@ -35,7 +37,7 @@ export const SparklineChart = ({
   }
 
   const max = Math.max(...data)
-  const min = Math.min(...data)
+  const min = minValue !== undefined ? minValue : Math.min(...data)
   const range = max - min === 0 ? 1 : max - min
 
   const path = data

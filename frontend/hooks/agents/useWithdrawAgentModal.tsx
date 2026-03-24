@@ -3,11 +3,11 @@ import { WithdrawAgentModal, WithdrawAgentModalProps } from '@/components/Withdr
 import React, { useState } from 'react'
 
 interface UseWithdrawAgentModalReturn {
-  openModal: (agentObjectId: string, agentId: string, agentBalanceInMist: number) => void
+  openModal: (agentObjectId: string, agentId: string, agentBalanceRaw: number, coinType?: string) => void
   Modal: React.FC<
     Omit<
       WithdrawAgentModalProps,
-      'open' | 'onClose' | 'agentObjectId' | 'agentId' | 'agentBalanceInMist'
+      'open' | 'onClose' | 'agentObjectId' | 'agentId' | 'agentBalanceRaw' | 'coinType'
     >
   >
 }
@@ -17,11 +17,13 @@ export function useWithdrawAgentModal(): UseWithdrawAgentModalReturn {
   const [currentAgentObjectId, setCurrentAgentObjectId] = useState('')
   const [currentAgentId, setCurrentAgentId] = useState('')
   const [currentBalance, setCurrentBalance] = useState(0)
+  const [currentCoinType, setCurrentCoinType] = useState<string | undefined>(undefined)
 
-  const openModal = (agentObjectId: string, agentId: string, agentBalanceInMist: number) => {
+  const openModal = (agentObjectId: string, agentId: string, agentBalanceRaw: number, coinType?: string) => {
     setCurrentAgentObjectId(agentObjectId)
     setCurrentAgentId(agentId)
-    setCurrentBalance(agentBalanceInMist)
+    setCurrentBalance(agentBalanceRaw)
+    setCurrentCoinType(coinType)
     setIsOpen(true)
   }
 
@@ -30,12 +32,13 @@ export function useWithdrawAgentModal(): UseWithdrawAgentModalReturn {
     setCurrentAgentObjectId('')
     setCurrentAgentId('')
     setCurrentBalance(0)
+    setCurrentCoinType(undefined)
   }
 
   const Modal: React.FC<
     Omit<
       WithdrawAgentModalProps,
-      'open' | 'onClose' | 'agentObjectId' | 'agentId' | 'agentBalanceInMist'
+      'open' | 'onClose' | 'agentObjectId' | 'agentId' | 'agentBalanceRaw' | 'coinType'
     >
   > = props => (
     <WithdrawAgentModal
@@ -43,7 +46,8 @@ export function useWithdrawAgentModal(): UseWithdrawAgentModalReturn {
       onClose={closeModal}
       agentObjectId={currentAgentObjectId}
       agentId={currentAgentId}
-      agentBalanceInMist={currentBalance}
+      agentBalanceRaw={currentBalance}
+      coinType={currentCoinType}
       {...props}
     />
   )
