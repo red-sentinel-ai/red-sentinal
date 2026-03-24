@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react'
 import { Transaction } from '@mysten/sui/transactions'
 import { useSignAndExecuteTransaction, useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
-import { MIST_PER_SUI, SUI_CONFIG } from '@/constants'
+import { SUI_CONFIG, SUI_LEGACY_CONFIG, SUI_COIN_TYPE, getTokenForCoinType } from '@/constants'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
 import { AGENT_DETAILS_FULL_QUERY_KEY } from './useAgentDetails'
@@ -16,12 +16,22 @@ interface UseWithdrawAgentOptions {
 interface AgentCap {
   id: string
   agentId: string
+  coinType: string
+  isLegacy: boolean  
 }
 
 interface WithdrawAgentParams {
   agentObjectId: string
   agentId: string
-  amount: number // Amount in SUI
+  amount: number
+}
+
+/** Extract coin type from a full Sui struct type string.
+ *  e.g. "0xpkg::sentinel::AgentCap<0x2::sui::SUI>" → "0x2::sui::SUI"
+ *  Returns SUI_COIN_TYPE when no type parameter is present (legacy agents). */
+function extractCoinTypeFromObjectType(objectType: string): string {
+  const match = objectType.match(/<(.+)>$/)
+  return match ? match[1] : SUI_COIN_TYPE
 }
 
 export const useWithdrawAgent = (options: UseWithdrawAgentOptions = {}) => {
@@ -54,29 +64,40 @@ export const useWithdrawAgent = (options: UseWithdrawAgentOptions = {}) => {
     }
 
     try {
-      const objects = await client.getOwnedObjects({
-        owner: account.address,
-        filter: {
-          StructType: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::AgentCap`,
-        },
-        options: {
-          showContent: true,
-          showType: true,
-        },
-      })
+      // Query both new multi-token contract and legacy single-token contract in parallel
+      const [newObjects, legacyObjects] = await Promise.all([
+        client.getOwnedObjects({
+          owner: account.address,
+          filter: {
+            StructType: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::AgentCap`,
+          },
+          options: { showContent: true, showType: true },
+        }),
+        client.getOwnedObjects({
+          owner: account.address,
+          filter: {
+            StructType: `${SUI_LEGACY_CONFIG.APP_PACKAGE_ID}::${SUI_LEGACY_CONFIG.MODULE_NAME}::AgentCap`,
+          },
+          options: { showContent: true, showType: true },
+        }),
+      ])
 
-      const caps: AgentCap[] = objects.data
-        .filter(obj => obj.data?.content?.dataType === 'moveObject')
-        .map(obj => {
-          const fields = (obj.data?.content as any)?.fields
-          return {
-            id: obj.data?.objectId || '',
-            agentId: fields?.agent_id || '',
-          }
-        })
-        .filter(cap => cap.id && cap.agentId)
+      const parseObjects = (objects: typeof newObjects, isLegacy: boolean): AgentCap[] =>
+        objects.data
+          .filter(obj => obj.data?.content?.dataType === 'moveObject')
+          .map(obj => {
+            const fields = (obj.data?.content as any)?.fields
+            const objectType: string = obj.data?.type || ''
+            return {
+              id: obj.data?.objectId || '',
+              agentId: fields?.agent_id || '',
+              coinType: isLegacy ? SUI_COIN_TYPE : extractCoinTypeFromObjectType(objectType),
+              isLegacy,
+            }
+          })
+          .filter(cap => cap.id && cap.agentId)
 
-      setAgentCaps(caps)
+      setAgentCaps([...parseObjects(newObjects, false), ...parseObjects(legacyObjects, true)])
     } catch (error) {
       console.error('Error fetching AgentCaps:', error)
     }
@@ -115,17 +136,31 @@ export const useWithdrawAgent = (options: UseWithdrawAgentOptions = {}) => {
 
       try {
         const tx = new Transaction()
-        const amountInMist = BigInt(Math.floor(amount * MIST_PER_SUI))
+        const token = getTokenForCoinType(agentCap.coinType)
+        const amountInRaw = BigInt(Math.round(amount * Math.pow(10, token.decimals)))
 
-        const [coin] = tx.moveCall({
-          target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::withdraw_from_agent`,
+        const packageId = agentCap.isLegacy
+          ? SUI_LEGACY_CONFIG.APP_PACKAGE_ID
+          : SUI_CONFIG.APP_PACKAGE_ID
+        const moduleName = agentCap.isLegacy
+          ? SUI_LEGACY_CONFIG.MODULE_NAME
+          : SUI_CONFIG.MODULE_NAME
+
+        const moveCallArgs: any = {
+          target: `${packageId}::${moduleName}::withdraw_from_agent`,
           arguments: [
             tx.object(agentObjectId),
             tx.object(agentCap.id),
-            tx.pure.u64(amountInMist),
+            tx.pure.u64(amountInRaw),
             tx.object(SUI_CLOCK_OBJECT_ID),
           ],
-        })
+        }
+
+        if (!agentCap.isLegacy) {
+          moveCallArgs.typeArguments = [agentCap.coinType]
+        }
+
+        const [coin] = tx.moveCall(moveCallArgs)
 
         tx.transferObjects([coin], account.address)
 
@@ -138,7 +173,7 @@ export const useWithdrawAgent = (options: UseWithdrawAgentOptions = {}) => {
                 setLastResult(result)
 
                 if (showToasts) {
-                  toast.success(`Successfully withdrew ${amount} SUI`)
+                  toast.success(`Successfully withdrew ${amount} ${token.symbol}`)
                 }
 
                 // Refetch agent data
