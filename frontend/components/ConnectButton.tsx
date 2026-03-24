@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Copy, CheckCircle, LogOut, ChevronDown, User, Loader2, ArrowLeftRight } from 'lucide-react'
+import { Copy, CheckCircle, LogOut, ChevronDown, User, ArrowLeftRight } from 'lucide-react'
 import posthog from 'posthog-js'
 import {
   DropdownMenu,
@@ -19,8 +19,10 @@ import {
 } from '@mysten/dapp-kit'
 import { formatAddress } from '@mysten/sui/utils'
 import { SuiClient, getFullnodeUrl } from '@mysten/sui/client'
-import { APP_NETWORK, SUI_SENTINEL_DOCS_URL } from '@/constants'
+import { APP_NETWORK, SUI_SENTINEL_DOCS_URL, SUI_TOKEN } from '@/constants'
+import { Skeleton } from '@/components/ui/skeleton'
 import Image from 'next/image'
+import { useTokenBalance } from '@/hooks/useTokenBalance'
 
 export const client = new SuiClient({ url: getFullnodeUrl(APP_NETWORK) })
 
@@ -28,8 +30,10 @@ export const ConnectButton = () => {
   const account = useCurrentAccount()
   const { mutate: disconnect } = useDisconnectWallet()
   const [copied, setCopied] = useState(false)
-  const [suiBalance, setSuiBalance] = useState<number | undefined>()
-  const [isLoadingBalance, setIsLoadingBalance] = useState(false)
+  const { balance: suiBalance, isLoading: isLoadingBalance } = useTokenBalance(
+    SUI_TOKEN.coinType,
+    SUI_TOKEN.decimals
+  )
 
   const handleCopy = () => {
     if (account?.address) {
@@ -51,26 +55,6 @@ export const ConnectButton = () => {
     } else {
       posthog.reset()
     }
-  }, [account?.address])
-
-  useEffect(() => {
-    const fetchBalance = async () => {
-      if (!account?.address) return
-      setIsLoadingBalance(true)
-      try {
-        const coins = await client.getCoins({
-          owner: account.address,
-          coinType: '0x2::sui::SUI',
-        })
-        const totalBalance = coins.data.reduce((sum, coin) => sum + Number(coin.balance), 0)
-        setSuiBalance(totalBalance / 10 ** 9)
-      } catch (error) {
-        console.error('Error fetching SUI balance:', error)
-      } finally {
-        setIsLoadingBalance(false)
-      }
-    }
-    fetchBalance()
   }, [account?.address])
 
   if (!account) {
@@ -102,9 +86,9 @@ export const ConnectButton = () => {
           <div className="text-sm font-medium text-gray-600">Balance</div>
           <span className="flex items-center gap-2 text-base font-bold text-black">
             {isLoadingBalance ? (
-              <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
+              <Skeleton className="h-5 w-24" />
             ) : (
-              <>{suiBalance?.toFixed(4)} SUI</>
+              <>{suiBalance.toFixed(4)} SUI</>
             )}
           </span>
         </div>

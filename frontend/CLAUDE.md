@@ -173,6 +173,49 @@ Key tables:
 - `ss_social_connections`: OAuth account linking
 - `ss_feature_requests`: Agent feature requests
 
+## Engineering Principles
+
+### Single source of truth for config
+Never hardcode values that already exist in constants. Always trace back to the canonical definition:
+- Use `SUI_TOKEN.coinType` / `SUI_TOKEN.decimals`, not `'0x2::sui::SUI'` / `9`
+- Use `SUI_CONFIG.SENTINEL_COIN_TYPE`, not an inline address string
+- If a value needs to change in the future, it should change in exactly one place
+
+### Avoid dead code
+Before adding logic to a hook (e.g. tier calculation), verify it's actually consumed by a caller. If no caller uses it, don't add it. If it was added and is unused, delete it — dead code is a maintenance burden and misleads future readers.
+
+### Name things for what they actually do
+A hook named `useSentinelBalance` that also computes a rewards tier is misnamed. Rename or split when a hook's responsibilities grow beyond its name. If a "specialized" hook only wraps a generic one without adding real value, delete the wrapper and call the generic hook directly at the call site.
+
+### Prefer skeleton loading over spinners or placeholder text
+Always use `<Skeleton />` (`components/ui/skeleton.tsx`) for loading states, not spinners, ellipsis (`...`), or `animate-pulse` on text. Size the skeleton to match the expected content dimensions so the layout doesn't jump when data arrives — match the height to the text size and width to the typical content length. This is the standard across the whole app.
+
+```tsx
+// bad — layout jumps, content flashes
+{isLoading ? <Loader2 className="animate-spin" /> : <span>{value}</span>}
+{isLoading ? <span className="animate-pulse">...</span> : <span>{value}</span>}
+
+// good — stable layout, no jump
+{isLoading ? <Skeleton className="h-5 w-24" /> : <span>{value}</span>}
+```
+
+### Use existing UI components, don't inline formatting
+- For displaying token amounts with icon: use `<TokenAmount rawAmount={...} token={...} />`
+- For formatted balance strings in text: use `formattedBalance` from `useTokenBalance`
+- Do not inline `toLocaleString(...)` or `formatCompact(...)` at call sites
+
+### Token balance fetching
+**Always use `hooks/useTokenBalance.ts`** — never call `client.getBalance()` or `client.getCoins()` inline for display purposes.
+
+```typescript
+const { rawBalance, balance, formattedBalance, isLoading } = useTokenBalance(
+  token.coinType,   // from SupportedToken or SUI_TOKEN / SUI_CONFIG constants
+  token.decimals    // never hardcode the decimal count
+)
+```
+
+Note: `getCoins()` is still appropriate inside transaction-building hooks (e.g. `useFundAgent`) where actual coin objects are needed for PTBs — this is different from balance display.
+
 ## Important Notes
 
 - **No testing framework** is currently configured
