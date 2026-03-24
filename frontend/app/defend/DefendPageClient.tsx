@@ -18,6 +18,7 @@ import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 import { TokenSelectDropdown } from '@/components/defend/TokenSelectDropdown'
 import { RewardsConditions } from '@/components/defend/RewardsConditions'
 import { SuccessModal } from '@/components/DefenderSuccessModal'
+import { formatCompact } from '@/components/ui/common/TokenAmount'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 import { FormInput } from './components/FormInput'
@@ -407,7 +408,7 @@ export default function DefendPageClient() {
                 Bounty Pool
               </label>
               <span className="mt-1 block text-[16px] font-normal text-[#5E5E5E]">
-                Minimum {selectedToken.minimumAmount} {selectedToken.symbol} required to deploy.
+                Minimum {formatCompact(selectedToken.minimumAmount)} {selectedToken.symbol} required to deploy.
               </span>
             </div>
             <div className="mt-auto flex h-[56px] overflow-hidden rounded-xl border border-[#5E5E5E] bg-white transition-all focus-within:border-black focus-within:ring-1 focus-within:ring-black sm:h-[65px]">

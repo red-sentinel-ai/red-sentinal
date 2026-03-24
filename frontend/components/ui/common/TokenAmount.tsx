@@ -11,7 +11,7 @@ interface TokenAmountProps {
   iconSize?: number
 }
 
-function formatCompact(value: number, precision: number): string {
+export function formatCompact(value: number, precision = 2): string {
   if (value >= 1_000_000_000) return `${parseFloat((value / 1_000_000_000).toFixed(2))}B`
   if (value >= 1_000_000) return `${parseFloat((value / 1_000_000).toFixed(2))}M`
   if (value >= 1_000) return `${parseFloat((value / 1_000).toFixed(2))}K`
