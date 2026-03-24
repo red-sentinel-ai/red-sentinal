@@ -508,6 +508,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
         onClose={() => setIsChartModalOpen(false)}
         data={prizePoolData?.history.map(p => ({ time: new Date(p.time), value: p.value })) || []}
         agentName={agent.agent_name}
+        tokenSymbol={agentToken.symbol}
       />
 
       <SocialMissionModal
