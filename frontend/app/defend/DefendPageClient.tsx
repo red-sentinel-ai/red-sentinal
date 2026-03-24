@@ -18,8 +18,11 @@ import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 import { TokenSelectDropdown } from '@/components/defend/TokenSelectDropdown'
 import { RewardsConditions } from '@/components/defend/RewardsConditions'
 import { SuccessModal } from '@/components/DefenderSuccessModal'
-import { formatCompact } from '@/components/ui/common/TokenAmount'
+import { formatCompact, TokenAmount } from '@/components/ui/common/TokenAmount'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+
+import { useTokenBalance } from '@/hooks/useTokenBalance'
+import { Skeleton } from '@/components/ui/skeleton'
 
 import { FormInput } from './components/FormInput'
 import { LLMProviderSection } from './components/LLMProviderSection'
@@ -40,6 +43,10 @@ export default function DefendPageClient() {
   } | null>({ url: SENTINEL_IMAGES[0], isCustom: false })
 
   const [selectedToken, setSelectedToken] = useState<SupportedToken>(SUPPORTED_TOKENS[0])
+  const { rawBalance: selectedTokenRawBalance, isLoading: isTokenBalanceLoading } = useTokenBalance(
+    selectedToken.coinType,
+    selectedToken.decimals
+  )
 
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
   const { tokenCount: privateTokenCount, countTokens: countPrivateTokens, isDebouncing: isPrivateTokenCountDebouncing } = useTokenCount()
@@ -410,6 +417,20 @@ export default function DefendPageClient() {
               <span className="mt-1 block text-[16px] font-normal text-[#5E5E5E]">
                 Minimum {formatCompact(selectedToken.minimumAmount)} {selectedToken.symbol} required to deploy.
               </span>
+              {account?.address && (
+                <span className="mt-0.5 flex items-center gap-1 text-sm text-[#5E5E5E]">
+                  Balance:{' '}
+                  {isTokenBalanceLoading ? (
+                    <Skeleton className="inline-block h-4 w-20 align-middle" />
+                  ) : (
+                    <TokenAmount
+                      rawAmount={selectedTokenRawBalance}
+                      token={selectedToken}
+                      className="font-medium text-black"
+                    />
+                  )}
+                </span>
+              )}
             </div>
             <div className="mt-auto flex h-[56px] overflow-hidden rounded-xl border border-[#5E5E5E] bg-white transition-all focus-within:border-black focus-within:ring-1 focus-within:ring-black sm:h-[65px]">
               <input
