@@ -16,7 +16,7 @@ export const DEFEND_NAV_ITEMS: NavSubItem[] = [
 
 export const ATTACK_NAV_ITEMS: NavSubItem[] = [
   {
-    title: 'Attack Arena',
+    title: 'Attack a Sentinel',
     href: '/attack',
   },
 ]
