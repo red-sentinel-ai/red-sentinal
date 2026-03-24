@@ -18,8 +18,8 @@ import { SocialConnectionsSectionWrapper } from '@/components/profile/SocialConn
 import { useUserProfile, useUpdateAvatar } from '@/hooks/profile/useUserProfile'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 import { SENTINEL_GIFS, USER_IMAGES } from '@/constants/asset_paths'
-import { useSentinelBalance } from '@/hooks/rewards/useSentinelBalance'
-import { SENTINEL_TOKEN_EXPLORER_URL } from '@/constants'
+import { useTokenBalance } from '@/hooks/useTokenBalance'
+import { SENTINEL_TOKEN_DECIMALS, SENTINEL_TOKEN_EXPLORER_URL, SUI_CONFIG } from '@/constants'
 
 const PROFILE_TABS = {
   AGENTS: 'agents',
@@ -39,7 +39,10 @@ function ProfileContent() {
 
   const account = useCurrentAccount()
   const { data: profile, isLoading: isLoadingProfile } = useUserProfile()
-  const { formattedBalance: sentinelBalance } = useSentinelBalance()
+  const { formattedBalance: sentinelBalance } = useTokenBalance(
+    SUI_CONFIG.SENTINEL_COIN_TYPE,
+    SENTINEL_TOKEN_DECIMALS
+  )
 
   const { mutate: updateAvatar, isPending: isUpdatingAvatar } = useUpdateAvatar({
     onSuccess: () => setIsImagePickerOpen(false),

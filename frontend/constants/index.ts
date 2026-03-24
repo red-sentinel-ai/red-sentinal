@@ -53,6 +53,7 @@ export type SupportedToken = {
   minimumAmount: number
 }
 export const SUI_COIN_TYPE = '0x2::sui::SUI'
+export const SENTINEL_TOKEN_DECIMALS = 0
 
 // Tokens supported on testnet (new multi-token contract)
 
@@ -141,7 +142,7 @@ export const MAINNET_SUPPORTED_TOKENS: SupportedToken[] = [
     name: 'Sentinel',
     coinType:
       '0x66aaa74fecd25cb19b7576e101b25fd3a844e6b9f678421429d0d49d55e0fca0::sentinel::SENTINEL',
-    decimals: 0,
+    decimals: SENTINEL_TOKEN_DECIMALS,
     icon: '/icons/tokens/sentinel.png',
     minimumAmount: 100000,
   },
