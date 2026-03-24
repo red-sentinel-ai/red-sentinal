@@ -504,7 +504,8 @@ export default function DefendPageClient() {
   ) => {
     const agentObject = result?.objectChanges?.find(
       (obj: any) =>
-        obj.objectType === `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Agent<${selectedToken.coinType}>`
+        obj.objectType ===
+        `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Agent<${selectedToken.coinType}>`
     )
 
     if (agentObject) {
@@ -575,7 +576,10 @@ export default function DefendPageClient() {
       }
 
       const sortedCoins = coins.data.sort((a, b) => Number(b.balance) - Number(a.balance))
-      const totalAvailable = sortedCoins.reduce((sum, coin) => sum + BigInt(coin.balance), BigInt(0))
+      const totalAvailable = sortedCoins.reduce(
+        (sum, coin) => sum + BigInt(coin.balance),
+        BigInt(0)
+      )
 
       if (totalAvailable < initialAmountRaw) {
         throw new Error(
@@ -660,7 +664,8 @@ export default function DefendPageClient() {
         return
       }
 
-      const feePerMessage = parseFloat(formData.feePerMessage) * Math.pow(10, selectedToken.decimals)
+      const feePerMessage =
+        parseFloat(formData.feePerMessage) * Math.pow(10, selectedToken.decimals)
       const isCustomProvider = formData.llmProvider === 'custom'
       const agentDetails = await registerAgentUtil(
         formData.systemPrompt,
@@ -891,7 +896,6 @@ export default function DefendPageClient() {
           </div>
         </div>
 
-
         <div className="flex flex-col gap-2">
           <div className="mb-1 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
             <div>
@@ -1093,13 +1097,13 @@ export default function DefendPageClient() {
           <div className="flex flex-col gap-2">
             <div>
               <label className="text-[20px] font-medium leading-tight text-black">
-                Initial Balance
+                Bounty Pool
               </label>
               <span className="mt-1 block text-[16px] font-normal text-[#5E5E5E]">
                 Minimum {selectedToken.minimumAmount} {selectedToken.symbol} required to deploy.
               </span>
             </div>
-            <div className="flex h-[56px] overflow-hidden rounded-xl border border-[#5E5E5E] bg-white transition-all focus-within:border-black focus-within:ring-1 focus-within:ring-black sm:h-[65px] mt-auto">
+            <div className="mt-auto flex h-[56px] overflow-hidden rounded-xl border border-[#5E5E5E] bg-white transition-all focus-within:border-black focus-within:ring-1 focus-within:ring-black sm:h-[65px]">
               <input
                 name="initialBalance"
                 type="number"
