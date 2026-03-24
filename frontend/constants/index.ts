@@ -653,13 +653,9 @@ export const WITHDRAWAL_LOCK_MS = 1_209_600_000 // 14 days in milliseconds
 export const PROVIDER_MODELS: Record<string, string[]> = {
   openai: ['gpt-4o', 'gpt-4.1', 'gpt-4o-mini', 'gpt-3.5-turbo'],
   anthropic: [
-    'claude-opus-4-5',
-    'claude-sonnet-4-5',
+    'claude-opus-4-6',
+    'claude-sonnet-4-6',
     'claude-haiku-4-5',
-    'claude-3-5-sonnet-20241022',
-    'claude-3-5-sonnet-20240620',
-    'claude-3-opus-20240229',
-    'claude-3-haiku-20240307',
   ],
   deepseek: ['deepseek-chat', 'deepseek-reasoner'],
   'amazon bedrock': [
