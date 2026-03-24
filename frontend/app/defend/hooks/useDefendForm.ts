@@ -111,7 +111,7 @@ export function useDefendForm({
 
     const balance = parseFloat(formData.initialBalance)
     if (isNaN(balance) || balance < selectedToken.minimumAmount) {
-      newErrors.initialBalance = `Minimum initial balance is ${selectedToken.minimumAmount} ${selectedToken.symbol}`
+      newErrors.initialBalance = `Minimum Bounty Pool is ${selectedToken.minimumAmount} ${selectedToken.symbol}`
     }
 
     if (!formData.attackGoal.trim()) newErrors.attackGoal = 'Attack goal is required'
