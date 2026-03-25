@@ -9,7 +9,7 @@ export const useFeaturedAgents = () => {
     queryKey: [FEATURED_AGENTS_QUERY_KEY],
     queryFn: async () => {
       const res = await fetch(
-        `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}?is_featured=true&limit=50&include_prize_pool=true&min_balance=100000000&status=active`
+        `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}?is_featured=true&limit=50&include_prize_pool=true&min_balance=1&status=active`
       )
       if (!res.ok) {
         throw new Error('Failed to fetch featured agents')

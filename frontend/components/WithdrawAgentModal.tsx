@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { Loader2, X } from 'lucide-react'
 import { Dialog } from '@/components/Dialog'
-import { MIST_PER_SUI } from '@/constants'
+import { getTokenForCoinType } from '@/constants'
 import { useWithdrawAgent } from '@/hooks/agents/useWithdrawAgent'
 
 export interface WithdrawAgentModalProps {
@@ -10,7 +10,8 @@ export interface WithdrawAgentModalProps {
   onClose: () => void
   agentObjectId: string
   agentId: string
-  agentBalanceInMist: number
+  agentBalanceRaw: number  
+  coinType?: string
   onSuccess?: () => void
 }
 
@@ -19,12 +20,14 @@ export const WithdrawAgentModal = ({
   onClose,
   agentObjectId,
   agentId,
-  agentBalanceInMist,
+  agentBalanceRaw,
+  coinType,
   onSuccess,
 }: WithdrawAgentModalProps) => {
   const [amount, setAmount] = useState('')
   const [error, setError] = useState('')
-  const agentBalanceSui = agentBalanceInMist / MIST_PER_SUI
+  const token = getTokenForCoinType(coinType)
+  const agentBalanceHuman = agentBalanceRaw / Math.pow(10, token.decimals)
 
   const { withdrawAgent, isLoading } = useWithdrawAgent()
 
@@ -55,7 +58,7 @@ export const WithdrawAgentModal = ({
       setError('Amount must be a positive number')
       return false
     }
-    if (numAmount > agentBalanceSui) {
+    if (numAmount > agentBalanceHuman) {
       setError('Amount cannot exceed agent balance')
       return false
     }
@@ -93,8 +96,8 @@ export const WithdrawAgentModal = ({
 
         <div>
           <div className="mb-2 flex items-center justify-between">
-            <label className="block text-sm font-medium">Amount (SUI)</label>
-            <span className="text-xs text-gray-500">Max: {agentBalanceSui.toFixed(4)}</span>
+            <label className="block text-sm font-medium">Amount ({token.symbol})</label>
+            <span className="text-xs text-gray-500">Max: {agentBalanceHuman.toFixed(4)}</span>
           </div>
           <div className="relative">
             <input
@@ -108,7 +111,7 @@ export const WithdrawAgentModal = ({
               disabled={isLoading}
             />
             <button
-              onClick={() => setAmount(agentBalanceSui.toString())}
+              onClick={() => setAmount(agentBalanceHuman.toString())}
               className="btn btn-outline absolute right-2 top-1/2 h-7 -translate-y-1/2 px-3 text-xs font-medium"
               disabled={isLoading}
             >

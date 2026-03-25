@@ -36,7 +36,7 @@ export function TokenSelectDropdown({ tokens, selected, onSelect }: TokenSelectD
         </button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="end" className="min-w-[220px]">
+      <DropdownMenuContent align="end" className="max-h-[300px] min-w-[220px] overflow-y-auto">
         {tokens.map(token => (
           <DropdownMenuItem
             key={token.coinType}
