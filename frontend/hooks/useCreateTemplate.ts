@@ -20,13 +20,19 @@ const EMPTY_FORM: TemplateFormData = {
   jury_prompt: '',
 }
 
-export function useCreateTemplate(onSuccess?: () => void, onClose?: () => void) {
+export function useCreateTemplate(onSuccess?: () => void) {
   const account = useCurrentAccount()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
   const [formData, setFormData] = useState<TemplateFormData>(EMPTY_FORM)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
+  }
+
+  const reset = () => {
+    setFormData(EMPTY_FORM)
+    setIsSubmitted(false)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -61,10 +67,9 @@ export function useCreateTemplate(onSuccess?: () => void, onClose?: () => void) 
         throw new Error(errorData.error || 'Failed to create template')
       }
 
-      toast.success('Template created successfully!')
       setFormData(EMPTY_FORM)
+      setIsSubmitted(true)
       onSuccess?.()
-      onClose?.()
     } catch (error: any) {
       toast.error(error.message || 'Something went wrong')
     } finally {
@@ -72,5 +77,5 @@ export function useCreateTemplate(onSuccess?: () => void, onClose?: () => void) 
     }
   }
 
-  return { formData, isSubmitting, handleChange, handleSubmit }
+  return { formData, isSubmitting, isSubmitted, reset, handleChange, handleSubmit }
 }
