@@ -6,6 +6,7 @@ export async function GET() {
     const { data, error } = await supabaseServiceClient
       .from('ss_defender_templates' as any)
       .select('*')
+      .eq('status', 'approved')
       .order('rank', { ascending: false, nullsFirst: false })
       .order('created_at', { ascending: false })
 
@@ -24,22 +25,29 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { name, public_instructions, private_instructions, attack_goal, jury_prompt, creator_address } = body
+    const { name, tags, public_instructions, private_instructions, attack_goal, jury_prompt, creator_address } = body
 
     if (!name || !public_instructions || !private_instructions || !attack_goal || !jury_prompt || !creator_address) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
+
+    // Convert comma-separated string to array
+    const tagsArray = tags 
+      ? tags.split(',').map((tag: string) => tag.trim()).filter(Boolean) 
+      : []
 
     const { data, error } = await supabaseServiceClient
       .from('ss_defender_templates' as any)
       .insert([
         {
           name,
+          tags: tagsArray,
           public_instructions,
           private_instructions,
           attack_goal,
           jury_prompt,
           creator_address,
+          status: 'pending',
           rank: 0
         }
       ])
