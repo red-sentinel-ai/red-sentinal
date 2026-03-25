@@ -52,7 +52,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
           <p className="mb-6 text-sm text-gray-500">Your sentinel is deployed and open for attacks.</p>
 
           <div className="mb-6 flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
-            <span className="text-sm text-gray-500">Tx</span>
+            <span className="text-sm text-gray-500">Transaction</span>
             <Link
               href={`${SUIVISION_TXBLOCK_URL}/${transactionDigest}`}
               className="font-mono text-sm text-black transition-colors hover:underline"
@@ -65,7 +65,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
 
           <Link href={`/attack/${agentPath}`} className="block w-full">
             <button className="w-full rounded-xl bg-black py-3 font-bold text-white transition-colors hover:bg-black/80">
-              View Agent
+              View Sentinel
             </button>
           </Link>
         </div>
