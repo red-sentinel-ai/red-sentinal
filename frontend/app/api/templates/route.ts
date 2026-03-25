@@ -37,7 +37,7 @@ export async function POST(request: Request) {
       : []
 
     const { data, error } = await supabaseServiceClient
-      .from('ss_defender_templates' as any)
+      .from('ss_defender_templates')
       .insert([
         {
           name,
