@@ -1,22 +1,19 @@
 'use client'
 
 import Link from 'next/link'
-import {
-  ChevronLeft,
-  Copy,
-  Check,
-  Eye,
-  EyeOff,
-  Crosshair,
-  Gavel,
-  AlertTriangle,
-  Plus
-} from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { ChevronLeft, AlertTriangle, Plus, Crosshair } from 'lucide-react'
+import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { CreateTemplateModal } from '@/components/CreateTemplateModal'
 import { ConnectModal } from '@mysten/dapp-kit'
 import { useInstructionTemplates } from '@/hooks/useInstructionTemplates'
+import { TemplateDetailModal } from '@/components/TemplateDetailModal'
+import {
+  GARAK_GITHUB_URL,
+  PROMPTFOO_URL,
+  PETRI_GITHUB_URL,
+  BLOOM_GITHUB_URL,
+} from '@/constants'
 
 export default function InstructionTemplatesPage() {
   const {
@@ -34,31 +31,6 @@ export default function InstructionTemplatesPage() {
     handleCreateClick,
     fetchTemplates
   } = useInstructionTemplates()
-
-  const CopyButton = ({ text, fieldId }: { text: string; fieldId: string }) => (
-    <button
-      onClick={e => {
-        e.stopPropagation()
-        copyToClipboard(text, fieldId)
-      }}
-      className={cn(
-        'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs transition-all',
-        copiedField === fieldId ? 'bg-green-100 text-green-800' : 'bg-gray-100 hover:bg-gray-200'
-      )}
-    >
-      {copiedField === fieldId ? (
-        <>
-          <Check className="h-3 w-3" />
-          Copied
-        </>
-      ) : (
-        <>
-          <Copy className="h-3 w-3" />
-          Copy
-        </>
-      )}
-    </button>
-  )
 
   return (
     <div className="min-h-body relative">
@@ -95,7 +67,7 @@ export default function InstructionTemplatesPage() {
               <p className="text-sm text-amber-800">
                 These templates draw from security research including{' '}
                 <Link
-                  href="https://github.com/NVIDIA/garak"
+                  href={GARAK_GITHUB_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="underline hover:text-amber-900"
@@ -104,7 +76,7 @@ export default function InstructionTemplatesPage() {
                 </Link>
                 ,{' '}
                 <Link
-                  href="https://www.promptfoo.dev"
+                  href={PROMPTFOO_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="underline hover:text-amber-900"
@@ -113,7 +85,7 @@ export default function InstructionTemplatesPage() {
                 </Link>
                 ,{' '}
                 <Link
-                  href="https://github.com/safety-research/petri"
+                  href={PETRI_GITHUB_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="underline hover:text-amber-900"
@@ -122,7 +94,7 @@ export default function InstructionTemplatesPage() {
                 </Link>
                 , and{' '}
                 <Link
-                  href="https://github.com/safety-research/bloom"
+                  href={BLOOM_GITHUB_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="underline hover:text-amber-900"
@@ -154,7 +126,6 @@ export default function InstructionTemplatesPage() {
               </button>
             ))}
           </div>
-          
           <button
             onClick={handleCreateClick}
             className="inline-flex items-center justify-center gap-2 rounded-xl bg-black px-6 py-2.5 sm:py-3 text-sm font-medium text-white transition-all hover:bg-black/90 shrink-0 sm:text-base"
@@ -201,124 +172,12 @@ export default function InstructionTemplatesPage() {
           ))}
         </div>
 
-        {/* Template Detail Modal */}
-        <AnimatePresence>
-          {selectedTemplate && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
-              onClick={() => setSelectedTemplate(null)}
-            >
-              <motion.div
-                initial={{ scale: 0.95, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.95, opacity: 0 }}
-                className="max-h-[90vh] w-full max-w-4xl overflow-auto rounded-2xl bg-white"
-                onClick={e => e.stopPropagation()}
-              >
-                <div className="sticky top-0 z-10 rounded-t-2xl border-b border-[#5E5E5E] bg-white p-6">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3">
-                        <h2 className="text-2xl font-semibold">{selectedTemplate.name}</h2>
-                        <span
-                          className={cn(
-                            'shrink-0 rounded-full border px-3 py-1 text-xs font-medium',
-                            selectedTemplate.sentinel_type === 'rag'
-                              ? 'border-purple-200 bg-purple-100 text-purple-800'
-                              : 'border-blue-200 bg-blue-100 text-blue-800'
-                          )}
-                        >
-                          {selectedTemplate.sentinel_type}
-                        </span>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => setSelectedTemplate(null)}
-                      className="ml-4 text-gray-400 transition-colors hover:text-black"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                </div>
-
-                <div className="space-y-6 p-6">
-                  <div>
-                    <div className="mb-2 flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Eye className="h-4 w-4 text-blue-600" />
-                        <h3 className="text-base font-semibold">Public Instructions</h3>
-                      </div>
-                      <CopyButton text={selectedTemplate.public_instructions} fieldId="public" />
-                    </div>
-                    <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
-                      <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-gray-800">
-                        {selectedTemplate.public_instructions}
-                      </pre>
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="mb-2 flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <EyeOff className="h-4 w-4 text-orange-600" />
-                        <h3 className="text-base font-semibold">Private Instructions</h3>
-                      </div>
-                      <CopyButton text={selectedTemplate.hidden_instructions} fieldId="hidden" />
-                    </div>
-                    <div className="rounded-xl border border-orange-200 bg-orange-50 p-4">
-                      <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-gray-800">
-                        {selectedTemplate.hidden_instructions}
-                      </pre>
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="mb-2 flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Crosshair className="h-4 w-4 text-red-600" />
-                        <h3 className="text-base font-semibold">Attack Goal</h3>
-                      </div>
-                      <CopyButton text={selectedTemplate.attack_goal} fieldId="attack" />
-                    </div>
-                    <div className="rounded-xl border border-red-200 bg-red-50 p-4">
-                      <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-gray-800">
-                        {selectedTemplate.attack_goal}
-                      </pre>
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="mb-2 flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Gavel className="h-4 w-4 text-purple-600" />
-                        <h3 className="text-base font-semibold">Jury Prompt</h3>
-                      </div>
-                      <CopyButton text={selectedTemplate.jury_prompt} fieldId="jury" />
-                    </div>
-                    <div className="rounded-xl border border-purple-200 bg-purple-50 p-4">
-                      <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-gray-800">
-                        {selectedTemplate.jury_prompt}
-                      </pre>
-                    </div>
-                  </div>
-
-                  <Link
-                    href="/defend"
-                    onClick={() => {
-                      sessionStorage.setItem('selectedTemplate', JSON.stringify(selectedTemplate))
-                    }}
-                    className="block w-full rounded-xl bg-black py-4 text-center font-medium text-white transition-all hover:bg-black/90"
-                  >
-                    Use This Template
-                  </Link>
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <TemplateDetailModal
+          template={selectedTemplate}
+          copiedField={copiedField}
+          onCopy={copyToClipboard}
+          onClose={() => setSelectedTemplate(null)}
+        />
 
         <CreateTemplateModal
           isOpen={isCreateModalOpen}
@@ -327,7 +186,7 @@ export default function InstructionTemplatesPage() {
             fetchTemplates()
           }}
         />
-       <ConnectModal
+        <ConnectModal
           open={isWalletModalOpen}
           onOpenChange={setIsWalletModalOpen}
           trigger={<span className="hidden" />}
