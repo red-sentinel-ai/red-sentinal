@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { SentinelTemplate } from '@/constants/sentinel-templates'
 import { useCurrentAccount } from '@mysten/dapp-kit'
+import { SentinelTemplate } from '@/types'
 
 export function useInstructionTemplates() {
   const account = useCurrentAccount()
