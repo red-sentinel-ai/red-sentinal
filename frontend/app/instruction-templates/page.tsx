@@ -296,11 +296,11 @@ export default function InstructionTemplatesPage() {
                         <Gavel className="h-4 w-4 text-purple-600" />
                         <h3 className="text-base font-semibold">Jury Prompt</h3>
                       </div>
-                      <CopyButton text={selectedTemplate.judge_prompt} fieldId="judge" />
+                      <CopyButton text={selectedTemplate.jury_prompt} fieldId="jury" />
                     </div>
                     <div className="rounded-xl border border-purple-200 bg-purple-50 p-4">
                       <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-gray-800">
-                        {selectedTemplate.judge_prompt}
+                        {selectedTemplate.jury_prompt}
                       </pre>
                     </div>
                   </div>
