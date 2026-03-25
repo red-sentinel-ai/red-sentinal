@@ -160,8 +160,8 @@ export default function DefendPageClient() {
         if (template.attack_goal) {
           templateFormFields.attackGoal = template.attack_goal
         }
-        if (template.judge_prompt) {
-          templateFormFields.juryPrompt = template.judge_prompt
+        if (template.jury_prompt) {
+          templateFormFields.juryPrompt = template.jury_prompt
         }
         if (template.name) {
           templateFormFields.agentName = template.name
