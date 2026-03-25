@@ -8,6 +8,7 @@ import { CreateTemplateModal } from '@/components/CreateTemplateModal'
 import { ConnectModal } from '@mysten/dapp-kit'
 import { useInstructionTemplates } from '@/hooks/useInstructionTemplates'
 import { TemplateDetailModal } from '@/components/TemplateDetailModal'
+import { TemplateCardSkeleton } from '@/components/ui/skeletons/TemplateCardSkeleton'
 import {
   GARAK_GITHUB_URL,
   PROMPTFOO_URL,
@@ -29,7 +30,8 @@ export default function InstructionTemplatesPage() {
     isWalletModalOpen,
     setIsWalletModalOpen,
     handleCreateClick,
-    fetchTemplates
+    fetchTemplates,
+    isLoading,
   } = useInstructionTemplates()
 
   return (
@@ -137,7 +139,9 @@ export default function InstructionTemplatesPage() {
 
         {/* Templates Grid */}
         <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {filteredTemplates.map((template, index) => (
+          {isLoading
+            ? Array.from({ length: 6 }).map((_, i) => <TemplateCardSkeleton key={`skeleton-${i}`} />)
+            : filteredTemplates.map((template, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
