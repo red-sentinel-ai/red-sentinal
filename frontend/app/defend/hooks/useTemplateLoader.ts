@@ -29,7 +29,7 @@ export function useTemplateLoader({
         else if (template.prompt) fields.systemPrompt = template.prompt
         if (template.hidden_instructions) fields.privatePrompt = template.hidden_instructions
         if (template.attack_goal) fields.attackGoal = template.attack_goal
-        if (template.judge_prompt) fields.juryPrompt = template.judge_prompt
+        if (template.jury_prompt) fields.juryPrompt = template.jury_prompt
         if (template.name) fields.agentName = template.name
 
         if (savedFormData) {
