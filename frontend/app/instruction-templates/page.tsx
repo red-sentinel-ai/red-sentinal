@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import {
   ChevronLeft,
@@ -11,26 +10,30 @@ import {
   Crosshair,
   Gavel,
   AlertTriangle,
+  Plus
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
-import { SENTINEL_TEMPLATES, SentinelTemplate } from '@/constants/sentinel-templates'
+import { CreateTemplateModal } from '@/components/CreateTemplateModal'
+import { ConnectModal } from '@mysten/dapp-kit'
+import { useInstructionTemplates } from '@/hooks/useInstructionTemplates'
 
 export default function InstructionTemplatesPage() {
-  const [selectedCategory, setSelectedCategory] = useState<'all' | 'basic' | 'rag'>('all')
-  const [selectedTemplate, setSelectedTemplate] = useState<SentinelTemplate | null>(null)
-  const [copiedField, setCopiedField] = useState<string | null>(null)
-
-  const filteredTemplates =
-    selectedCategory === 'all'
-      ? SENTINEL_TEMPLATES
-      : SENTINEL_TEMPLATES.filter(t => t.sentinel_type === selectedCategory)
-
-  const copyToClipboard = async (text: string, fieldId: string) => {
-    await navigator.clipboard.writeText(text)
-    setCopiedField(fieldId)
-    setTimeout(() => setCopiedField(null), 2000)
-  }
+  const {
+    selectedCategory,
+    setSelectedCategory,
+    selectedTemplate,
+    setSelectedTemplate,
+    filteredTemplates,
+    copiedField,
+    copyToClipboard,
+    isCreateModalOpen,
+    setIsCreateModalOpen,
+    isWalletModalOpen,
+    setIsWalletModalOpen,
+    handleCreateClick,
+    fetchTemplates
+  } = useInstructionTemplates()
 
   const CopyButton = ({ text, fieldId }: { text: string; fieldId: string }) => (
     <button
@@ -73,11 +76,13 @@ export default function InstructionTemplatesPage() {
             <span>Back to Deploy</span>
           </Link>
 
-          <h1 className="mb-3 text-2xl font-medium sm:text-4xl md:text-5xl">Sentinel Templates</h1>
-          <p className="max-w-3xl text-base text-[#5E5E5E] sm:text-xl">
-            Fun, pre-configured sentinel characters ready to deploy. Pick a template, customize it
-            if you want, and deploy your defender with all fields auto-filled.
-          </p>
+          <div className="mb-3">
+            <h1 className="mb-3 text-2xl font-medium sm:text-4xl md:text-5xl">Sentinel Templates</h1>
+            <p className="max-w-3xl text-base text-[#5E5E5E] sm:text-xl">
+              Fun, pre-configured sentinel characters ready to deploy. Pick a template, customize it
+              if you want, and deploy your defender with all fields auto-filled.
+            </p>
+          </div>
         </div>
 
         <div className="mb-8 rounded-xl border border-amber-200 bg-amber-50 p-6">
@@ -132,21 +137,31 @@ export default function InstructionTemplatesPage() {
           </div>
         </div>
 
-        <div className="mb-8 flex flex-wrap gap-2 sm:gap-3">
-          {(['all', 'basic', 'rag'] as const).map(category => (
-            <button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={cn(
-                'rounded-xl px-4 py-2 text-sm font-medium transition-all sm:px-6 sm:py-3 sm:text-base',
-                selectedCategory === category
-                  ? 'bg-black text-white'
-                  : 'border border-[#5E5E5E] bg-white hover:border-black'
-              )}
-            >
-              {category === 'all' ? 'All Templates' : category === 'basic' ? 'Basic' : 'RAG'}
-            </button>
-          ))}
+        <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex flex-wrap gap-2 sm:gap-3">
+            {(['all', 'basic', 'rag'] as const).map(category => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={cn(
+                  'rounded-xl px-4 py-2 text-sm font-medium transition-all sm:px-6 sm:py-3 sm:text-base',
+                  selectedCategory === category
+                    ? 'bg-black text-white'
+                    : 'border border-[#5E5E5E] bg-white hover:border-black'
+                )}
+              >
+                {category === 'all' ? 'All Templates' : category === 'basic' ? 'Basic' : 'RAG'}
+              </button>
+            ))}
+          </div>
+          
+          <button
+            onClick={handleCreateClick}
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-black px-6 py-2.5 sm:py-3 text-sm font-medium text-white transition-all hover:bg-black/90 shrink-0 sm:text-base"
+          >
+            <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
+            Create Template
+          </button>
         </div>
 
         {/* Templates Grid */}
@@ -304,6 +319,19 @@ export default function InstructionTemplatesPage() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        <CreateTemplateModal
+          isOpen={isCreateModalOpen}
+          onClose={() => setIsCreateModalOpen(false)}
+          onSuccess={() => {
+            fetchTemplates()
+          }}
+        />
+       <ConnectModal
+          open={isWalletModalOpen}
+          onOpenChange={setIsWalletModalOpen}
+          trigger={<span className="hidden" />}
+        />
       </div>
     </div>
   )
