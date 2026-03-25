@@ -118,3 +118,12 @@ export interface SpinHistoryItem {
   transferDigest: string
   spunAt: string
 }
+
+export interface SentinelTemplate {
+  name: string
+  sentinel_type: 'basic' | 'rag'
+  public_instructions: string
+  hidden_instructions: string
+  attack_goal: string
+  jury_prompt: string
+}
