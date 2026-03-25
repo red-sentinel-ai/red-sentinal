@@ -1,0 +1,146 @@
+import { useState } from 'react'
+import { PROVIDER_MODELS, SYSTEM_PROMPT_MAX_TOKENS, type SupportedToken } from '@/constants'
+
+export const DEFAULT_PROVIDER = 'anthropic'
+export const DEFAULT_MODEL = PROVIDER_MODELS[DEFAULT_PROVIDER][0]
+
+export interface DefendFormData {
+  agentName: string
+  systemPrompt: string
+  feePerMessage: string
+  initialBalance: string
+  rewardPool: string
+  llmProvider: string
+  llmModel: string
+  privatePrompt: string
+  attackGoal: string
+  juryPrompt: string
+  customEndpointUrl: string
+  customApiKey: string
+  customModelName: string
+}
+
+export const INITIAL_FORM_DATA: DefendFormData = {
+  agentName: '',
+  systemPrompt: '',
+  feePerMessage: '',
+  initialBalance: '',
+  rewardPool: '',
+  llmProvider: DEFAULT_PROVIDER,
+  llmModel: DEFAULT_MODEL,
+  privatePrompt: '',
+  attackGoal: '',
+  juryPrompt: '',
+  customEndpointUrl: '',
+  customApiKey: '',
+  customModelName: '',
+}
+
+interface UseDefendFormOptions {
+  selectedToken: SupportedToken
+  tokenCount: number
+  countTokens: (text: string) => void
+  countPrivateTokens: (text: string) => void
+  countAttackGoalTokens: (text: string) => void
+  countJuryPromptTokens: (text: string) => void
+  /** Called when any custom-provider field (url/key/model) changes */
+  onCustomProviderFieldChange?: () => void
+}
+
+export function useDefendForm({
+  selectedToken,
+  tokenCount,
+  countTokens,
+  countPrivateTokens,
+  countAttackGoalTokens,
+  countJuryPromptTokens,
+  onCustomProviderFieldChange,
+}: UseDefendFormOptions) {
+  const [formData, setFormData] = useState<DefendFormData>(INITIAL_FORM_DATA)
+  const [errors, setErrors] = useState<Partial<DefendFormData>>({})
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+
+    if (name === 'feePerMessage' || name === 'initialBalance') {
+      if (value === '') {
+        setFormData(prev => ({ ...prev, [name]: '' }))
+      } else {
+        const num = parseFloat(value)
+        if (!isNaN(num) && num >= 0) {
+          setFormData(prev => ({ ...prev, [name]: value }))
+        }
+      }
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }))
+    }
+
+    if (['customEndpointUrl', 'customApiKey', 'customModelName'].includes(name)) {
+      onCustomProviderFieldChange?.()
+    }
+
+    if (name === 'systemPrompt') countTokens(value)
+    else if (name === 'privatePrompt') countPrivateTokens(value)
+    else if (name === 'attackGoal') countAttackGoalTokens(value)
+    else if (name === 'juryPrompt') countJuryPromptTokens(value)
+
+    if (errors[name as keyof DefendFormData]) {
+      setErrors(prev => ({ ...prev, [name]: '' }))
+    }
+  }
+
+  const validateForm = (customProviderValidated: boolean): boolean => {
+    const newErrors: Partial<DefendFormData> = {}
+
+    if (!formData.agentName.trim()) {
+      newErrors.agentName = 'Sentinel name is required'
+    } else if (formData.agentName.length > 31) {
+      newErrors.agentName = 'Sentinel name must be 31 characters or less'
+    }
+
+    if (!formData.systemPrompt.trim()) {
+      newErrors.systemPrompt = 'System prompt is required'
+    } else if (tokenCount > SYSTEM_PROMPT_MAX_TOKENS) {
+      return false
+    }
+
+    const fee = parseFloat(formData.feePerMessage)
+    if (isNaN(fee) || fee < 0.1) {
+      newErrors.feePerMessage = `Fee must be at least 0.1 ${selectedToken.symbol}`
+    }
+
+    const balance = parseFloat(formData.initialBalance)
+    if (isNaN(balance) || balance < selectedToken.minimumAmount) {
+      newErrors.initialBalance = `Minimum Bounty Pool is ${selectedToken.minimumAmount} ${selectedToken.symbol}`
+    }
+
+    if (!formData.attackGoal.trim()) newErrors.attackGoal = 'Attack goal is required'
+    if (!formData.juryPrompt.trim()) newErrors.juryPrompt = 'Jury prompt is required'
+
+    if (formData.llmProvider === 'custom') {
+      if (!formData.customEndpointUrl.trim()) newErrors.customEndpointUrl = 'Endpoint URL is required'
+      if (!formData.customApiKey.trim()) newErrors.customApiKey = 'API Key is required'
+      if (!formData.customModelName.trim()) newErrors.customModelName = 'Model name is required'
+      if (!customProviderValidated) {
+        // toast is called at the call-site to avoid importing toast here
+        return false
+      }
+    }
+
+    setErrors(newErrors)
+
+    const firstErrorField = Object.keys(newErrors)[0]
+    if (firstErrorField) {
+      document.querySelector(`[name="${firstErrorField}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+
+    return Object.keys(newErrors).length === 0
+  }
+
+  const resetForm = () => {
+    setFormData(INITIAL_FORM_DATA)
+    setErrors({})
+  }
+
+  return { formData, setFormData, errors, setErrors, handleChange, validateForm, resetForm }
+}

@@ -1,360 +1,110 @@
 'use client'
+
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import {
-  CameraIcon,
-  CheckCircle,
-  ChevronLeft,
-  Eye,
-  EyeOff,
-  Info,
-  Loader2,
-  Sparkles,
-  XCircle,
-} from 'lucide-react'
+import { ChevronLeft, CameraIcon, Info, Loader2, Sparkles } from 'lucide-react'
 import { toast } from 'sonner'
-import posthog from 'posthog-js'
-import { Transaction } from '@mysten/sui/transactions'
-import { SuiTransactionBlockResponse } from '@mysten/sui/client'
+import { ConnectButton, useCurrentAccount } from '@mysten/dapp-kit'
 import {
-  ConnectButton,
-  useCurrentAccount,
-  useSignAndExecuteTransaction,
-  useSuiClient,
-} from '@mysten/dapp-kit'
-import {
-  PROVIDER_MODELS,
   SUPPORTED_TOKENS,
-  SUI_COIN_TYPE,
-  SUI_CONFIG,
   SUI_SENTINEL_DOCS_URL,
   SYSTEM_PROMPT_MAX_TOKENS,
   type SupportedToken,
 } from '@/constants'
 import { SENTINEL_GIFS, SENTINEL_IMAGES } from '@/constants/asset_paths'
-import { hexToVector } from '@/lib/utils'
-import { registerAgentUtil } from './utils'
-import { useAgentObjectNames } from '@/hooks/useAgentObjectNames'
-import { SuccessModal } from '@/components/DefenderSuccessModal'
-import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
 import { useTokenCount } from '@/hooks/useTokenCount'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
-import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
-import { CustomDropdown } from '@/components/ui/common/CustomDropdown'
-import { RewardsConditions } from '@/components/defend/RewardsConditions'
 import { TokenSelectDropdown } from '@/components/defend/TokenSelectDropdown'
-import { useEffect } from 'react'
+import { RewardsConditions } from '@/components/defend/RewardsConditions'
+import { SuccessModal } from '@/components/DefenderSuccessModal'
+import { formatCompact, TokenAmount } from '@/components/ui/common/TokenAmount'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
-interface FormData {
-  agentName: string
-  systemPrompt: string
-  feePerMessage: string
-  initialBalance: string
-  rewardPool: string
-  llmProvider: string
-  llmModel: string
-  privatePrompt: string
-  attackGoal: string
-  juryPrompt: string
-  customEndpointUrl: string
-  customApiKey: string
-  customModelName: string
-}
+import { useTokenBalance } from '@/hooks/useTokenBalance'
+import { Skeleton } from '@/components/ui/skeleton'
 
-interface FormInputProps {
-  label: string
-  subLabel?: string
-  name: keyof FormData
-  value: string
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
-  error?: string
-  type?: string
-  placeholder?: string
-  required?: boolean
-  isTextarea?: boolean
-  rightElement?: React.ReactNode
-  className?: string
-  min?: string
-  step?: string
-}
-
-const FormInput: React.FC<FormInputProps> = ({
-  label,
-  subLabel,
-  name,
-  value,
-  onChange,
-  error,
-  type = 'text',
-  placeholder,
-  required = false,
-  isTextarea = false,
-  rightElement,
-  className = '',
-  min,
-  step,
-}) => {
-  const InputComponent = isTextarea ? 'textarea' : 'input'
-
-  return (
-    <div className={`flex flex-col gap-2 ${className}`}>
-      <div className="flex items-start justify-between">
-        <div className="flex flex-col">
-          <div className="flex items-center gap-2">
-            <label className="text-[20px] font-medium leading-tight text-black">{label}</label>
-            {rightElement}
-          </div>
-          {subLabel && (
-            <span className="mt-1 text-[16px] font-normal text-[#5E5E5E]">{subLabel}</span>
-          )}
-        </div>
-      </div>
-
-      <InputComponent
-        name={name}
-        type={isTextarea ? undefined : type}
-        value={value}
-        onChange={onChange}
-        className={`w-full rounded-xl border border-[#5E5E5E] bg-white p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-base ${
-          isTextarea ? 'min-h-[200px] resize-none' : 'h-[56px] sm:h-[65px]'
-        }`}
-        placeholder={placeholder}
-        required={required}
-        autoComplete="off"
-        spellCheck="false"
-        {...(!isTextarea && min ? { min } : {})}
-        {...(!isTextarea && step ? { step } : {})}
-      />
-      {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
-    </div>
-  )
-}
-
-const DEFAULT_PROVIDER = 'anthropic'
-const DEFAULT_MODEL = PROVIDER_MODELS[DEFAULT_PROVIDER][0]
+import { FormInput } from './components/FormInput'
+import { LLMProviderSection } from './components/LLMProviderSection'
+import { useDefendForm } from './hooks/useDefendForm'
+import { useCustomProvider } from './hooks/useCustomProvider'
+import { useDeployAgent } from './hooks/useDeployAgent'
+import { useTemplateLoader } from './hooks/useTemplateLoader'
 
 export default function DefendPageClient() {
-  const client = useSuiClient()
   const account = useCurrentAccount()
 
-  // Load template from sessionStorage if user came from templates page
-  useEffect(() => {
-    const templateData = sessionStorage.getItem('selectedTemplate')
-    const savedFormData = sessionStorage.getItem('defendFormData')
-
-    if (templateData) {
-      try {
-        const template = JSON.parse(templateData)
-
-        const templateFormFields: Partial<FormData> = {}
-        if (template.public_instructions) {
-          templateFormFields.systemPrompt = template.public_instructions
-        } else if (template.prompt) {
-          templateFormFields.systemPrompt = template.prompt
-        }
-        if (template.hidden_instructions) {
-          templateFormFields.privatePrompt = template.hidden_instructions
-        }
-        if (template.attack_goal) {
-          templateFormFields.attackGoal = template.attack_goal
-        }
-        if (template.jury_prompt) {
-          templateFormFields.juryPrompt = template.jury_prompt
-        }
-        if (template.name) {
-          templateFormFields.agentName = template.name
-        }
-
-        if (savedFormData) {
-          const parsedFormData = JSON.parse(savedFormData)
-          setFormData({
-            ...parsedFormData,
-            ...templateFormFields,
-          })
-          sessionStorage.removeItem('defendFormData')
-        } else {
-          setFormData(prev => ({
-            ...prev,
-            ...templateFormFields,
-          }))
-        }
-
-        const promptText = templateFormFields.systemPrompt || ''
-        if (promptText) countTokens(promptText)
-        if (templateFormFields.privatePrompt) countPrivateTokens(templateFormFields.privatePrompt)
-        if (templateFormFields.attackGoal) countAttackGoalTokens(templateFormFields.attackGoal)
-        if (templateFormFields.juryPrompt) countJuryPromptTokens(templateFormFields.juryPrompt)
-
-        sessionStorage.removeItem('selectedTemplate')
-      } catch (error) {
-        console.error('Failed to load template:', error)
-      }
-    } else if (savedFormData) {
-      try {
-        const parsedFormData = JSON.parse(savedFormData)
-        setFormData(parsedFormData)
-        // Restore token count for the saved systemPrompt
-        if (parsedFormData.systemPrompt) {
-          countTokens(parsedFormData.systemPrompt)
-        }
-        sessionStorage.removeItem('defendFormData')
-      } catch (error) {
-        console.error('Failed to restore form data:', error)
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-  const { addAgentObjectIdWithName } = useAgentObjectNames()
-  const { mutate: createAgent } = useCreateAgent()
   const [agentImage, setAgentImage] = useState<File | null>(null)
-  const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
-  const {
-    tokenCount: privateTokenCount,
-    countTokens: countPrivateTokens,
-    isDebouncing: isPrivateTokenCountDebouncing,
-  } = useTokenCount()
-  const {
-    tokenCount: attackGoalTokenCount,
-    countTokens: countAttackGoalTokens,
-    isDebouncing: isAttackGoalTokenCountDebouncing,
-  } = useTokenCount()
-  const {
-    tokenCount: juryPromptTokenCount,
-    countTokens: countJuryPromptTokens,
-    isDebouncing: isJuryPromptTokenCountDebouncing,
-  } = useTokenCount()
   const [imagePickerOpen, setImagePickerOpen] = useState(false)
   const [selectedImage, setSelectedImage] = useState<{
     url: string
     isCustom: boolean
     file?: File | null
-  } | null>({
-    url: SENTINEL_IMAGES[0],
-    isCustom: false,
-  })
+  } | null>({ url: SENTINEL_IMAGES[0], isCustom: false })
 
-  const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction({
-    execute: async ({ bytes, signature }) =>
-      await client.executeTransactionBlock({
-        transactionBlock: bytes,
-        signature,
-        options: {
-          showRawEffects: true,
-          showObjectChanges: true,
-        },
-      }),
-  })
-
-  const [formData, setFormData] = useState<FormData>({
-    agentName: '',
-    systemPrompt: '',
-    feePerMessage: '',
-    initialBalance: '',
-    rewardPool: '',
-    llmProvider: DEFAULT_PROVIDER,
-    llmModel: DEFAULT_MODEL,
-    privatePrompt: '',
-    attackGoal: '',
-    juryPrompt: '',
-    customEndpointUrl: '',
-    customApiKey: '',
-    customModelName: '',
-  })
-
-  const [errors, setErrors] = useState<Partial<FormData>>({})
-  const [isLoading, setIsLoading] = useState(false)
-  const [isGeneratingConfig, setIsGeneratingConfig] = useState(false)
-
-  const [isValidatingCustomProvider, setIsValidatingCustomProvider] = useState(false)
-  const [customProviderValidated, setCustomProviderValidated] = useState(false)
-  const [customProviderError, setCustomProviderError] = useState<string | null>(null)
-  const [showApiKey, setShowApiKey] = useState(false)
-
-  const [deployedAgentPath, setDeployedAgentPath] = useState<string | null>(null)
-  const [transactionDigest, setTransactionDigest] = useState('')
-
-  const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [selectedToken, setSelectedToken] = useState<SupportedToken>(SUPPORTED_TOKENS[0])
-  const handleProviderChange = (provider: string) => {
-    const isCustom = provider === 'custom'
-    const defaultModelForProvider = isCustom ? '' : PROVIDER_MODELS[provider]?.[0] || DEFAULT_MODEL
+  const { rawBalance: selectedTokenRawBalance, isLoading: isTokenBalanceLoading } = useTokenBalance(
+    selectedToken.coinType,
+    selectedToken.decimals
+  )
 
-    setFormData(prev => ({
-      ...prev,
-      llmProvider: provider,
-      llmModel: defaultModelForProvider,
-      ...(isCustom ? {} : { customEndpointUrl: '', customApiKey: '', customModelName: '' }),
-    }))
+  const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
+  const { tokenCount: privateTokenCount, countTokens: countPrivateTokens, isDebouncing: isPrivateTokenCountDebouncing } = useTokenCount()
+  const { tokenCount: attackGoalTokenCount, countTokens: countAttackGoalTokens, isDebouncing: isAttackGoalTokenCountDebouncing } = useTokenCount()
+  const { tokenCount: juryPromptTokenCount, countTokens: countJuryPromptTokens, isDebouncing: isJuryPromptTokenCountDebouncing } = useTokenCount()
 
-    if (!isCustom) {
-      setCustomProviderValidated(false)
-      setCustomProviderError(null)
+  const { formData, setFormData, errors, setErrors, handleChange, validateForm, resetForm } =
+    useDefendForm({
+      selectedToken,
+      tokenCount,
+      countTokens,
+      countPrivateTokens,
+      countAttackGoalTokens,
+      countJuryPromptTokens,
+    })
+
+  const customProvider = useCustomProvider(setFormData)
+
+  const handleChangeWithProviderReset = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (['customEndpointUrl', 'customApiKey', 'customModelName'].includes(e.target.name)) {
+      customProvider.resetValidation()
     }
+    handleChange(e)
   }
 
-  const handleValidateCustomProvider = async () => {
-    if (!formData.customEndpointUrl || !formData.customApiKey || !formData.customModelName) {
-      toast.error('Please fill in all custom provider fields')
-      return
-    }
+  useTemplateLoader({
+    setFormData,
+    countTokens,
+    countPrivateTokens,
+    countAttackGoalTokens,
+    countJuryPromptTokens,
+  })
 
-    setIsValidatingCustomProvider(true)
-    setCustomProviderError(null)
-    setCustomProviderValidated(false)
+  const {
+    isLoading,
+    deployedAgentPath,
+    transactionDigest,
+    showSuccessModal,
+    setShowSuccessModal,
+    deploy,
+    resetDeployState,
+  } = useDeployAgent({ formData, selectedToken, tokenCount, agentImage, selectedImage })
 
-    try {
-      const response = await fetch('/api/test-model', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model_provider: 'custom',
-          api_base_url: formData.customEndpointUrl,
-          api_key: formData.customApiKey,
-          model_name: formData.customModelName,
-          test_prompt: 'Say OK if you can hear me',
-        }),
-      })
-
-      const data = await response.json()
-
-      if (data.success && data.connected) {
-        setCustomProviderValidated(true)
-        setCustomProviderError(null)
-        setFormData(prev => ({ ...prev, llmModel: prev.customModelName }))
-        toast.success('Custom provider connection validated!')
-      } else {
-        setCustomProviderValidated(false)
-        setCustomProviderError(data.error_details || data.message || 'Connection failed')
-      }
-    } catch (error) {
-      console.error('Error validating custom provider:', error)
-      setCustomProviderValidated(false)
-      setCustomProviderError('Failed to validate connection. Please try again.')
-    } finally {
-      setIsValidatingCustomProvider(false)
-    }
-  }
+  const [isGeneratingConfig, setIsGeneratingConfig] = useState(false)
 
   const handleGenerateConfig = async () => {
     if (!formData.systemPrompt) {
       toast.error('Please fill in Sentinel Instructions first')
       return
     }
-
     setIsGeneratingConfig(true)
     try {
       const response = await fetch('/api/generate-config', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          public_instructions: formData.systemPrompt,
-        }),
+        body: JSON.stringify({ public_instructions: formData.systemPrompt }),
       })
-
       if (!response.ok) throw new Error('Failed to generate config')
-
       const data = await response.json()
       setFormData(prev => ({
         ...prev,
@@ -370,319 +120,31 @@ export default function DefendPageClient() {
     }
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-
-    if (name === 'feePerMessage' || name === 'initialBalance') {
-      if (value === '') {
-        setFormData(prev => ({ ...prev, [name]: '' }))
-      } else {
-        const num = parseFloat(value)
-        if (!isNaN(num) && num >= 0) {
-          setFormData(prev => ({ ...prev, [name]: value }))
-        }
-      }
-    } else {
-      setFormData(prev => ({ ...prev, [name]: value }))
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (formData.llmProvider === 'custom' && !customProvider.isValidated) {
+      toast.error('Please validate your custom provider connection before deploying')
+      return
     }
-
-    if (['customEndpointUrl', 'customApiKey', 'customModelName'].includes(name)) {
-      setCustomProviderValidated(false)
-      setCustomProviderError(null)
+    const result = await deploy(
+      customProvider.isValidated,
+      () => validateForm(customProvider.isValidated)
+    )
+    if (result?.nameExists) {
+      setErrors(prev => ({
+        ...prev,
+        agentName: 'This Sentinel name is already taken. Please choose another.',
+      }))
     }
-
-    if (name === 'systemPrompt') {
-      countTokens(value)
-    } else if (name === 'privatePrompt') {
-      countPrivateTokens(value)
-    } else if (name === 'attackGoal') {
-      countAttackGoalTokens(value)
-    } else if (name === 'juryPrompt') {
-      countJuryPromptTokens(value)
-    }
-
-    if (errors[name as keyof FormData]) {
-      setErrors(prev => ({ ...prev, [name]: '' }))
-    }
-  }
-
-  const resetAllState = () => {
-    setTransactionDigest('')
-    setFormData({
-      agentName: '',
-      systemPrompt: '',
-      feePerMessage: '',
-      initialBalance: '',
-      rewardPool: '',
-      llmProvider: DEFAULT_PROVIDER,
-      llmModel: DEFAULT_MODEL,
-      privatePrompt: '',
-      attackGoal: '',
-      juryPrompt: '',
-      customEndpointUrl: '',
-      customApiKey: '',
-      customModelName: '',
-    })
-    setSelectedImage({
-      url: SENTINEL_IMAGES[0],
-      isCustom: false,
-    })
-    setAgentImage(null)
-    setCustomProviderValidated(false)
-    setCustomProviderError(null)
   }
 
   const handleCloseSuccessModal = () => {
     setShowSuccessModal(false)
-    resetAllState()
-  }
-
-  const validateForm = (): boolean => {
-    const newErrors: Partial<FormData> = {}
-
-    if (!formData.agentName.trim()) {
-      newErrors.agentName = 'Sentinel name is required'
-    } else if (formData.agentName.length > 31) {
-      newErrors.agentName = 'Sentinel name must be 31 characters or less'
-    }
-
-    if (!formData.systemPrompt.trim()) {
-      newErrors.systemPrompt = 'System prompt is required'
-    } else if (tokenCount > SYSTEM_PROMPT_MAX_TOKENS) {
-      return false
-    }
-
-    const fee = parseFloat(formData.feePerMessage)
-    if (isNaN(fee) || fee < 0.1) {
-      newErrors.feePerMessage = `Fee must be at least 0.1 ${selectedToken.symbol}`
-    }
-
-    const balance = parseFloat(formData.initialBalance)
-    if (isNaN(balance) || balance < selectedToken.minimumAmount) {
-      newErrors.initialBalance = `Minimum initial balance is ${selectedToken.minimumAmount} ${selectedToken.symbol}`
-    }
-
-    if (!formData.attackGoal.trim()) {
-      newErrors.attackGoal = 'Attack goal is required'
-    }
-
-    if (!formData.juryPrompt.trim()) {
-      newErrors.juryPrompt = 'Jury prompt is required'
-    }
-
-    if (formData.llmProvider === 'custom') {
-      if (!formData.customEndpointUrl.trim()) {
-        newErrors.customEndpointUrl = 'Endpoint URL is required'
-      }
-      if (!formData.customApiKey.trim()) {
-        newErrors.customApiKey = 'API Key is required'
-      }
-      if (!formData.customModelName.trim()) {
-        newErrors.customModelName = 'Model name is required'
-      }
-      if (!customProviderValidated) {
-        toast.error('Please validate your custom provider connection before deploying')
-        return false
-      }
-    }
-
-    setErrors(newErrors)
-
-    const firstErrorField = Object.keys(newErrors)[0]
-    if (firstErrorField) {
-      const el = document.querySelector(`[name="${firstErrorField}"]`)
-      el?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    }
-
-    return Object.keys(newErrors).length === 0
-  }
-
-  const handleOffChainSuccess = async (
-    result: SuiTransactionBlockResponse,
-    agentName: string,
-    agent_id: string
-  ) => {
-    const agentObject = result?.objectChanges?.find(
-      (obj: any) =>
-        obj.objectType === `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Agent<${selectedToken.coinType}>`
-    )
-
-    if (agentObject) {
-      const agentObjectId = (agentObject as any).objectId
-      await addAgentObjectIdWithName(`${agentObjectId} ${agentName}`)
-      setTransactionDigest(result.digest.toString())
-      setShowSuccessModal(true)
-
-      posthog.capture('sentinel_deployed', {
-        agent_name: agentName,
-        agent_id: agent_id,
-        agent_object_id: (agentObject as any).objectId,
-        owner_address: account!.address,
-        cost_per_message: formData.feePerMessage,
-        system_prompt_length: formData.systemPrompt.length,
-        system_prompt_tokens: tokenCount,
-        tx_digest: result.digest.toString(),
-      })
-
-      const payload = new FormData()
-      payload.append('agent_id', agent_id)
-      payload.append('agent_name', agentName)
-      payload.append('object_id', agentObjectId)
-      payload.append('owner', account!.address)
-      payload.append('digest', result.digest.toString())
-      payload.append('model_provider', formData.llmProvider)
-      payload.append(
-        'model_name',
-        formData.llmProvider === 'custom' ? formData.customModelName : formData.llmModel
-      )
-
-      if (agentImage) {
-        payload.append('image', agentImage)
-      } else if (selectedImage?.url && !selectedImage.isCustom) {
-        payload.append('image_url', selectedImage.url)
-      }
-
-      createAgent(payload, {
-        onSuccess: data => {
-          if (data?.data?.agent_path) {
-            setDeployedAgentPath(data.data.agent_path)
-          }
-        },
-      })
-    }
-  }
-
-  const createAgentTransaction = async (agentDetails: any) => {
-    const tx = new Transaction()
-    const sigVector = hexToVector(agentDetails.signature)
-
-    const initialAmountRaw = BigInt(
-      Math.floor(parseFloat(formData.initialBalance) * Math.pow(10, selectedToken.decimals))
-    )
-
-    let initialFundCoin
-    if (selectedToken.coinType === SUI_COIN_TYPE) {
-      ;[initialFundCoin] = tx.splitCoins(tx.gas, [tx.pure.u64(initialAmountRaw)])
-    } else {
-      const coins = await client.getCoins({
-        owner: account!.address,
-        coinType: selectedToken.coinType,
-        limit: 100,
-      })
-
-      if (!coins.data.length) {
-        throw new Error(`No ${selectedToken.symbol} coins found in wallet`)
-      }
-
-      const sortedCoins = coins.data.sort((a, b) => Number(b.balance) - Number(a.balance))
-      const totalAvailable = sortedCoins.reduce((sum, coin) => sum + BigInt(coin.balance), BigInt(0))
-
-      if (totalAvailable < initialAmountRaw) {
-        throw new Error(
-          `Insufficient ${selectedToken.symbol} balance. Need ${formData.initialBalance} ${selectedToken.symbol}, have ${Number(totalAvailable) / Math.pow(10, selectedToken.decimals)} ${selectedToken.symbol}`
-        )
-      }
-
-      const selectedCoins: typeof sortedCoins = []
-      let runningTotal = BigInt(0)
-      for (const coin of sortedCoins) {
-        selectedCoins.push(coin)
-        runningTotal += BigInt(coin.balance)
-        if (runningTotal >= initialAmountRaw) break
-      }
-
-      if (selectedCoins.length === 1) {
-        ;[initialFundCoin] = tx.splitCoins(tx.object(selectedCoins[0].coinObjectId), [
-          tx.pure.u64(initialAmountRaw),
-        ])
-      } else {
-        const primaryCoinRef = tx.object(selectedCoins[0].coinObjectId)
-        tx.mergeCoins(
-          primaryCoinRef,
-          selectedCoins.slice(1).map(c => tx.object(c.coinObjectId))
-        )
-        ;[initialFundCoin] = tx.splitCoins(primaryCoinRef, [tx.pure.u64(initialAmountRaw)])
-      }
-    }
-
-    tx.moveCall({
-      target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::register_agent`,
-      typeArguments: [selectedToken.coinType],
-      arguments: [
-        tx.object(SUI_CONFIG.AGENT_REGISTRY),
-        tx.object(SUI_CONFIG.PROTOCOL_CONFIG_ID),
-        tx.pure.string(agentDetails.response.data.agent_id),
-        tx.pure.u64(agentDetails.response.timestamp_ms),
-        tx.pure.u64(agentDetails.response.data.cost_per_message),
-        tx.pure.string(agentDetails.response.data.system_prompt),
-        initialFundCoin,
-        tx.pure.vector('u8', sigVector),
-        tx.object(SUI_CONFIG.ENCLAVE_OBJECT_ID),
-        tx.object(SUI_CLOCK_OBJECT_ID),
-      ],
-    })
-
-    return await signAndExecuteTransaction(
-      { transaction: tx },
-      {
-        onSuccess: async result => {
-          await handleOffChainSuccess(
-            result,
-            formData.agentName,
-            agentDetails.response.data.agent_id
-          )
-        },
-      }
-    )
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!validateForm() || !account) return
-    setIsLoading(true)
-
-    try {
-      const checkResponse = await fetch(
-        `/api/agents/check-name?name=${encodeURIComponent(formData.agentName)}`
-      )
-      const checkData = await checkResponse.json()
-
-      if (!checkResponse.ok) {
-        throw new Error(checkData.error || 'Failed to validate Sentinel name.')
-      }
-
-      if (checkData.exists) {
-        setErrors(prev => ({
-          ...prev,
-          agentName: 'This Sentinel name is already taken. Please choose another.',
-        }))
-        setIsLoading(false)
-        return
-      }
-
-      const feePerMessage = parseFloat(formData.feePerMessage) * Math.pow(10, selectedToken.decimals)
-      const isCustomProvider = formData.llmProvider === 'custom'
-      const agentDetails = await registerAgentUtil(
-        formData.systemPrompt,
-        feePerMessage,
-        account.address,
-        formData.llmProvider,
-        isCustomProvider ? formData.customModelName : formData.llmModel,
-        formData.privatePrompt,
-        formData.attackGoal,
-        formData.juryPrompt,
-        isCustomProvider
-          ? { apiBaseUrl: formData.customEndpointUrl, apiKey: formData.customApiKey }
-          : undefined
-      )
-      await createAgentTransaction(agentDetails)
-    } catch (error) {
-      console.error('Deployment error:', error)
-      const message = error instanceof Error ? error.message : 'Deployment failed'
-      toast.error(message)
-    } finally {
-      setIsLoading(false)
-    }
+    resetForm()
+    resetDeployState()
+    setAgentImage(null)
+    setSelectedImage({ url: SENTINEL_IMAGES[0], isCustom: false })
+    customProvider.resetValidation()
   }
 
   return (
@@ -720,7 +182,7 @@ export default function DefendPageClient() {
                   className="relative z-10 h-full w-full object-cover"
                 />
               ) : null}
-              <div className="absolute inset-0 z-10 h-full w-full bg-black/40 opacity-0 transition-opacity group-hover:opacity-100"></div>
+              <div className="absolute inset-0 z-10 h-full w-full bg-black/40 opacity-0 transition-opacity group-hover:opacity-100" />
               <span className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 text-white opacity-0 transition-opacity group-hover:opacity-100">
                 <CameraIcon className="h-8 w-8" />
               </span>
@@ -737,11 +199,7 @@ export default function DefendPageClient() {
           onSelectImage={img => {
             setSelectedImage(img)
             setImagePickerOpen(false)
-            if (img.isCustom) {
-              setAgentImage(img.file ?? null)
-            } else {
-              setAgentImage(null)
-            }
+            setAgentImage(img.isCustom ? (img.file ?? null) : null)
           }}
           title="Select Sentinel Image"
           subtitle="Choose a profile image for your Sentinel."
@@ -755,142 +213,24 @@ export default function DefendPageClient() {
           subLabel="Give your Sentinel a unique identity."
           name="agentName"
           value={formData.agentName}
-          onChange={handleChange}
+          onChange={handleChangeWithProviderReset}
           error={errors.agentName}
           placeholder="e.g. Atlas Guard, Void Watcher, Nova Sentinel"
         />
 
-        <div className="rounded-xl border border-[#5E5E5E] bg-white p-6">
-          <h3 className="mb-6 text-[20px] font-medium text-black">LLM provider</h3>
-          <div className="flex flex-col gap-6 md:flex-row">
-            <CustomDropdown
-              label="Select service"
-              subLabel="Select the service that hosts and serves the LLM."
-              options={Object.keys(PROVIDER_MODELS)}
-              selected={formData.llmProvider}
-              onSelect={handleProviderChange}
-            />
-            {formData.llmProvider !== 'custom' ? (
-              <CustomDropdown
-                label="Select Model"
-                subLabel="Select the model version for the chosen LLM."
-                options={PROVIDER_MODELS[formData.llmProvider] || []}
-                selected={formData.llmModel}
-                onSelect={val => setFormData(prev => ({ ...prev, llmModel: val }))}
-              />
-            ) : (
-              <div className="flex min-w-[200px] flex-1 flex-col gap-4">
-                <div>
-                  <label className="block text-[18px] font-medium text-black">Endpoint URL</label>
-                  <p className="mb-2 text-[14px] text-[#5E5E5E]">
-                    OpenAI-compatible API endpoint URL
-                  </p>
-                  <input
-                    name="customEndpointUrl"
-                    type="url"
-                    value={formData.customEndpointUrl}
-                    onChange={handleChange}
-                    className="h-[56px] w-full rounded-xl border border-[#5E5E5E] bg-white px-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:h-[55px] sm:text-base"
-                    placeholder="https://api.example.com/v1"
-                    autoComplete="off"
-                    spellCheck="false"
-                  />
-                  {errors.customEndpointUrl && (
-                    <p className="mt-1 text-sm text-red-500">{errors.customEndpointUrl}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-[18px] font-medium text-black">API Key</label>
-                  <p className="mb-2 text-[14px] text-[#5E5E5E]">Your API key for authentication</p>
-                  <div className="relative">
-                    <input
-                      name="customApiKey"
-                      type={showApiKey ? 'text' : 'password'}
-                      value={formData.customApiKey}
-                      onChange={handleChange}
-                      className="h-[56px] w-full rounded-xl border border-[#5E5E5E] bg-white px-4 pr-12 text-[16px] text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:h-[55px] sm:text-base"
-                      placeholder="sk-..."
-                      autoComplete="off"
-                      spellCheck="false"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowApiKey(!showApiKey)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                    >
-                      {showApiKey ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                    </button>
-                  </div>
-                  {errors.customApiKey && (
-                    <p className="mt-1 text-sm text-red-500">{errors.customApiKey}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-[18px] font-medium text-black">Model Name</label>
-                  <p className="mb-2 text-[14px] text-[#5E5E5E]">
-                    The model identifier to use (e.g., gpt-4o, claude-3-opus)
-                  </p>
-                  <input
-                    name="customModelName"
-                    type="text"
-                    value={formData.customModelName}
-                    onChange={handleChange}
-                    className="h-[56px] w-full rounded-xl border border-[#5E5E5E] bg-white px-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:h-[55px] sm:text-base"
-                    placeholder="e.g., kimi-k2-turbo-preview"
-                    autoComplete="off"
-                    spellCheck="false"
-                  />
-                  {errors.customModelName && (
-                    <p className="mt-1 text-sm text-red-500">{errors.customModelName}</p>
-                  )}
-                </div>
-
-                <button
-                  type="button"
-                  onClick={handleValidateCustomProvider}
-                  disabled={
-                    isValidatingCustomProvider ||
-                    !formData.customEndpointUrl ||
-                    !formData.customApiKey ||
-                    !formData.customModelName
-                  }
-                  className="flex h-[48px] items-center justify-center gap-2 rounded-xl border border-black bg-black px-6 font-medium text-white transition-colors hover:bg-black/90 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  {isValidatingCustomProvider ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Validating...
-                    </>
-                  ) : customProviderValidated ? (
-                    <>
-                      <CheckCircle className="h-4 w-4 text-green-400" />
-                      Validated
-                    </>
-                  ) : (
-                    'Validate Connection'
-                  )}
-                </button>
-
-                {customProviderValidated && (
-                  <div className="flex items-center gap-2 rounded-lg bg-green-50 px-4 py-3 text-sm text-green-700">
-                    <CheckCircle className="h-4 w-4 shrink-0" />
-                    <span>Connection verified successfully</span>
-                  </div>
-                )}
-
-                {customProviderError && (
-                  <div className="flex items-center gap-2 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
-                    <XCircle className="h-4 w-4 shrink-0" />
-                    <span>{customProviderError}</span>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-
+        <LLMProviderSection
+          formData={formData}
+          errors={errors}
+          onChange={handleChangeWithProviderReset}
+          onProviderChange={customProvider.handleProviderChange}
+          onModelChange={val => setFormData(prev => ({ ...prev, llmModel: val }))}
+          isValidating={customProvider.isValidating}
+          isValidated={customProvider.isValidated}
+          validationError={customProvider.validationError}
+          showApiKey={customProvider.showApiKey}
+          onToggleApiKey={() => customProvider.setShowApiKey(v => !v)}
+          onValidate={() => customProvider.handleValidate(formData)}
+        />
 
         <div className="flex flex-col gap-2">
           <div className="mb-1 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
@@ -903,14 +243,11 @@ export default function DefendPageClient() {
                 constraints, and objectives.
               </span>
             </div>
-
             <div className="flex shrink-0 gap-4 sm:ml-4">
               <Link
                 href="/instruction-templates"
                 className="text-sm text-[#0077FF] underline hover:text-[#0077ffd3] sm:mt-1"
-                onClick={() => {
-                  sessionStorage.setItem('defendFormData', JSON.stringify(formData))
-                }}
+                onClick={() => sessionStorage.setItem('defendFormData', JSON.stringify(formData))}
               >
                 View Templates
               </Link>
@@ -927,20 +264,15 @@ export default function DefendPageClient() {
           <textarea
             name="systemPrompt"
             value={formData.systemPrompt}
-            onChange={handleChange}
+            onChange={handleChangeWithProviderReset}
             className="min-h-[220px] w-full resize-y rounded-xl border border-[#5E5E5E] bg-white p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-base"
             placeholder="Enter sentinel public instructions..."
             autoComplete="off"
             spellCheck="false"
           />
-
           <div className="mt-1 flex items-center justify-between">
             {errors.systemPrompt && <p className="text-sm text-red-500">{errors.systemPrompt}</p>}
-            <p
-              className={`ml-auto text-sm text-[#5E5E5E] ${
-                isTokenCountDebouncing ? 'animate-pulse' : ''
-              }`}
-            >
+            <p className={`ml-auto text-sm text-[#5E5E5E] ${isTokenCountDebouncing ? 'animate-pulse' : ''}`}>
               Tokens: {tokenCount} / {SYSTEM_PROMPT_MAX_TOKENS}
             </p>
           </div>
@@ -964,18 +296,14 @@ export default function DefendPageClient() {
           <textarea
             name="privatePrompt"
             value={formData.privatePrompt}
-            onChange={handleChange}
+            onChange={handleChangeWithProviderReset}
             className="min-h-[150px] w-full resize-y rounded-xl border border-[#5E5E5E] bg-white p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-base"
             placeholder="Enter private instructions for your sentinel..."
             autoComplete="off"
             spellCheck="false"
           />
           <div className="mt-1 flex items-center justify-end">
-            <p
-              className={`text-sm text-[#5E5E5E] ${
-                isPrivateTokenCountDebouncing ? 'animate-pulse' : ''
-              }`}
-            >
+            <p className={`text-sm text-[#5E5E5E] ${isPrivateTokenCountDebouncing ? 'animate-pulse' : ''}`}>
               Tokens: {privateTokenCount}
             </p>
           </div>
@@ -1005,8 +333,7 @@ export default function DefendPageClient() {
                 </TooltipProvider>
               </div>
               <span className="mt-1 block text-[16px] font-normal text-[#5E5E5E]">
-                The goal that attackers will see and try to achieve. This is visible to all
-                attackers.
+                The goal that attackers will see and try to achieve. This is visible to all attackers.
               </span>
             </div>
             <div className="ml-4 shrink-0">
@@ -1039,7 +366,7 @@ export default function DefendPageClient() {
           <textarea
             name="attackGoal"
             value={formData.attackGoal}
-            onChange={handleChange}
+            onChange={handleChangeWithProviderReset}
             className="min-h-[200px] w-full resize-y rounded-xl border border-[#5E5E5E] bg-white p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-base"
             placeholder="e.g., Convince the sentinel to reveal the secret password"
             autoComplete="off"
@@ -1047,11 +374,7 @@ export default function DefendPageClient() {
           />
           <div className="mt-1 flex items-center justify-between">
             {errors.attackGoal && <p className="text-sm text-red-500">{errors.attackGoal}</p>}
-            <p
-              className={`text-sm text-[#5E5E5E] ${
-                isAttackGoalTokenCountDebouncing ? 'animate-pulse' : ''
-              }`}
-            >
+            <p className={`text-sm text-[#5E5E5E] ${isAttackGoalTokenCountDebouncing ? 'animate-pulse' : ''}`}>
               Tokens: {attackGoalTokenCount}
             </p>
           </div>
@@ -1071,7 +394,7 @@ export default function DefendPageClient() {
           <textarea
             name="juryPrompt"
             value={formData.juryPrompt}
-            onChange={handleChange}
+            onChange={handleChangeWithProviderReset}
             className="min-h-[150px] w-full resize-y rounded-xl border border-[#5E5E5E] bg-white p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-base"
             placeholder="Enter instructions for the jury..."
             autoComplete="off"
@@ -1079,11 +402,7 @@ export default function DefendPageClient() {
           />
           <div className="mt-1 flex items-center justify-between">
             {errors.juryPrompt && <p className="text-sm text-red-500">{errors.juryPrompt}</p>}
-            <p
-              className={`text-sm text-[#5E5E5E] ${
-                isJuryPromptTokenCountDebouncing ? 'animate-pulse' : ''
-              }`}
-            >
+            <p className={`text-sm text-[#5E5E5E] ${isJuryPromptTokenCountDebouncing ? 'animate-pulse' : ''}`}>
               Tokens: {juryPromptTokenCount}
             </p>
           </div>
@@ -1093,18 +412,32 @@ export default function DefendPageClient() {
           <div className="flex flex-col gap-2">
             <div>
               <label className="text-[20px] font-medium leading-tight text-black">
-                Initial Balance
+                Bounty Pool
               </label>
               <span className="mt-1 block text-[16px] font-normal text-[#5E5E5E]">
-                Minimum {selectedToken.minimumAmount} {selectedToken.symbol} required to deploy.
+                Minimum {formatCompact(selectedToken.minimumAmount)} {selectedToken.symbol} required to deploy.
               </span>
+              {account?.address && (
+                <span className="mt-0.5 flex items-center gap-1 text-sm text-[#5E5E5E]">
+                  Balance:{' '}
+                  {isTokenBalanceLoading ? (
+                    <Skeleton className="inline-block h-4 w-20 align-middle" />
+                  ) : (
+                    <TokenAmount
+                      rawAmount={selectedTokenRawBalance}
+                      token={selectedToken}
+                      className="font-medium text-black"
+                    />
+                  )}
+                </span>
+              )}
             </div>
-            <div className="flex h-[56px] overflow-hidden rounded-xl border border-[#5E5E5E] bg-white transition-all focus-within:border-black focus-within:ring-1 focus-within:ring-black sm:h-[65px] mt-auto">
+            <div className="mt-auto flex h-[56px] overflow-hidden rounded-xl border border-[#5E5E5E] bg-white transition-all focus-within:border-black focus-within:ring-1 focus-within:ring-black sm:h-[65px]">
               <input
                 name="initialBalance"
                 type="number"
                 value={formData.initialBalance}
-                onChange={handleChange}
+                onChange={handleChangeWithProviderReset}
                 className="h-full flex-1 bg-transparent px-4 text-[16px] text-black placeholder-gray-400 focus:outline-none"
                 placeholder="0.00"
                 step="0.1"
@@ -1129,7 +462,7 @@ export default function DefendPageClient() {
             subLabel={`You earn this fee whenever users interact with your Sentinel. Minimum 0.1 ${selectedToken.symbol}.`}
             name="feePerMessage"
             value={formData.feePerMessage}
-            onChange={handleChange}
+            onChange={handleChangeWithProviderReset}
             error={errors.feePerMessage}
             type="number"
             placeholder="0.00"
@@ -1147,7 +480,7 @@ export default function DefendPageClient() {
               disabled={
                 isLoading ||
                 tokenCount > SYSTEM_PROMPT_MAX_TOKENS ||
-                (formData.llmProvider === 'custom' && !customProviderValidated)
+                (formData.llmProvider === 'custom' && !customProvider.isValidated)
               }
               className="flex h-[65px] w-full items-center justify-center gap-3 rounded-xl bg-black text-xl font-medium text-white transition-colors hover:bg-black/90 disabled:cursor-not-allowed disabled:opacity-50"
             >
