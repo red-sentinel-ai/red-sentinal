@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { SESSION_KEYS } from '@/constants'
 import type { DefendFormData } from './useDefendForm'
 
 interface UseTemplateLoaderOptions {
@@ -17,8 +18,8 @@ export function useTemplateLoader({
   countJuryPromptTokens,
 }: UseTemplateLoaderOptions) {
   useEffect(() => {
-    const templateData = sessionStorage.getItem('selectedTemplate')
-    const savedFormData = sessionStorage.getItem('defendFormData')
+    const templateData = sessionStorage.getItem(SESSION_KEYS.SELECTED_TEMPLATE)
+    const savedFormData = sessionStorage.getItem(SESSION_KEYS.DEFEND_FORM_DATA)
 
     if (templateData) {
       try {
@@ -35,7 +36,7 @@ export function useTemplateLoader({
         if (savedFormData) {
           const parsed = JSON.parse(savedFormData)
           setFormData({ ...parsed, ...fields })
-          sessionStorage.removeItem('defendFormData')
+          sessionStorage.removeItem(SESSION_KEYS.DEFEND_FORM_DATA)
         } else {
           setFormData(prev => ({ ...prev, ...fields }))
         }
@@ -45,7 +46,7 @@ export function useTemplateLoader({
         if (fields.attackGoal) countAttackGoalTokens(fields.attackGoal)
         if (fields.juryPrompt) countJuryPromptTokens(fields.juryPrompt)
 
-        sessionStorage.removeItem('selectedTemplate')
+        sessionStorage.removeItem(SESSION_KEYS.SELECTED_TEMPLATE)
       } catch (error) {
         console.error('Failed to load template:', error)
       }
@@ -54,7 +55,7 @@ export function useTemplateLoader({
         const parsed = JSON.parse(savedFormData)
         setFormData(parsed)
         if (parsed.systemPrompt) countTokens(parsed.systemPrompt)
-        sessionStorage.removeItem('defendFormData')
+        sessionStorage.removeItem(SESSION_KEYS.DEFEND_FORM_DATA)
       } catch (error) {
         console.error('Failed to restore form data:', error)
       }
