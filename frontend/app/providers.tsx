@@ -12,6 +12,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ProfileInitializer } from '@/components/profile/ProfileInitializer'
 import { FeedbackButton } from '@/components/feedback/FeedbackButton'
 import { APP_NETWORK } from '@/constants'
+import { SolanaWalletProvider } from '@/app/SolanaWalletProvider'
+import { ActiveChainProvider } from '@/context/ActiveChainContext'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -47,14 +49,18 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <QueryClientProvider client={queryClient}>
           <SuiClientProvider networks={networks} defaultNetwork={APP_NETWORK}>
             <WalletProvider autoConnect theme={lightTheme}>
-              <div className="flex flex-col">
-                {/* <LaunchMainnetBanner /> */}
-                <Header />
-                <div className="mt-[96px] md:mt-[100px]"></div>
-                <ProfileInitializer />
-                {children}
-                <FeedbackButton />
-              </div>
+              <SolanaWalletProvider>
+                <ActiveChainProvider>
+                  <div className="flex flex-col">
+                    {/* <LaunchMainnetBanner /> */}
+                    <Header />
+                    <div className="mt-[96px] md:mt-[100px]"></div>
+                    <ProfileInitializer />
+                    {children}
+                    <FeedbackButton />
+                  </div>
+                </ActiveChainProvider>
+              </SolanaWalletProvider>
             </WalletProvider>
           </SuiClientProvider>
         </QueryClientProvider>
