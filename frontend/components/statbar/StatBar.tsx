@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { usePlatformStats, mistToSui } from '@/hooks/stats/usePlatformStats'
+import { usePlatformStats } from '@/hooks/stats/usePlatformStats'
 import type { PlatformStatsResponse } from '@/hooks/stats/usePlatformStats'
 
 interface StatItemData {
@@ -20,18 +20,18 @@ function transformStats(data: PlatformStatsResponse): StatItemData[] {
     {
       id: 'tvl',
       label: 'Value Secured',
-      value: mistToSui(data.tvl),
-      prefix: '',
-      suffix: ' SUI',
+      value: data.tvl,
+      prefix: '$',
+      suffix: '',
       format: 'compact',
       accent: 'mint',
     },
     {
       id: 'bounties',
       label: 'Bounties Claimed',
-      value: mistToSui(data.totalBountyWon),
-      prefix: '',
-      suffix: ' SUI',
+      value: data.totalBountyWon,
+      prefix: '$',
+      suffix: '',
       format: 'compact',
       accent: 'pink',
     },
@@ -74,9 +74,9 @@ function transformStats(data: PlatformStatsResponse): StatItemData[] {
     {
       id: 'largest',
       label: 'Largest Breach',
-      value: data.largestBountyWon ? mistToSui(data.largestBountyWon.amount) : 0,
-      prefix: '',
-      suffix: ' SUI',
+      value: data.largestBountyWon ? data.largestBountyWon.amount : 0,
+      prefix: '$',
+      suffix: '',
       format: 'compact',
       accent: 'mint',
     },
@@ -89,8 +89,8 @@ const DEFAULT_STATS: StatItemData[] = [
     id: 'tvl',
     label: 'Value Secured',
     value: 0,
-    prefix: '',
-    suffix: ' SUI',
+    prefix: '$',
+    suffix: '',
     format: 'compact',
     accent: 'mint',
   },
@@ -98,8 +98,8 @@ const DEFAULT_STATS: StatItemData[] = [
     id: 'bounties',
     label: 'Bounties Claimed',
     value: 0,
-    prefix: '',
-    suffix: ' SUI',
+    prefix: '$',
+    suffix: '',
     format: 'compact',
     accent: 'pink',
   },
@@ -143,8 +143,8 @@ const DEFAULT_STATS: StatItemData[] = [
     id: 'largest',
     label: 'Largest Breach',
     value: 0,
-    prefix: '',
-    suffix: ' SUI',
+    prefix: '$',
+    suffix: '',
     format: 'compact',
     accent: 'mint',
   },
