@@ -34,15 +34,27 @@ export function CreateTemplateModal({ isOpen, onClose, onSuccess }: CreateTempla
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
+            transition={{ duration: 0.2 }}
             className="max-h-[90vh] w-full max-w-4xl overflow-auto rounded-2xl bg-white"
             onClick={e => e.stopPropagation()}
           >
             <div className="sticky top-0 z-10 rounded-t-2xl border-b border-[#5E5E5E] bg-white p-6">
-              <div className="flex items-start justify-between">
-                <h2 className="text-2xl font-semibold">
-                  {isSubmitted ? 'Template Submitted' : (formData.name || 'Create Custom Template')}
-                </h2>
-                <button onClick={handleClose} className="ml-4 text-gray-400 transition-colors hover:text-black">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-semibold text-black sm:text-2xl">
+                    {isSubmitted ? 'Template Submitted' : 'Create Template'}
+                  </h2>
+                  {!isSubmitted && (
+                    <p className="mt-1 text-sm text-[#5E5E5E]">
+                      Submitted templates are reviewed before appearing in community listings.
+                    </p>
+                  )}
+                </div>
+                <button
+                  onClick={handleClose}
+                  className="ml-4 shrink-0 text-gray-400 transition-colors hover:text-black"
+                  aria-label="Close modal"
+                >
                   ✕
                 </button>
               </div>
@@ -50,14 +62,13 @@ export function CreateTemplateModal({ isOpen, onClose, onSuccess }: CreateTempla
 
             {isSubmitted ? (
               <div className="flex flex-col items-center px-6 py-16 text-center">
-                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-                  <CheckCircle2 className="h-8 w-8 text-green-600" />
+                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-black">
+                  <CheckCircle2 className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="mb-3 text-xl font-semibold">We&apos;ve received your template!</h3>
-                <p className="mb-10 max-w-md text-[#5E5E5E]">
+                <h3 className="mb-3 text-xl font-semibold text-black">We&apos;ve received your template!</h3>
+                <p className="mb-2 max-w-md text-[#5E5E5E]">
                   Our team will review your submission. Once approved, it will be listed in the community templates for everyone to use.
                 </p>
-                
                 <button
                   onClick={handleClose}
                   className="rounded-xl bg-black px-8 py-3 font-medium text-white transition-all hover:bg-black/90"
@@ -66,126 +77,90 @@ export function CreateTemplateModal({ isOpen, onClose, onSuccess }: CreateTempla
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6 p-6">
-                <div>
-                  <div className="mb-2 flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-yellow-600" />
-                    <h3 className="text-base font-semibold">Template Name</h3>
-                  </div>
-                  <div className="rounded-xl border border-[#e5e7eb] bg-[hsl(210deg_20%_98.04%)] p-4">
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      placeholder="e.g., The Ultimate Defender"
-                      className="w-full bg-transparent font-mono text-sm leading-relaxed text-gray-800 placeholder-yellow-700/50 focus:outline-none"
-                      required
-                    />
-                  </div>
-                </div>
+              <form onSubmit={handleSubmit} className="space-y-5 p-6">
+                <Field icon={<Sparkles className="h-4 w-4 text-[#5E5E5E]" />} label="Template Name">
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="e.g., The Ultimate Defender"
+                    className="w-full bg-transparent font-mono text-sm leading-relaxed text-black placeholder-gray-400 focus:outline-none"
+                    required
+                  />
+                </Field>
 
-                <div>
-                  <div className="mb-2 flex items-center gap-2">
-                    <Eye className="h-4 w-4 text-blue-600" />
-                    <h3 className="text-base font-semibold">Public Instructions</h3>
-                  </div>
-                  <div className="rounded-xl border border-[#fed7aa] bg-[#fff7ed] p-4">
-                    <textarea
-                      name="public_instructions"
-                      value={formData.public_instructions}
-                      onChange={handleChange}
-                      rows={4}
-                      placeholder="What attackers see before they start. Describe the agent's public persona..."
-                      className="w-full resize-none bg-transparent font-mono text-sm leading-relaxed text-gray-800 placeholder-blue-700/50 focus:outline-none"
-                      required
-                    />
-                  </div>
-                </div>
+                <Field icon={<Eye className="h-4 w-4 text-[#5E5E5E]" />} label="Public Instructions">
+                  <textarea
+                    name="public_instructions"
+                    value={formData.public_instructions}
+                    onChange={handleChange}
+                    rows={4}
+                    placeholder="What attackers see before they start. Describe the agent's public persona..."
+                    className="w-full resize-none bg-transparent font-mono text-sm leading-relaxed text-black placeholder-gray-400 focus:outline-none"
+                    required
+                  />
+                </Field>
 
-                <div>
-                  <div className="mb-2 flex items-center gap-2">
-                    <EyeOff className="h-4 w-4 text-orange-600" />
-                    <h3 className="text-base font-semibold">Private Instructions</h3>
-                  </div>
-                  <div className="rounded-xl border border-orange-200 bg-orange-50 p-4">
-                    <textarea
-                      name="private_instructions"
-                      value={formData.private_instructions}
-                      onChange={handleChange}
-                      rows={4}
-                      placeholder="The secret prompt the agent follows to defend. Enter the secret rules and knowledge..."
-                      className="w-full resize-none bg-transparent font-mono text-sm leading-relaxed text-gray-800 placeholder-orange-700/50 focus:outline-none"
-                      required
-                    />
-                  </div>
-                </div>
+                <Field icon={<EyeOff className="h-4 w-4 text-[#5E5E5E]" />} label="Private Instructions">
+                  <textarea
+                    name="private_instructions"
+                    value={formData.private_instructions}
+                    onChange={handleChange}
+                    rows={4}
+                    placeholder="The secret prompt the agent follows to defend..."
+                    className="w-full resize-none bg-transparent font-mono text-sm leading-relaxed text-black placeholder-gray-400 focus:outline-none"
+                    required
+                  />
+                </Field>
 
-                <div>
-                  <div className="mb-2 flex items-center gap-2">
-                    <Crosshair className="h-4 w-4 text-red-600" />
-                    <h3 className="text-base font-semibold">Attack Goal</h3>
-                  </div>
-                  <div className="rounded-xl border border-[#fecaca] bg-[#fef2f2] p-4">
-                    <textarea
-                      name="attack_goal"
-                      value={formData.attack_goal}
-                      onChange={handleChange}
-                      rows={3}
-                      placeholder="What the attacker is trying to achieve. e.g., Make the agent reveal..."
-                      className="w-full resize-none bg-transparent font-mono text-sm leading-relaxed text-gray-800 placeholder-red-700/50 focus:outline-none"
-                      required
-                    />
-                  </div>
-                </div>
+                <Field icon={<Crosshair className="h-4 w-4 text-[#5E5E5E]" />} label="Attack Goal">
+                  <textarea
+                    name="attack_goal"
+                    value={formData.attack_goal}
+                    onChange={handleChange}
+                    rows={3}
+                    placeholder="What the attacker is trying to achieve. e.g., Make the agent reveal..."
+                    className="w-full resize-none bg-transparent font-mono text-sm leading-relaxed text-black placeholder-gray-400 focus:outline-none"
+                    required
+                  />
+                </Field>
 
-                <div>
-                  <div className="mb-2 flex items-center gap-2">
-                    <Gavel className="h-4 w-4 text-purple-600" />
-                    <h3 className="text-base font-semibold">Jury Prompt</h3>
-                  </div>
-                  <div className="rounded-xl border border-[#e9d5ff] bg-[#faf5ff] p-4">
-                    <textarea
-                      name="jury_prompt"
-                      value={formData.jury_prompt}
-                      onChange={handleChange}
-                      rows={3}
-                      placeholder="How the jury decides if the attacker won. e.g., Did the agent reveal..."
-                      className="w-full resize-none bg-transparent font-mono text-sm leading-relaxed text-gray-800 placeholder-purple-700/50 focus:outline-none"
-                      required
-                    />
-                  </div>
-                </div>
+                <Field icon={<Gavel className="h-4 w-4 text-[#5E5E5E]" />} label="Jury Prompt">
+                  <textarea
+                    name="jury_prompt"
+                    value={formData.jury_prompt}
+                    onChange={handleChange}
+                    rows={3}
+                    placeholder="How the jury decides if the attacker won. e.g., Did the agent reveal..."
+                    className="w-full resize-none bg-transparent font-mono text-sm leading-relaxed text-black placeholder-gray-400 focus:outline-none"
+                    required
+                  />
+                </Field>
 
-                <div>
-                  <div className="mb-2 flex items-center gap-2">
-                    <Tag className="h-4 w-4 text-green-600" />
-                    <h3 className="text-base font-semibold">Tags</h3>
-                  </div>
-                  <div className="rounded-xl border border-green-200 bg-green-50 p-4">
-                    <input
-                      type="text"
-                      name="tags"
-                      value={formData.tags}
-                      onChange={handleChange}
-                      placeholder="e.g., blockchain, security, AI (comma-separated)"
-                      className="w-full bg-transparent font-mono text-sm leading-relaxed text-gray-800 placeholder-green-700/50 focus:outline-none"
-                    />
-                  </div>
-                </div>
+                <Field icon={<Tag className="h-4 w-4 text-[#5E5E5E]" />} label="Tags" optional>
+                  <input
+                    type="text"
+                    name="tags"
+                    value={formData.tags}
+                    onChange={handleChange}
+                    placeholder="e.g., blockchain, security, AI (comma-separated)"
+                    className="w-full bg-transparent font-mono text-sm leading-relaxed text-black placeholder-gray-400 focus:outline-none"
+                  />
+                </Field>
 
-                <div className="flex flex-col gap-3 border-t pt-4 sm:flex-row sm:justify-end">
+                <div className="flex flex-col gap-3 border-t border-[#5E5E5E] pt-5 sm:flex-row sm:justify-end">
                   <button
                     type="button"
                     onClick={handleClose}
-                    className="w-full rounded-xl border border-gray-200 px-6 py-4 font-medium text-gray-800 transition-all hover:bg-gray-50 sm:w-auto"
+                    className="w-full rounded-xl border border-[#5E5E5E] px-6 py-3 font-medium text-black transition-all hover:border-black hover:bg-gray-50 sm:w-auto"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-black px-6 py-4 font-medium text-white transition-all hover:bg-black/90 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-black px-6 py-3 font-medium text-white transition-all hover:bg-black/90 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
                   >
                     {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
                     {isSubmitting ? 'Submitting...' : 'Submit Template'}
@@ -197,5 +172,30 @@ export function CreateTemplateModal({ isOpen, onClose, onSuccess }: CreateTempla
         </motion.div>
       )}
     </AnimatePresence>
+  )
+}
+
+function Field({
+  icon,
+  label,
+  optional,
+  children,
+}: {
+  icon: React.ReactNode
+  label: string
+  optional?: boolean
+  children: React.ReactNode
+}) {
+  return (
+    <div>
+      <div className="mb-1.5 flex items-center gap-2">
+        {icon}
+        <span className="text-sm font-medium text-black">{label}</span>
+        {optional && <span className="text-xs text-[#5E5E5E]">(optional)</span>}
+      </div>
+      <div className="rounded-xl border border-[#5E5E5E] bg-white p-3.5 transition-colors focus-within:border-black focus-within:ring-1 focus-within:ring-black">
+        {children}
+      </div>
+    </div>
   )
 }
