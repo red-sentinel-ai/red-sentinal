@@ -1,7 +1,9 @@
 import { SUIVISION_TXBLOCK_URL } from '@/constants'
+import { formatAddress } from '@mysten/sui/utils'
 import { motion } from 'framer-motion'
 import { CheckCircle, X } from 'lucide-react'
 import Link from 'next/link'
+import { SpinPassPromo } from '@/components/rewards/SpinPassPromo'
 
 interface SuccessModalProps {
   open: boolean
@@ -27,7 +29,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9 }}
         transition={{ duration: 0.3 }}
-        className="relative w-full max-w-md rounded-2xl border border-gray-200 bg-white p-8 text-black shadow-2xl"
+        className="relative w-full max-w-[600px] rounded-2xl border border-gray-200 bg-white p-8 text-black shadow-2xl"
       >
         <button
           onClick={onClose}
@@ -37,36 +39,39 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
           <X className="h-6 w-6" />
         </button>
 
-        <div className="text-center">
-          <div className="mb-6 flex justify-center">
-            <div className="shadow-glow-blue flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-r from-[#558EB4] to-[#1388D5]">
-              <CheckCircle className="h-12 w-12 text-white" />
+        <div className="mx-auto max-w-sm text-center">
+          <div className="mb-4 flex justify-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-black">
+              <CheckCircle className="h-6 w-6 text-white" />
             </div>
           </div>
 
-          <h2 className="mb-3 text-3xl font-bold text-black">Agent Deployed!</h2>
-          <p className="mb-6 text-gray-600">
-            Your agent &quot;<span className="font-semibold text-black">{agentName}</span>&quot; has
-            been successfully deployed to the blockchain.
-          </p>
+          <h2 className="mb-1 text-2xl font-bold text-black">
+            <span className="text-black">{agentName}</span> is now live
+          </h2>
+          <p className="mb-6 text-sm text-gray-500">Your sentinel is deployed and open for attacks.</p>
 
-          <div className="mb-8 rounded-xl border border-blue-200 bg-gray-50 p-4 text-left">
-            <p className="mb-2 text-sm text-gray-500">Transaction Block:</p>
+          <div className="mb-6 flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
+            <span className="text-sm text-gray-500">Transaction</span>
             <Link
               href={`${SUIVISION_TXBLOCK_URL}/${transactionDigest}`}
-              className="break-all font-mono text-xs text-blue-600 transition-colors hover:underline"
+              className="font-mono text-sm text-black transition-colors hover:underline"
               target="_blank"
               rel="noopener noreferrer"
             >
-              {transactionDigest}
+              {formatAddress(transactionDigest)}
             </Link>
           </div>
 
           <Link href={`/attack/${agentPath}`} className="block w-full">
-            <button className="btn hover:shadow-glow-blue w-full rounded-full bg-gradient-to-r from-[#558EB4] to-[#1388D5] py-3 font-bold text-white shadow-lg transition-all duration-300 hover:from-[#1388D5] hover:to-[#558EB4]">
-              View Agent
+            <button className="w-full rounded-xl bg-black py-3 font-bold text-white transition-colors hover:bg-black/80">
+              View Sentinel
             </button>
           </Link>
+        </div>
+
+        <div className="mt-2 border-t border-gray-100">
+          <SpinPassPromo description="You've received a free spin pass for deploying your Sentinel!" buttonVariant="secondary" />
         </div>
       </motion.div>
     </div>
