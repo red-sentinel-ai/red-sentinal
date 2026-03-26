@@ -2,15 +2,13 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
-import Confetti from 'react-confetti'
-import { useWindowSize } from 'react-use'
 import { Dialog } from '@/components/Dialog'
 import { TruncatedText } from '@/components/TruncatedText'
 import { ConsumePromptApiResponse } from '@/types'
 import { SUIVISION_TXBLOCK_URL } from '@/constants'
 import { cn } from '@/lib/utils'
+import { SpinPassPromo } from '@/components/rewards/SpinPassPromo'
 
 type AttackStatusModalProps = {
   apiResponse: ConsumePromptApiResponse
@@ -25,24 +23,13 @@ export const AttackStatusModal = ({
   setShowResultModal,
   txnHash,
 }: AttackStatusModalProps) => {
-  const { width, height } = useWindowSize()
   const [isExplanationOpen, setIsExplanationOpen] = useState(true)
-  const [showConfetti, setShowConfetti] = useState(false)
 
   const success = apiResponse?.response.data.success
   const originalScore = apiResponse?.response.data.score || 0
   const score = success ? 100 : originalScore
   const explanation = apiResponse?.response.data.agent_response
   const juryResponse = apiResponse?.response.data.jury_response
-
-  // Trigger confetti animation when modal opens
-  React.useEffect(() => {
-    if (showResultModal) {
-      setShowConfetti(true)
-      const timer = setTimeout(() => setShowConfetti(false), 5000)
-      return () => clearTimeout(timer)
-    }
-  }, [showResultModal])
 
   return (
     <Dialog
@@ -146,63 +133,8 @@ export const AttackStatusModal = ({
             </div>
           </div>
 
-          <div className="mb-6 h-[1px] w-full bg-[#E5E5E5]" />
-
-          <div className="relative flex min-h-[420px] flex-col items-center justify-center bg-gradient-to-b from-white to-pink-50/30 px-6 pb-8">
-            {showConfetti && (
-              <div className="pointer-events-none absolute inset-0 z-50 overflow-hidden">
-                <Confetti
-                  width={width}
-                  height={height}
-                  recycle={false}
-                  numberOfPieces={500}
-                  gravity={0.2}
-                />
-              </div>
-            )}
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="relative z-10 w-full max-w-md text-center"
-            >
-              <div className="mb-6 inline-block">
-                <Image
-                  src="/img/slot_machine_1x.png"
-                  alt="Slot machine"
-                  width={96}
-                  height={126}
-                  className="h-24 w-24"
-                />
-              </div>
-
-              <h3 className="mb-3 text-2xl font-bold text-black">Free Spin Pass Received!</h3>
-
-              <p className="mb-6 text-base text-gray-600">
-                You&apos;ve received a free spin pass for your attack!
-                <br />
-                Use your pass to WIN SENTINEL tokens from your profile rewards tab.
-              </p>
-
-              <div className="mb-6 rounded-xl border-2 border-dashed border-[#F632F3] bg-gradient-to-br from-purple-50/50 to-pink-50/50 p-4">
-                <p className="text-sm font-medium text-gray-700">
-                  🎁 Spin passes may contain boosters with up to{' '}
-                  <span className="font-bold text-[#F632F3]">100x multipliers</span>
-                </p>
-              </div>
-
-              <Link
-                href="/profile?tab=rewards"
-                className="inline-block w-full rounded-lg bg-black px-6 py-4 font-semibold text-white transition-transform hover:scale-105"
-              >
-                Go to Profile → Spin Now
-              </Link>
-
-              <p className="mt-4 text-xs text-gray-500">
-                Passes are automatically available in your profile
-              </p>
-            </motion.div>
+          <div className="border-t border-[#E5E5E5]">
+            <SpinPassPromo description="You've received a free spin pass for your attack!" />
           </div>
         </div>
       </motion.div>
