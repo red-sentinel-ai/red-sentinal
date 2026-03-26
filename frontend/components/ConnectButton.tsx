@@ -21,7 +21,6 @@ import { formatAddress } from '@mysten/sui/utils'
 import { SuiClient, getFullnodeUrl } from '@mysten/sui/client'
 import { APP_NETWORK, SUI_SENTINEL_DOCS_URL, SUI_TOKEN } from '@/constants'
 import { Skeleton } from '@/components/ui/skeleton'
-import Image from 'next/image'
 import { useTokenBalance } from '@/hooks/useTokenBalance'
 
 export const client = new SuiClient({ url: getFullnodeUrl(APP_NETWORK) })

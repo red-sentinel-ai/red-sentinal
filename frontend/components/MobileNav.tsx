@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
 
 import { X_URL } from '@/constants'
 import { DEFEND_NAV_ITEMS, ATTACK_NAV_ITEMS } from '@/constants/navigation'
