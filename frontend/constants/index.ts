@@ -22,6 +22,16 @@ export const SUI_SENTINEL_DEFENDER_REWARDS_DOCS_URL = `${SUI_SENTINEL_DOCS_URL}/
 
 export const SLUSH_BASE_URL = 'https://my.slush.app/browse/'
 
+export const GARAK_GITHUB_URL = 'https://github.com/NVIDIA/garak'
+export const PROMPTFOO_URL = 'https://www.promptfoo.dev'
+export const PETRI_GITHUB_URL = 'https://github.com/safety-research/petri'
+export const BLOOM_GITHUB_URL = 'https://github.com/safety-research/bloom'
+
+export const SESSION_KEYS = {
+  SELECTED_TEMPLATE: 'selectedTemplate',
+  DEFEND_FORM_DATA: 'defendFormData',
+} as const
+
 export const TEXT_COPIES = {
   leaderboard: {
     heading: 'Red Team Leaderboard',
