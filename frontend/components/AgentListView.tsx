@@ -70,7 +70,7 @@ export const AgentListView = () => {
     <div className="mx-auto max-w-[1560px] px-2 py-4 md:px-8 md:py-16">
       <div className="mb-4 md:mb-20">
         <h1
-          className="hidden text-center text-2xl font-bold sm:text-4xl md:block md:text-[48px]"
+          className="font-display hidden text-center text-2xl font-bold text-on-surface sm:text-4xl md:block md:text-[48px]"
           id="leaderboard"
         >
           Enter the Arena
@@ -79,7 +79,7 @@ export const AgentListView = () => {
           <div className="black-gradient-border hidden md:block"></div>
           <div className="black-gradient-border hidden rotate-180 md:block"></div>
         </div>
-        <p className="mx-auto hidden max-w-[650px] px-4 text-center text-base text-[#5E5E5E] sm:text-xl md:block">
+        <p className="mx-auto hidden max-w-[650px] px-4 text-center text-base text-on-surface-variant sm:text-xl md:block">
           Select a Sentinel, engineer your attack, and claim the bounty. Verified on-chain, paid
           instantly.
         </p>
@@ -92,8 +92,8 @@ export const AgentListView = () => {
           {activeFeaturedAgents?.length > 0 && (
             <div className="mb-8 md:mb-16">
               <div className="mb-4 md:mb-8">
-                <h2 className="mb-2 text-xl font-medium md:text-[32px]">Featured Sentinels</h2>
-                <p className="text-sm text-[#5E5E5E] md:text-base">
+                <h2 className="font-display mb-2 text-xl font-medium text-on-surface md:text-[32px]">Featured Sentinels</h2>
+                <p className="text-sm text-on-surface-variant md:text-base">
                   Curated high-value targets. Bigger pools, proven resilience. The prestige kills.
                 </p>
               </div>
@@ -126,23 +126,23 @@ export const AgentListView = () => {
       <div>
         <div className="mb-3 flex flex-col gap-4 md:mb-6 md:flex-row md:items-center md:justify-between">
           <div>
-            <h2 className="text-lg font-medium md:text-[32px]">All Sentinels</h2>
-            <p className="mt-0.5 text-xs text-[#5E5E5E] md:mt-1 md:text-sm">
+            <h2 className="font-display text-lg font-medium text-on-surface md:text-[32px]">All Sentinels</h2>
+            <p className="mt-0.5 text-xs text-on-surface-variant md:mt-1 md:text-sm">
               Every active target, ranked and sortable. Find your edge.
             </p>
           </div>
 
           <Tabs value={activeTab} onValueChange={v => setActiveTab(v as BountyTab)}>
-            <TabsList className="h-auto rounded-md border border-gray-200 bg-gray-100 p-[2px]">
+            <TabsList className="h-auto rounded-md border border-outline-variant bg-surface-container p-[2px]">
               <TabsTrigger
                 value="big_bounties"
-                className="rounded-md border-b-0 py-1 data-[state=active]:border-b-0 data-[state=active]:bg-white data-[state=active]:shadow-sm sm:px-4"
+                className="rounded-md border-b-0 py-1 text-on-surface-variant data-[state=active]:border-b-0 data-[state=active]:bg-surface-container-high data-[state=active]:text-on-surface data-[state=active]:shadow-sm sm:px-4"
               >
                 Big Bounties
               </TabsTrigger>
               <TabsTrigger
                 value="all"
-                className="rounded-md border-b-0 py-1 data-[state=active]:border-b-0 data-[state=active]:bg-white data-[state=active]:shadow-sm sm:px-4"
+                className="rounded-md border-b-0 py-1 text-on-surface-variant data-[state=active]:border-b-0 data-[state=active]:bg-surface-container-high data-[state=active]:text-on-surface data-[state=active]:shadow-sm sm:px-4"
               >
                 All
               </TabsTrigger>
@@ -165,7 +165,7 @@ export const AgentListView = () => {
           <Button
             onClick={() => fetchNextPage()}
             disabled={isFetchingNextPage}
-            variant="outline"
+            variant="secondary"
             className="min-w-[200px]"
           >
             {isFetchingNextPage ? (
@@ -180,7 +180,7 @@ export const AgentListView = () => {
         </div>
       )}
       
-      <p className="mt-4 text-xs text-[#5E5E5E]">{TEXT_COPIES.LOW_POOL_BALANCE_HIDDEN_MESSAGE}</p>
+      <p className="mt-4 text-xs text-on-surface-variant">{TEXT_COPIES.LOW_POOL_BALANCE_HIDDEN_MESSAGE}</p>
       
       {/* Single instance of modals - prevents duplicate hook calls */}
       <FundModal onSuccess={() => console.log('Funded successfully!')} />

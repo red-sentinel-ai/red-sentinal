@@ -1,3 +1,4 @@
+'use client'
 import Link from 'next/link'
 import Image from 'next/image'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -12,6 +13,18 @@ export const LandingPage = () => {
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.3 }}
       >
+        {/* Top Secret Watermark */}
+        <div className="pointer-events-none absolute left-1/4 top-1/4 select-none opacity-[0.03]">
+          <span className="font-display text-[8rem] font-bold uppercase tracking-widest text-on-surface rotate-[-15deg]">
+            TOP SECRET
+          </span>
+        </div>
+        <div className="pointer-events-none absolute bottom-1/4 right-1/4 select-none opacity-[0.03]">
+          <span className="font-display text-[6rem] font-bold uppercase tracking-widest text-on-surface rotate-[15deg]">
+            CLASSIFIED
+          </span>
+        </div>
+
         <div className="mx-auto max-w-[933px]">
           <motion.div
             className="z-10 text-center"
@@ -19,10 +32,10 @@ export const LandingPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.1 }}
           >
-            <h1 className="text-xl font-medium text-text sm:text-[32px] md:text-[40px] lg:text-[48px]">
+            <h1 className="font-display text-xl font-medium text-on-surface sm:text-[32px] md:text-[40px] lg:text-[48px]">
               Ship AI Agents Without Fear
             </h1>
-            <p className="mx-auto mt-4 max-w-[700px] text-sm sm:text-base md:text-lg">
+            <p className="mx-auto mt-4 max-w-[700px] text-sm text-on-surface-variant sm:text-base md:text-lg">
               The first crowdsourced AI red teaming platform on Sui. Deploy agents, break defenses,
               and earn instant rewards.
             </p>
@@ -44,7 +57,7 @@ export const LandingPage = () => {
                     width={411}
                     height={546}
                     alt=""
-                    className="h-auto w-full object-contain"
+                    className="h-auto w-full object-contain opacity-80"
                     priority
                   />
                 </div>
@@ -62,7 +75,7 @@ export const LandingPage = () => {
               </div>
 
               <div className="my-2 flex items-center justify-center gap-2">
-                <p className="text-base font-medium leading-normal md:text-lg lg:text-[2rem]">
+                <p className="font-display text-base font-medium leading-normal text-on-surface md:text-lg lg:text-[2rem]">
                   DEFEND
                 </p>
               </div>
@@ -73,7 +86,7 @@ export const LandingPage = () => {
               </div>
 
               <div className="my-3 md:my-4">
-                <ul className="flex list-disc flex-col items-center justify-center ps-4 text-center text-xs md:ps-0 md:text-base">
+                <ul className="flex list-disc flex-col items-center justify-center ps-4 text-center text-xs text-on-surface-variant md:ps-0 md:text-base">
                   <li>Launch your AI as a Sentinel with staked rewards</li>
                   <li>Earn SUI from every failed attack attempt</li>
                   <li>Get real adversarial data to harden your defenses</li>
@@ -82,7 +95,7 @@ export const LandingPage = () => {
               <div>
                 <Link
                   href="/defend"
-                  className="flex min-h-[48px] w-full items-center justify-center rounded-[8px] border border-secondary_blue_60 bg-secondary_blue p-2 text-lg text-primary_blue text-white transition-all hover:bg-secondary_blue_60 md:min-h-[62px] md:text-2xl"
+                  className="btn-primary flex min-h-[48px] w-full items-center justify-center rounded-lg p-2 text-lg md:min-h-[62px] md:text-2xl"
                 >
                   Deploy Sentinel
                 </Link>
@@ -104,7 +117,7 @@ export const LandingPage = () => {
                     width={411}
                     height={546}
                     alt=""
-                    className="h-auto w-full object-contain"
+                    className="h-auto w-full object-contain opacity-80"
                     priority
                   />
                 </div>
@@ -122,7 +135,7 @@ export const LandingPage = () => {
               </div>
 
               <div className="my-2 flex items-center justify-center gap-2">
-                <p className="text-base font-medium leading-normal md:text-lg lg:text-[2rem]">
+                <p className="font-display text-base font-medium leading-normal text-on-surface md:text-lg lg:text-[2rem]">
                   ATTACK
                 </p>
               </div>
@@ -133,7 +146,7 @@ export const LandingPage = () => {
               </div>
 
               <div className="my-3 md:my-4">
-                <ul className="flex list-disc flex-col items-center justify-center ps-4 text-center text-xs md:ps-0 md:text-base">
+                <ul className="flex list-disc flex-col items-center justify-center ps-4 text-center text-xs text-on-surface-variant md:ps-0 md:text-base">
                   <li>Use prompt engineering to jailbreak AI defenses</li>
                   <li>Win instant SUI payouts for verified exploits</li>
                   <li>Build your rep as an elite AI red teamer</li>
@@ -143,7 +156,7 @@ export const LandingPage = () => {
               <div>
                 <Link
                   href="/attack"
-                  className="flex min-h-[48px] w-full items-center justify-center rounded-[8px] border border-secondary_blue_60 bg-secondary_pink p-2 text-lg text-white transition-all hover:bg-secondary_pink_60 md:min-h-[62px] md:text-2xl"
+                  className="btn-secondary flex min-h-[48px] w-full items-center justify-center rounded-lg border border-tertiary/50 bg-tertiary/10 p-2 text-lg text-on-surface transition-all hover:bg-tertiary/20 md:min-h-[62px] md:text-2xl"
                 >
                   Start Attacking
                 </Link>
@@ -151,7 +164,8 @@ export const LandingPage = () => {
             </motion.div>
           </div>
         </div>
-        <div className="absolute left-1/2 top-[23%] h-[600px] w-full -translate-x-1/2 rounded-full bg-[#00000036] blur-3xl md:w-[1000px]"></div>
+        {/* Ambient glow background */}
+        <div className="absolute left-1/2 top-[23%] h-[600px] w-full -translate-x-1/2 rounded-full bg-primary/5 blur-3xl md:w-[1000px]"></div>
       </motion.div>
     </AnimatePresence>
   )

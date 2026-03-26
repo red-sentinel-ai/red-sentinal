@@ -22,7 +22,7 @@ export const Header = () => {
     <header className="fixed left-0 right-0 top-0 z-50 w-full">
       <SentinelStatsBar />
 
-      <div className="w-full bg-transparent pt-8 transition-all duration-300 md:border-b md:border-gray-200 md:bg-white/80 md:backdrop-blur-xl">
+      <div className="w-full bg-transparent pt-8 transition-all duration-300 md:border-b md:border-outline-variant md:bg-surface/80 md:backdrop-blur-xl">
         <div className="mx-auto flex max-w-full items-center justify-between p-2 lg:px-6">
           <div className="flex flex-1 items-center gap-2 md:gap-8">
             <Link href="/" className="flex-shrink-0 md:hidden">
@@ -54,9 +54,17 @@ export const Header = () => {
           <Link
             href={X_URL}
             target="_blank"
-            className="btn btn-outline ms-4 hidden h-[50px] items-center justify-center gap-2 !rounded-[25px] !px-6 text-base font-medium xl:flex"
+            className="btn-secondary ms-4 hidden h-[50px] items-center justify-center gap-2 !rounded-[25px] !px-6 text-base xl:flex"
           >
-            <Image src="/icons/x_black.png" width={20} height={20} alt="x" />
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="text-on-surface"
+            >
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+            </svg>
             Support on X
           </Link>
 
@@ -65,20 +73,20 @@ export const Header = () => {
           </div>
 
           <button
-            className="ml-2 flex-shrink-0 p-2 xl:hidden"
+            className="ml-2 flex-shrink-0 p-2 text-on-surface xl:hidden"
             onClick={() => setMobileMenuOpen(prev => !prev)}
             aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
           >
             {mobileMenuOpen ? <X /> : <MenuIcon />}
           </button>
 
-          <Link href="/profile" className="ms-4 hidden rounded-full bg-white xl:block">
+          <Link href="/profile" className="ms-4 hidden rounded-full xl:block">
             <Image
               src="/icons/default_profile.png"
               width={32}
               height={32}
               alt="profile"
-              className="mix-blend-luminosity"
+              className="rounded-full border border-outline-variant mix-blend-luminosity"
             />
           </Link>
         </div>
@@ -86,11 +94,11 @@ export const Header = () => {
         {mobileMenuOpen && (
           <>
             <div
-              className="fixed inset-0 top-[96px] z-40 bg-black/20 backdrop-blur-sm md:top-[100px] xl:hidden"
+              className="fixed inset-0 top-[96px] z-40 bg-surface/80 backdrop-blur-sm md:top-[100px] xl:hidden"
               onClick={() => setMobileMenuOpen(false)}
             />
-            <div className="absolute left-0 right-0 top-full z-50 border-b border-gray-200 bg-white/95 px-4 pb-6 pt-2 shadow-lg backdrop-blur-xl xl:hidden">
-              <div className="border-t border-gray-200 pt-4">
+            <div className="absolute left-0 right-0 top-full z-50 border-b border-outline-variant bg-surface/95 px-4 pb-6 pt-2 shadow-ambient backdrop-blur-xl xl:hidden">
+              <div className="border-t border-outline-variant pt-4">
                 <MobileNav onItemClick={() => setMobileMenuOpen(false)} />
               </div>
               <div className="mt-4 flex justify-center">

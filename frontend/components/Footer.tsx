@@ -14,27 +14,13 @@ const Footer = () => {
   }
 
   return (
-    <footer
-      className="relative bg-cover bg-bottom bg-no-repeat pt-8 sm:pt-16"
-      style={{ backgroundImage: "url('/img/footer-bg.png')" }}
-    >
-      <div className="vertical-line left-4"></div>
-      <div className="vertical-line right-4"></div>
+    <footer className="relative border-t border-outline-variant bg-surface-container-low pt-8 sm:pt-16">
+      <div className="vertical-line left-4 border-outline"></div>
+      <div className="vertical-line right-4 border-outline"></div>
+      
+      {/* Ambient glow at bottom */}
       <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-end pb-[24px] md:justify-center md:pb-0">
-        <Image
-          src="/gifs/fullCircleRed.gif"
-          width={500}
-          height={346}
-          alt="Decorative blend element"
-          className="h-auto w-[100px] max-w-xs sm:w-[160px] md:w-auto md:max-w-lg"
-        />
-        <Image
-          width={310}
-          height={29}
-          src="/img/shadowEllipse.png"
-          alt="shadow ellipse"
-          className="h-auto w-[120px] sm:w-[200px] md:w-[310px]"
-        />
+        <div className="h-auto w-[100px] max-w-xs rounded-full bg-primary/10 blur-3xl sm:w-[160px] md:w-auto md:max-w-lg" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-[1440px] px-4 pb-4 sm:px-6 md:pb-0 lg:px-8">
@@ -49,7 +35,7 @@ const Footer = () => {
                 width={198}
               />
             </div>
-            <p className="py-2 text-sm leading-relaxed text-black sm:py-4 sm:text-base">
+            <p className="py-2 text-sm leading-relaxed text-on-surface-variant sm:py-4 sm:text-base">
               The first crowdsource AI red teaming platform on Sui. Deploy Sentinels, break AI
               defenses, earn instant rewards. Every attack verified cryptographically. Every payout
               trustless.
@@ -62,25 +48,25 @@ const Footer = () => {
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex h-10 w-10 items-center justify-center rounded-[8px] border border-black transition-colors hover:bg-black/5"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg border border-outline-variant transition-colors hover:bg-surface-container"
                   aria-label={link.alt}
                 >
                   {link.isImage ? (
-                    <Image src={link.icon as string} alt={link.alt} width={20} height={20} />
+                    <Image src={link.icon as string} alt={link.alt} width={20} height={20} className="opacity-80" />
                   ) : (
-                    <link.icon className="size-5 text-black" />
+                    <link.icon className="size-5 text-on-surface" />
                   )}
                 </Link>
               ))}
             </div>
 
-            <div className="mt-auto text-xs sm:text-sm md:text-base">
+            <div className="mt-auto text-xs text-on-surface-variant sm:text-sm md:text-base">
               <span>Powered by </span>
               <a
                 href={NAUTILUS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline"
+                className="text-primary hover:underline"
               >
                 Nautilus Framework
               </a>
@@ -91,13 +77,13 @@ const Footer = () => {
                 href="https://osec.io/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline"
+                className="text-primary hover:underline"
               >
                 Audited by OtterSec
               </a>
             </div>
-            <p className="mb-4 text-xs font-medium text-white sm:text-sm md:text-base">
-              <span>© 2025 </span>
+            <p className="mb-4 text-xs font-medium text-on-surface-variant sm:text-sm md:text-base">
+              <span>© 2025 </span>
               <span>All Rights Reserved @Cyphronix Software</span>
             </p>
           </div>
@@ -107,7 +93,7 @@ const Footer = () => {
               {socialLinks.map(link => (
                 <div key={link.href} className="flex items-center justify-between gap-6">
                   <Link
-                    className="whitespace-nowrap font-medium text-black hover:underline"
+                    className="whitespace-nowrap font-medium text-on-surface hover:text-primary hover:underline"
                     href={link.href}
                     target="_blank"
                   >
@@ -117,13 +103,13 @@ const Footer = () => {
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex h-[51px] w-[70px] items-center justify-center rounded-[8px] border border-[#ACACAC] transition-colors hover:bg-black/5"
+                    className="flex h-[51px] w-[70px] items-center justify-center rounded-lg border border-outline-variant transition-colors hover:bg-surface-container"
                     aria-label={link.alt}
                   >
                     {link.isImage ? (
-                      <Image src={link.icon as string} alt={link.alt} width={20} height={20} />
+                      <Image src={link.icon as string} alt={link.alt} width={20} height={20} className="opacity-80" />
                     ) : (
-                      <link.icon className="size-5 text-black" />
+                      <link.icon className="size-5 text-on-surface" />
                     )}
                   </Link>
                 </div>

@@ -31,7 +31,7 @@ function DropdownMenuContent({
       <DropdownMenuPrimitive.Content
         sideOffset={sideOffset}
         className={cn(
-          'z-50 min-w-[8rem] overflow-hidden rounded-lg border border-gray-200 bg-white/80 p-1.5 text-black shadow-lg backdrop-blur-md',
+          'z-50 min-w-[8rem] overflow-hidden rounded-lg border border-outline-variant bg-surface-container-high/95 p-1.5 text-on-surface shadow-ambient backdrop-blur-glass',
           'animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
           className
         )}
@@ -57,10 +57,10 @@ function DropdownMenuItem({
   return (
     <DropdownMenuPrimitive.Item
       className={cn(
-        'relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm outline-none transition-colors',
-        'focus:bg-gray-100 focus:text-gray-900',
+        'relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm outline-none transition-colors font-body',
+        'focus:bg-surface-container focus:text-on-surface',
         inset && 'pl-8',
-        variant === 'destructive' && 'text-red-600 focus:bg-red-50 focus:text-red-700',
+        variant === 'destructive' && 'text-tertiary focus:bg-tertiary/10 focus:text-tertiary',
         'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
         className
       )}
@@ -79,7 +79,7 @@ function DropdownMenuCheckboxItem({
     <DropdownMenuPrimitive.CheckboxItem
       className={cn(
         'relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pl-8 pr-2.5 text-sm outline-none transition-colors',
-        'focus:bg-gray-100 focus:text-gray-900',
+        'focus:bg-surface-container focus:text-on-surface',
         'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
         className
       )}
@@ -111,7 +111,7 @@ function DropdownMenuRadioItem({
     <DropdownMenuPrimitive.RadioItem
       className={cn(
         'relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pl-8 pr-2.5 text-sm outline-none transition-colors',
-        'focus:bg-gray-100 focus:text-gray-900',
+        'focus:bg-surface-container focus:text-on-surface',
         'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
         className
       )}
@@ -136,7 +136,7 @@ function DropdownMenuLabel({
 }) {
   return (
     <DropdownMenuPrimitive.Label
-      className={cn('px-2.5 py-1.5 text-xs font-medium text-gray-500', inset && 'pl-8', className)}
+      className={cn('px-2.5 py-1.5 text-xs font-medium text-on-surface-variant font-display', inset && 'pl-8', className)}
       {...props}
     />
   )
@@ -148,7 +148,7 @@ function DropdownMenuSeparator({
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Separator>) {
   return (
     <DropdownMenuPrimitive.Separator
-      className={cn('-mx-1 my-1 h-px bg-gray-200', className)}
+      className={cn('-mx-1 my-1 h-px bg-outline-variant', className)}
       {...props}
     />
   )
@@ -156,7 +156,7 @@ function DropdownMenuSeparator({
 
 function DropdownMenuShortcut({ className, ...props }: React.ComponentProps<'span'>) {
   return (
-    <span className={cn('ml-auto text-xs tracking-widest text-gray-500', className)} {...props} />
+    <span className={cn('ml-auto text-xs tracking-widest text-on-surface-variant', className)} {...props} />
   )
 }
 
@@ -176,14 +176,14 @@ function DropdownMenuSubTrigger({
     <DropdownMenuPrimitive.SubTrigger
       className={cn(
         'flex cursor-pointer select-none items-center rounded-md px-2.5 py-1.5 text-sm outline-none transition-colors',
-        'focus:bg-gray-100 focus:text-gray-900 data-[state=open]:bg-gray-100 data-[state=open]:text-gray-900',
+        'focus:bg-surface-container focus:text-on-surface data-[state=open]:bg-surface-container data-[state=open]:text-on-surface',
         inset && 'pl-8',
         className
       )}
       {...props}
     >
       {children}
-      <ChevronRightIcon className="ml-auto h-4 w-4 text-gray-500" />
+      <ChevronRightIcon className="ml-auto h-4 w-4 text-on-surface-variant" />
     </DropdownMenuPrimitive.SubTrigger>
   )
 }
@@ -195,7 +195,7 @@ function DropdownMenuSubContent({
   return (
     <DropdownMenuPrimitive.SubContent
       className={cn(
-        'z-50 min-w-[8rem] overflow-hidden rounded-lg border border-gray-200 bg-white/80 p-1.5 text-black shadow-lg backdrop-blur-md',
+        'z-50 min-w-[8rem] overflow-hidden rounded-lg border border-outline-variant bg-surface-container-high/95 p-1.5 text-on-surface shadow-ambient backdrop-blur-glass',
         'animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
         className
       )}

@@ -13,11 +13,11 @@ export function NavSubMenuList({ items }: { items: NavSubItem[] }) {
               href={item.href}
               className={cn(
                 'block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors',
-                'hover:bg-gray-100 hover:text-black focus:bg-gray-100 focus:text-black'
+                'hover:bg-surface-container-high hover:text-on-surface focus:bg-surface-container-high focus:text-on-surface'
               )}
             >
-              <div className="text-sm font-medium leading-none">{item.title}</div>
-              <p className="mt-1 line-clamp-2 text-xs leading-snug text-muted-foreground">
+              <div className="font-display text-sm font-medium leading-none text-on-surface">{item.title}</div>
+              <p className="mt-1 line-clamp-2 text-xs leading-snug text-on-surface-variant">
                 {item.description}
               </p>
             </Link>

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import NextTopLoader from 'nextjs-toploader'
 import { Toaster } from 'sonner'
+import { Space_Grotesk, Inter, Space_Mono } from 'next/font/google'
 import localFont from 'next/font/local'
 
 import './globals.css'
@@ -9,6 +10,29 @@ import { Providers } from './providers'
 import Footer from '@/components/Footer'
 import { SUI_SENTINEL_APP_URL, SUI_SENTINEL_X_USERNAME, SUI_SENTINEL_GITHUB_URL } from '@/constants'
 
+// Neon Protocol Typography: Space Grotesk for display, Inter for body
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  variable: '--font-space-grotesk',
+  display: 'swap',
+  weight: ['400', '500', '600', '700'],
+})
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+  weight: ['400', '500', '600', '700'],
+})
+
+const spaceMono = Space_Mono({
+  subsets: ['latin'],
+  variable: '--font-space-mono',
+  display: 'swap',
+  weight: ['400', '700'],
+})
+
+// Keep Satoshi for backward compatibility during migration
 const satoshi = localFont({
   src: [
     { path: '../public/fonts/Satoshi-Variable.ttf', style: 'normal' },
@@ -24,7 +48,7 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: 'cover',
-  themeColor: '#ffffff',
+  themeColor: '#00110d',
 }
 
 export const metadata: Metadata = {
@@ -232,7 +256,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   }
 
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <head>
         <script
           type="application/ld+json"
@@ -252,37 +276,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body
-        className={`${satoshi.className} flex min-h-screen flex-col bg-no-repeat text-black`}
-        style={{
-          backgroundImage: `
-      url('/img/hero_bg.png'),
-      linear-gradient(
-        to right,
-        rgba(233,239,255,0.55),
-        rgba(245,245,245,0.55),
-        rgba(255,235,253,0.55)
-      )
-    `,
-          backgroundSize: '100% auto, 100% auto',
-          backgroundRepeat: 'no-repeat, no-repeat',
-          backgroundPosition: 'center top, center top',
-        }}
+        className={`${spaceGrotesk.variable} ${inter.variable} ${spaceMono.variable} ${satoshi.variable} flex min-h-screen flex-col bg-surface text-on-surface antialiased`}
       >
         <Providers>
-          <NextTopLoader color="#000000" showSpinner={false} />
+          <NextTopLoader color="#a1ffc2" showSpinner={false} />
           <main className="w-full flex-grow">{children}</main>
           <Footer />
           <Toaster
             position="top-right"
             toastOptions={{
               style: {
-                background: '#fff',
-                border: '1px solid rgba(0,0,0,0.08)',
+                background: 'rgba(0, 17, 13, 0.95)',
+                border: '1px solid rgba(23, 81, 68, 0.3)',
                 borderRadius: '12px',
                 padding: '12px 16px',
                 fontSize: '14px',
                 fontWeight: '500',
-                boxShadow: '0 4px 24px -2px rgba(0,0,0,0.1)',
+                boxShadow: '0 4px 24px -2px rgba(0, 0, 0, 0.4)',
+                color: '#c3fdeb',
               },
             }}
             mobileOffset={{ top: 80, right: 16 }}
