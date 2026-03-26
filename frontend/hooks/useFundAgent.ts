@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react'
 import { Transaction } from '@mysten/sui/transactions'
 import { useSignAndExecuteTransaction, useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
-import { SUI_COIN_TYPE, SUI_CONFIG } from '@/constants'
+import { SUI_COIN_TYPE, SUI_CONFIG, SUI_LEGACY_CONFIG } from '@/constants'
 import { toast } from 'sonner'
 
 
@@ -24,6 +24,7 @@ interface FundAgentParams {
 interface AgentCap {
   id: string
   agentId: string
+  isLegacy: boolean
 }
 
 export const useFundAgent = (options: UseFundAgentOptions = {}) => {
@@ -55,28 +56,37 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
     }
 
     try {
-      const objects = await client.getOwnedObjects({
-        owner: account.address,
-        filter: {
-          StructType: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::AgentCap`,
-        },
-        options: {
-          showContent: true,
-          showType: true,
-        },
-      })
+      const [newObjects, legacyObjects] = await Promise.all([
+        client.getOwnedObjects({
+          owner: account.address,
+          filter: {
+            StructType: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::AgentCap`,
+          },
+          options: { showContent: true, showType: true },
+        }),
+        client.getOwnedObjects({
+          owner: account.address,
+          filter: {
+            StructType: `${SUI_LEGACY_CONFIG.APP_PACKAGE_ID}::${SUI_LEGACY_CONFIG.MODULE_NAME}::AgentCap`,
+          },
+          options: { showContent: true, showType: true },
+        }),
+      ])
 
-      const caps: AgentCap[] = objects.data
-        .filter(obj => obj.data?.content?.dataType === 'moveObject')
-        .map(obj => {
-          const fields = (obj.data?.content as any)?.fields
-          return {
-            id: obj.data?.objectId || '',
-            agentId: fields?.agent_id || '',
-          }
-        })
-        .filter(cap => cap.id && cap.agentId)
+      const parseObjects = (objects: typeof newObjects, isLegacy: boolean): AgentCap[] =>
+        objects.data
+          .filter(obj => obj.data?.content?.dataType === 'moveObject')
+          .map(obj => {
+            const fields = (obj.data?.content as any)?.fields
+            return {
+              id: obj.data?.objectId || '',
+              agentId: fields?.agent_id || '',
+              isLegacy,
+            }
+          })
+          .filter(cap => cap.id && cap.agentId)
 
+      const caps = [...parseObjects(newObjects, false), ...parseObjects(legacyObjects, true)]
       setAgentCaps(caps)
       console.log('Fetched AgentCaps:', caps)
     } catch (error) {
@@ -120,20 +130,31 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
       if (!agentCap) {
         await fetchAgentCaps()
         // fetchAgentCaps updates state asynchronously, so read directly from the RPC result
-        const objects = await client.getOwnedObjects({
-          owner: account.address,
-          filter: {
-            StructType: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::AgentCap`,
-          },
-          options: { showContent: true, showType: true },
-        })
-        caps = objects.data
-          .filter(obj => obj.data?.content?.dataType === 'moveObject')
-          .map(obj => {
-            const fields = (obj.data?.content as any)?.fields
-            return { id: obj.data?.objectId || '', agentId: fields?.agent_id || '' }
-          })
-          .filter(cap => cap.id && cap.agentId)
+        const [newObjects, legacyObjects] = await Promise.all([
+          client.getOwnedObjects({
+            owner: account.address,
+            filter: {
+              StructType: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::AgentCap`,
+            },
+            options: { showContent: true, showType: true },
+          }),
+          client.getOwnedObjects({
+            owner: account.address,
+            filter: {
+              StructType: `${SUI_LEGACY_CONFIG.APP_PACKAGE_ID}::${SUI_LEGACY_CONFIG.MODULE_NAME}::AgentCap`,
+            },
+            options: { showContent: true, showType: true },
+          }),
+        ])
+        const parseObjects = (objects: typeof newObjects, isLegacy: boolean): AgentCap[] =>
+          objects.data
+            .filter(obj => obj.data?.content?.dataType === 'moveObject')
+            .map(obj => {
+              const fields = (obj.data?.content as any)?.fields
+              return { id: obj.data?.objectId || '', agentId: fields?.agent_id || '', isLegacy }
+            })
+            .filter(cap => cap.id && cap.agentId)
+        caps = [...parseObjects(newObjects, false), ...parseObjects(legacyObjects, true)]
         agentCap = caps.find(cap => cap.agentId.toString() === agentId.toString())
       }
 
@@ -212,16 +233,28 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
           }
         }
 
-        tx.moveCall({
-          target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::fund_agent`,
-          typeArguments: [coinType],
+        const packageId = agentCap.isLegacy
+          ? SUI_LEGACY_CONFIG.APP_PACKAGE_ID
+          : SUI_CONFIG.APP_PACKAGE_ID
+        const moduleName = agentCap.isLegacy
+          ? SUI_LEGACY_CONFIG.MODULE_NAME
+          : SUI_CONFIG.MODULE_NAME
+
+        const moveCallArgs: any = {
+          target: `${packageId}::${moduleName}::fund_agent`,
           arguments: [
             tx.object(agentObjectId),
             tx.object(agentCap.id),
             paymentCoin,
             tx.object(SUI_CLOCK_OBJECT_ID),
           ],
-        })
+        }
+
+        if (!agentCap.isLegacy) {
+          moveCallArgs.typeArguments = [coinType]
+        }
+
+        tx.moveCall(moveCallArgs)
 
         // Execute transaction
         return new Promise((resolve, reject) => {
