@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { SUI_SENTINEL_API_URL, APP_NETWORK, MIST_PER_SUI } from '@/constants'
+import { SUI_SENTINEL_API_URL, APP_NETWORK } from '@/constants'
 
 export interface PlatformStatsResponse {
   network: string
@@ -8,19 +8,15 @@ export interface PlatformStatsResponse {
   totalSentinelsLaunched: number
   activeSentinels: number
   defeatedSentinels: number
-  totalBountyWon: string
+  totalBountyWon: number
   totalSentinelTokensDistributed: number
-  tvl: string
+  tvl: number
   largestBountyWon: {
     agentId: string
     winner: string
-    amount: string
+    amount: number
     timestamp: string
   } | null
-}
-
-export function mistToSui(mist: string): number {
-  return Math.ceil(Number(mist) / MIST_PER_SUI)
 }
 
 export function usePlatformStats(network = APP_NETWORK) {

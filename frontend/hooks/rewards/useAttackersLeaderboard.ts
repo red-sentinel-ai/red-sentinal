@@ -14,11 +14,11 @@ interface ApiAttackerEntry {
   rank: number
   wallet: string
   attackerTier: string
-  totalBountySui: number
+  totalBountyUsd: number
   successfulBreaches: number
   totalAttacks: number
   breachRatePct: number
-  largestBountySui: number
+  largestBountyUsd: number
   sentinelTokensEarned: number
   lastActiveTimestamp: string | null
   attackStreakDays: number
@@ -43,11 +43,11 @@ export function mapApiAttacker(entry: ApiAttackerEntry, connectedWallet?: string
     walletAddress: wallet,
     avatarUrl: entry.avatar_url ?? undefined,
     attackerTier: entry.attackerTier as AttackerEntry['attackerTier'],
-    totalBountyWonSui: entry.totalBountySui,
+    totalBountyWonUsd: entry.totalBountyUsd,
     successfulBreaches: entry.successfulBreaches,
     totalAttacksSent: entry.totalAttacks,
     breachRatePct: entry.breachRatePct,
-    largestSingleBountySui: entry.largestBountySui,
+    largestSingleBountyUsd: entry.largestBountyUsd,
     attackStreakDays: entry.attackStreakDays ?? 0,
     sentinelTokensEarned: entry.sentinelTokensEarned,
     lastActiveTimestamp: entry.lastActiveTimestamp ?? new Date(0).toISOString(),
