@@ -678,3 +678,65 @@ export const PROVIDER_MODELS: Record<string, string[]> = {
   ],
   custom: [],
 }
+
+
+export const MISSION_STEP1_CONFIG: Record<string, {
+  heading: string
+  hint: string
+  actionLabel?: string
+  actionUrl?: string
+  urlPlaceholder: string
+}> = {
+  like_tweet: {
+    heading: 'Like an official tweet from @suisentinal',
+    hint: 'Go to our X profile and like any official tweet.',
+    actionLabel: 'Go to @suisentinal',
+    actionUrl: X_URL,
+    urlPlaceholder: 'https://x.com/suisentinal/status/...',
+  },
+  repost_tweet: {
+    heading: 'Repost an official tweet from @suisentinal',
+    hint: 'Go to our X profile and repost any official tweet.',
+    actionLabel: 'Go to @suisentinal',
+    actionUrl: X_URL,
+    urlPlaceholder: 'https://x.com/yourusername/status/...',
+  },
+  quote_tweet: {
+    heading: 'Quote tweet with your own thoughts and insights',
+    hint: 'Quote any @suisentinal tweet with original commentary (50+ characters).',
+    actionLabel: 'Go to @suisentinal',
+    actionUrl: X_URL,
+    urlPlaceholder: 'https://x.com/yourusername/status/...',
+  },
+  tag_friends: {
+    heading: 'Tag 3 friends in a tweet about Sui Sentinel',
+    hint: 'Mention 3 real, active friends in your tweet about the platform.',
+    actionLabel: 'Post on X',
+    actionUrl: X_URL,
+    urlPlaceholder: 'https://x.com/yourusername/status/...',
+  },
+  create_thread: {
+    heading: 'Create an educational thread about Sui Sentinel (5+ tweets)',
+    hint: 'Write informational content covering platform features, attack/defend mechanics, or tokenomics.',
+    actionLabel: 'Post on X',
+    actionUrl: X_URL,
+    urlPlaceholder: 'https://x.com/yourusername/status/... (first tweet in thread)',
+  },
+  short_video: {
+    heading: 'Create a short video showcasing Sui Sentinel (< 2 min)',
+    hint: 'Ensure quality production with clear audio and video. Upload to YouTube, X, or similar.',
+    urlPlaceholder: 'https://youtube.com/watch?v=... or https://x.com/...',
+  },
+  long_video: {
+    heading: 'Create an in-depth tutorial or walkthrough video (5+ min)',
+    hint: 'Aim for tutorial quality with comprehensive coverage of the platform.',
+    urlPlaceholder: 'https://youtube.com/watch?v=... or https://x.com/...',
+  },
+  written_article: {
+    heading: 'Write a comprehensive article about Sui Sentinel (800+ words)',
+    hint: 'Publish on X, Substack, Medium, or your own blog.',
+    actionLabel: 'Go to X / Substack',
+    actionUrl: X_URL,
+    urlPlaceholder: 'https://substack.com/... or https://medium.com/... or https://x.com/...',
+  },
+}
