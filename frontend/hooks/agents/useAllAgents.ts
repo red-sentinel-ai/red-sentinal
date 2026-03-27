@@ -50,10 +50,11 @@ interface AgentsResponse {
 
 export const useAllAgents = (
   sortField: SortField = 'total_balance',
-  sortDirection: SortDirection = 'desc'
+  sortDirection: SortDirection = 'desc',
+  coinTypeFilter?: string
 ) => {
   return useInfiniteQuery<AgentsResponse, Error>({
-    queryKey: [ALL_AGENTS_QUERY_KEY, sortField, sortDirection],
+    queryKey: [ALL_AGENTS_QUERY_KEY, sortField, sortDirection, coinTypeFilter],
     queryFn: async ({ pageParam }) => {
       const offset = pageParam as number
 
@@ -71,6 +72,10 @@ export const useAllAgents = (
         const apiSortField = sortField === 'change7d' ? 'prize_pool_change_7d' : sortField
         params.append('sortBy', apiSortField)
         params.append('sortDirection', sortDirection)
+      }
+
+      if (coinTypeFilter) {
+        params.append('coin_type', coinTypeFilter)
       }
 
       const res = await fetch(
