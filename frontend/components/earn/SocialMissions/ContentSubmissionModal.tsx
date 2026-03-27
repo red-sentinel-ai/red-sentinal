@@ -6,7 +6,7 @@ import { toast } from 'sonner'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { Dialog } from '@/components/Dialog'
 import type { EarnMission } from '@/types/Earn'
-import { BOOSTER_TIERS } from '@/constants'
+import { BOOSTER_TIERS, MISSION_STEP1_CONFIG } from '@/constants'
 import Image from 'next/image'
 
 interface ContentSubmissionModalProps {
@@ -140,18 +140,11 @@ export function ContentSubmissionModal({ mission, isOpen, onClose }: ContentSubm
 
   const tierInfo = BOOSTER_TIERS[mission.boosterTier]
 
-  // Determine content type for better UX messaging
-  const getContentTypeInfo = () => {
-    const id = mission.id.toLowerCase()
-    if (id.includes('video')) return { type: 'video', placeholder: 'https://youtube.com/watch?v=... or https://twitter.com/...' }
-    if (id.includes('article')) return { type: 'article', placeholder: 'https://substack.com/... or https://medium.com/...' }
-    if (id.includes('thread')) return { type: 'thread', placeholder: 'https://twitter.com/username/status/...' }
-    if (id.includes('infographic')) return { type: 'image', placeholder: 'https://twitter.com/... or image hosting URL' }
-    if (id.includes('translation')) return { type: 'document', placeholder: 'https://docs.google.com/... or https://notion.so/...' }
-    return { type: 'content', placeholder: 'https://...' }
+  const step1 = MISSION_STEP1_CONFIG[mission.id] ?? {
+    heading: `Create your content about Sui Sentinel`,
+    hint: 'Share accurate information and showcase the platform\'s features.',
+    urlPlaceholder: 'https://...',
   }
-
-  const contentTypeInfo = getContentTypeInfo()
 
   return (
     <Dialog open={isOpen} onClose={handleClose} disableBackdropClick className="max-w-[600px]">
@@ -208,15 +201,22 @@ export function ContentSubmissionModal({ mission, isOpen, onClose }: ContentSubm
 
             <div className="border-t border-gray-200" />
 
-            {/* Step 1: Create Content */}
+            {/* Step 1: Mission-specific action */}
             <div>
               <p className="mb-1 text-xs font-medium text-gray-500 md:text-sm">Step 1</p>
-              <p className="mb-2 text-sm font-medium md:text-base">
-                Create your {contentTypeInfo.type} about Sui Sentinel
-              </p>
-              <p className="text-xs text-gray-500">
-                Share accurate information and showcase the platform&apos;s features
-              </p>
+              <p className="mb-2 text-sm font-medium md:text-base">{step1.heading}</p>
+              <p className="mb-3 text-xs text-gray-500">{step1.hint}</p>
+              {step1.actionLabel && step1.actionUrl && (
+                <a
+                  href={step1.actionUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-black inline-flex h-[34px] items-center gap-1.5 px-4 text-sm md:h-[38px] md:gap-2"
+                >
+                  <ExternalLink className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                  {step1.actionLabel}
+                </a>
+              )}
             </div>
 
             <div className="border-t border-gray-200" />
@@ -237,7 +237,7 @@ export function ContentSubmissionModal({ mission, isOpen, onClose }: ContentSubm
                     <input
                       value={contentUrl}
                       onChange={e => setContentUrl(e.target.value)}
-                      placeholder={contentTypeInfo.placeholder}
+                      placeholder={step1.urlPlaceholder}
                       className="w-full rounded-lg border border-gray-300 bg-white py-2 pl-10 pr-3 text-xs focus:border-black focus:outline-none focus:ring-1 focus:ring-black md:text-sm"
                     />
                   </div>
