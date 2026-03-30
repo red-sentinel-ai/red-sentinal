@@ -6,7 +6,7 @@ import { toast } from 'sonner'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { Dialog } from '@/components/Dialog'
 import type { EarnMission } from '@/types/Earn'
-import { BOOSTER_TIERS, MISSION_STEP1_CONFIG } from '@/constants'
+import { APP_NETWORK, BOOSTER_TIERS, MISSION_STEP1_CONFIG } from '@/constants'
 import Image from 'next/image'
 
 interface ContentSubmissionModalProps {
@@ -116,7 +116,7 @@ export function ContentSubmissionModal({ mission, isOpen, onClose }: ContentSubm
         body: JSON.stringify({
           wallet_address: account.address,
           mission_type: mission.id,
-          network: 'testnet',
+          network: APP_NETWORK,
           content_link: contentUrl,
           description: description.trim() || undefined,
           screenshot_url: screenshotUrl || undefined,
