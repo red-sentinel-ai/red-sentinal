@@ -1,40 +1,16 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
-import { Check, X } from 'lucide-react'
+import { Check, Mail, X } from 'lucide-react'
 import posthog from 'posthog-js'
 import { Button, Badge, Card } from '@/components/ui'
 import { toast } from 'sonner'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { useSocialStatus } from '@/hooks/profile/useSocialStatus'
-import { handleConnectGoogle } from '@/utils/socialConnection'
+import { useSendEmailVerification } from '@/hooks/profile/useSendEmailVerification'
 import { useDisconnectProvider } from '@/hooks/rewards/useDisconnectProvider'
-
-
-function GoogleIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-        fill="#4285F4"
-      />
-      <path
-        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-        fill="#34A853"
-      />
-      <path
-        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-        fill="#FBBC05"
-      />
-      <path
-        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-        fill="#EA4335"
-      />
-    </svg>
-  )
-}
 
 export function SocialConnectionsSection() {
   const account = useCurrentAccount()
@@ -43,65 +19,41 @@ export function SocialConnectionsSection() {
   const { mutate: disconnect, isPending: isDisconnecting } = useDisconnectProvider()
   const searchParams = useSearchParams()
 
-  const [connectingPlatform, setConnectingPlatform] = useState<string | null>(null)
   const [disconnectingPlatform, setDisconnectingPlatform] = useState<string | null>(null)
+  const { emailInput, setEmailInput, isSending, linkSent, sentToEmail, sendVerificationLink, reset } =
+    useSendEmailVerification(address)
+
   const telegramContainerRef = useRef<HTMLDivElement>(null)
   const [telegramContainerReady, setTelegramContainerReady] = useState(false)
 
-  // Callback ref so we know exactly when the container div mounts/unmounts
   const setTelegramRef = useCallback((node: HTMLDivElement | null) => {
     telegramContainerRef.current = node
     setTelegramContainerReady(!!node)
   }, [])
 
-  const hasGoogle = socialStatus?.isGoogleConnected || false
+  const hasEmail = socialStatus?.isEmailConnected || false
   const hasTelegram = socialStatus?.isTelegramConnected || false
-  const hasAnyConnection = hasGoogle || hasTelegram
+  const hasAnyConnection = hasEmail || hasTelegram
 
   const telegramBotName = process.env.NEXT_PUBLIC_TELEGRAM_BOT_NAME
 
-  // Handle Google OAuth callback
+  // Handle email verification callback
   useEffect(() => {
     const connected = searchParams.get('connected')
     const error = searchParams.get('error')
 
-    if (connected) {
-      const provider = connected.toLowerCase()
+    if (connected === 'email') {
+      toast.success('Email connected successfully!')
+      refetch()
+      posthog.capture('social_account_connected', { platform: 'email', wallet_address: address })
 
-      if (provider === 'google' && address) {
-        // Google: save using active NextAuth session
-        fetch('/api/auth/save-social-connection', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ walletAddress: address, provider }),
-        })
-          .then(res => res.json())
-          .then(data => {
-            if (data.success) {
-              toast.success('Google connected successfully!')
-              refetch()
-              posthog.capture('social_account_connected', { platform: provider, wallet_address: address })
-            } else {
-              toast.error(`Connected but failed to save: ${data.error}`)
-            }
-          })
-          .catch(() => toast.error('Failed to save connection'))
-      } else if (provider === 'telegram') {
-        // Telegram: already saved server-side in the callback route
-        toast.success('Telegram connected successfully!')
-        refetch()
-        posthog.capture('social_account_connected', { platform: provider, wallet_address: address })
-      }
-
-      setConnectingPlatform(null)
       const url = new URL(window.location.href)
       url.searchParams.delete('connected')
       window.history.replaceState({}, '', url.toString())
     }
 
     if (error) {
-      toast.error('Failed to connect social account')
-      setConnectingPlatform(null)
+      toast.error('Failed to connect email')
       const url = new URL(window.location.href)
       url.searchParams.delete('error')
       window.history.replaceState({}, '', url.toString())
@@ -115,7 +67,7 @@ export function SocialConnectionsSection() {
     }
   }, [isDisconnecting, disconnectingPlatform])
 
-  // Inject Telegram Login Widget (data-auth-url redirect approach)
+  // Inject Telegram Login Widget
   useEffect(() => {
     if (hasTelegram || !telegramBotName || !address || !telegramContainerRef.current) return
 
@@ -132,7 +84,6 @@ export function SocialConnectionsSection() {
     script.async = true
     telegramContainerRef.current.appendChild(script)
   }, [hasTelegram, telegramBotName, address, telegramContainerReady])
-
 
   if (isLoading) {
     return (
@@ -171,66 +122,92 @@ export function SocialConnectionsSection() {
           </div>
 
           <div className="grid grid-cols-1 gap-3">
-            {/* Connect Email (Google) */}
-            <div className="flex flex-col items-start justify-between gap-2 rounded-lg border border-[#5E5E5E] bg-gradient-to-r from-white/45 to-[rgba(249,240,249,0.46)] p-3 sm:flex-row sm:items-center">
-              <div className="flex items-center gap-2">
-                <div className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-[#5E5E5E] sm:h-10 sm:w-10">
-                  <GoogleIcon />
-                  {hasGoogle && (
-                    <div className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-green-500"></div>
-                  )}
+            {/* Connect Email */}
+            <div className="rounded-lg border border-[#5E5E5E] bg-gradient-to-r from-white/45 to-[rgba(249,240,249,0.46)] p-3">
+              <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+                <div className="flex items-center gap-2">
+                  <div className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-[#5E5E5E] sm:h-10 sm:w-10">
+                    <Mail className="h-4 w-4 text-[#5E5E5E] sm:h-5 sm:w-5" />
+                    {hasEmail && (
+                      <div className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-green-500"></div>
+                    )}
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium sm:text-base">Connect Email</p>
+                    <p className="text-xs text-[#5E5E5E]">
+                      {hasEmail && 'Email connected'}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm font-medium sm:text-base">Connect Email</p>
-                  <p className="text-xs text-[#5E5E5E]">
-                    {hasGoogle ? 'Connected via Google' : 'Connect via Google'}
-                  </p>
-                </div>
+
+                {hasEmail ? (
+                  <Button
+                    onClick={() => {
+                      if (!address) return
+                      setDisconnectingPlatform('email')
+                      disconnect({ provider: 'email', walletAddress: address })
+                    }}
+                    size="sm"
+                    variant="outline"
+                    disabled={disconnectingPlatform === 'email'}
+                    className="flex h-8 min-w-[90px] items-center gap-1 border-red-200 px-2 text-xs text-red-600 hover:border-red-300 hover:bg-red-50 hover:text-red-700 disabled:opacity-50 sm:h-9 sm:text-sm"
+                  >
+                    {disconnectingPlatform === 'email' ? (
+                      <>
+                        <div className="mr-1 h-3 w-3 flex-shrink-0 animate-spin rounded-full border border-black border-t-transparent"></div>
+                        Disconnecting...
+                      </>
+                    ) : (
+                      <>
+                        <X className="mr-1 h-4 w-4" />
+                        Disconnect
+                      </>
+                    )}
+                  </Button>
+                ) : null}
               </div>
 
-              {hasGoogle ? (
-                <Button
-                  onClick={() => {
-                    if (!address) return
-                    setDisconnectingPlatform('google')
-                    disconnect({ provider: 'google', walletAddress: address })
-                  }}
-                  size="sm"
-                  variant="outline"
-                  disabled={disconnectingPlatform === 'google'}
-                  className="flex h-8 min-w-[90px] items-center gap-1 border-red-200 px-2 text-xs text-red-600 hover:border-red-300 hover:bg-red-50 hover:text-red-700 disabled:opacity-50 sm:h-9 sm:text-sm"
-                >
-                  {disconnectingPlatform === 'google' ? (
-                    <>
-                      <div className="mr-1 h-3 w-3 flex-shrink-0 animate-spin rounded-full border border-black border-t-transparent"></div>
-                      Disconnecting...
-                    </>
+              {/* Email input — shown only when not connected */}
+              {!hasEmail && (
+                <div className="mt-3">
+                  {linkSent ? (
+                    <div className="rounded-lg border border-green-200 bg-green-50 px-3 py-2.5 text-sm text-green-800">
+                      <p className="font-medium">Check your inbox!</p>
+                      <p className="mt-0.5 text-xs text-green-700">
+                        Verification link sent to <span className="font-medium">{sentToEmail}</span>. It expires in 15 minutes.
+                      </p>
+                      <button
+                        onClick={reset}
+                        className="mt-1.5 text-xs text-green-600 underline hover:text-green-800"
+                      >
+                        Use a different email
+                      </button>
+                    </div>
                   ) : (
-                    <>
-                      <X className="mr-1 h-4 w-4" />
-                      Disconnect
-                    </>
+                    <div className="flex gap-2">
+                      <input
+                        type="email"
+                        placeholder="your@email.com"
+                        value={emailInput}
+                        onChange={e => setEmailInput(e.target.value)}
+                        onKeyDown={e => { if (e.key === 'Enter') sendVerificationLink() }}
+                        className="h-8 flex-1 rounded-md border border-[#5E5E5E] bg-white/70 px-3 text-xs focus:border-[#F445AB] focus:outline-none sm:h-9 sm:text-sm"
+                      />
+                      <Button
+                        onClick={sendVerificationLink}
+                        size="sm"
+                        disabled={isSending || !emailInput.trim()}
+                        className="btn btn-outline h-8 min-w-[100px] text-xs sm:h-9 sm:text-sm"
+                      >
+                        {isSending ? (
+                          <div className="h-3 w-3 animate-spin rounded-full border border-current border-t-transparent" />
+                        ) : (
+                          'Send Link'
+                        )}
+                      </Button>
+                    </div>
                   )}
-                </Button>
-              ) : (
-                <Button
-                  onClick={() => {
-                    setConnectingPlatform('google')
-                    handleConnectGoogle(address || undefined)
-                  }}
-                  size="sm"
-                  disabled={connectingPlatform === 'google'}
-                  className="btn btn-outline flex h-8 min-w-[85px] items-center gap-1 text-xs sm:h-9 sm:text-sm"
-                >
-                  {connectingPlatform === 'google' ? (
-                    <>
-                      <div className="mr-1 h-3 w-3 flex-shrink-0 animate-spin rounded-full border border-black border-t-transparent"></div>
-                      <span>Connecting...</span>
-                    </>
-                  ) : (
-                    'Connect'
-                  )}
-                </Button>
+                </div>
               )}
             </div>
 
@@ -281,11 +258,6 @@ export function SocialConnectionsSection() {
                     </>
                   )}
                 </Button>
-              ) : connectingPlatform === 'telegram' ? (
-                <div className="flex h-8 min-w-[85px] items-center justify-center gap-1 text-xs sm:h-9 sm:text-sm">
-                  <div className="h-3 w-3 animate-spin rounded-full border border-black border-t-transparent"></div>
-                  <span>Connecting...</span>
-                </div>
               ) : (
                 <div className="relative">
                   <Button
