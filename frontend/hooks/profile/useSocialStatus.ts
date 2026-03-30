@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 
 export interface SocialStatusResponse {
   wallet_address: string
-  isGoogleConnected: boolean
+  isEmailConnected: boolean
   isTelegramConnected: boolean
 }
 
