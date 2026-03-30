@@ -11,7 +11,7 @@ export async function GET(
 
     return NextResponse.json({
       wallet_address: result.wallet_address,
-      isGoogleConnected: result.isGoogleConnected,
+      isEmailConnected: result.isEmailConnected,
       isTelegramConnected: result.isTelegramConnected,
     })
   } catch (error) {
