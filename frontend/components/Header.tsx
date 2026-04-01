@@ -12,7 +12,7 @@ import { MobileNav } from './MobileNav'
 import SentinelStatsBar from './statbar/StatBar'
 
 const LOGO_SRC =
-  APP_NETWORK === 'testnet' ? '/icons/logo_large_testnet.svg' : '/icons/logo_large.svg'
+  APP_NETWORK === 'testnet' ? '/icons/logo_large_testnet.svg' : '/icons/logo_large_white.svg'
 const LOGO_SMALL_SRC = '/icons/logo-sm.svg'
 
 export const Header = () => {
@@ -22,7 +22,7 @@ export const Header = () => {
     <header className="fixed left-0 right-0 top-0 z-50 w-full">
       <SentinelStatsBar />
 
-      <div className="w-full bg-transparent pt-8 transition-all duration-300 md:border-b md:border-outline-variant md:bg-surface/80 md:backdrop-blur-xl">
+      <div className="md:bg-surface/80 w-full bg-transparent pt-8 transition-all duration-300 md:border-b md:border-outline-variant md:backdrop-blur-xl">
         <div className="mx-auto flex max-w-full items-center justify-between p-2 lg:px-6">
           <div className="flex flex-1 items-center gap-2 md:gap-8">
             <Link href="/" className="flex-shrink-0 md:hidden">
@@ -94,10 +94,10 @@ export const Header = () => {
         {mobileMenuOpen && (
           <>
             <div
-              className="fixed inset-0 top-[96px] z-40 bg-surface/80 backdrop-blur-sm md:top-[100px] xl:hidden"
+              className="bg-surface/80 fixed inset-0 top-[96px] z-40 backdrop-blur-sm md:top-[100px] xl:hidden"
               onClick={() => setMobileMenuOpen(false)}
             />
-            <div className="absolute left-0 right-0 top-full z-50 border-b border-outline-variant bg-surface/95 px-4 pb-6 pt-2 shadow-ambient backdrop-blur-xl xl:hidden">
+            <div className="bg-surface/95 absolute left-0 right-0 top-full z-50 border-b border-outline-variant px-4 pb-6 pt-2 shadow-ambient backdrop-blur-xl xl:hidden">
               <div className="border-t border-outline-variant pt-4">
                 <MobileNav onItemClick={() => setMobileMenuOpen(false)} />
               </div>

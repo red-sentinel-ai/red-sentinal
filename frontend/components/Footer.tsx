@@ -17,10 +17,10 @@ const Footer = () => {
     <footer className="relative border-t border-outline-variant bg-surface-container-low pt-8 sm:pt-16">
       <div className="vertical-line left-4 border-outline"></div>
       <div className="vertical-line right-4 border-outline"></div>
-      
+
       {/* Ambient glow at bottom */}
       <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-end pb-[24px] md:justify-center md:pb-0">
-        <div className="h-auto w-[100px] max-w-xs rounded-full bg-primary/10 blur-3xl sm:w-[160px] md:w-auto md:max-w-lg" />
+        <div className="bg-primary/10 h-auto w-[100px] max-w-xs rounded-full blur-3xl sm:w-[160px] md:w-auto md:max-w-lg" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-[1440px] px-4 pb-4 sm:px-6 md:pb-0 lg:px-8">
@@ -28,7 +28,7 @@ const Footer = () => {
           <div className="flex max-w-md flex-grow flex-col md:self-stretch">
             <div className="mb-4 flex items-center justify-center gap-3 md:justify-start">
               <Image
-                src="/icons/logo_large.svg"
+                src="/icons/logo_large_white.svg"
                 alt="Sui Sentinel Logo"
                 style={{ objectFit: 'contain' }}
                 height={49}
@@ -52,7 +52,13 @@ const Footer = () => {
                   aria-label={link.alt}
                 >
                   {link.isImage ? (
-                    <Image src={link.icon as string} alt={link.alt} width={20} height={20} className="opacity-80" />
+                    <Image
+                      src={link.icon as string}
+                      alt={link.alt}
+                      width={20}
+                      height={20}
+                      className="opacity-80"
+                    />
                   ) : (
                     <link.icon className="size-5 text-on-surface" />
                   )}
@@ -107,7 +113,13 @@ const Footer = () => {
                     aria-label={link.alt}
                   >
                     {link.isImage ? (
-                      <Image src={link.icon as string} alt={link.alt} width={20} height={20} className="opacity-80" />
+                      <Image
+                        src={link.icon as string}
+                        alt={link.alt}
+                        width={20}
+                        height={20}
+                        className="opacity-80"
+                      />
                     ) : (
                       <link.icon className="size-5 text-on-surface" />
                     )}
