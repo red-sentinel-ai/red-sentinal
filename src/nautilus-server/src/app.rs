@@ -1,8 +1,8 @@
-// Copyright (c), Mysten Labs, Inc.
+// Copyright (c), Sui Sentinel
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::common::IntentMessage;
-use crate::common::{to_signed_response, IntentScope, ProcessDataRequest, ProcessedDataResponse};
+use crate::common::{sign_register_agent_response, sign_consume_prompt_response, ProcessedDataResponse};
 use crate::AppState;
 use crate::EnclaveError;
 use axum::extract::{Path, State};
@@ -23,6 +23,24 @@ use crate::models::{
     RegisterAgentResponse,
 };
 
+/// Decode a base58-encoded Solana address to a 32-byte array
+fn decode_solana_address(address: &str) -> Result<[u8; 32], EnclaveError> {
+    let bytes = bs58::decode(address)
+        .into_vec()
+        .map_err(|e| EnclaveError::GenericError(format!("Failed to decode base58 address: {}", e)))?;
+
+    if bytes.len() != 32 {
+        return Err(EnclaveError::GenericError(format!(
+            "Invalid Solana address length: expected 32 bytes, got {}",
+            bytes.len()
+        )));
+    }
+
+    let mut arr = [0u8; 32];
+    arr.copy_from_slice(&bytes);
+    Ok(arr)
+}
+
 pub async fn register_agent(
     Path(network): Path<String>,
     State(state): State<Arc<AppState>>,
@@ -39,7 +57,7 @@ pub async fn register_agent(
     // Build the new API request body according to v2 structure
     let sentinel_type = payload.sentinel_type.clone().unwrap_or_else(|| "basic".to_string());
     let hidden_instructions = payload.private_prompt.clone().unwrap_or_default();
-    
+
     let mut request_body = json!({
         "sentinel_type": sentinel_type,
         "public_instructions": payload.system_prompt,
@@ -50,7 +68,7 @@ pub async fn register_agent(
         "model_name": payload.model_name,
         "creator": payload.creator
     });
-    
+
     // Add api_key and api_base_url to request body if available
     if let Some(api_key) = &payload.api_key {
         request_body["api_key"] = json!(api_key);
@@ -93,10 +111,11 @@ pub async fn register_agent(
             EnclaveError::GenericError(format!("Failed to parse register response: {}", e))
         })?;
     let agent_id = sentinel_id.to_string();
+    // Use seconds (i64) to match Solana's Clock::unix_timestamp
     let current_timestamp = std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
         .map_err(|e| EnclaveError::GenericError(format!("Failed to get current timestamp: {}", e)))?
-        .as_millis() as u64;
+        .as_secs() as i64;
 
     let agent = Agent {
         id: agent_id.clone(),
@@ -113,17 +132,19 @@ pub async fn register_agent(
     let mut agents = state.agents.write().await;
     agents.insert(agent_id.clone(), agent);
 
-    Ok(Json(to_signed_response(
+    // Decode creator address (base58 for Solana)
+    let creator_bytes = decode_solana_address(&payload.creator)?;
+
+    Ok(Json(sign_register_agent_response(
         &state.eph_kp,
         RegisterAgentResponse {
             agent_id: agent_id.to_string(),
             cost_per_message: payload.cost_per_message,
             system_prompt: payload.system_prompt,
             is_defeated: false,
-            creator: decode_bytes_hex(&payload.creator).unwrap(),
+            creator: creator_bytes,
         },
         current_timestamp,
-        IntentScope::RegisterAgent,
     )))
 }
 
@@ -133,37 +154,40 @@ pub async fn consume_prompt(
     Json(payload): Json<ConsumePromptRequest>,
 ) -> Result<Json<ProcessedDataResponse<IntentMessage<ConsumePromptResponse>>>, EnclaveError> {
     let agents = state.agents.write().await;
-    let attack_object_id = payload.attack_object_id.clone();
+    let attack_account_pubkey = payload.attack_account_pubkey.clone();
     {
         let mut attack_object_usage = state.attack_object_usage.write().await;
-        if attack_object_usage.contains_key(&attack_object_id) {
+        if attack_object_usage.contains_key(&attack_account_pubkey) {
             return Err(EnclaveError::GenericError(
-                "Attack object has already been used".to_string(),
+                "Attack account has already been used".to_string(),
             ));
         }
-        attack_object_usage.insert(attack_object_id.clone(), false);
+        attack_object_usage.insert(attack_account_pubkey.clone(), false);
     }
     let mut hasher = Blake2bVar::new(32)
         .map_err(|e| EnclaveError::GenericError(format!("Failed to initialize hasher: {}", e)))?;
     let client = Client::new();
-    let rpc_url = if network == "testnet" {
-        "https://fullnode.testnet.sui.io"
+
+    // Solana RPC endpoints
+    let rpc_url = if network == "devnet" {
+        "https://api.devnet.solana.com"
+    } else if network == "testnet" {
+        "https://api.testnet.solana.com"
     } else {
-        "https://fullnode.mainnet.sui.io"
+        "https://api.mainnet-beta.solana.com"
     };
+
+    // Solana JSON-RPC call to get account info for the Attack account
     let request_body = json!({
-          "jsonrpc": "2.0",
+        "jsonrpc": "2.0",
         "id": 1,
-      "method": "sui_getObject",
-      "params": [
-        payload.attack_object_id,
-        {
-          "showType": true,
-          "showOwner": true,
-          "showDisplay": false,
-          "showContent": true
-        }
-      ]
+        "method": "getAccountInfo",
+        "params": [
+            payload.attack_account_pubkey,
+            {
+                "encoding": "base64"
+            }
+        ]
     });
 
     let response = client
@@ -176,74 +200,108 @@ pub async fn consume_prompt(
     if !response.status().is_success() {
         let error_text = response.text().await?;
         return Err(EnclaveError::GenericError(format!(
-            "Attack request object API failed with status {}",
+            "Attack account API failed with status {}",
             error_text
         )));
     }
 
     let response_json: Value = response.json().await?;
 
-    // let is_not_used = response_json
-    //     .get("result")
-    //     .and_then(|result| result.get("data"))
-    //     .and_then(|data| data.get("content"))
-    //     .and_then(|content| content.get("fields"))
-    //     .and_then(|fields| fields.get("used"))
-    //     .and_then(|used| used.as_bool())
-    //     .map(|used| !used) // Negate the boolean value
-    //     .unwrap_or(false); // Default to not used being false if not found, to be safe
-    let attacker = response_json
+    // Check if account exists
+    let account_value = response_json
         .get("result")
-        .and_then(|result| result.get("data"))
-        .and_then(|data| data.get("owner"))
-        .and_then(|owner| owner.get("AddressOwner"))
-        .and_then(|address_owner| address_owner.as_str())
-        .map(|s| s.to_string())
+        .and_then(|result| result.get("value"))
         .ok_or_else(|| {
-            EnclaveError::GenericError(
-                "Could not retrieve attacker address from attack object".to_string(),
-            )
+            EnclaveError::GenericError("Attack account not found or invalid response".to_string())
         })?;
 
-    let nonce = response_json
-        .get("result")
-        .and_then(|result| result.get("data"))
-        .and_then(|data| data.get("content"))
-        .and_then(|content| content.get("fields"))
-        .and_then(|fields| fields.get("nonce"))
-        .and_then(|nonce| nonce.as_str())
-        .and_then(|nonce_str| nonce_str.parse::<u64>().ok())
+    if account_value.is_null() {
+        return Err(EnclaveError::GenericError(
+            "Attack account does not exist on Solana".to_string(),
+        ));
+    }
+
+    // Parse base64 encoded account data
+    let data_array = account_value
+        .get("data")
+        .and_then(|d| d.as_array())
         .ok_or_else(|| {
-            EnclaveError::GenericError("Could not retrieve nonce from attack object".to_string())
+            EnclaveError::GenericError("Could not retrieve data from account".to_string())
         })?;
 
-    // if !is_not_used {
-    //     return Err(EnclaveError::GenericError(
-    //         "Attack object has already been used or is invalid".to_string(),
-    //     ));
-    // }
-    let attack_object_agent_id = response_json
-        .get("result")
-        .and_then(|result| result.get("data"))
-        .and_then(|data| data.get("content"))
-        .and_then(|content| content.get("fields"))
-        .and_then(|fields| fields.get("agent_id"))
-        .and_then(|agent_id| agent_id.as_str())
-        .map(|s| s.to_string())
+    let base64_data = data_array
+        .get(0)
+        .and_then(|d| d.as_str())
         .ok_or_else(|| {
-            EnclaveError::GenericError("Could not retrieve agent_id from attack object".to_string())
+            EnclaveError::GenericError("Invalid account data format".to_string())
         })?;
 
-    // if attack_object_agent_id != payload.agent_id {
-    //     return Err(EnclaveError::GenericError("Agent ID in attack object does not match payload agent ID".to_string()));
-    // }
+    // Decode base64 account data
+    use base64::Engine;
+    let account_data = base64::engine::general_purpose::STANDARD
+        .decode(base64_data)
+        .map_err(|e| EnclaveError::GenericError(format!("Failed to decode base64 data: {}", e)))?;
 
+    // Parse Anchor Attack account structure:
+    // - 8 bytes: Anchor discriminator
+    // - 32 bytes: agent (Pubkey)
+    // - 32 bytes: attacker (Pubkey)
+    // - 8 bytes: paid_amount (u64)
+    // - 8 bytes: nonce (u64)
+    // - 8 bytes: created_at (i64)
+    // - 1 byte: bump (u8)
+    // Total: 97 bytes minimum
+
+    if account_data.len() < 97 {
+        return Err(EnclaveError::GenericError(format!(
+            "Invalid Attack account data length: expected at least 97 bytes, got {}",
+            account_data.len()
+        )));
+    }
+
+    // Skip 8-byte Anchor discriminator
+    let data_offset = 8;
+
+    // Extract agent pubkey (32 bytes)
+    let _agent_pubkey_bytes: [u8; 32] = account_data[data_offset..data_offset + 32]
+        .try_into()
+        .map_err(|_| EnclaveError::GenericError("Invalid agent pubkey bytes".to_string()))?;
+
+    // Extract attacker pubkey (32 bytes)
+    let attacker_bytes: [u8; 32] = account_data[data_offset + 32..data_offset + 64]
+        .try_into()
+        .map_err(|_| EnclaveError::GenericError("Invalid attacker pubkey bytes".to_string()))?;
+    let attacker = bs58::encode(&attacker_bytes).into_string();
+
+    // Extract paid_amount (8 bytes, little-endian u64)
+    let _paid_amount = u64::from_le_bytes(
+        account_data[data_offset + 64..data_offset + 72]
+            .try_into()
+            .map_err(|_| EnclaveError::GenericError("Invalid paid_amount bytes".to_string()))?
+    );
+
+    // Extract nonce (8 bytes, little-endian u64)
+    let nonce = u64::from_le_bytes(
+        account_data[data_offset + 72..data_offset + 80]
+            .try_into()
+            .map_err(|_| EnclaveError::GenericError("Invalid nonce bytes".to_string()))?
+    );
+
+    // Extract created_at (8 bytes, little-endian i64)
+    let _created_at = i64::from_le_bytes(
+        account_data[data_offset + 80..data_offset + 88]
+            .try_into()
+            .map_err(|_| EnclaveError::GenericError("Invalid created_at bytes".to_string()))?
+    );
+
+    // Hash the message using BCS serialization (keeping original format)
     let message_bytes = bcs::to_bytes(&payload.message).expect("Serialization failed");
     hasher.update(&message_bytes);
     let mut message_hash = [0u8; 32];
     hasher
         .finalize_variable(&mut message_hash)
         .map_err(|e| EnclaveError::GenericError(format!("Hashing failed: {}", e)))?;
+
     #[derive(Debug, Deserialize)]
     struct ExternalEvaluateResponse {
         agent_response: String,
@@ -259,9 +317,9 @@ pub async fn consume_prompt(
     );
 
     let client = Client::new();
-    let mut eval_request = client
+    let eval_request = client
         .post(&eval_url)
-        .bearer_auth("suihero@345") // adds: Authorization: Bearer <token>
+        .bearer_auth("solhero@345")
         .header("Content-Type", "application/json");
 
     let eval_response = eval_request
@@ -269,7 +327,6 @@ pub async fn consume_prompt(
             "user_prompt": payload.message,
             "attacker_address": attacker
         }))
-
         .send()
         .await
         .map_err(|e| {
@@ -305,7 +362,7 @@ pub async fn consume_prompt(
         agent_id: payload.agent_id.clone(),
         success,
         score,
-        attacker: decode_bytes_hex(&attacker).unwrap(),
+        attacker: attacker_bytes,
         nonce,
         message_hash,
         agent_response,
@@ -313,71 +370,22 @@ pub async fn consume_prompt(
         fun_response,
     };
 
-    // Get timestamp
+    // Get timestamp in seconds (i64) to match Solana's Clock::unix_timestamp
     let current_timestamp = std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
         .map_err(|e| EnclaveError::GenericError(format!("Failed to get current timestamp: {}", e)))?
-        .as_millis() as u64;
+        .as_secs() as i64;
 
-    let response = to_signed_response(
+    let response = sign_consume_prompt_response(
         &state.eph_kp,
         evaluation,
         current_timestamp,
-        IntentScope::ConsumePrompt,
     );
 
     {
         let mut attack_object_usage = state.attack_object_usage.write().await;
-        attack_object_usage.insert(attack_object_id, true);
+        attack_object_usage.insert(attack_account_pubkey, true);
     }
 
     Ok(Json(response))
 }
-
-// #[cfg(test)]
-// mod test {
-//     use super::*;
-//     use crate::common::IntentMessage;
-//     use axum::{extract::State, Json};
-//     use fastcrypto::{ed25519::Ed25519KeyPair, traits::KeyPair};
-
-//     #[tokio::test]
-//     async fn test_process_data() {
-//         let state = Arc::new(AppState {
-//             eph_kp: Ed25519KeyPair::generate(&mut rand::thread_rng()),
-//             api_key: "045a27812dbe456392913223221306".to_string(),
-//         });
-//         let signed_weather_response = process_data(
-//             State(state),
-//             Json(ProcessDataRequest {
-//                 payload: WeatherRequest {
-//                     location: "San Francisco".to_string(),
-//                 },
-//             }),
-//         )
-//         .await
-//         .unwrap();
-//         assert_eq!(
-//             signed_weather_response.response.data.location,
-//             "San Francisco"
-//         );
-//     }
-
-//     #[test]
-//     fn test_serde() {
-//         // test result should be consistent with test_serde in `move/enclave/sources/enclave.move`.
-//         use fastcrypto::encoding::{Encoding, Hex};
-//         let payload = WeatherResponse {
-//             location: "San Francisco".to_string(),
-//             temperature: 13,
-//         };
-//         let timestamp = 1744038900000;
-//         let intent_msg = IntentMessage::new(payload, timestamp, IntentScope::Weather);
-//         let signing_payload = bcs::to_bytes(&intent_msg).expect("should not fail");
-//         assert!(
-//             signing_payload
-//                 == Hex::decode("0020b1d110960100000d53616e204672616e636973636f0d00000000000000")
-//                     .unwrap()
-//         );
-//     }
-// }
