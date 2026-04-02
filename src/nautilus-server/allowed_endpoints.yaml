@@ -1,8 +1,11 @@
-# External endpoints that the enclave is allowed to access. 
+# External endpoints that the enclave is allowed to access.
 endpoints:
-  - api.anthropic.com # replace with your own endpoints
+  - api.anthropic.com # Claude API
   - oauth2.googleapis.com
   - us-central1-aiplatform.googleapis.com
-  - fullnode.testnet.sui.io
-  - fullnode.mainnet.sui.io
+  # Solana RPC endpoints
+  - api.devnet.solana.com
+  - api.testnet.solana.com
+  - api.mainnet-beta.solana.com
+  # Sentinel backend
   - redteam.suisentinel.xyz
