@@ -33,7 +33,8 @@ pub struct RegisterAgentRequest {
 pub struct RegisterAgentResponse {
     pub agent_id: String,
     pub cost_per_message: u64,
-    pub system_prompt: String,
+    /// SHA256 hash of the system prompt (32 bytes)
+    pub prompt_hash: [u8; 32],
     pub is_defeated: bool,
     /// Creator's Solana public key (32 bytes)
     pub creator: [u8; 32],

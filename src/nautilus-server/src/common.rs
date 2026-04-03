@@ -15,7 +15,6 @@ use serde::{Deserialize, Serialize};
 use serde_bytes::ByteBuf;
 use serde_repr::Deserialize_repr;
 use serde_repr::Serialize_repr;
-use sha2::{Sha256, Digest};
 use std::collections::HashMap;
 use std::fmt::Debug;
 use std::sync::Arc;
@@ -83,11 +82,8 @@ fn build_register_agent_signing_payload(
     // Cost per message (8 bytes, u64 little-endian)
     message.extend_from_slice(&data.cost_per_message.to_le_bytes());
 
-    // System prompt hash (32 bytes, SHA256)
-    let mut hasher = Sha256::new();
-    hasher.update(data.system_prompt.as_bytes());
-    let prompt_hash = hasher.finalize();
-    message.extend_from_slice(&prompt_hash);
+    // Prompt hash (32 bytes) - already computed, use directly
+    message.extend_from_slice(&data.prompt_hash);
 
     // Creator pubkey (32 bytes)
     message.extend_from_slice(&data.creator);
