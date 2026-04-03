@@ -16,6 +16,7 @@ use fastcrypto::encoding::{decode_bytes_hex, Encoding, Hex};
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
+use sha2::{Sha256, Digest};
 use std::sync::Arc;
 
 use crate::models::{
@@ -135,12 +136,15 @@ pub async fn register_agent(
     // Decode creator address (base58 for Solana)
     let creator_bytes = decode_solana_address(&payload.creator)?;
 
+    // Compute SHA256 hash of system_prompt (matches Solana's hash::hash)
+    let prompt_hash: [u8; 32] = Sha256::digest(payload.system_prompt.as_bytes()).into();
+
     Ok(Json(sign_register_agent_response(
         &state.eph_kp,
         RegisterAgentResponse {
             agent_id: agent_id.to_string(),
             cost_per_message: payload.cost_per_message,
-            system_prompt: payload.system_prompt,
+            prompt_hash,
             is_defeated: false,
             creator: creator_bytes,
         },
