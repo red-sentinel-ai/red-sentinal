@@ -7,7 +7,7 @@ use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::response::Response;
 use axum::Json;
-use fastcrypto::ed25519::Ed25519KeyPair;
+use fastcrypto::secp256k1::Secp256k1KeyPair;
 use serde_json::json;
 use std::collections::HashMap;
 use tokio::sync::RwLock;
@@ -20,7 +20,7 @@ pub mod models;
 
 #[derive(Debug)]
 pub struct AppState {
-    pub eph_kp: Ed25519KeyPair,
+    pub eph_kp: Secp256k1KeyPair,
     pub agents: RwLock<HashMap<String, Agent>>,
     pub agent_counter: RwLock<u64>,
     pub attack_object_usage: RwLock<HashMap<String, bool>>,

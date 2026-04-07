@@ -5,7 +5,7 @@
 use anyhow::Result;
 use axum::{routing::get, routing::post, Router};
 use dotenvy::dotenv;
-use fastcrypto::{ed25519::Ed25519KeyPair, traits::KeyPair};
+use fastcrypto::{secp256k1::Secp256k1KeyPair, traits::KeyPair};
 use nautilus_server::app::{consume_prompt, register_agent};
 use nautilus_server::common::{get_attestation, health_check};
 use nautilus_server::AppState;
@@ -26,7 +26,7 @@ async fn main() -> Result<()> {
         ))
         .with(tracing_subscriber::fmt::layer())
         .init();
-    let eph_kp = Ed25519KeyPair::generate(&mut rand::thread_rng());
+    let eph_kp = Secp256k1KeyPair::generate(&mut rand::thread_rng());
 
     let state = Arc::new(AppState {
         eph_kp,

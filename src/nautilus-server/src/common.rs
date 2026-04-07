@@ -20,7 +20,7 @@ use std::sync::Arc;
 use std::time::Duration;
 use tracing::info;
 
-use fastcrypto::ed25519::Ed25519KeyPair;
+use fastcrypto::secp256k1::Secp256k1KeyPair;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct IntentMessage<T: Serialize> {
@@ -60,7 +60,7 @@ pub struct ProcessDataRequest<T> {
 }
 
 pub fn to_signed_response<T: Serialize + Clone>(
-    kp: &Ed25519KeyPair,
+    kp: &Secp256k1KeyPair,
     payload: T,
     timestamp_ms: u64,
     intent: IntentScope,

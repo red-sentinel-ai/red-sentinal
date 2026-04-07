@@ -366,3 +366,10 @@ Sentinel Mint: #9AFFC0
   }
 }
 ```
+
+
+Fetch ssl certificate
+```
+sudo certbot --nginx -d tee-solana.suisentinel.xyz
+```
+
