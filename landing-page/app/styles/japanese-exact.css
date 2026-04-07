@@ -1,0 +1,437 @@
+/* ===== EXACT JAPANESE UI STYLES FROM USER'S CODE ===== */
+
+:root {
+  --bg-color: #fef7f7;
+  --black-color: #000001;
+  --white-color: #ffffff;
+  --orange-color: #ef5a28;
+  --light-pink: #fbe7e7;
+  --dark-pink: #ebbcbd;
+  --red-color: #cc1321;
+  --gray-color: #b4b4b4;
+  --red-circle: radial-gradient(circle, #ff003c, #900020);
+  --heading-color: linear-gradient(135deg, #371f4e, #b52945, #ef5a28);
+  --max-width: 1200px;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* ===== JAPANESE UI WRAPPER ===== */
+.japanese-exact {
+  font-family: "Poppins", sans-serif;
+  background: var(--bg-color);
+  color: var(--black-color);
+  width: 100vw;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.japanese-exact-container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 30px 8px;
+  position: relative;
+}
+
+/* ===== HEADER ===== */
+.japanese-exact-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+
+.japanese-exact-header .logo {
+  display: flex;
+  align-items: center;
+}
+
+.japanese-exact-nav {
+  display: flex;
+  gap: 32px;
+  font-size: 15px;
+  align-items: center;
+}
+
+.japanese-exact-nav a {
+  color: var(--black-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+  position: relative;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.japanese-exact-nav a:hover {
+  color: var(--red-color);
+}
+
+.japanese-exact-nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--red-color);
+  transition: width 0.3s ease;
+}
+
+.japanese-exact-nav a:hover::after {
+  width: 100%;
+}
+
+.japanese-exact-menu-icon {
+  font-size: 22px;
+  cursor: pointer;
+  color: var(--white-color);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--red-color);
+  transition: transform 0.2s ease;
+  box-shadow: var(--box-shadow);
+  border: none;
+}
+
+.japanese-exact-menu-icon:hover {
+  transform: scale(1.1);
+}
+
+/* ===== SIDE MENU ===== */
+.japanese-exact-side-menu {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 30%;
+  height: 100%;
+  background: var(--white-color);
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  padding: 32px;
+  transition: right 0.4s ease;
+  z-index: 999;
+}
+
+.japanese-exact-side-menu.active {
+  right: 0;
+}
+
+.japanese-exact-side-menu .close-icon {
+  font-size: 26px;
+  color: var(--red-color);
+  align-self: flex-end;
+  cursor: pointer;
+  margin-bottom: 24px;
+  background: none;
+  border: none;
+}
+
+.japanese-exact-side-menu nav {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  font-size: 18px;
+  margin-bottom: auto;
+}
+
+.japanese-exact-side-menu nav a {
+  color: var(--black-color);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.japanese-exact-side-menu nav a:hover {
+  color: var(--red-color);
+}
+
+.japanese-exact-side-floating {
+  display: flex;
+  justify-content: space-around;
+  padding-top: 20px;
+  border-top: 1px solid var(--dark-pink);
+}
+
+.japanese-exact-side-floating .icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--light-pink);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.japanese-exact-side-floating .icon:hover {
+  transform: scale(1.1);
+}
+
+.japanese-exact-side-floating i {
+  font-size: 20px;
+  color: var(--orange-color);
+}
+
+/* ===== HERO SECTION ===== */
+.japanese-exact-hero {
+  display: grid;
+  grid-template-columns: 30% 40% 30%;
+  align-items: center;
+  position: relative;
+  margin-top: -70px;
+}
+
+/* ---------- LEFT ----------- */
+.japanese-exact-hero-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 20px;
+  z-index: 2;
+}
+
+.japanese-exact-hero-left::before {
+  content: "";
+  position: absolute;
+  left: -180px;
+  top: 10%;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background: var(--light-pink);
+  z-index: -1;
+}
+
+.japanese-exact-hero h1 {
+  font-family: "Playfair Display", serif;
+  font-size: 64px;
+  margin: 8px 0 14px 0;
+  background: var(--heading-color);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  line-height: 1.1;
+}
+
+.japanese-exact-hero p {
+  margin: 0 0 28px 0;
+  max-width: 320px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--black-color);
+}
+
+.japanese-exact-preview {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  margin-top: 24px;
+}
+
+.japanese-exact-date {
+  font-size: 11px;
+  color: var(--gray-color);
+}
+
+.japanese-exact-meta {
+  font-size: 11px;
+  color: var(--black-color);
+}
+
+.japanese-exact-play-btn {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--dark-pink);
+  display: grid;
+  place-items: center;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  box-shadow: var(--box-shadow);
+}
+
+.japanese-exact-play-btn i {
+  font-size: 28px;
+  color: var(--white-color);
+}
+
+.japanese-exact-play-btn:hover {
+  transform: scale(1.1);
+}
+
+.japanese-exact-socials {
+  position: absolute;
+  left: 28px;
+  bottom: -8px;
+  display: flex;
+  gap: 18px;
+}
+
+.japanese-exact-socials .socials-icons {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--light-pink);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  box-shadow: var(--box-shadow);
+}
+
+.japanese-exact-socials-icons:hover {
+  transform: translateY(-7px);
+}
+
+.japanese-exact-socials i {
+  font-size: 20px;
+  color: var(--orange-color);
+}
+
+/* ---------- CENTER ----------- */
+.japanese-exact-hero-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.japanese-exact-red-sun {
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  background: var(--red-circle);
+  border-radius: 50%;
+  z-index: 1;
+  box-shadow: var(--box-shadow);
+}
+
+.japanese-exact-hero-img {
+  position: relative;
+  z-index: 2;
+  max-width: 450px;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.2));
+}
+
+/* ---------- RIGHT ----------- */
+.japanese-exact-hero-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;
+}
+
+.japanese-exact-hero-right::before {
+  content: "";
+  position: absolute;
+  right: -120px;
+  top: -350px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: var(--light-pink);
+  z-index: -1;
+}
+
+.japanese-exact-floating-menu {
+  position: absolute;
+  right: -12px;
+  top: 30%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.japanese-exact-floating-menu .icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--light-pink);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  box-shadow: var(--box-shadow);
+}
+
+.japanese-exact-floating-menu .icon:hover {
+  transform: scale(1.2);
+}
+
+.japanese-exact-floating-menu i {
+  font-size: 22px;
+  color: var(--red-color);
+}
+
+.japanese-exact-cherry {
+  position: absolute;
+  right: 0;
+  top: -100px;
+  width: 400px;
+  height: auto;
+  opacity: 0.9;
+  pointer-events: none;
+  z-index: 0;
+  filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.1));
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .japanese-exact-hero {
+    grid-template-columns: 1fr;
+    margin-top: 0;
+    gap: 40px;
+  }
+
+  .japanese-exact-hero h1 {
+    font-size: 48px;
+  }
+
+  .japanese-exact-side-menu {
+    width: 80%;
+  }
+
+  .japanese-exact-red-sun {
+    width: 250px;
+    height: 250px;
+  }
+
+  .japanese-exact-hero-img {
+    max-width: 300px;
+  }
+
+  .japanese-exact-cherry {
+    display: none;
+  }
+
+  .japanese-exact-floating-menu {
+    position: static;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .japanese-exact-socials {
+    position: static;
+    margin-top: 40px;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .japanese-exact-hero h1 {
+    font-size: 36px;
+  }
+
+  .japanese-exact-nav {
+    display: none;
+  }
+}
