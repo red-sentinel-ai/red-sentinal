@@ -41,7 +41,8 @@ pub struct RegisterAgentResponse {
 pub struct ConsumePromptRequest {
     pub agent_id: String,
     pub message: String,
-    pub attack_object_id: String,
+    pub wallet_address: String,
+    pub nonce: u64,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
