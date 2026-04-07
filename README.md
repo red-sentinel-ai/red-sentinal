@@ -264,9 +264,9 @@ aws sts get-session-token \
    {
    "Credentials": {
    "AccessKeyId": "*STS_KEY_REMOVED*",
-   "SecretAccessKey": "*REMOVED*",
-   "SessionToken": "IQoJb3JpZ2luX2VjEEgaCXVzLWVhc3QtMSJGMEQCIEMcE2qjSA5YQ8At+L3do/YeWQGSdfnXpkMPGglCQItjAiB4V1LNIHCtpxsC4H+fKlibrWUJGk0hnpLGCYcAaeYfnSrvAQgREAAaDDQwMjA1NDgwMzExMyIMZYg7Z0HGvjzaQC2UKswBgoxFMu1IeIMqJ9ApDwGSd7vuS5fAPAzrMLcX348XEDgwuCvzGBP5591HkZ7w1BbyOyMvht7pqA2vfcFTB0JFKYpOGekboGd8+YsgQZk/T8sy/JoKLTqYyCM/kxI/DzBLliMOX4WANm20fnV4+2xGJH1e6iNUOGMqnzEqsqzGrVjNw2HliSzQyi66pOj8fldKTR34cGa62o9cUmvPlXilXbTJneUVQwKOdnuR3FuuGSd0kzufNotH3cIu70swXOZa+Zl0mfYorYZCLvVRMKH1qsoGOpkBgn69nDuqyXow3z3SDO6/r3oOqhIvPFtdbuygNKVdI0WbaixgR1arzm0PGNrZMJ+jazo13CvSPm/GZg4FwtFhEy+hsfXg5lNn94j4XaagVUUDTJHbr/KNNLEtsYLVdvDtyr4Vg9714TyXZ+WFZlPj7ABeYtgeOya0/3l80ggeXCqwCCfJG+wig9OXbqFzuP2PfcYfGqzHrsjs",
-   "Expiration": "2025-12-24T03:52:01+00:00"
+   "SecretAccessKey": "KlQtG0L8CSQK9NX7UwPjORHTm1vtySmhjkrPT6js",
+   "SessionToken": "IQoJb3JpZ2luX2VjECUaCXVzLWVhc3QtMSJIMEYCIQCk6XT72+bSXYDKshve4HLwZKPeP59+1Aul9+MXu6/i2AIhAMJBrTIN/H2iNNtmniU2brDQs21QgDCQhMYRFzh2jJWWKvgBCO7//////////wEQABoMNDAyMDU0ODAzMTEzIgxFC32wf9Inz/aPdQcqzAGdr6BQfcyKX8ILdEfkCA7aDE42gQ3dbhi1r29hCnuHGycdSittIzU+g6NOGxL/RdIu8p+HQN23dmSpuu4faiQlueFlrZQKN2WHfFLo/PspK9ya/CvavZ5bDmPtVbvK0VaTzPeaeoZ03/NfoSHCs+r5f4N9S1hlK2Kq4P2v1ZW0yQ17IMIlJhYarR3H1DErqWCG7vKM2Dpu+7kSPT9A2m7VvH91WFbG2Y9Ppo1nMBXV2gyurs+97TfotAQTmRiqZPk50fZRbXoixQP1flwwrc/VzgY6lwG5bCZFwpihnR8reQdvINMJrgaWJfsAERa7zrMoLxfSoT8JQOC4D9lHvYeExEBGghYRa+rai/HMqGdi4bszB2KoHILJ9X7/IT92Bh7MVFaHyw7kZNoRPe9X6DMuWDWFzrqO/cnZIz3r70uQAnhGg5IT7ZGIj30Rh7ZW2PI26gka04iaYLMD8VX+S5PRUza/6MEvy8FdLuHX",
+   "Expiration": "2026-04-08T08:23:09+00:00"
    }
    }
 
@@ -274,7 +274,7 @@ aws sts get-session-token \
 export KEY_PAIR=MyEC2KeyPair
 export AWS_ACCESS_KEY_ID=*STS_KEY_REMOVED*
 export AWS_SECRET_ACCESS_KEY=*AWS_SECRET_REMOVED*
-export AWS_SESSION_TOKEN="IQoJb3JpZ2luX2VjEEgaCXVzLWVhc3QtMSJGMEQCIEMcE2qjSA5YQ8At+L3do/YeWQGSdfnXpkMPGglCQItjAiB4V1LNIHCtpxsC4H+fKlibrWUJGk0hnpLGCYcAaeYfnSrvAQgREAAaDDQwMjA1NDgwMzExMyIMZYg7Z0HGvjzaQC2UKswBgoxFMu1IeIMqJ9ApDwGSd7vuS5fAPAzrMLcX348XEDgwuCvzGBP5591HkZ7w1BbyOyMvht7pqA2vfcFTB0JFKYpOGekboGd8+YsgQZk/T8sy/JoKLTqYyCM/kxI/DzBLliMOX4WANm20fnV4+2xGJH1e6iNUOGMqnzEqsqzGrVjNw2HliSzQyi66pOj8fldKTR34cGa62o9cUmvPlXilXbTJneUVQwKOdnuR3FuuGSd0kzufNotH3cIu70swXOZa+Zl0mfYorYZCLvVRMKH1qsoGOpkBgn69nDuqyXow3z3SDO6/r3oOqhIvPFtdbuygNKVdI0WbaixgR1arzm0PGNrZMJ+jazo13CvSPm/GZg4FwtFhEy+hsfXg5lNn94j4XaagVUUDTJHbr/KNNLEtsYLVdvDtyr4Vg9714TyXZ+WFZlPj7ABeYtgeOya0/3l80ggeXCqwCCfJG+wig9OXbqFzuP2PfcYfGqzHrsjs"
+export AWS_SESSION_TOKEN="IQoJb3JpZ2luX2VjECUaCXVzLWVhc3QtMSJIMEYCIQCk6XT72+bSXYDKshve4HLwZKPeP59+1Aul9+MXu6/i2AIhAMJBrTIN/H2iNNtmniU2brDQs21QgDCQhMYRFzh2jJWWKvgBCO7//////////wEQABoMNDAyMDU0ODAzMTEzIgxFC32wf9Inz/aPdQcqzAGdr6BQfcyKX8ILdEfkCA7aDE42gQ3dbhi1r29hCnuHGycdSittIzU+g6NOGxL/RdIu8p+HQN23dmSpuu4faiQlueFlrZQKN2WHfFLo/PspK9ya/CvavZ5bDmPtVbvK0VaTzPeaeoZ03/NfoSHCs+r5f4N9S1hlK2Kq4P2v1ZW0yQ17IMIlJhYarR3H1DErqWCG7vKM2Dpu+7kSPT9A2m7VvH91WFbG2Y9Ppo1nMBXV2gyurs+97TfotAQTmRiqZPk50fZRbXoixQP1flwwrc/VzgY6lwG5bCZFwpihnR8reQdvINMJrgaWJfsAERa7zrMoLxfSoT8JQOC4D9lHvYeExEBGghYRa+rai/HMqGdi4bszB2KoHILJ9X7/IT92Bh7MVFaHyw7kZNoRPe9X6DMuWDWFzrqO/cnZIz3r70uQAnhGg5IT7ZGIj30Rh7ZW2PI26gka04iaYLMD8VX+S5PRUza/6MEvy8FdLuHX"
 ```
 
 4. Now run `sh configure_enclave.sh`. here for secrets, select existing ARN
@@ -331,6 +331,7 @@ This project is licensed under the APACHE License - see the LICENSE file for det
 Enforce cost per message in TEE
 
 ## Brand Kit
+
 ```
 ### Base Colors
 
@@ -367,9 +368,12 @@ Sentinel Mint: #9AFFC0
 }
 ```
 
-
 Fetch ssl certificate
+
 ```
 sudo certbot --nginx -d tee-solana.suisentinel.xyz
 ```
 
+```
+ssh -i "MyEC2KeyPair.pem" ec2-user@ec2-35-168-159-88.compute-1.amazonaws.com
+```

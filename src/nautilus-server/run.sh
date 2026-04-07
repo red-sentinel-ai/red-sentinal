@@ -30,6 +30,7 @@ echo "127.0.0.68   fullnode.mainnet.sui.io" >> /etc/hosts
 echo "127.0.0.69   redteam.suisentinel.xyz" >> /etc/hosts
 
 
+
 # End of hosts record
 
 cat /etc/hosts
@@ -54,6 +55,7 @@ python3 /traffic_forwarder.py 127.0.0.66 443 3 8103 &
 python3 /traffic_forwarder.py 127.0.0.67 443 3 8104 &
 python3 /traffic_forwarder.py 127.0.0.68 443 3 8105 &
 python3 /traffic_forwarder.py 127.0.0.69 443 3 8106 &
+
 
 
 # End of traffic-forwarder-block
