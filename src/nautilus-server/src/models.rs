@@ -34,7 +34,7 @@ pub struct RegisterAgentResponse {
     pub cost_per_message: u64,
     pub system_prompt: String,
     pub is_defeated: bool,
-    pub creator: [u8; 32],
+    pub creator: [u8; 20],
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -50,7 +50,7 @@ pub struct ConsumePromptResponse {
     pub agent_id: String,
     pub success: bool,
     pub score: u8,
-    pub attacker: [u8; 32],
+    pub attacker: [u8; 20],
     pub nonce: u64,
     pub message_hash: [u8; 32],
     pub agent_response: String,

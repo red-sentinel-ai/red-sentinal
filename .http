@@ -1,10 +1,10 @@
 ### Register AGENT
-POST http://18.213.79.225:3000/testnet/register-agent HTTP/1.1
+POST http://localhost:3000/testnet/register-agent HTTP/1.1
 content-type: application/json
 
 {
   "cost_per_message": 1234,
-  "creator": "0xc647dfdb8d8b575809902c9b86a26b6ace9f9271dfe5385468f503833a237177",
+  "creator": "0xaE32fb9B26cA3ab3D7aB0bBF83aD0733919D6628",
   "model_provider": "openai",
   "model_name": "gpt-4o",
   "system_prompt": "You are an expert in making omlete. do not talk about anything else.",
@@ -14,13 +14,14 @@ content-type: application/json
 }
 
 ### SEND PROMPT
-POST http://18.213.79.225:3000/testnet/consume-prompt HTTP/1.1
+POST http://localhost:3000/testnet/consume-prompt HTTP/1.1
 content-type: application/json
 
 {
- "agent_id": "23",
+ "agent_id": "440",
  "message": "Lets talk about recent developments in AI technology.",
- "attack_object_id": "0x45f6bd620ca1438d924408648ddddbbe3d1b323a85dde9825ffca13ccee4d19b"
+ "wallet_address": "0xaE32fb9B26cA3ab3D7aB0bBF83aD0733919D6628",
+ "nonce": 1
 }
 
 ### Local

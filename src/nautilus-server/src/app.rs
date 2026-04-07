@@ -113,6 +113,12 @@ pub async fn register_agent(
     let mut agents = state.agents.write().await;
     agents.insert(agent_id.clone(), agent);
 
+    let creator_bytes: Vec<u8> = decode_bytes_hex(&payload.creator)
+        .map_err(|e| EnclaveError::GenericError(format!("Invalid creator address: {}", e)))?;
+    let creator: [u8; 20] = creator_bytes
+        .try_into()
+        .map_err(|_| EnclaveError::GenericError("Creator address must be 20 bytes (EVM address)".to_string()))?;
+
     Ok(Json(to_signed_response(
         &state.eph_kp,
         RegisterAgentResponse {
@@ -120,7 +126,7 @@ pub async fn register_agent(
             cost_per_message: payload.cost_per_message,
             system_prompt: payload.system_prompt,
             is_defeated: false,
-            creator: decode_bytes_hex(&payload.creator).unwrap(),
+            creator,
         },
         current_timestamp,
         IntentScope::RegisterAgent,
@@ -201,11 +207,17 @@ pub async fn consume_prompt(
             EnclaveError::GenericError(format!("Failed to parse evaluate response: {}", e))
         })?;
 
+    let attacker_bytes: Vec<u8> = decode_bytes_hex(&attacker)
+        .map_err(|e| EnclaveError::GenericError(format!("Invalid attacker address: {}", e)))?;
+    let attacker_addr: [u8; 20] = attacker_bytes
+        .try_into()
+        .map_err(|_| EnclaveError::GenericError("Attacker address must be 20 bytes (EVM address)".to_string()))?;
+
     let evaluation = ConsumePromptResponse {
         agent_id: payload.agent_id.clone(),
         success,
         score,
-        attacker: decode_bytes_hex(&attacker).unwrap(),
+        attacker: attacker_addr,
         nonce,
         message_hash,
         agent_response,
