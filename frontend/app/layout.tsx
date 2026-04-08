@@ -250,24 +250,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
         />
+        {/* ===== GOOGLE FONTS (Japanese UI Theme) ===== */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap"
+          rel="stylesheet"
+        />
+        {/* ===== REMIX ICONS ===== */}
+        <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
       </head>
-      <body
-        className={`${satoshi.className} flex min-h-screen flex-col bg-no-repeat text-black`}
-        style={{
-          backgroundImage: `
-      url('/img/hero_bg.png'),
-      linear-gradient(
-        to right,
-        rgba(233,239,255,0.55),
-        rgba(245,245,245,0.55),
-        rgba(255,235,253,0.55)
-      )
-    `,
-          backgroundSize: '100% auto, 100% auto',
-          backgroundRepeat: 'no-repeat, no-repeat',
-          backgroundPosition: 'center top, center top',
-        }}
-      >
+      <body className={`${satoshi.className} flex min-h-screen flex-col bg-white text-black`}>
         <Providers>
           <NextTopLoader color="#000000" showSpinner={false} />
           <main className="w-full flex-grow">{children}</main>

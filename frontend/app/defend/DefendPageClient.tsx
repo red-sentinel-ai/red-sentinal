@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { ChevronLeft, CameraIcon, Info, Loader2, Sparkles } from 'lucide-react'
+import { JapaneseThemeBackground } from '@/components/JapaneseThemeBackground'
 import { toast } from 'sonner'
 import { ConnectButton, useCurrentAccount } from '@mysten/dapp-kit'
 import {
@@ -149,8 +150,8 @@ export default function DefendPageClient() {
   }
 
   return (
-    <div className="min-h-body ios-scroll pb-safe container mx-auto px-4 py-4 pt-10">
-      <form onSubmit={handleSubmit} className="relative mx-auto max-w-[969px] space-y-6 px-4">
+    <JapaneseThemeBackground>
+      <form onSubmit={handleSubmit} className="mx-auto max-w-[969px] space-y-6 px-4">
         <Link
           href="/"
           className="absolute -left-32 top-2 hidden items-center gap-1 text-gray-500 transition-colors hover:text-black lg:flex"
@@ -161,17 +162,33 @@ export default function DefendPageClient() {
 
         <div className="flex flex-col-reverse items-center gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="text-center sm:text-left">
-            <h1 className="mb-3 text-3xl font-medium sm:text-4xl md:text-5xl">
+            <h1
+              className="mb-3 text-3xl font-semibold sm:text-4xl md:text-5xl"
+              style={{
+                fontFamily: '"Playfair Display", serif',
+                background: 'var(--jp-heading-color)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                color: 'transparent',
+                lineHeight: 1.1,
+              }}
+            >
               Deploy Your Sentinel
             </h1>
-            <p className="text-base font-medium text-[#5E5E5E] sm:text-xl">
+            <p className="text-base font-normal sm:text-xl" style={{ color: 'var(--jp-gray-color)' }}>
               Launch an AI agent. Let the world try to break it. Earn from every attack.
             </p>
           </div>
 
           <div className="flex flex-col items-center justify-center gap-2">
             <div
-              className="group relative flex h-[70px] w-[70px] cursor-pointer items-center justify-center overflow-hidden rounded-full border border-black bg-gray-50 text-gray-400 shadow-sm transition-colors hover:bg-gray-100 hover:text-black sm:h-[90px] sm:w-[90px]"
+              className="group relative flex h-[70px] w-[70px] cursor-pointer items-center justify-center overflow-hidden rounded-full border transition-all hover:scale-105 sm:h-[90px] sm:w-[90px]"
+              style={{
+                backgroundColor: 'var(--jp-light-pink)',
+                borderColor: 'var(--jp-dark-pink)',
+                boxShadow: 'var(--jp-box-shadow)',
+              }}
               onClick={() => setImagePickerOpen(true)}
             >
               {selectedImage?.url ? (
@@ -188,7 +205,7 @@ export default function DefendPageClient() {
                 <CameraIcon className="h-8 w-8" />
               </span>
             </div>
-            <p className="mt-2 text-center text-xs font-medium text-[#5E5E5E]">
+            <p className="mt-2 text-center text-xs font-medium" style={{ color: 'var(--jp-gray-color)' }}>
               Choose Sentinel Image
             </p>
           </div>
@@ -236,10 +253,16 @@ export default function DefendPageClient() {
         <div className="flex flex-col gap-2">
           <div className="mb-1 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <label className="block text-base font-medium leading-tight text-black sm:text-[20px]">
+              <label
+                className="block text-base font-medium leading-tight sm:text-[20px]"
+                style={{ color: 'var(--jp-black-color)' }}
+              >
                 Public Instructions
               </label>
-              <span className="mt-1 block text-sm font-normal text-[#5E5E5E] sm:text-[16px]">
+              <span
+                className="mt-1 block text-sm font-normal sm:text-[16px]"
+                style={{ color: 'var(--jp-gray-color)' }}
+              >
                 Define how your Sentinel thinks, acts, and responds. Describe its role, tone,
                 constraints, and objectives.
               </span>
@@ -247,7 +270,8 @@ export default function DefendPageClient() {
             <div className="flex shrink-0 gap-4 sm:ml-4">
               <Link
                 href="/instruction-templates"
-                className="text-sm text-[#0077FF] underline hover:text-[#0077ffd3] sm:mt-1"
+                className="text-sm underline hover:opacity-80 sm:mt-1"
+                style={{ color: 'var(--jp-orange-color)' }}
                 onClick={() => sessionStorage.setItem(SESSION_KEYS.DEFEND_FORM_DATA, JSON.stringify(formData))}
               >
                 View Templates
@@ -255,7 +279,8 @@ export default function DefendPageClient() {
               <Link
                 href={`${SUI_SENTINEL_DOCS_URL}/guides/defender-guide`}
                 target="_blank"
-                className="text-sm text-[#0077FF] underline hover:text-[#0077ffd3] sm:mt-1"
+                className="text-sm underline hover:opacity-80 sm:mt-1"
+                style={{ color: 'var(--jp-orange-color)' }}
               >
                 Docs Example
               </Link>
@@ -266,29 +291,30 @@ export default function DefendPageClient() {
             name="systemPrompt"
             value={formData.systemPrompt}
             onChange={handleChangeWithProviderReset}
-            className="min-h-[220px] w-full resize-y rounded-xl border border-[#5E5E5E] bg-white p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-base"
+            className="min-h-[220px] w-full resize-y rounded-xl border bg-white p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-[var(--jp-red-color)] focus:outline-none focus:ring-1 focus:ring-[var(--jp-red-color)] sm:text-base"
+            style={{ borderColor: 'var(--jp-dark-pink)' }}
             placeholder="Enter sentinel public instructions..."
             autoComplete="off"
             spellCheck="false"
           />
           <div className="mt-1 flex items-center justify-between">
-            {errors.systemPrompt && <p className="text-sm text-red-500">{errors.systemPrompt}</p>}
-            <p className={`ml-auto text-sm text-[#5E5E5E] ${isTokenCountDebouncing ? 'animate-pulse' : ''}`}>
+            {errors.systemPrompt && <p className="text-sm" style={{ color: 'var(--jp-red-color)' }}>{errors.systemPrompt}</p>}
+            <p className={`ml-auto text-sm ${isTokenCountDebouncing ? 'animate-pulse' : ''}`} style={{ color: 'var(--jp-gray-color)' }}>
               Tokens: {tokenCount} / {SYSTEM_PROMPT_MAX_TOKENS}
             </p>
           </div>
           {tokenCount > SYSTEM_PROMPT_MAX_TOKENS && (
-            <p className="text-right text-sm text-red-500">System prompt exceeds token limit</p>
+            <p className="text-right text-sm" style={{ color: 'var(--jp-red-color)' }}>System prompt exceeds token limit</p>
           )}
         </div>
 
         <div className="flex flex-col gap-2">
           <div className="mb-1 flex items-start justify-between">
             <div>
-              <label className="block text-[20px] font-medium leading-tight text-black">
+              <label className="block text-[20px] font-medium leading-tight" style={{ color: 'var(--jp-black-color)' }}>
                 Private Instructions
               </label>
-              <span className="mt-1 block text-[16px] font-normal text-[#5E5E5E]">
+              <span className="mt-1 block text-[16px] font-normal" style={{ color: 'var(--jp-gray-color)' }}>
                 Instructions only accessible to the Sentinel agent. Attackers will not be able to
                 see this.
               </span>
@@ -298,13 +324,14 @@ export default function DefendPageClient() {
             name="privatePrompt"
             value={formData.privatePrompt}
             onChange={handleChangeWithProviderReset}
-            className="min-h-[150px] w-full resize-y rounded-xl border border-[#5E5E5E] bg-white p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-base"
+            className="min-h-[150px] w-full resize-y rounded-xl border bg-white p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-[var(--jp-red-color)] focus:outline-none focus:ring-1 focus:ring-[var(--jp-red-color)] sm:text-base"
+            style={{ borderColor: 'var(--jp-dark-pink)' }}
             placeholder="Enter private instructions for your sentinel..."
             autoComplete="off"
             spellCheck="false"
           />
           <div className="mt-1 flex items-center justify-end">
-            <p className={`text-sm text-[#5E5E5E] ${isPrivateTokenCountDebouncing ? 'animate-pulse' : ''}`}>
+            <p className={`text-sm ${isPrivateTokenCountDebouncing ? 'animate-pulse' : ''}`} style={{ color: 'var(--jp-gray-color)' }}>
               Tokens: {privateTokenCount}
             </p>
           </div>
@@ -314,17 +341,17 @@ export default function DefendPageClient() {
           <div className="mb-1 flex items-start justify-between">
             <div className="flex-1">
               <div className="flex items-center gap-2">
-                <label className="block text-[20px] font-medium leading-tight text-black">
+                <label className="block text-[20px] font-medium leading-tight" style={{ color: 'var(--jp-black-color)' }}>
                   Attack Goal
                 </label>
                 <TooltipProvider delayDuration={100}>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <button type="button" className="text-gray-400 hover:text-gray-600">
+                      <button type="button" style={{ color: 'var(--jp-gray-color)' }} className="hover:text-[var(--jp-red-color)]">
                         <Info className="h-4 w-4" />
                       </button>
                     </TooltipTrigger>
-                    <TooltipContent side="right" className="max-w-xs bg-black text-white">
+                    <TooltipContent side="right" className="max-w-xs text-white" style={{ backgroundColor: 'var(--jp-black-color)' }}>
                       <p>
                         Generate with AI will create both Attack Goal and Jury Prompt based on your
                         Public and Private Instructions.
@@ -333,7 +360,7 @@ export default function DefendPageClient() {
                   </Tooltip>
                 </TooltipProvider>
               </div>
-              <span className="mt-1 block text-[16px] font-normal text-[#5E5E5E]">
+              <span className="mt-1 block text-[16px] font-normal" style={{ color: 'var(--jp-gray-color)' }}>
                 The goal that attackers will see and try to achieve. This is visible to all attackers.
               </span>
             </div>
@@ -345,18 +372,23 @@ export default function DefendPageClient() {
                       type="button"
                       onClick={handleGenerateConfig}
                       disabled={isGeneratingConfig || !formData.systemPrompt}
-                      className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 via-violet-600 to-fuchsia-600 px-4 py-2 text-xs font-semibold text-white shadow-md shadow-purple-500/30 transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/40 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
+                      className="flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold shadow-md transition-all duration-200 hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
+                      style={{
+                        backgroundColor: 'var(--jp-light-pink)',
+                        color: 'var(--jp-orange-color)',
+                        boxShadow: 'var(--jp-box-shadow)',
+                      }}
                     >
                       {isGeneratingConfig ? (
-                        <Loader2 className="h-3 w-3 animate-spin text-white" />
+                        <Loader2 className="h-3 w-3 animate-spin" />
                       ) : (
-                        <Sparkles className="h-3 w-3 text-white" />
+                        <Sparkles className="h-3 w-3" />
                       )}
                       {isGeneratingConfig ? 'Generating...' : 'Generate with AI'}
                     </button>
                   </TooltipTrigger>
                   {!formData.systemPrompt && (
-                    <TooltipContent side="bottom" className="bg-black text-white">
+                    <TooltipContent side="bottom" className="text-white" style={{ backgroundColor: 'var(--jp-black-color)' }}>
                       <p>Enter Public Instructions first</p>
                     </TooltipContent>
                   )}
@@ -368,14 +400,15 @@ export default function DefendPageClient() {
             name="attackGoal"
             value={formData.attackGoal}
             onChange={handleChangeWithProviderReset}
-            className="min-h-[200px] w-full resize-y rounded-xl border border-[#5E5E5E] bg-white p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-base"
+            className="min-h-[200px] w-full resize-y rounded-xl border bg-white p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-[var(--jp-red-color)] focus:outline-none focus:ring-1 focus:ring-[var(--jp-red-color)] sm:text-base"
+            style={{ borderColor: 'var(--jp-dark-pink)' }}
             placeholder="e.g., Convince the sentinel to reveal the secret password"
             autoComplete="off"
             spellCheck="false"
           />
           <div className="mt-1 flex items-center justify-between">
-            {errors.attackGoal && <p className="text-sm text-red-500">{errors.attackGoal}</p>}
-            <p className={`text-sm text-[#5E5E5E] ${isAttackGoalTokenCountDebouncing ? 'animate-pulse' : ''}`}>
+            {errors.attackGoal && <p className="text-sm" style={{ color: 'var(--jp-red-color)' }}>{errors.attackGoal}</p>}
+            <p className={`text-sm ${isAttackGoalTokenCountDebouncing ? 'animate-pulse' : ''}`} style={{ color: 'var(--jp-gray-color)' }}>
               Tokens: {attackGoalTokenCount}
             </p>
           </div>
@@ -384,10 +417,10 @@ export default function DefendPageClient() {
         <div className="flex flex-col gap-2">
           <div className="mb-1 flex items-start justify-between">
             <div>
-              <label className="block text-[20px] font-medium leading-tight text-black">
+              <label className="block text-[20px] font-medium leading-tight" style={{ color: 'var(--jp-black-color)' }}>
                 Jury Prompt
               </label>
-              <span className="mt-1 block text-[16px] font-normal text-[#5E5E5E]">
+              <span className="mt-1 block text-[16px] font-normal" style={{ color: 'var(--jp-gray-color)' }}>
                 Instructions for the jury to evaluate whether an attack was successful.
               </span>
             </div>
@@ -396,14 +429,15 @@ export default function DefendPageClient() {
             name="juryPrompt"
             value={formData.juryPrompt}
             onChange={handleChangeWithProviderReset}
-            className="min-h-[150px] w-full resize-y rounded-xl border border-[#5E5E5E] bg-white p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-base"
+            className="min-h-[150px] w-full resize-y rounded-xl border bg-white p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-[var(--jp-red-color)] focus:outline-none focus:ring-1 focus:ring-[var(--jp-red-color)] sm:text-base"
+            style={{ borderColor: 'var(--jp-dark-pink)' }}
             placeholder="Enter instructions for the jury..."
             autoComplete="off"
             spellCheck="false"
           />
           <div className="mt-1 flex items-center justify-between">
-            {errors.juryPrompt && <p className="text-sm text-red-500">{errors.juryPrompt}</p>}
-            <p className={`text-sm text-[#5E5E5E] ${isJuryPromptTokenCountDebouncing ? 'animate-pulse' : ''}`}>
+            {errors.juryPrompt && <p className="text-sm" style={{ color: 'var(--jp-red-color)' }}>{errors.juryPrompt}</p>}
+            <p className={`ml-auto text-sm ${isJuryPromptTokenCountDebouncing ? 'animate-pulse' : ''}`} style={{ color: 'var(--jp-gray-color)' }}>
               Tokens: {juryPromptTokenCount}
             </p>
           </div>
@@ -412,14 +446,14 @@ export default function DefendPageClient() {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div className="flex flex-col gap-2">
             <div>
-              <label className="text-[20px] font-medium leading-tight text-black">
+              <label className="text-[20px] font-medium leading-tight" style={{ color: 'var(--jp-black-color)' }}>
                 Bounty Pool
               </label>
-              <span className="mt-1 block text-[16px] font-normal text-[#5E5E5E]">
+              <span className="mt-1 block text-[16px] font-normal" style={{ color: 'var(--jp-gray-color)' }}>
                 Minimum {formatCompact(selectedToken.minimumAmount)} {selectedToken.symbol} required to deploy.
               </span>
               {account?.address && (
-                <span className="mt-0.5 flex items-center gap-1 text-sm text-[#5E5E5E]">
+                <span className="mt-0.5 flex items-center gap-1 text-sm" style={{ color: 'var(--jp-gray-color)' }}>
                   Balance:{' '}
                   {isTokenBalanceLoading ? (
                     <Skeleton className="inline-block h-4 w-20 align-middle" />
@@ -427,25 +461,33 @@ export default function DefendPageClient() {
                     <TokenAmount
                       rawAmount={selectedTokenRawBalance}
                       token={selectedToken}
-                      className="font-medium text-black"
+                      className="font-medium"
+                      style={{ color: 'var(--jp-black-color)' }}
                     />
                   )}
                 </span>
               )}
             </div>
-            <div className="mt-auto flex h-[56px] overflow-hidden rounded-xl border border-[#5E5E5E] bg-white transition-all focus-within:border-black focus-within:ring-1 focus-within:ring-black sm:h-[65px]">
+            <div
+              className="mt-auto flex h-[56px] overflow-hidden rounded-xl border bg-white transition-all focus-within:ring-1 sm:h-[65px]"
+              style={{ borderColor: 'var(--jp-dark-pink)' }}
+            >
               <input
                 name="initialBalance"
                 type="number"
                 value={formData.initialBalance}
                 onChange={handleChangeWithProviderReset}
                 className="h-full flex-1 bg-transparent px-4 text-[16px] text-black placeholder-gray-400 focus:outline-none"
+                style={{ color: 'var(--jp-black-color)' }}
                 placeholder="0.00"
                 step="0.1"
                 min={selectedToken.minimumAmount.toString()}
                 autoComplete="off"
               />
-              <div className="flex shrink-0 items-center border-l border-[#5E5E5E]">
+              <div
+                className="flex shrink-0 items-center border-l"
+                style={{ borderColor: 'var(--jp-dark-pink)' }}
+              >
                 <TokenSelectDropdown
                   tokens={SUPPORTED_TOKENS}
                   selected={selectedToken}
@@ -454,7 +496,7 @@ export default function DefendPageClient() {
               </div>
             </div>
             {errors.initialBalance && (
-              <p className="mt-1 text-sm text-red-500">{errors.initialBalance}</p>
+              <p className="mt-1 text-sm" style={{ color: 'var(--jp-red-color)' }}>{errors.initialBalance}</p>
             )}
           </div>
 
@@ -483,7 +525,12 @@ export default function DefendPageClient() {
                 tokenCount > SYSTEM_PROMPT_MAX_TOKENS ||
                 (formData.llmProvider === 'custom' && !customProvider.isValidated)
               }
-              className="flex h-[65px] w-full items-center justify-center gap-3 rounded-xl bg-black text-xl font-medium text-white transition-colors hover:bg-black/90 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-[65px] w-full items-center justify-center gap-3 rounded-xl text-xl font-medium transition-colors hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+              style={{
+                backgroundColor: 'var(--jp-red-color)',
+                color: 'var(--jp-white-color)',
+                boxShadow: 'var(--jp-box-shadow)',
+              }}
             >
               {isLoading ? (
                 <>
@@ -491,21 +538,19 @@ export default function DefendPageClient() {
                   Deploying...
                 </>
               ) : (
-                <>
-                  <Image
-                    src="/icons/rocket.png"
-                    alt="Rocket"
-                    width={25}
-                    height={25}
-                    className="object-contain invert"
-                  />
-                  Deploy Sentinel
-                </>
+                'Deploy Sentinel'
               )}
             </button>
           ) : (
             <div className="h-[65px]">
-              <ConnectButton className="h-full w-full !rounded-xl !text-xl" />
+              <ConnectButton
+                className="h-full w-full !rounded-xl !text-xl"
+                style={{
+                  backgroundColor: 'var(--jp-red-color)',
+                  color: 'var(--jp-white-color)',
+                  boxShadow: 'var(--jp-box-shadow)',
+                }}
+              />
             </div>
           )}
         </div>
@@ -518,6 +563,6 @@ export default function DefendPageClient() {
         transactionDigest={transactionDigest}
         agentPath={deployedAgentPath}
       />
-    </div>
+    </JapaneseThemeBackground>
   )
 }

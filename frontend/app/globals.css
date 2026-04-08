@@ -44,6 +44,20 @@
   /* Mobile optimization: Prevent double-tap zoom delay */
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+
+  /* ===== JAPANESE UI THEME VARIABLES ===== */
+  --jp-bg-color: #fef7f7;
+  --jp-black-color: #000001;
+  --jp-white-color: #ffffff;
+  --jp-orange-color: #ef5a28;
+  --jp-light-pink: #fbe7e7;
+  --jp-dark-pink: #ebbcbd;
+  --jp-red-color: #cc1321;
+  --jp-gray-color: #b4b4b4;
+  --jp-red-circle: radial-gradient(circle, #ff003c, #900020);
+  --jp-heading-color: linear-gradient(135deg, #371f4e, #b52945, #ef5a28);
+  --jp-max-width: 1200px;
+  --jp-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 @layer base {
@@ -683,5 +697,181 @@ body::-webkit-scrollbar-thumb:hover {
   }
   .ssb-item {
     padding: 1px 8px;
+  }
+}
+
+/* ========================================
+   Japanese Theme Utilities
+   ======================================== */
+
+/* Japanese Theme Page Container */
+.jp-theme-page {
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+  font-family: "Poppins", sans-serif;
+  background-color: var(--jp-bg-color);
+  position: relative;
+}
+
+/* Red Sun Circle Decoration */
+.jp-red-sun {
+  position: absolute;
+  left: 50%;
+  top: 300px;
+  transform: translateX(-50%);
+  width: 350px;
+  height: 350px;
+  background: var(--jp-red-circle);
+  border-radius: 50%;
+  box-shadow: var(--jp-box-shadow);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Light Pink Circle - Left Side */
+.jp-pink-circle {
+  position: absolute;
+  left: -180px;
+  top: 10%;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background-color: var(--jp-light-pink);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Cherry Blossom Image Container */
+.jp-cherry-container {
+  position: absolute;
+  right: -30px;
+  top: 100px;
+  width: 550px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.jp-cherry-container img {
+  filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.1));
+  opacity: 0.9;
+}
+
+/* Content wrapper to appear above decorations */
+.jp-theme-content {
+  position: relative;
+  z-index: 10;
+}
+
+/* Japanese Theme Buttons */
+.jp-btn-primary {
+  background-color: var(--jp-red-color);
+  color: var(--jp-white-color);
+  box-shadow: var(--jp-box-shadow);
+  transition: opacity 0.2s ease;
+}
+
+.jp-btn-primary:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.jp-btn-secondary {
+  background-color: var(--jp-light-pink);
+  color: var(--jp-orange-color);
+  box-shadow: var(--jp-box-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.jp-btn-secondary:hover:not(:disabled) {
+  transform: scale(1.02);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* Japanese Theme Text */
+.jp-text-heading {
+  font-family: "Playfair Display", serif;
+  background: var(--jp-heading-color);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  line-height: 1.1;
+}
+
+.jp-text-orange {
+  color: var(--jp-orange-color);
+}
+
+.jp-text-red {
+  color: var(--jp-red-color);
+}
+
+.jp-text-gray {
+  color: var(--jp-gray-color);
+}
+
+.jp-text-black {
+  color: var(--jp-black-color);
+}
+
+/* Japanese Theme Form Elements */
+.jp-input {
+  border-color: var(--jp-dark-pink);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.jp-input:focus {
+  border-color: var(--jp-red-color);
+  box-shadow: 0 0 0 1px var(--jp-red-color);
+  outline: none;
+}
+
+/* Japanese Theme Image Picker */
+.jp-image-picker {
+  background-color: var(--jp-light-pink);
+  border-color: var(--jp-dark-pink);
+  box-shadow: var(--jp-box-shadow);
+  transition: transform 0.2s ease;
+}
+
+.jp-image-picker:hover {
+  transform: scale(1.05);
+}
+
+/* Responsive adjustments for Japanese theme */
+@media (max-width: 1024px) {
+  .jp-cherry-container {
+    width: 400px;
+    right: -50px;
+    opacity: 0.6;
+  }
+
+  .jp-pink-circle {
+    width: 250px;
+    height: 250px;
+    left: -100px;
+  }
+
+  .jp-red-sun {
+    width: 250px;
+    height: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .jp-cherry-container {
+    display: none;
+  }
+
+  .jp-pink-circle {
+    width: 200px;
+    height: 200px;
+    left: -80px;
+  }
+
+  .jp-red-sun {
+    width: 200px;
+    height: 200px;
+    top: 200px;
   }
 }
