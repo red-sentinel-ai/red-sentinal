@@ -15,13 +15,13 @@ interface ApiDefenderEntry {
   wallet: string
   compositeScore: number
   defenderTier: string
-  tvlSui: number
+  tvlUsd: number
   activeSentinels: number
   totalSentinels: number
   longestSurvivingHours: number
   totalAttacksSurvived: number
   breachRatePct: number
-  totalFeesEarnedSui: number
+  totalFeesEarnedUsd: number
   sentinelTokensEarned: number
   computedAt: string | null
   username?: string | null
@@ -48,13 +48,13 @@ export function mapApiDefender(entry: ApiDefenderEntry, connectedWallet?: string
     avatarUrl: entry.avatar_url ?? undefined,
     compositeScore: entry.compositeScore,
     defenderTier: entry.defenderTier as DefenderEntry['defenderTier'],
-    tvlSui: entry.tvlSui,
+    tvlUsd: entry.tvlUsd,
     activeSentinels: entry.activeSentinels,
     totalSentinelsDeployed: entry.totalSentinels,
     longestSurvivingHours: entry.longestSurvivingHours,
     totalAttacksSurvived: entry.totalAttacksSurvived,
     breachRatePct: entry.breachRatePct,
-    totalFeesEarnedSui: entry.totalFeesEarnedSui,
+    totalFeesEarnedUsd: entry.totalFeesEarnedUsd,
     sentinelTokensEarned: entry.sentinelTokensEarned,
     isCurrentUser,
   }

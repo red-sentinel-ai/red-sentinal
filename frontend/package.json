@@ -12,6 +12,7 @@
     "generate:types:prod": "export $(cat .env.production | xargs) && supabase gen types typescript --project-id ${SUPABASE_PROJECT_REF} --schema public > lib/database.types.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-ses": "^3.1019.0",
     "@mysten/bcs": "^1.6.1",
     "@mysten/dapp-kit": "^0.16.4",
     "@mysten/sui": "^1.30.0",

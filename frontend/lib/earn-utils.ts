@@ -253,10 +253,10 @@ export const DEFENDER_MISSIONS: EarnMission[] = [
   {
     id: 'fund_sentinel_rare',
     title: 'Fund Your Sentinel',
-    description: 'Add any amount of SUI to your Sentinel\'s reward pool and earn a Rare Spin Pass.',
+    description: 'Add any amount to your Sentinel\'s reward pool and earn a Rare Spin Pass.',
     boosterTier: 'RARE',
     multiplier: 5,
-    requirements: { description: 'Fund less than 5 SUI in a single transaction' },
+    requirements: { description: 'Fund less than $5 USD in a single transaction' },
     rewardRange: { min: 500, max: 5000 },
     submissionType: 'verify',
     category: 'defender',
@@ -264,11 +264,11 @@ export const DEFENDER_MISSIONS: EarnMission[] = [
   },
   {
     id: 'fund_sentinel_epic',
-    title: 'Fund with 5+ SUI',
-    description: 'Add at least 5 SUI to your Sentinel and earn an Epic Spin Pass.',
+    title: 'Fund with $5+',
+    description: 'Add at least $5 USD worth of tokens to your Sentinel and earn an Epic Spin Pass.',
     boosterTier: 'EPIC',
     multiplier: 10,
-    requirements: { description: 'Fund at least 5 SUI in a single transaction' },
+    requirements: { description: 'Fund at least $5 USD in a single transaction' },
     rewardRange: { min: 1000, max: 10000 },
     submissionType: 'verify',
     category: 'defender',
@@ -276,11 +276,11 @@ export const DEFENDER_MISSIONS: EarnMission[] = [
   },
   {
     id: 'fund_sentinel_legendary',
-    title: 'Fund with 10+ SUI',
-    description: 'Add at least 10 SUI to your Sentinel and earn a Legendary Spin Pass.',
+    title: 'Fund with $10+',
+    description: 'Add at least $10 USD worth of tokens to your Sentinel and earn a Legendary Spin Pass.',
     boosterTier: 'LEGENDARY',
     multiplier: 25,
-    requirements: { description: 'Fund at least 10 SUI in a single transaction' },
+    requirements: { description: 'Fund at least $10 USD in a single transaction' },
     rewardRange: { min: 2500, max: 25000 },
     submissionType: 'verify',
     category: 'defender',
@@ -288,11 +288,11 @@ export const DEFENDER_MISSIONS: EarnMission[] = [
   },
   {
     id: 'fund_sentinel_mythic',
-    title: 'Fund with 25+ SUI',
-    description: 'Add at least 25 SUI to your Sentinel and earn a Mythic Spin Pass.',
+    title: 'Fund with $25+',
+    description: 'Add at least $25 USD worth of tokens to your Sentinel and earn a Mythic Spin Pass.',
     boosterTier: 'MYTHIC',
     multiplier: 50,
-    requirements: { description: 'Fund at least 25 SUI in a single transaction' },
+    requirements: { description: 'Fund at least $25 USD in a single transaction' },
     rewardRange: { min: 5000, max: 50000 },
     submissionType: 'verify',
     category: 'defender',
@@ -300,11 +300,11 @@ export const DEFENDER_MISSIONS: EarnMission[] = [
   },
   {
     id: 'fund_sentinel_divine',
-    title: 'Fund with 50+ SUI',
-    description: 'Add at least 50 SUI to your Sentinel and earn a Divine Spin Pass.',
+    title: 'Fund with $50+',
+    description: 'Add at least $50 USD worth of tokens to your Sentinel and earn a Divine Spin Pass.',
     boosterTier: 'DIVINE',
     multiplier: 100,
-    requirements: { description: 'Fund at least 50 SUI in a single transaction' },
+    requirements: { description: 'Fund at least $50 USD in a single transaction' },
     rewardRange: { min: 10000, max: 100000 },
     submissionType: 'verify',
     category: 'defender',
@@ -312,11 +312,11 @@ export const DEFENDER_MISSIONS: EarnMission[] = [
   },
   {
     id: 'fund_sentinel_celestial',
-    title: 'Fund with 100+ SUI',
-    description: 'Add at least 100 SUI to your Sentinel and earn a Celestial Spin Pass.',
+    title: 'Fund with $100+',
+    description: 'Add at least $100 USD worth of tokens to your Sentinel and earn a Celestial Spin Pass.',
     boosterTier: 'CELESTIAL',
     multiplier: 250,
-    requirements: { description: 'Fund at least 100 SUI in a single transaction' },
+    requirements: { description: 'Fund at least $100 USD in a single transaction' },
     rewardRange: { min: 25000, max: 250000 },
     submissionType: 'verify',
     category: 'defender',
@@ -324,11 +324,11 @@ export const DEFENDER_MISSIONS: EarnMission[] = [
   },
   {
     id: 'fund_sentinel_eternal',
-    title: 'Fund with 500+ SUI',
-    description: 'Add at least 500 SUI to your Sentinel and earn an Eternal Spin Pass.',
+    title: 'Fund with $500+',
+    description: 'Add at least $500 USD worth of tokens to your Sentinel and earn an Eternal Spin Pass.',
     boosterTier: 'ETERNAL',
     multiplier: 500,
-    requirements: { description: 'Fund at least 500 SUI in a single transaction' },
+    requirements: { description: 'Fund at least $500 USD in a single transaction' },
     rewardRange: { min: 50000, max: 500000 },
     submissionType: 'verify',
     category: 'defender',
@@ -336,11 +336,11 @@ export const DEFENDER_MISSIONS: EarnMission[] = [
   },
   {
     id: 'fund_sentinel_transcendent',
-    title: 'Fund with 1,000+ SUI',
-    description: 'Add at least 1,000 SUI to your Sentinel and earn a Transcendent Spin Pass.',
+    title: 'Fund with $1,000+',
+    description: 'Add at least $1,000 USD worth of tokens to your Sentinel and earn a Transcendent Spin Pass.',
     boosterTier: 'TRANSCENDENT',
     multiplier: 1000,
-    requirements: { description: 'Fund at least 1,000 SUI in a single transaction' },
+    requirements: { description: 'Fund at least $1,000 USD in a single transaction' },
     rewardRange: { min: 100000, max: 1000000 },
     submissionType: 'verify',
     category: 'defender',
@@ -407,20 +407,20 @@ export const ACTIVE_MISSIONS_COUNT =
   ATTACKER_MISSIONS.length
 
 export const DEFENDER_FUNDING_BOOSTERS = [
-  { minSui: '0 – 1 SUI',  minSuiValue: 0,    tier: 'RARE',          booster: 'Rare (5x)',              range: '500 – 5,000' },
-  { minSui: '5 SUI',      minSuiValue: 5,    tier: 'EPIC',          booster: 'Epic (10x)',             range: '1,000 – 10,000' },
-  { minSui: '10 SUI',     minSuiValue: 10,   tier: 'LEGENDARY',     booster: 'Legendary (25x)',        range: '2,500 – 25,000' },
-  { minSui: '25 SUI',     minSuiValue: 25,   tier: 'MYTHIC',        booster: 'Mythic (50x)',           range: '5,000 – 50,000' },
-  { minSui: '50 SUI',     minSuiValue: 50,   tier: 'DIVINE',        booster: 'Divine (100x)',          range: '10,000 – 100,000' },
-  { minSui: '100 SUI',    minSuiValue: 100,  tier: 'CELESTIAL',     booster: 'Celestial (250x)',       range: '25,000 – 250,000' },
-  { minSui: '500 SUI',    minSuiValue: 500,  tier: 'ETERNAL',       booster: 'Eternal (500x)',         range: '50,000 – 500,000' },
-  { minSui: '1,000 SUI',  minSuiValue: 1000, tier: 'TRANSCENDENT',  booster: 'Transcendent (1000x)',   range: '100,000 – 1,000,000' },
+  { minUsd: '$0',       minUsdValue: 0,    tier: 'RARE',          booster: 'Rare (5x)',              range: '500 – 5,000' },
+  { minUsd: '$5',       minUsdValue: 5,    tier: 'EPIC',          booster: 'Epic (10x)',             range: '1,000 – 10,000' },
+  { minUsd: '$10',      minUsdValue: 10,   tier: 'LEGENDARY',     booster: 'Legendary (25x)',        range: '2,500 – 25,000' },
+  { minUsd: '$25',      minUsdValue: 25,   tier: 'MYTHIC',        booster: 'Mythic (50x)',           range: '5,000 – 50,000' },
+  { minUsd: '$50',      minUsdValue: 50,   tier: 'DIVINE',        booster: 'Divine (100x)',          range: '10,000 – 100,000' },
+  { minUsd: '$100',     minUsdValue: 100,  tier: 'CELESTIAL',     booster: 'Celestial (250x)',       range: '25,000 – 250,000' },
+  { minUsd: '$500',     minUsdValue: 500,  tier: 'ETERNAL',       booster: 'Eternal (500x)',         range: '50,000 – 500,000' },
+  { minUsd: '$1,000',   minUsdValue: 1000, tier: 'TRANSCENDENT',  booster: 'Transcendent (1000x)',   range: '100,000 – 1,000,000' },
 ] as const
 
-export function getDefenderBoosterTier(amountInSui: number): string {
-  const sorted = [...DEFENDER_FUNDING_BOOSTERS].sort((a, b) => b.minSuiValue - a.minSuiValue)
+export function getDefenderBoosterTier(amountInUsd: number): string {
+  const sorted = [...DEFENDER_FUNDING_BOOSTERS].sort((a, b) => b.minUsdValue - a.minUsdValue)
   for (const row of sorted) {
-    if (amountInSui >= row.minSuiValue) return row.tier
+    if (amountInUsd >= row.minUsdValue) return row.tier
   }
   return 'RARE'
 }

@@ -54,13 +54,13 @@ export interface DefenderEntry {
   avatarUrl?: string
   compositeScore: number // Weighted composite score (40% TVL, 30% attacks survived, 20% breach rate inverted, 10% active sentinels)
   defenderTier: DefenderTier
-  tvlSui: number // Total Value Locked in SUI across all reward pools
+  tvlUsd: number // Total Value Locked in USD across all reward pools
   activeSentinels: number // Count of currently live Sentinels
   totalSentinelsDeployed: number // All-time created Sentinels (includes inactive)
   longestSurvivingHours: number // Hours since deployment of longest-standing unbreached Sentinel
   totalAttacksSurvived: number // consume_prompt calls where success=false
   breachRatePct: number // (successful attacks / total attacks) * 100
-  totalFeesEarnedSui: number // Cumulative fees claimed + pending
+  totalFeesEarnedUsd: number // Cumulative fees claimed + pending in USD
   sentinelTokensEarned: number // $SENTINEL token rewards distributed
   isCurrentUser?: boolean
 }
@@ -72,19 +72,21 @@ export interface AttackerEntry {
   walletAddress: string
   avatarUrl?: string
   attackerTier: AttackerTier
-  totalBountyWonSui: number // Sum of all reward pool payouts received
+  totalBountyWonUsd: number // Sum of all reward pool payouts received in USD
   successfulBreaches: number // consume_prompt calls where success=true
   totalAttacksSent: number // All consume_prompt calls by this address
   breachRatePct: number // (successfulBreaches / totalAttacksSent) * 100
-  largestSingleBountySui: number // Maximum single payout received
+  largestSingleBountyUsd: number // Maximum single payout received in USD
   attackStreakDays: number // Consecutive days with at least one attack
   sentinelTokensEarned: number // Token rewards distributed for attacking
   lastActiveTimestamp: string // ISO timestamp of most recent consume_prompt
   isCurrentUser?: boolean
 }
 
-function formatSui(n: number) {
-  return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+function formatUsd(n: number) {
+  if (n >= 1_000_000) return `$${(n / 1_000_000).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}M`
+  if (n >= 1_000) return `$${(n / 1_000).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}K`
+  return `$${n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 }
 
 function formatSurvivalTime(hours: number) {
@@ -498,7 +500,7 @@ function DefenderCard({ entry }: { entry: DefenderEntry }) {
         </div>
         <div className="rounded-lg bg-gray-50 px-3 py-2">
           <p className="text-[10px] uppercase tracking-wide text-gray-500">TVL</p>
-          <p className="text-sm font-bold text-gray-900">{formatSui(entry.tvlSui)} SUI</p>
+          <p className="text-sm font-bold text-gray-900">{formatUsd(entry.tvlUsd)}</p>
         </div>
       </div>
 
@@ -524,7 +526,7 @@ function DefenderCard({ entry }: { entry: DefenderEntry }) {
                   value: `${entry.breachRatePct}%`,
                   colorClass: breachRateColor(entry.breachRatePct),
                 },
-                { label: 'Fees Earned', value: `${formatSui(entry.totalFeesEarnedSui)} SUI` },
+                { label: 'Fees Earned', value: formatUsd(entry.totalFeesEarnedUsd) },
                 {
                   label: '$SENTINEL Earned',
                   value: entry.sentinelTokensEarned.toLocaleString(),
@@ -561,7 +563,7 @@ function DefenderCard({ entry }: { entry: DefenderEntry }) {
         </button>
         <div className="flex items-center gap-2">
           <Link
-            href={`${REWARD_CALCULATOR_URL}?poolSize=${entry.tvlSui}`}
+            href={`${REWARD_CALCULATOR_URL}?poolSize=${entry.tvlUsd}`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1 text-xs font-medium text-blue-600 hover:underline"
@@ -614,7 +616,7 @@ function AttackerCard({ entry }: { entry: AttackerEntry }) {
         <div className="rounded-lg bg-gray-50 px-3 py-2">
           <p className="text-[10px] uppercase tracking-wide text-gray-500">Bounty Won</p>
           <p className="text-sm font-bold text-gray-900">
-            {formatSui(entry.totalBountyWonSui)} SUI
+            {formatUsd(entry.totalBountyWonUsd)}
           </p>
         </div>
         <div className="rounded-lg bg-gray-50 px-3 py-2">
@@ -641,7 +643,7 @@ function AttackerCard({ entry }: { entry: AttackerEntry }) {
                 },
                 {
                   label: 'Largest Bounty',
-                  value: `${formatSui(entry.largestSingleBountySui)} SUI`,
+                  value: formatUsd(entry.largestSingleBountyUsd),
                 },
                 {
                   label: 'Attack Streak',
@@ -726,9 +728,9 @@ function DefendersTable({ entries }: { entries: DefenderEntry[] }) {
             />
             <ColHeader label="Tier" sortKey="defenderTier" {...colProps} />
             <ColHeader
-              label="Fees Earned(SUI)"
-              tooltip="Cumulative fees claimed + pending in SUI"
-              sortKey="totalFeesEarnedSui"
+              label="Fees Earned(USD)"
+              tooltip="Cumulative fees claimed + pending in USD"
+              sortKey="totalFeesEarnedUsd"
               {...colProps}
             />
             <ColHeader
@@ -738,9 +740,9 @@ function DefendersTable({ entries }: { entries: DefenderEntry[] }) {
               {...colProps}
             />
             <ColHeader
-              label="TVL (SUI)"
-              tooltip="Total Value Locked across all active reward pools"
-              sortKey="tvlSui"
+              label="TVL (USD)"
+              tooltip="Total Value Locked across all active reward pools in USD"
+              sortKey="tvlUsd"
               {...colProps}
             />
 
@@ -831,13 +833,13 @@ function DefendersTable({ entries }: { entries: DefenderEntry[] }) {
                 <td className="px-3 py-3">
                   <DefenderTierBadge tier={entry.defenderTier} />
                 </td>
-                <td className="px-3 py-3 text-gray-700">{formatSui(entry.totalFeesEarnedSui)}</td>
+                <td className="px-3 py-3 text-gray-700">{formatUsd(entry.totalFeesEarnedUsd)}</td>
                 <td className="px-3 py-3 font-medium text-purple-700">
                   {entry.sentinelTokensEarned.toLocaleString()}
                 </td>
                 <td className="px-3 py-3">
                   <div className="flex items-center gap-1.5">
-                    <span className="font-medium text-gray-900">{formatSui(entry.tvlSui)}</span>
+                    <span className="font-medium text-gray-900">{formatUsd(entry.tvlUsd)}</span>
                   </div>
                 </td>
 
@@ -867,7 +869,7 @@ function DefendersTable({ entries }: { entries: DefenderEntry[] }) {
 // ─── Attackers Table ──────────────────────────────────────────────────────────
 
 function AttackersTable({ entries }: { entries: AttackerEntry[] }) {
-  const [sortKey, setSortKey] = useState<keyof AttackerEntry>('totalBountyWonSui')
+  const [sortKey, setSortKey] = useState<keyof AttackerEntry>('totalBountyWonUsd')
   const [sortDir, setSortDir] = useState<SortDir>('desc')
 
   function handleSort(key: string) {
@@ -904,8 +906,8 @@ function AttackersTable({ entries }: { entries: AttackerEntry[] }) {
             <ColHeader label="Tier" sortKey="attackerTier" {...colProps} />
             <ColHeader
               label="Total Bounty Won"
-              tooltip="Sum of all reward pool payouts received in SUI"
-              sortKey="totalBountyWonSui"
+              tooltip="Sum of all reward pool payouts received in USD"
+              sortKey="totalBountyWonUsd"
               {...colProps}
             />
             <ColHeader
@@ -928,8 +930,8 @@ function AttackersTable({ entries }: { entries: AttackerEntry[] }) {
             />
             <ColHeader
               label="Largest Bounty"
-              tooltip="Maximum single payout received in SUI"
-              sortKey="largestSingleBountySui"
+              tooltip="Maximum single payout received in USD"
+              sortKey="largestSingleBountyUsd"
               {...colProps}
             />
             <ColHeader
@@ -998,7 +1000,7 @@ function AttackersTable({ entries }: { entries: AttackerEntry[] }) {
                   <AttackerTierBadge tier={entry.attackerTier} />
                 </td>
                 <td className="px-3 py-3 font-bold text-gray-900">
-                  {formatSui(entry.totalBountyWonSui)} SUI
+                  {formatUsd(entry.totalBountyWonUsd)}
                 </td>
                 <td className="px-3 py-3 text-gray-700">
                   {entry.totalAttacksSent.toLocaleString()}
@@ -1017,7 +1019,7 @@ function AttackersTable({ entries }: { entries: AttackerEntry[] }) {
                   {entry.breachRatePct.toFixed(1)}%
                 </td>
                 <td className="px-3 py-3 text-gray-700">
-                  {formatSui(entry.largestSingleBountySui)} SUI
+                  {formatUsd(entry.largestSingleBountyUsd)}
                 </td>
                 <td className="px-3 py-3">
                   {entry.attackStreakDays > 0 ? (

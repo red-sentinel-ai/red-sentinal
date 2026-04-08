@@ -22,6 +22,16 @@ export const SUI_SENTINEL_DEFENDER_REWARDS_DOCS_URL = `${SUI_SENTINEL_DOCS_URL}/
 
 export const SLUSH_BASE_URL = 'https://my.slush.app/browse/'
 
+export const GARAK_GITHUB_URL = 'https://github.com/NVIDIA/garak'
+export const PROMPTFOO_URL = 'https://www.promptfoo.dev'
+export const PETRI_GITHUB_URL = 'https://github.com/safety-research/petri'
+export const BLOOM_GITHUB_URL = 'https://github.com/safety-research/bloom'
+
+export const SESSION_KEYS = {
+  SELECTED_TEMPLATE: 'selectedTemplate',
+  DEFEND_FORM_DATA: 'defendFormData',
+} as const
+
 export const TEXT_COPIES = {
   leaderboard: {
     heading: 'Red Team Leaderboard',
@@ -244,10 +254,11 @@ export const SUI_MAINNET_LEGACY_CONFIG = {
   MODULE_NAME: 'sentinel',
   OTW_NAME: 'SENTINEL',
   AGENT_REGISTRY: '0xc47564f5f14c12b31e0dfa1a3dc99a6380a1edf8929c28cb0eaa3359c8db36ac',
-  ENCLAVE_OBJECT_ID: '0x4eee5fcc7fffff8f781654b35409e807a2db66aa2889c74217804881a6f7a644',
+  ENCLAVE_OBJECT_ID: '0xd2915fd1e1a8949d1c517186d4524abb94a34d6839cfce83da715de0e0c78d14',
   PROTOCOL_CONFIG_ID: '0x2fa4fa4a1dd0498612304635ff9334e1b922e78af325000e9d9c0e88adea459f',
   SENTINEL_COIN_TYPE:
     '0x66aaa74fecd25cb19b7576e101b25fd3a844e6b9f678421429d0d49d55e0fca0::sentinel::SENTINEL',
+  ENCLAVE_PACKAGE_ID: '0x74b12d0903b409cdcb1ce06280ff3eef7b35622ae164c1d7c4cd154231d89f25',
 }
 
 export const SUI_MAINNET_CONFIG = {
@@ -263,7 +274,7 @@ export const SUI_MAINNET_CONFIG = {
   "APP_PACKAGE_ID": "0x037bc647dd1fb211101a896617c85574edd5f2cda7f31a2ebd982ee63eb9668d",
   "AGENT_REGISTRY": "0xd7ad36e0e1a09fdd3d28e796a0a42d4b32c8f3868e810fe7014e60d9883a0c32",
   "PROTOCOL_CONFIG_ID": "0xd34205207fb2be845f21d53e1a5308477d2a35ea2936d0667a2d659000b55966",
-  "ENCLAVE_OBJECT_ID": "0xee91d73c8080e4eb2eb269391d5e8fd05686fa265198b034b9dbf8be93773ea2",
+  "ENCLAVE_OBJECT_ID": "0x29bb2ca51e2547729bae5f174d82ead78dfbbe80256242953b3fcc6a0bdd36fb",
   "CLOCK_OBJECT_ID": "0x6",
   "GAS_BUDGET": 100000000,
   "TOKENS_TO_WHITELIST": [
@@ -667,4 +678,66 @@ export const PROVIDER_MODELS: Record<string, string[]> = {
     'us.meta.llama3-3-70b-instruct-v1:0',
   ],
   custom: [],
+}
+
+
+export const MISSION_STEP1_CONFIG: Record<string, {
+  heading: string
+  hint: string
+  actionLabel?: string
+  actionUrl?: string
+  urlPlaceholder: string
+}> = {
+  like_tweet: {
+    heading: 'Like an official tweet from @suisentinal',
+    hint: 'Go to our X profile and like any official tweet.',
+    actionLabel: 'Go to @suisentinal',
+    actionUrl: X_URL,
+    urlPlaceholder: 'https://x.com/suisentinal/status/...',
+  },
+  repost_tweet: {
+    heading: 'Repost an official tweet from @suisentinal',
+    hint: 'Go to our X profile and repost any official tweet.',
+    actionLabel: 'Go to @suisentinal',
+    actionUrl: X_URL,
+    urlPlaceholder: 'https://x.com/yourusername/status/...',
+  },
+  quote_tweet: {
+    heading: 'Quote tweet with your own thoughts and insights',
+    hint: 'Quote any @suisentinal tweet with original commentary (50+ characters).',
+    actionLabel: 'Go to @suisentinal',
+    actionUrl: X_URL,
+    urlPlaceholder: 'https://x.com/yourusername/status/...',
+  },
+  tag_friends: {
+    heading: 'Tag 3 friends in a tweet about Sui Sentinel',
+    hint: 'Mention 3 real, active friends in your tweet about the platform.',
+    actionLabel: 'Post on X',
+    actionUrl: X_URL,
+    urlPlaceholder: 'https://x.com/yourusername/status/...',
+  },
+  create_thread: {
+    heading: 'Create an educational thread about Sui Sentinel (5+ tweets)',
+    hint: 'Write informational content covering platform features, attack/defend mechanics, or tokenomics.',
+    actionLabel: 'Post on X',
+    actionUrl: X_URL,
+    urlPlaceholder: 'https://x.com/yourusername/status/... (first tweet in thread)',
+  },
+  short_video: {
+    heading: 'Create a short video showcasing Sui Sentinel (< 2 min)',
+    hint: 'Ensure quality production with clear audio and video. Upload to YouTube, X, or similar.',
+    urlPlaceholder: 'https://youtube.com/watch?v=... or https://x.com/...',
+  },
+  long_video: {
+    heading: 'Create an in-depth tutorial or walkthrough video (5+ min)',
+    hint: 'Aim for tutorial quality with comprehensive coverage of the platform.',
+    urlPlaceholder: 'https://youtube.com/watch?v=... or https://x.com/...',
+  },
+  written_article: {
+    heading: 'Write a comprehensive article about Sui Sentinel (800+ words)',
+    hint: 'Publish on X, Substack, Medium, or your own blog.',
+    actionLabel: 'Go to X / Substack',
+    actionUrl: X_URL,
+    urlPlaceholder: 'https://substack.com/... or https://medium.com/... or https://x.com/...',
+  },
 }

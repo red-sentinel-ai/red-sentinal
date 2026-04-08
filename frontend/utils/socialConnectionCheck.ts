@@ -2,17 +2,12 @@ import { supabaseServiceClient } from '@/db/config/server'
 
 export interface SocialConnectionStatus {
   wallet_address: string
-  isGoogleConnected: boolean
+  isEmailConnected: boolean
   isTelegramConnected: boolean
   hasAnyConnection: boolean
 }
 
-/**
- * Check social connections for a wallet address
- */
-export async function checkSocialConnections(
-  walletAddress: string
-): Promise<SocialConnectionStatus> {
+export async function checkSocialConnections(walletAddress: string): Promise<SocialConnectionStatus> {
   const { data: user } = await supabaseServiceClient
     .from('ss_users')
     .select('id')
@@ -22,7 +17,7 @@ export async function checkSocialConnections(
   if (!user) {
     return {
       wallet_address: walletAddress,
-      isGoogleConnected: false,
+      isEmailConnected: false,
       isTelegramConnected: false,
       hasAnyConnection: false,
     }
@@ -34,14 +29,13 @@ export async function checkSocialConnections(
     .eq('user_id', user.id)
 
   const platforms = connections?.map(conn => conn.platform) || []
-  const isGoogleConnected = platforms.includes('google')
+  const isEmailConnected = platforms.includes('email')
   const isTelegramConnected = platforms.includes('telegram')
-  const hasAnyConnection = isGoogleConnected || isTelegramConnected
 
   return {
     wallet_address: walletAddress,
-    isGoogleConnected,
+    isEmailConnected,
     isTelegramConnected,
-    hasAnyConnection,
+    hasAnyConnection: isEmailConnected || isTelegramConnected,
   }
 }
