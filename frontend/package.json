@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-ses": "^3.1019.0",
+    "@coral-xyz/anchor": "^0.32.1",
     "@mysten/bcs": "^1.6.1",
     "@mysten/dapp-kit": "^0.16.4",
     "@mysten/sui": "^1.30.0",
@@ -23,6 +24,7 @@
     "@radix-ui/react-tabs": "^1.1.2",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@rive-app/react-canvas": "^4.22.1",
+    "@solana/spl-token": "^0.4.14",
     "@solana/wallet-adapter-base": "^0.9.27",
     "@solana/wallet-adapter-react": "^0.15.39",
     "@solana/wallet-adapter-react-ui": "^0.9.39",
