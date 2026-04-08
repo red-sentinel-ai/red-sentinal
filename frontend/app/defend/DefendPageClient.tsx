@@ -527,8 +527,8 @@ export default function DefendPageClient() {
               }
               className="flex h-[65px] w-full items-center justify-center gap-3 rounded-xl text-xl font-medium transition-colors hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
               style={{
-                backgroundColor: 'var(--jp-red-color)',
-                color: 'var(--jp-white-color)',
+                backgroundColor: '#fbe7e7',
+                color: 'var(--jp-orange-color)',
                 boxShadow: 'var(--jp-box-shadow)',
               }}
             >
