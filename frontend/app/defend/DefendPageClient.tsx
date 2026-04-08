@@ -7,6 +7,7 @@ import { ChevronLeft, CameraIcon, Info, Loader2, Sparkles } from 'lucide-react'
 import { toast } from 'sonner'
 import { ConnectButton, useCurrentAccount } from '@mysten/dapp-kit'
 import {
+  SESSION_KEYS,
   SUPPORTED_TOKENS,
   SUI_SENTINEL_DOCS_URL,
   SYSTEM_PROMPT_MAX_TOKENS,
@@ -247,7 +248,7 @@ export default function DefendPageClient() {
               <Link
                 href="/instruction-templates"
                 className="text-sm text-[#0077FF] underline hover:text-[#0077ffd3] sm:mt-1"
-                onClick={() => sessionStorage.setItem('defendFormData', JSON.stringify(formData))}
+                onClick={() => sessionStorage.setItem(SESSION_KEYS.DEFEND_FORM_DATA, JSON.stringify(formData))}
               >
                 View Templates
               </Link>

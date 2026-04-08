@@ -1,10 +1,16 @@
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: '13.0.5'
+    PostgrestVersion: "13.0.5"
   }
   public: {
     Tables: {
@@ -32,11 +38,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'aztec_discord_server_collections_collection_id_fkey'
-            columns: ['collection_id']
+            foreignKeyName: "aztec_discord_server_collections_collection_id_fkey"
+            columns: ["collection_id"]
             isOneToOne: false
-            referencedRelation: 'aztec_nft_collections'
-            referencedColumns: ['collection_id']
+            referencedRelation: "aztec_nft_collections"
+            referencedColumns: ["collection_id"]
           },
         ]
       }
@@ -241,11 +247,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'aztec_nfts_collection_id_fkey'
-            columns: ['collection_id']
+            foreignKeyName: "aztec_nfts_collection_id_fkey"
+            columns: ["collection_id"]
             isOneToOne: false
-            referencedRelation: 'aztec_nft_collections'
-            referencedColumns: ['collection_id']
+            referencedRelation: "aztec_nft_collections"
+            referencedColumns: ["collection_id"]
           },
         ]
       }
@@ -330,11 +336,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'game_scores_game_id_fkey'
-            columns: ['game_id']
+            foreignKeyName: "game_scores_game_id_fkey"
+            columns: ["game_id"]
             isOneToOne: true
-            referencedRelation: 'transaction_logs'
-            referencedColumns: ['id']
+            referencedRelation: "transaction_logs"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -403,7 +409,7 @@ export type Database = {
       }
       minaty_nfts: {
         Row: {
-          category: Database['public']['Enums']['nft_category']
+          category: Database["public"]["Enums"]["nft_category"]
           created_at: string
           description: string | null
           id: number
@@ -417,7 +423,7 @@ export type Database = {
           txn_hash: string | null
         }
         Insert: {
-          category: Database['public']['Enums']['nft_category']
+          category: Database["public"]["Enums"]["nft_category"]
           created_at?: string
           description?: string | null
           id?: number
@@ -431,7 +437,7 @@ export type Database = {
           txn_hash?: string | null
         }
         Update: {
-          category?: Database['public']['Enums']['nft_category']
+          category?: Database["public"]["Enums"]["nft_category"]
           created_at?: string
           description?: string | null
           id?: number
@@ -593,11 +599,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'pvp_challenge_participants_challenge_id_fkey'
-            columns: ['challenge_id']
+            foreignKeyName: "pvp_challenge_participants_challenge_id_fkey"
+            columns: ["challenge_id"]
             isOneToOne: false
-            referencedRelation: 'pvp_challenges'
-            referencedColumns: ['id']
+            referencedRelation: "pvp_challenges"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -676,11 +682,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'raven_comments_confession_id_fkey'
-            columns: ['confession_id']
+            foreignKeyName: "raven_comments_confession_id_fkey"
+            columns: ["confession_id"]
             isOneToOne: false
-            referencedRelation: 'raven_confessions'
-            referencedColumns: ['id']
+            referencedRelation: "raven_confessions"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -735,11 +741,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'raven_likes_confession_id_fkey'
-            columns: ['confession_id']
+            foreignKeyName: "raven_likes_confession_id_fkey"
+            columns: ["confession_id"]
             isOneToOne: false
-            referencedRelation: 'raven_confessions'
-            referencedColumns: ['id']
+            referencedRelation: "raven_confessions"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -779,11 +785,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'reviews_place_id_fkey'
-            columns: ['place_id']
+            foreignKeyName: "reviews_place_id_fkey"
+            columns: ["place_id"]
             isOneToOne: false
-            referencedRelation: 'places'
-            referencedColumns: ['place_id']
+            referencedRelation: "places"
+            referencedColumns: ["place_id"]
           },
         ]
       }
@@ -798,7 +804,7 @@ export type Database = {
           l2_tx_hash: string | null
           message_leaf_index: string | null
           recipient_address: string
-          status: Database['public']['Enums']['bridge_status'] | null
+          status: Database["public"]["Enums"]["bridge_status"] | null
           token_symbol: string
           updated_at: string
           user_address: string
@@ -813,7 +819,7 @@ export type Database = {
           l2_tx_hash?: string | null
           message_leaf_index?: string | null
           recipient_address: string
-          status?: Database['public']['Enums']['bridge_status'] | null
+          status?: Database["public"]["Enums"]["bridge_status"] | null
           token_symbol: string
           updated_at?: string
           user_address: string
@@ -828,7 +834,7 @@ export type Database = {
           l2_tx_hash?: string | null
           message_leaf_index?: string | null
           recipient_address?: string
-          status?: Database['public']['Enums']['bridge_status'] | null
+          status?: Database["public"]["Enums"]["bridge_status"] | null
           token_symbol?: string
           updated_at?: string
           user_address?: string
@@ -871,11 +877,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'fk_feature_requests_collection_id'
-            columns: ['collection_id']
+            foreignKeyName: "fk_feature_requests_collection_id"
+            columns: ["collection_id"]
             isOneToOne: false
-            referencedRelation: 'aztec_nft_collections'
-            referencedColumns: ['collection_id']
+            referencedRelation: "aztec_nft_collections"
+            referencedColumns: ["collection_id"]
           },
         ]
       }
@@ -909,13 +915,102 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'rh_nft_upload_tasks_collection_id_fkey'
-            columns: ['collection_id']
+            foreignKeyName: "rh_nft_upload_tasks_collection_id_fkey"
+            columns: ["collection_id"]
             isOneToOne: false
-            referencedRelation: 'aztec_nft_collections'
-            referencedColumns: ['collection_id']
+            referencedRelation: "aztec_nft_collections"
+            referencedColumns: ["collection_id"]
           },
         ]
+      }
+      rh_proposal_choices: {
+        Row: {
+          created_at: string
+          id: number
+          order_index: number
+          percentage: number
+          proposal_id: number
+          text: string
+          vote_count: number
+        }
+        Insert: {
+          created_at?: string
+          id?: never
+          order_index?: number
+          percentage?: number
+          proposal_id: number
+          text: string
+          vote_count?: number
+        }
+        Update: {
+          created_at?: string
+          id?: never
+          order_index?: number
+          percentage?: number
+          proposal_id?: number
+          text?: string
+          vote_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rh_proposal_choices_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "rh_proposals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rh_proposals: {
+        Row: {
+          author: string
+          created_at: string
+          description: string
+          eligibility_requirements: string[]
+          end_date: string
+          hide_vote_count: boolean
+          id: number
+          is_private_voting: boolean
+          start_date: string
+          status: string
+          title: string
+          updated_at: string
+          vote_count: number
+          vote_visibility: string
+        }
+        Insert: {
+          author: string
+          created_at?: string
+          description: string
+          eligibility_requirements?: string[]
+          end_date: string
+          hide_vote_count?: boolean
+          id?: never
+          is_private_voting?: boolean
+          start_date: string
+          status?: string
+          title: string
+          updated_at?: string
+          vote_count?: number
+          vote_visibility?: string
+        }
+        Update: {
+          author?: string
+          created_at?: string
+          description?: string
+          eligibility_requirements?: string[]
+          end_date?: string
+          hide_vote_count?: boolean
+          id?: never
+          is_private_voting?: boolean
+          start_date?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          vote_count?: number
+          vote_visibility?: string
+        }
+        Relationships: []
       }
       rh_rewards_activity: {
         Row: {
@@ -947,18 +1042,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'fk_rh_rewards_activity_user_id'
-            columns: ['user_id']
+            foreignKeyName: "fk_rh_rewards_activity_user_id"
+            columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: 'rh_rewards_leaderboard'
-            referencedColumns: ['user_id']
+            referencedRelation: "rh_rewards_leaderboard"
+            referencedColumns: ["user_id"]
           },
           {
-            foreignKeyName: 'fk_rh_rewards_activity_user_id'
-            columns: ['user_id']
+            foreignKeyName: "fk_rh_rewards_activity_user_id"
+            columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: 'rh_users'
-            referencedColumns: ['id']
+            referencedRelation: "rh_users"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -992,18 +1087,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'rh_social_connections_user_id_fkey'
-            columns: ['user_id']
+            foreignKeyName: "rh_social_connections_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: 'rh_rewards_leaderboard'
-            referencedColumns: ['user_id']
+            referencedRelation: "rh_rewards_leaderboard"
+            referencedColumns: ["user_id"]
           },
           {
-            foreignKeyName: 'rh_social_connections_user_id_fkey'
-            columns: ['user_id']
+            foreignKeyName: "rh_social_connections_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: 'rh_users'
-            referencedColumns: ['id']
+            referencedRelation: "rh_users"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1076,6 +1171,45 @@ export type Database = {
         }
         Relationships: []
       }
+      rh_votes: {
+        Row: {
+          choice_id: number
+          created_at: string
+          id: number
+          proposal_id: number
+          voter_address: string
+        }
+        Insert: {
+          choice_id: number
+          created_at?: string
+          id?: never
+          proposal_id: number
+          voter_address: string
+        }
+        Update: {
+          choice_id?: number
+          created_at?: string
+          id?: never
+          proposal_id?: number
+          voter_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rh_votes_choice_id_fkey"
+            columns: ["choice_id"]
+            isOneToOne: false
+            referencedRelation: "rh_proposal_choices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rh_votes_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "rh_proposals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rh_whitelist_addresses: {
         Row: {
           address: string
@@ -1115,11 +1249,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'rh_whitelist_addresses_collection_id_fkey'
-            columns: ['collection_id']
+            foreignKeyName: "rh_whitelist_addresses_collection_id_fkey"
+            columns: ["collection_id"]
             isOneToOne: false
-            referencedRelation: 'aztec_nft_collections'
-            referencedColumns: ['collection_id']
+            referencedRelation: "aztec_nft_collections"
+            referencedColumns: ["collection_id"]
           },
         ]
       }
@@ -1239,7 +1373,7 @@ export type Database = {
           preferred_name: string | null
           previous_ambassador_programs: Json | null
           roles: string[] | null
-          status: Database['public']['Enums']['ss_ambassador_status']
+          status: Database["public"]["Enums"]["ss_ambassador_status"]
           submitted_at: string | null
           sui_wallet_address: string | null
           target_region_language_audience: string | null
@@ -1247,7 +1381,9 @@ export type Database = {
           timezone: string | null
           twitter_url: string | null
           updated_at: string
-          web3_experience_level: Database['public']['Enums']['ss_web3_experience_level'] | null
+          web3_experience_level:
+            | Database["public"]["Enums"]["ss_web3_experience_level"]
+            | null
           weekly_availability: string | null
           why_become_ambassador: string | null
         }
@@ -1270,7 +1406,7 @@ export type Database = {
           preferred_name?: string | null
           previous_ambassador_programs?: Json | null
           roles?: string[] | null
-          status?: Database['public']['Enums']['ss_ambassador_status']
+          status?: Database["public"]["Enums"]["ss_ambassador_status"]
           submitted_at?: string | null
           sui_wallet_address?: string | null
           target_region_language_audience?: string | null
@@ -1278,7 +1414,9 @@ export type Database = {
           timezone?: string | null
           twitter_url?: string | null
           updated_at?: string
-          web3_experience_level?: Database['public']['Enums']['ss_web3_experience_level'] | null
+          web3_experience_level?:
+            | Database["public"]["Enums"]["ss_web3_experience_level"]
+            | null
           weekly_availability?: string | null
           why_become_ambassador?: string | null
         }
@@ -1301,7 +1439,7 @@ export type Database = {
           preferred_name?: string | null
           previous_ambassador_programs?: Json | null
           roles?: string[] | null
-          status?: Database['public']['Enums']['ss_ambassador_status']
+          status?: Database["public"]["Enums"]["ss_ambassador_status"]
           submitted_at?: string | null
           sui_wallet_address?: string | null
           target_region_language_audience?: string | null
@@ -1309,9 +1447,95 @@ export type Database = {
           timezone?: string | null
           twitter_url?: string | null
           updated_at?: string
-          web3_experience_level?: Database['public']['Enums']['ss_web3_experience_level'] | null
+          web3_experience_level?:
+            | Database["public"]["Enums"]["ss_web3_experience_level"]
+            | null
           weekly_availability?: string | null
           why_become_ambassador?: string | null
+        }
+        Relationships: []
+      }
+      ss_defender_templates: {
+        Row: {
+          attack_goal: string | null
+          created_at: string
+          creator_address: string
+          id: number
+          jury_prompt: string | null
+          name: string
+          private_instructions: string | null
+          public_instructions: string | null
+          rank: number | null
+          status: Database["public"]["Enums"]["status"] | null
+          tags: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          attack_goal?: string | null
+          created_at?: string
+          creator_address: string
+          id?: number
+          jury_prompt?: string | null
+          name: string
+          private_instructions?: string | null
+          public_instructions?: string | null
+          rank?: number | null
+          status?: Database["public"]["Enums"]["status"] | null
+          tags?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          attack_goal?: string | null
+          created_at?: string
+          creator_address?: string
+          id?: number
+          jury_prompt?: string | null
+          name?: string
+          private_instructions?: string | null
+          public_instructions?: string | null
+          rank?: number | null
+          status?: Database["public"]["Enums"]["status"] | null
+          tags?: string[] | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ss_demo_requests: {
+        Row: {
+          company_name: string
+          created_at: string | null
+          email: string
+          first_name: string
+          id: string
+          join_beta: boolean | null
+          last_name: string
+          message: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          company_name: string
+          created_at?: string | null
+          email: string
+          first_name: string
+          id?: string
+          join_beta?: boolean | null
+          last_name: string
+          message?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          company_name?: string
+          created_at?: string | null
+          email?: string
+          first_name?: string
+          id?: string
+          join_beta?: boolean | null
+          last_name?: string
+          message?: string | null
+          status?: string | null
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -1323,7 +1547,7 @@ export type Database = {
           email_id: string
           id: string
           name: string
-          status: Database['public']['Enums']['status'] | null
+          status: Database["public"]["Enums"]["status"] | null
           telegram_username: string | null
           twitter_username: string | null
           wallet_address: string
@@ -1335,7 +1559,7 @@ export type Database = {
           email_id: string
           id?: string
           name: string
-          status?: Database['public']['Enums']['status'] | null
+          status?: Database["public"]["Enums"]["status"] | null
           telegram_username?: string | null
           twitter_username?: string | null
           wallet_address: string
@@ -1347,18 +1571,18 @@ export type Database = {
           email_id?: string
           id?: string
           name?: string
-          status?: Database['public']['Enums']['status'] | null
+          status?: Database["public"]["Enums"]["status"] | null
           telegram_username?: string | null
           twitter_username?: string | null
           wallet_address?: string
         }
         Relationships: [
           {
-            foreignKeyName: 'ss_feature_requests_agent_id_fkey'
-            columns: ['agent_id']
+            foreignKeyName: "ss_feature_requests_agent_id_fkey"
+            columns: ["agent_id"]
             isOneToOne: false
-            referencedRelation: 'ss_agents'
-            referencedColumns: ['agent_id']
+            referencedRelation: "ss_agents"
+            referencedColumns: ["agent_id"]
           },
         ]
       }
@@ -1452,18 +1676,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'ss_rewards_activity_user_id_fkey'
-            columns: ['user_id']
+            foreignKeyName: "ss_rewards_activity_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: 'ss_rewards_leaderboard'
-            referencedColumns: ['user_id']
+            referencedRelation: "ss_rewards_leaderboard"
+            referencedColumns: ["user_id"]
           },
           {
-            foreignKeyName: 'ss_rewards_activity_user_id_fkey'
-            columns: ['user_id']
+            foreignKeyName: "ss_rewards_activity_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: 'ss_users'
-            referencedColumns: ['id']
+            referencedRelation: "ss_users"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1497,18 +1721,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'ss_social_connections_user_id_fkey'
-            columns: ['user_id']
+            foreignKeyName: "ss_social_connections_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: 'ss_rewards_leaderboard'
-            referencedColumns: ['user_id']
+            referencedRelation: "ss_rewards_leaderboard"
+            referencedColumns: ["user_id"]
           },
           {
-            foreignKeyName: 'ss_social_connections_user_id_fkey'
-            columns: ['user_id']
+            foreignKeyName: "ss_social_connections_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: 'ss_users'
-            referencedColumns: ['id']
+            referencedRelation: "ss_users"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1866,18 +2090,27 @@ export type Database = {
       }
     }
     Enums: {
-      bridge_status: 'DEPOSITED' | 'CLAIMED' | 'FAILED'
+      bridge_status: "DEPOSITED" | "CLAIMED" | "FAILED"
       nft_category:
-        | 'FOUNDER'
-        | 'DESIGNER'
-        | 'SOLDIER'
-        | 'GUARDIAN'
-        | 'TOTEM'
-        | 'YOUR_NEW_CATEGORY'
-        | 'ZKON'
-      ss_ambassador_status: 'draft' | 'submitted' | 'under_review' | 'approved' | 'rejected'
-      ss_web3_experience_level: 'beginner' | 'intermediate' | 'advanced' | 'expert'
-      status: 'pending' | 'approved' | 'denied'
+        | "FOUNDER"
+        | "DESIGNER"
+        | "SOLDIER"
+        | "GUARDIAN"
+        | "TOTEM"
+        | "YOUR_NEW_CATEGORY"
+        | "ZKON"
+      ss_ambassador_status:
+        | "draft"
+        | "submitted"
+        | "under_review"
+        | "approved"
+        | "rejected"
+      ss_web3_experience_level:
+        | "beginner"
+        | "intermediate"
+        | "advanced"
+        | "expert"
+      status: "pending" | "approved" | "denied"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1885,31 +2118,33 @@ export type Database = {
   }
 }
 
-type DatabaseWithoutInternals = Omit<Database, '__InternalSupabase'>
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, 'public'>]
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])[TableName] extends {
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
-    ? (DefaultSchema['Tables'] & DefaultSchema['Views'])[DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
         Row: infer R
       }
       ? R
@@ -1918,23 +2153,23 @@ export type Tables<
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema['Tables']
+    | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
-    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
         Insert: infer I
       }
       ? I
@@ -1943,23 +2178,23 @@ export type TablesInsert<
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema['Tables']
+    | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
-    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
         Update: infer U
       }
       ? U
@@ -1968,54 +2203,65 @@ export type TablesUpdate<
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema['Enums']
+    | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums'][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema['Enums']
-    ? DefaultSchema['Enums'][DefaultSchemaEnumNameOrOptions]
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema['CompositeTypes']
+    | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema['CompositeTypes']
-    ? DefaultSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
 
 export const Constants = {
   public: {
     Enums: {
-      bridge_status: ['DEPOSITED', 'CLAIMED', 'FAILED'],
+      bridge_status: ["DEPOSITED", "CLAIMED", "FAILED"],
       nft_category: [
-        'FOUNDER',
-        'DESIGNER',
-        'SOLDIER',
-        'GUARDIAN',
-        'TOTEM',
-        'YOUR_NEW_CATEGORY',
-        'ZKON',
+        "FOUNDER",
+        "DESIGNER",
+        "SOLDIER",
+        "GUARDIAN",
+        "TOTEM",
+        "YOUR_NEW_CATEGORY",
+        "ZKON",
       ],
-      ss_ambassador_status: ['draft', 'submitted', 'under_review', 'approved', 'rejected'],
-      ss_web3_experience_level: ['beginner', 'intermediate', 'advanced', 'expert'],
-      status: ['pending', 'approved', 'denied'],
+      ss_ambassador_status: [
+        "draft",
+        "submitted",
+        "under_review",
+        "approved",
+        "rejected",
+      ],
+      ss_web3_experience_level: [
+        "beginner",
+        "intermediate",
+        "advanced",
+        "expert",
+      ],
+      status: ["pending", "approved", "denied"],
     },
   },
 } as const

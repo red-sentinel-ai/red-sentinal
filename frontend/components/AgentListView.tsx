@@ -3,18 +3,21 @@
 import { useState } from 'react'
 import { AgentsList } from './AgentsList'
 import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
+import { Loader2, X } from 'lucide-react'
 
 import { FeaturedAgentCard } from './FeaturedAgentCard'
 import { FeaturedAgentsSkeleton } from './ui/skeletons/FeaturedAgentsSkeleton'
 import { useAllAgents, SortField, SortDirection } from '@/hooks/agents/useAllAgents'
 import { useFeaturedAgents } from '@/hooks/agents/useFeaturedAgents'
+import { useAgentCoinTypes } from '@/hooks/agents/useAgentCoinTypes'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { TEXT_COPIES } from '@/constants/text_copies'
-import { Loader2 } from 'lucide-react'
 import { useFundAgentModal } from '@/hooks/useFundAgentModal'
 import { useWithdrawAgentModal } from '@/hooks/agents/useWithdrawAgentModal'
 import { useFeatureAgentModal } from '@/hooks/useFeatureAgentModal'
+import { TokenFilterDropdown } from '@/components/agents/TokenFilterDropdown'
 
 const BIG_BOUNTY_THRESHOLD_MIST = BigInt(20_000_000_000) // 20 SUI
 
@@ -24,31 +27,34 @@ export const AgentListView = () => {
   const [activeTab, setActiveTab] = useState<BountyTab>('all')
   const [sortField, setSortField] = useState<SortField>('total_balance')
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
-  
+  const [selectedCoinType, setSelectedCoinType] = useState<string | undefined>(undefined)
+
   // Single instance of modals at parent level to avoid duplicate hook calls
   const { Modal: FundModal, openModal: openFundModal } = useFundAgentModal()
   const { Modal: WithdrawModal, openModal: openWithdrawModal } = useWithdrawAgentModal()
   const { Modal: FeatureModal, openModal: openFeatureModal } = useFeatureAgentModal()
-  
+
   const {
     data: allAgentsData,
     isPending: isFetchingAllAgents,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useAllAgents(sortField, sortDirection)
-  
+  } = useAllAgents(sortField, sortDirection, selectedCoinType)
+
   const { data: featuredAgents, isPending: isFetchingFeaturedAgents } = useFeaturedAgents()
+  const { data: availableTokens = [] } = useAgentCoinTypes()
 
   // Flatten all pages of agents
   const allAgents = allAgentsData?.pages.flatMap(page => page.agents) || []
+  const totalAgents = allAgentsData?.pages[0]?.total ?? 0
 
   const activeFeaturedAgents =
     featuredAgents?.filter(agent => agent.state !== 'defeated') || []
 
   const filteredAgents =
     activeTab === 'big_bounties'
-      ? allAgents?.filter(agent => {
+      ? allAgents.filter(agent => {
           try {
             return BigInt(agent.total_balance) >= BIG_BOUNTY_THRESHOLD_MIST
           } catch {
@@ -56,6 +62,14 @@ export const AgentListView = () => {
           }
         })
       : allAgents
+
+  const bigBountiesCount = allAgents.filter(agent => {
+    try {
+      return BigInt(agent.total_balance) >= BIG_BOUNTY_THRESHOLD_MIST
+    } catch {
+      return false
+    }
+  }).length
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -65,6 +79,8 @@ export const AgentListView = () => {
       setSortDirection('desc')
     }
   }
+
+  const selectedToken = availableTokens.find(t => t.coinType === selectedCoinType)
 
   return (
     <div className="mx-auto max-w-[1560px] px-2 py-4 md:px-8 md:py-16">
@@ -124,32 +140,74 @@ export const AgentListView = () => {
       )}
 
       <div>
-        <div className="mb-3 flex flex-col gap-4 md:mb-6 md:flex-row md:items-center md:justify-between">
+        <div className="mb-3 flex flex-col gap-3 md:mb-6 md:flex-row md:items-center md:justify-between">
           <div>
-            <h2 className="text-lg font-medium md:text-[32px]">All Sentinels</h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-lg font-medium md:text-[32px]">All Sentinels</h2>
+              {!isFetchingAllAgents && totalAgents > 0 && (
+                <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 md:text-sm">
+                  {totalAgents}
+                </span>
+              )}
+            </div>
             <p className="mt-0.5 text-xs text-[#5E5E5E] md:mt-1 md:text-sm">
               Every active target, ranked and sortable. Find your edge.
             </p>
           </div>
 
-          <Tabs value={activeTab} onValueChange={v => setActiveTab(v as BountyTab)}>
-            <TabsList className="h-auto rounded-md border border-gray-200 bg-gray-100 p-[2px]">
-              <TabsTrigger
-                value="big_bounties"
-                className="rounded-md border-b-0 py-1 data-[state=active]:border-b-0 data-[state=active]:bg-white data-[state=active]:shadow-sm sm:px-4"
-              >
-                Big Bounties
-              </TabsTrigger>
-              <TabsTrigger
-                value="all"
-                className="rounded-md border-b-0 py-1 data-[state=active]:border-b-0 data-[state=active]:bg-white data-[state=active]:shadow-sm sm:px-4"
-              >
-                All
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+          <div className="flex items-center gap-2">
+            <TokenFilterDropdown
+              availableTokens={availableTokens}
+              selectedCoinType={selectedCoinType}
+              onSelect={setSelectedCoinType}
+            />
+
+            <Tabs value={activeTab} onValueChange={v => setActiveTab(v as BountyTab)}>
+              <TabsList className="h-auto rounded-md border border-gray-200 bg-gray-100 p-[2px]">
+                <TabsTrigger
+                  value="big_bounties"
+                  className="rounded-md border-b-0 py-1 data-[state=active]:border-b-0 data-[state=active]:bg-white data-[state=active]:shadow-sm sm:px-4"
+                >
+                  Big Bounties
+                  {bigBountiesCount > 0 && (
+                    <span className="ml-1.5 rounded-full bg-gray-200 px-1.5 py-0.5 text-xs font-medium leading-none">
+                      {bigBountiesCount}
+                    </span>
+                  )}
+                </TabsTrigger>
+                <TabsTrigger
+                  value="all"
+                  className="rounded-md border-b-0 py-1 data-[state=active]:border-b-0 data-[state=active]:bg-white data-[state=active]:shadow-sm sm:px-4"
+                >
+                  All
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
         </div>
       </div>
+
+      {selectedCoinType && selectedToken && (
+        <div className="mb-3 flex items-center gap-2">
+          <span className="text-xs text-[#5E5E5E]">Filtered by:</span>
+          <span className="flex items-center gap-1.5 rounded-full border border-gray-200 bg-gray-50 px-2.5 py-0.5 text-xs font-medium">
+            <Image
+              src={selectedToken.icon}
+              alt={selectedToken.symbol}
+              width={14}
+              height={14}
+              className="rounded-full"
+            />
+            {selectedToken.symbol}
+            <button
+              onClick={() => setSelectedCoinType(undefined)}
+              className="ml-0.5 text-gray-400 hover:text-gray-700"
+            >
+              <X className="h-3 w-3" />
+            </button>
+          </span>
+        </div>
+      )}
 
       <AgentsList
         agents={filteredAgents}
@@ -158,7 +216,7 @@ export const AgentListView = () => {
         sortDirection={sortDirection}
         onSort={handleSort}
       />
-      
+
       {/* Load More Button */}
       {hasNextPage && !isFetchingAllAgents && (
         <div className="mt-6 flex justify-center">
@@ -179,9 +237,9 @@ export const AgentListView = () => {
           </Button>
         </div>
       )}
-      
+
       <p className="mt-4 text-xs text-[#5E5E5E]">{TEXT_COPIES.LOW_POOL_BALANCE_HIDDEN_MESSAGE}</p>
-      
+
       {/* Single instance of modals - prevents duplicate hook calls */}
       <FundModal onSuccess={() => console.log('Funded successfully!')} />
       <WithdrawModal onSuccess={() => console.log('Withdrew successfully!')} />
