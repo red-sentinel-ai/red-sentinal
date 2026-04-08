@@ -34,7 +34,7 @@ export function LLMProviderSection({
   onValidate,
 }: LLMProviderSectionProps) {
   return (
-    <div className="rounded-xl border border-[#5E5E5E] bg-white p-6">
+    <div className="rounded-xl border bg-transparent p-6" style={{ borderColor: 'var(--jp-dark-pink)' }}>
       <h3 className="mb-6 text-[20px] font-medium text-black">LLM provider</h3>
       <div className="flex flex-col gap-6 md:flex-row">
         <CustomDropdown
@@ -63,7 +63,8 @@ export function LLMProviderSection({
                 type="url"
                 value={formData.customEndpointUrl}
                 onChange={onChange}
-                className="h-[56px] w-full rounded-xl border border-[#5E5E5E] bg-white px-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:h-[55px] sm:text-base"
+                className="h-[56px] w-full rounded-xl border bg-transparent px-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-[var(--jp-red-color)] focus:outline-none focus:ring-1 focus:ring-[var(--jp-red-color)] sm:h-[55px] sm:text-base"
+                style={{ borderColor: 'var(--jp-dark-pink)' }}
                 placeholder="https://api.example.com/v1"
                 autoComplete="off"
                 spellCheck="false"
@@ -82,7 +83,8 @@ export function LLMProviderSection({
                   type={showApiKey ? 'text' : 'password'}
                   value={formData.customApiKey}
                   onChange={onChange}
-                  className="h-[56px] w-full rounded-xl border border-[#5E5E5E] bg-white px-4 pr-12 text-[16px] text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:h-[55px] sm:text-base"
+                  className="h-[56px] w-full rounded-xl border bg-transparent px-4 pr-12 text-[16px] text-black placeholder-gray-400 transition-all focus:border-[var(--jp-red-color)] focus:outline-none focus:ring-1 focus:ring-[var(--jp-red-color)] sm:h-[55px] sm:text-base"
+                  style={{ borderColor: 'var(--jp-dark-pink)' }}
                   placeholder="sk-..."
                   autoComplete="off"
                   spellCheck="false"
@@ -110,7 +112,8 @@ export function LLMProviderSection({
                 type="text"
                 value={formData.customModelName}
                 onChange={onChange}
-                className="h-[56px] w-full rounded-xl border border-[#5E5E5E] bg-white px-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:h-[55px] sm:text-base"
+                className="h-[56px] w-full rounded-xl border bg-transparent px-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-[var(--jp-red-color)] focus:outline-none focus:ring-1 focus:ring-[var(--jp-red-color)] sm:h-[55px] sm:text-base"
+                style={{ borderColor: 'var(--jp-dark-pink)' }}
                 placeholder="e.g., kimi-k2-turbo-preview"
                 autoComplete="off"
                 spellCheck="false"

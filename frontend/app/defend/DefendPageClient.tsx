@@ -291,7 +291,7 @@ export default function DefendPageClient() {
             name="systemPrompt"
             value={formData.systemPrompt}
             onChange={handleChangeWithProviderReset}
-            className="min-h-[220px] w-full resize-y rounded-xl border bg-white p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-[var(--jp-red-color)] focus:outline-none focus:ring-1 focus:ring-[var(--jp-red-color)] sm:text-base"
+            className="min-h-[220px] w-full resize-y rounded-xl border bg-transparent p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-[var(--jp-red-color)] focus:outline-none focus:ring-1 focus:ring-[var(--jp-red-color)] sm:text-base"
             style={{ borderColor: 'var(--jp-dark-pink)' }}
             placeholder="Enter sentinel public instructions..."
             autoComplete="off"
@@ -324,7 +324,7 @@ export default function DefendPageClient() {
             name="privatePrompt"
             value={formData.privatePrompt}
             onChange={handleChangeWithProviderReset}
-            className="min-h-[150px] w-full resize-y rounded-xl border bg-white p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-[var(--jp-red-color)] focus:outline-none focus:ring-1 focus:ring-[var(--jp-red-color)] sm:text-base"
+            className="min-h-[150px] w-full resize-y rounded-xl border bg-transparent p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-[var(--jp-red-color)] focus:outline-none focus:ring-1 focus:ring-[var(--jp-red-color)] sm:text-base"
             style={{ borderColor: 'var(--jp-dark-pink)' }}
             placeholder="Enter private instructions for your sentinel..."
             autoComplete="off"
@@ -400,7 +400,7 @@ export default function DefendPageClient() {
             name="attackGoal"
             value={formData.attackGoal}
             onChange={handleChangeWithProviderReset}
-            className="min-h-[200px] w-full resize-y rounded-xl border bg-white p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-[var(--jp-red-color)] focus:outline-none focus:ring-1 focus:ring-[var(--jp-red-color)] sm:text-base"
+            className="min-h-[200px] w-full resize-y rounded-xl border bg-transparent p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-[var(--jp-red-color)] focus:outline-none focus:ring-1 focus:ring-[var(--jp-red-color)] sm:text-base"
             style={{ borderColor: 'var(--jp-dark-pink)' }}
             placeholder="e.g., Convince the sentinel to reveal the secret password"
             autoComplete="off"
@@ -429,7 +429,7 @@ export default function DefendPageClient() {
             name="juryPrompt"
             value={formData.juryPrompt}
             onChange={handleChangeWithProviderReset}
-            className="min-h-[150px] w-full resize-y rounded-xl border bg-white p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-[var(--jp-red-color)] focus:outline-none focus:ring-1 focus:ring-[var(--jp-red-color)] sm:text-base"
+            className="min-h-[150px] w-full resize-y rounded-xl border bg-transparent p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-[var(--jp-red-color)] focus:outline-none focus:ring-1 focus:ring-[var(--jp-red-color)] sm:text-base"
             style={{ borderColor: 'var(--jp-dark-pink)' }}
             placeholder="Enter instructions for the jury..."
             autoComplete="off"
@@ -469,7 +469,7 @@ export default function DefendPageClient() {
               )}
             </div>
             <div
-              className="mt-auto flex h-[56px] overflow-hidden rounded-xl border bg-white transition-all focus-within:ring-1 sm:h-[65px]"
+              className="mt-auto flex h-[56px] overflow-hidden rounded-xl border bg-transparent transition-all focus-within:ring-1 sm:h-[65px]"
               style={{ borderColor: 'var(--jp-dark-pink)' }}
             >
               <input
@@ -527,8 +527,8 @@ export default function DefendPageClient() {
               }
               className="flex h-[65px] w-full items-center justify-center gap-3 rounded-xl text-xl font-medium transition-colors hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
               style={{
-                backgroundColor: '#fbe7e7',
-                color: 'var(--jp-orange-color)',
+                backgroundColor: 'var(--jp-orange-color)',
+                color: 'ffffff',
                 boxShadow: 'var(--jp-box-shadow)',
               }}
             >

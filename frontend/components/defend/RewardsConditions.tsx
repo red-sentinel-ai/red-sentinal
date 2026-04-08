@@ -5,7 +5,7 @@ import { SUI_SENTINEL_DEFENDER_REWARDS_DOCS_URL } from '@/constants'
 
 export const RewardsConditions = () => {
   return (
-    <div className="w-full rounded-xl border border-[#D8D8D8] bg-white px-10 py-5">
+    <div className="w-full rounded-xl border bg-transparent px-10 py-5" style={{ borderColor: 'var(--jp-dark-pink)' }}>
       <h3 className="mb-3 text-xl font-medium">Reward Conditions</h3>
 
       <div className="flex items-center gap-8">

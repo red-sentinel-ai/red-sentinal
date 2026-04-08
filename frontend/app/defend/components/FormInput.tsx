@@ -66,7 +66,7 @@ export const FormInput: React.FC<FormInputProps> = ({
         type={isTextarea ? undefined : type}
         value={value}
         onChange={onChange}
-        className={`w-full rounded-xl border bg-white p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:outline-none focus:ring-1 sm:text-base ${
+        className={`w-full rounded-xl border bg-transparent p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:outline-none focus:ring-1 sm:text-base ${
           isTextarea ? 'min-h-[200px] resize-none' : 'h-[56px] sm:h-[65px]'
         } ${inputClassName}`}
         style={{

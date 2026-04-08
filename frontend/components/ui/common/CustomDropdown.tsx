@@ -36,7 +36,8 @@ export const CustomDropdown = ({
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-[55px] w-full items-center justify-between rounded-xl border border-[#5E5E5E] bg-white px-4 transition-colors hover:border-black"
+          className="flex h-[55px] w-full items-center justify-between rounded-xl border bg-transparent px-4 transition-colors"
+          style={{ borderColor: 'var(--jp-dark-pink)' }}
         >
           <div className="flex items-center gap-2">
             {label === 'Select service' && (
@@ -50,7 +51,10 @@ export const CustomDropdown = ({
         </button>
 
         {isOpen && (
-          <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg">
+          <div
+            className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-xl border shadow-lg"
+            style={{ backgroundColor: 'var(--jp-bg-color)', borderColor: 'var(--jp-dark-pink)' }}
+          >
             {options.map(option => (
               <button
                 key={option}
@@ -59,7 +63,7 @@ export const CustomDropdown = ({
                   onSelect(option)
                   setIsOpen(false)
                 }}
-                className="flex w-full items-center justify-between px-4 py-3 text-left hover:bg-gray-50"
+                className="flex w-full items-center justify-between px-4 py-3 text-left hover:opacity-80"
               >
                 <div className="flex items-center gap-2">
                   {label === 'Select service' && (
