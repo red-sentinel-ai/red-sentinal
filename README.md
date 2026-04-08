@@ -377,3 +377,8 @@ sudo certbot --nginx -d tee-solana.suisentinel.xyz
 ```
 ssh -i "MyEC2KeyPair.pem" ec2-user@ec2-35-168-159-88.compute-1.amazonaws.com
 ```
+
+http://35.168.159.88/get_attestation
+bbb5b48126bc748f9462a813b0b3bfb36feda56c7f48e9f6c5eed61ee2eabd7edef81c5d0931e70cfe607154a9b8291c PCR0
+bbb5b48126bc748f9462a813b0b3bfb36feda56c7f48e9f6c5eed61ee2eabd7edef81c5d0931e70cfe607154a9b8291c PCR1
+21b9efbc184807662e966d34f390821309eeac6802309798826296bf3e8bec7c10edb30948c90ba67310f7b964fc500a PCR2
