@@ -29,21 +29,21 @@ export function EarnMissionCard({
   const getStatusBadge = () => {
     if (isPending)
       return (
-        <Badge className="border-yellow-200 bg-yellow-100 text-yellow-800">
+        <Badge style={{ backgroundColor: 'var(--jp-light-pink)', color: 'var(--jp-orange-color)', borderColor: 'var(--jp-dark-pink)' }}>
           <Clock className="mr-1 h-3 w-3" />
           Under Review
         </Badge>
       )
     if (isCompleted)
       return (
-        <Badge className="border-green-200 bg-green-100 text-green-800">
+        <Badge style={{ backgroundColor: 'rgba(200, 255, 200, 0.3)', color: '#228B22', borderColor: 'var(--jp-dark-pink)' }}>
           <CheckCircle className="mr-1 h-3 w-3" />
           Completed
         </Badge>
       )
     if (isLimitReached)
       return (
-        <Badge className="border-gray-200 bg-gray-100 text-gray-700">
+        <Badge style={{ backgroundColor: 'rgba(200, 200, 200, 0.2)', color: 'var(--jp-gray-color)', borderColor: 'var(--jp-dark-pink)' }}>
           <AlertCircle className="mr-1 h-3 w-3" />
           Limit Reached
         </Badge>
@@ -59,11 +59,16 @@ export function EarnMissionCard({
       transition={{ duration: 0.3 }}
     >
       <Card
-        className={`h-full rounded-2xl border transition-all duration-300 hover:shadow-sm ${
+        className={`jp-card h-full rounded-2xl border transition-all duration-300 hover:shadow-sm ${
           isCompleted || isLimitReached
-            ? 'border-gray-200 bg-gray-50 opacity-75'
-            : 'border-gray-200 bg-white hover:border-gray-300'
+            ? 'opacity-75'
+            : ''
         }`}
+        style={{
+          backgroundColor: isCompleted || isLimitReached ? 'rgba(235, 188, 189, 0.2)' : 'rgba(251, 231, 231, 0.5)',
+          backdropFilter: 'blur(8px)',
+          borderColor: 'var(--jp-dark-pink)'
+        }}
       >
         <CardContent className="flex flex-col p-5 h-full">
           {/* Header: Booster Badge */}
@@ -78,65 +83,85 @@ export function EarnMissionCard({
           </div>
 
           {/* Title & Description */}
-          <h4 className="mb-2 text-lg font-bold text-black">{mission.title}</h4>
-          <p className="mb-3 text-sm text-gray-600">{mission.description}</p>
+          <h4 className="mb-2 text-lg font-bold" style={{ color: 'var(--jp-black-color)' }}>{mission.title}</h4>
+          <p className="mb-3 text-sm" style={{ color: 'var(--jp-gray-color)' }}>{mission.description}</p>
 
           {/* Requirements */}
           {mission.requirements.description && (
-            <div className="mb-3 rounded-lg bg-gray-50 p-3">
-              <p className="text-xs font-medium text-gray-500">Requirements</p>
-              <p className="text-xs text-gray-700">{mission.requirements.description}</p>
+            <div className="mb-3 rounded-lg p-3" style={{ backgroundColor: 'rgba(251, 231, 231, 0.4)' }}>
+              <p className="text-xs font-medium" style={{ color: 'var(--jp-gray-color)' }}>Requirements</p>
+              <p className="text-xs" style={{ color: 'var(--jp-black-color)' }}>{mission.requirements.description}</p>
             </div>
           )}
 
           {/* Reward Range */}
           <div className="mb-4">
-            <p className="mb-1 text-xs font-medium text-gray-500">Reward Range</p>
-            <p className="text-sm font-semibold text-black">
+            <p className="mb-1 text-xs font-medium" style={{ color: 'var(--jp-gray-color)' }}>Reward Range</p>
+            <p className="text-sm font-semibold" style={{ color: 'var(--jp-orange-color)' }}>
               {formatNumber(mission.rewardRange.min)} – {formatNumber(mission.rewardRange.max)}
-              <span className="ml-1 text-gray-500">SENTINEL</span>
+              <span className="ml-1" style={{ color: 'var(--jp-gray-color)' }}>SENTINEL</span>
             </p>
           </div>
 
 
           {/* Help Text for Auto-Detected */}
           {mission.helpText && (
-            <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-3">
-              <p className="text-xs text-blue-700">{mission.helpText}</p>
+            <div className="mb-4 rounded-lg border p-3" style={{ borderColor: 'var(--jp-dark-pink)', backgroundColor: 'rgba(251, 231, 231, 0.4)' }}>
+              <p className="text-xs" style={{ color: 'var(--jp-black-color)' }}>{mission.helpText}</p>
             </div>
           )}
 
           {/* Submit Button */}
           <div className="mt-auto pt-3">
             {!isAuthenticated ? (
-              <button className="btn btn-outline w-full cursor-not-allowed opacity-60" disabled>
-                <Lock className="mr-2 h-4 w-4" />
+              <button
+                className="w-full cursor-not-allowed rounded-xl border px-4 py-2 font-medium opacity-60"
+                style={{ borderColor: 'var(--jp-dark-pink)', color: 'var(--jp-gray-color)' }}
+                disabled
+              >
+                <Lock className="mr-2 inline h-4 w-4" />
                 Connect Wallet to Submit
               </button>
             ) : isAutoDetected ? (
-              <button className="btn btn-outline w-full cursor-not-allowed" disabled>
+              <button
+                className="w-full cursor-not-allowed rounded-xl border px-4 py-2 font-medium"
+                style={{ borderColor: 'var(--jp-dark-pink)', color: 'var(--jp-gray-color)' }}
+                disabled
+              >
                 Auto-Detected
               </button>
             ) : isCompleted ? (
-              <button className="btn btn-outline w-full cursor-not-allowed opacity-60" disabled>
-                <CheckCircle className="mr-2 h-4 w-4" />
+              <button
+                className="w-full cursor-not-allowed rounded-xl border px-4 py-2 font-medium opacity-60"
+                style={{ borderColor: 'var(--jp-dark-pink)', color: 'var(--jp-gray-color)' }}
+                disabled
+              >
+                <CheckCircle className="mr-2 inline h-4 w-4" />
                 Already Submitted
               </button>
             ) : isLimitReached ? (
-              <button className="btn btn-outline w-full cursor-not-allowed opacity-60" disabled>
+              <button
+                className="w-full cursor-not-allowed rounded-xl border px-4 py-2 font-medium opacity-60"
+                style={{ borderColor: 'var(--jp-dark-pink)', color: 'var(--jp-gray-color)' }}
+                disabled
+              >
                 Come Back Tomorrow
               </button>
             ) : isPending ? (
-              <button className="btn btn-outline w-full cursor-not-allowed opacity-60" disabled>
-                <Clock className="mr-2 h-4 w-4" />
+              <button
+                className="w-full cursor-not-allowed rounded-xl border px-4 py-2 font-medium opacity-60"
+                style={{ borderColor: 'var(--jp-dark-pink)', color: 'var(--jp-gray-color)' }}
+                disabled
+              >
+                <Clock className="mr-2 inline h-4 w-4" />
                 Under Review
               </button>
             ) : (
               <button
                 onClick={onSubmit}
-                className="btn btn-black w-full transition-transform active:scale-[0.98]"
+                className="jp-btn-primary w-full rounded-xl px-4 py-2 font-medium transition-transform active:scale-[0.98]"
               >
-                <ExternalLink className="mr-2 h-4 w-4" />
+                <ExternalLink className="mr-2 inline h-4 w-4" />
                 Submit Mission
               </button>
             )}

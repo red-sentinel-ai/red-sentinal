@@ -39,34 +39,37 @@ export function EarnHero() {
   ]
 
   return (
-    <section className="container mx-auto px-4 py-12 md:py-16">
+    <section className="container relative z-10 mx-auto px-4 py-12 md:py-16">
       <motion.div
         className="text-center"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <h1 className="mb-4 text-3xl font-bold uppercase text-black sm:text-4xl md:text-5xl">
+        <h1
+          className="jp-text-heading mb-4 text-3xl font-bold uppercase sm:text-4xl md:text-5xl"
+        >
           Every Action Earns SENTINEL
         </h1>
-        <p className="mx-auto mb-10 max-w-2xl text-base text-gray-600 sm:text-xl md:mb-12">
+        <p className="mx-auto mb-10 max-w-2xl text-base sm:text-xl md:mb-12" style={{ color: 'var(--jp-gray-color)' }}>
           Complete missions, defend or attack Sentinels, and create content to earn Spin Passes. Use
           your passes at the slot machine to win{' '}
           <Link
             href={SENTINEL_TOKEN_EXPLORER_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-semibold text-black underline underline-offset-2 hover:opacity-70 transition-opacity"
+            className="font-semibold underline underline-offset-2 hover:opacity-70 transition-opacity"
+            style={{ color: 'var(--jp-orange-color)' }}
           >
             SENTINEL tokens
           </Link>
           .
         </p>
 
-        {/* Stats Cards */}
-        <Card className="mb-8 rounded-2xl border-gray-200 bg-white md:mb-10">
+        {/* Stats Cards - Japanese Theme Styled */}
+        <Card className="jp-card mb-8 rounded-2xl md:mb-10" style={{ backgroundColor: 'rgba(251, 231, 231, 0.5)', backdropFilter: 'blur(8px)', borderColor: 'var(--jp-dark-pink)' }}>
           <CardContent className="p-0">
-            <div className="grid grid-cols-1 divide-y divide-gray-200 md:grid-cols-3 md:divide-x md:divide-y-0">
+            <div className="grid grid-cols-1 divide-y md:grid-cols-3 md:divide-x md:divide-y-0" style={{ borderColor: 'var(--jp-dark-pink)' }}>
               {statCards.map((stat, index) => {
                 const Icon = stat.icon
                 const formatValue = stat.format || formatNumber
@@ -82,19 +85,20 @@ export function EarnHero() {
                   >
                     <div className="flex items-center justify-center gap-4">
                       <div
-                        className={`flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full ${stat.iconBg} md:h-16 md:w-16`}
+                        className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full md:h-16 md:w-16"
+                        style={{ backgroundColor: 'var(--jp-light-pink)' }}
                       >
-                        <Icon className={`h-7 w-7 ${stat.iconColor} md:h-8 md:w-8`} />
+                        <Icon className="h-7 w-7 md:h-8 md:w-8" style={{ color: 'var(--jp-orange-color)' }} />
                       </div>
                       <div className="text-left">
-                        <div className="flex items-center gap-2 text-2xl font-bold text-black md:text-3xl">
+                        <div className="flex items-center gap-2 text-2xl font-bold md:text-3xl" style={{ color: 'var(--jp-black-color)' }}>
                           {isLoading ? (
-                            <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+                            <Loader2 className="h-6 w-6 animate-spin" style={{ color: 'var(--jp-gray-color)' }} />
                           ) : (
                             displayValue
                           )}
                         </div>
-                        <div className="text-sm font-medium text-gray-500 md:text-base">
+                        <div className="text-sm font-medium md:text-base" style={{ color: 'var(--jp-gray-color)' }}>
                           {stat.label}
                         </div>
                       </div>
@@ -110,7 +114,7 @@ export function EarnHero() {
         {account ? (
           <Link href="/profile?tab=rewards">
             <motion.button
-              className="btn btn-black px-8 py-3 text-base md:text-lg"
+              className="jp-btn-primary rounded-xl px-8 py-3 text-base md:text-lg"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -119,7 +123,7 @@ export function EarnHero() {
           </Link>
         ) : (
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <button className="btn btn-black px-8 py-3 text-base md:text-lg">
+            <button className="jp-btn-primary rounded-xl px-8 py-3 text-base md:text-lg">
               Connect Wallet to Start Earning
             </button>
           </motion.div>

@@ -72,8 +72,8 @@ export function SocialMissionsSection() {
   const missions = getMissionsByTab()
 
   return (
-    <section id="missions" className="scroll-mt-20 bg-gray-50 py-16 md:py-20">
-      <div className="container mx-auto px-4">
+    <section id="missions" className="scroll-mt-20 py-16 md:py-20">
+      <div className="container relative z-10 mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -81,26 +81,26 @@ export function SocialMissionsSection() {
           transition={{ duration: 0.4 }}
           className="mb-12 text-center"
         >
-          <h2 className="mb-4 text-3xl font-bold uppercase text-black sm:text-4xl">
+          <h2 className="jp-text-heading mb-4 text-3xl font-bold uppercase sm:text-4xl">
             Missions
           </h2>
-          <p className="mx-auto max-w-2xl text-base text-gray-600 md:text-lg">
+          <p className="mx-auto max-w-2xl text-base md:text-lg" style={{ color: 'var(--jp-gray-color)' }}>
             Attack, defend, create content, and engage with the community to earn Spin Passes
           </p>
         </motion.div>
 
-        <Card className="rounded-2xl border-gray-200 bg-white">
+        <Card className="jp-card rounded-2xl" style={{ backgroundColor: 'rgba(251, 231, 231, 0.6)', backdropFilter: 'blur(8px)', borderColor: 'var(--jp-dark-pink)' }}>
           <CardContent className="p-6 md:p-8">
             {/* Tab Navigation */}
             <MissionTabNav activeTab={activeTab} onTabChange={setActiveTab} />
 
             {activeTab === 'defender' && (
-              <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4">
+              <div className="mb-6 rounded-lg border p-4" style={{ borderColor: 'var(--jp-dark-pink)', backgroundColor: 'rgba(251, 231, 231, 0.4)' }}>
                 <div className="flex gap-3">
-                  <Info className="h-5 w-5 flex-shrink-0 text-blue-600" />
+                  <Info className="h-5 w-5 flex-shrink-0" style={{ color: 'var(--jp-orange-color)' }} />
                   <div>
-                    <p className="font-medium text-blue-900">Rewards Are Auto-Detected On-Chain</p>
-                    <p className="text-sm text-blue-700">
+                    <p className="font-medium" style={{ color: 'var(--jp-black-color)' }}>Rewards Are Auto-Detected On-Chain</p>
+                    <p className="text-sm" style={{ color: 'var(--jp-gray-color)' }}>
                       Deploy or fund your Sentinel and booster passes are awarded automatically, no submission needed.
                     </p>
                   </div>
@@ -109,12 +109,12 @@ export function SocialMissionsSection() {
             )}
 
             {activeTab === 'attacker' && (
-              <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4">
+              <div className="mb-6 rounded-lg border p-4" style={{ borderColor: 'var(--jp-dark-pink)', backgroundColor: 'rgba(235, 188, 189, 0.3)' }}>
                 <div className="flex gap-3">
-                  <Info className="h-5 w-5 flex-shrink-0 text-red-600" />
+                  <Info className="h-5 w-5 flex-shrink-0" style={{ color: 'var(--jp-red-color)' }} />
                   <div>
-                    <p className="font-medium text-red-900">Rewards Are Auto-Detected On-Chain</p>
-                    <p className="text-sm text-red-700">
+                    <p className="font-medium" style={{ color: 'var(--jp-black-color)' }}>Rewards Are Auto-Detected On-Chain</p>
+                    <p className="text-sm" style={{ color: 'var(--jp-gray-color)' }}>
                       Attack any Sentinel and your booster passes are awarded automatically based on your result.
                     </p>
                   </div>
@@ -124,14 +124,14 @@ export function SocialMissionsSection() {
 
             {/* Content Review Banner (Content Tab) */}
             {activeTab === 'content' && (
-              <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4">
+              <div className="mb-6 rounded-lg border p-4" style={{ borderColor: 'var(--jp-dark-pink)', backgroundColor: 'rgba(251, 231, 231, 0.4)' }}>
                 <div className="flex gap-3">
-                  <Info className="h-5 w-5 flex-shrink-0 text-blue-600" />
+                  <Info className="h-5 w-5 flex-shrink-0" style={{ color: 'var(--jp-orange-color)' }} />
                   <div>
-                    <p className="font-medium text-blue-900">
+                    <p className="font-medium" style={{ color: 'var(--jp-black-color)' }}>
                       Content Submissions Reviewed Within 48 Hours
                     </p>
-                    <p className="text-sm text-blue-700">
+                    <p className="text-sm" style={{ color: 'var(--jp-gray-color)' }}>
                       Quality content that accurately represents Sui Sentinel earns Spin Passes.
                     </p>
                   </div>
@@ -141,12 +141,12 @@ export function SocialMissionsSection() {
 
             {/* Mod Reward Info Card (Community Tab) */}
             {activeTab === 'community' && (
-              <div className="mb-6 rounded-lg border border-purple-200 bg-purple-50 p-4">
+              <div className="mb-6 rounded-lg border p-4" style={{ borderColor: 'var(--jp-dark-pink)', backgroundColor: 'rgba(235, 188, 189, 0.3)' }}>
                 <div className="flex gap-3">
-                  <AlertCircle className="h-5 w-5 flex-shrink-0 text-purple-600" />
+                  <AlertCircle className="h-5 w-5 flex-shrink-0" style={{ color: 'var(--jp-red-color)' }} />
                   <div>
-                    <p className="font-medium text-purple-900">Helpful Telegram Members Rewarded</p>
-                    <p className="text-sm text-purple-700">
+                    <p className="font-medium" style={{ color: 'var(--jp-black-color)' }}>Helpful Telegram Members Rewarded</p>
+                    <p className="text-sm" style={{ color: 'var(--jp-gray-color)' }}>
                       Help others in Discord and our moderators will award you with 2x Uncommon Spin
                       Passes automatically.
                     </p>

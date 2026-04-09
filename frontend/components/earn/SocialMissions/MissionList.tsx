@@ -15,7 +15,7 @@ export function MissionList({ missions, onMissionSubmit }: MissionListProps) {
   if (missions.length === 0) {
     return (
       <div className="py-12 text-center">
-        <p className="text-gray-500">No missions available in this category yet.</p>
+        <p style={{ color: 'var(--jp-gray-color)' }}>No missions available in this category yet.</p>
       </div>
     )
   }
