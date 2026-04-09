@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { SUI_SENTINEL_API_URL, APP_NETWORK } from '@/constants'
+import { useActiveChain } from '@/context/ActiveChainContext'
 
 export interface PrizePoolHistory {
   history: { time: string; value: number }[]
@@ -43,8 +44,10 @@ export interface AgentDetailsFull {
 export const AGENT_DETAILS_FULL_QUERY_KEY = 'agentDetailsFull'
 
 export function useAgentDetails(slug?: string) {
+  const { activeChain } = useActiveChain()
+
   return useQuery<AgentDetailsFull>({
-    queryKey: [AGENT_DETAILS_FULL_QUERY_KEY, slug, APP_NETWORK],
+    queryKey: [AGENT_DETAILS_FULL_QUERY_KEY, slug, APP_NETWORK, activeChain],
     queryFn: async () => {
       let normalizedSlug: string
       try {
@@ -53,7 +56,7 @@ export function useAgentDetails(slug?: string) {
         normalizedSlug = slug!
       }
       const res = await fetch(
-        `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}/details?agent_path=${encodeURIComponent(normalizedSlug)}`
+        `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}/details?agent_path=${encodeURIComponent(normalizedSlug)}&chain=${activeChain}`
       )
       if (!res.ok) {
         const err = await res.json().catch(() => ({}))

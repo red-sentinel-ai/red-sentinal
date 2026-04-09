@@ -1,5 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { SUI_SENTINEL_API_URL, APP_NETWORK } from '@/constants'
+import { useActiveChain } from '@/context/ActiveChainContext'
 
 export interface PrizePoolHistory {
   history: { time: string; value: number }[]
@@ -53,8 +54,10 @@ export const useAllAgents = (
   sortDirection: SortDirection = 'desc',
   coinTypeFilter?: string
 ) => {
+  const { activeChain } = useActiveChain()
+
   return useInfiniteQuery<AgentsResponse, Error>({
-    queryKey: [ALL_AGENTS_QUERY_KEY, sortField, sortDirection, coinTypeFilter],
+    queryKey: [ALL_AGENTS_QUERY_KEY, sortField, sortDirection, coinTypeFilter, activeChain],
     queryFn: async ({ pageParam }) => {
       const offset = pageParam as number
 
@@ -64,6 +67,7 @@ export const useAllAgents = (
         offset: String(offset),
         include_prize_pool: 'true',
         min_balance: '1',
+        chain: activeChain,
       })
 
       // Add sort params if provided
