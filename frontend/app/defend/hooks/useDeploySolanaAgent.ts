@@ -1,7 +1,6 @@
 import {
   Transaction,
   PublicKey,
-  Connection,
 } from '@solana/web3.js'
 import {
   getAssociatedTokenAddress,
@@ -18,7 +17,7 @@ import {
   buildFundAgentInstruction,
   buildEd25519VerifyInstruction,
   buildRegisterAgentMessage,
-  deriveProtocolConfigPda,
+  fetchEnclavePubkey,
   deriveAgentPda,
 } from '@/lib/solana/program'
 import type { DefendFormData } from './useDefendForm'
@@ -36,27 +35,6 @@ export function useDeploySolanaAgent({
   const { publicKey, sendTransaction } = useSolanaWallet()
   const { connection } = useSolanaConnection()
 
-  const fetchEnclavePubkey = async (conn: Connection): Promise<Uint8Array> => {
-    const protocolConfigPda = deriveProtocolConfigPda()
-    const accountInfo = await conn.getAccountInfo(protocolConfigPda)
-    if (!accountInfo) throw new Error('Protocol config account not found on Solana')
-
-    // Parse ProtocolConfig account data (Anchor 8-byte discriminator + fields)
-    // Layout after 8-byte discriminator:
-    //   admin: 32 bytes (Pubkey)
-    //   protocol_wallet: 32 bytes (Pubkey)
-    //   agent_balance_fee: 8 bytes (u64)
-    //   creator_fee: 8 bytes (u64)
-    //   protocol_fee: 8 bytes (u64)
-    //   enclave_pubkey: 1 byte (Option tag) + 32 bytes ([u8; 32])
-    const data = accountInfo.data
-    const enclaveOptionOffset = 8 + 32 + 32 + 8 + 8 + 8 // = 96
-    const hasEnclave = data[enclaveOptionOffset] === 1
-    if (!hasEnclave) throw new Error('Enclave public key not set in Solana protocol config')
-
-    return Uint8Array.from(data.subarray(enclaveOptionOffset + 1, enclaveOptionOffset + 1 + 32))
-  }
-
   const executeTransaction = async (
     teeResponse: SolanaTeeResponse
   ): Promise<DeployTransactionResult> => {
@@ -68,7 +46,7 @@ export function useDeploySolanaAgent({
     const tokenMint = new PublicKey(selectedSolanaToken.coinType)
     const isNativeSol = selectedSolanaToken.coinType === NATIVE_SOL_MINT
 
-    // Fetch enclave pubkey from on-chain config
+    // Fetch enclave pubkey from on-chain protocol config
     const enclavePubkey = await fetchEnclavePubkey(connection)
 
     // Build the message that was signed by the enclave
@@ -116,11 +94,15 @@ export function useDeploySolanaAgent({
     tx1.add(initVaultsIx)
 
     tx1.feePayer = publicKey
-    const { blockhash: blockhash1 } = await connection.getLatestBlockhash()
-    tx1.recentBlockhash = blockhash1
+    const latestBlockhash1 = await connection.getLatestBlockhash('confirmed')
+    tx1.recentBlockhash = latestBlockhash1.blockhash
 
     const tx1Signature = await sendTransaction(tx1, connection)
-    await connection.confirmTransaction(tx1Signature, 'confirmed')
+    await connection.confirmTransaction({
+      signature: tx1Signature,
+      blockhash: latestBlockhash1.blockhash,
+      lastValidBlockHeight: latestBlockhash1.lastValidBlockHeight,
+    }, 'confirmed')
 
     // === Transaction 2: Fund agent (transfer tokens to vault) ===
     const fundAmount = BigInt(
@@ -174,11 +156,15 @@ export function useDeploySolanaAgent({
       tx2.add(fundIx)
 
       tx2.feePayer = publicKey
-      const { blockhash: blockhash2 } = await connection.getLatestBlockhash()
-      tx2.recentBlockhash = blockhash2
+      const latestBlockhash2 = await connection.getLatestBlockhash('confirmed')
+      tx2.recentBlockhash = latestBlockhash2.blockhash
 
       const tx2Signature = await sendTransaction(tx2, connection)
-      await connection.confirmTransaction(tx2Signature, 'confirmed')
+      await connection.confirmTransaction({
+        signature: tx2Signature,
+        blockhash: latestBlockhash2.blockhash,
+        lastValidBlockHeight: latestBlockhash2.lastValidBlockHeight,
+      }, 'confirmed')
     }
 
     const agentPda = deriveAgentPda(data.agent_id)

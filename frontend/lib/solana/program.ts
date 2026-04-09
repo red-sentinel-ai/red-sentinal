@@ -4,6 +4,7 @@ import {
   SystemProgram,
   SYSVAR_INSTRUCTIONS_PUBKEY,
   Ed25519Program,
+  type Connection,
 } from '@solana/web3.js'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { SOLANA_CONFIG } from '@/constants/solana'
@@ -200,6 +201,28 @@ export function buildEd25519VerifyInstruction(params: {
     message: params.message,
     signature: params.signature,
   })
+}
+
+// Fetch the enclave public key from the on-chain ProtocolConfig account
+export async function fetchEnclavePubkey(connection: Connection): Promise<Uint8Array> {
+  const protocolConfigPda = deriveProtocolConfigPda()
+  const accountInfo = await connection.getAccountInfo(protocolConfigPda)
+  if (!accountInfo) throw new Error('Protocol config account not found on Solana')
+
+  // Parse ProtocolConfig account data (Anchor 8-byte discriminator + fields)
+  // Layout after 8-byte discriminator:
+  //   admin: 32 bytes (Pubkey)
+  //   protocol_wallet: 32 bytes (Pubkey)
+  //   agent_balance_fee: 8 bytes (u64)
+  //   creator_fee: 8 bytes (u64)
+  //   protocol_fee: 8 bytes (u64)
+  //   enclave_pubkey: 1 byte (Option tag) + 32 bytes ([u8; 32])
+  const data = accountInfo.data
+  const enclaveOptionOffset = 8 + 32 + 32 + 8 + 8 + 8 // = 96
+  const hasEnclave = data[enclaveOptionOffset] === 1
+  if (!hasEnclave) throw new Error('Enclave public key not set in Solana protocol config')
+
+  return Uint8Array.from(data.subarray(enclaveOptionOffset + 1, enclaveOptionOffset + 1 + 32))
 }
 
 // Build the register_agent message that was signed by the enclave
