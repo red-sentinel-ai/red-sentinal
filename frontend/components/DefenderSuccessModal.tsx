@@ -1,5 +1,6 @@
 import { SUIVISION_TXBLOCK_URL } from '@/constants'
-import { formatAddress } from '@mysten/sui/utils'
+import { SOLANA_EXPLORER_TX_URL, SOLANA_EXPLORER_TX_SUFFIX } from '@/constants/solana'
+import { truncateAddress } from '@/lib/utils'
 import { motion } from 'framer-motion'
 import { CheckCircle, X } from 'lucide-react'
 import Link from 'next/link'
@@ -11,6 +12,7 @@ interface SuccessModalProps {
   agentName: string
   transactionDigest: string
   agentPath: string
+  chain?: 'sui' | 'solana'
 }
 
 export const SuccessModal: React.FC<SuccessModalProps> = ({
@@ -19,8 +21,13 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
   agentName,
   transactionDigest,
   agentPath,
+  chain = 'sui',
 }) => {
   if (!open) return null
+
+  const txExplorerUrl = chain === 'solana'
+    ? `${SOLANA_EXPLORER_TX_URL}${transactionDigest}${SOLANA_EXPLORER_TX_SUFFIX}`
+    : `${SUIVISION_TXBLOCK_URL}/${transactionDigest}`
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4 backdrop-blur-sm">
@@ -54,12 +61,12 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
           <div className="mb-6 flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
             <span className="text-sm text-gray-500">Transaction</span>
             <Link
-              href={`${SUIVISION_TXBLOCK_URL}/${transactionDigest}`}
+              href={txExplorerUrl}
               className="font-mono text-sm text-black transition-colors hover:underline"
               target="_blank"
               rel="noopener noreferrer"
             >
-              {formatAddress(transactionDigest)}
+              {truncateAddress(transactionDigest)}
             </Link>
           </div>
 

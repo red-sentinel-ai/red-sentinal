@@ -557,6 +557,7 @@ export default function DefendPageClient() {
         agentName={formData.agentName}
         transactionDigest={transactionDigest}
         agentPath={deployedAgentPath}
+        chain={activeChain}
       />
     </div>
   )
