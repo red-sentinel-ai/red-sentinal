@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { CheckCircle, XCircle, Trophy, Clock, User, AlertCircle } from 'lucide-react'
 import { useAgentEvents } from '@/hooks/useAgentEvents'
 import { useCurrentAccount } from '@mysten/dapp-kit'
-import { formatAddress } from '@mysten/sui/utils'
+import { truncateAddress } from '@/lib/utils'
 import { SUIVISION_TXBLOCK_URL } from '@/constants'
 
 export const UserActivity = () => {
@@ -97,7 +97,7 @@ export const UserActivity = () => {
                           rel="noopener noreferrer"
                           className="font-mono text-blue-600 hover:underline"
                         >
-                          {formatAddress(event.id.txDigest)}
+                          {truncateAddress(event.id.txDigest)}
                         </a>
                       </div>
                     </div>
@@ -152,7 +152,7 @@ export const UserActivity = () => {
                           <User className="h-4 w-4 text-gray-500" />
                           <span className="text-gray-500">Sender:</span>
                           <span className="font-mono">
-                            {formatAddress(event.parsedJson.sender)}
+                            {truncateAddress(event.parsedJson.sender)}
                           </span>
                         </div>
 
@@ -179,7 +179,7 @@ export const UserActivity = () => {
                             rel="noopener noreferrer"
                             className="ml-2 font-mono text-xs text-blue-600 hover:underline"
                           >
-                            {formatAddress(event.id.txDigest)}
+                            {truncateAddress(event.id.txDigest)}
                           </a>
                         </div>
                       </div>

@@ -7,10 +7,10 @@ import Image from 'next/image'
 import clsx from 'clsx'
 import { Loader2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { formatAddress } from '@mysten/sui/utils'
 import { ConnectModal, useCurrentAccount } from '@mysten/dapp-kit'
 
 import { ATTACK_PROMPT_MAX_TOKENS, DEFAULT_PROFILE_URL } from '@/constants'
+import { truncateAddress } from '@/lib/utils'
 import type { ConsumePromptApiResponse } from '@/types'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { ChatEvent } from '@/hooks/agents/useAgentChatHistory'
@@ -375,7 +375,7 @@ export default function ChatInterface({
                       href={`/u/${winnerInfo.winnerAddress}`}
                       className="text-right text-sm text-blue-600 underline"
                     >
-                      {formatAddress(winnerInfo.winnerAddress as string)}
+                      {truncateAddress(winnerInfo.winnerAddress as string)}
                     </Link>
                   </div>
 
