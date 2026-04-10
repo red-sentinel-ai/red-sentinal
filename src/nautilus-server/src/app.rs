@@ -323,7 +323,7 @@ pub async fn consume_prompt(
     let client = Client::new();
     let eval_request = client
         .post(&eval_url)
-        .bearer_auth("solhero@345")
+        .bearer_auth("suihero@345")
         .header("Content-Type", "application/json");
 
     let eval_response = eval_request
