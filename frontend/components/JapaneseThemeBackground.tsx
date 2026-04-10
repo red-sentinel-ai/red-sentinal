@@ -12,7 +12,7 @@ interface JapaneseThemeBackgroundProps {
 export function JapaneseThemeBackground({
   children,
   showCherry = true,
-  showRedSun = true,
+  // showRedSun = true,
   showPinkCircle = true,
 }: JapaneseThemeBackgroundProps) {
   return (

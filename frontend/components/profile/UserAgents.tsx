@@ -22,12 +22,14 @@ export const UserAgents = () => {
       {userAgents && userAgents.length > 0 ? (
         <div className="mb-16">
           <div className="mb-8">
-            <h2 className="mb-2 text-center text-2xl font-bold text-black md:text-3xl">
+            <h2 className="jp-text-heading mb-2 text-center text-2xl font-bold md:text-3xl"
+              style={{ color: 'var(--jp-black-color)' }}
+            >
               Your Sentinels
             </h2>
             <div className="mx-auto flex max-w-[400px]">
-              <div className="black-gradient-border"></div>
-              <div className="black-gradient-border rotate-180"></div>
+              <div className="h-[1px] flex-1" style={{ background: 'linear-gradient(to right, transparent, var(--jp-dark-pink))' }}></div>
+              <div className="h-[1px] flex-1" style={{ background: 'linear-gradient(to left, transparent, var(--jp-dark-pink))' }}></div>
             </div>
           </div>
 
@@ -53,19 +55,20 @@ export const UserAgents = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col items-center justify-center rounded-2xl border border-gray-200 bg-gray-50 px-4 py-16 text-center"
+          className="jp-card flex flex-col items-center justify-center rounded-2xl border px-4 py-16 text-center"
+          style={{ backgroundColor: 'rgba(251, 231, 231, 0.5)', backdropFilter: 'blur(8px)', borderColor: 'var(--jp-dark-pink)' }}
         >
-          <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-gray-200 bg-gray-100">
-            <Shield className="h-10 w-10 text-gray-400" />
+          <div className="jp-image-picker mb-6 flex h-20 w-20 items-center justify-center rounded-full" style={{ backgroundColor: 'var(--jp-light-pink)' }}>
+            <Shield className="h-10 w-10" style={{ color: 'var(--jp-orange-color)' }} />
           </div>
-          <h3 className="mb-2 text-xl font-bold text-black">You don&apos;t own any Sentinel yet</h3>
-          <p className="mb-8 max-w-md text-gray-500">
+          <h3 className="mb-2 text-xl font-bold" style={{ color: 'var(--jp-black-color)' }}>You don&apos;t own any Sentinel yet</h3>
+          <p className="mb-8 max-w-md" style={{ color: 'var(--jp-gray-color)' }}>
             Deploy your own AI agent, set the rules, and earn rewards when attackers try to break
             them.
           </p>
           <Link href="/defend">
-            <button className="btn btn-black">
-              <Plus className="h-4 w-4" />
+            <button className="jp-btn-primary rounded-xl px-6 py-2 font-medium">
+              <Plus className="mr-2 inline h-4 w-4" />
               Deploy Sentinel
             </button>
           </Link>

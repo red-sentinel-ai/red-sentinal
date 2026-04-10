@@ -136,15 +136,15 @@ export function SocialConnectionsSection() {
 
   if (isLoading) {
     return (
-      <Card className="border-gray-200 bg-gray-50 p-6">
+      <Card className="jp-card border p-6" style={{ backgroundColor: 'rgba(251, 231, 231, 0.5)', backdropFilter: 'blur(8px)', borderColor: 'var(--jp-dark-pink)' }}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="h-5 w-5 animate-pulse rounded bg-gray-200"></div>
-            <div className="h-5 w-40 animate-pulse rounded bg-gray-200"></div>
+            <div className="h-5 w-5 animate-pulse rounded" style={{ backgroundColor: 'var(--jp-light-pink)' }}></div>
+            <div className="h-5 w-40 animate-pulse rounded" style={{ backgroundColor: 'var(--jp-light-pink)' }}></div>
           </div>
           <div className="flex gap-3">
-            <div className="h-9 w-28 animate-pulse rounded-lg bg-gray-200"></div>
-            <div className="h-9 w-36 animate-pulse rounded-lg bg-gray-200"></div>
+            <div className="h-9 w-28 animate-pulse rounded-lg" style={{ backgroundColor: 'var(--jp-light-pink)' }}></div>
+            <div className="h-9 w-36 animate-pulse rounded-lg" style={{ backgroundColor: 'var(--jp-light-pink)' }}></div>
           </div>
         </div>
       </Card>
@@ -153,16 +153,17 @@ export function SocialConnectionsSection() {
 
   return (
     <div className="px-4 md:px-8">
-      <Card className="border-[#5E5E5E] bg-transparent bg-gradient-to-r from-white/45 to-[rgba(249,241,248,0.45)] p-4">
+      <Card className="jp-card border p-4" style={{ backgroundColor: 'rgba(251, 231, 231, 0.5)', backdropFilter: 'blur(8px)', borderColor: 'var(--jp-dark-pink)' }}>
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-medium text-black sm:text-xl">
+            <h3 className="text-lg font-medium sm:text-xl" style={{ color: 'var(--jp-black-color)' }}>
               Connect your socials to unlock rewards
             </h3>
             {hasAnyConnection && (
               <Badge
                 variant="secondary"
-                className="border-green-200 bg-green-100 px-2 py-0.5 text-xs text-green-800"
+                className="px-2 py-0.5 text-xs"
+                style={{ backgroundColor: 'rgba(200, 255, 200, 0.3)', color: '#228B22', borderColor: 'var(--jp-dark-pink)' }}
               >
                 <Check className="mr-1 h-3 w-3" />
                 Active
@@ -172,17 +173,17 @@ export function SocialConnectionsSection() {
 
           <div className="grid grid-cols-1 gap-3">
             {/* Connect Email (Google) */}
-            <div className="flex flex-col items-start justify-between gap-2 rounded-lg border border-[#5E5E5E] bg-gradient-to-r from-white/45 to-[rgba(249,240,249,0.46)] p-3 sm:flex-row sm:items-center">
+            <div className="flex flex-col items-start justify-between gap-2 rounded-lg border p-3 sm:flex-row sm:items-center" style={{ backgroundColor: 'rgba(255, 255, 255, 0.3)', borderColor: 'var(--jp-dark-pink)' }}>
               <div className="flex items-center gap-2">
-                <div className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-[#5E5E5E] sm:h-10 sm:w-10">
+                <div className="jp-image-picker relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg sm:h-10 sm:w-10" style={{ backgroundColor: 'var(--jp-light-pink)' }}>
                   <GoogleIcon />
                   {hasGoogle && (
                     <div className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-green-500"></div>
                   )}
                 </div>
                 <div>
-                  <p className="text-sm font-medium sm:text-base">Connect Email</p>
-                  <p className="text-xs text-[#5E5E5E]">
+                  <p className="text-sm font-medium sm:text-base" style={{ color: 'var(--jp-black-color)' }}>Connect Email</p>
+                  <p className="text-xs" style={{ color: 'var(--jp-gray-color)' }}>
                     {hasGoogle ? 'Connected via Google' : 'Connect via Google'}
                   </p>
                 </div>
@@ -198,11 +199,12 @@ export function SocialConnectionsSection() {
                   size="sm"
                   variant="outline"
                   disabled={disconnectingPlatform === 'google'}
-                  className="flex h-8 min-w-[90px] items-center gap-1 border-red-200 px-2 text-xs text-red-600 hover:border-red-300 hover:bg-red-50 hover:text-red-700 disabled:opacity-50 sm:h-9 sm:text-sm"
+                  className="flex h-8 min-w-[90px] items-center gap-1 px-2 text-xs disabled:opacity-50 sm:h-9 sm:text-sm"
+                  style={{ borderColor: 'var(--jp-dark-pink)', color: 'var(--jp-red-color)' }}
                 >
                   {disconnectingPlatform === 'google' ? (
                     <>
-                      <div className="mr-1 h-3 w-3 flex-shrink-0 animate-spin rounded-full border border-black border-t-transparent"></div>
+                      <div className="mr-1 h-3 w-3 flex-shrink-0 animate-spin rounded-full border border-[var(--jp-orange-color)] border-t-transparent"></div>
                       Disconnecting...
                     </>
                   ) : (
@@ -220,11 +222,11 @@ export function SocialConnectionsSection() {
                   }}
                   size="sm"
                   disabled={connectingPlatform === 'google'}
-                  className="btn btn-outline flex h-8 min-w-[85px] items-center gap-1 text-xs sm:h-9 sm:text-sm"
+                  className="jp-btn-primary flex h-8 min-w-[85px] items-center gap-1 rounded-lg text-xs sm:h-9 sm:text-sm"
                 >
                   {connectingPlatform === 'google' ? (
                     <>
-                      <div className="mr-1 h-3 w-3 flex-shrink-0 animate-spin rounded-full border border-black border-t-transparent"></div>
+                      <div className="mr-1 h-3 w-3 flex-shrink-0 animate-spin rounded-full border border-white border-t-transparent"></div>
                       <span>Connecting...</span>
                     </>
                   ) : (

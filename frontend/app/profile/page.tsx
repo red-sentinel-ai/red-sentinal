@@ -15,6 +15,7 @@ import { BoosterRewards } from '@/components/rewards/BoosterRewards'
 import { ConnectPrompt } from '@/components/ConnectPrompt'
 import { EditProfileModal } from '@/components/profile/EditProfileModal'
 import { SocialConnectionsSectionWrapper } from '@/components/profile/SocialConnectionsSectionWrapper'
+import { JapaneseThemeBackground } from '@/components/JapaneseThemeBackground'
 import { useUserProfile, useUpdateAvatar } from '@/hooks/profile/useUserProfile'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 import { SENTINEL_GIFS, USER_IMAGES } from '@/constants/asset_paths'
@@ -94,28 +95,25 @@ function ProfileContent() {
   }
 
   return (
-    <>
-      <div className="relative">
-        <div className="vertical-line left-4"></div>
-        <div className="vertical-line right-4"></div>
-        <div className="min-h-body relative mx-auto max-w-[1440px] pb-12">
-          <div
-            className="mb-6 flex min-h-[300px] w-full flex-col items-start gap-4 bg-cover bg-bottom bg-no-repeat px-4 pb-8 pt-4 sm:min-h-[376px] sm:items-end sm:pb-20 md:flex-row md:px-12"
-            style={{ backgroundImage: 'url("/img/footer-bg.png")' }}
-          >
+    <JapaneseThemeBackground>
+      <div className="relative z-10 mx-auto max-w-[1440px] pb-12">
+        <div
+          className="mb-6 flex min-h-[300px] w-full flex-col items-start gap-4 bg-cover bg-bottom bg-no-repeat px-4 pb-8 pt-4 sm:min-h-[376px] sm:items-end sm:pb-20 md:flex-row md:px-12"
+          style={{ backgroundImage: 'url("/img/footer-bg.png")' }}
+        >
             <div
               className="group relative h-20 w-20 flex-shrink-0 cursor-pointer overflow-hidden rounded-full md:h-44 md:w-44"
               onClick={() => setIsImagePickerOpen(true)}
             >
               {isUpdatingAvatar ? (
-                <div className="flex h-full w-full items-center justify-center bg-white/70">
-                  <Loader2 className="h-8 w-8 animate-spin text-black" />
+                <div className="flex h-full w-full items-center justify-center" style={{ backgroundColor: 'rgba(251, 231, 231, 0.7)' }}>
+                  <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--jp-orange-color)' }} />
                 </div>
               ) : profile?.avatar_url ? (
                 <Image src={profile.avatar_url} alt="User Avatar" fill className="object-cover" />
               ) : (
-                <div className="flex h-full w-full items-center justify-center bg-gray-100">
-                  <User className="h-12 w-12 text-gray-500" />
+                <div className="flex h-full w-full items-center justify-center" style={{ backgroundColor: 'var(--jp-light-pink)' }}>
+                  <User className="h-12 w-12" style={{ color: 'var(--jp-orange-color)' }} />
                 </div>
               )}
               <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
@@ -133,7 +131,8 @@ function ProfileContent() {
                 href={SENTINEL_TOKEN_EXPLORER_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mb-5 flex min-h-10 w-fit items-center justify-center gap-2 rounded-xl bg-white px-2 py-1 transition-opacity hover:opacity-80"
+                className="mb-5 flex min-h-10 w-fit items-center justify-center gap-2 rounded-xl px-2 py-1 transition-opacity hover:opacity-80"
+                style={{ backgroundColor: 'var(--jp-light-pink)' }}
               >
                 <Image
                   src="/icons/dollar_coin.png"
@@ -142,47 +141,59 @@ function ProfileContent() {
                   alt="coin"
                   className="flex-shrink-0"
                 />
-                <span className="text-sm font-medium sm:text-base">
+                <span className="text-sm font-medium sm:text-base" style={{ color: 'var(--jp-black-color)' }}>
                   Sentinel Balance:{' '}
-                  <span className="text-[#F632F3] underline">{sentinelBalance} SENTINEL</span>
+                  <span style={{ color: 'var(--jp-orange-color)' }} className="underline">{sentinelBalance} SENTINEL</span>
                 </span>
               </Link>
 
               <button
                 onClick={() => setIsEditModalOpen(true)}
-                className="btn btn-outline h-[50px] font-medium"
+                className="h-[50px] rounded-xl border px-4 font-medium transition-colors hover:opacity-80"
+                style={{ borderColor: 'var(--jp-dark-pink)', color: 'var(--jp-black-color)' }}
               >
                 Edit Profile
               </button>
             </div>
             <div className="flex w-full flex-wrap items-center justify-start gap-2 pt-2 sm:ml-auto sm:w-auto sm:justify-end">
-              <Link className="btn btn-black text-sm sm:text-base" href="/defend">
+              <Link
+                className="rounded-xl px-4 py-2 text-sm font-medium text-white transition-colors hover:opacity-90 sm:text-base"
+                style={{ backgroundColor: 'var(--jp-orange-color)', boxShadow: 'var(--jp-box-shadow)' }}
+                href="/defend"
+              >
                 Launch Sentinel
               </Link>
 
-              <Link className="btn btn-outline text-sm sm:text-base" href="/attack">
+              <Link
+                className="rounded-xl border px-4 py-2 text-sm font-medium transition-colors hover:opacity-80 sm:text-base"
+                style={{ borderColor: 'var(--jp-dark-pink)', color: 'var(--jp-black-color)' }}
+                href="/attack"
+              >
                 Attack Sentinel
               </Link>
 
               {profile?.username && (
                 <Link href={`/u/${profile.username}`}>
-                  <button className="btn btn-outline h-[30px] text-xs sm:text-sm">
+                  <button
+                    className="h-[30px] rounded-xl border px-3 text-xs transition-colors hover:opacity-80 sm:text-sm"
+                    style={{ borderColor: 'var(--jp-dark-pink)', color: 'var(--jp-black-color)' }}
+                  >
                     View Profile as Public
                   </button>
                 </Link>
               )}
             </div>
           </div>
-          <div className="mb-6">
+          <div className="mb-6 relative z-10">
             <SocialConnectionsSectionWrapper />
           </div>
 
-          <div className="px-4 md:px-8">
+          <div className="px-4 md:px-8 relative z-10">
             <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-              <TabsList className="grid w-full grid-cols-4 gap-2 lg:flex lg:w-auto lg:justify-start">
+              <TabsList className="grid w-full grid-cols-4 gap-2 lg:flex lg:w-auto lg:justify-start" style={{ backgroundColor: 'rgba(251, 231, 231, 0.5)' }}>
                 <TabsTrigger
                   value={PROFILE_TABS.AGENTS}
-                  className="flex items-center gap-2 text-sm sm:text-lg md:text-xl"
+                  className="flex items-center gap-2 text-sm sm:text-lg md:text-xl data-[state=active]:text-[var(--jp-orange-color)]"
                 >
                   <Folder className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="truncate">Sentinels</span>
@@ -190,7 +201,7 @@ function ProfileContent() {
 
                 <TabsTrigger
                   value={PROFILE_TABS.ACTIVITY}
-                  className="flex items-center gap-2 text-sm sm:text-lg md:text-xl"
+                  className="flex items-center gap-2 text-sm sm:text-lg md:text-xl data-[state=active]:text-[var(--jp-orange-color)]"
                 >
                   <Activity className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="truncate">Activity</span>
@@ -198,7 +209,7 @@ function ProfileContent() {
 
                 <TabsTrigger
                   value={PROFILE_TABS.STATS}
-                  className="flex items-center gap-2 text-sm sm:text-lg md:text-xl"
+                  className="flex items-center gap-2 text-sm sm:text-lg md:text-xl data-[state=active]:text-[var(--jp-orange-color)]"
                 >
                   <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="truncate">Stats</span>
@@ -206,7 +217,7 @@ function ProfileContent() {
 
                 <TabsTrigger
                   value={PROFILE_TABS.REWARDS}
-                  className="flex items-center gap-2 text-sm sm:text-lg md:text-xl"
+                  className="flex items-center gap-2 text-sm sm:text-lg md:text-xl data-[state=active]:text-[var(--jp-orange-color)]"
                 >
                   <Gift className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="truncate">My Rewards</span>
@@ -234,7 +245,6 @@ function ProfileContent() {
               </div>
             </Tabs>
           </div>
-        </div>
       </div>
 
       <EditProfileModal
@@ -253,7 +263,7 @@ function ProfileContent() {
         gifArray={SENTINEL_GIFS}
         disableGifs={true}
       />
-    </>
+    </JapaneseThemeBackground>
   )
 }
 

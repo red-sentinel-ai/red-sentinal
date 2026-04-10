@@ -14,9 +14,9 @@ export const UserStats = () => {
 
   if (isLoading) {
     return (
-      <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-md">
-        <Skeleton className="mb-4 h-6 w-32 bg-gray-100" />
-        <Skeleton className="h-[280px] w-full rounded-lg bg-gray-100" />
+      <div className="jp-card rounded-xl border p-6" style={{ backgroundColor: 'rgba(251, 231, 231, 0.5)', backdropFilter: 'blur(8px)', borderColor: 'var(--jp-dark-pink)' }}>
+        <Skeleton className="mb-4 h-6 w-32" style={{ backgroundColor: 'var(--jp-light-pink)' }} />
+        <Skeleton className="h-[280px] w-full rounded-lg" style={{ backgroundColor: 'var(--jp-light-pink)' }} />
       </div>
     )
   }

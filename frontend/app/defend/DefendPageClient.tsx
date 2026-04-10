@@ -462,7 +462,6 @@ export default function DefendPageClient() {
                       rawAmount={selectedTokenRawBalance}
                       token={selectedToken}
                       className="font-medium"
-                      style={{ color: 'var(--jp-black-color)' }}
                     />
                   )}
                 </span>
