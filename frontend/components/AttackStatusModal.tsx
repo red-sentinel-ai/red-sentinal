@@ -6,9 +6,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Dialog } from '@/components/Dialog'
 import { TruncatedText } from '@/components/TruncatedText'
 import { ConsumePromptApiResponse } from '@/types'
-import { SUIVISION_TXBLOCK_URL } from '@/constants'
-import { SOLANA_EXPLORER_TX_URL, SOLANA_EXPLORER_TX_SUFFIX } from '@/constants/solana'
 import { useActiveChain } from '@/context/ActiveChainContext'
+import { getExplorerTxUrl } from '@/lib/explorer'
 import { cn } from '@/lib/utils'
 import { SpinPassPromo } from '@/components/rewards/SpinPassPromo'
 
@@ -28,9 +27,7 @@ export const AttackStatusModal = ({
   const [isExplanationOpen, setIsExplanationOpen] = useState(true)
   const { activeChain } = useActiveChain()
 
-  const txExplorerUrl = activeChain === 'solana'
-    ? `${SOLANA_EXPLORER_TX_URL}${txnHash}${SOLANA_EXPLORER_TX_SUFFIX}`
-    : `${SUIVISION_TXBLOCK_URL}/${txnHash}`
+  const txExplorerUrl = getExplorerTxUrl(txnHash, activeChain)
 
   const success = apiResponse?.response.data.success
   const originalScore = apiResponse?.response.data.score || 0

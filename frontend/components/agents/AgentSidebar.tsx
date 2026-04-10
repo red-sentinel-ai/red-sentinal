@@ -16,13 +16,12 @@ import { toast } from 'sonner'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import {
   DEFAULT_PROFILE_URL,
-  EXPLORER_BASE_URL,
   getTokenForCoinType,
   SLUSH_BASE_URL,
   WITHDRAWAL_LOCK_MS,
   SUI_SENTINEL_X_USERNAME,
-  APP_NETWORK,
 } from '@/constants'
+import { getExplorerObjectUrl } from '@/lib/explorer'
 import type { AgentDetailsFull } from '@/hooks/agents/useAgentDetails'
 import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
 import { DefenderProfile } from './DefenderProfile'
@@ -219,11 +218,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
               Sentinel Object Id
             </h3>
             <Link
-              href={
-                agent.chain === 'solana'
-                  ? `https://explorer.solana.com/address/${agent.agent_object_id}${APP_NETWORK === 'mainnet' ? '' : '?cluster=devnet'}`
-                  : `${EXPLORER_BASE_URL}/object/${agent.agent_object_id}`
-              }
+              href={getExplorerObjectUrl(agent.agent_object_id, agent.chain)}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block text-sm hover:underline md:text-base"

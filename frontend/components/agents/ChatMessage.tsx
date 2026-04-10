@@ -6,8 +6,8 @@ import { motion } from 'framer-motion'
 import clsx from 'clsx'
 import { formatDistanceToNow } from 'date-fns'
 import { Trophy } from 'lucide-react'
-import { DEFAULT_PROFILE_URL, SUIVISION_TXBLOCK_URL } from '@/constants'
-import { SOLANA_EXPLORER_TX_URL, SOLANA_EXPLORER_TX_SUFFIX } from '@/constants/solana'
+import { DEFAULT_PROFILE_URL } from '@/constants'
+import { getExplorerTxUrl } from '@/lib/explorer'
 import { truncateAddress } from '@/lib/utils'
 import type { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { type ChatMessage as ChatMessageType } from './ChatInterface'
@@ -133,11 +133,7 @@ export const ChatMessage = ({
               <div className="absolute bottom-1 right-3 flex gap-3 whitespace-nowrap text-right text-[11px] text-[#666666]">
                 {message.type === 'agent' && message.txDigest && (
                   <a
-                    href={
-                      agent.chain === 'solana'
-                        ? `${SOLANA_EXPLORER_TX_URL}${message.txDigest}${SOLANA_EXPLORER_TX_SUFFIX}`
-                        : `${SUIVISION_TXBLOCK_URL}/${message.txDigest}`
-                    }
+                    href={getExplorerTxUrl(message.txDigest, agent.chain)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="break-all lowercase text-[#0F23A7] underline"

@@ -1,5 +1,4 @@
-import { SUIVISION_TXBLOCK_URL } from '@/constants'
-import { SOLANA_EXPLORER_TX_URL, SOLANA_EXPLORER_TX_SUFFIX } from '@/constants/solana'
+import { getExplorerTxUrl } from '@/lib/explorer'
 import { truncateAddress } from '@/lib/utils'
 import { motion } from 'framer-motion'
 import { CheckCircle, X } from 'lucide-react'
@@ -25,9 +24,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
 }) => {
   if (!open) return null
 
-  const txExplorerUrl = chain === 'solana'
-    ? `${SOLANA_EXPLORER_TX_URL}${transactionDigest}${SOLANA_EXPLORER_TX_SUFFIX}`
-    : `${SUIVISION_TXBLOCK_URL}/${transactionDigest}`
+  const txExplorerUrl = getExplorerTxUrl(transactionDigest, chain)
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4 backdrop-blur-sm">
