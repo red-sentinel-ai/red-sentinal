@@ -127,7 +127,7 @@ export const FeaturedAgentCard = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
     >
-      <div className="h-full w-full overflow-hidden rounded-lg bg-white p-2 lg:rounded-xl lg:p-6">
+      <div className="jp-card h-full w-full overflow-hidden rounded-lg p-2 lg:rounded-xl lg:p-6">
         <div className="relative mb-2 sm:mb-4">
           <div className="relative flex h-32 w-full items-center justify-center overflow-hidden rounded-lg bg-gray-100 sm:h-80">
             {agent.agent_image ? (
@@ -178,7 +178,7 @@ export const FeaturedAgentCard = ({
 
         <div className="mb-2 text-center sm:mb-4">
           <div className="mb-1 flex items-center justify-center gap-1 sm:mb-2">
-            <h3 className="truncate text-sm font-medium sm:text-lg lg:text-2xl">
+            <h3 className="truncate text-sm font-medium sm:text-lg lg:text-2xl" style={{ color: 'var(--jp-black-color)' }}>
               {agent.agent_name}
             </h3>
             {agent.is_featured && (
@@ -191,24 +191,24 @@ export const FeaturedAgentCard = ({
               />
             )}
           </div>
-          <div className="mx-auto flex max-w-[394px] border-t border-gray-200"></div>
+          <div className="mx-auto flex max-w-[394px] border-t" style={{ borderColor: 'var(--jp-dark-pink)' }}></div>
         </div>
 
         <div className="mb-2 space-y-1 text-xs font-medium sm:mb-4 sm:space-y-3 sm:text-base lg:text-xl">
           <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
-            <span className="text-[#5E5E5E]">Prize Pool:</span>
+            <span style={{ color: 'var(--jp-gray-color)' }}>Prize Pool:</span>
             <div className="flex items-center justify-end">
               <span className="mr-1 sm:mr-2"><TokenAmount rawAmount={agent.total_balance} token={token} precision={4} /></span>
               <PrizePoolChangeDisplay prizePoolHistory={agent.prizePoolHistory} variant="card" />
             </div>
           </div>
           <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
-            <span className="text-[#5E5E5E]">Message Cost:</span>
-            <span className="text-right"><TokenAmount rawAmount={agent.cost_per_message} token={token} precision={4} /></span>
+            <span style={{ color: 'var(--jp-gray-color)' }}>Message Cost:</span>
+            <span className="text-right" style={{ color: 'var(--jp-black-color)' }}><TokenAmount rawAmount={agent.cost_per_message} token={token} precision={4} /></span>
           </div>
           {fromProfile && isOwner && (
             <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
-              <span className="text-[#5E5E5E]">Your Earnings:</span>
+              <span style={{ color: 'var(--jp-gray-color)' }}>Your Earnings:</span>
               <span className={`text-right ${hasEarnings ? 'font-semibold text-green-600' : ''}`}>
                 <TokenAmount rawAmount={agent.accumulated_fees || 0} token={token} precision={4} />
               </span>
@@ -237,7 +237,7 @@ export const FeaturedAgentCard = ({
               e.stopPropagation()
               handleAttack()
             }}
-            className="btn btn-black h-9 w-full text-xs sm:h-[62px] sm:text-xl"
+            className="jp-btn-primary h-9 w-full text-xs sm:h-[62px] sm:text-xl"
           >
             {fromProfile ? 'Manage Sentinel' : ctaHeading}
           </button>
@@ -248,7 +248,7 @@ export const FeaturedAgentCard = ({
                   const token = getTokenForCoinType(agent.coin_type)
                   openFundModal(agent.agent_object_id, agent.agent_id, token.coinType, token.symbol, token.decimals)
                 }}
-                className="btn btn-black w-1/2 px-2 py-1.5 text-[10px] sm:px-4 sm:py-2.5 sm:text-sm"
+                className="jp-btn-primary w-1/2 px-2 py-1.5 text-[10px] sm:px-4 sm:py-2.5 sm:text-sm"
               >
                 Add Funds
               </button>
@@ -261,7 +261,7 @@ export const FeaturedAgentCard = ({
                     agent.coin_type
                   )
                 }
-                className="btn btn-outline w-1/2 px-2 py-1.5 text-[10px] sm:px-4 sm:py-2.5 sm:text-sm"
+                className="jp-btn-secondary w-1/2 px-2 py-1.5 text-[10px] sm:px-4 sm:py-2.5 sm:text-sm"
                 disabled={isWithdrawalLocked || Number(agent.total_balance) === 0}
                 title={
                   isWithdrawalLocked
@@ -282,7 +282,7 @@ export const FeaturedAgentCard = ({
                 setIsClaimFeesModalOpen(true)
               }}
               disabled={!hasEarnings}
-              className="btn btn-outline w-full px-2 py-1.5 text-[10px] disabled:opacity-50 sm:px-4 sm:py-2.5 sm:text-sm"
+              className="jp-btn-secondary w-full px-2 py-1.5 text-[10px] disabled:opacity-50 sm:px-4 sm:py-2.5 sm:text-sm"
               title={hasEarnings ? 'Collect your earned fees' : 'No earnings to claim yet'}
             >
               {hasEarnings ? (
