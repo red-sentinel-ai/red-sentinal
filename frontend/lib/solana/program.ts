@@ -15,15 +15,19 @@ let discriminatorCache: Record<string, Buffer> | null = null
 
 async function getDiscriminators() {
   if (discriminatorCache) return discriminatorCache
-  const [registerAgent, initAgentVaults, fundAgent] = await Promise.all([
+  const [registerAgent, initAgentVaults, fundAgent, requestAttack, consumePrompt] = await Promise.all([
     sha256('global:register_agent'),
     sha256('global:init_agent_vaults'),
     sha256('global:fund_agent'),
+    sha256('global:request_attack'),
+    sha256('global:consume_prompt'),
   ])
   discriminatorCache = {
     registerAgent: Buffer.from(registerAgent.slice(0, 8)),
     initAgentVaults: Buffer.from(initAgentVaults.slice(0, 8)),
     fundAgent: Buffer.from(fundAgent.slice(0, 8)),
+    requestAttack: Buffer.from(requestAttack.slice(0, 8)),
+    consumePrompt: Buffer.from(consumePrompt.slice(0, 8)),
   }
   return discriminatorCache
 }
@@ -245,4 +249,167 @@ export function buildRegisterAgentMessage(params: {
   const creatorBuf = params.creator.toBuffer()
 
   return Buffer.concat([intentBuf, timestampBuf, agentIdBuf, costBuf, promptHashBuf, creatorBuf])
+}
+
+// ============================================================================
+// Attack flow instruction builders
+// ============================================================================
+
+export function deriveAttackPda(
+  agentPda: PublicKey,
+  attacker: PublicKey,
+  nonce: bigint
+): PublicKey {
+  const nonceBuf = Buffer.alloc(8)
+  nonceBuf.writeBigUInt64LE(nonce, 0)
+  const [pda] = PublicKey.findProgramAddressSync(
+    [Buffer.from('attack'), agentPda.toBuffer(), attacker.toBuffer(), nonceBuf],
+    getProgramId()
+  )
+  return pda
+}
+
+/**
+ * Fetch the protocol wallet pubkey from the on-chain ProtocolConfig account.
+ * Layout after 8-byte Anchor discriminator:
+ *   admin: 32 bytes | protocol_wallet: 32 bytes | ...
+ */
+export async function fetchProtocolWallet(connection: Connection): Promise<PublicKey> {
+  const protocolConfigPda = deriveProtocolConfigPda()
+  const accountInfo = await connection.getAccountInfo(protocolConfigPda)
+  if (!accountInfo) throw new Error('Protocol config account not found on Solana')
+  // protocol_wallet is at offset 8 (discriminator) + 32 (admin) = 40
+  return new PublicKey(accountInfo.data.subarray(40, 72))
+}
+
+// Build request_attack instruction
+export async function buildRequestAttackInstruction(params: {
+  agentId: string
+  nonce: bigint
+  agentTokenMint: PublicKey
+  attacker: PublicKey
+  attackerTokenAccount: PublicKey
+  protocolWallet: PublicKey
+  protocolWalletTokenAccount: PublicKey
+}): Promise<TransactionInstruction> {
+  const discriminators = await getDiscriminators()
+  const programId = getProgramId()
+
+  const protocolConfigPda = deriveProtocolConfigPda()
+  const agentPda = deriveAgentPda(params.agentId)
+  const agentVaultPda = deriveAgentVaultPda(agentPda)
+  const agentFeesVaultPda = deriveAgentFeesVaultPda(agentPda)
+  const attackPda = deriveAttackPda(agentPda, params.attacker, params.nonce)
+
+  const data = Buffer.concat([discriminators.requestAttack, encodeU64(params.nonce)])
+
+  return new TransactionInstruction({
+    programId,
+    keys: [
+      { pubkey: protocolConfigPda, isSigner: false, isWritable: false },
+      { pubkey: agentPda, isSigner: false, isWritable: true },
+      { pubkey: agentVaultPda, isSigner: false, isWritable: true },
+      { pubkey: agentFeesVaultPda, isSigner: false, isWritable: true },
+      { pubkey: attackPda, isSigner: false, isWritable: true },
+      { pubkey: params.attackerTokenAccount, isSigner: false, isWritable: true },
+      { pubkey: params.protocolWallet, isSigner: false, isWritable: true },
+      { pubkey: params.protocolWalletTokenAccount, isSigner: false, isWritable: true },
+      { pubkey: params.attacker, isSigner: true, isWritable: true },
+      { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },
+      { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
+    ],
+    data,
+  })
+}
+
+function encodeBool(val: boolean): Buffer {
+  return Buffer.from([val ? 1 : 0])
+}
+
+// Build consume_prompt instruction
+export async function buildConsumePromptInstruction(params: {
+  agentId: string
+  success: boolean
+  score: bigint
+  messageHash: Uint8Array // 32 bytes
+  timestamp: bigint // seconds
+  signature: Uint8Array // 64 bytes
+  attacker: PublicKey
+  attackerTokenAccount: PublicKey
+  attackNonce: bigint
+}): Promise<TransactionInstruction> {
+  const discriminators = await getDiscriminators()
+  const programId = getProgramId()
+
+  const protocolConfigPda = deriveProtocolConfigPda()
+  const agentPda = deriveAgentPda(params.agentId)
+  const agentVaultPda = deriveAgentVaultPda(agentPda)
+  const attackPda = deriveAttackPda(agentPda, params.attacker, params.attackNonce)
+
+  const data = Buffer.concat([
+    discriminators.consumePrompt,
+    encodeBool(params.success),
+    encodeU64(params.score),
+    encodeFixedArray(params.messageHash),
+    encodeI64(params.timestamp),
+    encodeFixedArray(params.signature),
+  ])
+
+  return new TransactionInstruction({
+    programId,
+    keys: [
+      { pubkey: protocolConfigPda, isSigner: false, isWritable: false },
+      { pubkey: agentPda, isSigner: false, isWritable: true },
+      { pubkey: agentVaultPda, isSigner: false, isWritable: true },
+      { pubkey: attackPda, isSigner: false, isWritable: true },
+      { pubkey: params.attackerTokenAccount, isSigner: false, isWritable: true },
+      { pubkey: params.attacker, isSigner: true, isWritable: true },
+      { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },
+      { pubkey: SYSVAR_INSTRUCTIONS_PUBKEY, isSigner: false, isWritable: false },
+    ],
+    data,
+  })
+}
+
+// CONSUME_PROMPT_INTENT = 2 (from contract lib.rs)
+const CONSUME_PROMPT_INTENT = 2
+
+/**
+ * Build the consume_prompt message that was signed by the enclave.
+ * Must match: signature.rs build_consume_prompt_message
+ *
+ * Format: intent(1) + timestamp(8) + agentId(var) + success(1) + score(8) +
+ *         attacker(32) + nonce(8) + messageHash(32)
+ */
+export function buildConsumePromptMessage(params: {
+  timestamp: bigint // seconds
+  agentId: string
+  success: boolean
+  score: bigint
+  attacker: PublicKey
+  nonce: bigint
+  messageHash: Uint8Array // 32 bytes
+}): Uint8Array {
+  const intentBuf = Buffer.from([CONSUME_PROMPT_INTENT])
+  const timestampBuf = Buffer.alloc(8)
+  timestampBuf.writeBigInt64LE(params.timestamp, 0)
+  const agentIdBuf = Buffer.from(params.agentId)
+  const successBuf = Buffer.from([params.success ? 1 : 0])
+  const scoreBuf = Buffer.alloc(8)
+  scoreBuf.writeBigUInt64LE(params.score, 0)
+  const attackerBuf = params.attacker.toBuffer()
+  const nonceBuf = Buffer.alloc(8)
+  nonceBuf.writeBigUInt64LE(params.nonce, 0)
+  const messageHashBuf = Buffer.from(params.messageHash)
+
+  return Buffer.concat([
+    intentBuf,
+    timestampBuf,
+    agentIdBuf,
+    successBuf,
+    scoreBuf,
+    attackerBuf,
+    nonceBuf,
+    messageHashBuf,
+  ])
 }
