@@ -38,7 +38,8 @@ export interface AgentDetailsFull {
   defender_profile: { username: string | null; avatar_url: string | null } | null
   prizePoolHistory: PrizePoolHistory | null
   coin_type?: string
-  current_cost_per_message?: string 
+  current_cost_per_message?: string
+  chain?: 'sui' | 'solana'
 }
 
 export const AGENT_DETAILS_FULL_QUERY_KEY = 'agentDetailsFull'

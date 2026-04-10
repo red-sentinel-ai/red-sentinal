@@ -34,7 +34,8 @@ export interface AgentDetails {
   unlock_timestamp?: string
   accumulated_fees?: number
   coin_type?: string
-  current_cost_per_message?: string 
+  current_cost_per_message?: string
+  chain?: 'sui' | 'solana'
 }
 
 export type SortField = 'total_balance' | 'cost_per_message' | 'total_attacks' | 'agent_id' | 'change7d' | null
