@@ -57,14 +57,3 @@ const SOLANA_MAINNET_CONFIG = {
 export const SOLANA_CONFIG =
   APP_NETWORK === 'mainnet' ? SOLANA_MAINNET_CONFIG : SOLANA_DEVNET_CONFIG
 
-export const SOLANA_EXPLORER_BASE_URL =
-  APP_NETWORK === 'mainnet'
-    ? 'https://explorer.solana.com'
-    : 'https://explorer.solana.com/?cluster=devnet'
-
-export const SOLANA_EXPLORER_TX_URL =
-  APP_NETWORK === 'mainnet'
-    ? 'https://explorer.solana.com/tx/'
-    : 'https://explorer.solana.com/tx/'
-
-export const SOLANA_EXPLORER_TX_SUFFIX = APP_NETWORK === 'mainnet' ? '' : '?cluster=devnet'
