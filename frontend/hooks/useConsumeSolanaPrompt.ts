@@ -35,6 +35,9 @@ interface SolanaConsumePromptResponse {
       attacker: number[]
       nonce: number
       message_hash: number[]
+      agent_response?: string
+      fun_response?: string
+      jury_response?: string
     }
   }
   signature: string
@@ -60,9 +63,9 @@ function toConsumePromptApiResponse(solana: SolanaConsumePromptResponse): Consum
         agent_id: solana.response.data.agent_id,
         success: solana.response.data.success,
         score: solana.response.data.score,
-        agent_response: '',
-        fun_response: '',
-        jury_response: '',
+        agent_response: solana.response.data.agent_response ?? '',
+        fun_response: solana.response.data.fun_response ?? '',
+        jury_response: solana.response.data.jury_response ?? '',
       },
     },
     signature: solana.signature,
