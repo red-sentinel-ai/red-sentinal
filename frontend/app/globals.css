@@ -10,9 +10,9 @@
   /* Background tiers */
   --color-bg-deepest: #E8E2D8;
   --color-bg-base: #F5F1EB;
-  --color-bg-surface: #FFFFFF;
-  --color-bg-elevated: #FFFFFF;
-  --color-bg-subtle: #E0DAD0;
+  --color-bg-surface: #FDF8F0;
+  --color-bg-elevated: #FDF8F0;
+  --color-bg-subtle: #E8E0D4;
 
   /* Text hierarchy */
   --color-text-primary: #1A1814;
@@ -131,7 +131,10 @@
 
 @layer components {
   .badge-black {
-    @apply flex min-h-[31px] items-center justify-center gap-1 rounded-full border border-black bg-black px-4 py-1 text-base font-bold text-white;
+    @apply flex min-h-[31px] items-center justify-center gap-1 rounded-full border px-4 py-1 text-base font-bold;
+    background-color: var(--color-gold-primary);
+    border-color: var(--color-gold-primary);
+    color: var(--color-text-on-gold);
   }
 
   .badge-outline-black {
@@ -475,12 +478,12 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .btn-black {
-  background-color: black;
-  color: white;
+  background-color: var(--color-gold-primary);
+  color: var(--color-text-on-gold);
 }
 
 .btn-black:hover {
-  background-color: #111827; /* gray-900 */
+  background-color: var(--color-gold-light);
 }
 
 /* ========================================
