@@ -41,14 +41,14 @@ export function StickyTabNav() {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
     if (element) {
-      const yOffset = -80 // Account for sticky nav height
+      const yOffset = -80
       const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset
       window.scrollTo({ top: y, behavior: 'smooth' })
     }
   }
 
   return (
-    <nav className="sticky top-0 z-40 border-b border-gray-200 bg-white/95 backdrop-blur-sm">
+    <nav className="sticky top-0 z-40 border-b border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)]/95 backdrop-blur-sm">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-center gap-1 overflow-x-auto py-2 sm:gap-2">
           {NAV_ITEMS.map(item => {
@@ -59,8 +59,8 @@ export function StickyTabNav() {
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className={`relative flex items-center gap-1.5 whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-colors sm:gap-2 sm:px-6 sm:text-base ${
-                  isActive ? 'text-black' : 'text-gray-500 hover:text-gray-700'
+                className={`font-body relative flex items-center gap-1.5 whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-colors sm:gap-2 sm:px-6 sm:text-base ${
+                  isActive ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]'
                 }`}
               >
                 <Icon className="h-4 w-4" />
@@ -69,7 +69,7 @@ export function StickyTabNav() {
 
                 {isActive && (
                   <motion.div
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-black"
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-[var(--color-gold-primary)]"
                     layoutId="activeTab"
                     transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                   />
