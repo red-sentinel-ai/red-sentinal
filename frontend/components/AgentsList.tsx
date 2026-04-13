@@ -58,7 +58,7 @@ export const AgentsList = ({
           <LeaderboardSkeleton />
         ) : (
           <div className="flex flex-col gap-1">
-            <div className="mb-2 hidden rounded-lg border border-[#5E5E5E] p-3 text-lg font-medium backdrop-blur-xl hover:border-black/80 md:grid md:grid-cols-12 md:gap-4">
+            <div className="mb-2 hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 text-lg font-medium shadow-[var(--shadow-card)] md:grid md:grid-cols-12 md:gap-4">
               <div className="col-span-1 flex items-center">
                 <span>#</span>
               </div>
@@ -113,7 +113,7 @@ export const AgentsList = ({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.15 }}
-                    className="cursor-pointer rounded-lg border border-black/30 p-3 text-xl backdrop-blur-xl hover:border-black/80"
+                    className="cursor-pointer rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] p-3 text-xl shadow-[var(--shadow-card)] hover:border-[var(--color-border-default)]"
                     onClick={() => router.push(`/attack/${agent.agent_path}`)}
                   >
                     <div className="space-y-3 md:hidden">
@@ -160,19 +160,19 @@ export const AgentsList = ({
                       </div>
                       <div className="grid grid-cols-2 gap-2 text-sm">
                         <div>
-                          <p className="text-xs text-gray-400">Reward</p>
+                          <p className="text-xs text-[var(--color-text-muted)]">Reward</p>
                           <p className="text-sm"><TokenAmount rawAmount={agent.total_balance} token={agentToken} precision={2} /></p>
                         </div>
                         <div>
-                          <p className="text-xs text-gray-400">Message Price</p>
+                          <p className="text-xs text-[var(--color-text-muted)]">Message Price</p>
                           <p className="text-sm"><TokenAmount rawAmount={agent.cost_per_message} token={agentToken} precision={2} /></p>
                         </div>
                         <div>
-                          <p className="text-xs text-gray-400">Attacks</p>
+                          <p className="text-xs text-[var(--color-text-muted)]">Attacks</p>
                           <p>{agent.total_attacks || 0}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-gray-400">7d Change</p>
+                          <p className="text-xs text-[var(--color-text-muted)]">7d Change</p>
                           <PrizePoolChangeDisplay
                             prizePoolHistory={agent.prizePoolHistory}
                             variant="list"
