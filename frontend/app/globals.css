@@ -6,9 +6,59 @@
   --font-satoshi: var(--font-satoshi), sans-serif;
   font-family: var(--font-satoshi);
 
-  --background: #ffffff;
-  --foreground: #000000;
-  --text: #000000;
+  /* ─── LIGHT THEME: Warm Parchment ─── */
+  /* Background tiers */
+  --color-bg-deepest: #E8E2D8;
+  --color-bg-base: #F5F1EB;
+  --color-bg-surface: #FDF8F0;
+  --color-bg-elevated: #FDF8F0;
+  --color-bg-subtle: #E8E0D4;
+
+  /* Text hierarchy */
+  --color-text-primary: #1A1814;
+  --color-text-secondary: #4A4640;
+  --color-text-muted: #6B6560;
+  --color-text-faint: #7D776C;
+
+  /* Accent — burgundy */
+  --color-gold-primary: #7A1830;
+  --color-gold-light: #8E2C44;
+  --color-gold-dark: #5C1024;
+  --color-accent-fg: #FFFFFF;
+  --color-text-on-gold: #FFFFFF;
+
+  /* Semantic */
+  --color-success: #187518;
+  --color-success-muted: rgba(24, 117, 24, 0.1);
+  --color-danger: #C03030;
+  --color-danger-muted: rgba(192, 48, 48, 0.08);
+  --color-warning: #8B6508;
+  --color-info: #3070A0;
+
+  /* Borders */
+  --color-border-subtle: #C4BCB0;
+  --color-border-default: #8E8678;
+  --color-border-strong: #766E62;
+
+  /* Shadows */
+  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-elevated: 0 4px 16px rgba(0, 0, 0, 0.08);
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  /* Fonts */
+  --font-display: "Cinzel", Georgia, serif;
+  --font-body: "Josefin Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Legacy compatibility */
+  --background: var(--color-bg-base);
+  --foreground: var(--color-text-primary);
+  --text: var(--color-text-primary);
   --primary_pink: rgb(159, 29, 36);
   --primary_pink_20: rgba(159, 29, 36, 0.2);
   --primary_pink_light: rgba(159, 29, 36, 0.9);
@@ -81,7 +131,10 @@
 
 @layer components {
   .badge-black {
-    @apply flex min-h-[31px] items-center justify-center gap-1 rounded-full border border-black bg-black px-4 py-1 text-base font-bold text-white;
+    @apply flex min-h-[31px] items-center justify-center gap-1 rounded-full border px-4 py-1 text-base font-bold;
+    background-color: var(--color-gold-primary);
+    border-color: var(--color-gold-primary);
+    color: var(--color-text-on-gold);
   }
 
   .badge-outline-black {
@@ -425,12 +478,12 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .btn-black {
-  background-color: black;
-  color: white;
+  background-color: var(--color-gold-primary);
+  color: var(--color-text-on-gold);
 }
 
 .btn-black:hover {
-  background-color: #111827; /* gray-900 */
+  background-color: var(--color-gold-light);
 }
 
 /* ========================================
