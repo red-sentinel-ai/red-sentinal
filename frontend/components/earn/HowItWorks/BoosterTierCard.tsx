@@ -1,11 +1,8 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import Image from 'next/image'
 import { Card, CardContent } from '@/components/ui'
 import { formatNumber, calculateAveragePayout } from '@/lib/earn-utils'
-import { cn } from '@/lib/utils'
-import { getTierAsset, getTierStyleConfig, getTierTextConfig } from '@/constants'
 
 interface BoosterTierInfo {
   name: string
@@ -23,16 +20,12 @@ interface BoosterTierCardProps {
   index: number
 }
 
-
 export function BoosterTierCard({ tier, index }: BoosterTierCardProps) {
   const avgPayout = calculateAveragePayout(tier.minReward, tier.maxReward)
-  const styleClass = getTierStyleConfig(tier.name)
-  const textColorClass = getTierTextConfig(tier.name)
-  const assetPath = getTierAsset(tier.name)
 
   return (
     <motion.div
-      className="w-full sm:w-64 flex-shrink-0 snap-center"
+      className="w-full sm:w-56 flex-shrink-0 snap-center"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -43,68 +36,51 @@ export function BoosterTierCard({ tier, index }: BoosterTierCardProps) {
       }}
       whileHover={{ y: -4 }}
     >
-      <Card className={cn("rounded-2xl w-full min-h-[220px]", styleClass)}>
+      <Card className="rounded-2xl w-full min-h-[200px] border-2 border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] shadow-[var(--shadow-card)] transition-all duration-300 hover:shadow-[var(--shadow-elevated)]">
         <CardContent className="w-full flex flex-col items-center justify-center p-4 space-y-3">
-          
-          {/* Top Section: Logo and Name */}
-          <div className="flex flex-col items-center gap-1.5">
-            <motion.div
-              className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-white/80 shadow-sm backdrop-blur-sm"
 
-              transition={{ duration: 0.3 }}
-            >
-              <Image
-                src={assetPath}
-                alt={`${tier.name} icon`}
-                width={28}
-                height={28}
-                className="relative object-contain drop-shadow-sm"
-              />
-            </motion.div>
-            
-            <div className="text-center">
-              <h4 className={cn("text-xl font-black tracking-tight uppercase", textColorClass)}>
-                {tier.name}
-              </h4>
-              <p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Spin Pass</p>
-            </div>
+          {/* Tier Name */}
+          <div className="text-center">
+            <h4 className="font-display text-xl font-bold tracking-tight uppercase text-[var(--color-gold-primary)]">
+              {tier.name}
+            </h4>
+            <p className="font-body text-[10px] font-semibold text-[var(--color-text-muted)] uppercase tracking-widest">Spin Pass</p>
           </div>
 
-          <div className="w-full h-px bg-black/5 rounded-full" />
+          <div className="w-full h-px bg-[var(--color-border-subtle)] rounded-full" />
 
-          {/* Centered Stats Section */}
-          <div className="flex flex-col items-center w-full space-y-2.5">
-            
+          {/* Stats Section */}
+          <div className="flex flex-col items-center w-full space-y-2">
+
             {/* Multiplier Badge */}
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-white/90 px-2.5 py-1 text-xs font-black shadow-sm text-gray-800">
-              <span className="text-[10px]">⚡</span>
+            <div className="font-body inline-flex items-center gap-1.5 rounded-full bg-[var(--color-gold-muted)]/30 px-3 py-1 text-xs font-bold text-[var(--color-gold-primary)]">
               {tier.multiplier}x Multiplier
             </div>
 
             {/* Spin Reward Range */}
             <div className="flex flex-col items-center text-center">
-              <p className="text-[9px] font-bold uppercase tracking-widest text-gray-500">Reward Range</p>
-              <p className="text-sm font-black text-gray-900 leading-tight">
+              <p className="font-body text-[10px] font-bold uppercase tracking-widest text-[var(--color-text-muted)]">Reward Range</p>
+              <p className="font-body text-sm font-bold text-[var(--color-text-primary)] leading-tight">
                 {formatNumber(tier.minReward)} - {formatNumber(tier.maxReward)}
               </p>
-              <p className="text-[8px] font-bold text-gray-400">SENTINEL</p>
+              <p className="font-body text-[9px] font-bold text-[var(--color-text-faint)]">SENTINEL</p>
             </div>
 
             <div className="flex w-full items-center justify-center gap-4 pt-1">
               {/* Avg Payout */}
               <div className="flex flex-col items-center">
-                <p className="text-[8px] font-bold uppercase tracking-widest text-gray-500">Avg</p>
-                <p className="text-xs font-bold text-gray-800">
+                <p className="font-body text-[9px] font-bold uppercase tracking-widest text-[var(--color-text-muted)]">Avg</p>
+                <p className="font-body text-xs font-bold text-[var(--color-text-secondary)]">
                   ~{formatNumber(avgPayout)}
                 </p>
               </div>
-              
-              <div className="w-px h-5 bg-black/10" />
+
+              <div className="w-px h-5 bg-[var(--color-border-subtle)]" />
 
               {/* Validity */}
               <div className="flex flex-col items-center">
-                <p className="text-[8px] font-bold uppercase tracking-widest text-gray-500">Expires</p>
-                <p className="text-xs font-bold text-gray-800">
+                <p className="font-body text-[9px] font-bold uppercase tracking-widest text-[var(--color-text-muted)]">Expires</p>
+                <p className="font-body text-xs font-bold text-[var(--color-text-secondary)]">
                   {tier.expirationDays}d
                 </p>
               </div>
@@ -117,5 +93,3 @@ export function BoosterTierCard({ tier, index }: BoosterTierCardProps) {
     </motion.div>
   )
 }
-
-
