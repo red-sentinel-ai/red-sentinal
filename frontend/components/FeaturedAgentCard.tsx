@@ -127,9 +127,9 @@ export const FeaturedAgentCard = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
     >
-      <div className="h-full w-full overflow-hidden rounded-lg bg-white p-2 lg:rounded-xl lg:p-6">
+      <div className="h-full w-full overflow-hidden rounded-lg bg-[var(--color-bg-surface)] p-2 shadow-[var(--shadow-card)] lg:rounded-xl lg:p-6">
         <div className="relative mb-2 sm:mb-4">
-          <div className="relative flex h-32 w-full items-center justify-center overflow-hidden rounded-lg bg-gray-100 sm:h-80">
+          <div className="relative flex h-32 w-full items-center justify-center overflow-hidden rounded-lg bg-[var(--color-bg-subtle)] sm:h-80">
             {agent.agent_image ? (
               <Image
                 src={agent.agent_image || '/placeholder.svg'}
@@ -191,24 +191,24 @@ export const FeaturedAgentCard = ({
               />
             )}
           </div>
-          <div className="mx-auto flex max-w-[394px] border-t border-gray-200"></div>
+          <div className="mx-auto flex max-w-[394px] border-t border-[var(--color-border-subtle)]"></div>
         </div>
 
         <div className="mb-2 space-y-1 text-xs font-medium sm:mb-4 sm:space-y-3 sm:text-base lg:text-xl">
           <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
-            <span className="text-[#5E5E5E]">Prize Pool:</span>
+            <span className="text-[var(--color-text-secondary)]">Prize Pool:</span>
             <div className="flex items-center justify-end">
               <span className="mr-1 sm:mr-2"><TokenAmount rawAmount={agent.total_balance} token={token} precision={4} /></span>
               <PrizePoolChangeDisplay prizePoolHistory={agent.prizePoolHistory} variant="card" />
             </div>
           </div>
           <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
-            <span className="text-[#5E5E5E]">Message Cost:</span>
+            <span className="text-[var(--color-text-secondary)]">Message Cost:</span>
             <span className="text-right"><TokenAmount rawAmount={agent.cost_per_message} token={token} precision={4} /></span>
           </div>
           {fromProfile && isOwner && (
             <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
-              <span className="text-[#5E5E5E]">Your Earnings:</span>
+              <span className="text-[var(--color-text-secondary)]">Your Earnings:</span>
               <span className={`text-right ${hasEarnings ? 'font-semibold text-green-600' : ''}`}>
                 <TokenAmount rawAmount={agent.accumulated_fees || 0} token={token} precision={4} />
               </span>

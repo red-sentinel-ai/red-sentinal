@@ -42,11 +42,15 @@ export const FormInput: React.FC<FormInputProps> = ({
       <div className="flex items-start justify-between">
         <div className="flex flex-col">
           <div className="flex items-center gap-2">
-            <label className="text-[20px] font-medium leading-tight text-black">{label}</label>
+            <label className="font-display text-lg font-medium leading-tight text-[var(--color-text-primary)] sm:text-xl">
+              {label}
+            </label>
             {rightElement}
           </div>
           {subLabel && (
-            <span className="mt-1 text-[16px] font-normal text-[#5E5E5E]">{subLabel}</span>
+            <span className="font-body mt-1 text-sm text-[var(--color-text-secondary)] sm:text-base">
+              {subLabel}
+            </span>
           )}
         </div>
       </div>
@@ -56,7 +60,7 @@ export const FormInput: React.FC<FormInputProps> = ({
         type={isTextarea ? undefined : type}
         value={value}
         onChange={onChange}
-        className={`w-full rounded-xl border border-[#5E5E5E] bg-white p-4 text-[16px] text-black placeholder-gray-400 transition-all focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-base ${
+        className={`font-body w-full rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-4 text-base text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] transition-all focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)] ${
           isTextarea ? 'min-h-[200px] resize-none' : 'h-[56px] sm:h-[65px]'
         }`}
         placeholder={placeholder}
@@ -66,7 +70,7 @@ export const FormInput: React.FC<FormInputProps> = ({
         {...(!isTextarea && min ? { min } : {})}
         {...(!isTextarea && step ? { step } : {})}
       />
-      {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+      {error && <p className="font-body mt-1 text-sm text-[var(--color-danger)]">{error}</p>}
     </div>
   )
 }
