@@ -43,7 +43,7 @@ export function EarnMissionCard({
       )
     if (isLimitReached)
       return (
-        <Badge className="border-gray-200 bg-gray-100 text-gray-700">
+        <Badge className="border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] text-[var(--color-text-secondary)]">
           <AlertCircle className="mr-1 h-3 w-3" />
           Limit Reached
         </Badge>
@@ -61,8 +61,8 @@ export function EarnMissionCard({
       <Card
         className={`h-full rounded-2xl border transition-all duration-300 hover:shadow-sm ${
           isCompleted || isLimitReached
-            ? 'border-gray-200 bg-gray-50 opacity-75'
-            : 'border-gray-200 bg-white hover:border-gray-300'
+            ? 'border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] opacity-75'
+            : 'border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] hover:border-[var(--color-border-default)]'
         }`}
       >
         <CardContent className="flex flex-col p-5 h-full">
@@ -78,31 +78,31 @@ export function EarnMissionCard({
           </div>
 
           {/* Title & Description */}
-          <h4 className="mb-2 text-lg font-bold text-black">{mission.title}</h4>
-          <p className="mb-3 text-sm text-gray-600">{mission.description}</p>
+          <h4 className="font-display mb-2 text-lg font-bold text-[var(--color-text-primary)]">{mission.title}</h4>
+          <p className="font-body mb-3 text-sm text-[var(--color-text-secondary)]">{mission.description}</p>
 
           {/* Requirements */}
           {mission.requirements.description && (
-            <div className="mb-3 rounded-lg bg-gray-50 p-3">
-              <p className="text-xs font-medium text-gray-500">Requirements</p>
-              <p className="text-xs text-gray-700">{mission.requirements.description}</p>
+            <div className="mb-3 rounded-lg bg-[var(--color-bg-subtle)] p-3">
+              <p className="font-body text-xs font-medium text-[var(--color-text-muted)]">Requirements</p>
+              <p className="font-body text-xs text-[var(--color-text-secondary)]">{mission.requirements.description}</p>
             </div>
           )}
 
           {/* Reward Range */}
           <div className="mb-4">
-            <p className="mb-1 text-xs font-medium text-gray-500">Reward Range</p>
-            <p className="text-sm font-semibold text-black">
+            <p className="font-body mb-1 text-xs font-medium text-[var(--color-text-muted)]">Reward Range</p>
+            <p className="font-body text-sm font-semibold text-[var(--color-text-primary)]">
               {formatNumber(mission.rewardRange.min)} – {formatNumber(mission.rewardRange.max)}
-              <span className="ml-1 text-gray-500">SENTINEL</span>
+              <span className="ml-1 text-[var(--color-text-muted)]">SENTINEL</span>
             </p>
           </div>
 
 
           {/* Help Text for Auto-Detected */}
           {mission.helpText && (
-            <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-3">
-              <p className="text-xs text-blue-700">{mission.helpText}</p>
+            <div className="mb-4 rounded-lg border border-[var(--color-gold-primary)]/20 bg-[var(--color-gold-muted)]/10 p-3">
+              <p className="font-body text-xs text-[var(--color-gold-primary)]">{mission.helpText}</p>
             </div>
           )}
 
