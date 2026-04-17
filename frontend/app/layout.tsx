@@ -3,11 +3,33 @@ import { Analytics } from '@vercel/analytics/next'
 import NextTopLoader from 'nextjs-toploader'
 import { Toaster } from 'sonner'
 import localFont from 'next/font/local'
+import { Cinzel, Josefin_Sans, JetBrains_Mono } from 'next/font/google'
 
 import './globals.css'
 import { Providers } from './providers'
 import Footer from '@/components/Footer'
 import { SUI_SENTINEL_APP_URL, SUI_SENTINEL_X_USERNAME, SUI_SENTINEL_GITHUB_URL } from '@/constants'
+
+// Light Theme Fonts
+const cinzel = Cinzel({
+  subsets: ['latin'],
+  variable: '--font-cinzel',
+  display: 'swap',
+  weight: ['400', '500', '600', '700'],
+})
+
+const josefin = Josefin_Sans({
+  subsets: ['latin'],
+  variable: '--font-josefin',
+  display: 'swap',
+  weight: ['300', '400', '500', '600', '700'],
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-jetbrains',
+  display: 'swap',
+})
 
 const satoshi = localFont({
   src: [
@@ -24,7 +46,7 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: 'cover',
-  themeColor: '#ffffff',
+  themeColor: '#F5F1EB',
 }
 
 export const metadata: Metadata = {
@@ -252,21 +274,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body
-        className={`${satoshi.className} flex min-h-screen flex-col bg-no-repeat text-black`}
-        style={{
-          backgroundImage: `
-      url('/img/hero_bg.png'),
-      linear-gradient(
-        to right,
-        rgba(233,239,255,0.55),
-        rgba(245,245,245,0.55),
-        rgba(255,235,253,0.55)
-      )
-    `,
-          backgroundSize: '100% auto, 100% auto',
-          backgroundRepeat: 'no-repeat, no-repeat',
-          backgroundPosition: 'center top, center top',
-        }}
+        className={`${satoshi.className} ${cinzel.variable} ${josefin.variable} ${jetbrainsMono.variable} flex min-h-screen flex-col bg-[var(--color-bg-base)] text-[var(--color-text-primary)]`}
+        style={{ fontFamily: 'var(--font-body)' }}
       >
         <Providers>
           <NextTopLoader color="#000000" showSpinner={false} />

@@ -86,16 +86,16 @@ export const AgentListView = () => {
     <div className="mx-auto max-w-[1560px] px-2 py-4 md:px-8 md:py-16">
       <div className="mb-4 md:mb-20">
         <h1
-          className="hidden text-center text-2xl font-bold sm:text-4xl md:block md:text-[48px]"
+          className="font-display hidden text-center text-2xl font-bold text-[var(--color-text-primary)] sm:text-4xl md:block md:text-5xl"
           id="leaderboard"
         >
           Enter the Arena
         </h1>
         <div className="mx-auto my-3 flex max-w-[800px] md:my-4">
-          <div className="black-gradient-border hidden md:block"></div>
-          <div className="black-gradient-border hidden rotate-180 md:block"></div>
+          <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-[var(--color-border-subtle)]"></div>
+          <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-[var(--color-border-subtle)]"></div>
         </div>
-        <p className="mx-auto hidden max-w-[650px] px-4 text-center text-base text-[#5E5E5E] sm:text-xl md:block">
+        <p className="font-body mx-auto hidden max-w-[650px] px-4 text-center text-base text-[var(--color-text-secondary)] sm:text-xl md:block">
           Select a Sentinel, engineer your attack, and claim the bounty. Verified on-chain, paid
           instantly.
         </p>
@@ -108,8 +108,10 @@ export const AgentListView = () => {
           {activeFeaturedAgents?.length > 0 && (
             <div className="mb-8 md:mb-16">
               <div className="mb-4 md:mb-8">
-                <h2 className="mb-2 text-xl font-medium md:text-[32px]">Featured Sentinels</h2>
-                <p className="text-sm text-[#5E5E5E] md:text-base">
+                <h2 className="font-display mb-2 text-xl font-medium text-[var(--color-text-primary)] md:text-3xl">
+                  Featured Sentinels
+                </h2>
+                <p className="font-body text-sm text-[var(--color-text-secondary)] md:text-base">
                   Curated high-value targets. Bigger pools, proven resilience. The prestige kills.
                 </p>
               </div>
@@ -143,14 +145,16 @@ export const AgentListView = () => {
         <div className="mb-3 flex flex-col gap-3 md:mb-6 md:flex-row md:items-center md:justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-lg font-medium md:text-[32px]">All Sentinels</h2>
+              <h2 className="font-display text-lg font-medium text-[var(--color-text-primary)] md:text-3xl">
+                All Sentinels
+              </h2>
               {!isFetchingAllAgents && totalAgents > 0 && (
-                <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 md:text-sm">
+                <span className="font-body rounded-full bg-[var(--color-bg-subtle)] px-2 py-0.5 text-xs font-medium text-[var(--color-text-muted)] md:text-sm">
                   {totalAgents}
                 </span>
               )}
             </div>
-            <p className="mt-0.5 text-xs text-[#5E5E5E] md:mt-1 md:text-sm">
+            <p className="font-body mt-0.5 text-xs text-[var(--color-text-secondary)] md:mt-1 md:text-sm">
               Every active target, ranked and sortable. Find your edge.
             </p>
           </div>
@@ -163,21 +167,21 @@ export const AgentListView = () => {
             />
 
             <Tabs value={activeTab} onValueChange={v => setActiveTab(v as BountyTab)}>
-              <TabsList className="h-auto rounded-md border border-gray-200 bg-gray-100 p-[2px]">
+              <TabsList className="h-auto rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] p-[2px]">
                 <TabsTrigger
                   value="big_bounties"
-                  className="rounded-md border-b-0 py-1 data-[state=active]:border-b-0 data-[state=active]:bg-white data-[state=active]:shadow-sm sm:px-4"
+                  className="font-body rounded-md border-b-0 py-1 text-[var(--color-text-secondary)] data-[state=active]:border-b-0 data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:text-[var(--color-text-primary)] data-[state=active]:shadow-sm sm:px-4"
                 >
                   Big Bounties
                   {bigBountiesCount > 0 && (
-                    <span className="ml-1.5 rounded-full bg-gray-200 px-1.5 py-0.5 text-xs font-medium leading-none">
+                    <span className="ml-1.5 rounded-full bg-[var(--color-gold-muted)] px-1.5 py-0.5 text-xs font-medium leading-none text-[var(--color-gold-primary)]">
                       {bigBountiesCount}
                     </span>
                   )}
                 </TabsTrigger>
                 <TabsTrigger
                   value="all"
-                  className="rounded-md border-b-0 py-1 data-[state=active]:border-b-0 data-[state=active]:bg-white data-[state=active]:shadow-sm sm:px-4"
+                  className="font-body rounded-md border-b-0 py-1 text-[var(--color-text-secondary)] data-[state=active]:border-b-0 data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:text-[var(--color-text-primary)] data-[state=active]:shadow-sm sm:px-4"
                 >
                   All
                 </TabsTrigger>
@@ -189,8 +193,8 @@ export const AgentListView = () => {
 
       {selectedCoinType && selectedToken && (
         <div className="mb-3 flex items-center gap-2">
-          <span className="text-xs text-[#5E5E5E]">Filtered by:</span>
-          <span className="flex items-center gap-1.5 rounded-full border border-gray-200 bg-gray-50 px-2.5 py-0.5 text-xs font-medium">
+          <span className="font-body text-xs text-[var(--color-text-muted)]">Filtered by:</span>
+          <span className="font-body flex items-center gap-1.5 rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] px-2.5 py-0.5 text-xs font-medium text-[var(--color-text-primary)]">
             <Image
               src={selectedToken.icon}
               alt={selectedToken.symbol}
@@ -201,7 +205,7 @@ export const AgentListView = () => {
             {selectedToken.symbol}
             <button
               onClick={() => setSelectedCoinType(undefined)}
-              className="ml-0.5 text-gray-400 hover:text-gray-700"
+              className="ml-0.5 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
             >
               <X className="h-3 w-3" />
             </button>
@@ -224,7 +228,7 @@ export const AgentListView = () => {
             onClick={() => fetchNextPage()}
             disabled={isFetchingNextPage}
             variant="outline"
-            className="min-w-[200px]"
+            className="font-body min-w-[200px] border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-subtle)] hover:text-[var(--color-text-primary)]"
           >
             {isFetchingNextPage ? (
               <>
@@ -238,7 +242,9 @@ export const AgentListView = () => {
         </div>
       )}
 
-      <p className="mt-4 text-xs text-[#5E5E5E]">{TEXT_COPIES.LOW_POOL_BALANCE_HIDDEN_MESSAGE}</p>
+      <p className="font-body mt-4 text-xs text-[var(--color-text-muted)]">
+        {TEXT_COPIES.LOW_POOL_BALANCE_HIDDEN_MESSAGE}
+      </p>
 
       {/* Single instance of modals - prevents duplicate hook calls */}
       <FundModal onSuccess={() => console.log('Funded successfully!')} />
