@@ -1,4 +1,4 @@
-// Copyright (c), Mysten Labs, Inc.
+// Copyright (c), Sui Sentinel
 // SPDX-License-Identifier: Apache-2.0
 #![allow(warnings)]
 
