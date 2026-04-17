@@ -23,21 +23,17 @@ export function SocialMissionsSection() {
 
   const handleMissionSubmit = (mission: EarnMission) => {
     if (mission.submissionType === 'form') {
-      // Open bug report form
       setIsCriticalBug(mission.id === 'report_critical')
       setIsBugFormOpen(true)
     } else if (mission.submissionType === 'url') {
-      // Open content submission modal for URL-based submissions
       setSelectedMission(mission)
       setIsContentModalOpen(true)
     } else {
-      // Open social mission modal for verify submissions (follow_x, join_telegram)
       setSelectedMission(mission)
       setIsMissionModalOpen(true)
     }
   }
 
-  // Convert EarnMission to RewardsMission format for the modal
   const convertedMission: RewardsMission | null = selectedMission
     ? {
         id: selectedMission.id,
@@ -71,7 +67,7 @@ export function SocialMissionsSection() {
   const missions = getMissionsByTab()
 
   return (
-    <section id="missions" className="scroll-mt-20 bg-gray-50 py-16 md:py-20">
+    <section id="missions" className="scroll-mt-20 bg-[var(--color-bg-subtle)] py-16 md:py-20">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -80,26 +76,25 @@ export function SocialMissionsSection() {
           transition={{ duration: 0.4 }}
           className="mb-12 text-center"
         >
-          <h2 className="mb-4 text-3xl font-bold uppercase text-black sm:text-4xl">
+          <h2 className="font-display mb-4 text-3xl font-bold uppercase text-[var(--color-text-primary)] sm:text-4xl">
             Missions
           </h2>
-          <p className="mx-auto max-w-2xl text-base text-gray-600 md:text-lg">
+          <p className="font-body mx-auto max-w-2xl text-base text-[var(--color-text-secondary)] md:text-lg">
             Attack, defend, create content, and engage with the community to earn Spin Passes
           </p>
         </motion.div>
 
-        <Card className="rounded-2xl border-gray-200 bg-white">
+        <Card className="rounded-2xl border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] shadow-[var(--shadow-card)]">
           <CardContent className="p-6 md:p-8">
-            {/* Tab Navigation */}
             <MissionTabNav activeTab={activeTab} onTabChange={setActiveTab} />
 
             {activeTab === 'defender' && (
-              <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4">
+              <div className="mb-6 rounded-lg border border-[var(--color-info)]/20 bg-[var(--color-info)]/5 p-4">
                 <div className="flex gap-3">
-                  <Info className="h-5 w-5 flex-shrink-0 text-blue-600" />
+                  <Info className="h-5 w-5 flex-shrink-0 text-[var(--color-info)]" />
                   <div>
-                    <p className="font-medium text-blue-900">Rewards Are Auto-Detected On-Chain</p>
-                    <p className="text-sm text-blue-700">
+                    <p className="font-body font-medium text-[var(--color-text-primary)]">Rewards Are Auto-Detected On-Chain</p>
+                    <p className="font-body text-sm text-[var(--color-text-secondary)]">
                       Deploy or fund your Sentinel and booster passes are awarded automatically, no submission needed.
                     </p>
                   </div>
@@ -108,12 +103,12 @@ export function SocialMissionsSection() {
             )}
 
             {activeTab === 'attacker' && (
-              <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4">
+              <div className="mb-6 rounded-lg border border-[var(--color-danger)]/20 bg-[var(--color-danger)]/5 p-4">
                 <div className="flex gap-3">
-                  <Info className="h-5 w-5 flex-shrink-0 text-red-600" />
+                  <Info className="h-5 w-5 flex-shrink-0 text-[var(--color-danger)]" />
                   <div>
-                    <p className="font-medium text-red-900">Rewards Are Auto-Detected On-Chain</p>
-                    <p className="text-sm text-red-700">
+                    <p className="font-body font-medium text-[var(--color-text-primary)]">Rewards Are Auto-Detected On-Chain</p>
+                    <p className="font-body text-sm text-[var(--color-text-secondary)]">
                       Attack any Sentinel and your booster passes are awarded automatically based on your result.
                     </p>
                   </div>
@@ -121,16 +116,15 @@ export function SocialMissionsSection() {
               </div>
             )}
 
-            {/* Content Review Banner (Content Tab) */}
             {activeTab === 'content' && (
-              <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4">
+              <div className="mb-6 rounded-lg border border-[var(--color-info)]/20 bg-[var(--color-info)]/5 p-4">
                 <div className="flex gap-3">
-                  <Info className="h-5 w-5 flex-shrink-0 text-blue-600" />
+                  <Info className="h-5 w-5 flex-shrink-0 text-[var(--color-info)]" />
                   <div>
-                    <p className="font-medium text-blue-900">
+                    <p className="font-body font-medium text-[var(--color-text-primary)]">
                       Content Submissions Reviewed Within 48 Hours
                     </p>
-                    <p className="text-sm text-blue-700">
+                    <p className="font-body text-sm text-[var(--color-text-secondary)]">
                       Quality content that accurately represents Sui Sentinel earns Spin Passes.
                     </p>
                   </div>
@@ -138,14 +132,13 @@ export function SocialMissionsSection() {
               </div>
             )}
 
-            {/* Mod Reward Info Card (Community Tab) */}
             {activeTab === 'community' && (
-              <div className="mb-6 rounded-lg border border-purple-200 bg-purple-50 p-4">
+              <div className="mb-6 rounded-lg border border-[var(--color-gold-muted)] bg-[var(--color-gold-muted)]/10 p-4">
                 <div className="flex gap-3">
-                  <AlertCircle className="h-5 w-5 flex-shrink-0 text-purple-600" />
+                  <AlertCircle className="h-5 w-5 flex-shrink-0 text-[var(--color-gold-primary)]" />
                   <div>
-                    <p className="font-medium text-purple-900">Helpful Telegram Members Rewarded</p>
-                    <p className="text-sm text-purple-700">
+                    <p className="font-body font-medium text-[var(--color-text-primary)]">Helpful Telegram Members Rewarded</p>
+                    <p className="font-body text-sm text-[var(--color-text-secondary)]">
                       Help others in Discord and our moderators will award you with 2x Uncommon Spin
                       Passes automatically.
                     </p>
@@ -154,17 +147,11 @@ export function SocialMissionsSection() {
               </div>
             )}
 
-            {/* Tab Content */}
-            {/* {activeTab === 'referrals' ? (
-              <ReferralSection />
-            ) : ( */}
             <MissionList missions={missions} onMissionSubmit={handleMissionSubmit} />
-            {/* )} */}
           </CardContent>
         </Card>
       </div>
 
-      {/* Modals */}
       <SocialMissionModal
         mission={convertedMission}
         isOpen={isMissionModalOpen}
