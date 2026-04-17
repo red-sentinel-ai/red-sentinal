@@ -87,53 +87,51 @@ function ProfileContent() {
 
   if (isLoadingProfile) {
     return (
-      <div className="min-h-body flex items-center justify-center">
-        <Loader2 className="h-10 w-10 animate-spin text-black" />
+      <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg-base)]">
+        <Loader2 className="h-10 w-10 animate-spin text-[var(--color-gold-primary)]" />
       </div>
     )
   }
 
   return (
     <>
-      <div className="relative">
-        <div className="vertical-line left-4"></div>
-        <div className="vertical-line right-4"></div>
-        <div className="min-h-body relative mx-auto max-w-[1440px] pb-12">
+      <div className="relative bg-[var(--color-bg-base)]">
+        <div className="min-h-screen relative mx-auto max-w-[1440px] pb-12">
           <div
             className="mb-6 flex min-h-[300px] w-full flex-col items-start gap-4 bg-cover bg-bottom bg-no-repeat px-4 pb-8 pt-4 sm:min-h-[376px] sm:items-end sm:pb-20 md:flex-row md:px-12"
             style={{ backgroundImage: 'url("/img/footer-bg.png")' }}
           >
             <div
-              className="group relative h-20 w-20 flex-shrink-0 cursor-pointer overflow-hidden rounded-full md:h-44 md:w-44"
+              className="group relative h-20 w-20 flex-shrink-0 cursor-pointer overflow-hidden rounded-full border-2 border-[var(--color-border-subtle)] md:h-44 md:w-44"
               onClick={() => setIsImagePickerOpen(true)}
             >
               {isUpdatingAvatar ? (
-                <div className="flex h-full w-full items-center justify-center bg-white/70">
-                  <Loader2 className="h-8 w-8 animate-spin text-black" />
+                <div className="flex h-full w-full items-center justify-center bg-[var(--color-bg-surface)]/70">
+                  <Loader2 className="h-8 w-8 animate-spin text-[var(--color-gold-primary)]" />
                 </div>
               ) : profile?.avatar_url ? (
                 <Image src={profile.avatar_url} alt="User Avatar" fill className="object-cover" />
               ) : (
-                <div className="flex h-full w-full items-center justify-center bg-gray-100">
-                  <User className="h-12 w-12 text-gray-500" />
+                <div className="flex h-full w-full items-center justify-center bg-[var(--color-bg-subtle)]">
+                  <User className="h-12 w-12 text-[var(--color-text-muted)]" />
                 </div>
               )}
-              <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
+              <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-overlay)] opacity-0 transition-opacity group-hover:opacity-100">
                 <Camera className="h-8 w-8 text-white" />
               </div>
             </div>
 
             <div className="min-w-0 flex-1 pt-2">
-              <h1 className="truncate text-2xl font-medium leading-snug sm:text-[32px]">
+              <h1 className="font-display truncate text-2xl font-semibold text-[var(--color-text-primary)] leading-snug sm:text-3xl">
                 {profile?.display_name || 'Your Profile'}
               </h1>
-              <p className="mb-3 mt-1 font-medium text-[#5E5E5E]">@{profile?.username}</p>
+              <p className="font-body mb-3 mt-1 font-medium text-[var(--color-text-secondary)]">@{profile?.username}</p>
 
               <Link
                 href={SENTINEL_TOKEN_EXPLORER_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mb-5 flex min-h-10 w-fit items-center justify-center gap-2 rounded-xl bg-white px-2 py-1 transition-opacity hover:opacity-80"
+                className="mb-5 flex min-h-10 w-fit items-center justify-center gap-2 rounded-xl bg-[var(--color-bg-surface)] px-3 py-1 shadow-[var(--shadow-card)] transition-opacity hover:opacity-80"
               >
                 <Image
                   src="/icons/dollar_coin.png"
@@ -142,31 +140,37 @@ function ProfileContent() {
                   alt="coin"
                   className="flex-shrink-0"
                 />
-                <span className="text-sm font-medium sm:text-base">
-                  Sentinel Balance:{' '}
-                  <span className="text-[#F632F3] underline">{sentinelBalance} SENTINEL</span>
+                <span className="font-body text-sm font-medium text-[var(--color-text-primary)] sm:text-base">
+                  Sentinel Balance:{` `}
+                  <span className="text-[var(--color-gold-primary)] underline">{sentinelBalance} SENTINEL</span>
                 </span>
               </Link>
 
               <button
                 onClick={() => setIsEditModalOpen(true)}
-                className="btn btn-outline h-[50px] font-medium"
+                className="font-body btn btn-outline h-[50px] font-medium text-[var(--color-text-primary)] border-[var(--color-border-default)] hover:bg-[var(--color-bg-subtle)]"
               >
                 Edit Profile
               </button>
             </div>
             <div className="flex w-full flex-wrap items-center justify-start gap-2 pt-2 sm:ml-auto sm:w-auto sm:justify-end">
-              <Link className="btn btn-black text-sm sm:text-base" href="/defend">
+              <Link
+                className="font-body btn h-[50px] bg-[var(--color-gold-primary)] text-[var(--color-text-on-gold)] hover:bg-[var(--color-gold-light)] text-sm sm:text-base"
+                href="/defend"
+              >
                 Launch Sentinel
               </Link>
 
-              <Link className="btn btn-outline text-sm sm:text-base" href="/attack">
+              <Link
+                className="font-body btn btn-outline text-sm sm:text-base text-[var(--color-text-primary)] border-[var(--color-border-default)] hover:bg-[var(--color-bg-subtle)]"
+                href="/attack"
+              >
                 Attack Sentinel
               </Link>
 
               {profile?.username && (
                 <Link href={`/u/${profile.username}`}>
-                  <button className="btn btn-outline h-[30px] text-xs sm:text-sm">
+                  <button className="font-body btn btn-outline h-[30px] text-xs sm:text-sm text-[var(--color-text-muted)] border-[var(--color-border-subtle)] hover:bg-[var(--color-bg-subtle)]">
                     View Profile as Public
                   </button>
                 </Link>
@@ -179,10 +183,10 @@ function ProfileContent() {
 
           <div className="px-4 md:px-8">
             <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-              <TabsList className="grid w-full grid-cols-4 gap-2 lg:flex lg:w-auto lg:justify-start">
+              <TabsList className="grid w-full grid-cols-4 gap-2 bg-[var(--color-bg-subtle)] lg:flex lg:w-auto lg:justify-start">
                 <TabsTrigger
                   value={PROFILE_TABS.AGENTS}
-                  className="flex items-center gap-2 text-sm sm:text-lg md:text-xl"
+                  className="font-body flex items-center gap-2 text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
                 >
                   <Folder className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="truncate">Sentinels</span>
@@ -190,7 +194,7 @@ function ProfileContent() {
 
                 <TabsTrigger
                   value={PROFILE_TABS.ACTIVITY}
-                  className="flex items-center gap-2 text-sm sm:text-lg md:text-xl"
+                  className="font-body flex items-center gap-2 text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
                 >
                   <Activity className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="truncate">Activity</span>
@@ -198,7 +202,7 @@ function ProfileContent() {
 
                 <TabsTrigger
                   value={PROFILE_TABS.STATS}
-                  className="flex items-center gap-2 text-sm sm:text-lg md:text-xl"
+                  className="font-body flex items-center gap-2 text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
                 >
                   <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="truncate">Stats</span>
@@ -206,7 +210,7 @@ function ProfileContent() {
 
                 <TabsTrigger
                   value={PROFILE_TABS.REWARDS}
-                  className="flex items-center gap-2 text-sm sm:text-lg md:text-xl"
+                  className="font-body flex items-center gap-2 text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
                 >
                   <Gift className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="truncate">My Rewards</span>
@@ -261,8 +265,8 @@ export default function ProfilePage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-body flex items-center justify-center">
-          <Loader2 className="h-10 w-10 animate-spin text-black" />
+        <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg-base)]">
+          <Loader2 className="h-10 w-10 animate-spin text-[var(--color-gold-primary)]" />
         </div>
       }
     >

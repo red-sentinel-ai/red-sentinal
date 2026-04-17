@@ -17,23 +17,23 @@ export function EarnHero() {
       icon: TrendingUp,
       label: 'Total SENTINEL Distributed',
       value: stats?.totalDistributed || 0,
-      iconBg: 'bg-blue-100',
-      iconColor: 'text-blue-600',
+      iconBg: 'bg-[var(--color-gold-muted)]',
+      iconColor: 'text-[var(--color-gold-primary)]',
     },
     {
       icon: Target,
       label: 'Active Missions',
       value: stats?.activeMissions || 0,
-      iconBg: 'bg-purple-100',
-      iconColor: 'text-purple-600',
+      iconBg: 'bg-[var(--color-success-muted)]',
+      iconColor: 'text-[var(--color-success)]',
       format: (val: number) => val.toString(),
     },
     {
       icon: Trophy,
       label: 'Total Spins',
       value: stats?.totalSpins || 0,
-      iconBg: 'bg-orange-100',
-      iconColor: 'text-orange-600',
+      iconBg: 'bg-[var(--color-analysis-gold-faint)]',
+      iconColor: 'text-[var(--color-analysis-gold)]',
       format: (val: number) => val.toLocaleString(),
     },
   ]
@@ -46,17 +46,17 @@ export function EarnHero() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <h1 className="mb-4 text-3xl font-bold uppercase text-black sm:text-4xl md:text-5xl">
+        <h1 className="font-display mb-4 text-3xl font-bold uppercase text-[var(--color-text-primary)] sm:text-4xl md:text-5xl">
           Every Action Earns SENTINEL
         </h1>
-        <p className="mx-auto mb-10 max-w-2xl text-base text-gray-600 sm:text-xl md:mb-12">
+        <p className="font-body mx-auto mb-10 max-w-2xl text-base text-[var(--color-text-secondary)] sm:text-xl md:mb-12">
           Complete missions, defend or attack Sentinels, and create content to earn Spin Passes. Use
           your passes at the slot machine to win{' '}
           <Link
             href={SENTINEL_TOKEN_EXPLORER_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-semibold text-black underline underline-offset-2 hover:opacity-70 transition-opacity"
+            className="font-semibold text-[var(--color-gold-primary)] underline underline-offset-2 hover:text-[var(--color-gold-light)] transition-opacity"
           >
             SENTINEL tokens
           </Link>
@@ -64,9 +64,9 @@ export function EarnHero() {
         </p>
 
         {/* Stats Cards */}
-        <Card className="mb-8 rounded-2xl border-gray-200 bg-white md:mb-10">
+        <Card className="mb-8 rounded-2xl border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] shadow-[var(--shadow-card)] md:mb-10">
           <CardContent className="p-0">
-            <div className="grid grid-cols-1 divide-y divide-gray-200 md:grid-cols-3 md:divide-x md:divide-y-0">
+            <div className="grid grid-cols-1 divide-y divide-[var(--color-border-subtle)] md:grid-cols-3 md:divide-x md:divide-y-0">
               {statCards.map((stat, index) => {
                 const Icon = stat.icon
                 const formatValue = stat.format || formatNumber
@@ -87,14 +87,14 @@ export function EarnHero() {
                         <Icon className={`h-7 w-7 ${stat.iconColor} md:h-8 md:w-8`} />
                       </div>
                       <div className="text-left">
-                        <div className="flex items-center gap-2 text-2xl font-bold text-black md:text-3xl">
+                        <div className="font-display flex items-center gap-2 text-2xl font-bold text-[var(--color-text-primary)] md:text-3xl">
                           {isLoading ? (
-                            <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+                            <Loader2 className="h-6 w-6 animate-spin text-[var(--color-text-muted)]" />
                           ) : (
                             displayValue
                           )}
                         </div>
-                        <div className="text-sm font-medium text-gray-500 md:text-base">
+                        <div className="font-body text-sm font-medium text-[var(--color-text-muted)] md:text-base">
                           {stat.label}
                         </div>
                       </div>
@@ -110,7 +110,7 @@ export function EarnHero() {
         {account ? (
           <Link href="/profile?tab=rewards">
             <motion.button
-              className="btn btn-black px-8 py-3 text-base md:text-lg"
+              className="font-body btn bg-[var(--color-gold-primary)] px-8 py-3 text-base text-[var(--color-text-on-gold)] hover:bg-[var(--color-gold-light)] md:text-lg"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -119,7 +119,7 @@ export function EarnHero() {
           </Link>
         ) : (
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <button className="btn btn-black px-8 py-3 text-base md:text-lg">
+            <button className="font-body btn bg-[var(--color-gold-primary)] px-8 py-3 text-base text-[var(--color-text-on-gold)] hover:bg-[var(--color-gold-light)] md:text-lg">
               Connect Wallet to Start Earning
             </button>
           </motion.div>
