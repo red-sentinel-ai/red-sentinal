@@ -1,17 +1,18 @@
 import { useMemo } from 'react'
 import { CheckCircle, XCircle, Trophy, Clock, User, AlertCircle } from 'lucide-react'
 import { useAgentEvents } from '@/hooks/useAgentEvents'
-import { useCurrentAccount } from '@mysten/dapp-kit'
+import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { truncateAddress } from '@/lib/utils'
 import { SUIVISION_TXBLOCK_URL } from '@/constants'
 
 export const UserActivity = () => {
   const { events, loading } = useAgentEvents()
-  const account = useCurrentAccount()
-  const accountAddress = account?.address
+  const { address: accountAddress, chain } = useConnectedAddress()
+
+  const isSui = chain === 'sui'
 
   const userEvents = useMemo(() => {
-    if (!accountAddress || !events.promptConsumed || !events.agentDefeated) {
+    if (!isSui || !accountAddress || !events.promptConsumed || !events.agentDefeated) {
       return {
         promptConsumed: [],
         agentDefeated: [],
@@ -30,7 +31,7 @@ export const UserActivity = () => {
       promptConsumed: filteredPrompts,
       agentDefeated: filteredDefeated,
     }
-  }, [events.promptConsumed, events.agentDefeated, accountAddress])
+  }, [events.promptConsumed, events.agentDefeated, accountAddress, isSui])
 
   const formatTimestamp = (ms: string) =>
     new Date(parseInt(ms)).toLocaleString(undefined, {

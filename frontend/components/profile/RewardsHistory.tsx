@@ -3,16 +3,15 @@
 import { motion } from 'framer-motion'
 import { Gift, AlertCircle, ExternalLink } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
-import { useCurrentAccount } from '@mysten/dapp-kit'
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useRecipientRewards } from '@/hooks/rewards/useRecipientRewards'
+import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { SUIVISION_TXBLOCK_URL, MIST_PER_SUI } from '@/constants'
 
 export const RewardsHistory = () => {
-  const account = useCurrentAccount()
-  const { data, isLoading } = useRecipientRewards(account?.address)
+  const { address } = useConnectedAddress()
+  const { data, isLoading } = useRecipientRewards(address)
 
   const history = data?.result || []
 

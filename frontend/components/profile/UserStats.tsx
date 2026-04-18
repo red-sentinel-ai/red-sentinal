@@ -1,14 +1,13 @@
 'use client'
 
-import { useCurrentAccount } from '@mysten/dapp-kit'
-
 import { Skeleton } from '@/components/ui/skeleton'
 import { PointsHistoryChart } from '@/components/profile/PointsHistoryChart'
 import { useRecipientRewards } from '@/hooks/rewards/useRecipientRewards'
+import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 
 export const UserStats = () => {
-  const account = useCurrentAccount()
-  const { data, isLoading } = useRecipientRewards(account?.address)
+  const { address } = useConnectedAddress()
+  const { data, isLoading } = useRecipientRewards(address)
 
   const history = data?.result || []
 
