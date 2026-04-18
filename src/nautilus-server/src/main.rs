@@ -1,4 +1,4 @@
-// Copyright (c), Cyphronix Software
+// Copyright (c), Sui Sentinel
 // SPDX-License-Identifier: Apache-2.0
 #![allow(warnings)]
 
@@ -46,7 +46,8 @@ async fn main() -> Result<()> {
         .with_state(state)
         .layer(cors);
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await?;
+    let port = env::var("PORT").unwrap_or_else(|_| "3013".to_string());
+    let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", port)).await?;
     info!("listening on {}", listener.local_addr().unwrap());
     axum::serve(listener, app.into_make_service())
         .await

@@ -1,6 +1,7 @@
-// Copyright (c), Mysten Labs, Inc.
+// Copyright (c), Sui Sentinel
 // SPDX-License-Identifier: Apache-2.0
 
+use crate::models::{RegisterAgentResponse, ConsumePromptResponse};
 use crate::AppState;
 use crate::EnclaveError;
 use axum::{extract::State, Json};
@@ -25,11 +26,12 @@ use fastcrypto::ed25519::Ed25519KeyPair;
 #[derive(Debug, Serialize, Deserialize)]
 pub struct IntentMessage<T: Serialize> {
     pub intent: IntentScope,
-    pub timestamp_ms: u64,
+    /// Timestamp in seconds (i64) to match Solana's Clock::unix_timestamp
+    pub timestamp: i64,
     pub data: T,
 }
 
-#[derive(Serialize_repr, Deserialize_repr, Debug)]
+#[derive(Serialize_repr, Deserialize_repr, Debug, Clone, Copy)]
 #[repr(u8)]
 pub enum IntentScope {
     Weather = 0,
@@ -38,10 +40,10 @@ pub enum IntentScope {
 }
 
 impl<T: Serialize + Debug> IntentMessage<T> {
-    pub fn new(data: T, timestamp_ms: u64, intent: IntentScope) -> Self {
+    pub fn new(data: T, timestamp: i64, intent: IntentScope) -> Self {
         Self {
             data,
-            timestamp_ms,
+            timestamp,
             intent,
         }
     }
@@ -59,20 +61,112 @@ pub struct ProcessDataRequest<T> {
     pub payload: T,
 }
 
-pub fn to_signed_response<T: Serialize + Clone>(
-    kp: &Ed25519KeyPair,
-    payload: T,
-    timestamp_ms: u64,
+/// Build signing payload for RegisterAgent matching Solana contract format:
+/// intent(1) || timestamp(8, i64 LE) || agent_id(bytes) || cost(8, u64 LE) || prompt_hash(32) || creator(32)
+fn build_register_agent_signing_payload(
     intent: IntentScope,
-) -> ProcessedDataResponse<IntentMessage<T>> {
+    timestamp: i64,
+    data: &RegisterAgentResponse,
+) -> Vec<u8> {
+    let mut message = Vec::new();
+
+    // Intent (1 byte)
+    message.push(intent as u8);
+
+    // Timestamp (8 bytes, i64 little-endian)
+    message.extend_from_slice(&timestamp.to_le_bytes());
+
+    // Agent ID (variable length, raw bytes)
+    message.extend_from_slice(data.agent_id.as_bytes());
+
+    // Cost per message (8 bytes, u64 little-endian)
+    message.extend_from_slice(&data.cost_per_message.to_le_bytes());
+
+    // Prompt hash (32 bytes) - already computed, use directly
+    message.extend_from_slice(&data.prompt_hash);
+
+    // Creator pubkey (32 bytes)
+    message.extend_from_slice(&data.creator);
+
+    message
+}
+
+/// Build signing payload for ConsumePrompt matching Solana contract format:
+/// intent(1) || timestamp(8, i64 LE) || agent_id(bytes) || success(1) || score(8, u64 LE) || attacker(32) || nonce(8, u64 LE) || message_hash(32)
+fn build_consume_prompt_signing_payload(
+    intent: IntentScope,
+    timestamp: i64,
+    data: &ConsumePromptResponse,
+) -> Vec<u8> {
+    let mut message = Vec::new();
+
+    // Intent (1 byte)
+    message.push(intent as u8);
+
+    // Timestamp (8 bytes, i64 little-endian)
+    message.extend_from_slice(&timestamp.to_le_bytes());
+
+    // Agent ID (variable length, raw bytes)
+    message.extend_from_slice(data.agent_id.as_bytes());
+
+    // Success (1 byte)
+    message.push(if data.success { 1 } else { 0 });
+
+    // Score (8 bytes, u64 little-endian) - convert u8 to u64
+    message.extend_from_slice(&(data.score as u64).to_le_bytes());
+
+    // Attacker pubkey (32 bytes)
+    message.extend_from_slice(&data.attacker);
+
+    // Nonce (8 bytes, u64 little-endian)
+    message.extend_from_slice(&data.nonce.to_le_bytes());
+
+    // Message hash (32 bytes)
+    message.extend_from_slice(&data.message_hash);
+
+    message
+}
+
+/// Sign a RegisterAgentResponse with the format expected by Solana contract
+pub fn sign_register_agent_response(
+    kp: &Ed25519KeyPair,
+    payload: RegisterAgentResponse,
+    timestamp: i64,
+) -> ProcessedDataResponse<IntentMessage<RegisterAgentResponse>> {
+    let intent = IntentScope::RegisterAgent;
+
+    let signing_payload = build_register_agent_signing_payload(intent, timestamp, &payload);
+    let sig = kp.sign(&signing_payload);
+
     let intent_msg = IntentMessage {
         intent,
-        timestamp_ms,
-        data: payload.clone(),
+        timestamp,
+        data: payload,
     };
 
-    let signing_payload = bcs::to_bytes(&intent_msg).expect("should not fail");
+    ProcessedDataResponse {
+        response: intent_msg,
+        signature: Hex::encode(sig),
+    }
+}
+
+/// Sign a ConsumePromptResponse with the format expected by Solana contract
+pub fn sign_consume_prompt_response(
+    kp: &Ed25519KeyPair,
+    payload: ConsumePromptResponse,
+    timestamp: i64,
+) -> ProcessedDataResponse<IntentMessage<ConsumePromptResponse>> {
+    let intent = IntentScope::ConsumePrompt;
+
+    let signing_payload = build_consume_prompt_signing_payload(intent, timestamp, &payload);
     let sig = kp.sign(&signing_payload);
+
+    let intent_msg = IntentMessage {
+        intent,
+        timestamp,
+        data: payload,
+    };
+
     ProcessedDataResponse {
         response: intent_msg,
         signature: Hex::encode(sig),

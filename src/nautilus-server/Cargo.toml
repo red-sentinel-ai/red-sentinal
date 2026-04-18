@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 authors = ["Satyam Bansal <satyamsgsits1994@gmail.com>"]
 license = "Apache-2.0"
-repository = "https://github.com/MystenLabs/nautilus"
+repository = "https://github.com/sui-sentinel/nautilus"
 
 [workspace]
 
@@ -36,3 +36,7 @@ chrono = { version = "0.4", features = ["serde"] }
 base64 = "0.21"
 jsonwebtoken = "8.0"
 blake2 = "0.10.6"
+# SHA256 for Solana-compatible hashing
+sha2 = "0.10"
+# Solana address encoding
+bs58 = "0.5"
