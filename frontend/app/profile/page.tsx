@@ -5,7 +5,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { User, Folder, Activity, Loader2, Camera, Gift, BarChart3 } from 'lucide-react'
-import { useCurrentAccount } from '@mysten/dapp-kit'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { UserActivity } from '@/components/profile/UserActivity'
@@ -16,6 +15,7 @@ import { ConnectPrompt } from '@/components/ConnectPrompt'
 import { EditProfileModal } from '@/components/profile/EditProfileModal'
 import { SocialConnectionsSectionWrapper } from '@/components/profile/SocialConnectionsSectionWrapper'
 import { useUserProfile, useUpdateAvatar } from '@/hooks/profile/useUserProfile'
+import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 import { SENTINEL_GIFS, USER_IMAGES } from '@/constants/asset_paths'
 import { useTokenBalance } from '@/hooks/useTokenBalance'
@@ -37,7 +37,7 @@ function ProfileContent() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isImagePickerOpen, setIsImagePickerOpen] = useState(false)
 
-  const account = useCurrentAccount()
+  const { address: connectedAddress, chain: activeChain } = useConnectedAddress()
   const { data: profile, isLoading: isLoadingProfile } = useUserProfile()
   const { formattedBalance: sentinelBalance } = useTokenBalance(
     SUI_CONFIG.SENTINEL_COIN_TYPE,
@@ -75,7 +75,7 @@ function ProfileContent() {
     updateAvatar(formData)
   }
 
-  if (!account?.address) {
+  if (!connectedAddress) {
     return (
       <ConnectPrompt
         title="Join the Red Team"
@@ -84,6 +84,8 @@ function ProfileContent() {
       />
     )
   }
+
+  const isSolana = activeChain === 'solana'
 
   if (isLoadingProfile) {
     return (
@@ -127,24 +129,26 @@ function ProfileContent() {
               </h1>
               <p className="font-body mb-3 mt-1 font-medium text-[var(--color-text-secondary)]">@{profile?.username}</p>
 
-              <Link
-                href={SENTINEL_TOKEN_EXPLORER_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mb-5 flex min-h-10 w-fit items-center justify-center gap-2 rounded-xl bg-[var(--color-bg-surface)] px-3 py-1 shadow-[var(--shadow-card)] transition-opacity hover:opacity-80"
-              >
-                <Image
-                  src="/icons/dollar_coin.png"
-                  width={24}
-                  height={24}
-                  alt="coin"
-                  className="flex-shrink-0"
-                />
-                <span className="font-body text-sm font-medium text-[var(--color-text-primary)] sm:text-base">
-                  Sentinel Balance:{` `}
-                  <span className="text-[var(--color-gold-primary)] underline">{sentinelBalance} SENTINEL</span>
-                </span>
-              </Link>
+              {!isSolana && (
+                <Link
+                  href={SENTINEL_TOKEN_EXPLORER_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mb-5 flex min-h-10 w-fit items-center justify-center gap-2 rounded-xl bg-[var(--color-bg-surface)] px-3 py-1 shadow-[var(--shadow-card)] transition-opacity hover:opacity-80"
+                >
+                  <Image
+                    src="/icons/dollar_coin.png"
+                    width={24}
+                    height={24}
+                    alt="coin"
+                    className="flex-shrink-0"
+                  />
+                  <span className="font-body text-sm font-medium text-[var(--color-text-primary)] sm:text-base">
+                    Sentinel Balance:{` `}
+                    <span className="text-[var(--color-gold-primary)] underline">{sentinelBalance} SENTINEL</span>
+                  </span>
+                </Link>
+              )}
 
               <button
                 onClick={() => setIsEditModalOpen(true)}

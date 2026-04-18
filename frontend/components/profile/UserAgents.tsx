@@ -2,16 +2,16 @@
 
 import Link from 'next/link'
 import { Shield, Plus } from 'lucide-react'
-import { useCurrentAccount } from '@mysten/dapp-kit'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAgentsByOwner } from '@/hooks/agents/useOwnerAgents'
+import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { FeaturedAgentsSkeleton } from '../ui/skeletons/FeaturedAgentsSkeleton'
 import { FeaturedAgentCard } from '../FeaturedAgentCard'
 
 export const UserAgents = () => {
-  const account = useCurrentAccount()
+  const { address } = useConnectedAddress()
 
-  const { data: userAgents, isPending: isFetchingAllAgents } = useAgentsByOwner(account?.address)
+  const { data: userAgents, isPending: isFetchingAllAgents } = useAgentsByOwner(address)
 
   if (isFetchingAllAgents) {
     return <FeaturedAgentsSkeleton />
