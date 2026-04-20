@@ -12,6 +12,7 @@ import {
 import { UpdatePromptModal } from './UpdatePromptModal'
 import { UpdateCostModal } from './UpdateCostModal'
 import { getTokenForCoinType } from '@/constants'
+import type { SupportedChain } from '@/constants/chains'
 
 const PROMPT_UPDATE_WINDOW_MS = 10_800_000
 
@@ -26,6 +27,7 @@ interface AgentDropdownProps {
   accumulatedFees?: number
   createdAt?: string
   coinType?: string
+  chain?: SupportedChain
 }
 
 export const AgentDropdown = ({
@@ -38,7 +40,9 @@ export const AgentDropdown = ({
   currentCost,
   createdAt,
   coinType,
+  chain = 'sui',
 }: AgentDropdownProps) => {
+  const isSolana = chain === 'solana'
   const [isPromptModalOpen, setIsPromptModalOpen] = useState(false)
   const [isCostModalOpen, setIsCostModalOpen] = useState(false)
 
@@ -86,11 +90,13 @@ export const AgentDropdown = ({
                   <DropdownMenuItem
                     onClick={handleOpenPromptModal}
                     className="cursor-pointer gap-2"
-                    disabled={isUpdateWindowExpired}
+                    disabled={isUpdateWindowExpired || isSolana}
                     title={
-                      isUpdateWindowExpired
-                        ? 'Updates are only allowed within 3 hours of launch'
-                        : undefined
+                      isSolana
+                        ? 'Not available for Solana sentinels yet'
+                        : isUpdateWindowExpired
+                          ? 'Updates are only allowed within 3 hours of launch'
+                          : undefined
                     }
                   >
                     <Edit className="h-4 w-4" />
@@ -99,11 +105,13 @@ export const AgentDropdown = ({
                   <DropdownMenuItem
                     onClick={handleOpenCostModal}
                     className="cursor-pointer gap-2"
-                    disabled={isUpdateWindowExpired}
+                    disabled={isUpdateWindowExpired || isSolana}
                     title={
-                      isUpdateWindowExpired
-                        ? 'Updates are only allowed within 3 hours of launch'
-                        : undefined
+                      isSolana
+                        ? 'Not available for Solana sentinels yet'
+                        : isUpdateWindowExpired
+                          ? 'Updates are only allowed within 3 hours of launch'
+                          : undefined
                     }
                   >
                     <DollarSign className="h-4 w-4" />

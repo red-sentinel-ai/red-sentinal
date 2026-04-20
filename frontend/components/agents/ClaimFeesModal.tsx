@@ -1,9 +1,12 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { useUpdateAgent } from '@/hooks/agents/useUpdateAgent'
+import { useClaimFeesSolana } from '@/hooks/agents/useClaimFeesSolana'
+import { useSolanaWallet } from '@/hooks/useSolanaWallet'
 import { AgentUpdateDialog } from './AgentUpdateDialog'
 import { getTokenForCoinType } from '@/constants'
 import { TokenAmount } from '../ui/common/TokenAmount'
+import type { SupportedChain } from '@/constants/chains'
 
 interface ClaimFeesModalProps {
   open: boolean
@@ -12,6 +15,7 @@ interface ClaimFeesModalProps {
   agentObjectId: string
   accumulatedFees: number
   coinType?: string
+  chain?: SupportedChain
 }
 
 export const ClaimFeesModal = ({
@@ -21,17 +25,37 @@ export const ClaimFeesModal = ({
   agentObjectId,
   accumulatedFees,
   coinType,
+  chain = 'sui',
 }: ClaimFeesModalProps) => {
-  const { claimFees, isLoading } = useUpdateAgent()
+  const { claimFees: claimFeesSui, isLoading: isSuiLoading } = useUpdateAgent()
+  const { claimFees: claimFeesSolana, isLoading: isSolanaLoading } = useClaimFeesSolana()
   const queryClient = useQueryClient()
   const account = useCurrentAccount()
+  const { publicKey: solanaPublicKey } = useSolanaWallet()
 
+  const isSolana = chain === 'solana'
+  const isLoading = isSolana ? isSolanaLoading : isSuiLoading
   const token = getTokenForCoinType(coinType)
   const hasFees = accumulatedFees > 0
 
-  const handleClaim = () => {
+  const handleClaim = async () => {
     if (!hasFees) return
-    claimFees(agentId, agentObjectId, coinType, () => {
+    if (isSolana) {
+      if (!coinType) return
+      try {
+        await claimFeesSolana({ agentId, tokenMint: coinType })
+        onClose()
+        setTimeout(() => {
+          queryClient.invalidateQueries({
+            queryKey: ['agents-by-owner', solanaPublicKey?.toBase58()],
+          })
+        }, 3000)
+      } catch (err) {
+        console.error('Claim fees error:', err)
+      }
+      return
+    }
+    claimFeesSui(agentId, agentObjectId, coinType, () => {
       onClose()
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey: ['agents-by-owner', account?.address] })

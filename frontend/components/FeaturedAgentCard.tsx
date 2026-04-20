@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react'
 import { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { useFundAgentModal } from '@/hooks/useFundAgentModal'
 import { useFeatureAgentModal } from '@/hooks/useFeatureAgentModal'
-import { useCurrentAccount } from '@mysten/dapp-kit'
+import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { getTokenForCoinType } from '@/constants'
 import { AgentDropdown } from './agents/AgentCardDropdown'
 import { useWithdrawAgentModal } from '@/hooks/agents/useWithdrawAgentModal'
@@ -23,8 +23,8 @@ type FeaturedAgentCardProps = {
   ctaHeading?: string
   fromProfile?: boolean
   // Optional modal callbacks - when provided, component won't create its own modal instances
-  onFund?: (agentObjectId: string, agentId: string, coinType?: string, tokenSymbol?: string, tokenDecimals?: number) => void
-  onWithdraw?: (agentObjectId: string, agentId: string, balance: number, coinType?: string) => void
+  onFund?: ReturnType<typeof useFundAgentModal>['openModal']
+  onWithdraw?: ReturnType<typeof useWithdrawAgentModal>['openModal']
   onFeature?: (agentId: string) => void
 }
 
@@ -52,8 +52,8 @@ export const FeaturedAgentCard = ({
   const FeatureModal = featureModal.Modal
   
   const router = useRouter()
-  const account = useCurrentAccount()
-  const isOwner = account?.address === agent.creator
+  const { address: connectedAddress } = useConnectedAddress()
+  const isOwner = !!connectedAddress && connectedAddress === agent.creator
 
   const [isWithdrawalLocked, setIsWithdrawalLocked] = useState(true)
   const [timeRemaining, setTimeRemaining] = useState('')
@@ -172,6 +172,7 @@ export const FeaturedAgentCard = ({
               accumulatedFees={agent.accumulated_fees}
               createdAt={agent.timestampMs}
               coinType={agent.coin_type}
+              chain={agent.chain}
             />
           </div>
         </div>
@@ -246,7 +247,14 @@ export const FeaturedAgentCard = ({
               <button
                 onClick={() => {
                   const token = getTokenForCoinType(agent.coin_type)
-                  openFundModal(agent.agent_object_id, agent.agent_id, token.coinType, token.symbol, token.decimals)
+                  openFundModal({
+                    agentObjectId: agent.agent_object_id,
+                    agentId: agent.agent_id,
+                    coinType: token.coinType,
+                    tokenSymbol: token.symbol,
+                    tokenDecimals: token.decimals,
+                    chain: agent.chain,
+                  })
                 }}
                 className="btn btn-black w-1/2 px-2 py-1.5 text-[10px] sm:px-4 sm:py-2.5 sm:text-sm"
               >
@@ -254,12 +262,13 @@ export const FeaturedAgentCard = ({
               </button>
               <button
                 onClick={() =>
-                  openWithdrawModal(
-                    agent.agent_object_id,
-                    agent.agent_id,
-                    Number(agent.total_balance),
-                    agent.coin_type
-                  )
+                  openWithdrawModal({
+                    agentObjectId: agent.agent_object_id,
+                    agentId: agent.agent_id,
+                    agentBalanceRaw: Number(agent.total_balance),
+                    coinType: agent.coin_type,
+                    chain: agent.chain,
+                  })
                 }
                 className="btn btn-outline w-1/2 px-2 py-1.5 text-[10px] sm:px-4 sm:py-2.5 sm:text-sm"
                 disabled={isWithdrawalLocked || Number(agent.total_balance) === 0}
@@ -305,6 +314,7 @@ export const FeaturedAgentCard = ({
           agentObjectId={agent.agent_object_id}
           accumulatedFees={agent.accumulated_fees}
           coinType={agent.coin_type}
+          chain={agent.chain}
         />
       </div>
     </motion.div>

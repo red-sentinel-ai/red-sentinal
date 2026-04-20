@@ -4,15 +4,18 @@ import { Loader2, X } from 'lucide-react'
 import { Dialog } from '@/components/Dialog'
 import { getTokenForCoinType } from '@/constants'
 import { useWithdrawAgent } from '@/hooks/agents/useWithdrawAgent'
+import { useWithdrawAgentSolana } from '@/hooks/agents/useWithdrawAgentSolana'
+import type { SupportedChain } from '@/constants/chains'
 
 export interface WithdrawAgentModalProps {
   open: boolean
   onClose: () => void
   agentObjectId: string
   agentId: string
-  agentBalanceRaw: number  
+  agentBalanceRaw: number
   coinType?: string
   onSuccess?: () => void
+  chain?: SupportedChain
 }
 
 export const WithdrawAgentModal = ({
@@ -23,13 +26,17 @@ export const WithdrawAgentModal = ({
   agentBalanceRaw,
   coinType,
   onSuccess,
+  chain = 'sui',
 }: WithdrawAgentModalProps) => {
   const [amount, setAmount] = useState('')
   const [error, setError] = useState('')
   const token = getTokenForCoinType(coinType)
   const agentBalanceHuman = agentBalanceRaw / Math.pow(10, token.decimals)
+  const isSolana = chain === 'solana'
 
-  const { withdrawAgent, isLoading } = useWithdrawAgent()
+  const { withdrawAgent: withdrawAgentSui, isLoading: isSuiLoading } = useWithdrawAgent()
+  const { withdrawAgent: withdrawAgentSolana, isLoading: isSolanaLoading } = useWithdrawAgentSolana()
+  const isLoading = isSolana ? isSolanaLoading : isSuiLoading
 
   useEffect(() => {
     if (open) {
@@ -70,7 +77,19 @@ export const WithdrawAgentModal = ({
     if (!validateAmount()) return
 
     try {
-      await withdrawAgent({ agentObjectId, agentId, amount: +amount })
+      if (isSolana) {
+        if (!agentId) throw new Error('Missing agent id')
+        if (!coinType) throw new Error('Missing token mint')
+        await withdrawAgentSolana({
+          agentId,
+          tokenMint: coinType,
+          amount: +amount,
+          decimals: token.decimals,
+          symbol: token.symbol,
+        })
+      } else {
+        await withdrawAgentSui({ agentObjectId, agentId, amount: +amount })
+      }
       onSuccess?.()
       onClose()
     } catch (err) {

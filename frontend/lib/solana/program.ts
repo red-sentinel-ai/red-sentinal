@@ -15,12 +15,26 @@ let discriminatorCache: Record<string, Buffer> | null = null
 
 async function getDiscriminators() {
   if (discriminatorCache) return discriminatorCache
-  const [registerAgent, initAgentVaults, fundAgent, requestAttack, consumePrompt] = await Promise.all([
+  const [
+    registerAgent,
+    initAgentVaults,
+    fundAgent,
+    requestAttack,
+    consumePrompt,
+    withdrawFromAgent,
+    claimFees,
+    updateAgentCost,
+    updateAgentPromptHash,
+  ] = await Promise.all([
     sha256('global:register_agent'),
     sha256('global:init_agent_vaults'),
     sha256('global:fund_agent'),
     sha256('global:request_attack'),
     sha256('global:consume_prompt'),
+    sha256('global:withdraw_from_agent'),
+    sha256('global:claim_fees'),
+    sha256('global:update_agent_cost'),
+    sha256('global:update_agent_prompt_hash'),
   ])
   discriminatorCache = {
     registerAgent: Buffer.from(registerAgent.slice(0, 8)),
@@ -28,6 +42,10 @@ async function getDiscriminators() {
     fundAgent: Buffer.from(fundAgent.slice(0, 8)),
     requestAttack: Buffer.from(requestAttack.slice(0, 8)),
     consumePrompt: Buffer.from(consumePrompt.slice(0, 8)),
+    withdrawFromAgent: Buffer.from(withdrawFromAgent.slice(0, 8)),
+    claimFees: Buffer.from(claimFees.slice(0, 8)),
+    updateAgentCost: Buffer.from(updateAgentCost.slice(0, 8)),
+    updateAgentPromptHash: Buffer.from(updateAgentPromptHash.slice(0, 8)),
   }
   return discriminatorCache
 }
@@ -189,6 +207,105 @@ export async function buildFundAgentInstruction(params: {
       { pubkey: params.ownerTokenAccount, isSigner: false, isWritable: true },
       { pubkey: params.owner, isSigner: true, isWritable: false },
       { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },
+    ],
+    data,
+  })
+}
+
+// Build withdraw_from_agent instruction
+export async function buildWithdrawFromAgentInstruction(params: {
+  agentId: string
+  amount: bigint
+  ownerTokenAccount: PublicKey
+  owner: PublicKey
+}): Promise<TransactionInstruction> {
+  const discriminators = await getDiscriminators()
+  const programId = getProgramId()
+
+  const agentPda = deriveAgentPda(params.agentId)
+  const agentVaultPda = deriveAgentVaultPda(agentPda)
+
+  const data = Buffer.concat([discriminators.withdrawFromAgent, encodeU64(params.amount)])
+
+  return new TransactionInstruction({
+    programId,
+    keys: [
+      { pubkey: agentPda, isSigner: false, isWritable: true },
+      { pubkey: agentVaultPda, isSigner: false, isWritable: true },
+      { pubkey: params.ownerTokenAccount, isSigner: false, isWritable: true },
+      { pubkey: params.owner, isSigner: true, isWritable: true },
+      { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },
+    ],
+    data,
+  })
+}
+
+// Build claim_fees instruction
+export async function buildClaimFeesInstruction(params: {
+  agentId: string
+  ownerTokenAccount: PublicKey
+  owner: PublicKey
+}): Promise<TransactionInstruction> {
+  const discriminators = await getDiscriminators()
+  const programId = getProgramId()
+
+  const agentPda = deriveAgentPda(params.agentId)
+  const agentFeesVaultPda = deriveAgentFeesVaultPda(agentPda)
+
+  return new TransactionInstruction({
+    programId,
+    keys: [
+      { pubkey: agentPda, isSigner: false, isWritable: true },
+      { pubkey: agentFeesVaultPda, isSigner: false, isWritable: true },
+      { pubkey: params.ownerTokenAccount, isSigner: false, isWritable: true },
+      { pubkey: params.owner, isSigner: true, isWritable: true },
+      { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },
+    ],
+    data: discriminators.claimFees,
+  })
+}
+
+// Build update_agent_cost instruction
+export async function buildUpdateAgentCostInstruction(params: {
+  agentId: string
+  newCost: bigint
+  owner: PublicKey
+}): Promise<TransactionInstruction> {
+  const discriminators = await getDiscriminators()
+  const programId = getProgramId()
+
+  const agentPda = deriveAgentPda(params.agentId)
+
+  const data = Buffer.concat([discriminators.updateAgentCost, encodeU64(params.newCost)])
+
+  return new TransactionInstruction({
+    programId,
+    keys: [
+      { pubkey: agentPda, isSigner: false, isWritable: true },
+      { pubkey: params.owner, isSigner: true, isWritable: false },
+    ],
+    data,
+  })
+}
+
+// Build update_agent_prompt_hash instruction
+export async function buildUpdateAgentPromptHashInstruction(params: {
+  agentId: string
+  newPromptHash: Uint8Array // 32 bytes
+  owner: PublicKey
+}): Promise<TransactionInstruction> {
+  const discriminators = await getDiscriminators()
+  const programId = getProgramId()
+
+  const agentPda = deriveAgentPda(params.agentId)
+
+  const data = Buffer.concat([discriminators.updateAgentPromptHash, Buffer.from(params.newPromptHash)])
+
+  return new TransactionInstruction({
+    programId,
+    keys: [
+      { pubkey: agentPda, isSigner: false, isWritable: true },
+      { pubkey: params.owner, isSigner: true, isWritable: false },
     ],
     data,
   })
