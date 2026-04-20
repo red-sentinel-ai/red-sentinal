@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { useUpdateAgent } from '@/hooks/agents/useUpdateAgent'
+import { useUpdateAgentSolana } from '@/hooks/agents/useUpdateAgentSolana'
 import { SYSTEM_PROMPT_MAX_TOKENS } from '@/constants'
 import { useTokenCount } from '@/hooks/useTokenCount'
 import { AgentUpdateDialog } from './AgentUpdateDialog'
+import type { SupportedChain } from '@/constants/chains'
 
 interface UpdatePromptModalProps {
   open: boolean
@@ -11,6 +13,7 @@ interface UpdatePromptModalProps {
   agentObjectId: string
   currentPrompt?: string
   coinType?: string
+  chain?: SupportedChain
 }
 
 export const UpdatePromptModal = ({
@@ -20,14 +23,23 @@ export const UpdatePromptModal = ({
   agentObjectId,
   currentPrompt = '',
   coinType,
+  chain = 'sui',
 }: UpdatePromptModalProps) => {
   const [prompt, setPrompt] = useState(currentPrompt)
-  const { updatePrompt, isLoading } = useUpdateAgent()
+  const { updatePrompt: updatePromptSui, isLoading: isSuiLoading } = useUpdateAgent()
+  const { updatePrompt: updatePromptSolana, isLoading: isSolanaLoading } = useUpdateAgentSolana()
   const { tokenCount, countTokens } = useTokenCount()
+
+  const isSolana = chain === 'solana'
+  const isLoading = isSolana ? isSolanaLoading : isSuiLoading
 
   const handleUpdate = () => {
     if (tokenCount > SYSTEM_PROMPT_MAX_TOKENS) return
-    updatePrompt(agentId, agentObjectId, prompt, coinType, onClose)
+    if (isSolana) {
+      updatePromptSolana(agentId, prompt, onClose)
+    } else {
+      updatePromptSui(agentId, agentObjectId, prompt, coinType, onClose)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {

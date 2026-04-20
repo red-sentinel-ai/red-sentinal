@@ -42,7 +42,6 @@ export const AgentDropdown = ({
   coinType,
   chain = 'sui',
 }: AgentDropdownProps) => {
-  const isSolana = chain === 'solana'
   const [isPromptModalOpen, setIsPromptModalOpen] = useState(false)
   const [isCostModalOpen, setIsCostModalOpen] = useState(false)
 
@@ -90,13 +89,11 @@ export const AgentDropdown = ({
                   <DropdownMenuItem
                     onClick={handleOpenPromptModal}
                     className="cursor-pointer gap-2"
-                    disabled={isUpdateWindowExpired || isSolana}
+                    disabled={isUpdateWindowExpired}
                     title={
-                      isSolana
-                        ? 'Not available for Solana sentinels yet'
-                        : isUpdateWindowExpired
-                          ? 'Updates are only allowed within 3 hours of launch'
-                          : undefined
+                      isUpdateWindowExpired
+                        ? 'Updates are only allowed within 3 hours of launch'
+                        : undefined
                     }
                   >
                     <Edit className="h-4 w-4" />
@@ -105,13 +102,11 @@ export const AgentDropdown = ({
                   <DropdownMenuItem
                     onClick={handleOpenCostModal}
                     className="cursor-pointer gap-2"
-                    disabled={isUpdateWindowExpired || isSolana}
+                    disabled={isUpdateWindowExpired}
                     title={
-                      isSolana
-                        ? 'Not available for Solana sentinels yet'
-                        : isUpdateWindowExpired
-                          ? 'Updates are only allowed within 3 hours of launch'
-                          : undefined
+                      isUpdateWindowExpired
+                        ? 'Updates are only allowed within 3 hours of launch'
+                        : undefined
                     }
                   >
                     <DollarSign className="h-4 w-4" />
@@ -133,6 +128,7 @@ export const AgentDropdown = ({
             agentObjectId={agentObjectId}
             currentPrompt={currentPrompt}
             coinType={coinType}
+            chain={chain}
           />
           <UpdateCostModal
             open={isCostModalOpen}
@@ -141,6 +137,7 @@ export const AgentDropdown = ({
             agentObjectId={agentObjectId}
             currentCost={currentCost ? currentCost / Math.pow(10, getTokenForCoinType(coinType).decimals) : 0}
             coinType={coinType}
+            chain={chain}
           />
         </>
       )}
