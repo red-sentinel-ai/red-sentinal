@@ -7,9 +7,12 @@ import posthog from 'posthog-js'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { Dialog } from '@/components/Dialog'
 import { useFundAgent } from '@/hooks/useFundAgent'
+import { useFundAgentSolana } from '@/hooks/useFundAgentSolana'
+import { useSolanaWallet } from '@/hooks/useSolanaWallet'
 import { getTokenForCoinType } from '@/constants'
 import { getDefenderBoosterTier } from '@/lib/earn-utils'
 import { BoosterPassBadge } from '@/components/BoosterPassBadge'
+import type { SupportedChain } from '@/constants/chains'
 
 export interface FundAgentModalProps {
   open: boolean
@@ -21,6 +24,7 @@ export interface FundAgentModalProps {
   coinType?: string
   tokenSymbol?: string
   tokenDecimals?: number
+  chain?: SupportedChain
 }
 
 export const FundAgentModal = ({
@@ -32,15 +36,20 @@ export const FundAgentModal = ({
   coinType = '0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC',
   tokenSymbol = 'USDC',
   tokenDecimals = 6,
+  chain = 'sui',
 }: FundAgentModalProps) => {
   const [amount, setAmount] = useState('')
   const [error, setError] = useState('')
   const [funded, setFunded] = useState(false)
   const [fundedTier, setFundedTier] = useState('')
   const account = useCurrentAccount()
+  const { publicKey: solanaPublicKey } = useSolanaWallet()
   const token = getTokenForCoinType(coinType)
+  const isSolana = chain === 'solana'
 
-  const { fundAgent, isLoading } = useFundAgent()
+  const { fundAgent: fundAgentSui, isLoading: isSuiLoading } = useFundAgent()
+  const { fundAgent: fundAgentSolana, isLoading: isSolanaLoading } = useFundAgentSolana()
+  const isLoading = isSolana ? isSolanaLoading : isSuiLoading
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAmount(e.target.value)
@@ -59,19 +68,32 @@ export const FundAgentModal = ({
     if (!validateAmount()) return
 
     try {
-      await fundAgent({
-        agentObjectId,
-        amount: +amount,
-        agentId,
-        coinType,
-        decimals: tokenDecimals,
-        symbol: tokenSymbol,
-      })
+      if (isSolana) {
+        if (!agentId) throw new Error('Missing agent id')
+        await fundAgentSolana({
+          agentId,
+          tokenMint: coinType,
+          amount: +amount,
+          decimals: tokenDecimals,
+          symbol: tokenSymbol,
+        })
+      } else {
+        await fundAgentSui({
+          agentObjectId,
+          amount: +amount,
+          agentId,
+          coinType,
+          decimals: tokenDecimals,
+          symbol: tokenSymbol,
+        })
+      }
 
+      const funderAddress = isSolana ? solanaPublicKey?.toBase58() : account?.address
       posthog.capture('sentinel_funded', {
         agent_object_id: agentObjectId,
         amount_sui: parseFloat(amount),
-        funder_address: account?.address,
+        funder_address: funderAddress,
+        chain,
       })
 
       const tier = getDefenderBoosterTier(parseFloat(amount))
