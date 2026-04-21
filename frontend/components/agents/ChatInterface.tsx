@@ -10,13 +10,16 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ConnectModal, useCurrentAccount } from '@mysten/dapp-kit'
 
 import { ATTACK_PROMPT_MAX_TOKENS, DEFAULT_PROFILE_URL } from '@/constants'
+import type { SupportedChain } from '@/constants/chains'
 import { truncateAddress } from '@/lib/utils'
 import type { ConsumePromptApiResponse } from '@/types'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { ChatEvent } from '@/hooks/agents/useAgentChatHistory'
+import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { useTokenCount } from '@/hooks/useTokenCount'
 import type { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
+import { ChainMismatchBanner } from '@/components/ui/common/ChainMismatchBanner'
 import { ChatMessage } from './ChatMessage'
 import { JuryResponseModal } from './JuryResponseModal'
 
@@ -44,6 +47,7 @@ interface ChatInterfaceProps {
   isSubmitting: boolean
   submitError: string | null
   refetchAgent: () => void
+  chainMismatch?: SupportedChain | null
 }
 
 export default function ChatInterface({
@@ -55,13 +59,15 @@ export default function ChatInterface({
   isSubmitting,
   submitError,
   refetchAgent,
+  chainMismatch,
 }: ChatInterfaceProps) {
   const [promptInput, setPromptInput] = useState('')
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
   const [activeTab, setActiveTab] = useState<'global' | 'mine'>('global')
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const account = useCurrentAccount()
+  const { address: connectedAddress } = useConnectedAddress()
+  const suiAccount = useCurrentAccount()
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
 
   const [isAttackPaused, setIsAttackPaused] = useState(false)
@@ -132,11 +138,11 @@ export default function ChatInterface({
 
   const displayedMessages = useMemo(() => {
     if (activeTab === 'global') return chatMessages
-    if (!account?.address) return []
+    if (!connectedAddress) return []
     const filtered: ChatMessage[] = []
     for (let i = 0; i < chatMessages.length; i++) {
       const msg = chatMessages[i]
-      if (msg.type === 'user' && msg.sender === account.address) {
+      if (msg.type === 'user' && msg.sender === connectedAddress) {
         filtered.push(msg)
         if (chatMessages[i + 1]?.type === 'agent') {
           filtered.push(chatMessages[i + 1])
@@ -145,7 +151,7 @@ export default function ChatInterface({
       }
     }
     return filtered
-  }, [chatMessages, activeTab, account?.address])
+  }, [chatMessages, activeTab, connectedAddress])
 
   const adjustTextareaHeight = () => {
     const textarea = textareaRef.current
@@ -215,9 +221,12 @@ export default function ChatInterface({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!account?.address) {
-      setIsWalletModalOpen(true)
-      return
+    if (!connectedAddress) {
+      // ConnectModal is Sui-specific; only trigger it when Sui is the active chain
+      if (!suiAccount?.address) {
+        setIsWalletModalOpen(true)
+        return
+      }
     }
 
     if (tokenCount > ATTACK_PROMPT_MAX_TOKENS) {
@@ -231,7 +240,7 @@ export default function ChatInterface({
       type: 'user',
       content: promptInput,
       timestamp: Date.now().toString(),
-      sender: account?.address,
+      sender: connectedAddress,
     }
 
     setChatMessages(prevMessages => [...prevMessages, newUserMessage])
@@ -282,12 +291,12 @@ export default function ChatInterface({
             {activeTab === 'mine' ? (
               <>
                 <p className="text-base sm:text-lg">
-                  {account?.address
+                  {connectedAddress
                     ? "You haven't attacked yet."
                     : 'Connect your wallet to see your chats.'}
                 </p>
                 <p className="mt-2 px-4 text-xs opacity-75 sm:text-sm">
-                  {account?.address
+                  {connectedAddress
                     ? 'Submit a prompt to start your attack!'
                     : 'Your messages will appear here once connected.'}
                 </p>
@@ -347,7 +356,9 @@ export default function ChatInterface({
         </AnimatePresence>
       </div>
 
-      {isAttackPaused ? (
+      {chainMismatch ? (
+        <ChainMismatchBanner agentChain={chainMismatch} />
+      ) : isAttackPaused ? (
         <div className="border-t border-gray-200 bg-amber-50 p-4">
           <div className="w-full text-center">
             <h3 className="text-lg font-bold text-amber-700">Attacks Paused</h3>
