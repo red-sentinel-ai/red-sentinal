@@ -333,6 +333,27 @@ export const useConsumeSolanaPrompt = (options: UseConsumeSolanaPromptOptions = 
         if (showToasts) toast.info('Finalizing transaction...')
         const txSignature = await executeConsumePrompt(agentDetails, apiResponse, nonce)
 
+        // Solana on-chain PromptConsumed events don't include the message body
+        // or TEE responses — persist them to the backend keyed by tx signature
+        // so the chat history endpoint can join them in.
+        try {
+          await fetch('/api/solana/persist-prompt-content', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              tx_digest: txSignature,
+              agent_id: agentDetails.agent_id,
+              attacker: publicKey.toBase58(),
+              message,
+              agent_response: apiResponse.response.data.agent_response ?? null,
+              jury_response: apiResponse.response.data.jury_response ?? null,
+              fun_response: apiResponse.response.data.fun_response ?? null,
+            }),
+          })
+        } catch (persistErr) {
+          console.warn('Failed to persist Solana prompt content:', persistErr)
+        }
+
         if (showToasts) {
           if (apiResponse.response.data.success) {
             toast.success('Agent defeated! You won the challenge!')
