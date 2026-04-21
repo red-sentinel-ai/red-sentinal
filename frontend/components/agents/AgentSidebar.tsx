@@ -13,7 +13,6 @@ import {
 } from 'lucide-react'
 import { QRCodeSVG } from 'qrcode.react'
 import { toast } from 'sonner'
-import { useCurrentAccount } from '@mysten/dapp-kit'
 import {
   DEFAULT_PROFILE_URL,
   getTokenForCoinType,
@@ -21,6 +20,7 @@ import {
   WITHDRAWAL_LOCK_MS,
   SUI_SENTINEL_X_USERNAME,
 } from '@/constants'
+import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { getExplorerObjectUrl } from '@/lib/explorer'
 import type { AgentDetailsFull } from '@/hooks/agents/useAgentDetails'
 import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
@@ -62,8 +62,10 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
   const [isChartModalOpen, setIsChartModalOpen] = useState(false)
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
 
-  const account = useCurrentAccount()
-  const isOwner = account?.address === agent.creator
+  const { address: connectedAddress, chain: connectedChain } = useConnectedAddress()
+  // Only claim ownership when the active chain matches the agent's chain — cross-chain
+  // address strings can't collide format-wise, but this is the correct invariant.
+  const isOwner = connectedChain === agent.chain && connectedAddress === agent.creator
 
   const prizePoolData = agent.prizePoolHistory ?? null
 

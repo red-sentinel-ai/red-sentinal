@@ -2,7 +2,6 @@
 import { useState, useCallback } from 'react'
 import { X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useCurrentAccount } from '@mysten/dapp-kit'
 import { useQueryClient } from '@tanstack/react-query'
 import posthog from 'posthog-js'
 
@@ -16,17 +15,16 @@ import { useAgentDetails, AGENT_DETAILS_FULL_QUERY_KEY } from '@/hooks/agents/us
 import { useAgentChatHistory, AGENT_CHAT_QUERY_KEY } from '@/hooks/agents/useAgentChatHistory'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useActiveChain } from '@/context/ActiveChainContext'
-import { useSolanaWallet } from '@/hooks/useSolanaWallet'
+import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
 import ChatInterface from '@/components/agents/ChatInterface'
 import { AgentSidebar } from '@/components/agents/AgentSidebar'
 import { MobileAgentHeader } from './MobileAgentHeader'
 
 export default function AgentChallengePage({ slug }: { slug: string }) {
-  const account = useCurrentAccount()
-  const { publicKey: solanaPublicKey } = useSolanaWallet()
   const queryClient = useQueryClient()
   const { activeChain } = useActiveChain()
+  const { address: connectedAddress } = useConnectedAddress()
 
   const { data: agent, isLoading, error, refetch } = useAgentDetails(slug)
   const { data: chat, isLoading: chatLoading, refetch: refetchChat } = useAgentChatHistory(
@@ -51,14 +49,13 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
       })
     }, 1000)
 
-    const walletAddress = activeChain === 'solana' ? solanaPublicKey?.toBase58() : account?.address
-    if (walletAddress && agent) {
+    if (connectedAddress && agent) {
       const isWinner = apiResponse.response.data.success
 
       posthog.capture('sentinel_attacked', {
         agent_id: agent.agent_id,
         agent_name: agent.agent_name,
-        attacker_address: walletAddress,
+        attacker_address: connectedAddress,
         is_successful: isWinner,
         attack_score: apiResponse.response.data.score,
         tx_digest: txDigest,
@@ -70,13 +67,12 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
         posthog.capture('sentinel_defeated', {
           agent_id: agent.agent_id,
           prize_pool_won: Number(agent.total_balance) / Math.pow(10, getTokenForCoinType(agent.coin_type).decimals),
-          winner_address: walletAddress,
+          winner_address: connectedAddress,
           chain: activeChain,
         })
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account?.address, agent, slug, refetch, refetchChat, queryClient, activeChain])
+  }, [connectedAddress, agent, slug, refetch, refetchChat, queryClient, activeChain])
 
   const { consumePrompt: suiConsumePrompt } = useConsumePrompt({
     showToasts: true,
@@ -98,7 +94,9 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
     },
   })
 
-  const consumePrompt = activeChain === 'solana' ? solanaConsumePrompt : suiConsumePrompt
+  const agentChain = agent?.chain ?? 'sui'
+  const chainMismatch = agent && agentChain !== activeChain ? agentChain : null
+  const consumePrompt = agentChain === 'solana' ? solanaConsumePrompt : suiConsumePrompt
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -110,13 +108,16 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   const isMobile = useMediaQuery('(max-width: 768px)')
 
   const handleSendMessage = async (prompt: string) => {
-    const isWalletConnected = activeChain === 'solana' ? !!solanaPublicKey : !!account?.address
-    if (!isWalletConnected) {
-      setSubmitError('Please connect your wallet')
-      return
-    }
     if (!agent) {
       setSubmitError('Agent not loaded')
+      return
+    }
+    if (chainMismatch) {
+      setSubmitError(`Switch to ${chainMismatch === 'solana' ? 'Solana' : 'Sui'} to attack this sentinel`)
+      return
+    }
+    if (!connectedAddress) {
+      setSubmitError('Please connect your wallet')
       return
     }
     if (prompt.length === 0) {
@@ -213,6 +214,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
                   isSubmitting={isSubmitting}
                   submitError={submitError}
                   refetchAgent={refetch}
+                  chainMismatch={chainMismatch}
                 />
               )}
             </div>
@@ -246,6 +248,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
           isSubmitting={isSubmitting}
           submitError={submitError}
           refetchAgent={refetch}
+          chainMismatch={chainMismatch}
         />
       </div>
 
