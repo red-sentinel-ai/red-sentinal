@@ -93,7 +93,7 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
     <Dialog
       open={open}
       onClose={handleClose}
-      className="w-full max-w-lg border-gray-200 bg-white p-4 sm:p-6"
+      className="w-full max-w-lg p-4 sm:p-6"
     >
       {isCheckingRequest ? (
         <LoadingSkeleton />
@@ -102,7 +102,7 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
       ) : showSuccessState ? (
         <FeatureRequestSuccessState onClose={handleClose} />
       ) : (
-        <div className="space-y-3 text-black sm:space-y-4">
+        <div className="space-y-3 text-[var(--color-text-primary)] sm:space-y-4">
           <div className="flex items-start justify-between gap-2">
             <div className="flex items-center gap-2 sm:gap-3">
               <Image
@@ -113,10 +113,10 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
                 className="size-5 sm:size-6"
               />
               <div>
-                <h2 className="text-base font-bold text-black sm:text-lg">
+                <h2 className="text-base font-bold text-[var(--color-text-primary)] sm:text-lg">
                   Request to Feature Your Agent
                 </h2>
-                <p className="text-[10px] text-gray-500 sm:text-xs">
+                <p className="text-[10px] text-[var(--color-text-muted)] sm:text-xs">
                   Please share a few details so we can consider your agent for featuring.
                 </p>
                 <div className="mt-2">
@@ -124,7 +124,7 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
                     href={`${SUI_SENTINEL_DOCS_URL}/agents/how-to-feature-your-agent#best-practices-before-requesting`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-xs text-blue-600 underline transition-colors hover:text-blue-800"
+                    className="flex items-center gap-1 text-xs text-[var(--color-info)] underline transition-colors hover:text-[var(--color-gold-primary)]"
                   >
                     <BookOpen className="size-3" />
                     View best practices
@@ -135,7 +135,7 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
             <button
               onClick={handleClose}
               disabled={isPending}
-              className="p-1 text-gray-500 transition-colors hover:text-black"
+              className="p-1 text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-primary)]"
               aria-label="Close modal"
             >
               <X className="size-5" />
@@ -145,23 +145,23 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
           <>
             <div className="space-y-3">
               <div className="space-y-2">
-                <label className="flex items-center gap-1 text-xs font-medium text-gray-600">
+                <label className="flex items-center gap-1 text-xs font-medium text-[var(--color-text-secondary)]">
                   <User className="size-3" />
-                  Your Name <span className="text-red-500">*</span>
+                  Your Name <span className="text-[var(--color-danger)]">*</span>
                 </label>
                 <input
                   name="name"
                   value={form.name}
                   onChange={handleChange}
                   placeholder="Enter your full name"
-                  className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-black placeholder-gray-400 transition-colors focus:border-black focus:outline-none focus:ring-black"
+                  className="w-full rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-3 py-2 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] transition-colors focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-[var(--color-gold-primary)]"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="flex items-center gap-1 text-xs font-medium text-gray-600">
+                <label className="flex items-center gap-1 text-xs font-medium text-[var(--color-text-secondary)]">
                   <Mail className="size-3" />
-                  Email Address <span className="text-red-500">*</span>
+                  Email Address <span className="text-[var(--color-danger)]">*</span>
                 </label>
                 <input
                   name="email"
@@ -169,13 +169,13 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
                   value={form.email}
                   onChange={handleChange}
                   placeholder="your.email@example.com"
-                  className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-black placeholder-gray-400 transition-colors focus:border-black focus:outline-none focus:ring-black"
+                  className="w-full rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-3 py-2 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] transition-colors focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-[var(--color-gold-primary)]"
                 />
               </div>
 
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <label className="flex items-center gap-1 text-xs font-medium text-gray-600">
+                  <label className="flex items-center gap-1 text-xs font-medium text-[var(--color-text-secondary)]">
                     <Image
                       src="/icons/x_black.png"
                       alt="X (Twitter)"
@@ -186,7 +186,7 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
                     Twitter Username
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 transform text-sm text-gray-400">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 transform text-sm text-[var(--color-text-faint)]">
                       @
                     </span>
                     <input
@@ -195,13 +195,13 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
                       value={form.twitter_username}
                       onChange={handleChange}
                       placeholder="username"
-                      className="w-full rounded-lg border border-gray-300 bg-white py-2 pl-6 pr-3 text-sm text-black placeholder-gray-400 transition-colors focus:border-black focus:outline-none focus:ring-black"
+                      className="w-full rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] py-2 pl-6 pr-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] transition-colors focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-[var(--color-gold-primary)]"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="flex items-center gap-1 text-xs font-medium text-gray-600">
+                  <label className="flex items-center gap-1 text-xs font-medium text-[var(--color-text-secondary)]">
                     <Image
                       src="/icons/telegram_black.png"
                       alt="Telegram"
@@ -212,7 +212,7 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
                     Telegram Username
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 transform text-sm text-gray-400">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 transform text-sm text-[var(--color-text-faint)]">
                       @
                     </span>
                     <input
@@ -221,16 +221,16 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
                       value={form.telegram_username}
                       onChange={handleChange}
                       placeholder="username"
-                      className="w-full rounded-lg border border-gray-300 bg-white py-2 pl-6 pr-3 text-sm text-black placeholder-gray-400 transition-colors focus:border-black focus:outline-none focus:ring-black"
+                      className="w-full rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] py-2 pl-6 pr-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] transition-colors focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-[var(--color-gold-primary)]"
                     />
                   </div>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="flex items-center gap-1 text-xs font-medium text-gray-600">
+                <label className="flex items-center gap-1 text-xs font-medium text-[var(--color-text-secondary)]">
                   <MessageSquare className="size-3" />
-                  Any notes you wish to provide <span className="text-red-500">*</span>
+                  Any notes you wish to provide <span className="text-[var(--color-danger)]">*</span>
                 </label>
                 <textarea
                   name="description"
@@ -238,14 +238,14 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
                   onChange={handleChange}
                   placeholder="Write here..."
                   rows={3}
-                  className="w-full resize-none rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-black placeholder-gray-400 transition-colors focus:border-black focus:outline-none focus:ring-black"
+                  className="w-full resize-none rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-3 py-2 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] transition-colors focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-[var(--color-gold-primary)]"
                 />
               </div>
             </div>
 
             {error && (
-              <div className="rounded-lg border border-red-200 bg-red-50 p-3">
-                <p className="flex items-center gap-2 text-xs text-red-700">
+              <div className="rounded-lg border border-[var(--color-danger-muted)] bg-[var(--color-danger-muted)] p-3">
+                <p className="flex items-center gap-2 text-xs text-[var(--color-danger)]">
                   <X className="size-3" />
                   {error}
                 </p>
@@ -253,8 +253,8 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
             )}
 
             {!address && (
-              <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-3">
-                <p className="flex items-center gap-2 text-xs text-yellow-800">
+              <div className="rounded-lg border border-[var(--color-warning)]/20 bg-[var(--color-warning)]/10 p-3">
+                <p className="flex items-center gap-2 text-xs text-[var(--color-warning)]">
                   <MessageSquare className="size-3" />
                   Please connect your wallet to submit a feature request.
                 </p>
@@ -264,7 +264,7 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
             <button
               onClick={handleSubmit}
               disabled={!address || isPending || !form.name || !form.email || !form.description}
-              className="btn btn-black w-full disabled:cursor-not-allowed disabled:bg-gray-300"
+              className="btn btn-black w-full disabled:cursor-not-allowed disabled:bg-[var(--color-border-subtle)]"
             >
               {isPending ? (
                 <div className="flex items-center justify-center gap-2">
