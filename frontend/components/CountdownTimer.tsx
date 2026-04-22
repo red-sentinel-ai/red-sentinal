@@ -93,8 +93,8 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
     className?: string
   }) => (
     <div className={cn(`flex items-center`, className)}>
-      <span className="text-right tabular-nums text-white">{value}</span>
-      <span className="ml-0.5 text-gray-400">{unit}</span>
+      <span className="text-right tabular-nums text-[var(--color-bg-surface)]">{value}</span>
+      <span className="ml-0.5 text-[var(--color-text-muted)]">{unit}</span>
     </div>
   )
 
