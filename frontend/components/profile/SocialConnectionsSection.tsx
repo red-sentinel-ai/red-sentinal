@@ -37,7 +37,6 @@ export function SocialConnectionsSection() {
 
   const telegramBotName = process.env.NEXT_PUBLIC_TELEGRAM_BOT_NAME
 
-  // Handle email verification callback
   useEffect(() => {
     const connected = searchParams.get('connected')
     const error = searchParams.get('error')
@@ -60,14 +59,12 @@ export function SocialConnectionsSection() {
     }
   }, [searchParams, refetch, address])
 
-  // Reset disconnecting state when mutation finishes
   useEffect(() => {
     if (!isDisconnecting && disconnectingPlatform) {
       setDisconnectingPlatform(null)
     }
   }, [isDisconnecting, disconnectingPlatform])
 
-  // Inject Telegram Login Widget
   useEffect(() => {
     if (hasTelegram || !telegramBotName || !address || !telegramContainerRef.current) return
 
@@ -87,15 +84,15 @@ export function SocialConnectionsSection() {
 
   if (isLoading) {
     return (
-      <Card className="border-gray-200 bg-gray-50 p-6">
+      <Card className="border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="h-5 w-5 animate-pulse rounded bg-gray-200"></div>
-            <div className="h-5 w-40 animate-pulse rounded bg-gray-200"></div>
+            <div className="h-5 w-5 animate-pulse rounded bg-[var(--color-border-subtle)]"></div>
+            <div className="h-5 w-40 animate-pulse rounded bg-[var(--color-border-subtle)]"></div>
           </div>
           <div className="flex gap-3">
-            <div className="h-9 w-28 animate-pulse rounded-lg bg-gray-200"></div>
-            <div className="h-9 w-36 animate-pulse rounded-lg bg-gray-200"></div>
+            <div className="h-9 w-28 animate-pulse rounded-lg bg-[var(--color-border-subtle)]"></div>
+            <div className="h-9 w-36 animate-pulse rounded-lg bg-[var(--color-border-subtle)]"></div>
           </div>
         </div>
       </Card>
@@ -104,16 +101,16 @@ export function SocialConnectionsSection() {
 
   return (
     <div className="px-4 md:px-8">
-      <Card className="border-[#5E5E5E] bg-transparent bg-gradient-to-r from-white/45 to-[rgba(249,241,248,0.45)] p-4">
+      <Card className="border-[var(--color-border-subtle)] bg-gradient-to-r from-[var(--color-bg-surface)]/60 to-[var(--color-bg-subtle)]/60 p-4">
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-medium text-black sm:text-xl">
+            <h3 className="text-lg font-medium text-[var(--color-text-primary)] sm:text-xl">
               Connect your socials to unlock rewards
             </h3>
             {hasAnyConnection && (
               <Badge
                 variant="secondary"
-                className="border-green-200 bg-green-100 px-2 py-0.5 text-xs text-green-800"
+                className="border-[var(--color-success-muted)] bg-[var(--color-success-muted)] px-2 py-0.5 text-xs text-[var(--color-success)]"
               >
                 <Check className="mr-1 h-3 w-3" />
                 Active
@@ -123,18 +120,18 @@ export function SocialConnectionsSection() {
 
           <div className="grid grid-cols-1 gap-3">
             {/* Connect Email */}
-            <div className="rounded-lg border border-[#5E5E5E] bg-gradient-to-r from-white/45 to-[rgba(249,240,249,0.46)] p-3">
+            <div className="rounded-lg border border-[var(--color-border-subtle)] bg-gradient-to-r from-[var(--color-bg-surface)]/60 to-[var(--color-bg-subtle)]/60 p-3">
               <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
                 <div className="flex items-center gap-2">
-                  <div className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-[#5E5E5E] sm:h-10 sm:w-10">
-                    <Mail className="h-4 w-4 text-[#5E5E5E] sm:h-5 sm:w-5" />
+                  <div className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-[var(--color-border-subtle)] sm:h-10 sm:w-10">
+                    <Mail className="h-4 w-4 text-[var(--color-text-muted)] sm:h-5 sm:w-5" />
                     {hasEmail && (
-                      <div className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-green-500"></div>
+                      <div className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-[var(--color-bg-surface)] bg-[var(--color-success)]"></div>
                     )}
                   </div>
                   <div>
-                    <p className="text-sm font-medium sm:text-base">Connect Email</p>
-                    <p className="text-xs text-[#5E5E5E]">
+                    <p className="text-sm font-medium text-[var(--color-text-primary)] sm:text-base">Connect Email</p>
+                    <p className="text-xs text-[var(--color-text-muted)]">
                       {hasEmail && 'Email connected'}
                     </p>
                   </div>
@@ -150,11 +147,11 @@ export function SocialConnectionsSection() {
                     size="sm"
                     variant="outline"
                     disabled={disconnectingPlatform === 'email'}
-                    className="flex h-8 min-w-[90px] items-center gap-1 border-red-200 px-2 text-xs text-red-600 hover:border-red-300 hover:bg-red-50 hover:text-red-700 disabled:opacity-50 sm:h-9 sm:text-sm"
+                    className="flex h-8 min-w-[90px] items-center gap-1 border-[var(--color-danger-muted)] px-2 text-xs text-[var(--color-danger)] hover:border-[var(--color-danger)]/30 hover:bg-[var(--color-danger-muted)] hover:text-[var(--color-danger)] disabled:opacity-50 sm:h-9 sm:text-sm"
                   >
                     {disconnectingPlatform === 'email' ? (
                       <>
-                        <div className="mr-1 h-3 w-3 flex-shrink-0 animate-spin rounded-full border border-black border-t-transparent"></div>
+                        <div className="mr-1 h-3 w-3 flex-shrink-0 animate-spin rounded-full border border-[var(--color-text-primary)] border-t-transparent"></div>
                         Disconnecting...
                       </>
                     ) : (
@@ -171,14 +168,14 @@ export function SocialConnectionsSection() {
               {!hasEmail && (
                 <div className="mt-3">
                   {linkSent ? (
-                    <div className="rounded-lg border border-green-200 bg-green-50 px-3 py-2.5 text-sm text-green-800">
+                    <div className="rounded-lg border border-[var(--color-success-muted)] bg-[var(--color-success-muted)] px-3 py-2.5 text-sm text-[var(--color-success)]">
                       <p className="font-medium">Check your inbox!</p>
-                      <p className="mt-0.5 text-xs text-green-700">
+                      <p className="mt-0.5 text-xs text-[var(--color-success)]">
                         Verification link sent to <span className="font-medium">{sentToEmail}</span>. It expires in 15 minutes.
                       </p>
                       <button
                         onClick={reset}
-                        className="mt-1.5 text-xs text-green-600 underline hover:text-green-800"
+                        className="mt-1.5 text-xs text-[var(--color-success)] underline hover:text-[var(--color-gold-primary)]"
                       >
                         Use a different email
                       </button>
@@ -191,7 +188,7 @@ export function SocialConnectionsSection() {
                         value={emailInput}
                         onChange={e => setEmailInput(e.target.value)}
                         onKeyDown={e => { if (e.key === 'Enter') sendVerificationLink() }}
-                        className="h-8 flex-1 rounded-md border border-[#5E5E5E] bg-white/70 px-3 text-xs focus:border-[#F445AB] focus:outline-none sm:h-9 sm:text-sm"
+                        className="h-8 flex-1 rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] px-3 text-xs text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)] sm:h-9 sm:text-sm"
                       />
                       <Button
                         onClick={sendVerificationLink}
@@ -212,9 +209,9 @@ export function SocialConnectionsSection() {
             </div>
 
             {/* Connect Telegram - temporarily hidden, pending debug */}
-            {false && <div className="flex flex-col items-start justify-between gap-2 rounded-lg border border-[#5E5E5E] bg-gradient-to-r from-white/45 to-[rgba(249,240,249,0.46)] p-3 sm:flex-row sm:items-center">
+            {false && <div className="flex flex-col items-start justify-between gap-2 rounded-lg border border-[var(--color-border-subtle)] bg-gradient-to-r from-[var(--color-bg-surface)]/60 to-[var(--color-bg-subtle)]/60 p-3 sm:flex-row sm:items-center">
               <div className="flex items-center gap-2">
-                <div className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-[#5E5E5E] sm:h-10 sm:w-10">
+                <div className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-[var(--color-border-subtle)] sm:h-10 sm:w-10">
                   <Image
                     src="/icons/telegram_black.png"
                     width={24}
@@ -223,12 +220,12 @@ export function SocialConnectionsSection() {
                     className="rounded"
                   />
                   {hasTelegram && (
-                    <div className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-green-500"></div>
+                    <div className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-[var(--color-bg-surface)] bg-[var(--color-success)]"></div>
                   )}
                 </div>
                 <div>
-                  <p className="text-sm font-medium sm:text-base">Connect Telegram</p>
-                  <p className="text-xs text-[#5E5E5E]">
+                  <p className="text-sm font-medium text-[var(--color-text-primary)] sm:text-base">Connect Telegram</p>
+                  <p className="text-xs text-[var(--color-text-muted)]">
                     {hasTelegram ? 'Connected' : 'Not connected'}
                   </p>
                 </div>
@@ -244,11 +241,11 @@ export function SocialConnectionsSection() {
                   size="sm"
                   variant="outline"
                   disabled={disconnectingPlatform === 'telegram'}
-                  className="flex h-8 min-w-[90px] items-center gap-1 border-red-200 px-2 text-xs text-red-600 hover:border-red-300 hover:bg-red-50 hover:text-red-700 disabled:opacity-50 sm:h-9 sm:text-sm"
+                  className="flex h-8 min-w-[90px] items-center gap-1 border-[var(--color-danger-muted)] px-2 text-xs text-[var(--color-danger)] hover:border-[var(--color-danger)]/30 hover:bg-[var(--color-danger-muted)] hover:text-[var(--color-danger)] disabled:opacity-50 sm:h-9 sm:text-sm"
                 >
                   {disconnectingPlatform === 'telegram' ? (
                     <>
-                      <div className="mr-1 h-3 w-3 flex-shrink-0 animate-spin rounded-full border border-black border-t-transparent"></div>
+                      <div className="mr-1 h-3 w-3 flex-shrink-0 animate-spin rounded-full border border-[var(--color-text-primary)] border-t-transparent"></div>
                       Disconnecting...
                     </>
                   ) : (

@@ -118,7 +118,7 @@ function ProfileContent() {
                   <User className="h-12 w-12 text-[var(--color-text-muted)]" />
                 </div>
               )}
-              <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-overlay)] opacity-0 transition-opacity group-hover:opacity-100">
+              <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
                 <Camera className="h-8 w-8 text-white" />
               </div>
             </div>
