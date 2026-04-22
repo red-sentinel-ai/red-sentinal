@@ -123,7 +123,7 @@ export const FundAgentModal = ({
           <div className="flex items-center justify-between">
             <span className="w-6" />
             <h2 className="flex-grow text-center text-xl font-bold">Sentinel Funded!</h2>
-            <button onClick={handleClose} className="text-gray-400 transition-colors hover:text-black">
+            <button onClick={handleClose} className="text-[var(--color-text-faint)] transition-colors hover:text-[var(--color-text-primary)]">
               <X className="h-6 w-6" />
             </button>
           </div>
@@ -136,9 +136,9 @@ export const FundAgentModal = ({
               height={74}
               className="h-14 w-14"
             />
-            <p className="font-semibold text-black">Free Spin Pass Received!</p>
+            <p className="font-semibold text-[var(--color-text-primary)]">Free Spin Pass Received!</p>
             <BoosterPassBadge tierKey={fundedTier} mode="received" />
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-[var(--color-text-muted)]">
               Use it to WIN SENTINEL tokens from your profile rewards tab.
             </p>
           </div>
@@ -146,7 +146,7 @@ export const FundAgentModal = ({
           <Link
             href="/profile?tab=rewards"
             onClick={handleClose}
-            className="inline-block w-full rounded-lg bg-black px-5 py-3 text-sm font-semibold text-white transition-transform hover:scale-105"
+            className="inline-block w-full rounded-lg bg-[var(--color-text-primary)] px-5 py-3 text-sm font-semibold text-[var(--color-bg-surface)] transition-transform hover:scale-105"
           >
             Go to Profile → Spin Now
           </Link>
@@ -157,20 +157,20 @@ export const FundAgentModal = ({
             <h2 className="text-2xl font-bold">Fund Your Sentinel</h2>
             <button
               onClick={handleClose}
-              className="text-gray-400 transition-colors hover:text-black"
+              className="text-[var(--color-text-faint)] transition-colors hover:text-[var(--color-text-primary)]"
               disabled={isLoading}
             >
               <X className="h-6 w-6" />
             </button>
           </div>
 
-          <p className="text-gray-600">
+          <p className="text-[var(--color-text-secondary)]">
             Add funds to your reward pool to list your sentinel on the attack page. The bigger the
             bounty, the more attackers you&apos;ll attract.
           </p>
 
           <div>
-            <label className="mb-2 flex items-center gap-1.5 text-sm font-medium">
+            <label className="mb-2 flex items-center gap-1.5 text-sm font-medium text-[var(--color-text-primary)]">
               Amount
               <Image src={token.icon} alt={tokenSymbol} width={16} height={16} className="rounded-full" />
               {tokenSymbol}
@@ -179,16 +179,16 @@ export const FundAgentModal = ({
               type="number"
               value={amount}
               onChange={handleAmountChange}
-              className="w-full rounded-lg border border-gray-300 bg-white p-3 placeholder:text-gray-400 focus:ring-1 focus:ring-black [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              className="w-full rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:ring-1 focus:ring-[var(--color-gold-primary)] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
               placeholder="0.00"
               min="0"
               step="0.001"
               disabled={isLoading}
             />
-            {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+            {error && <p className="mt-1 text-sm text-[var(--color-danger)]">{error}</p>}
           </div>
 
-          <p className="flex items-center gap-1 text-xs text-gray-500">
+          <p className="flex items-center gap-1 text-xs text-[var(--color-text-muted)]">
             Sentinels with less than 0.1
             <Image src={token.icon} alt={tokenSymbol} width={12} height={12} className="rounded-full" />
             {tokenSymbol} balance won&apos;t be visible to attackers.
