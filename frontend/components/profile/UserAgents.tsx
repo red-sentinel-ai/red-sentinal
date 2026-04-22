@@ -22,7 +22,7 @@ export const UserAgents = () => {
       {userAgents && userAgents.length > 0 ? (
         <div className="mb-16">
           <div className="mb-8">
-            <h2 className="mb-2 text-center text-2xl font-bold text-black md:text-3xl">
+            <h2 className="mb-2 text-center text-2xl font-bold text-[var(--color-text-primary)] md:text-3xl">
               Your Sentinels
             </h2>
             <div className="mx-auto flex max-w-[400px]">
@@ -53,18 +53,18 @@ export const UserAgents = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col items-center justify-center rounded-2xl border border-gray-200 bg-gray-50 px-4 py-16 text-center"
+          className="flex flex-col items-center justify-center rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] px-4 py-16 text-center"
         >
-          <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-gray-200 bg-gray-100">
-            <Shield className="h-10 w-10 text-gray-400" />
+          <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)]">
+            <Shield className="h-10 w-10 text-[var(--color-text-muted)]" />
           </div>
-          <h3 className="mb-2 text-xl font-bold text-black">You don&apos;t own any Sentinel yet</h3>
-          <p className="mb-8 max-w-md text-gray-500">
+          <h3 className="mb-2 text-xl font-bold text-[var(--color-text-primary)]">You don't own any Sentinel yet</h3>
+          <p className="mb-8 max-w-md text-[var(--color-text-muted)]">
             Deploy your own AI agent, set the rules, and earn rewards when attackers try to break
             them.
           </p>
           <Link href="/defend">
-            <button className="btn btn-black">
+            <button className="btn bg-[var(--color-gold-primary)] text-[var(--color-text-on-gold)] hover:bg-[var(--color-gold-light)]">
               <Plus className="h-4 w-4" />
               Deploy Sentinel
             </button>

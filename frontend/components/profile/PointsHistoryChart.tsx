@@ -35,7 +35,6 @@ export const PointsHistoryChart = ({ history }: PointsHistoryChartProps) => {
       return timeA - timeB
     })
 
-    // Get date range (last 30 days or from first activity, whichever is more recent)
     const now = new Date()
     const thirtyDaysAgo = subDays(now, 30)
 
@@ -44,13 +43,11 @@ export const PointsHistoryChart = ({ history }: PointsHistoryChartProps) => {
 
     const startDate = firstActivityDate > thirtyDaysAgo ? firstActivityDate : thirtyDaysAgo
 
-    // Generate all days in range
     const days = eachDayOfInterval({
       start: startOfDay(startDate),
       end: startOfDay(now),
     })
 
-    // Group points by day
     const pointsByDay: Record<string, number> = {}
 
     sortedHistory.forEach(activity => {
@@ -59,7 +56,6 @@ export const PointsHistoryChart = ({ history }: PointsHistoryChartProps) => {
       pointsByDay[dayKey] = (pointsByDay[dayKey] || 0) + (activity.rewardAmount || 0)
     })
 
-    // Calculate cumulative points for activities before the start date
     let priorPoints = 0
     sortedHistory.forEach(activity => {
       const activityDate = new Date(parseInt(activity.timestampMs))
@@ -68,7 +64,6 @@ export const PointsHistoryChart = ({ history }: PointsHistoryChartProps) => {
       }
     })
 
-    // Build chart data with cumulative values
     let cumulative = priorPoints
     const data: ChartDataPoint[] = days.map(day => {
       const dayKey = format(day, 'yyyy-MM-dd')
@@ -96,16 +91,16 @@ export const PointsHistoryChart = ({ history }: PointsHistoryChartProps) => {
       : 0
 
   return (
-    <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-md">
+    <div className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-6 shadow-[var(--shadow-card)]">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-black">Tokens Growth</h3>
-          <p className="text-sm text-gray-500">Your SENTINEL tokens over time</p>
+          <h3 className="text-lg font-semibold text-[var(--color-text-primary)]">Tokens Growth</h3>
+          <p className="text-sm text-[var(--color-text-muted)]">Your SENTINEL tokens over time</p>
         </div>
         {totalGrowth > 0 && (
-          <div className="flex items-center gap-2 rounded-lg bg-green-50 px-3 py-1.5">
-            <TrendingUp className="h-4 w-4 text-green-600" />
-            <span className="text-sm font-medium text-green-600">
+          <div className="flex items-center gap-2 rounded-lg bg-[var(--color-success-muted)] px-3 py-1.5">
+            <TrendingUp className="h-4 w-4 text-[var(--color-success)]" />
+            <span className="text-sm font-medium text-[var(--color-success)]">
               +{totalGrowth.toLocaleString()} tokens
             </span>
           </div>
@@ -117,22 +112,22 @@ export const PointsHistoryChart = ({ history }: PointsHistoryChartProps) => {
           <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id="pointsGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#F632F3" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#F632F3" stopOpacity={0} />
+                <stop offset="5%" stopColor="var(--color-gold-primary)" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="var(--color-gold-primary)" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border-subtle)" />
             <XAxis
               dataKey="dateLabel"
-              tick={{ fill: '#9ca3af', fontSize: 12 }}
+              tick={{ fill: 'var(--color-text-muted)', fontSize: 12 }}
               tickLine={false}
-              axisLine={{ stroke: '#e5e7eb' }}
+              axisLine={{ stroke: 'var(--color-border-subtle)' }}
               interval="preserveStartEnd"
             />
             <YAxis
-              tick={{ fill: '#9ca3af', fontSize: 12 }}
+              tick={{ fill: 'var(--color-text-muted)', fontSize: 12 }}
               tickLine={false}
-              axisLine={{ stroke: '#e5e7eb' }}
+              axisLine={{ stroke: 'var(--color-border-subtle)' }}
               tickFormatter={value => value.toLocaleString()}
               width={60}
             />
@@ -141,16 +136,16 @@ export const PointsHistoryChart = ({ history }: PointsHistoryChartProps) => {
                 if (active && payload && payload.length) {
                   const data = payload[0].payload as ChartDataPoint
                   return (
-                    <div className="rounded-lg border border-gray-200 bg-white p-3 shadow-lg">
-                      <p className="mb-1 text-sm font-medium text-gray-900">{label}</p>
-                      <p className="text-sm text-gray-600">
+                    <div className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-3 shadow-lg">
+                      <p className="mb-1 text-sm font-medium text-[var(--color-text-primary)]">{label}</p>
+                      <p className="text-sm text-[var(--color-text-secondary)]">
                         Total:{' '}
-                        <span className="font-semibold text-[#F632F3]">
+                        <span className="font-semibold text-[var(--color-gold-primary)]">
                           {data.cumulativePoints.toLocaleString()} SENTINEL
                         </span>
                       </p>
                       {data.dailyPoints > 0 && (
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-[var(--color-text-muted)]">
                           +{data.dailyPoints.toLocaleString()} earned this day
                         </p>
                       )}
@@ -163,14 +158,14 @@ export const PointsHistoryChart = ({ history }: PointsHistoryChartProps) => {
             <Area
               type="monotone"
               dataKey="cumulativePoints"
-              stroke="#F632F3"
+              stroke="var(--color-gold-primary)"
               strokeWidth={2}
               fill="url(#pointsGradient)"
               dot={false}
               activeDot={{
                 r: 6,
-                fill: '#F632F3',
-                stroke: '#fff',
+                fill: 'var(--color-gold-primary)',
+                stroke: 'var(--color-bg-surface)',
                 strokeWidth: 2,
               }}
             />
