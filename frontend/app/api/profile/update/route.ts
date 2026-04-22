@@ -1,5 +1,8 @@
 import { NextResponse, NextRequest } from 'next/server'
 import { supabaseServiceClient } from '@/db/config/server'
+import type { Database } from '@/lib/database.types'
+
+type SsUsersUpdate = Database['public']['Tables']['ss_users']['Update']
 
 const AVATARS_BUCKET_NAME = 'ss-avatars'
 
@@ -55,7 +58,7 @@ export async function PUT(request: NextRequest) {
       newAvatarUrl = imageUrl
     }
 
-    const updateData: { [key: string]: unknown } = {
+    const updateData: SsUsersUpdate = {
       username: username,
       display_name: displayName,
       email: email || null,
