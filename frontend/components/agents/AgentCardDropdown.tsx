@@ -71,10 +71,10 @@ export const AgentDropdown = ({
       {hasItems && (
         <div className="absolute right-2 top-2 z-20">
           <DropdownMenu>
-            <DropdownMenuTrigger className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-sm outline-none backdrop-blur-sm transition-colors hover:bg-white">
-              <MoreVertical className="h-5 w-5 text-gray-700" />
+            <DropdownMenuTrigger className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-bg-surface)]/90 shadow-sm outline-none backdrop-blur-sm transition-colors hover:bg-[var(--color-bg-surface)]">
+              <MoreVertical className="h-5 w-5 text-[var(--color-text-secondary)]" />
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuContent align="end" className="w-56 border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)]">
               {!isFeatured && (
                 <DropdownMenuItem onClick={handleOpenFeatureModal} className="cursor-pointer gap-2">
                   <Star className="h-4 w-4" />

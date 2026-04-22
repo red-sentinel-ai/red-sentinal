@@ -66,8 +66,8 @@ export function EditProfileModal({ open, onClose, profile }: EditProfileModalPro
                   <User className="h-12 w-12 text-[var(--color-text-muted)]" />
                 </div>
               )}
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
-                <Camera className="h-8 w-8 text-white" />
+              <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-text-primary)]/40 opacity-0 transition-opacity group-hover:opacity-100">
+                <Camera className="h-8 w-8 text-[var(--color-bg-surface)]" />
               </div>
             </div>
           </div>

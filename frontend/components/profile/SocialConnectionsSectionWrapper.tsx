@@ -16,8 +16,8 @@ function SocialConnectionsLoading() {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          <div className="h-12 animate-pulse rounded bg-gray-700"></div>
-          <div className="h-12 animate-pulse rounded bg-gray-700"></div>
+          <div className="h-12 animate-pulse rounded bg-[var(--color-border-subtle)]"></div>
+          <div className="h-12 animate-pulse rounded bg-[var(--color-border-subtle)]"></div>
         </div>
       </CardContent>
     </Card>

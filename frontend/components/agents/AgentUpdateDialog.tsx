@@ -28,7 +28,7 @@ export const AgentUpdateDialog = ({
       <div className="space-y-4 sm:space-y-6">
         <div className="flex items-center justify-between gap-2">
           <h2 className="text-xl font-bold sm:text-2xl">{title}</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-black">
+          <button onClick={onClose} className="text-[var(--color-text-faint)] hover:text-[var(--color-text-primary)]">
             <X className="size-5 sm:size-6" />
           </button>
         </div>
