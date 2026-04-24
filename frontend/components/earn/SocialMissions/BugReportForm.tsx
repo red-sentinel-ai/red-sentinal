@@ -78,17 +78,17 @@ export function BugReportForm({ isOpen, onClose, isCritical = false }: BugReport
 
   return (
     <Dialog open={isOpen} onClose={handleClose}>
-      <div className="w-full rounded-xl bg-white text-black md:rounded-2xl">
+      <div className="w-full rounded-xl bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] md:rounded-2xl">
         <div className="mb-4 flex items-center justify-between md:mb-6">
           <div className="flex items-center gap-2">
-            <AlertTriangle className={`h-5 w-5 ${isCritical ? 'text-red-600' : 'text-yellow-600'}`} />
-            <h2 className="text-base font-bold md:text-lg">
+            <AlertTriangle className={`h-5 w-5 ${isCritical ? 'text-red-600' : 'text-[var(--color-gold-primary)]'}`} />
+            <h2 className="font-display text-base font-bold text-[var(--color-text-primary)] md:text-lg">
               {isCritical ? 'Report Critical Bug / Security Issue' : 'Report Bug'}
             </h2>
           </div>
           <button
             onClick={handleClose}
-            className="text-gray-500 transition-colors hover:text-black"
+            className="text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-primary)]"
           >
             <X className="h-4 w-4 md:h-5 md:w-5" />
           </button>
@@ -96,14 +96,14 @@ export function BugReportForm({ isOpen, onClose, isCritical = false }: BugReport
 
         {isSubmitted ? (
           <div className="flex flex-col items-center justify-center space-y-3 py-4 text-center duration-300 animate-in fade-in zoom-in md:space-y-4 md:py-6">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100 md:h-16 md:w-16">
-              <CheckCircle className="h-6 w-6 text-green-600 md:h-8 md:w-8" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-success-muted)] md:h-16 md:w-16">
+              <CheckCircle className="h-6 w-6 text-[var(--color-success)] md:h-8 md:w-8" />
             </div>
             <div>
-              <h3 className="mb-1.5 text-base font-bold text-black md:mb-2 md:text-lg">
+              <h3 className="font-display mb-1.5 text-base font-bold text-[var(--color-text-primary)] md:mb-2 md:text-lg">
                 Report Submitted!
               </h3>
-              <p className="mx-auto max-w-xs text-xs text-gray-600 md:text-sm">
+              <p className="font-body mx-auto max-w-xs text-xs text-[var(--color-text-secondary)] md:text-sm">
                 Our team will review your bug report and award Spin Passes once verified.
                 {isCritical && ' Critical bugs receive Divine Spin Passes (100x booster).'}
               </p>
@@ -119,20 +119,20 @@ export function BugReportForm({ isOpen, onClose, isCritical = false }: BugReport
           <div className="space-y-4 md:space-y-5">
             {/* Title */}
             <div>
-              <label className="mb-1 block text-xs font-medium text-gray-700 md:text-sm">
+              <label className="font-body mb-1 block text-xs font-medium text-[var(--color-text-secondary)] md:text-sm">
                 Bug Title <span className="text-red-500">*</span>
               </label>
               <input
                 value={title}
                 onChange={e => setTitle(e.target.value)}
                 placeholder="Brief description of the bug"
-                className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs focus:border-black focus:outline-none focus:ring-1 focus:ring-black md:text-sm"
+                className="w-full rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] px-3 py-2 text-xs text-[var(--color-text-primary)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)] md:text-sm"
               />
             </div>
 
             {/* Description */}
             <div>
-              <label className="mb-1 block text-xs font-medium text-gray-700 md:text-sm">
+              <label className="font-body mb-1 block text-xs font-medium text-[var(--color-text-secondary)] md:text-sm">
                 Description <span className="text-red-500">*</span>
               </label>
               <textarea
@@ -140,13 +140,13 @@ export function BugReportForm({ isOpen, onClose, isCritical = false }: BugReport
                 onChange={e => setDescription(e.target.value)}
                 placeholder="Detailed description of the bug and its impact"
                 rows={4}
-                className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs focus:border-black focus:outline-none focus:ring-1 focus:ring-black md:text-sm"
+                className="w-full rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] px-3 py-2 text-xs text-[var(--color-text-primary)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)] md:text-sm"
               />
             </div>
 
             {/* Reproduction Steps */}
             <div>
-              <label className="mb-1 block text-xs font-medium text-gray-700 md:text-sm">
+              <label className="font-body mb-1 block text-xs font-medium text-[var(--color-text-secondary)] md:text-sm">
                 Reproduction Steps
               </label>
               <textarea
@@ -154,32 +154,32 @@ export function BugReportForm({ isOpen, onClose, isCritical = false }: BugReport
                 onChange={e => setReproSteps(e.target.value)}
                 placeholder="Step-by-step instructions to reproduce the bug"
                 rows={3}
-                className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs focus:border-black focus:outline-none focus:ring-1 focus:ring-black md:text-sm"
+                className="w-full rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] px-3 py-2 text-xs text-[var(--color-text-primary)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)] md:text-sm"
               />
             </div>
 
             {/* URL */}
             <div>
-              <label className="mb-1 block text-xs font-medium text-gray-700 md:text-sm">
-                URL or Screenshot <span className="text-gray-400">(optional)</span>
+              <label className="font-body mb-1 block text-xs font-medium text-[var(--color-text-secondary)] md:text-sm">
+                URL or Screenshot <span className="text-[var(--color-text-muted)]">(optional)</span>
               </label>
               <input
                 value={url}
                 onChange={e => setUrl(e.target.value)}
                 placeholder="Link to screenshot or affected page"
-                className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs focus:border-black focus:outline-none focus:ring-1 focus:ring-black md:text-sm"
+                className="w-full rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] px-3 py-2 text-xs text-[var(--color-text-primary)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)] md:text-sm"
               />
             </div>
 
             {/* Severity */}
             <div>
-              <label className="mb-1 block text-xs font-medium text-gray-700 md:text-sm">
+              <label className="font-body mb-1 block text-xs font-medium text-[var(--color-text-secondary)] md:text-sm">
                 Severity
               </label>
               <select
                 value={severity}
                 onChange={e => setSeverity(e.target.value as any)}
-                className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs focus:border-black focus:outline-none focus:ring-1 focus:ring-black md:text-sm"
+                className="w-full rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] px-3 py-2 text-xs text-[var(--color-text-primary)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)] md:text-sm"
               >
                 <option value="bug">Bug (25x Legendary Spin Pass)</option>
                 <option value="critical">Critical Bug (100x Divine Spin Pass)</option>

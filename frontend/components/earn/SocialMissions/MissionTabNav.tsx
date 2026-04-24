@@ -28,7 +28,7 @@ interface MissionTabNavProps {
 export function MissionTabNav({ activeTab, onTabChange }: MissionTabNavProps) {
   return (
     <div className="mb-8 overflow-x-auto">
-      <div className="flex gap-2 border-b border-gray-200">
+      <div className="flex gap-2 border-b border-[var(--color-border-subtle)]">
         {TABS.map(tab => {
           const Icon = tab.icon
           const isActive = activeTab === tab.id
@@ -37,10 +37,10 @@ export function MissionTabNav({ activeTab, onTabChange }: MissionTabNavProps) {
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
-              className={`relative flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-medium transition-colors sm:px-6 sm:text-base ${
+              className={`font-body relative flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-medium transition-colors sm:px-6 sm:text-base ${
                 isActive
-                  ? 'border-black text-black'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
+                  ? 'border-[var(--color-gold-primary)] text-[var(--color-text-primary)]'
+                  : 'border-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]'
               }`}
             >
               {tab.iconSrc ? (

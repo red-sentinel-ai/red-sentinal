@@ -148,7 +148,7 @@ export function ContentSubmissionModal({ mission, isOpen, onClose }: ContentSubm
 
   return (
     <Dialog open={isOpen} onClose={handleClose} disableBackdropClick className="max-w-[600px]">
-      <div className="w-full rounded-xl bg-white text-black md:rounded-2xl">
+      <div className="w-full rounded-xl bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] md:rounded-2xl">
         <div className="mb-4 flex items-center justify-between md:mb-6">
           <div className="flex items-center gap-2">
             <div className={`rounded-lg px-2 py-1 ${tierInfo.bgColor}`}>
@@ -156,11 +156,11 @@ export function ContentSubmissionModal({ mission, isOpen, onClose }: ContentSubm
                 {mission.multiplier}x {tierInfo.name}
               </span>
             </div>
-            <h2 className="text-base font-bold md:text-lg">{mission.title}</h2>
+            <h2 className="font-display text-base font-bold text-[var(--color-text-primary)] md:text-lg">{mission.title}</h2>
           </div>
           <button
             onClick={handleClose}
-            className="text-gray-500 transition-colors hover:text-black"
+            className="text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-primary)]"
           >
             <X className="h-4 w-4 md:h-5 md:w-5" />
           </button>
@@ -168,14 +168,14 @@ export function ContentSubmissionModal({ mission, isOpen, onClose }: ContentSubm
 
         {isSubmitted ? (
           <div className="flex flex-col items-center justify-center space-y-3 py-4 text-center duration-300 animate-in fade-in zoom-in md:space-y-4 md:py-6">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100 md:h-16 md:w-16">
-              <CheckCircle className="h-6 w-6 text-green-600 md:h-8 md:w-8" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-success-muted)] md:h-16 md:w-16">
+              <CheckCircle className="h-6 w-6 text-[var(--color-success)] md:h-8 md:w-8" />
             </div>
             <div>
-              <h3 className="mb-1.5 text-base font-bold text-black md:mb-2 md:text-lg">
+              <h3 className="font-display mb-1.5 text-base font-bold text-[var(--color-text-primary)] md:mb-2 md:text-lg">
                 Submission Received!
               </h3>
-              <p className="mx-auto max-w-xs text-xs text-gray-600 md:text-sm">
+              <p className="font-body mx-auto max-w-xs text-xs text-[var(--color-text-secondary)] md:text-sm">
                 Our team will review your content within 48 hours. Quality content earns you a{' '}
                 {mission.multiplier}x {tierInfo.name} Spin Pass.
               </p>
@@ -190,22 +190,22 @@ export function ContentSubmissionModal({ mission, isOpen, onClose }: ContentSubm
         ) : (
           <div className="space-y-4 md:space-y-5">
             {/* Mission Description */}
-            <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
-              <p className="text-sm text-gray-700">{mission.description}</p>
+            <div className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] p-4">
+              <p className="font-body text-sm text-[var(--color-text-secondary)]">{mission.description}</p>
               {mission.requirements.description && (
-                <p className="mt-2 text-xs text-gray-500">
+                <p className="font-body mt-2 text-xs text-[var(--color-text-muted)]">
                   Requirements: {mission.requirements.description}
                 </p>
               )}
             </div>
 
-            <div className="border-t border-gray-200" />
+            <div className="border-t border-[var(--color-border-subtle)]" />
 
             {/* Step 1: Mission-specific action */}
             <div>
-              <p className="mb-1 text-xs font-medium text-gray-500 md:text-sm">Step 1</p>
-              <p className="mb-2 text-sm font-medium md:text-base">{step1.heading}</p>
-              <p className="mb-3 text-xs text-gray-500">{step1.hint}</p>
+              <p className="font-body mb-1 text-xs font-medium text-[var(--color-text-muted)] md:text-sm">Step 1</p>
+              <p className="font-body mb-2 text-sm font-medium text-[var(--color-text-primary)] md:text-base">{step1.heading}</p>
+              <p className="font-body mb-3 text-xs text-[var(--color-text-muted)]">{step1.hint}</p>
               {step1.actionLabel && step1.actionUrl && (
                 <a
                   href={step1.actionUrl}
@@ -219,58 +219,58 @@ export function ContentSubmissionModal({ mission, isOpen, onClose }: ContentSubm
               )}
             </div>
 
-            <div className="border-t border-gray-200" />
+            <div className="border-t border-[var(--color-border-subtle)]" />
 
             {/* Step 2: Submit Link */}
             <div>
-              <p className="mb-1 text-xs font-medium text-gray-500 md:text-sm">Step 2</p>
-              <p className="mb-3 text-sm font-medium md:text-base">Submit your content link</p>
+              <p className="font-body mb-1 text-xs font-medium text-[var(--color-text-muted)] md:text-sm">Step 2</p>
+              <p className="font-body mb-3 text-sm font-medium text-[var(--color-text-primary)] md:text-base">Submit your content link</p>
 
               <div className="space-y-3">
                 {/* Content URL */}
                 <div>
-                  <label className="mb-1 block text-xs font-medium text-gray-700 md:text-sm">
+                  <label className="font-body mb-1 block text-xs font-medium text-[var(--color-text-secondary)] md:text-sm">
                     Content URL <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
-                    <LinkIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                    <LinkIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-text-muted)]" />
                     <input
                       value={contentUrl}
                       onChange={e => setContentUrl(e.target.value)}
                       placeholder={step1.urlPlaceholder}
-                      className="w-full rounded-lg border border-gray-300 bg-white py-2 pl-10 pr-3 text-xs focus:border-black focus:outline-none focus:ring-1 focus:ring-black md:text-sm"
+                      className="w-full rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] py-2 pl-10 pr-3 text-xs text-[var(--color-text-primary)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)] md:text-sm"
                     />
                   </div>
-                  <p className="mt-1 text-[10px] text-gray-400 md:text-xs">
+                  <p className="font-body mt-1 text-[10px] text-[var(--color-text-faint)] md:text-xs">
                     Supported: YouTube, Twitter, Substack, Medium, Google Docs, Notion, and more
                   </p>
                 </div>
 
                 {/* Optional Description */}
                 <div>
-                  <label className="mb-1 block text-xs font-medium text-gray-700 md:text-sm">
-                    Additional Notes <span className="text-gray-400">(optional)</span>
+                  <label className="font-body mb-1 block text-xs font-medium text-[var(--color-text-secondary)] md:text-sm">
+                    Additional Notes <span className="text-[var(--color-text-muted)]">(optional)</span>
                   </label>
                   <textarea
                     value={description}
                     onChange={e => setDescription(e.target.value)}
                     placeholder="Any additional context for reviewers..."
                     rows={2}
-                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs focus:border-black focus:outline-none focus:ring-1 focus:ring-black md:text-sm"
+                    className="w-full rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] px-3 py-2 text-xs text-[var(--color-text-primary)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)] md:text-sm"
                   />
                 </div>
 
                 {/* Screenshot Upload */}
                 <div>
-                  <label className="mb-1 block text-xs font-medium text-gray-700 md:text-sm">
-                    Screenshot <span className="text-gray-400">(optional)</span>
+                  <label className="font-body mb-1 block text-xs font-medium text-[var(--color-text-secondary)] md:text-sm">
+                    Screenshot <span className="text-[var(--color-text-muted)]">(optional)</span>
                   </label>
                   <div
                     onClick={() => fileInputRef.current?.click()}
                     className={`flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-4 transition-colors md:p-5 ${
                       screenshotPreview
-                        ? 'border-black bg-gray-50'
-                        : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
+                        ? 'border-[var(--color-gold-primary)] bg-[var(--color-bg-subtle)]'
+                        : 'border-[var(--color-border-subtle)] hover:border-[var(--color-border-default)] hover:bg-[var(--color-bg-subtle)]'
                     }`}
                   >
                     {screenshotPreview ? (
@@ -289,16 +289,16 @@ export function ContentSubmissionModal({ mission, isOpen, onClose }: ContentSubm
                             setScreenshotPreview(null)
                             if (fileInputRef.current) fileInputRef.current.value = ''
                           }}
-                          className="absolute right-0 top-0 rounded-full bg-white p-0.5 text-gray-500 shadow hover:text-black"
+                          className="absolute right-0 top-0 rounded-full bg-[var(--color-bg-surface)] p-0.5 text-[var(--color-text-muted)] shadow hover:text-[var(--color-text-primary)]"
                         >
                           <X className="h-3.5 w-3.5" />
                         </button>
                       </div>
                     ) : (
                       <>
-                        <Upload className="mb-1.5 h-5 w-5 text-gray-400 md:h-6 md:w-6" />
-                        <p className="text-xs text-gray-500 md:text-sm">Click to upload screenshot</p>
-                        <p className="text-[10px] text-gray-400 md:text-xs">
+                        <Upload className="mb-1.5 h-5 w-5 text-[var(--color-text-muted)] md:h-6 md:w-6" />
+                        <p className="font-body text-xs text-[var(--color-text-secondary)] md:text-sm">Click to upload screenshot</p>
+                        <p className="font-body text-[10px] text-[var(--color-text-muted)] md:text-xs">
                           PNG, JPG, GIF or WebP up to 5MB
                         </p>
                       </>
