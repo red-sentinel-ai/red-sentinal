@@ -14,7 +14,7 @@ export default function VerifyEmailClient() {
     <div className="flex min-h-screen items-center justify-center bg-[var(--color-bg-base)] px-4">
       <div className="w-full max-w-md rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] shadow-sm overflow-hidden">
         <div className="flex justify-center px-10 pt-10 pb-5">
-          <Image src="/icons/logo_large.svg" alt="Sui Sentinel" width={180} height={48} />
+          <Image src="/redSentinel.jpeg" alt="Red Sentinel" width={180} height={48} />
         </div>
 
         <div className="h-px mx-10 bg-[var(--color-border-subtle)]" />
