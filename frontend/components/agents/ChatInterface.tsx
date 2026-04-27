@@ -249,7 +249,7 @@ export default function ChatInterface({
   }
 
   return (
-    <div className="flex h-full flex-1 flex-col justify-between pb-2 text-black sm:pb-6">
+    <div className="flex h-full flex-1 flex-col justify-between pb-2 text-[var(--color-text-primary)] sm:pb-6">
       <JuryResponseModal
         isOpen={isJuryModalOpen}
         onClose={() => setIsJuryModalOpen(false)}
@@ -258,16 +258,16 @@ export default function ChatInterface({
 
       <div className="px-3 pb-1 pt-1 sm:px-6 sm:py-2">
         <Tabs value={activeTab} onValueChange={v => setActiveTab(v as 'global' | 'mine')}>
-          <TabsList className="h-auto rounded-md border border-gray-200 bg-gray-100 p-[2px]">
+          <TabsList className="h-auto rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] p-[2px]">
             <TabsTrigger
               value="global"
-              className="rounded-md border-b-0 py-1 data-[state=active]:border-b-0 data-[state=active]:bg-white data-[state=active]:shadow-sm sm:px-4"
+              className="rounded-md border-b-0 py-1 data-[state=active]:border-b-0 data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:shadow-sm sm:px-4"
             >
               Global Chat
             </TabsTrigger>
             <TabsTrigger
               value="mine"
-              className="rounded-md border-b-0 py-1 data-[state=active]:border-b-0 data-[state=active]:bg-white data-[state=active]:shadow-sm sm:px-4"
+              className="rounded-md border-b-0 py-1 data-[state=active]:border-b-0 data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:shadow-sm sm:px-4"
             >
               My Chat
             </TabsTrigger>
@@ -280,7 +280,7 @@ export default function ChatInterface({
         className="ios-scroll max-h-[calc(100vh-160px)] flex-1 space-y-2 overflow-y-auto p-2 pt-1 sm:max-h-[calc(100vh-210px)] sm:space-y-6 sm:p-6"
       >
         {displayedMessages.length === 0 && !eventsLoading && (
-          <div className="py-6 text-center text-gray-500 sm:py-12">
+          <div className="py-6 text-center text-[var(--color-text-muted)] sm:py-12">
             <Image
               src="/icons/exclamation.png"
               width={60}
@@ -344,9 +344,9 @@ export default function ChatInterface({
                     className="h-full w-full rounded-full object-cover"
                   />
                 </div>
-                <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-gray-50 p-3 sm:p-4">
-                  <Loader2 className="h-4 w-4 animate-spin text-gray-600 sm:h-5 sm:w-5" />
-                  <span className="text-xs text-gray-700 sm:text-sm">
+                <div className="flex items-center gap-3 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] p-3 sm:p-4">
+                  <Loader2 className="h-4 w-4 animate-spin text-[var(--color-text-secondary)] sm:h-5 sm:w-5" />
+                  <span className="text-xs text-[var(--color-text-secondary)] sm:text-sm">
                     Agent is analyzing your attack...
                   </span>
                 </div>
@@ -359,40 +359,40 @@ export default function ChatInterface({
       {chainMismatch ? (
         <ChainMismatchBanner agentChain={chainMismatch} />
       ) : isAttackPaused ? (
-        <div className="border-t border-gray-200 bg-amber-50 p-4">
+        <div className="border-t border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] p-4">
           <div className="w-full text-center">
-            <h3 className="text-lg font-bold text-amber-700">Attacks Paused</h3>
-            <p className="text-xs text-amber-600">
+            <h3 className="text-lg font-bold text-[var(--color-warning)]">Attacks Paused</h3>
+            <p className="text-xs text-[var(--color-text-secondary)]">
               The owner&apos;s lock period has expired and they can currently withdraw funds. Attacks
               will resume once the sentinel is re-funded.
             </p>
           </div>
         </div>
       ) : isAgentDrained ? (
-        <div className="border-t border-gray-200 bg-gray-50 p-4">
+        <div className="border-t border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] p-4">
           <div className="w-full text-center">
-            <h3 className="text-lg font-bold text-red-600">This Sentinel is Drained</h3>
-            <p className="mb-2 text-xs text-gray-500">
+            <h3 className="text-lg font-bold text-[var(--color-danger)]">This Sentinel is Drained</h3>
+            <p className="mb-2 text-xs text-[var(--color-text-muted)]">
               The sentinel has been successfully defeated.
             </p>
 
             {winnerInfo && (
-              <div className="mx-auto rounded-lg border border-gray-200 bg-white px-3">
-                <div className="flex flex-col items-center justify-center gap-y-2 sm:flex-row sm:gap-y-0 sm:divide-x sm:divide-gray-200">
+              <div className="mx-auto rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] px-3">
+                <div className="flex flex-col items-center justify-center gap-y-2 sm:flex-row sm:gap-y-0 sm:divide-x sm:divide-[var(--color-border-subtle)]">
                   <div className="flex w-full items-baseline justify-center gap-x-2 px-3 sm:w-auto">
-                    <p className="shrink-0 text-xs font-semibold text-gray-600">Winner:</p>
+                    <p className="shrink-0 text-xs font-semibold text-[var(--color-text-secondary)]">Winner:</p>
 
                     <Link
                       href={`/u/${winnerInfo.winnerAddress}`}
-                      className="text-right text-sm text-blue-600 underline"
+                      className="text-right text-sm text-[var(--color-info)] underline"
                     >
                       {truncateAddress(winnerInfo.winnerAddress as string)}
                     </Link>
                   </div>
 
                   <div className="flex w-full items-baseline justify-center gap-x-2 px-3 sm:w-auto">
-                    <p className="shrink-0 text-xs font-semibold text-gray-600">Amount:</p>
-                    <p className="text-base font-bold text-green-600">{winnerInfo.wonAmount} SUI</p>
+                    <p className="shrink-0 text-xs font-semibold text-[var(--color-text-secondary)]">Amount:</p>
+                    <p className="text-base font-bold text-[var(--color-success)]">{winnerInfo.wonAmount} SUI</p>
                   </div>
                 </div>
               </div>
@@ -404,7 +404,7 @@ export default function ChatInterface({
           <form onSubmit={handleSubmit} className="relative">
             <div className="relative">
               {/* Premium mobile-like chat input container */}
-              <div className="relative z-10 w-full overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-lg transition-all duration-200 focus-within:border-gray-400 focus-within:shadow-xl sm:rounded-2xl sm:border-gray-300">
+              <div className="relative z-10 w-full overflow-hidden rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] shadow-lg transition-all duration-200 focus-within:border-[var(--color-border-default)] focus-within:shadow-xl sm:rounded-2xl sm:border-[var(--color-border-default)]">
                 <div className="relative">
                   <textarea
                     ref={textareaRef}
@@ -413,7 +413,7 @@ export default function ChatInterface({
                       setPromptInput(e.target.value)
                       countTokens(e.target.value)
                     }}
-                    className="min-h-[80px] w-full resize-none border-none bg-transparent p-3 pb-9 pr-12 text-[15px] leading-relaxed text-black outline-none placeholder:text-gray-400 focus:ring-0 sm:min-h-[100px] sm:p-4 sm:pb-10 sm:pr-14 sm:text-base"
+                    className="min-h-[80px] w-full resize-none border-none bg-transparent p-3 pb-9 pr-12 text-[15px] leading-relaxed text-[var(--color-text-primary)] outline-none placeholder:text-[var(--color-text-muted)] focus:ring-0 sm:min-h-[100px] sm:p-4 sm:pb-10 sm:pr-14 sm:text-base"
                     disabled={isSubmitting}
                     placeholder="Craft your attack prompt..."
                     rows={1}
@@ -432,7 +432,7 @@ export default function ChatInterface({
                   <div
                     className={clsx(
                       'absolute bottom-2 right-16 text-[10px] font-medium tracking-wide sm:bottom-3 sm:right-[72px]',
-                      tokenCount > ATTACK_PROMPT_MAX_TOKENS ? 'text-red-500' : 'text-gray-400'
+                      tokenCount > ATTACK_PROMPT_MAX_TOKENS ? 'text-[var(--color-danger)]' : 'text-[var(--color-text-muted)]'
                     )}
                   >
                     <span className={clsx({ 'animate-pulse': isTokenCountDebouncing })}>
@@ -448,7 +448,7 @@ export default function ChatInterface({
                       promptInput.length === 0 ||
                       tokenCount > ATTACK_PROMPT_MAX_TOKENS
                     }
-                    className="absolute bottom-3 right-3 hidden h-11 w-11 items-center justify-center rounded-full bg-black text-white shadow-md transition-all duration-200 hover:scale-105 hover:bg-gray-800 hover:shadow-lg active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 sm:flex"
+                    className="absolute bottom-3 right-3 hidden h-11 w-11 items-center justify-center rounded-full bg-[var(--color-text-primary)] text-[var(--color-bg-surface)] shadow-md transition-all duration-200 hover:scale-105 hover:bg-[var(--color-text-secondary)] hover:shadow-lg active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 sm:flex"
                   >
                     {isSubmitting ? (
                       <Loader2 className="h-5 w-5 animate-spin" />
@@ -471,7 +471,7 @@ export default function ChatInterface({
                       promptInput.length === 0 ||
                       tokenCount > ATTACK_PROMPT_MAX_TOKENS
                     }
-                    className="absolute bottom-2 right-2 flex h-10 w-10 touch-manipulation items-center justify-center rounded-full bg-black text-white shadow-md transition-all duration-200 hover:bg-gray-800 active:scale-90 disabled:cursor-not-allowed disabled:opacity-50 sm:hidden"
+                    className="absolute bottom-2 right-2 flex h-10 w-10 touch-manipulation items-center justify-center rounded-full bg-[var(--color-text-primary)] text-[var(--color-bg-surface)] shadow-md transition-all duration-200 hover:bg-[var(--color-text-secondary)] active:scale-90 disabled:cursor-not-allowed disabled:opacity-50 sm:hidden"
                   >
                     {isSubmitting ? (
                       <Loader2 className="h-4 w-4 animate-spin" />

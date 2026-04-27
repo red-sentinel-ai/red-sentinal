@@ -59,8 +59,8 @@ export const FeedbackForm = ({ onSuccess }: { onSuccess: () => void }) => {
     return (
       <div className="flex min-h-[300px] flex-col items-center justify-center text-center">
         <CheckCircle className="mb-4 h-16 w-16 text-green-500" />
-        <h3 className="text-xl font-bold text-black">Thank You!</h3>
-        <p className="text-gray-600">Your feedback has been submitted.</p>
+        <h3 className="text-xl font-bold text-[var(--color-text-primary)]">Thank You!</h3>
+        <p className="text-[var(--color-text-secondary)]">Your feedback has been submitted.</p>
       </div>
     )
   }
@@ -69,7 +69,7 @@ export const FeedbackForm = ({ onSuccess }: { onSuccess: () => void }) => {
     <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
         <div className="space-y-1">
-          <label htmlFor="name" className="text-xs font-medium text-gray-700 sm:text-sm">
+          <label htmlFor="name" className="text-xs font-medium text-[var(--color-text-secondary)] sm:text-sm">
             Name (Optional)
           </label>
           <input
@@ -77,11 +77,11 @@ export const FeedbackForm = ({ onSuccess }: { onSuccess: () => void }) => {
             type="text"
             value={name}
             onChange={e => setName(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-black sm:text-base"
+            className="w-full rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-2 text-sm text-[var(--color-text-primary)] sm:text-base"
           />
         </div>
         <div className="space-y-1">
-          <label htmlFor="email" className="text-xs font-medium text-gray-700 sm:text-sm">
+          <label htmlFor="email" className="text-xs font-medium text-[var(--color-text-secondary)] sm:text-sm">
             Email (Optional)
           </label>
           <input
@@ -89,20 +89,20 @@ export const FeedbackForm = ({ onSuccess }: { onSuccess: () => void }) => {
             type="email"
             value={email}
             onChange={e => setEmail(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-black sm:text-base"
+            className="w-full rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-2 text-sm text-[var(--color-text-primary)] sm:text-base"
           />
         </div>
       </div>
 
       <div className="space-y-1">
-        <label htmlFor="feedbackType" className="text-xs font-medium text-gray-700 sm:text-sm">
+        <label htmlFor="feedbackType" className="text-xs font-medium text-[var(--color-text-secondary)] sm:text-sm">
           Feedback Type
         </label>
         <select
           id="feedbackType"
           value={feedbackType}
           onChange={e => setFeedbackType(e.target.value)}
-          className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-black sm:text-base"
+          className="w-full rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-2 text-sm text-[var(--color-text-primary)] sm:text-base"
         >
           <option>Suggestion</option>
           <option>Bug Report</option>
@@ -111,7 +111,7 @@ export const FeedbackForm = ({ onSuccess }: { onSuccess: () => void }) => {
       </div>
 
       <div className="space-y-1">
-        <label htmlFor="message" className="text-xs font-medium text-gray-700 sm:text-sm">
+        <label htmlFor="message" className="text-xs font-medium text-[var(--color-text-secondary)] sm:text-sm">
           Message <span className="text-red-500">*</span>
         </label>
         <textarea
@@ -119,7 +119,7 @@ export const FeedbackForm = ({ onSuccess }: { onSuccess: () => void }) => {
           value={message}
           onChange={e => setMessage(e.target.value)}
           rows={4}
-          className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-black sm:text-base"
+          className="w-full rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-2 text-sm text-[var(--color-text-primary)] sm:text-base"
           placeholder="How can we improve?"
         />
       </div>

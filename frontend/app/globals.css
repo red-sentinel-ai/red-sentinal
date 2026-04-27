@@ -88,9 +88,9 @@
   --accent: #f1f5f9;
   --accent-foreground: #0f172a;
   --destructive: #ef4444;
-  --border: #e2e8f0;
-  --input: #e2e8f0;
-  --ring: #94a3b8;
+  --border: var(--color-border-subtle);
+  --input: var(--color-border-subtle);
+  --ring: var(--color-border-default);
 
   /* Mobile optimization: Prevent double-tap zoom delay */
   touch-action: manipulation;
