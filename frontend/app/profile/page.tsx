@@ -187,10 +187,10 @@ function ProfileContent() {
 
           <div className="px-4 md:px-8">
             <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-              <TabsList className="grid w-full grid-cols-4 gap-2 bg-[var(--color-bg-subtle)] lg:flex lg:w-auto lg:justify-start">
+              <TabsList className="flex w-full justify-start gap-0 bg-transparent lg:w-auto">
                 <TabsTrigger
                   value={PROFILE_TABS.AGENTS}
-                  className="font-body flex items-center gap-2 text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
+                  className="font-body flex items-center gap-2 rounded-none text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
                 >
                   <Folder className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="truncate">Sentinels</span>
@@ -198,7 +198,7 @@ function ProfileContent() {
 
                 <TabsTrigger
                   value={PROFILE_TABS.ACTIVITY}
-                  className="font-body flex items-center gap-2 text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
+                  className="font-body flex items-center gap-2 rounded-none text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
                 >
                   <Activity className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="truncate">Activity</span>
@@ -206,7 +206,7 @@ function ProfileContent() {
 
                 <TabsTrigger
                   value={PROFILE_TABS.STATS}
-                  className="font-body flex items-center gap-2 text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
+                  className="font-body flex items-center gap-2 rounded-none text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
                 >
                   <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="truncate">Stats</span>
@@ -214,7 +214,7 @@ function ProfileContent() {
 
                 <TabsTrigger
                   value={PROFILE_TABS.REWARDS}
-                  className="font-body flex items-center gap-2 text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
+                  className="font-body flex items-center gap-2 rounded-none text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
                 >
                   <Gift className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="truncate">My Rewards</span>
