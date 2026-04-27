@@ -140,8 +140,8 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   const ReadMoreModal = () => (
     <div className="ios-scroll absolute inset-0 flex flex-col overflow-hidden duration-200 animate-in fade-in">
       <div className="flex shrink-0 items-center justify-between py-6 md:py-8">
-        <h2 className="text-2xl font-medium">Instructions</h2>
-        <button onClick={() => setIsReadMoreOpen(false)} className="touch-manipulation p-2">
+        <h2 className="text-2xl font-medium text-[var(--color-text-primary)]">Instructions</h2>
+        <button onClick={() => setIsReadMoreOpen(false)} className="touch-manipulation p-2 text-[var(--color-text-secondary)]">
           <X size={24} />
         </button>
       </div>
