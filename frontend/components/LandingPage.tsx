@@ -143,7 +143,7 @@ export const LandingPage = () => {
               <div>
                 <Link
                   href="/attack"
-                  className="btn flex min-h-[48px] w-full items-center justify-center rounded-[8px] border-2 border-[var(--color-gold-primary)] bg-transparent p-2 text-lg text-[var(--color-gold-primary)] transition-all hover:bg-[var(--color-gold-primary)] hover:text-[var(--color-text-on-gold)] md:min-h-[62px] md:text-2xl"
+                  className="btn flex min-h-[48px] w-full items-center justify-center rounded-[8px] bg-[var(--color-gold-primary)] p-2 text-lg text-[var(--color-text-on-gold)] transition-all hover:bg-[var(--color-gold-dark)] md:min-h-[62px] md:text-2xl"
                 >
                   Start Attacking
                 </Link>
