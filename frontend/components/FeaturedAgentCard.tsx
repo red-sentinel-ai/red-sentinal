@@ -127,7 +127,7 @@ export const FeaturedAgentCard = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
     >
-      <div className="h-full w-full overflow-hidden rounded-lg bg-[var(--color-bg-surface)] p-2 shadow-[var(--shadow-card)] lg:rounded-xl lg:p-6">
+      <div className="h-full w-full overflow-hidden rounded-lg bg-[var(--color-bg-deepest)] p-2 shadow-[var(--shadow-card)] lg:rounded-xl lg:p-6">
         <div className="relative mb-2 sm:mb-4">
           <div className="relative flex h-32 w-full items-center justify-center overflow-hidden rounded-lg bg-[var(--color-bg-subtle)] sm:h-80">
             {agent.agent_image ? (
