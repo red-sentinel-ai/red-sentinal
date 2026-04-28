@@ -335,7 +335,7 @@ export default function ChatInterface({
               className="flex justify-start"
             >
               <div className="flex max-w-[85%] items-start gap-2 sm:max-w-[75%] sm:gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 ring-2 ring-gray-300 sm:h-10 sm:w-10">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-bg-subtle)] ring-2 ring-[var(--color-border-default)] sm:h-10 sm:w-10">
                   <Image
                     src={agent.agent_image || DEFAULT_PROFILE_URL}
                     width={32}
