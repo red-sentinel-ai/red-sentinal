@@ -12,8 +12,9 @@ import { DesktopNav } from './DesktopNav'
 import { MobileNav } from './MobileNav'
 import SentinelStatsBar from './statbar/StatBar'
 
-const LOGO_SRC = '/redSentinel.jpeg'
-const LOGO_SMALL_SRC = '/redSentinel.jpeg'
+const LOGO_SRC =
+  APP_NETWORK === 'testnet' ? '/icons/logo_large_testnet.svg' : '/icons/logo_large.svg'
+const LOGO_SMALL_SRC = '/icons/logo-sm.svg'
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -30,7 +31,7 @@ export const Header = () => {
                 src={LOGO_SMALL_SRC}
                 alt="logo"
                 height={36}
-                width={120}
+                width={36}
                 quality={100}
                 style={{ objectFit: 'contain' }}
               />
