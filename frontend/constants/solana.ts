@@ -47,7 +47,7 @@ export const SOLANA_TEE_API_PATH = 'https://tee-solana.suisentinel.xyz'
 export const SOLANA_TEE_NETWORK = APP_NETWORK === 'mainnet' ? 'mainnet' : 'devnet'
 
 const SOLANA_DEVNET_CONFIG = {
-  PROGRAM_ID: '761bJeLrxbVJmq3GU6yoJXc8N5rjFqbvRUL53b5dVczj',
+  PROGRAM_ID: 'Di4JaK3QBbA869f6UNGYMef5RFcxxXyxTMiBymnMb5Gz',
 }
 
 const SOLANA_MAINNET_CONFIG = {
