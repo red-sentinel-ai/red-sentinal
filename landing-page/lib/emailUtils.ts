@@ -210,8 +210,8 @@ export const sendAmbassadorConfirmationEmail = async (toEmail: string) => {
             <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 500px; margin-top: 20px;">
               <tr>
                 <td align="center">
-                  <a href="https://x.com/suisentinal" style="font-size: 12px; color: #888888; text-decoration: none; margin: 0 10px;">Twitter</a>
-                  <a href="https://x.com/redsentinel_ai" style="font-size: 12px; color: #888888; text-decoration: none; margin: 0 10px;">Telegram</a>
+                  <a href="https://x.com/redsentinel_ai" style="font-size: 12px; color: #888888; text-decoration: none; margin: 0 10px;">Twitter</a>
+                  <a href="https://t.me/suisentinel" style="font-size: 12px; color: #888888; text-decoration: none; margin: 0 10px;">Telegram</a>
                 </td>
               </tr>
             </table>
