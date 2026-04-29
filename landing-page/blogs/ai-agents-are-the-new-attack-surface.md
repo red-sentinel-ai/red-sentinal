@@ -180,7 +180,7 @@ The arena is open. Whether you're a defender who wants to stress-test your AI sy
 - **Docs**: [docs.redsentinel.xyz](https://docs.redsentinel.xyz/)
 - **Smart Contracts**: [github.com/sui-sentinel/contracts](https://github.com/sui-sentinel/contracts)
 - **Security Audit**: [OtterSec Report](https://www.redsentinel.xyz/pdfs/audit_final.pdf)
-- **Twitter/X**: [@suisentinal](https://x.com/suisentinal)
+- **Twitter/X**: [@redsentinel_al](https://x.com/redsentinel_ai)
 - **Telegram**: [t.me/suisentinel](https://t.me/suisentinel)
 
 ---
