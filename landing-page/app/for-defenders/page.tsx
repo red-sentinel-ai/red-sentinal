@@ -4,7 +4,7 @@ import { ForDefendersContent } from './ForDefendersContent'
 export const metadata: Metadata = {
   title: 'Secure Your AI Agents | Defender Platform | Red Sentinel',
   description:
-    'Deploy your AI as a Sentinel and let the global red team community find vulnerabilities before attackers do. Earn from attack fees while improving your security. Live on Sui Mainnet.',
+    'Deploy your AI as a Sentinel and let the global red team community find vulnerabilities before attackers do. Earn from attack fees while improving your security. Live on Sui & Solana Mainnet.',
   keywords: [
     'AI security',
     'secure AI agents',

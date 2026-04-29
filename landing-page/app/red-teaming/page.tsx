@@ -4,7 +4,7 @@ import { RedTeamingContent } from './RedTeamingContent'
 export const metadata: Metadata = {
   title: 'AI Red Teaming Platform | Crowdsourced Security Testing | Red Sentinel',
   description:
-    'The crowdsourced AI red teaming platform where security researchers test your AI systems. On-chain verified attacks, instant crypto payouts. Live on Sui Mainnet.',
+    'The crowdsourced AI red teaming platform where security researchers test your AI systems. On-chain verified attacks, instant crypto payouts. Live on Sui & Solana Mainnet.',
   keywords: [
     'AI red teaming',
     'red teaming platform',

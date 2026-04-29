@@ -19,7 +19,7 @@ This flywheel means better-defended systems attract more attackers, which genera
 
 ## Traction & Credibility
 
-Live on Sui Mainnet
+Live on Sui & Solana Mainnet
 Won the cryptography track at Overflow Hackathon
 Presented at Sui Fest Singapore
 Smart contracts audited by OtterSec — report is public
@@ -62,7 +62,7 @@ Got it. For investors, the pitch needs to do three things fast: make them feel t
 ---
 
 ### Why now, why us (20 sec)
-> "We've won the cryptography track at Overflow Hackathon, presented at Sui Fest Singapore, we're live on Sui Mainnet, and our contracts are audited by OtterSec. We've been building in stealth for months getting the product right — not rushing to market."
+> "We've won the cryptography track at Overflow Hackathon, presented at Sui Fest Singapore, we're live on Sui & Solana Mainnet, and our contracts are audited by OtterSec. We've been building in stealth for months getting the product right — not rushing to market."
 
 ---
 

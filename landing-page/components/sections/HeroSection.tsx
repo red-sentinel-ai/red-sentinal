@@ -26,7 +26,7 @@ export function HeroSection() {
           <p className="max-w-[300px] sm:max-w-[450px] md:max-w-[600px] lg:max-w-[750px] text-black text-sm sm:text-base font-medium md:text-lg lg:text-[22px] mb-8 md:mb-32 mx-auto md:mx-0">
             The crowdsourced AI red teaming platform where security researchers break AI systems and
             get paid. Every attack verified on-chain. Every payout instant.{' '}
-            <span className="bold">Live on Sui Mainnet.</span>
+            <span className="bold">Live on Sui & Solana Mainnet.</span>
           </p>
           <div className="flex gap-6 shrink-0 w-auto">
             <Link href={SUI_SENTINEL_APP_URL} target="_blank">

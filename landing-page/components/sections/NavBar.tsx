@@ -33,7 +33,7 @@ export function Navbar() {
           <a href="https://osec.io/" target="_blank" className="underline">
             OtterSec
           </a>{' '}
-          and live on Sui Mainnet.
+          and live on Sui & Solana Mainnet.
         </h3>
       </div>
       <div className="w-full px-4 sm:px-6 lg:px-8 py-2">

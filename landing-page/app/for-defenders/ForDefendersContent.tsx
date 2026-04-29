@@ -138,7 +138,7 @@ export function ForDefendersContent() {
               </span>
               <span className="flex items-center gap-2">
                 <Target className="w-4 h-4 text-[#C871FF]" />
-                Live on Sui Mainnet
+                Live on Sui & Solana Mainnet
               </span>
             </div>
           </motion.div>

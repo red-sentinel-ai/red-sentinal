@@ -331,7 +331,7 @@ export function RedTeamingContent() {
                   <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="2" />
                   <path d="M12 2v4M12 18v4M2 12h4M18 12h4" stroke="currentColor" strokeWidth="2" />
                 </svg>
-                Live on Sui Mainnet
+                Live on Sui & Solana Mainnet
               </span>
             </div>
           </motion.div>
@@ -912,7 +912,7 @@ export function RedTeamingContent() {
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {[
-              { label: 'Live on', value: 'Sui Mainnet', icon: 'chain' },
+              { label: 'Live on', value: 'Sui & Solana Mainnet', icon: 'chain' },
               { label: 'Verification', value: 'TEE Attestations', icon: 'shield' },
               { label: 'Audited by', value: 'OtterSec', icon: 'audit' },
               { label: 'Recognition', value: 'Overflow Winner', icon: 'trophy' },

@@ -59,7 +59,7 @@ export function AuditSection() {
                 >
                   OtterSec
                 </Link>
-                , winners of the cryptography track at the Overflow Hackathon. Live on Sui Mainnet.
+                , winners of the cryptography track at the Overflow Hackathon. Live on Sui & Solana Mainnet.
                 We don&apos;t just talk about security, we prove it.
               </p>
             </div>
