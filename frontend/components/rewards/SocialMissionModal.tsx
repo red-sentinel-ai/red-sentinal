@@ -25,7 +25,7 @@ interface SocialMissionModalProps {
 
 const MISSION_CONFIG = {
   follow_x: {
-    title: 'Follow Sui Sentinel on X',
+    title: 'Follow Red Sentinel on X',
     icon: '/icons/x_black.png',
     iconAlt: 'X',
     instructions: 'Follow @suisentinal on X to earn Sentinel tokens.',
@@ -41,7 +41,7 @@ const MISSION_CONFIG = {
     submitHint: 'Enter your Twitter/X username so we can verify you followed us.',
   },
   retweet: {
-    title: 'Retweet a Sui Sentinel Post',
+    title: 'Retweet a Red Sentinel Post',
     icon: '/icons/x_black.png',
     iconAlt: 'X',
     instructions: 'Retweet any post from @suisentinal and paste the URL of your retweet.',
@@ -65,7 +65,7 @@ const MISSION_CONFIG = {
     title: 'Share with #SuiSentinel',
     icon: '/icons/x_black.png',
     iconAlt: 'X',
-    instructions: 'Post about Sui Sentinel with #SuiSentinel and paste the URL of your tweet.',
+    instructions: 'Post about Red Sentinel with #SuiSentinel and paste the URL of your tweet.',
     actionLabel: 'Post on X',
     actionUrl: SUI_SENTINEL_CHECKOUT_URL,
     usernameField: {
@@ -82,7 +82,7 @@ const MISSION_CONFIG = {
     submitHint: 'Paste the URL of your tweet containing #SuiSentinel.',
   },
   join_telegram: {
-    title: 'Join Sui Sentinel Telegram',
+    title: 'Join Red Sentinel Telegram',
     icon: '/icons/telegram_black.png',
     iconAlt: 'Telegram',
     instructions: 'Join our Telegram community and enter your Telegram username for verification.',
@@ -98,10 +98,10 @@ const MISSION_CONFIG = {
     submitHint: 'Enter your Telegram username so we can verify you joined the group.',
   },
   share_content: {
-    title: 'Share Sui Sentinel Content',
+    title: 'Share Red Sentinel Content',
     icon: '/icons/x_black.png',
     iconAlt: 'Share',
-    instructions: 'Create content about Sui Sentinel (article, video, thread, etc.) and share the link.',
+    instructions: 'Create content about Red Sentinel (article, video, thread, etc.) and share the link.',
     actionLabel: 'Create Content',
     actionUrl: SUI_SENTINEL_X_URL,
     usernameField: {
@@ -115,7 +115,7 @@ const MISSION_CONFIG = {
       required: true,
     },
     telegramField: null,
-    submitHint: 'Paste the link to your content about Sui Sentinel (can be a tweet, article, video, etc.).',
+    submitHint: 'Paste the link to your content about Red Sentinel (can be a tweet, article, video, etc.).',
   },
 } as const
 

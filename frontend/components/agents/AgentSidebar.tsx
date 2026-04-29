@@ -464,7 +464,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
             Earn Sentinel Tokens
           </h3>
           <p className="mb-2 text-xs leading-relaxed text-[var(--color-text-secondary)] md:mb-3 md:text-sm">
-            Share about Sui Sentinel on X and earn Sentinel tokens as a reward.
+            Share about Red Sentinel on X and earn Sentinel tokens as a reward.
           </p>
           <button
             onClick={() => setIsShareModalOpen(true)}

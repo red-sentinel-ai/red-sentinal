@@ -13,12 +13,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!agent) {
     return {
-      title: 'Agent Not Found | Sui Sentinel',
+      title: 'Agent Not Found | Red Sentinel',
       description: 'The requested AI agent could not be found.',
     }
   }
 
-  const title = `Challenge ${agent.agent_name} | Sui Sentinel`
+  const title = `Challenge ${agent.agent_name} | Red Sentinel`
   const description = `Attempt to defeat the AI agent "${agent.agent_name}" on the Sui network. Outsmart its prompts and earn rewards!`
   const url = `${SUI_SENTINEL_APP_URL}/attack/${slug}`
 
@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: title,
       description: description,
       url: url,
-      siteName: 'Sui Sentinel',
+      siteName: 'Red Sentinel',
       images: [
         {
           url: agent.agent_profile,

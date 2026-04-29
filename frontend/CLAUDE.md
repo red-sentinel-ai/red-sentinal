@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Sui Sentinel** is a decentralized AI security platform built on Sui blockchain. Users create AI agents ("sentinels") that must resist prompt injection attacks, or attack other agents to claim bounties.
+**Red Sentinel** is a decentralized AI security platform built on Sui blockchain. Users create AI agents ("sentinels") that must resist prompt injection attacks, or attack other agents to claim bounties.
 
 **Tech Stack:**
 - Next.js 15 (App Router) + TypeScript

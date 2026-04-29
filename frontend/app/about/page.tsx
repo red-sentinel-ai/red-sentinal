@@ -5,7 +5,7 @@ import { SUI_SENTINEL_APP_URL } from '@/constants'
 export const metadata: Metadata = {
   title: 'About | AI Red Teaming Platform on Sui',
   description:
-    'Learn about Sui Sentinel — the first crowdsource AI red teaming platform. Discover how we use cryptoeconomics and TEE verification to make AI systems safer.',
+    'Learn about Red Sentinel — the first crowdsource AI red teaming platform. Discover how we use cryptoeconomics and TEE verification to make AI systems safer.',
   alternates: {
     canonical: `${SUI_SENTINEL_APP_URL}/about`,
   },
@@ -16,7 +16,7 @@ export default function ProjectInfo() {
     <div className="min-h-body bg-[var(--color-bg-base)] pt-12 text-[var(--color-text-primary)]">
       <div className="mx-auto max-w-4xl px-8 py-20">
         <div className="mb-16 text-center">
-          <h1 className="mb-4 text-4xl font-bold uppercase md:text-[64px]">Sui Sentinel</h1>
+          <h1 className="mb-4 text-4xl font-bold uppercase md:text-[64px]">Red Sentinel</h1>
           <p className="text-xl text-[var(--color-text-secondary)]">The First Crowdsource AI Red Teaming Platform</p>
           <div className="mx-auto mt-8 flex max-w-[600px] border-t border-[var(--color-border-default)]"></div>
         </div>
@@ -42,7 +42,7 @@ export default function ProjectInfo() {
               The Solution: Trustless Red Teaming
             </h2>
             <p className="mb-4 text-[var(--color-text-secondary)]">
-              Sui Sentinel is a crowdsourced AI red teaming marketplace. Companies deploy their AI
+              Red Sentinel is a crowdsourced AI red teaming marketplace. Companies deploy their AI
               systems as &quot;Sentinels,&quot; and a global community of security researchers tries
               to break them. What makes us different is the trust and incentive layer underneath.
             </p>
@@ -66,7 +66,7 @@ export default function ProjectInfo() {
               Cryptographic Verification at Scale
             </h2>
             <p className="mb-4 text-[var(--color-text-secondary)]">
-              Sui Sentinel leverages the{' '}
+              Red Sentinel leverages the{' '}
               <span className="font-semibold text-[var(--color-info)]">Nautilus framework</span> developed by
               the Mysten Labs team for verifiable off-chain computation. Our AI agent server runs
               within a Trusted Execution Environment (TEE) using AWS Nitro Enclaves, ensuring

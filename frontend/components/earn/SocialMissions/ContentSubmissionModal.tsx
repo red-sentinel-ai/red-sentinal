@@ -141,7 +141,7 @@ export function ContentSubmissionModal({ mission, isOpen, onClose }: ContentSubm
   const tierInfo = BOOSTER_TIERS[mission.boosterTier]
 
   const step1 = MISSION_STEP1_CONFIG[mission.id] ?? {
-    heading: `Create your content about Sui Sentinel`,
+    heading: `Create your content about Red Sentinel`,
     hint: 'Share accurate information and showcase the platform\'s features.',
     urlPlaceholder: 'https://...',
   }

@@ -32,7 +32,7 @@ export const FeedbackButton = () => {
           <SheetHeader className="border-b border-gray-200 pb-4">
             <SheetTitle className="flex items-center gap-2 text-xl font-semibold text-black">
               <MessageSquare className="h-5 w-5 text-gray-700" />
-              Help us make Sui Sentinel better!
+              Help us make Red Sentinel better!
             </SheetTitle>
             <p className="mt-1 text-sm text-gray-500">
               Share genuine feedback or report bugs and earn Sentinel Points as a thank you.

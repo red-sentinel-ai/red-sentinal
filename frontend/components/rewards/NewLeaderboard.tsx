@@ -1152,7 +1152,7 @@ export function NewLeaderboard() {
                     Leaderboard
                   </h1>
                   <p className="text-sm text-gray-500">
-                    Track top defenders & attackers in the Sui Sentinel ecosystem
+                    Track top defenders & attackers in the Red Sentinel ecosystem
                   </p>
                 </div>
               </div>

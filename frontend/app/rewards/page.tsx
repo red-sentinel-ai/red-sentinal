@@ -8,7 +8,7 @@ import { SUI_SENTINEL_APP_URL } from '@/constants'
 export const metadata: Metadata = {
   title: 'Earn SENTINEL Tokens | Complete Missions & Spin Rewards',
   description:
-    'Complete social missions, attack Sentinels, create content, and spin the slot machine to earn SENTINEL tokens. Comprehensive guide to the Sui Sentinel reward system.',
+    'Complete social missions, attack Sentinels, create content, and spin the slot machine to earn SENTINEL tokens. Comprehensive guide to the Red Sentinel reward system.',
   keywords: [
     'SENTINEL token',
     'crypto rewards',

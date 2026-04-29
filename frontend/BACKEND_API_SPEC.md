@@ -49,11 +49,11 @@ Receives social mission submission data from the frontend and sends a formatted 
 
 | Type | Label | Required Fields |
 |------|-------|----------------|
-| `follow_x` | Follow Sui Sentinel on X | `proof.username` |
-| `join_telegram` | Join Sui Sentinel Telegram | `proof.telegram_username` |
-| `retweet` | Retweet a Sui Sentinel post | `proof.content_link` |
-| `share_with_hashtag` | Share with #SuiSentinel | `proof.content_link` |
-| `share_content` | Share Sui Sentinel Content | `proof.content_link` |
+| `follow_x` | Follow Red Sentinel on X | `proof.username` |
+| `join_telegram` | Join Red Sentinel Telegram | `proof.telegram_username` |
+| `retweet` | Retweet a Red Sentinel post | `proof.content_link` |
+| `share_with_hashtag` | Share with #RedSentinel | `proof.content_link` |
+| `share_content` | Share Red Sentinel Content | `proof.content_link` |
 
 ### Example Request
 
@@ -61,7 +61,7 @@ Receives social mission submission data from the frontend and sends a formatted 
 {
   "submission_id": "550e8400-e29b-41d4-a716-446655440000",
   "mission_type": "retweet",
-  "mission_label": "Retweet a Sui Sentinel post",
+  "mission_label": "Retweet a Red Sentinel post",
   "user": {
     "username": "crypto_enthusiast",
     "wallet_address": "0x1234567890abcdef1234567890abcdef12345678"
@@ -138,7 +138,7 @@ The Telegram notification should include:
 ```
 🔔 NEW MISSION SUBMISSION
 
-📋 Mission: Retweet a Sui Sentinel post
+📋 Mission: Retweet a Red Sentinel post
 🆔 Submission ID: 550e8400-e29b-41d4-a716-446655440000
 
 👤 User: crypto_enthusiast
@@ -222,7 +222,7 @@ WHERE user_id = 'user-uuid-here';
 ```
 ✅ APPROVED
 
-📋 Mission: Retweet a Sui Sentinel post
+📋 Mission: Retweet a Red Sentinel post
 🆔 Submission ID: 550e8400...
 
 👤 User: crypto_enthusiast
@@ -320,7 +320,7 @@ curl -X POST https://api.suisentinel.com/rewards/social-missions/notify \
   -d '{
     "submission_id": "550e8400-e29b-41d4-a716-446655440000",
     "mission_type": "retweet",
-    "mission_label": "Retweet a Sui Sentinel post",
+    "mission_label": "Retweet a Red Sentinel post",
     "user": {
       "username": "test_user",
       "wallet_address": "0x1234567890abcdef"

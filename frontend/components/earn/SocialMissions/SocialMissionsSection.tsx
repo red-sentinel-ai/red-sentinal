@@ -125,7 +125,7 @@ export function SocialMissionsSection() {
                       Content Submissions Reviewed Within 48 Hours
                     </p>
                     <p className="font-body text-sm text-[var(--color-text-secondary)]">
-                      Quality content that accurately represents Sui Sentinel earns Spin Passes.
+                      Quality content that accurately represents Red Sentinel earns Spin Passes.
                     </p>
                   </div>
                 </div>

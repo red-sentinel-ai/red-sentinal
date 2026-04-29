@@ -31,7 +31,7 @@ export const TWITTER_MISSIONS: EarnMission[] = [
     multiplier: 1,
     requirements: {
       dailyLimit: 3,
-      description: 'Must be an official Sui Sentinel tweet',
+      description: 'Must be an official Red Sentinel tweet',
     },
     rewardRange: { min: 100, max: 1000 },
     submissionType: 'url',
@@ -45,7 +45,7 @@ export const TWITTER_MISSIONS: EarnMission[] = [
     multiplier: 2,
     requirements: {
       dailyLimit: 3,
-      description: 'Must be an official Sui Sentinel tweet',
+      description: 'Must be an official Red Sentinel tweet',
     },
     rewardRange: { min: 200, max: 2000 },
     submissionType: 'url',
@@ -54,7 +54,7 @@ export const TWITTER_MISSIONS: EarnMission[] = [
   {
     id: 'quote_tweet',
     title: 'Quote Tweet with Insight',
-    description: 'Quote tweet with your own thoughts and insights about Sui Sentinel.',
+    description: 'Quote tweet with your own thoughts and insights about Red Sentinel.',
     boosterTier: 'RARE',
     multiplier: 5,
     requirements: {
@@ -69,7 +69,7 @@ export const TWITTER_MISSIONS: EarnMission[] = [
   {
     id: 'tag_friends',
     title: 'Tag 3 Friends',
-    description: 'Tag 3 friends in a tweet about Sui Sentinel to introduce them to the platform.',
+    description: 'Tag 3 friends in a tweet about Red Sentinel to introduce them to the platform.',
     boosterTier: 'UNCOMMON',
     multiplier: 2,
     requirements: {
@@ -83,7 +83,7 @@ export const TWITTER_MISSIONS: EarnMission[] = [
   {
     id: 'create_thread',
     title: 'Create Thread (5+ Tweets)',
-    description: 'Create an educational thread about Sui Sentinel with at least 5 tweets.',
+    description: 'Create an educational thread about Red Sentinel with at least 5 tweets.',
     boosterTier: 'EPIC',
     multiplier: 10,
     requirements: {
@@ -115,7 +115,7 @@ export const CONTENT_MISSIONS: EarnMission[] = [
   {
     id: 'short_video',
     title: 'Short Video (< 2 min)',
-    description: 'Create a short video showcasing Sui Sentinel.',
+    description: 'Create a short video showcasing Red Sentinel.',
     boosterTier: 'LEGENDARY',
     multiplier: 25,
     requirements: {
@@ -142,7 +142,7 @@ export const CONTENT_MISSIONS: EarnMission[] = [
     id: 'written_article',
     title: 'Written Article',
     description:
-      'Write a comprehensive article about Sui Sentinel on X, Substack, Medium, or your own blog.',
+      'Write a comprehensive article about Red Sentinel on X, Substack, Medium, or your own blog.',
     boosterTier: 'LEGENDARY',
     multiplier: 25,
     requirements: {
@@ -174,7 +174,7 @@ export const COMMUNITY_MISSIONS: EarnMission[] = [
   {
     id: 'join_telegram',
     title: 'Join Telegram',
-    description: 'Join the Sui Sentinel Telegram group and verify your membership.',
+    description: 'Join the Red Sentinel Telegram group and verify your membership.',
     boosterTier: 'COMMON',
     multiplier: 1,
     requirements: {

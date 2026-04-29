@@ -27,11 +27,11 @@ type SocialMissionType = (typeof VALID_MISSION_TYPES)[number]
 const ONE_TIME_MISSIONS: SocialMissionType[] = ['follow_x', 'join_telegram']
 
 const MISSION_LABELS: Record<SocialMissionType, string> = {
-  follow_x: 'Follow Sui Sentinel on X',
-  retweet: 'Retweet a Sui Sentinel post',
+  follow_x: 'Follow Red Sentinel on X',
+  retweet: 'Retweet a Red Sentinel post',
   share_with_hashtag: 'Share with #SuiSentinel',
-  join_telegram: 'Join Sui Sentinel Telegram',
-  share_content: 'Share Sui Sentinel Content',
+  join_telegram: 'Join Red Sentinel Telegram',
+  share_content: 'Share Red Sentinel Content',
   // Twitter/X missions
   like_tweet: 'Like Official Tweet',
   repost_tweet: 'Repost Official Tweet',
