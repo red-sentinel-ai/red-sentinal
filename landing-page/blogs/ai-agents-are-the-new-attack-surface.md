@@ -49,7 +49,7 @@ What if you could harness that adversarial creativity at scale, continuously, in
 
 ## Enter Red Sentinel
 
-Red Sentinel is a crowdsourced AI red teaming platform live on Sui Mainnet. The concept is simple but powerful:
+Red Sentinel is a crowdsourced AI red teaming platform live on Sui & Solana Mainnet. The concept is simple but powerful:
 
 **Defenders** (companies, developers, AI teams) deploy their AI systems on the platform as "Sentinels." They configure the system prompt, set an attack goal, fund a reward pool, and choose the underlying model.
 
@@ -149,7 +149,7 @@ The ideal security posture uses both: automated tools in CI/CD for systematic, r
 
 ## What We've Built So Far
 
-Red Sentinel is live on Sui Mainnet with real economic activity:
+Red Sentinel is live on Sui & Solana Mainnet with real economic activity:
 
 - **~420 SUI** in active Sentinel bounties
 - **300+ unique wallets** using the platform as attackers and defenders

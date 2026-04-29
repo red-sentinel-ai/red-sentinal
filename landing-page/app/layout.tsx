@@ -22,9 +22,9 @@ const satoshi = localFont({
 })
 
 export const metadata: Metadata = {
-  title: 'Red Sentinel | Crowdsourced AI Red Teaming on Sui Blockchain',
+  title: 'Red Sentinel | Crowdsourced AI Red Teaming on Sui & Solana Blockchain',
   description:
-    'The first crowdsource AI red teaming platform. Attack AI systems, earn SUI/USDC rewards instantly. Deploy Sentinels, get real-world security testing. Cryptographically verified on-chain.',
+    'The first crowdsource AI red teaming platform. Attack AI systems, earn token rewards instantly. Deploy Sentinels, get real-world security testing. Cryptographically verified on-chain.',
   icons: {
     icon: '/icons/logo-sm.svg',
     shortcut: '/icons/logo-sm.svg',
@@ -40,6 +40,8 @@ export const metadata: Metadata = {
     'Crowdsourced Security',
     'Sui Blockchain',
     'Sui',
+    'Solana Blockchain',
+    'Solana',
     'Web3 AI',
     'Decentralized AI',
     'AI Agents',

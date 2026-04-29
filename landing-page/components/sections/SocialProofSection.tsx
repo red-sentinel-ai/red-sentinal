@@ -35,7 +35,7 @@ const credibilityItems = [
   },
   {
     label: 'Network Status',
-    value: 'Live on Sui Mainnet',
+    value: 'Live on Sui & Solana Mainnet',
     subtext: 'Fully Operational',
     icon: RocketLaunchIcon,
     gradient: 'bg-gradient-to-b from-[#F6BCE1] via-[#FFFFFF] to-[#FCC3E2]',
@@ -160,7 +160,7 @@ export function SocialProofSection() {
           <div className="hidden md:block w-px h-6 bg-black/20"></div>
           <div className="flex items-center gap-2 text-sm text-[#5F5C5C]">
             <RocketLaunchIcon className="w-4 h-4" />
-            <span>Live on Sui Mainnet</span>
+            <span>Live on Sui & Solana Mainnet</span>
           </div>
         </motion.div>
       </div>
