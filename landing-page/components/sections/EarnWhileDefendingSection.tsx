@@ -44,7 +44,7 @@ export function EarnWhileDefendingSection() {
         <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium leading-snug text-black">
           Skill-Based Income for AI Red Teamers. Turn your{' '}
           <span className="text-[#C871FF]">
-            prompt engineering expertise into SUI/USDC rewards.{' '}
+            prompt engineering expertise into real token rewards.{' '}
           </span>
           Every successful attack pays instantly. No delays, no disputes, pure meritocracy.
         </h2>
