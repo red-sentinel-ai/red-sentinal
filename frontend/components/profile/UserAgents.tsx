@@ -58,7 +58,7 @@ export const UserAgents = () => {
           <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)]">
             <Shield className="h-10 w-10 text-[var(--color-text-muted)]" />
           </div>
-          <h3 className="mb-2 text-xl font-bold text-[var(--color-text-primary)]">You don't own any Sentinel yet</h3>
+          <h3 className="mb-2 text-xl font-bold text-[var(--color-text-primary)]">You don&apos;t own any Sentinel yet</h3>
           <p className="mb-8 max-w-md text-[var(--color-text-muted)]">
             Deploy your own AI agent, set the rules, and earn rewards when attackers try to break
             them.
