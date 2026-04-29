@@ -15,7 +15,7 @@ export function JuryResponseModal({ isOpen, onClose, response }: JuryResponseMod
     <Dialog
       open={isOpen}
       onClose={onClose}
-      className="z-[100] w-full max-w-[600px] overflow-hidden rounded-xl border border-[#9A9A9A] bg-white p-0"
+      className="z-[100] w-full max-w-[600px] overflow-hidden rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-0"
     >
       <div className="relative w-full p-10">
         <div className="flex items-center justify-between pb-6">
@@ -24,14 +24,14 @@ export function JuryResponseModal({ isOpen, onClose, response }: JuryResponseMod
               <div>
                 <Image src="/icons/court_house.png" width="20" height="20" alt="Court House" />
               </div>
-              <h2 className="text-xl font-bold text-black">Jury Response</h2>
+              <h2 className="text-xl font-bold text-[var(--color-text-primary)]">Jury Response</h2>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="absolute right-4 top-4 rounded-full p-2 transition-colors hover:bg-gray-100"
+            className="absolute right-4 top-4 rounded-full p-2 transition-colors hover:bg-[var(--color-bg-subtle)]"
           >
-            <X className="h-5 w-5 text-black" />
+            <X className="h-5 w-5 text-[var(--color-text-primary)]" />
           </button>
         </div>
 
@@ -39,8 +39,8 @@ export function JuryResponseModal({ isOpen, onClose, response }: JuryResponseMod
           <Image src="/img/july_table.png" width="400" height="282" alt="Jury Table" />
         </div>
 
-        <div className="rounded-lg border border-[#9A9A9A] p-3 text-center shadow-sm">
-          <p className="whitespace-pre-line text-sm">{response || 'No jury response provided.'}</p>
+        <div className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] p-3 text-center shadow-sm">
+          <p className="whitespace-pre-line text-sm text-[var(--color-text-secondary)]">{response || 'No jury response provided.'}</p>
         </div>
       </div>
     </Dialog>

@@ -127,7 +127,7 @@ export const FeaturedAgentCard = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
     >
-      <div className="h-full w-full overflow-hidden rounded-lg bg-[var(--color-bg-surface)] p-2 shadow-[var(--shadow-card)] lg:rounded-xl lg:p-6">
+      <div className="h-full w-full overflow-hidden rounded-lg bg-[var(--color-bg-deepest)] p-2 shadow-[var(--shadow-card)] lg:rounded-xl lg:p-6">
         <div className="relative mb-2 sm:mb-4">
           <div className="relative flex h-32 w-full items-center justify-center overflow-hidden rounded-lg bg-[var(--color-bg-subtle)] sm:h-80">
             {agent.agent_image ? (
@@ -147,8 +147,8 @@ export const FeaturedAgentCard = ({
             <div
               className={`absolute left-2 top-2 z-20 flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium sm:px-2.5 sm:py-1 sm:text-xs ${
                 agent.state === 'active'
-                  ? 'border border-[#1FAD57] bg-[#D1E6DB] text-[#1FAD57]'
-                  : 'border border-red-500/20 bg-red-500/10 text-red-400'
+                  ? 'border border-[var(--color-success)] bg-[var(--color-success-muted)] text-[var(--color-success)]'
+                  : 'border border-[var(--color-danger)]/20 bg-[var(--color-danger-muted)] text-[var(--color-danger)]'
               }`}
             >
               <Image
@@ -210,7 +210,7 @@ export const FeaturedAgentCard = ({
           {fromProfile && isOwner && (
             <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
               <span className="text-[var(--color-text-secondary)]">Your Earnings:</span>
-              <span className={`text-right ${hasEarnings ? 'font-semibold text-green-600' : ''}`}>
+              <span className={`text-right ${hasEarnings ? 'font-semibold text-[var(--color-success)]' : ''}`}>
                 <TokenAmount rawAmount={agent.accumulated_fees || 0} token={token} precision={4} />
               </span>
             </div>
@@ -220,14 +220,14 @@ export const FeaturedAgentCard = ({
         {fromProfile && timeRemaining && (
           <div className="mb-2 text-center text-[10px] sm:mb-4 sm:text-xs">
             {isWithdrawalLocked ? (
-              <span className="font-medium text-yellow-700">{timeRemaining}</span>
+              <span className="font-medium text-[var(--color-warning)]">{timeRemaining}</span>
             ) : (
-              <span className="font-medium text-green-600">Ready to Withdraw</span>
+              <span className="font-medium text-[var(--color-success)]">Ready to Withdraw</span>
             )}
           </div>
         )}
         {fromProfile && isOwner && isAttackPaused && (
-          <div className="mb-2 rounded-md border border-amber-200 bg-amber-50 px-2 py-1 text-center text-[10px] text-amber-700 sm:mb-4 sm:text-xs">
+          <div className="mb-2 rounded-md border border-[var(--color-warning)]/20 bg-[var(--color-warning)]/10 px-2 py-1 text-center text-[10px] text-[var(--color-warning)] sm:mb-4 sm:text-xs">
             Attacks are paused, add funds to resume
           </div>
         )}

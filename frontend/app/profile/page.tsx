@@ -118,12 +118,12 @@ function ProfileContent() {
                   <User className="h-12 w-12 text-[var(--color-text-muted)]" />
                 </div>
               )}
-              <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-overlay)] opacity-0 transition-opacity group-hover:opacity-100">
-                <Camera className="h-8 w-8 text-white" />
+              <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-text-primary)]/40 opacity-0 transition-opacity group-hover:opacity-100">
+                <Camera className="h-8 w-8 text-[var(--color-bg-surface)]" />
               </div>
             </div>
 
-            <div className="min-w-0 flex-1 pt-2">
+            <div className="order-3 min-w-0 flex-1 pt-2 md:order-2">
               <h1 className="font-display truncate text-2xl font-semibold text-[var(--color-text-primary)] leading-snug sm:text-3xl">
                 {profile?.display_name || 'Your Profile'}
               </h1>
@@ -157,7 +157,7 @@ function ProfileContent() {
                 Edit Profile
               </button>
             </div>
-            <div className="flex w-full flex-wrap items-center justify-start gap-2 pt-2 sm:ml-auto sm:w-auto sm:justify-end">
+            <div className="order-2 flex w-full flex-wrap items-center justify-start gap-2 pt-2 sm:ml-auto sm:w-auto sm:justify-end md:order-3 md:pt-0">
               <Link
                 className="font-body btn h-[50px] bg-[var(--color-gold-primary)] text-[var(--color-text-on-gold)] hover:bg-[var(--color-gold-light)] text-sm sm:text-base"
                 href="/defend"
@@ -187,10 +187,10 @@ function ProfileContent() {
 
           <div className="px-4 md:px-8">
             <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-              <TabsList className="grid w-full grid-cols-4 gap-2 bg-[var(--color-bg-subtle)] lg:flex lg:w-auto lg:justify-start">
+              <TabsList className="flex w-full justify-start gap-0 bg-transparent lg:w-auto">
                 <TabsTrigger
                   value={PROFILE_TABS.AGENTS}
-                  className="font-body flex items-center gap-2 text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
+                  className="font-body flex items-center gap-2 rounded-none text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
                 >
                   <Folder className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="truncate">Sentinels</span>
@@ -198,7 +198,7 @@ function ProfileContent() {
 
                 <TabsTrigger
                   value={PROFILE_TABS.ACTIVITY}
-                  className="font-body flex items-center gap-2 text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
+                  className="font-body flex items-center gap-2 rounded-none text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
                 >
                   <Activity className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="truncate">Activity</span>
@@ -206,7 +206,7 @@ function ProfileContent() {
 
                 <TabsTrigger
                   value={PROFILE_TABS.STATS}
-                  className="font-body flex items-center gap-2 text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
+                  className="font-body flex items-center gap-2 rounded-none text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
                 >
                   <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="truncate">Stats</span>
@@ -214,7 +214,7 @@ function ProfileContent() {
 
                 <TabsTrigger
                   value={PROFILE_TABS.REWARDS}
-                  className="font-body flex items-center gap-2 text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
+                  className="font-body flex items-center gap-2 rounded-none text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
                 >
                   <Gift className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="truncate">My Rewards</span>

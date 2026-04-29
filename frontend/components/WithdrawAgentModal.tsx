@@ -106,7 +106,7 @@ export const WithdrawAgentModal = ({
           <h2 className="text-2xl font-bold">Withdraw Funds</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 transition-colors hover:text-black"
+            className="text-[var(--color-text-faint)] transition-colors hover:text-[var(--color-text-primary)]"
             disabled={isLoading}
           >
             <X className="h-6 w-6" />
@@ -115,15 +115,15 @@ export const WithdrawAgentModal = ({
 
         <div>
           <div className="mb-2 flex items-center justify-between">
-            <label className="block text-sm font-medium">Amount ({token.symbol})</label>
-            <span className="text-xs text-gray-500">Max: {agentBalanceHuman.toFixed(4)}</span>
+            <label className="block text-sm font-medium text-[var(--color-text-primary)]">Amount ({token.symbol})</label>
+            <span className="text-xs text-[var(--color-text-muted)]">Max: {agentBalanceHuman.toFixed(4)}</span>
           </div>
           <div className="relative">
             <input
               type="number"
               value={amount}
               onChange={handleAmountChange}
-              className="w-full rounded-lg border border-gray-300 bg-white p-3 pr-16 placeholder:text-gray-400 focus:ring-1 focus:ring-black"
+              className="w-full rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 pr-16 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:ring-1 focus:ring-[var(--color-gold-primary)]"
               placeholder="0.00"
               min="0"
               step="0.001"
@@ -137,7 +137,7 @@ export const WithdrawAgentModal = ({
               Max
             </button>
           </div>
-          {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+          {error && <p className="mt-1 text-sm text-[var(--color-danger)]">{error}</p>}
         </div>
 
         <button

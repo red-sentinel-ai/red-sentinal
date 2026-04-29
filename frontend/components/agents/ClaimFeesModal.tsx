@@ -73,22 +73,22 @@ export const ClaimFeesModal = ({
       confirmText="Claim Fees"
       isConfirmDisabled={isLoading || !hasFees}
     >
-      <div className="flex flex-col items-center justify-center space-y-2 rounded-xl border border-gray-100 bg-gray-50 py-4 sm:py-6">
-        <span className="text-xs font-medium uppercase tracking-wider text-gray-500 sm:text-sm">
+      <div className="flex flex-col items-center justify-center space-y-2 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] py-4 sm:py-6">
+        <span className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)] sm:text-sm">
           Available to Claim
         </span>
-        <div className="text-2xl font-extrabold tracking-tight text-black sm:text-4xl">
+        <div className="text-2xl font-extrabold tracking-tight text-[var(--color-text-primary)] sm:text-4xl">
           <TokenAmount rawAmount={accumulatedFees} token={token} precision={4} iconSize={24} />
         </div>
       </div>
 
       {!hasFees && (
-        <p className="mt-2 text-center text-sm text-red-500">
+        <p className="mt-2 text-center text-sm text-[var(--color-danger)]">
           There are no fees available to claim at this time.
         </p>
       )}
 
-      <p className="px-2 text-center text-[10px] text-gray-400 sm:px-4 sm:text-xs">
+      <p className="px-2 text-center text-[10px] text-[var(--color-text-faint)] sm:px-4 sm:text-xs">
         These fees are collected from attackers who pay to interact with your agent.
       </p>
     </AgentUpdateDialog>

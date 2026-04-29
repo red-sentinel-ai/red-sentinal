@@ -77,31 +77,31 @@ export function ProfileEditForm({ onSuccess, profile, selectedImage }: ProfileEd
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <label className="mb-2 block text-base font-medium">Display Name</label>
+        <label className="mb-2 block text-base font-medium text-[var(--color-text-primary)]">Display Name</label>
         <input
           type="text"
           value={displayName}
           onChange={e => setDisplayName(e.target.value)}
-          className="w-full rounded-xl border border-[#5E5E5E] bg-white p-3"
+          className="w-full rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] p-3 text-[var(--color-text-primary)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
         />
       </div>
 
       <div>
-        <label className="mb-2 block text-base font-medium">Username</label>
+        <label className="mb-2 block text-base font-medium text-[var(--color-text-primary)]">Username</label>
         <div className="relative">
           <input
             type="text"
             value={username}
             onChange={e => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
-            className="w-full rounded-xl border border-[#5E5E5E] bg-white p-3 pr-10"
+            className="w-full rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] p-3 pr-10 text-[var(--color-text-primary)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
           />
           <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-            {isChecking && <Loader2 className="h-5 w-5 animate-spin text-gray-400" />}
-            {isAvailable === true && <CheckCircle className="h-5 w-5 text-green-500" />}
-            {isAvailable === false && <XCircle className="h-5 w-5 text-red-500" />}
+            {isChecking && <Loader2 className="h-5 w-5 animate-spin text-[var(--color-text-muted)]" />}
+            {isAvailable === true && <CheckCircle className="h-5 w-5 text-[var(--color-success)]" />}
+            {isAvailable === false && <XCircle className="h-5 w-5 text-[var(--color-danger)]" />}
           </div>
         </div>
-        <p className="mt-2 text-sm text-[#5E5E5E]">
+        <p className="mt-2 text-sm text-[var(--color-text-muted)]">
           URL-friendly, lowercase letters, numbers, and underscores only.
         </p>
       </div>
