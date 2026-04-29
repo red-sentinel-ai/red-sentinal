@@ -798,6 +798,7 @@ export type Database = {
           amount: string
           claim_secret: string | null
           created_at: string
+          deposit_l2_block: number | null
           id: number
           is_private: boolean | null
           l1_tx_hash: string | null
@@ -813,6 +814,7 @@ export type Database = {
           amount: string
           claim_secret?: string | null
           created_at?: string
+          deposit_l2_block?: number | null
           id?: number
           is_private?: boolean | null
           l1_tx_hash?: string | null
@@ -828,6 +830,7 @@ export type Database = {
           amount?: string
           claim_secret?: string | null
           created_at?: string
+          deposit_l2_block?: number | null
           id?: number
           is_private?: boolean | null
           l1_tx_hash?: string | null
@@ -838,6 +841,45 @@ export type Database = {
           token_symbol?: string
           updated_at?: string
           user_address?: string
+        }
+        Relationships: []
+      }
+      rh_contact_requests: {
+        Row: {
+          aztec_address: string | null
+          created_at: string
+          description: string
+          email: string
+          eth_address: string | null
+          id: string
+          issue_type: string
+          screenshot_url: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          aztec_address?: string | null
+          created_at?: string
+          description: string
+          email: string
+          eth_address?: string | null
+          id?: string
+          issue_type: string
+          screenshot_url?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          aztec_address?: string | null
+          created_at?: string
+          description?: string
+          email?: string
+          eth_address?: string | null
+          id?: string
+          issue_type?: string
+          screenshot_url?: string | null
+          status?: string
+          updated_at?: string
         }
         Relationships: []
       }

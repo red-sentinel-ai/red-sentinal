@@ -45,6 +45,9 @@ interface UseDefendFormOptions {
   countJuryPromptTokens: (text: string) => void
   /** Called when any custom-provider field (url/key/model) changes */
   onCustomProviderFieldChange?: () => void
+  /** Override token symbol and minimum for validation (used for chain-specific tokens) */
+  activeTokenSymbol?: string
+  activeMinimumAmount?: number
 }
 
 export function useDefendForm({
@@ -55,6 +58,8 @@ export function useDefendForm({
   countAttackGoalTokens,
   countJuryPromptTokens,
   onCustomProviderFieldChange,
+  activeTokenSymbol,
+  activeMinimumAmount,
 }: UseDefendFormOptions) {
   const [formData, setFormData] = useState<DefendFormData>(INITIAL_FORM_DATA)
   const [errors, setErrors] = useState<Partial<DefendFormData>>({})
@@ -104,14 +109,17 @@ export function useDefendForm({
       return false
     }
 
+    const tokenSymbol = activeTokenSymbol ?? selectedToken.symbol
+    const minimumAmount = activeMinimumAmount ?? selectedToken.minimumAmount
+
     const fee = parseFloat(formData.feePerMessage)
     if (isNaN(fee) || fee < 0.1) {
-      newErrors.feePerMessage = `Fee must be at least 0.1 ${selectedToken.symbol}`
+      newErrors.feePerMessage = `Fee must be at least 0.1 ${tokenSymbol}`
     }
 
     const balance = parseFloat(formData.initialBalance)
-    if (isNaN(balance) || balance < selectedToken.minimumAmount) {
-      newErrors.initialBalance = `Minimum Bounty Pool is ${selectedToken.minimumAmount} ${selectedToken.symbol}`
+    if (isNaN(balance) || balance < minimumAmount) {
+      newErrors.initialBalance = `Minimum Bounty Pool is ${minimumAmount} ${tokenSymbol}`
     }
 
     if (!formData.attackGoal.trim()) newErrors.attackGoal = 'Attack goal is required'

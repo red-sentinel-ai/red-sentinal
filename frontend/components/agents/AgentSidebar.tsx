@@ -11,22 +11,21 @@ import {
   User,
   TrendingDown,
 } from 'lucide-react'
-import { formatAddress } from '@mysten/sui/utils'
 import { QRCodeSVG } from 'qrcode.react'
 import { toast } from 'sonner'
-import { useCurrentAccount } from '@mysten/dapp-kit'
 import {
   DEFAULT_PROFILE_URL,
-  EXPLORER_BASE_URL,
   getTokenForCoinType,
   SLUSH_BASE_URL,
   WITHDRAWAL_LOCK_MS,
   SUI_SENTINEL_X_USERNAME,
 } from '@/constants'
+import { useConnectedAddress } from '@/hooks/useConnectedAddress'
+import { getExplorerObjectUrl } from '@/lib/explorer'
 import type { AgentDetailsFull } from '@/hooks/agents/useAgentDetails'
 import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
 import { DefenderProfile } from './DefenderProfile'
-import { formatDuration, cn, buildAgentShareTweetUrl } from '@/lib/utils'
+import { formatDuration, cn, buildAgentShareTweetUrl, truncateAddress } from '@/lib/utils'
 import {
   Tooltip,
   TooltipContent,
@@ -63,8 +62,10 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
   const [isChartModalOpen, setIsChartModalOpen] = useState(false)
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
 
-  const account = useCurrentAccount()
-  const isOwner = account?.address === agent.creator
+  const { address: connectedAddress, chain: connectedChain } = useConnectedAddress()
+  // Only claim ownership when the active chain matches the agent's chain — cross-chain
+  // address strings can't collide format-wise, but this is the correct invariant.
+  const isOwner = connectedChain === agent.chain && connectedAddress === agent.creator
 
   const prizePoolData = agent.prizePoolHistory ?? null
 
@@ -172,13 +173,13 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
         <div>
           <Link
             href="/attack"
-            className="flex items-center gap-1 py-2 text-xs text-gray-500 transition-colors hover:text-black md:py-3 md:text-sm"
+            className="flex items-center gap-1 py-2 text-xs text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-primary)] md:py-3 md:text-sm"
           >
             <ChevronLeft className="h-4 w-4 md:h-5 md:w-5" /> Back to Sentinels
           </Link>
         </div>
 
-        <div className="my-2 w-full rounded-lg border border-gray-600/50 bg-gradient-to-r from-[#F7F3FC] to-[#FFFEFF] px-3 py-2 text-xs shadow-md sm:text-sm md:my-4 md:rounded-xl md:px-4 md:py-[10px] md:shadow-lg">
+        <div className="my-2 w-full rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface]/80 px-3 py-2 text-xs shadow-md sm:text-sm md:my-4 md:rounded-xl md:px-4 md:py-[10px] md:shadow-lg">
           <div className="flex items-center gap-2 md:gap-4">
             <div className="h-8 w-8 shrink-0 grow-0 basis-auto overflow-hidden rounded-full md:h-10 md:w-10">
               <Image
@@ -206,8 +207,8 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
 
         <div className="flex flex-col gap-3 py-2 md:gap-4 md:py-3 lg:gap-6 lg:py-4">
           {agent.attack_goal && (
-            <div className="flex flex-col gap-1.5 rounded-md border border-black/20 p-2 md:gap-2 md:p-3">
-              <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">
+            <div className="flex flex-col gap-1.5 rounded-md border border-[var(--color-text-primary)]/20 p-2 md:gap-2 md:p-3">
+              <h3 className="text-xs font-medium uppercase text-[var(--color-text-secondary)] md:text-sm">
                 Attack Goal
               </h3>
               <p className="text-sm font-semibold md:text-base">{agent.attack_goal}</p>
@@ -215,17 +216,17 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
           )}
 
           <div className="flex flex-col gap-1 md:gap-2">
-            <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">
+            <h3 className="text-xs font-medium uppercase text-[var(--color-text-secondary)] md:text-sm">
               Sentinel Object Id
             </h3>
             <Link
-              href={`${EXPLORER_BASE_URL}/object/${agent.agent_object_id}`}
+              href={getExplorerObjectUrl(agent.agent_object_id, agent.chain)}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block text-sm hover:underline md:text-base"
               title={agent.agent_object_id}
             >
-              {formatAddress(agent.agent_object_id)}
+              {truncateAddress(agent.agent_object_id)}
             </Link>
           </div>
 
@@ -233,7 +234,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
             <div className="flex justify-between gap-2">
               {agent.model_provider && (
                 <div className="flex flex-col gap-1 md:gap-2">
-                  <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">
+                  <h3 className="text-xs font-medium uppercase text-[var(--color-text-secondary)] md:text-sm">
                     LLM Provider
                   </h3>
                   <p className="text-sm font-semibold capitalize md:text-base">
@@ -246,7 +247,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
                 <div
                   className={`flex flex-col gap-1 md:gap-2 ${agent.model_provider ? 'items-end text-right' : ''}`}
                 >
-                  <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">Model</h3>
+                  <h3 className="text-xs font-medium uppercase text-[var(--color-text-secondary)] md:text-sm">Model</h3>
                   <p
                     className="max-w-[120px] truncate text-sm font-semibold md:max-w-[150px] md:text-base"
                     title={agent.model_name}
@@ -260,7 +261,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
 
           {isDrained ? (
             <div className="flex flex-col gap-1 md:gap-2">
-              <h3 className="flex items-center gap-1 text-xs font-medium uppercase text-[#5E5E5E] md:gap-1.5 md:text-sm">
+              <h3 className="flex items-center gap-1 text-xs font-medium uppercase text-[var(--color-text-secondary)] md:gap-1.5 md:text-sm">
                 Total Bounty Won
               </h3>
               <p className="inline-block text-lg font-semibold md:text-xl lg:text-2xl">
@@ -270,7 +271,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
           ) : (
             <div className="flex flex-col gap-1 md:gap-2">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">
+                <h3 className="text-xs font-medium uppercase text-[var(--color-text-secondary)] md:text-sm">
                   Prize pool
                 </h3>
                 {prizePoolData && prizePoolData.history.length > 0 && (
@@ -311,7 +312,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
                 </Button>
               )}
               {(!prizePoolData || prizePoolData.history.length === 0) && (
-                <p className="mt-1.5 text-center text-[10px] text-gray-500 md:mt-2 md:text-xs">
+                <p className="mt-1.5 text-center text-[10px] text-[var(--color-text-muted)] md:mt-2 md:text-xs">
                   No prize pool history available.
                 </p>
               )}
@@ -320,7 +321,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
 
           {isDrained && winnerAddress && (
             <div className="flex flex-col gap-1 md:gap-2">
-              <h3 className="flex items-center gap-1 text-xs font-medium uppercase text-[#5E5E5E] md:gap-1.5 md:text-sm">
+              <h3 className="flex items-center gap-1 text-xs font-medium uppercase text-[var(--color-text-secondary)] md:gap-1.5 md:text-sm">
                 <User className="h-3 w-3 md:h-4 md:w-4" />
                 Winner
               </h3>
@@ -329,13 +330,13 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
                 className="inline-block text-sm hover:underline md:text-base"
                 title={winnerAddress}
               >
-                {formatAddress(winnerAddress)}
+                {truncateAddress(winnerAddress)}
               </Link>
             </div>
           )}
 
           <div className="flex flex-col gap-1 md:gap-2">
-            <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">
+            <h3 className="text-xs font-medium uppercase text-[var(--color-text-secondary)] md:text-sm">
               Message Price
             </h3>
             <p className="inline-block text-lg font-semibold md:text-xl lg:text-2xl">
@@ -347,7 +348,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
               />
             </p>
             {agent.current_cost_per_message && agent.current_cost_per_message !== agent.cost_per_message && (
-              <p className="text-[10px] text-gray-400 md:text-xs flex items-center gap-1">
+              <p className="text-[10px] text-[var(--color-text-muted)] md:text-xs flex items-center gap-1">
                 <span>Base:</span> <TokenAmount rawAmount={agent.cost_per_message} token={agentToken} precision={4} iconSize={10} />
               </p>
             )}
@@ -356,13 +357,13 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
           {!isDrained && (
             <div className="flex flex-col gap-1 md:gap-2">
               <div className="flex items-center gap-1">
-                <h3 className="text-xs font-semibold uppercase text-black/70 md:text-sm">
+                <h3 className="text-xs font-semibold uppercase text-[var(--color-text-primary)]/70 md:text-sm">
                   Active Since
                 </h3>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild className="cursor-help">
-                      <Info width={10} height={10} className="text-black/60 md:h-3 md:w-3" />
+                      <Info width={10} height={10} className="text-[var(--color-text-primary)]/60 md:h-3 md:w-3" />
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>Format: Days, Hours, Minutes, Seconds</p>
@@ -372,20 +373,20 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
               </div>
               <p className="inline-block text-lg font-semibold md:text-xl lg:text-2xl">
                 {activeSince.days}
-                <span className="text-sm text-black/60 md:text-base lg:text-lg">D</span>{' '}
+                <span className="text-sm text-[var(--color-text-primary)]/60 md:text-base lg:text-lg">D</span>{' '}
                 {String(activeSince.hours).padStart(2, '0')}
-                <span className="text-sm text-black/60 md:text-base lg:text-lg">H</span>{' '}
+                <span className="text-sm text-[var(--color-text-primary)]/60 md:text-base lg:text-lg">H</span>{' '}
                 {String(activeSince.minutes).padStart(2, '0')}
-                <span className="text-sm text-black/60 md:text-base lg:text-lg">M</span>{' '}
+                <span className="text-sm text-[var(--color-text-primary)]/60 md:text-base lg:text-lg">M</span>{' '}
                 {String(activeSince.seconds).padStart(2, '0')}
-                <span className="text-sm text-black/60 md:text-base lg:text-lg">S</span>
+                <span className="text-sm text-[var(--color-text-primary)]/60 md:text-base lg:text-lg">S</span>
               </p>
             </div>
           )}
 
           {isOwner && !isDrained && (
             <div className="flex flex-col gap-1 md:gap-2">
-              <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">
+              <h3 className="text-xs font-medium uppercase text-[var(--color-text-secondary)] md:text-sm">
                 Withdrawal Lock
               </h3>
               {timeRemaining ? (
@@ -398,16 +399,16 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
                   {timeRemaining}
                 </p>
               ) : (
-                <div className="h-5 w-32 animate-pulse rounded bg-gray-200 md:h-7 md:w-40"></div>
+                <div className="h-5 w-32 animate-pulse rounded bg-[var(--color-bg-subtle)] md:h-7 md:w-40"></div>
               )}
             </div>
           )}
         </div>
-        <div className="border-t border-t-black/20"></div>
+        <div className="border-t border-t-[var(--color-text-primary)]/20"></div>
 
         <div className="z-20 mt-2 flex flex-col rounded-xl p-0 text-xs md:mt-4 md:text-sm">
           <div className="flex flex-col gap-1.5 md:gap-2">
-            <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">
+            <h3 className="text-xs font-medium uppercase text-[var(--color-text-secondary)] md:text-sm">
               Instructions
             </h3>
             <p
@@ -420,7 +421,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
             {shouldTruncate && onReadMore && (
               <button
                 onClick={onReadMore}
-                className="mt-2 flex w-fit items-center gap-1.5 self-end text-[10px] font-bold uppercase tracking-wide text-[#5E5E5E] transition-opacity hover:opacity-80 md:mt-3 md:gap-2 md:text-xs"
+                className="mt-2 flex w-fit items-center gap-1.5 self-end text-[10px] font-bold uppercase tracking-wide text-[var(--color-text-secondary)] transition-opacity hover:opacity-80 md:mt-3 md:gap-2 md:text-xs"
               >
                 Read All
               </button>
@@ -429,10 +430,10 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
         </div>
 
         <div className="flex flex-col gap-3 py-2 md:gap-4 md:py-3 lg:gap-6 lg:py-4">
-          <div className="border-t border-t-black/20"></div>
+          <div className="border-t border-t-[var(--color-text-primary)]/20"></div>
           <div className="flex justify-between">
             <div className="flex flex-col gap-1 md:gap-2">
-              <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">
+              <h3 className="text-xs font-medium uppercase text-[var(--color-text-secondary)] md:text-sm">
                 Total Participants
               </h3>
               <p className="inline-block text-center text-lg font-semibold md:text-xl lg:text-2xl">
@@ -440,7 +441,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
               </p>
             </div>
             <div className="flex flex-col gap-1 text-center md:gap-2">
-              <h3 className="text-xs font-medium uppercase text-[#5E5E5E] md:text-sm">
+              <h3 className="text-xs font-medium uppercase text-[var(--color-text-secondary)] md:text-sm">
                 Break Attempts
               </h3>
               <p className="inline-block text-lg font-semibold md:text-xl lg:text-2xl">
@@ -458,11 +459,11 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
           <LinkIcon className="h-3 w-3 md:h-4 md:w-4" />
         </Button>
 
-        <div className="mt-3 border-t border-black/20 pt-3 md:mt-4 md:pt-4 lg:mt-6 lg:pt-6">
-          <h3 className="mb-1.5 text-sm font-bold leading-tight text-black md:mb-2 md:text-base">
+        <div className="mt-3 border-t border-[var(--color-text-primary)]/20 pt-3 md:mt-4 md:pt-4 lg:mt-6 lg:pt-6">
+          <h3 className="mb-1.5 text-sm font-bold leading-tight text-[var(--color-text-primary)] md:mb-2 md:text-base">
             Earn Sentinel Tokens
           </h3>
-          <p className="mb-2 text-xs leading-relaxed text-[#5E5E5E] md:mb-3 md:text-sm">
+          <p className="mb-2 text-xs leading-relaxed text-[var(--color-text-secondary)] md:mb-3 md:text-sm">
             Share about Sui Sentinel on X and earn Sentinel tokens as a reward.
           </p>
           <button
@@ -479,24 +480,24 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
           isLoading={isLoadingProfile}
         />
 
-        <div className="mt-auto border-t border-black/20 pt-3 md:pt-4 lg:pt-6">
-          <h3 className="mb-2 text-center text-xs font-semibold text-black/80 md:mb-3 md:text-sm lg:mb-4">
+        <div className="mt-auto border-t border-[var(--color-text-primary)]/20 pt-3 md:pt-4 lg:pt-6">
+          <h3 className="mb-2 text-center text-xs font-semibold text-[var(--color-text-primary)]/80 md:mb-3 md:text-sm lg:mb-4">
             Scan this QR Code if you want to try to attack this agent using slush mobile wallet
           </h3>
-          <div className="flex justify-center rounded-lg border border-gray-200 p-2 md:rounded-xl md:p-3 lg:p-4">
+          <div className="flex justify-center rounded-lg border border-[var(--color-border-subtle)] p-2 md:rounded-xl md:p-3 lg:p-4">
             {deepLinkUrl ? (
               <QRCodeSVG
                 value={deepLinkUrl}
                 size={96}
                 bgColor="#ffffff00"
-                fgColor="#000000"
+                fgColor="var(--color-text-primary)"
                 level="L"
                 includeMargin={true}
                 className="h-20 w-20 md:h-24 md:w-24 lg:h-32 lg:w-32"
               />
             ) : (
-              <div className="flex h-24 w-24 animate-pulse items-center justify-center rounded-lg bg-gray-200 md:h-28 md:w-28 lg:h-32 lg:w-32">
-                <div className="h-6 w-6 animate-spin rounded-full border-4 border-gray-300 border-t-transparent md:h-8 md:w-8"></div>
+              <div className="flex h-24 w-24 animate-pulse items-center justify-center rounded-lg bg-[var(--color-bg-subtle)] md:h-28 md:w-28 lg:h-32 lg:w-32">
+                <div className="h-6 w-6 animate-spin rounded-full border-4 border-[var(--color-border-default)] border-t-transparent md:h-8 md:w-8"></div>
               </div>
             )}
           </div>

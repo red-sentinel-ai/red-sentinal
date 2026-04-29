@@ -6,8 +6,9 @@ import { motion } from 'framer-motion'
 import clsx from 'clsx'
 import { formatDistanceToNow } from 'date-fns'
 import { Trophy } from 'lucide-react'
-import { formatAddress } from '@mysten/sui/utils'
-import { DEFAULT_PROFILE_URL, SUIVISION_TXBLOCK_URL } from '@/constants'
+import { DEFAULT_PROFILE_URL } from '@/constants'
+import { getExplorerTxUrl } from '@/lib/explorer'
+import { truncateAddress } from '@/lib/utils'
 import type { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { type ChatMessage as ChatMessageType } from './ChatInterface'
 import Link from 'next/link'
@@ -25,6 +26,7 @@ type ChatMessageProps = {
 
 export const ChatMessage = ({
   message,
+  agent,
   senderProfile,
   isWinningPrompt,
   onShowJury,
@@ -43,7 +45,7 @@ export const ChatMessage = ({
 
   const avatarUrl = senderProfile?.avatar_url || DEFAULT_PROFILE_URL
   const displayName =
-    senderProfile?.username || (message.sender ? formatAddress(message.sender) : 'User')
+    senderProfile?.username || (message.sender ? truncateAddress(message.sender) : 'User')
   const profileLink = `/u/${senderProfile?.username || message.sender}`
 
   return (
@@ -65,7 +67,7 @@ export const ChatMessage = ({
         {message.type === 'user' && (
           <div className="flex-shrink-0">
             <Link href={profileLink}>
-              <div className="relative h-7 w-7 rounded-full border border-gray-200">
+              <div className="relative h-7 w-7 rounded-full border border-[var(--color-border-subtle)]">
                 <Image
                   src={avatarUrl}
                   fill
@@ -79,23 +81,23 @@ export const ChatMessage = ({
 
         <div
           className={clsx(
-            'relative min-w-[350px] rounded-2xl text-black shadow-sm backdrop-blur-sm',
+            'relative min-w-[350px] rounded-2xl text-[var(--color-text-primary)] shadow-sm backdrop-blur-sm',
             {
-              'border border-[#5E5E5E] bg-[#A3BCF2]/20': message.type === 'agent',
-              'border border-[#5E5E5E] bg-gradient-to-tr from-[#C4A7FF]/25 to-[#FD6ADD]/25':
+              'border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)]': message.type === 'agent',
+              'border border-[var(--color-gold-primary)]/10 bg-gradient-to-tr from-[var(--color-gold-primary)]/10 to-[var(--color-gold-light)]/5':
                 message.type === 'user' && !isWinningPrompt,
-              'border border-yellow-300 bg-yellow-50 shadow-md shadow-yellow-100': isWinningPrompt,
+              'border border-[var(--color-gold-primary)]/25 bg-gradient-to-tr from-[var(--color-gold-primary)]/20 to-[var(--color-gold-light)]/10 shadow-md shadow-[var(--color-gold-primary)]/10': isWinningPrompt,
             }
           )}
         >
           <div className="relative p-3 sm:p-4">
             {message.type === 'user' && message.sender && (
               <div className="-mt-1 mb-2 flex items-center justify-between gap-1 text-xs">
-                <Link href={profileLink} className="font-semibold text-black hover:underline">
+                <Link href={profileLink} className="font-semibold text-[var(--color-text-primary)] hover:underline">
                   {displayName}
                 </Link>
                 {isWinningPrompt && (
-                  <div className="flex items-center gap-1.5 rounded-full bg-yellow-200 px-2 py-0.5 text-xs font-semibold text-yellow-800">
+                  <div className="flex items-center gap-1.5 rounded-full bg-[var(--color-gold-primary)]/15 px-2 py-0.5 text-xs font-semibold text-[var(--color-gold-primary)]">
                     <Trophy className="h-3 w-3" />
                     Winner
                   </div>
@@ -106,7 +108,7 @@ export const ChatMessage = ({
               <p
                 ref={contentRef}
                 className={clsx(
-                  'break-words text-xs leading-relaxed text-black transition-all duration-200 ease-in-out sm:text-sm',
+                  'break-words text-xs leading-relaxed text-[var(--color-text-primary)] transition-all duration-200 ease-in-out sm:text-sm',
                   !isExpanded && 'line-clamp-4'
                 )}
               >
@@ -116,7 +118,7 @@ export const ChatMessage = ({
               {shouldTruncate && (
                 <button
                   onClick={() => setIsExpanded(!isExpanded)}
-                  className="mt-1 text-xs text-blue-600 hover:underline"
+                  className="mt-1 text-xs text-[var(--color-info)] hover:underline"
                 >
                   {isExpanded ? 'Show less' : 'Show more'}
                 </button>
@@ -128,19 +130,19 @@ export const ChatMessage = ({
               )}
             >
               <div className="flex flex-col gap-1"></div>
-              <div className="absolute bottom-1 right-3 flex gap-3 whitespace-nowrap text-right text-[11px] text-[#666666]">
+              <div className="absolute bottom-1 right-3 flex gap-3 whitespace-nowrap text-right text-[11px] text-[var(--color-text-muted)]">
                 {message.type === 'agent' && message.txDigest && (
                   <a
-                    href={`${SUIVISION_TXBLOCK_URL}/${message.txDigest}`}
+                    href={getExplorerTxUrl(message.txDigest, agent.chain)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="break-all lowercase text-[#0F23A7] underline"
+                    className="break-all lowercase text-[var(--color-info)] underline"
                   >
-                    {formatAddress(message.txDigest)}
+                    {truncateAddress(message.txDigest)}
                   </a>
                 )}
                 {message.type === 'agent' && message.score !== undefined && (
-                  <span className="font-medium text-black">Score: {message.score}/100</span>
+                  <span className="font-medium text-[var(--color-text-primary)]">Score: {message.score}/100</span>
                 )}
                 {message.type === 'agent' && message.juryResponse && onShowJury && (
                   <button
@@ -148,7 +150,7 @@ export const ChatMessage = ({
                       e.stopPropagation()
                       onShowJury()
                     }}
-                    className="flex w-fit cursor-pointer items-center gap-1.5 text-[10px] text-[#0F23A7] underline transition-all hover:no-underline"
+                    className="flex w-fit cursor-pointer items-center gap-1.5 text-[10px] text-[var(--color-info)] underline transition-all hover:no-underline"
                   >
                     <Image
                       src="/icons/court_house_blue.png"

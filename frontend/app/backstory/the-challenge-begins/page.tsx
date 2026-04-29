@@ -16,7 +16,7 @@ export default function Page() {
         <div className="relative z-10 mb-8 md:mb-0">
           <Link
             href="/backstory"
-            className="mb-12 flex items-center gap-1 text-2xl text-[#5F5C5C] hover:text-black"
+            className="mb-12 flex items-center gap-1 text-2xl text-[#5F5C5C] hover:text-[var(--color-text-primary)]"
           >
             <span>
               <ArrowLeft />
@@ -115,7 +115,7 @@ export default function Page() {
         <h3 className="mb-4 text-2xl font-bold">
           Choose your side:
           <br />
-          <span className="text-xl font-normal text-gray-600">
+          <span className="text-xl font-normal text-[var(--color-text-secondary)]">
             Challenge the Sentinels or become one.
           </span>
         </h3>

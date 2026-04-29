@@ -109,7 +109,7 @@ export function DemoRequestContent() {
               <CheckCircle className="w-16 h-16 text-green-600 mx-auto" />
               <h2 className="text-3xl font-bold mt-6 mb-2">Request Submitted!</h2>
               <p className="text-lg text-gray-700 mb-6">
-                Thank you for your interest in Sui Sentinel Enterprise. Our team will reach out
+                Thank you for your interest in Red Sentinel Enterprise. Our team will reach out
                 within 24-48 hours to schedule your personalized demo.
               </p>
               <p className="text-gray-600 mb-8">
@@ -150,7 +150,7 @@ export function DemoRequestContent() {
               Demo Request
             </h1>
             <p className="mt-4 text-lg text-white/80">
-              See how Sui Sentinel can secure your AI agents with crowdsourced red teaming
+              See how Red Sentinel can secure your AI agents with crowdsourced red teaming
             </p>
           </div>
         </div>
@@ -356,7 +356,7 @@ export function DemoRequestContent() {
                   <Link href="/privacy-policy" className="text-[#C871FF] hover:underline">
                     Privacy Policy
                   </Link>{' '}
-                  and consent to being contacted about Sui Sentinel products and services.
+                  and consent to being contacted about Red Sentinel products and services.
                 </p>
               </form>
             </motion.div>

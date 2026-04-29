@@ -10,7 +10,7 @@ const sections = [
     content: (
       <>
         <p className="text-gray-700 leading-relaxed mb-4">
-          Welcome to Sui Sentinel, a decentralized AI security platform operated by{' '}
+          Welcome to Red Sentinel, a decentralized AI security platform operated by{' '}
           <a
             href="https://www.indiafilings.com/search/cyphronix-software-private-limited-cin-U62013MP2025PTC075797"
             target="_blank"
@@ -22,12 +22,12 @@ const sections = [
           (CIN: U62013MP2025PTC075797). This Privacy Policy explains how we collect, use, disclose,
           and safeguard your information when you visit{' '}
           <Link href="/" className="underline font-medium hover:text-black transition-colors">
-            suisentinel.xyz
+            redsentinel.xyz
           </Link>{' '}
           or use our platform.
         </p>
         <p className="text-gray-700 leading-relaxed">
-          By accessing or using Sui Sentinel, you consent to the practices described in this policy.
+          By accessing or using Red Sentinel, you consent to the practices described in this policy.
           If you do not agree with any part of this Privacy Policy, please discontinue use of our
           services.
         </p>
@@ -40,14 +40,14 @@ const sections = [
     content: (
       <>
         <p className="text-gray-700 leading-relaxed mb-6">
-          We collect information across two surfaces: the landing page (suisentinel.xyz) and the
-          main application (app.suisentinel.xyz). Here is a full account of every category of data
+          We collect information across two surfaces: the landing page (redsentinel.xyz) and the
+          main application (app.redsentinel.xyz). Here is a full account of every category of data
           we collect.
         </p>
 
         <h4 className="text-lg font-semibold mb-3">2.1 Account & Identity Data</h4>
         <p className="text-gray-700 leading-relaxed mb-2">
-          When you create a Sui Sentinel account, we collect and store:
+          When you create a Red Sentinel account, we collect and store:
         </p>
         <ul className="list-disc list-inside space-y-2 text-gray-700 mb-6">
           <li>
@@ -151,7 +151,7 @@ const sections = [
 
         <h4 className="text-lg font-semibold mb-3">2.7 Blockchain Data</h4>
         <p className="text-gray-700 leading-relaxed">
-          When you interact with Sui Sentinel smart contracts on the Sui blockchain, your wallet
+          When you interact with Red Sentinel smart contracts on the Sui blockchain, your wallet
           address and all transaction data are recorded publicly and immutably on-chain. This data
           is outside our control and cannot be erased. Please be aware of the inherently public
           nature of blockchain interactions before participating.
@@ -166,7 +166,7 @@ const sections = [
       <>
         <p className="text-gray-700 leading-relaxed mb-4">We use the information we collect to:</p>
         <ul className="list-disc list-inside space-y-2 text-gray-700">
-          <li>Operate, maintain, and improve the Sui Sentinel platform and website.</li>
+          <li>Operate, maintain, and improve the Red Sentinel platform and website.</li>
           <li>Process and respond to your applications, demo requests, and enquiries.</li>
           <li>
             Send transactional emails (via AWS SES) such as application confirmations and community
@@ -282,7 +282,7 @@ const sections = [
             role key is used exclusively on the server and is never exposed to the client.
           </li>
           <li>
-            Smart contract security: Sui Sentinel&apos;s contracts are fully audited by{' '}
+            Smart contract security: Red Sentinel&apos;s contracts are fully audited by{' '}
             <a
               href="https://osec.io"
               target="_blank"
@@ -440,7 +440,7 @@ const sections = [
               suisentinal@gmail.com
             </a>
           </p>
-          <p className="text-gray-700">Platform: suisentinel.xyz</p>
+          <p className="text-gray-700">Platform: redsentinel.xyz</p>
         </div>
       </>
     ),
@@ -470,7 +470,7 @@ export default function PrivacyPolicyPage() {
           <p className="text-gray-500 text-sm">Last Updated: February 27, 2026</p>
           <p className="text-gray-700 mt-4 text-lg leading-relaxed">
             Cyphronix Software Private Limited is committed to protecting your privacy and being
-            transparent about how we handle your data on the Sui Sentinel platform.
+            transparent about how we handle your data on the Red Sentinel platform.
           </p>
         </motion.div>
 

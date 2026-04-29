@@ -252,7 +252,7 @@ const faqs = [
   {
     question: 'How is this different from hiring a red team firm?',
     answer:
-      'Traditional red teaming is a point-in-time assessment. Sui Sentinel is continuous. Your AI is tested 24/7 by a global community, with every attack verified and recorded on-chain. You get ongoing security data rather than a single PDF report.',
+      'Traditional red teaming is a point-in-time assessment. Red Sentinel is continuous. Your AI is tested 24/7 by a global community, with every attack verified and recorded on-chain. You get ongoing security data rather than a single PDF report.',
   },
   {
     question: 'What types of AI systems can I test?',
@@ -623,7 +623,7 @@ export function RedTeamingContent() {
         </div>
       </section>
 
-      {/* The Sui Sentinel Difference */}
+      {/* The Red Sentinel Difference */}
       <section className="py-24 relative">
         <div className="vertical-line left-4"></div>
         <div className="vertical-line right-4"></div>
@@ -637,7 +637,7 @@ export function RedTeamingContent() {
           >
             <div className="badge-pink w-fit mx-auto mb-6">• the difference</div>
             <h2 className="text-3xl md:text-4xl lg:text-[48px] font-medium mb-6">
-              The Sui Sentinel <span className="text-[#C871FF]">Difference</span>
+              The Red Sentinel <span className="text-[#C871FF]">Difference</span>
             </h2>
           </motion.div>
 

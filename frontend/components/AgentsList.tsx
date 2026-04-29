@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui'
 import { LeaderboardSkeleton } from './ui/skeletons/LeaderboardSkeleton'
 import { AgentDetails, SortField, SortDirection } from '@/hooks/agents/useAllAgents'
 import { getTokenForCoinType } from '@/constants'
+import { CHAINS } from '@/constants/chains'
 import { PrizePoolChangeDisplay } from './agents/PrizePoolChangeDisplay'
 import { TokenAmount } from './ui/common/TokenAmount'
 import Image from 'next/image'
@@ -58,7 +59,7 @@ export const AgentsList = ({
           <LeaderboardSkeleton />
         ) : (
           <div className="flex flex-col gap-1">
-            <div className="mb-2 hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 text-lg font-medium shadow-[var(--shadow-card)] md:grid md:grid-cols-12 md:gap-4">
+            <div className="mb-2 hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-deepest)] p-3 text-lg font-medium shadow-[var(--shadow-card)] md:grid md:grid-cols-12 md:gap-4">
               <div className="col-span-1 flex items-center">
                 <span>#</span>
               </div>
@@ -113,13 +114,20 @@ export const AgentsList = ({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.15 }}
-                    className="cursor-pointer rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] p-3 text-xl shadow-[var(--shadow-card)] hover:border-[var(--color-border-default)]"
+                    className="cursor-pointer rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] p-3 text-xl shadow-[var(--shadow-card)] hover:border-[var(--color-border-default)]"
                     onClick={() => router.push(`/attack/${agent.agent_path}`)}
                   >
                     <div className="space-y-3 md:hidden">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <span className="">#{idx + 1}</span>
+                          <Image
+                            src={CHAINS[agent.chain ?? 'sui'].icon}
+                            alt={CHAINS[agent.chain ?? 'sui'].name}
+                            width={14}
+                            height={14}
+                            className="shrink-0 rounded-full"
+                          />
                           <span className="truncate">{agent.agent_name}</span>
                           {agent.is_featured && (
                             <Image
@@ -188,6 +196,13 @@ export const AgentsList = ({
                       <div className="col-span-1 flex items-center">{agent.agent_id}</div>
 
                       <div className="col-span-2 flex items-center gap-1">
+                        <Image
+                          src={CHAINS[agent.chain ?? 'sui'].icon}
+                          alt={CHAINS[agent.chain ?? 'sui'].name}
+                          width={16}
+                          height={16}
+                          className="shrink-0 rounded-full"
+                        />
                         <span className="truncate">{agent.agent_name}</span>
                         {agent.is_featured && (
                           <Image

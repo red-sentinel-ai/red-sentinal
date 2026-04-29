@@ -85,7 +85,7 @@ export default function CommitmentStep({ form, disabled }: CommitmentStepProps) 
             >
               Code of Conduct
             </a>{' '}
-            and understand my responsibilities as a Sui Sentinel Ambassador.{' '}
+            and understand my responsibilities as a Red Sentinel Ambassador.{' '}
             <span className="text-red-500">*</span>
           </span>
         </label>

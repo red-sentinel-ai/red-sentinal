@@ -20,8 +20,8 @@ export function CopyButton({ text, fieldId, copiedField, onCopy }: CopyButtonPro
       className={cn(
         'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs transition-all',
         {
-          'bg-green-100 text-green-800': copiedField === fieldId,
-          'bg-gray-100 hover:bg-gray-200': copiedField !== fieldId,
+          'bg-[var(--color-success-muted)] text-[var(--color-success)]': copiedField === fieldId,
+          'bg-[var(--color-bg-subtle)] text-[var(--color-text-muted)] hover:bg-[var(--color-border-subtle)]': copiedField !== fieldId,
         }
       )}
     >

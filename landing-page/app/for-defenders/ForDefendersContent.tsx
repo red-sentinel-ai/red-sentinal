@@ -269,7 +269,7 @@ export function ForDefendersContent() {
           >
             <div className="badge-pink w-fit mx-auto mb-6">• benefits</div>
             <h2 className="text-3xl md:text-4xl lg:text-[48px] font-medium mb-6">
-              Why Defenders Choose <span className="text-[#C871FF]">Sui Sentinel</span>
+              Why Defenders Choose <span className="text-[#C871FF]">Red Sentinel</span>
             </h2>
           </motion.div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -310,7 +310,7 @@ export function ForDefendersContent() {
                 Security That Pays <span className="text-[#C871FF]">You Back</span>
               </h2>
               <p className="text-white/70 mb-8">
-                Traditional security audits cost money and end with a report. Sui Sentinel keeps
+                Traditional security audits cost money and end with a report. Red Sentinel keeps
                 paying you while making your AI stronger.
               </p>
               <div className="space-y-4">

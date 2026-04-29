@@ -194,7 +194,7 @@ export const BrandKitContent = () => {
           <div className="flex flex-col gap-4">
             <h3 className="font-medium text-lg md:text-[28px]">Clearspace</h3>
             <p className="text-[#5F5C5C] text-sm md:text-xl">
-              To keep the Sui Sentinel mark sharp, readable, and unmistakably ours, maintain a
+              To keep the Red Sentinel mark sharp, readable, and unmistakably ours, maintain a
               protective zone around the logo.This space must remain free of text, images, or any
               competing visual elements ensuring the emblem stands strong, focused, and unobstructed
               in every environment.

@@ -192,7 +192,7 @@ export default function DashboardDemoPage() {
           </h2>
           <p className="text-lg text-gray-500 mb-10 max-w-2xl mx-auto">
             Deploy your first Sentinel and get real-time visibility into your AI security posture.
-            Join enterprises already using Sui Sentinel.
+            Join enterprises already using Red Sentinel.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link

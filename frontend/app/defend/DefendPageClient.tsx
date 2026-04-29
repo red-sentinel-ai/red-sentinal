@@ -3,9 +3,10 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ChevronLeft, CameraIcon, Info, Loader2, Sparkles } from 'lucide-react'
+import { ChevronLeft, CameraIcon, Info, Loader2, Sparkles, Wallet } from 'lucide-react'
 import { toast } from 'sonner'
 import { ConnectButton, useCurrentAccount } from '@mysten/dapp-kit'
+import { useWalletModal } from '@solana/wallet-adapter-react-ui'
 import {
   SESSION_KEYS,
   SUPPORTED_TOKENS,
@@ -13,8 +14,12 @@ import {
   SYSTEM_PROMPT_MAX_TOKENS,
   type SupportedToken,
 } from '@/constants'
+import { SOLANA_SUPPORTED_TOKENS } from '@/constants/solana'
 import { SENTINEL_GIFS, SENTINEL_IMAGES } from '@/constants/asset_paths'
+import { useActiveChain } from '@/context/ActiveChainContext'
 import { useTokenCount } from '@/hooks/useTokenCount'
+import { useSolanaWallet } from '@/hooks/useSolanaWallet'
+import { useSolanaTokenBalance } from '@/hooks/useSolanaTokenBalance'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 import { TokenSelectDropdown } from '@/components/defend/TokenSelectDropdown'
 import { RewardsConditions } from '@/components/defend/RewardsConditions'
@@ -33,7 +38,14 @@ import { useDeployAgent } from './hooks/useDeployAgent'
 import { useTemplateLoader } from './hooks/useTemplateLoader'
 
 export default function DefendPageClient() {
+  const { activeChain } = useActiveChain()
+  const isSolana = activeChain === 'solana'
+
+  // Sui wallet
   const account = useCurrentAccount()
+  // Solana wallet
+  const { publicKey: solanaPublicKey } = useSolanaWallet()
+  const { setVisible: setSolanaWalletModalVisible } = useWalletModal()
 
   const [agentImage, setAgentImage] = useState<File | null>(null)
   const [imagePickerOpen, setImagePickerOpen] = useState(false)
@@ -43,11 +55,26 @@ export default function DefendPageClient() {
     file?: File | null
   } | null>({ url: SENTINEL_IMAGES[0], isCustom: false })
 
+  // Sui token selection
   const [selectedToken, setSelectedToken] = useState<SupportedToken>(SUPPORTED_TOKENS[0])
   const { rawBalance: selectedTokenRawBalance, isLoading: isTokenBalanceLoading } = useTokenBalance(
     selectedToken.coinType,
     selectedToken.decimals
   )
+
+  // Solana token selection
+  const [selectedSolanaToken, setSelectedSolanaToken] = useState<SupportedToken>(SOLANA_SUPPORTED_TOKENS[0])
+  const {
+    rawBalance: solanaTokenRawBalance,
+    isLoading: isSolanaTokenBalanceLoading,
+  } = useSolanaTokenBalance(selectedSolanaToken.coinType, selectedSolanaToken.decimals)
+
+  // Determine if a wallet is connected based on active chain
+  const isWalletConnected = isSolana ? !!solanaPublicKey : !!account
+
+  // Active chain's token info for display
+  const activeTokenSymbol = isSolana ? selectedSolanaToken.symbol : selectedToken.symbol
+  const activeMinimumAmount = isSolana ? selectedSolanaToken.minimumAmount : selectedToken.minimumAmount
 
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
   const { tokenCount: privateTokenCount, countTokens: countPrivateTokens, isDebouncing: isPrivateTokenCountDebouncing } = useTokenCount()
@@ -62,6 +89,8 @@ export default function DefendPageClient() {
       countPrivateTokens,
       countAttackGoalTokens,
       countJuryPromptTokens,
+      activeTokenSymbol: isSolana ? selectedSolanaToken.symbol : undefined,
+      activeMinimumAmount: isSolana ? selectedSolanaToken.minimumAmount : undefined,
     })
 
   const customProvider = useCustomProvider(setFormData)
@@ -89,7 +118,7 @@ export default function DefendPageClient() {
     setShowSuccessModal,
     deploy,
     resetDeployState,
-  } = useDeployAgent({ formData, selectedToken, tokenCount, agentImage, selectedImage })
+  } = useDeployAgent({ formData, selectedToken, selectedSolanaToken, tokenCount, agentImage, selectedImage })
 
   const [isGeneratingConfig, setIsGeneratingConfig] = useState(false)
 
@@ -426,17 +455,17 @@ export default function DefendPageClient() {
                   Bounty Pool
                 </label>
                 <span className="font-body mt-1 block text-sm text-[var(--color-text-secondary)] sm:text-base">
-                  Minimum {formatCompact(selectedToken.minimumAmount)} {selectedToken.symbol} required to deploy.
+                  Minimum {formatCompact(activeMinimumAmount)} {activeTokenSymbol} required to deploy.
                 </span>
-                {account?.address && (
+                {isWalletConnected && (
                   <span className="font-body mt-0.5 flex items-center gap-1 text-sm text-[var(--color-text-muted)]">
                     Balance:{' '}
-                    {isTokenBalanceLoading ? (
+                    {(isSolana ? isSolanaTokenBalanceLoading : isTokenBalanceLoading) ? (
                       <Skeleton className="inline-block h-4 w-20 align-middle" />
                     ) : (
                       <TokenAmount
-                        rawAmount={selectedTokenRawBalance}
-                        token={selectedToken}
+                        rawAmount={isSolana ? solanaTokenRawBalance : selectedTokenRawBalance}
+                        token={isSolana ? selectedSolanaToken : selectedToken}
                         className="font-medium text-[var(--color-text-primary)]"
                       />
                     )}
@@ -452,14 +481,14 @@ export default function DefendPageClient() {
                   className="font-body h-full flex-1 bg-transparent px-4 text-base text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:outline-none"
                   placeholder="0.00"
                   step="0.1"
-                  min={selectedToken.minimumAmount.toString()}
+                  min={activeMinimumAmount.toString()}
                   autoComplete="off"
                 />
                 <div className="flex shrink-0 items-center border-l border-[var(--color-border-subtle)]">
                   <TokenSelectDropdown
-                    tokens={SUPPORTED_TOKENS}
-                    selected={selectedToken}
-                    onSelect={setSelectedToken}
+                    tokens={isSolana ? SOLANA_SUPPORTED_TOKENS : SUPPORTED_TOKENS}
+                    selected={isSolana ? selectedSolanaToken : selectedToken}
+                    onSelect={isSolana ? setSelectedSolanaToken : setSelectedToken}
                   />
                 </div>
               </div>
@@ -469,8 +498,8 @@ export default function DefendPageClient() {
             </div>
 
             <FormInput
-              label={`Fee Per Message (${selectedToken.symbol})`}
-              subLabel={`You earn this fee whenever users interact with your Sentinel. Minimum 0.1 ${selectedToken.symbol}.`}
+              label={`Fee Per Message (${activeTokenSymbol})`}
+              subLabel={`You earn this fee whenever users interact with your Sentinel. Minimum 0.1 ${activeTokenSymbol}.`}
               name="feePerMessage"
               value={formData.feePerMessage}
               onChange={handleChangeWithProviderReset}
@@ -486,7 +515,7 @@ export default function DefendPageClient() {
 
           {/* Deploy Button */}
           <div className="pb-20 pt-2">
-            {account?.address ? (
+            {isWalletConnected ? (
               <button
                 type="submit"
                 disabled={
@@ -502,21 +531,23 @@ export default function DefendPageClient() {
                     Deploying...
                   </>
                 ) : (
-                  <>
-                    <Image
-                      src="/icons/rocket.png"
-                      alt="Rocket"
-                      width={25}
-                      height={25}
-                      className="object-contain"
-                    />
-                    Deploy Sentinel
-                  </>
+                  'Deploy Sentinel'
                 )}
               </button>
             ) : (
               <div className="h-[65px]">
-                <ConnectButton className="h-full w-full !rounded-lg !text-xl" />
+                {isSolana ? (
+                  <button
+                    type="button"
+                    onClick={() => setSolanaWalletModalVisible(true)}
+                    className="font-display flex h-full w-full items-center justify-center gap-3 rounded-lg bg-[var(--color-gold-primary)] text-xl font-semibold text-[var(--color-text-on-gold)] shadow-[var(--shadow-card)] transition-all hover:bg-[var(--color-gold-light)]"
+                  >
+                    <Wallet className="h-5 w-5" />
+                    Connect Wallet
+                  </button>
+                ) : (
+                  <ConnectButton className="h-full w-full !rounded-lg !text-xl" />
+                )}
               </div>
             )}
           </div>
@@ -528,6 +559,7 @@ export default function DefendPageClient() {
           agentName={formData.agentName}
           transactionDigest={transactionDigest}
           agentPath={deployedAgentPath}
+          chain={activeChain}
         />
       </div>
     </div>

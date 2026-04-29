@@ -7,16 +7,19 @@ import Image from 'next/image'
 import clsx from 'clsx'
 import { Loader2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { formatAddress } from '@mysten/sui/utils'
 import { ConnectModal, useCurrentAccount } from '@mysten/dapp-kit'
 
 import { ATTACK_PROMPT_MAX_TOKENS, DEFAULT_PROFILE_URL } from '@/constants'
+import type { SupportedChain } from '@/constants/chains'
+import { truncateAddress } from '@/lib/utils'
 import type { ConsumePromptApiResponse } from '@/types'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { ChatEvent } from '@/hooks/agents/useAgentChatHistory'
+import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { useTokenCount } from '@/hooks/useTokenCount'
 import type { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
+import { ChainMismatchBanner } from '@/components/ui/common/ChainMismatchBanner'
 import { ChatMessage } from './ChatMessage'
 import { JuryResponseModal } from './JuryResponseModal'
 
@@ -44,6 +47,7 @@ interface ChatInterfaceProps {
   isSubmitting: boolean
   submitError: string | null
   refetchAgent: () => void
+  chainMismatch?: SupportedChain | null
 }
 
 export default function ChatInterface({
@@ -55,13 +59,15 @@ export default function ChatInterface({
   isSubmitting,
   submitError,
   refetchAgent,
+  chainMismatch,
 }: ChatInterfaceProps) {
   const [promptInput, setPromptInput] = useState('')
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
   const [activeTab, setActiveTab] = useState<'global' | 'mine'>('global')
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const account = useCurrentAccount()
+  const { address: connectedAddress } = useConnectedAddress()
+  const suiAccount = useCurrentAccount()
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
 
   const [isAttackPaused, setIsAttackPaused] = useState(false)
@@ -132,11 +138,11 @@ export default function ChatInterface({
 
   const displayedMessages = useMemo(() => {
     if (activeTab === 'global') return chatMessages
-    if (!account?.address) return []
+    if (!connectedAddress) return []
     const filtered: ChatMessage[] = []
     for (let i = 0; i < chatMessages.length; i++) {
       const msg = chatMessages[i]
-      if (msg.type === 'user' && msg.sender === account.address) {
+      if (msg.type === 'user' && msg.sender === connectedAddress) {
         filtered.push(msg)
         if (chatMessages[i + 1]?.type === 'agent') {
           filtered.push(chatMessages[i + 1])
@@ -145,7 +151,7 @@ export default function ChatInterface({
       }
     }
     return filtered
-  }, [chatMessages, activeTab, account?.address])
+  }, [chatMessages, activeTab, connectedAddress])
 
   const adjustTextareaHeight = () => {
     const textarea = textareaRef.current
@@ -215,9 +221,12 @@ export default function ChatInterface({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!account?.address) {
-      setIsWalletModalOpen(true)
-      return
+    if (!connectedAddress) {
+      // ConnectModal is Sui-specific; only trigger it when Sui is the active chain
+      if (!suiAccount?.address) {
+        setIsWalletModalOpen(true)
+        return
+      }
     }
 
     if (tokenCount > ATTACK_PROMPT_MAX_TOKENS) {
@@ -231,7 +240,7 @@ export default function ChatInterface({
       type: 'user',
       content: promptInput,
       timestamp: Date.now().toString(),
-      sender: account?.address,
+      sender: connectedAddress,
     }
 
     setChatMessages(prevMessages => [...prevMessages, newUserMessage])
@@ -240,7 +249,7 @@ export default function ChatInterface({
   }
 
   return (
-    <div className="flex h-full flex-1 flex-col justify-between pb-2 text-black sm:pb-6">
+    <div className="flex h-full flex-1 flex-col justify-between pb-2 text-[var(--color-text-primary)] sm:pb-6">
       <JuryResponseModal
         isOpen={isJuryModalOpen}
         onClose={() => setIsJuryModalOpen(false)}
@@ -249,16 +258,16 @@ export default function ChatInterface({
 
       <div className="px-3 pb-1 pt-1 sm:px-6 sm:py-2">
         <Tabs value={activeTab} onValueChange={v => setActiveTab(v as 'global' | 'mine')}>
-          <TabsList className="h-auto rounded-md border border-gray-200 bg-gray-100 p-[2px]">
+          <TabsList className="h-auto rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] p-[2px]">
             <TabsTrigger
               value="global"
-              className="rounded-md border-b-0 py-1 data-[state=active]:border-b-0 data-[state=active]:bg-white data-[state=active]:shadow-sm sm:px-4"
+              className="rounded-md border-b-0 py-1 data-[state=active]:border-b-0 data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:shadow-sm sm:px-4"
             >
               Global Chat
             </TabsTrigger>
             <TabsTrigger
               value="mine"
-              className="rounded-md border-b-0 py-1 data-[state=active]:border-b-0 data-[state=active]:bg-white data-[state=active]:shadow-sm sm:px-4"
+              className="rounded-md border-b-0 py-1 data-[state=active]:border-b-0 data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:shadow-sm sm:px-4"
             >
               My Chat
             </TabsTrigger>
@@ -271,7 +280,7 @@ export default function ChatInterface({
         className="ios-scroll max-h-[calc(100vh-160px)] flex-1 space-y-2 overflow-y-auto p-2 pt-1 sm:max-h-[calc(100vh-210px)] sm:space-y-6 sm:p-6"
       >
         {displayedMessages.length === 0 && !eventsLoading && (
-          <div className="py-6 text-center text-gray-500 sm:py-12">
+          <div className="py-6 text-center text-[var(--color-text-muted)] sm:py-12">
             <Image
               src="/icons/exclamation.png"
               width={60}
@@ -282,12 +291,12 @@ export default function ChatInterface({
             {activeTab === 'mine' ? (
               <>
                 <p className="text-base sm:text-lg">
-                  {account?.address
+                  {connectedAddress
                     ? "You haven't attacked yet."
                     : 'Connect your wallet to see your chats.'}
                 </p>
                 <p className="mt-2 px-4 text-xs opacity-75 sm:text-sm">
-                  {account?.address
+                  {connectedAddress
                     ? 'Submit a prompt to start your attack!'
                     : 'Your messages will appear here once connected.'}
                 </p>
@@ -326,7 +335,7 @@ export default function ChatInterface({
               className="flex justify-start"
             >
               <div className="flex max-w-[85%] items-start gap-2 sm:max-w-[75%] sm:gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 ring-2 ring-gray-300 sm:h-10 sm:w-10">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-bg-subtle)] ring-2 ring-[var(--color-border-default)] sm:h-10 sm:w-10">
                   <Image
                     src={agent.agent_image || DEFAULT_PROFILE_URL}
                     width={32}
@@ -335,9 +344,9 @@ export default function ChatInterface({
                     className="h-full w-full rounded-full object-cover"
                   />
                 </div>
-                <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-gray-50 p-3 sm:p-4">
-                  <Loader2 className="h-4 w-4 animate-spin text-gray-600 sm:h-5 sm:w-5" />
-                  <span className="text-xs text-gray-700 sm:text-sm">
+                <div className="flex items-center gap-3 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] p-3 sm:p-4">
+                  <Loader2 className="h-4 w-4 animate-spin text-[var(--color-text-secondary)] sm:h-5 sm:w-5" />
+                  <span className="text-xs text-[var(--color-text-secondary)] sm:text-sm">
                     Agent is analyzing your attack...
                   </span>
                 </div>
@@ -347,41 +356,43 @@ export default function ChatInterface({
         </AnimatePresence>
       </div>
 
-      {isAttackPaused ? (
-        <div className="border-t border-gray-200 bg-amber-50 p-4">
+      {chainMismatch ? (
+        <ChainMismatchBanner agentChain={chainMismatch} />
+      ) : isAttackPaused ? (
+        <div className="border-t border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] p-4">
           <div className="w-full text-center">
-            <h3 className="text-lg font-bold text-amber-700">Attacks Paused</h3>
-            <p className="text-xs text-amber-600">
+            <h3 className="text-lg font-bold text-[var(--color-warning)]">Attacks Paused</h3>
+            <p className="text-xs text-[var(--color-text-secondary)]">
               The owner&apos;s lock period has expired and they can currently withdraw funds. Attacks
               will resume once the sentinel is re-funded.
             </p>
           </div>
         </div>
       ) : isAgentDrained ? (
-        <div className="border-t border-gray-200 bg-gray-50 p-4">
+        <div className="border-t border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] p-4">
           <div className="w-full text-center">
-            <h3 className="text-lg font-bold text-red-600">This Sentinel is Drained</h3>
-            <p className="mb-2 text-xs text-gray-500">
+            <h3 className="text-lg font-bold text-[var(--color-danger)]">This Sentinel is Drained</h3>
+            <p className="mb-2 text-xs text-[var(--color-text-muted)]">
               The sentinel has been successfully defeated.
             </p>
 
             {winnerInfo && (
-              <div className="mx-auto rounded-lg border border-gray-200 bg-white px-3">
-                <div className="flex flex-col items-center justify-center gap-y-2 sm:flex-row sm:gap-y-0 sm:divide-x sm:divide-gray-200">
+              <div className="mx-auto rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] px-3">
+                <div className="flex flex-col items-center justify-center gap-y-2 sm:flex-row sm:gap-y-0 sm:divide-x sm:divide-[var(--color-border-subtle)]">
                   <div className="flex w-full items-baseline justify-center gap-x-2 px-3 sm:w-auto">
-                    <p className="shrink-0 text-xs font-semibold text-gray-600">Winner:</p>
+                    <p className="shrink-0 text-xs font-semibold text-[var(--color-text-secondary)]">Winner:</p>
 
                     <Link
                       href={`/u/${winnerInfo.winnerAddress}`}
-                      className="text-right text-sm text-blue-600 underline"
+                      className="text-right text-sm text-[var(--color-info)] underline"
                     >
-                      {formatAddress(winnerInfo.winnerAddress as string)}
+                      {truncateAddress(winnerInfo.winnerAddress as string)}
                     </Link>
                   </div>
 
                   <div className="flex w-full items-baseline justify-center gap-x-2 px-3 sm:w-auto">
-                    <p className="shrink-0 text-xs font-semibold text-gray-600">Amount:</p>
-                    <p className="text-base font-bold text-green-600">{winnerInfo.wonAmount} SUI</p>
+                    <p className="shrink-0 text-xs font-semibold text-[var(--color-text-secondary)]">Amount:</p>
+                    <p className="text-base font-bold text-[var(--color-success)]">{winnerInfo.wonAmount} SUI</p>
                   </div>
                 </div>
               </div>
@@ -393,7 +404,7 @@ export default function ChatInterface({
           <form onSubmit={handleSubmit} className="relative">
             <div className="relative">
               {/* Premium mobile-like chat input container */}
-              <div className="relative z-10 w-full overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-lg transition-all duration-200 focus-within:border-gray-400 focus-within:shadow-xl sm:rounded-2xl sm:border-gray-300">
+              <div className="relative z-10 w-full overflow-hidden rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] shadow-lg transition-all duration-200 focus-within:border-[var(--color-border-default)] focus-within:shadow-xl sm:rounded-2xl sm:border-[var(--color-border-default)]">
                 <div className="relative">
                   <textarea
                     ref={textareaRef}
@@ -402,7 +413,7 @@ export default function ChatInterface({
                       setPromptInput(e.target.value)
                       countTokens(e.target.value)
                     }}
-                    className="min-h-[80px] w-full resize-none border-none bg-transparent p-3 pb-9 pr-12 text-[15px] leading-relaxed text-black outline-none placeholder:text-gray-400 focus:ring-0 sm:min-h-[100px] sm:p-4 sm:pb-10 sm:pr-14 sm:text-base"
+                    className="min-h-[80px] w-full resize-none border-none bg-transparent p-3 pb-9 pr-12 text-[15px] leading-relaxed text-[var(--color-text-primary)] outline-none placeholder:text-[var(--color-text-muted)] focus:ring-0 sm:min-h-[100px] sm:p-4 sm:pb-10 sm:pr-14 sm:text-base"
                     disabled={isSubmitting}
                     placeholder="Craft your attack prompt..."
                     rows={1}
@@ -421,7 +432,7 @@ export default function ChatInterface({
                   <div
                     className={clsx(
                       'absolute bottom-2 right-16 text-[10px] font-medium tracking-wide sm:bottom-3 sm:right-[72px]',
-                      tokenCount > ATTACK_PROMPT_MAX_TOKENS ? 'text-red-500' : 'text-gray-400'
+                      tokenCount > ATTACK_PROMPT_MAX_TOKENS ? 'text-[var(--color-danger)]' : 'text-[var(--color-text-muted)]'
                     )}
                   >
                     <span className={clsx({ 'animate-pulse': isTokenCountDebouncing })}>
@@ -437,7 +448,7 @@ export default function ChatInterface({
                       promptInput.length === 0 ||
                       tokenCount > ATTACK_PROMPT_MAX_TOKENS
                     }
-                    className="absolute bottom-3 right-3 hidden h-11 w-11 items-center justify-center rounded-full bg-black text-white shadow-md transition-all duration-200 hover:scale-105 hover:bg-gray-800 hover:shadow-lg active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 sm:flex"
+                    className="absolute bottom-3 right-3 hidden h-11 w-11 items-center justify-center rounded-full bg-[var(--color-text-primary)] text-[var(--color-bg-surface)] shadow-md transition-all duration-200 hover:scale-105 hover:bg-[var(--color-text-secondary)] hover:shadow-lg active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 sm:flex"
                   >
                     {isSubmitting ? (
                       <Loader2 className="h-5 w-5 animate-spin" />
@@ -460,7 +471,7 @@ export default function ChatInterface({
                       promptInput.length === 0 ||
                       tokenCount > ATTACK_PROMPT_MAX_TOKENS
                     }
-                    className="absolute bottom-2 right-2 flex h-10 w-10 touch-manipulation items-center justify-center rounded-full bg-black text-white shadow-md transition-all duration-200 hover:bg-gray-800 active:scale-90 disabled:cursor-not-allowed disabled:opacity-50 sm:hidden"
+                    className="absolute bottom-2 right-2 flex h-10 w-10 touch-manipulation items-center justify-center rounded-full bg-[var(--color-text-primary)] text-[var(--color-bg-surface)] shadow-md transition-all duration-200 hover:bg-[var(--color-text-secondary)] active:scale-90 disabled:cursor-not-allowed disabled:opacity-50 sm:hidden"
                   >
                     {isSubmitting ? (
                       <Loader2 className="h-4 w-4 animate-spin" />

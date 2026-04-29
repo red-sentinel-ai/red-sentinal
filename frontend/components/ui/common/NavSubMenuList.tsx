@@ -14,13 +14,13 @@ export function NavSubMenuList({ items }: { items: NavSubItem[] }) {
               href={item.href}
               className={cn(
                 'group/item flex select-none items-center justify-between rounded-lg px-4 py-3.5 no-underline outline-none transition-colors',
-                'hover:bg-gray-100 focus:bg-gray-100'
+                'hover:bg-[var(--color-bg-subtle)] focus:bg-[var(--color-bg-subtle)]'
               )}
             >
-              <span className="text-[15px] font-semibold text-gray-800 group-hover/item:text-black">
+              <span className="text-[15px] font-semibold text-[var(--color-text-secondary)] group-hover/item:text-[var(--color-text-primary)]">
                 {item.title}
               </span>
-              <ChevronRight className="h-4 w-4 translate-x-0 text-gray-400 transition-transform duration-150 group-hover/item:translate-x-1 group-hover/item:text-gray-600" />
+              <ChevronRight className="h-4 w-4 translate-x-0 text-[var(--color-text-faint)] transition-transform duration-150 group-hover/item:translate-x-1 group-hover/item:text-[var(--color-text-muted)]" />
             </Link>
           </NavigationMenuLink>
         </li>

@@ -24,6 +24,7 @@
   --color-gold-primary: #7A1830;
   --color-gold-light: #8E2C44;
   --color-gold-dark: #5C1024;
+  --color-gold-muted: rgba(122, 24, 48, 0.1);
   --color-accent-fg: #FFFFFF;
   --color-text-on-gold: #FFFFFF;
 
@@ -87,9 +88,9 @@
   --accent: #f1f5f9;
   --accent-foreground: #0f172a;
   --destructive: #ef4444;
-  --border: #e2e8f0;
-  --input: #e2e8f0;
-  --ring: #94a3b8;
+  --border: var(--color-border-subtle);
+  --input: var(--color-border-subtle);
+  --ring: var(--color-border-default);
 
   /* Mobile optimization: Prevent double-tap zoom delay */
   touch-action: manipulation;
@@ -297,61 +298,61 @@ body::-webkit-scrollbar-thumb:hover {
 .robo-img-defender {
   background: linear-gradient(
     to right,
-    rgba(19, 136, 213, 0.2),
-    rgba(19, 136, 213, 0.196),
+    rgba(122, 24, 48, 0.08),
+    rgba(122, 24, 48, 0.06),
     transparent
   );
 }
 
 .agent-card {
   background:
-    linear-gradient(#ebdee1b3, #6b6b6bb3) padding-box,
-    linear-gradient(180deg, #ebdee1b3, #6b6b6bb3) border-box;
+    linear-gradient(var(--color-bg-surface), var(--color-bg-subtle)) padding-box,
+    linear-gradient(180deg, rgba(122, 24, 48, 0.15), rgba(122, 24, 48, 0.3)) border-box;
 }
 
 .robo-card:hover .robo-img-defender {
   background: linear-gradient(
     to right,
-    rgba(19, 136, 213, 0.27),
-    rgba(19, 136, 213, 0.3),
+    rgba(122, 24, 48, 0.15),
+    rgba(122, 24, 48, 0.12),
     transparent
   );
 }
 
 .robo-img-attacker {
-  background: linear-gradient(to left, rgba(229, 57, 34, 0), rgba(229, 57, 34, 0), transparent);
+  background: linear-gradient(to left, rgba(92, 16, 36, 0.06), rgba(92, 16, 36, 0.04), transparent);
 }
 
 .robo-card:hover .robo-img-attacker {
-  background: linear-gradient(to left, rgb(234, 69, 97, 0.4), rgb(234, 69, 97, 0.4), transparent);
+  background: linear-gradient(to left, rgba(92, 16, 36, 0.15), rgba(92, 16, 36, 0.12), transparent);
   backdrop-filter: blur(10px);
 }
 .robo-card.defender {
   border: 1px solid #ffffff00;
   background:
-    linear-gradient(#ffffff, #f6eaff) padding-box,
-    linear-gradient(180deg, #1388d500, var(--primary_pink)) border-box;
+    linear-gradient(var(--color-bg-surface), #f0ebe3) padding-box,
+    linear-gradient(180deg, transparent, var(--color-gold-primary)) border-box;
 }
 
 .robo-card.defender:hover {
   border: 1px solid #ffffff00;
   background:
-    linear-gradient(#ffffff, #f6eaff) padding-box,
-    linear-gradient(var(--angle), #1388d500, var(--primary_pink)) border-box;
+    linear-gradient(var(--color-bg-surface), #ebe5db) padding-box,
+    linear-gradient(var(--angle), transparent, var(--color-gold-primary)) border-box;
 }
 
 .robo-card.attacker {
   border: 1px solid #ffffff00;
   background:
-    linear-gradient(#ffffff, #dbe6ff) padding-box,
-    linear-gradient(180deg, #1388d500, var(--primary_blue)) border-box;
+    linear-gradient(var(--color-bg-surface), #eae5dd) padding-box,
+    linear-gradient(180deg, transparent, var(--color-gold-dark)) border-box;
 }
 
 .robo-card.attacker:hover {
   border: 1px solid #ffffff00;
   background:
-    linear-gradient(#ffffff, #dbe6ff) padding-box,
-    linear-gradient(var(--angle), #1388d500, var(--primary_blue)) border-box;
+    linear-gradient(var(--color-bg-surface), #e5dfd6) padding-box,
+    linear-gradient(var(--angle), transparent, var(--color-gold-dark)) border-box;
 }
 
 .rotate-y-180 {
@@ -359,7 +360,7 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .black-gradient-border {
-  border-image: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.9) 100%) 1;
+  border-image: linear-gradient(to right, rgba(122, 24, 48, 0) 0%, rgba(122, 24, 48, 0.9) 100%) 1;
   border-width: 1px;
   border-style: solid;
   padding: 0px;
@@ -376,12 +377,12 @@ body::-webkit-scrollbar-thumb:hover {
   border-image: linear-gradient(
       to right,
       rgba(255, 255, 255, 0.05) 0%,
-      var(--primary_pink_light) 100%
+      var(--color-gold-primary) 100%
     )
     1;
 }
 .gradient-border.blue {
-  border-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 0%, var(--primary_blue_90) 100%)
+  border-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 0%, var(--color-gold-dark) 100%)
     1;
 }
 
@@ -738,3 +739,53 @@ body::-webkit-scrollbar-thumb:hover {
     padding: 1px 8px;
   }
 }
+
+/* ── Solana Wallet Adapter – light theme overrides ─────────────────────────── */
+.wallet-adapter-modal-wrapper {
+  background: #ffffff;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.wallet-adapter-modal-title {
+  color: #111827;
+  padding: 40px 40px 24px;
+  font-size: 20px;
+}
+
+.wallet-adapter-button {
+  color: #111827;
+}
+
+.wallet-adapter-button:not([disabled]):hover {
+  background-color: #f3f4f6;
+}
+
+.wallet-adapter-modal-list .wallet-adapter-button {
+  border-radius: 12px;
+  margin: 0 12px;
+  width: calc(100% - 24px);
+}
+
+.wallet-adapter-modal-list .wallet-adapter-button span {
+  color: #6b7280;
+}
+
+.wallet-adapter-modal-button-close {
+  background: #f3f4f6;
+}
+
+.wallet-adapter-modal-button-close svg {
+  fill: #6b7280;
+}
+
+.wallet-adapter-modal-button-close:hover svg {
+  fill: #111827;
+}
+
+/* Hide the "More wallets" toggle – not-installed wallets do nothing when clicked */
+.wallet-adapter-modal-list-more {
+  display: none;
+}
+/* ─────────────────────────────────────────────────────────────────────────── */

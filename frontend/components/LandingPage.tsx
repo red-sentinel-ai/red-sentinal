@@ -82,7 +82,7 @@ export const LandingPage = () => {
               <div>
                 <Link
                   href="/defend"
-                  className="flex min-h-[48px] w-full items-center justify-center rounded-[8px] border border-secondary_blue_60 bg-secondary_blue p-2 text-lg text-primary_blue text-white transition-all hover:bg-secondary_blue_60 md:min-h-[62px] md:text-2xl"
+                  className="btn flex min-h-[48px] w-full items-center justify-center rounded-[8px] bg-[var(--color-gold-primary)] p-2 text-lg text-[var(--color-text-on-gold)] transition-all hover:bg-[var(--color-gold-dark)] md:min-h-[62px] md:text-2xl"
                 >
                   Deploy Sentinel
                 </Link>
@@ -143,7 +143,7 @@ export const LandingPage = () => {
               <div>
                 <Link
                   href="/attack"
-                  className="flex min-h-[48px] w-full items-center justify-center rounded-[8px] border border-secondary_blue_60 bg-secondary_pink p-2 text-lg text-white transition-all hover:bg-secondary_pink_60 md:min-h-[62px] md:text-2xl"
+                  className="btn flex min-h-[48px] w-full items-center justify-center rounded-[8px] bg-[var(--color-gold-primary)] p-2 text-lg text-[var(--color-text-on-gold)] transition-all hover:bg-[var(--color-gold-dark)] md:min-h-[62px] md:text-2xl"
                 >
                   Start Attacking
                 </Link>
@@ -151,7 +151,7 @@ export const LandingPage = () => {
             </motion.div>
           </div>
         </div>
-        <div className="absolute left-1/2 top-[23%] h-[600px] w-full -translate-x-1/2 rounded-full bg-[#00000036] blur-3xl md:w-[1000px]"></div>
+        <div className="absolute left-1/2 top-[23%] h-[600px] w-full -translate-x-1/2 rounded-full bg-[var(--color-gold-primary)]/8 blur-3xl md:w-[1000px]"></div>
       </motion.div>
     </AnimatePresence>
   )

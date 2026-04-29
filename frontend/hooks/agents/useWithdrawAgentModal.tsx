@@ -1,13 +1,22 @@
 'use client'
 import { WithdrawAgentModal, WithdrawAgentModalProps } from '@/components/WithdrawAgentModal'
 import React, { useState } from 'react'
+import type { SupportedChain } from '@/constants/chains'
+
+interface OpenWithdrawAgentModalArgs {
+  agentObjectId: string
+  agentId: string
+  agentBalanceRaw: number
+  coinType?: string
+  chain?: SupportedChain
+}
 
 interface UseWithdrawAgentModalReturn {
-  openModal: (agentObjectId: string, agentId: string, agentBalanceRaw: number, coinType?: string) => void
+  openModal: (args: OpenWithdrawAgentModalArgs) => void
   Modal: React.FC<
     Omit<
       WithdrawAgentModalProps,
-      'open' | 'onClose' | 'agentObjectId' | 'agentId' | 'agentBalanceRaw' | 'coinType'
+      'open' | 'onClose' | 'agentObjectId' | 'agentId' | 'agentBalanceRaw' | 'coinType' | 'chain'
     >
   >
 }
@@ -18,12 +27,20 @@ export function useWithdrawAgentModal(): UseWithdrawAgentModalReturn {
   const [currentAgentId, setCurrentAgentId] = useState('')
   const [currentBalance, setCurrentBalance] = useState(0)
   const [currentCoinType, setCurrentCoinType] = useState<string | undefined>(undefined)
+  const [currentChain, setCurrentChain] = useState<SupportedChain>('sui')
 
-  const openModal = (agentObjectId: string, agentId: string, agentBalanceRaw: number, coinType?: string) => {
+  const openModal = ({
+    agentObjectId,
+    agentId,
+    agentBalanceRaw,
+    coinType,
+    chain = 'sui',
+  }: OpenWithdrawAgentModalArgs) => {
     setCurrentAgentObjectId(agentObjectId)
     setCurrentAgentId(agentId)
     setCurrentBalance(agentBalanceRaw)
     setCurrentCoinType(coinType)
+    setCurrentChain(chain)
     setIsOpen(true)
   }
 
@@ -38,7 +55,7 @@ export function useWithdrawAgentModal(): UseWithdrawAgentModalReturn {
   const Modal: React.FC<
     Omit<
       WithdrawAgentModalProps,
-      'open' | 'onClose' | 'agentObjectId' | 'agentId' | 'agentBalanceRaw' | 'coinType'
+      'open' | 'onClose' | 'agentObjectId' | 'agentId' | 'agentBalanceRaw' | 'coinType' | 'chain'
     >
   > = props => (
     <WithdrawAgentModal
@@ -48,6 +65,7 @@ export function useWithdrawAgentModal(): UseWithdrawAgentModalReturn {
       agentId={currentAgentId}
       agentBalanceRaw={currentBalance}
       coinType={currentCoinType}
+      chain={currentChain}
       {...props}
     />
   )

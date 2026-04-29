@@ -307,7 +307,7 @@ export function AdvancedDashboard({ showNavbar = true }: { showNavbar?: boolean 
                 <div className="flex items-center gap-3">
                   <Image
                     src="/icons/logo/logo_dark.png"
-                    alt="Sui Sentinel"
+                    alt="Red Sentinel"
                     width={140}
                     height={32}
                     className="h-7 w-auto"
