@@ -59,7 +59,7 @@ export const UserActivity = () => {
             {agentDefeated.length === 0 ? (
               <div className="py-8 text-center text-[var(--color-text-muted)]">
                 <AlertCircle className="mx-auto mb-4 h-12 w-12 opacity-50" />
-                You haven't defeated any agents yet.
+                You haven&apos;t defeated any agents yet.
               </div>
             ) : (
               <div className="space-y-4">
