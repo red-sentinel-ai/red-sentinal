@@ -16,7 +16,7 @@ export default function Page() {
         <div className="mb-16">
           <Link
             href="/backstory"
-            className="mb-12 flex items-center gap-1 text-2xl text-[#5F5C5C] hover:text-black"
+            className="mb-12 flex items-center gap-1 text-2xl text-[#5F5C5C] hover:text-[var(--color-text-primary)]"
           >
             <span>
               <ArrowLeft />

@@ -44,8 +44,8 @@ export const Dialog = ({ open, onClose, children, className, disableBackdropClic
       <div
         className={cn(
           'relative',
-          'bg-white text-black',
-          'rounded-lg border border-gray-200 shadow-lg',
+          'bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)]',
+          'rounded-lg border border-[var(--color-border-subtle)] shadow-lg',
           'w-[90vw] max-w-[440px]',
           'p-6',
           'duration-200 animate-in zoom-in-95',

@@ -35,20 +35,20 @@ export function TemplateDetailModal({
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
-            className="max-h-[90vh] w-full max-w-4xl overflow-auto rounded-2xl bg-white"
+            className="max-h-[90vh] w-full max-w-4xl overflow-auto rounded-2xl bg-[var(--color-bg-elevated)]"
             onClick={e => e.stopPropagation()}
           >
-            <div className="sticky top-0 z-10 rounded-t-2xl border-b border-[#5E5E5E] bg-white p-6">
+            <div className="sticky top-0 z-10 rounded-t-2xl border-b border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-6">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
-                    <h2 className="text-2xl font-semibold">{template.name}</h2>
+                    <h2 className="text-2xl font-semibold text-[var(--color-text-primary)]">{template.name}</h2>
                     <span
                       className={cn(
                         'shrink-0 rounded-full border px-3 py-1 text-xs font-medium',
                         template.sentinel_type === 'rag'
-                          ? 'border-purple-200 bg-purple-100 text-purple-800'
-                          : 'border-blue-200 bg-blue-100 text-blue-800'
+                          ? 'border-[var(--color-gold-primary)]/20 bg-[var(--color-gold-muted)] text-[var(--color-gold-primary)]'
+                          : 'border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] text-[var(--color-text-muted)]'
                       )}
                     >
                       {template.sentinel_type}
@@ -57,7 +57,7 @@ export function TemplateDetailModal({
                 </div>
                 <button
                   onClick={onClose}
-                  className="ml-4 text-gray-400 transition-colors hover:text-black"
+                  className="ml-4 text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-primary)]"
                 >
                   ✕
                 </button>
@@ -68,8 +68,8 @@ export function TemplateDetailModal({
               <div>
                 <div className="mb-2 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Eye className="h-4 w-4 text-blue-600" />
-                    <h3 className="text-base font-semibold">Public Instructions</h3>
+                    <Eye className="h-4 w-4 text-[var(--color-info)]" />
+                    <h3 className="text-base font-semibold text-[var(--color-text-primary)]">Public Instructions</h3>
                   </div>
                   <CopyButton
                     text={template.public_instructions}
@@ -78,8 +78,8 @@ export function TemplateDetailModal({
                     onCopy={onCopy}
                   />
                 </div>
-                <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
-                  <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-gray-800">
+                <div className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] p-4">
+                  <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-[var(--color-text-secondary)]">
                     {template.public_instructions}
                   </pre>
                 </div>
@@ -88,8 +88,8 @@ export function TemplateDetailModal({
               <div>
                 <div className="mb-2 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <EyeOff className="h-4 w-4 text-orange-600" />
-                    <h3 className="text-base font-semibold">Private Instructions</h3>
+                    <EyeOff className="h-4 w-4 text-[var(--color-warning)]" />
+                    <h3 className="text-base font-semibold text-[var(--color-text-primary)]">Private Instructions</h3>
                   </div>
                   <CopyButton
                     text={template.hidden_instructions}
@@ -98,8 +98,8 @@ export function TemplateDetailModal({
                     onCopy={onCopy}
                   />
                 </div>
-                <div className="rounded-xl border border-orange-200 bg-orange-50 p-4">
-                  <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-gray-800">
+                <div className="rounded-xl border border-[var(--color-warning)]/20 bg-[var(--color-warning)]/5 p-4">
+                  <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-[var(--color-text-secondary)]">
                     {template.hidden_instructions}
                   </pre>
                 </div>
@@ -108,8 +108,8 @@ export function TemplateDetailModal({
               <div>
                 <div className="mb-2 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Crosshair className="h-4 w-4 text-red-600" />
-                    <h3 className="text-base font-semibold">Attack Goal</h3>
+                    <Crosshair className="h-4 w-4 text-[var(--color-danger)]" />
+                    <h3 className="text-base font-semibold text-[var(--color-text-primary)]">Attack Goal</h3>
                   </div>
                   <CopyButton
                     text={template.attack_goal}
@@ -118,8 +118,8 @@ export function TemplateDetailModal({
                     onCopy={onCopy}
                   />
                 </div>
-                <div className="rounded-xl border border-red-200 bg-red-50 p-4">
-                  <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-gray-800">
+                <div className="rounded-xl border border-[var(--color-danger)]/20 bg-[var(--color-danger)]/5 p-4">
+                  <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-[var(--color-text-secondary)]">
                     {template.attack_goal}
                   </pre>
                 </div>
@@ -128,8 +128,8 @@ export function TemplateDetailModal({
               <div>
                 <div className="mb-2 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Gavel className="h-4 w-4 text-purple-600" />
-                    <h3 className="text-base font-semibold">Jury Prompt</h3>
+                    <Gavel className="h-4 w-4 text-[var(--color-gold-primary)]" />
+                    <h3 className="text-base font-semibold text-[var(--color-text-primary)]">Jury Prompt</h3>
                   </div>
                   <CopyButton
                     text={template.jury_prompt}
@@ -138,8 +138,8 @@ export function TemplateDetailModal({
                     onCopy={onCopy}
                   />
                 </div>
-                <div className="rounded-xl border border-purple-200 bg-purple-50 p-4">
-                  <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-gray-800">
+                <div className="rounded-xl border border-[var(--color-gold-primary)]/20 bg-[var(--color-gold-muted)] p-4">
+                  <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-[var(--color-text-secondary)]">
                     {template.jury_prompt}
                   </pre>
                 </div>
@@ -150,7 +150,7 @@ export function TemplateDetailModal({
                 onClick={() => {
                   sessionStorage.setItem(SESSION_KEYS.SELECTED_TEMPLATE, JSON.stringify(template))
                 }}
-                className="block w-full rounded-xl bg-black py-4 text-center font-medium text-white transition-all hover:bg-black/90"
+                className="btn block w-full rounded-xl bg-[var(--color-gold-primary)] py-4 text-center font-medium text-[var(--color-text-on-gold)] transition-all hover:bg-[var(--color-gold-light)]"
               >
                 Use This Template
               </Link>

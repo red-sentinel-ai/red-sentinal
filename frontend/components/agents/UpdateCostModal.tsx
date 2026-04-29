@@ -55,17 +55,17 @@ export const UpdateCostModal = ({
       confirmText="Update Fee"
       isConfirmDisabled={isLoading || !cost}
     >
-      <label className="mb-2 block text-sm font-medium text-gray-700">Fee per Message ({token.symbol})</label>
+      <label className="mb-2 block text-sm font-medium text-[var(--color-text-secondary)]">Fee per Message ({token.symbol})</label>
       <input
         type="number"
         value={cost}
         onChange={e => setCost(e.target.value)}
-        className="w-full rounded-xl border border-gray-300 bg-white p-3 outline-none focus:ring-1 focus:ring-black"
+        className="w-full rounded-xl border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 text-[var(--color-text-primary)] outline-none placeholder:text-[var(--color-text-faint)] focus:ring-1 focus:ring-[var(--color-gold-primary)]"
         placeholder="0.00"
         min="0"
         step="0.01"
       />
-      <p className="mt-2 text-xs text-gray-500">
+      <p className="mt-2 text-xs text-[var(--color-text-muted)]">
         This is the amount attackers must pay to send one message to your agent.
       </p>
     </AgentUpdateDialog>

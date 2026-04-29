@@ -13,9 +13,9 @@ export const UserStats = () => {
 
   if (isLoading) {
     return (
-      <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-md">
-        <Skeleton className="mb-4 h-6 w-32 bg-gray-100" />
-        <Skeleton className="h-[280px] w-full rounded-lg bg-gray-100" />
+      <div className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-6 shadow-[var(--shadow-card)]">
+        <Skeleton className="mb-4 h-6 w-32 bg-[var(--color-border-subtle)]" />
+        <Skeleton className="h-[280px] w-full rounded-lg bg-[var(--color-border-subtle)]" />
       </div>
     )
   }

@@ -77,30 +77,30 @@ export const ImagePickerSheet = ({
     <Sheet open={open} onOpenChange={onClose}>
       <SheetContent
         side="right"
-        className="w-full overflow-y-auto border-l border-gray-200 bg-white text-black sm:w-[480px]"
+        className="w-full overflow-y-auto border-l border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)] sm:w-[480px]"
       >
-        <SheetHeader className="border-b border-gray-200 pb-6">
-          <SheetTitle className="flex items-center gap-2 text-xl font-semibold text-black">
-            <ImageIcon className="h-5 w-5 text-gray-700" />
+        <SheetHeader className="border-b border-[var(--color-border-subtle)] pb-6">
+          <SheetTitle className="flex items-center gap-2 text-xl font-semibold text-[var(--color-text-primary)]">
+            <ImageIcon className="h-5 w-5 text-[var(--color-text-secondary)]" />
             {title}
           </SheetTitle>
-          <p className="mt-1 text-sm text-gray-500">{subtitle}</p>
+          <p className="mt-1 text-sm text-[var(--color-text-muted)]">{subtitle}</p>
         </SheetHeader>
 
         <div className="p-4">
           <Tabs defaultValue="images" className="w-full">
-            <TabsList className="mb-6 grid h-auto w-full grid-cols-3 gap-1 rounded-lg bg-gray-100 p-1">
+            <TabsList className="mb-6 grid h-auto w-full grid-cols-3 gap-1 rounded-lg bg-[var(--color-bg-subtle)] p-1">
               <TabsTrigger
                 value="gifs"
                 disabled={disableGifs}
-                className="group relative flex h-10 items-center justify-center gap-2 rounded-md border-0 bg-transparent px-4 py-2 text-sm font-medium text-gray-500 transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-sm"
+                className="group relative flex h-10 items-center justify-center gap-2 rounded-md border-0 bg-transparent px-4 py-2 text-sm font-medium text-[var(--color-text-muted)] transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:text-[var(--color-text-primary)] data-[state=active]:shadow-sm"
               >
                 <span>GIFs</span>
               </TabsTrigger>
 
               <TabsTrigger
                 value="images"
-                className="group relative flex h-10 items-center justify-center gap-2 rounded-md border-0 bg-transparent px-4 py-2 text-sm font-medium text-gray-500 transition-all duration-300 data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-sm"
+                className="group relative flex h-10 items-center justify-center gap-2 rounded-md border-0 bg-transparent px-4 py-2 text-sm font-medium text-[var(--color-text-muted)] transition-all duration-300 data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:text-[var(--color-text-primary)] data-[state=active]:shadow-sm"
               >
                 <ImageIcon className="h-4 w-4" />
                 <span>Images</span>
@@ -108,7 +108,7 @@ export const ImagePickerSheet = ({
 
               <TabsTrigger
                 value="custom"
-                className="group relative flex h-10 items-center justify-center gap-2 rounded-md border-0 bg-transparent px-4 py-2 text-sm font-medium text-gray-500 transition-all duration-300 data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-sm"
+                className="group relative flex h-10 items-center justify-center gap-2 rounded-md border-0 bg-transparent px-4 py-2 text-sm font-medium text-[var(--color-text-muted)] transition-all duration-300 data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:text-[var(--color-text-primary)] data-[state=active]:shadow-sm"
               >
                 <Upload className="h-4 w-4" />
                 <span>Custom</span>
@@ -117,8 +117,8 @@ export const ImagePickerSheet = ({
 
             <TabsContent value="gifs" className="space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-medium text-gray-700">Animated GIFs</h3>
-                <span className="text-xs text-gray-500">{gifArray.length} available</span>
+                <h3 className="text-sm font-medium text-[var(--color-text-secondary)]">Animated GIFs</h3>
+                <span className="text-xs text-[var(--color-text-muted)]">{gifArray.length} available</span>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 {gifArray.map((url, idx) => (
@@ -127,8 +127,8 @@ export const ImagePickerSheet = ({
                     className={cn(
                       'group relative cursor-pointer overflow-hidden rounded-xl border-2 transition-all duration-200 hover:shadow-md',
                       selectedURL === url
-                        ? 'border-black shadow-lg'
-                        : 'border-gray-200 hover:border-gray-300'
+                        ? 'border-[var(--color-gold-primary)] shadow-lg'
+                        : 'border-[var(--color-border-subtle)] hover:border-[var(--color-border-default)]'
                     )}
                     onClick={() => handleImageClick(url)}
                   >
@@ -140,9 +140,9 @@ export const ImagePickerSheet = ({
                       className="h-32 w-full object-cover"
                     />
                     {selectedURL === url && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-black">
-                          <div className="h-2 w-2 rounded-full bg-white" />
+                      <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-gold-primary)]/20">
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--color-gold-primary)]">
+                          <div className="h-2 w-2 rounded-full bg-[var(--color-text-on-gold)]" />
                         </div>
                       </div>
                     )}
@@ -153,8 +153,8 @@ export const ImagePickerSheet = ({
 
             <TabsContent value="images" className="space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-medium text-gray-700">Static Images</h3>
-                <span className="text-xs text-gray-500">{imageArray.length} available</span>
+                <h3 className="text-sm font-medium text-[var(--color-text-secondary)]">Static Images</h3>
+                <span className="text-xs text-[var(--color-text-muted)]">{imageArray.length} available</span>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 {imageArray.map((url, idx) => (
@@ -163,8 +163,8 @@ export const ImagePickerSheet = ({
                     className={cn(
                       'group relative cursor-pointer overflow-hidden rounded-xl border-2 transition-all duration-200 hover:shadow-md',
                       selectedURL === url
-                        ? 'border-black shadow-lg'
-                        : 'border-gray-200 hover:border-gray-300'
+                        ? 'border-[var(--color-gold-primary)] shadow-lg'
+                        : 'border-[var(--color-border-subtle)] hover:border-[var(--color-border-default)]'
                     )}
                     onClick={() => handleImageClick(url)}
                   >
@@ -176,9 +176,9 @@ export const ImagePickerSheet = ({
                       className="h-32 w-full object-cover"
                     />
                     {selectedURL === url && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-black">
-                          <div className="h-2 w-2 rounded-full bg-white" />
+                      <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-gold-primary)]/20">
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--color-gold-primary)]">
+                          <div className="h-2 w-2 rounded-full bg-[var(--color-text-on-gold)]" />
                         </div>
                       </div>
                     )}
@@ -189,16 +189,16 @@ export const ImagePickerSheet = ({
 
             <TabsContent value="custom" className="space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-medium text-gray-700">Upload Custom Image</h3>
-                <span className="text-xs text-gray-500">JPG, PNG, GIF</span>
+                <h3 className="text-sm font-medium text-[var(--color-text-secondary)]">Upload Custom Image</h3>
+                <span className="text-xs text-[var(--color-text-muted)]">JPG, PNG, GIF</span>
               </div>
 
               <div
                 className={cn(
                   'relative rounded-xl border-2 border-dashed p-8 transition-all duration-200',
                   dragActive
-                    ? 'border-black bg-gray-100'
-                    : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
+                    ? 'border-[var(--color-gold-primary)] bg-[var(--color-bg-subtle)]'
+                    : 'border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-bg-subtle)]'
                 )}
                 onDragEnter={handleDrag}
                 onDragLeave={handleDrag}
@@ -213,28 +213,28 @@ export const ImagePickerSheet = ({
                 />
 
                 <div className="space-y-4 text-center">
-                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-gray-100">
+                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)]">
                     <Upload
                       className={cn(
                         'h-6 w-6 transition-colors',
-                        dragActive ? 'text-black' : 'text-gray-500'
+                        dragActive ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-muted)]'
                       )}
                     />
                   </div>
 
                   <div>
-                    <p className="mb-1 text-sm font-medium text-black">
+                    <p className="mb-1 text-sm font-medium text-[var(--color-text-primary)]">
                       {dragActive ? 'Drop your image here' : 'Click to upload or drag and drop'}
                     </p>
-                    <p className="text-xs text-gray-500">Supports JPG, PNG, GIF up to 10MB</p>
+                    <p className="text-xs text-[var(--color-text-muted)]">Supports JPG, PNG, GIF up to 10MB</p>
                   </div>
                 </div>
               </div>
 
               {customFile && (
                 <div className="space-y-3">
-                  <h4 className="text-sm font-medium text-gray-700">Preview</h4>
-                  <div className="relative overflow-hidden rounded-xl border-2 border-black shadow-lg">
+                  <h4 className="text-sm font-medium text-[var(--color-text-secondary)]">Preview</h4>
+                  <div className="relative overflow-hidden rounded-xl border-2 border-[var(--color-gold-primary)] shadow-lg">
                     <Image
                       src={URL.createObjectURL(customFile) || '/placeholder.svg'}
                       alt="custom preview"
@@ -242,13 +242,13 @@ export const ImagePickerSheet = ({
                       height={200}
                       className="h-48 w-full object-cover"
                     />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-black">
-                        <div className="h-2 w-2 rounded-full bg-white" />
+                    <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-gold-primary)]/20">
+                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--color-gold-primary)]">
+                        <div className="h-2 w-2 rounded-full bg-[var(--color-text-on-gold)]" />
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between rounded-lg bg-gray-100 p-3 text-xs text-gray-500">
+                  <div className="flex items-center justify-between rounded-lg bg-[var(--color-bg-subtle)] p-3 text-xs text-[var(--color-text-muted)]">
                     <span>{customFile.name}</span>
                     <span>{(customFile.size / 1024 / 1024).toFixed(2)} MB</span>
                   </div>

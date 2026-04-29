@@ -531,16 +531,7 @@ export default function DefendPageClient() {
                     Deploying...
                   </>
                 ) : (
-                  <>
-                    <Image
-                      src="/icons/rocket.png"
-                      alt="Rocket"
-                      width={25}
-                      height={25}
-                      className="object-contain"
-                    />
-                    Deploy Sentinel
-                  </>
+                  'Deploy Sentinel'
                 )}
               </button>
             ) : (

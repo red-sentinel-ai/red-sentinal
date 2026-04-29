@@ -140,8 +140,8 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   const ReadMoreModal = () => (
     <div className="ios-scroll absolute inset-0 flex flex-col overflow-hidden duration-200 animate-in fade-in">
       <div className="flex shrink-0 items-center justify-between py-6 md:py-8">
-        <h2 className="text-2xl font-medium">Instructions</h2>
-        <button onClick={() => setIsReadMoreOpen(false)} className="touch-manipulation p-2">
+        <h2 className="text-2xl font-medium text-[var(--color-text-primary)]">Instructions</h2>
+        <button onClick={() => setIsReadMoreOpen(false)} className="touch-manipulation p-2 text-[var(--color-text-secondary)]">
           <X size={24} />
         </button>
       </div>
@@ -168,7 +168,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   if (error || !agent) {
     return (
       <div
-        className="h-[calc(100vh-128px)] bg-no-repeat p-4 pt-20 text-gray-800"
+        className="h-[calc(100vh-128px)] bg-no-repeat p-4 pt-20 text-[var(--color-text-primary)]"
         style={{
           backgroundImage: 'url(/img/chat_bg.png)',
           backgroundPosition: '0% 17%',
@@ -176,7 +176,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
         }}
       >
         <div className="flex min-h-[400px] items-center justify-center">
-          <p className="text-lg text-gray-600">{error?.message || 'Agent not found'}</p>
+          <p className="text-lg text-[var(--color-text-secondary)]">{error?.message || 'Agent not found'}</p>
         </div>
       </div>
     )
@@ -193,7 +193,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
         }}
       >
         <ResizablePanelGroup direction="horizontal" className="w-full">
-          <ResizablePanel defaultSize={25} minSize={20} maxSize={40} className="bg-gray-50/50">
+          <ResizablePanel defaultSize={25} minSize={20} maxSize={40} className="bg-[var(--color-bg-subtle)]">
             <AgentSidebar
               agent={agent}
               onReadMore={() => setIsReadMoreOpen(true)}
@@ -235,7 +235,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   }
 
   return (
-    <div className="ios-scroll flex h-[100dvh] flex-col bg-white pt-16">
+    <div className="ios-scroll flex h-[100dvh] flex-col bg-[var(--color-bg-surface)] pt-16">
       <MobileAgentHeader agentName={agent.agent_name} onInfoClick={() => setIsSidebarOpen(true)} />
 
       <div className="min-h-0 flex-1 overflow-hidden">
@@ -267,7 +267,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
               animate={{ x: '0%' }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="ios-scroll fixed bottom-0 left-0 top-0 z-50 w-[85%] max-w-sm overflow-y-auto bg-gray-50 shadow-2xl"
+              className="ios-scroll fixed bottom-0 left-0 top-0 z-50 w-[85%] max-w-sm overflow-y-auto bg-[var(--color-bg-subtle)] shadow-2xl"
             >
               <AgentSidebar
                 agent={agent}

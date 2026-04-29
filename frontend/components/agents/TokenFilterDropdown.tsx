@@ -32,7 +32,7 @@ export function TokenFilterDropdown({
         <Button
           variant="outline"
           size="sm"
-          className="h-auto gap-1.5 rounded-md border border-gray-200 bg-gray-100 px-3 py-1 text-sm font-medium hover:bg-gray-200"
+          className="h-auto gap-1.5 rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] px-3 py-1 text-sm font-medium text-[var(--color-text-primary)] hover:bg-[var(--color-bg-surface)]"
         >
           {selectedToken ? (
             <>
@@ -48,13 +48,13 @@ export function TokenFilterDropdown({
           ) : (
             'All Tokens'
           )}
-          <ChevronDown className="h-3.5 w-3.5 text-gray-500" />
+          <ChevronDown className="h-3.5 w-3.5 text-[var(--color-text-muted)]" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-[140px]">
+      <DropdownMenuContent align="end" className="min-w-[140px] bg-[var(--color-bg-elevated)] border-[var(--color-border-subtle)]">
         <DropdownMenuItem
           onClick={() => onSelect(undefined)}
-          className={!selectedCoinType ? 'bg-gray-50 font-medium' : ''}
+          className={!selectedCoinType ? 'bg-[var(--color-bg-subtle)] font-medium text-[var(--color-text-primary)]' : 'text-[var(--color-text-secondary)]'}
         >
           All Tokens
         </DropdownMenuItem>
@@ -62,7 +62,7 @@ export function TokenFilterDropdown({
           <DropdownMenuItem
             key={token.coinType}
             onClick={() => onSelect(token.coinType)}
-            className={selectedCoinType === token.coinType ? 'bg-gray-50 font-medium' : ''}
+            className={selectedCoinType === token.coinType ? 'bg-[var(--color-bg-subtle)] font-medium text-[var(--color-text-primary)]' : 'text-[var(--color-text-secondary)]'}
           >
             <Image
               src={token.icon}

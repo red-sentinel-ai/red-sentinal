@@ -11,10 +11,10 @@ export default function VerifyEmailPage() {
 
 function VerifyEmailLoading() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#F5F5F5] px-4">
-      <div className="w-full max-w-md rounded-2xl border border-[#EAEAEA] bg-white shadow-sm overflow-hidden">
+    <div className="flex min-h-screen items-center justify-center bg-[var(--color-bg-base)] px-4">
+      <div className="w-full max-w-md rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] shadow-sm overflow-hidden">
         <div className="px-10 py-16 text-center">
-          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-2 border-[#F445AB] border-t-transparent" />
+          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-2 border-[var(--color-gold-primary)] border-t-transparent" />
         </div>
       </div>
     </div>
