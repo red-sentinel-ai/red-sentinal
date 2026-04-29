@@ -42,7 +42,7 @@ const Footer = () => {
           <div className="flex max-w-md flex-grow flex-col md:self-stretch">
             <div className="mb-4 flex items-center justify-center gap-3 md:justify-start">
               <Image
-                src="/redSentinel.jpeg"
+                src="/icons/red-sentinel-logo.svg"
                 alt="Red Sentinel Logo"
                 style={{ objectFit: 'contain' }}
                 height={49}
@@ -74,7 +74,7 @@ const Footer = () => {
               ))}
             </div>
 
-            <div className="mt-auto text-xs sm:text-sm md:text-base">
+            <div className="mt-auto text-xs sm:text-sm md:text-base text-white ">
               <span>Powered by </span>
               <a
                 href={NAUTILUS_URL}

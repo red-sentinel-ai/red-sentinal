@@ -123,7 +123,7 @@ function ProfileContent() {
               </div>
             </div>
 
-            <div className="min-w-0 flex-1 pt-2">
+            <div className="order-3 min-w-0 flex-1 pt-2 md:order-2">
               <h1 className="font-display truncate text-2xl font-semibold text-[var(--color-text-primary)] leading-snug sm:text-3xl">
                 {profile?.display_name || 'Your Profile'}
               </h1>
@@ -157,7 +157,7 @@ function ProfileContent() {
                 Edit Profile
               </button>
             </div>
-            <div className="flex w-full flex-wrap items-center justify-start gap-2 pt-2 sm:ml-auto sm:w-auto sm:justify-end">
+            <div className="order-2 flex w-full flex-wrap items-center justify-start gap-2 pt-2 sm:ml-auto sm:w-auto sm:justify-end md:order-3 md:pt-0">
               <Link
                 className="font-body btn h-[50px] bg-[var(--color-gold-primary)] text-[var(--color-text-on-gold)] hover:bg-[var(--color-gold-light)] text-sm sm:text-base"
                 href="/defend"

@@ -179,7 +179,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
           </Link>
         </div>
 
-        <div className="my-2 w-full rounded-lg border border-gray-600/50 bg-gradient-to-r from-[var(--color-bg-subtle)] to-[var(--color-bg-surface)] px-3 py-2 text-xs shadow-md sm:text-sm md:my-4 md:rounded-xl md:px-4 md:py-[10px] md:shadow-lg">
+        <div className="my-2 w-full rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface]/80 px-3 py-2 text-xs shadow-md sm:text-sm md:my-4 md:rounded-xl md:px-4 md:py-[10px] md:shadow-lg">
           <div className="flex items-center gap-2 md:gap-4">
             <div className="h-8 w-8 shrink-0 grow-0 basis-auto overflow-hidden rounded-full md:h-10 md:w-10">
               <Image
@@ -312,7 +312,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
                 </Button>
               )}
               {(!prizePoolData || prizePoolData.history.length === 0) && (
-                <p className="mt-1.5 text-center text-[10px] text-gray-500 md:mt-2 md:text-xs">
+                <p className="mt-1.5 text-center text-[10px] text-[var(--color-text-muted)] md:mt-2 md:text-xs">
                   No prize pool history available.
                 </p>
               )}
@@ -459,8 +459,8 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
           <LinkIcon className="h-3 w-3 md:h-4 md:w-4" />
         </Button>
 
-        <div className="mt-3 border-t border-black/20 pt-3 md:mt-4 md:pt-4 lg:mt-6 lg:pt-6">
-          <h3 className="mb-1.5 text-sm font-bold leading-tight text-black md:mb-2 md:text-base">
+        <div className="mt-3 border-t border-[var(--color-text-primary)]/20 pt-3 md:mt-4 md:pt-4 lg:mt-6 lg:pt-6">
+          <h3 className="mb-1.5 text-sm font-bold leading-tight text-[var(--color-text-primary)] md:mb-2 md:text-base">
             Earn Sentinel Tokens
           </h3>
           <p className="mb-2 text-xs leading-relaxed text-[var(--color-text-secondary)] md:mb-3 md:text-sm">
@@ -480,7 +480,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
           isLoading={isLoadingProfile}
         />
 
-        <div className="mt-auto border-t border-black/20 pt-3 md:pt-4 lg:pt-6">
+        <div className="mt-auto border-t border-[var(--color-text-primary)]/20 pt-3 md:pt-4 lg:pt-6">
           <h3 className="mb-2 text-center text-xs font-semibold text-[var(--color-text-primary)]/80 md:mb-3 md:text-sm lg:mb-4">
             Scan this QR Code if you want to try to attack this agent using slush mobile wallet
           </h3>
@@ -497,7 +497,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
               />
             ) : (
               <div className="flex h-24 w-24 animate-pulse items-center justify-center rounded-lg bg-[var(--color-bg-subtle)] md:h-28 md:w-28 lg:h-32 lg:w-32">
-                <div className="h-6 w-6 animate-spin rounded-full border-4 border-gray-300 border-t-transparent md:h-8 md:w-8"></div>
+                <div className="h-6 w-6 animate-spin rounded-full border-4 border-[var(--color-border-default)] border-t-transparent md:h-8 md:w-8"></div>
               </div>
             )}
           </div>
