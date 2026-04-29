@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui'
 import { LeaderboardSkeleton } from './ui/skeletons/LeaderboardSkeleton'
 import { AgentDetails, SortField, SortDirection } from '@/hooks/agents/useAllAgents'
 import { getTokenForCoinType } from '@/constants'
+import { CHAINS } from '@/constants/chains'
 import { PrizePoolChangeDisplay } from './agents/PrizePoolChangeDisplay'
 import { TokenAmount } from './ui/common/TokenAmount'
 import Image from 'next/image'
@@ -120,6 +121,13 @@ export const AgentsList = ({
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <span className="">#{idx + 1}</span>
+                          <Image
+                            src={CHAINS[agent.chain ?? 'sui'].icon}
+                            alt={CHAINS[agent.chain ?? 'sui'].name}
+                            width={14}
+                            height={14}
+                            className="shrink-0 rounded-full"
+                          />
                           <span className="truncate">{agent.agent_name}</span>
                           {agent.is_featured && (
                             <Image
@@ -188,6 +196,13 @@ export const AgentsList = ({
                       <div className="col-span-1 flex items-center">{agent.agent_id}</div>
 
                       <div className="col-span-2 flex items-center gap-1">
+                        <Image
+                          src={CHAINS[agent.chain ?? 'sui'].icon}
+                          alt={CHAINS[agent.chain ?? 'sui'].name}
+                          width={16}
+                          height={16}
+                          className="shrink-0 rounded-full"
+                        />
                         <span className="truncate">{agent.agent_name}</span>
                         {agent.is_featured && (
                           <Image

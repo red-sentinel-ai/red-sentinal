@@ -53,12 +53,14 @@ interface AgentsResponse {
 export const useAllAgents = (
   sortField: SortField = 'total_balance',
   sortDirection: SortDirection = 'desc',
-  coinTypeFilter?: string
+  coinTypeFilter?: string,
+  skipChainFilter?: boolean
 ) => {
   const { activeChain } = useActiveChain()
+  const chainFilter = skipChainFilter ? undefined : activeChain
 
   return useInfiniteQuery<AgentsResponse, Error>({
-    queryKey: [ALL_AGENTS_QUERY_KEY, sortField, sortDirection, coinTypeFilter, activeChain],
+    queryKey: [ALL_AGENTS_QUERY_KEY, sortField, sortDirection, coinTypeFilter, chainFilter ?? 'all'],
     queryFn: async ({ pageParam }) => {
       const offset = pageParam as number
 
@@ -68,8 +70,11 @@ export const useAllAgents = (
         offset: String(offset),
         include_prize_pool: 'true',
         min_balance: '1',
-        chain: activeChain,
       })
+
+      if (chainFilter) {
+        params.append('chain', chainFilter)
+      }
 
       // Add sort params if provided
       if (sortField) {
