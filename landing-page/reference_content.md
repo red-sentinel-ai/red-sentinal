@@ -9,7 +9,7 @@ Unlike traditional software, AI systems are attacked through language — by any
 
 ## The solution
 
-Sui Sentinel is a crowdsourced AI red teaming platform. Companies deploy their AI systems on our platform as "Sentinels," and a global community of red teamers, anyone from security researchers to curious users tries to break them.
+Red Sentinel is a crowdsourced AI red teaming platform. Companies deploy their AI systems on our platform as "Sentinels," and a global community of red teamers, anyone from security researchers to curious users tries to break them.
 What makes us different is the trust and incentive layer underneath. Every attack is verified using cryptographic attestations generated inside a Trusted Execution Environment, and rewards are processed instantly on-chain via the Sui blockchain. You can't fake a successful attack. You can't delay a payout.
 For defenders, it's an always-on, real-world stress test with a public resilience score that doubles as a security audit. For attackers, it's a skill-building game where breaking things pays real money.
 
@@ -44,7 +44,7 @@ Got it. For investors, the pitch needs to do three things fast: make them feel t
 
 ---
 
-## Sui Sentinel — 2-Minute Investor Pitch
+## Red Sentinel — 2-Minute Investor Pitch
 
 ### Open with the problem (20 sec)
 > "Every company is rushing to ship AI agents — but they're doing it without any real way to test whether those agents can be manipulated, tricked into leaking data, or weaponized against their own users. Traditional security tools don't work here. AI is attacked through language, by anyone, and the attacks can go completely undetected."
@@ -52,7 +52,7 @@ Got it. For investors, the pitch needs to do three things fast: make them feel t
 ---
 
 ### The solution (30 sec)
-> "Sui Sentinel is a crowdsourced AI red teaming marketplace. Companies deploy their AI systems on our platform, set a bounty, and a global community of red teamers competes to break them. Every attack is verified inside a Trusted Execution Environment using cryptographic attestations, and payouts settle instantly on-chain. No trust required — the protocol enforces everything."
+> "Red Sentinel is a crowdsourced AI red teaming marketplace. Companies deploy their AI systems on our platform, set a bounty, and a global community of red teamers competes to break them. Every attack is verified inside a Trusted Execution Environment using cryptographic attestations, and payouts settle instantly on-chain. No trust required — the protocol enforces everything."
 
 ---
 

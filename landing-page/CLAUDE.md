@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is the landing page for Sui Sentinel, a decentralized AI security platform built on the Sui blockchain. The landing page showcases the product, handles manifesto signatures, job applications, and hosts a blog.
+This is the landing page for Red Sentinel, a decentralized AI security platform built on the Sui blockchain. The landing page showcases the product, handles manifesto signatures, job applications, and hosts a blog.
 
 ## Commands
 

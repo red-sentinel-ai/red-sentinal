@@ -27,7 +27,7 @@ export default function BlogIndex() {
       >
         <div className="max-w-7xl mx-auto flex items-end justify-between h-full">
           <h1 className="text-4xl md:text-5xl font-bold tracking-wide leading-tight">
-            The SuiSentinel <br /> Blogs
+            The RedSentinel <br /> Blogs
           </h1>
 
           <div className="text-center md:text-left">

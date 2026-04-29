@@ -214,7 +214,7 @@ export function RewardCalculatorContent() {
                 <p className="text-xs text-black/50 mt-3 text-center">
                   Earnings can be claimed instantly from{' '}
                   <Link
-                    href="https://app.suisentinel.xyz/profile"
+                    href="https://app.redsentinel.xyz/profile"
                     target="_blank"
                     className="text-[#F445AB] hover:underline font-medium"
                   >

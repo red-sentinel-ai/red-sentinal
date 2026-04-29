@@ -1,7 +1,7 @@
 # Design: Sui community outreach messages (light technical)
 
 ## Goal
-Create 3 short DM-ready messages for Sui community members to try Sui Sentinel, with a light technical tone centered on AI red teaming.
+Create 3 short DM-ready messages for Sui community members to try Red Sentinel, with a light technical tone centered on AI red teaming.
 
 ## Audience
 Active Sui community members who already understand the ecosystem; avoid calling out their activity explicitly.
@@ -13,7 +13,7 @@ Active Sui community members who already understand the ecosystem; avoid calling
 - Friendly CTA for trying the platform and sharing feedback
 
 ## Content Structure
-- Sentence 1: What Sui Sentinel is (crowdsourced AI red teaming)
+- Sentence 1: What Red Sentinel is (crowdsourced AI red teaming)
 - Sentence 2: Trust layer (verified attacks + on-chain payouts)
 - Sentence 3: Soft CTA (try it / share feedback)
 

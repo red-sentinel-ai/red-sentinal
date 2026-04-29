@@ -39,7 +39,7 @@ export function PassiveIncomeSection() {
             </div>
 
             <p className="text-lg md:text-xl leading-relaxed mb-8 max-w-3xl">
-              Sui Sentinel isn’t just for companies. Individuals with strong prompt-crafting skills
+              Red Sentinel isn’t just for companies. Individuals with strong prompt-crafting skills
               can create Sentinels, stake funds, and earn passive income from attack fees. It’s a
               unique way to monetize your expertise while contributing to AI security.
             </p>

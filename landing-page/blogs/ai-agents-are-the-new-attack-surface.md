@@ -2,7 +2,7 @@
 title: 'Why AI Agents Are the New Attack Surface'
 date: '2026-12-03'
 description: 'A deep dive into the problem of AI security, why existing tools fall short, and how we built a crowdsourced red teaming platform with on-chain verification on Sui.'
-author: 'The Sui Sentinel Team'
+author: 'The Red Sentinel Team'
 tags: ['Tech', 'Sui', 'Nautilus']
 image: '/img/ai_agents_new_attack_surface.png'
 ---
@@ -47,9 +47,9 @@ Real adversaries don't follow your test plan. They're creative, persistent, and 
 
 What if you could harness that adversarial creativity at scale, continuously, in production with built-in economic incentives and cryptographic guarantees?
 
-## Enter Sui Sentinel
+## Enter Red Sentinel
 
-Sui Sentinel is a crowdsourced AI red teaming platform live on Sui Mainnet. The concept is simple but powerful:
+Red Sentinel is a crowdsourced AI red teaming platform live on Sui Mainnet. The concept is simple but powerful:
 
 **Defenders** (companies, developers, AI teams) deploy their AI systems on the platform as "Sentinels." They configure the system prompt, set an attack goal, fund a reward pool, and choose the underlying model.
 
@@ -59,7 +59,7 @@ What makes this fundamentally different from running automated scans locally or 
 
 ## The Architecture: TEE + Blockchain = Verifiable Red Teaming
 
-Sui Sentinel's architecture combines three systems that don't typically talk to each other: Trusted Execution Environments (TEEs), blockchain smart contracts, and AI inference. Here's how they work together.
+Red Sentinel's architecture combines three systems that don't typically talk to each other: Trusted Execution Environments (TEEs), blockchain smart contracts, and AI inference. Here's how they work together.
 
 ### The Trust Problem
 
@@ -68,7 +68,7 @@ In any red teaming marketplace, you need to answer two questions:
 1. **How do you prove an attack actually succeeded?** The defender has an incentive to deny successful breaches. The attacker has an incentive to claim false victories.
 2. **How do you guarantee instant, fair payouts?** A centralized escrow introduces a single point of failure and trust dependency.
 
-Sui Sentinel solves both with a hybrid architecture.
+Red Sentinel solves both with a hybrid architecture.
 
 ### Trusted Execution Environments (AWS Nitro Enclaves)
 
@@ -101,7 +101,7 @@ The game logic lives entirely on-chain in Move smart contracts. Three main modul
 
 ### The Attack Lifecycle
 
-![Sui Sentinel Architecture Diagram](/img/sui_sentinel_architecture.png)
+![Red Sentinel Architecture Diagram](/img/sui_sentinel_architecture.png)
 The entire process is deterministic from the blockchain's perspective. The TEE produces a signed verdict. The contract verifies the signature and enforces the payout. No human intervention. No dispute resolution. No delays.
 
 ### The AI Red Team Module
@@ -131,11 +131,11 @@ Two lock periods ensure fair play:
 - **Withdrawal lock (14 days)**: After funding a Sentinel, the defender can't withdraw for 14 days. This prevents bait-and-switch tactics where a defender pulls their pool right before an attack resolves.
 - **Prompt update lock (3 hours)**: After creation, the system prompt can't be changed for 3 hours. This prevents defenders from switching to an easier-to-defend prompt after seeing attack patterns.
 
-## Where Sui Sentinel Fits in the Security Stack
+## Where Red Sentinel Fits in the Security Stack
 
-Sui Sentinel isn't replacing automated red teaming tools — it's completing the picture.
+Red Sentinel isn't replacing automated red teaming tools — it's completing the picture.
 
-|                      | Automated Red Teaming Tools | Sui Sentinel                                   |
+|                      | Automated Red Teaming Tools | Red Sentinel                                   |
 | -------------------- | --------------------------- | ---------------------------------------------- |
 | **When**             | Pre-deployment              | Continuous, post-deployment                    |
 | **Who attacks**      | LLM-generated probes        | Global community of humans                     |
@@ -145,11 +145,11 @@ Sui Sentinel isn't replacing automated red teaming tools — it's completing the
 | **Output**           | Risk report                 | Public resilience score + on-chain audit trail |
 | **Scaling model**    | Per-run cost                | Marketplace (scales with participants)         |
 
-The ideal security posture uses both: automated tools in CI/CD for systematic, repeatable vulnerability scanning during development — and Sui Sentinel in production for continuous, incentivized, human-driven adversarial testing that catches what automated tools miss.
+The ideal security posture uses both: automated tools in CI/CD for systematic, repeatable vulnerability scanning during development — and Red Sentinel in production for continuous, incentivized, human-driven adversarial testing that catches what automated tools miss.
 
 ## What We've Built So Far
 
-Sui Sentinel is live on Sui Mainnet with real economic activity:
+Red Sentinel is live on Sui Mainnet with real economic activity:
 
 - **~420 SUI** in active Sentinel bounties
 - **300+ unique wallets** using the platform as attackers and defenders
@@ -174,9 +174,9 @@ We're focused on several fronts:
 
 ## Try It
 
-The arena is open. Whether you're a defender who wants to stress-test your AI system with real adversaries, or a red teamer looking to sharpen your skills and earn rewards — Sui Sentinel is live.
+The arena is open. Whether you're a defender who wants to stress-test your AI system with real adversaries, or a red teamer looking to sharpen your skills and earn rewards — Red Sentinel is live.
 
-- **App**: [app.suisentinel.xyz](https://app.suisentinel.xyz/)
+- **App**: [app.redsentinel.xyz](https://app.redsentinel.xyz/)
 - **Docs**: [docs.suisentinel.xyz](https://docs.suisentinel.xyz/)
 - **Smart Contracts**: [github.com/sui-sentinel/contracts](https://github.com/sui-sentinel/contracts)
 - **Security Audit**: [OtterSec Report](https://www.suisentinel.xyz/pdfs/audit_final.pdf)
@@ -185,4 +185,4 @@ The arena is open. Whether you're a defender who wants to stress-test your AI sy
 
 ---
 
-_Sui Sentinel is built by a team of Web3 and security engineers with deep experience across the ZK ecosystem, blockchain development, and AI security. We won the Cryptography Track at Overflow, presented at Sui Fest Singapore, and our contracts are audited by OtterSec. We're backed by continuous support from Mysten Labs and the Sui ecosystem._
+_Red Sentinel is built by a team of Web3 and security engineers with deep experience across the ZK ecosystem, blockchain development, and AI security. We won the Cryptography Track at Overflow, presented at Sui Fest Singapore, and our contracts are audited by OtterSec. We're backed by continuous support from Mysten Labs and the Sui ecosystem._

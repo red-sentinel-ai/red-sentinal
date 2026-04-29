@@ -9,7 +9,7 @@ const sections = [
     title: '1. Our Pledge',
     content: (
       <p className="text-gray-700 leading-relaxed">
-        Sui Sentinel is an adversarial AI security platform built on the premise that
+        Red Sentinel is an adversarial AI security platform built on the premise that
         constructive conflict makes systems safer. We pledge to maintain an environment where
         attackers, defenders, researchers, and builders can collaborate with mutual respect. We are
         committed to providing a harassment-free experience for everyone, regardless of age,
@@ -73,7 +73,7 @@ const sections = [
     content: (
       <>
         <p className="text-gray-700 leading-relaxed mb-4">
-          Sui Sentinel is a red teaming platform. All adversarial activity <strong>must</strong>{' '}
+          Red Sentinel is a red teaming platform. All adversarial activity <strong>must</strong>{' '}
           occur exclusively within the bounds of the platform protocol. The following rules apply at
           all times:
         </p>
@@ -82,11 +82,11 @@ const sections = [
         <ul className="list-disc list-inside space-y-2 text-gray-700 mb-6">
           <li>
             Attacks are strictly limited to the AI Sentinel systems deployed on-chain within the
-            platform. Targeting any system, infrastructure, or service outside of the Sui Sentinel
+            platform. Targeting any system, infrastructure, or service outside of the Red Sentinel
             protocol is a violation of this Code and may be illegal.
           </li>
           <li>
-            Do not attempt to exploit vulnerabilities in the Sui Sentinel smart contracts or
+            Do not attempt to exploit vulnerabilities in the Red Sentinel smart contracts or
             infrastructure itself. Responsible disclosure applies (see Section 7).
           </li>
           <li>
@@ -126,7 +126,7 @@ const sections = [
             outcome is authoritative.
           </li>
           <li>
-            Do not attempt to manipulate, front-run, or exploit the Sui Sentinel smart contract
+            Do not attempt to manipulate, front-run, or exploit the Red Sentinel smart contract
             logic outside of its intended use.
           </li>
           <li>
@@ -160,7 +160,7 @@ const sections = [
           </li>
         </ul>
         <p className="text-gray-700 leading-relaxed">
-          If you discover a vulnerability in the Sui Sentinel platform, contracts, or
+          If you discover a vulnerability in the Red Sentinel platform, contracts, or
           infrastructure, please practise responsible disclosure by reporting it to{' '}
           <a
             href="mailto:suisentinal@gmail.com"
@@ -178,8 +178,8 @@ const sections = [
     title: '5. Scope',
     content: (
       <p className="text-gray-700 leading-relaxed">
-        This Code of Conduct applies to all spaces managed by Sui Sentinel and Cyphronix Software
-        Private Limited, including the Sui Sentinel web application and landing page, official
+        This Code of Conduct applies to all spaces managed by Red Sentinel and Cyphronix Software
+        Private Limited, including the Red Sentinel web application and landing page, official
         Telegram and Discord communities, the GitHub organisation, social media channels, and any
         in-person or virtual events. It applies equally to all participants: users, contributors,
         community members, ambassadors, and team members.
@@ -205,7 +205,7 @@ const sections = [
             community spaces.
           </li>
           <li>
-            <strong>Permanent Ban:</strong> Permanent exclusion from all Sui Sentinel community
+            <strong>Permanent Ban:</strong> Permanent exclusion from all Red Sentinel community
             spaces and, where technically feasible, platform access.
           </li>
           <li>
@@ -237,7 +237,7 @@ const sections = [
           it. All reports will be handled with discretion and confidentiality.
         </p>
         <div className="border border-black rounded-lg p-6 space-y-2">
-          <p className="font-semibold text-black">Contact the Sui Sentinel Team</p>
+          <p className="font-semibold text-black">Contact the Red Sentinel Team</p>
           <p className="text-gray-700">
             Email:{' '}
             <a
@@ -274,7 +274,7 @@ const sections = [
         </p>
         <p className="text-gray-700 leading-relaxed">
           We reserve the right to update this Code of Conduct as the platform evolves. Changes will
-          be communicated via our official channels. Continued participation in the Sui Sentinel
+          be communicated via our official channels. Continued participation in the Red Sentinel
           community after updates constitutes acceptance of the revised Code.
         </p>
       </>
@@ -304,7 +304,7 @@ export default function CodeOfConductPage() {
           <h1 className="text-4xl md:text-6xl font-bold mb-4">Code of Conduct</h1>
           <p className="text-gray-500 text-sm">Last Updated: February 27, 2026</p>
           <p className="text-gray-700 mt-4 text-lg leading-relaxed">
-            Sui Sentinel is a platform built on adversarial trust, where AI systems are challenged
+            Red Sentinel is a platform built on adversarial trust, where AI systems are challenged
             so they can be made stronger. This Code exists to ensure that competitive spirit never
             crosses into harmful behaviour, and that every participant can contribute to a safer AI
             ecosystem with confidence.

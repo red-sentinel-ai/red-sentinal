@@ -43,7 +43,7 @@ const tactics = [
       'Build automated attack frameworks',
     ],
     howWeHelp:
-      'The Sui Sentinel community continuously develops and tests new attack techniques. Successful methods become part of the collective knowledge base.',
+      'The Red Sentinel community continuously develops and tests new attack techniques. Successful methods become part of the collective knowledge base.',
   },
   {
     id: 'TA3',
@@ -134,9 +134,9 @@ const faqs = [
       'MITRE ATLAS (Adversarial Threat Landscape for Artificial-Intelligence Systems) is a knowledge base of adversary tactics and techniques based on real-world observations, demonstrations from AI red teams and security groups, and the state of the possible. It is modeled after the MITRE ATT&CK framework but specifically for AI/ML systems.',
   },
   {
-    question: 'How does Sui Sentinel relate to ATLAS?',
+    question: 'How does Red Sentinel relate to ATLAS?',
     answer:
-      'Sui Sentinel provides a live testing environment where the tactics and techniques cataloged in ATLAS are attempted against your AI systems. Instead of theoretical assessments, you get real attack data mapped to the ATLAS framework, showing which techniques succeed against your defenses.',
+      'Red Sentinel provides a live testing environment where the tactics and techniques cataloged in ATLAS are attempted against your AI systems. Instead of theoretical assessments, you get real attack data mapped to the ATLAS framework, showing which techniques succeed against your defenses.',
   },
   {
     question: 'What is the difference between ATLAS and OWASP LLM Top 10?',
@@ -144,9 +144,9 @@ const faqs = [
       'OWASP LLM Top 10 focuses on application security risks specific to LLM-based applications. ATLAS is broader, covering the full spectrum of adversarial ML attacks including model extraction, data poisoning, and traditional ML attacks beyond just language models. They complement each other: OWASP for app security, ATLAS for adversarial threat modeling.',
   },
   {
-    question: 'Can Sui Sentinel test all ATLAS techniques?',
+    question: 'Can Red Sentinel test all ATLAS techniques?',
     answer:
-      'Sui Sentinel specializes in runtime, inference-time attacks (tactics like Initial Access, Discovery, Evasion). Some ATLAS techniques related to training-time attacks or infrastructure compromise require different testing approaches. Our platform covers the techniques most relevant to deployed AI systems.',
+      'Red Sentinel specializes in runtime, inference-time attacks (tactics like Initial Access, Discovery, Evasion). Some ATLAS techniques related to training-time attacks or infrastructure compromise require different testing approaches. Our platform covers the techniques most relevant to deployed AI systems.',
   },
 ]
 
@@ -268,7 +268,7 @@ export function MITREATLASContent() {
               ATLAS <span className="text-[#C871FF]">Tactics</span>
             </h2>
             <p className="text-lg text-[#5F5C5C] max-w-2xl mx-auto">
-              How Sui Sentinel crowdsourced red teaming maps to ATLAS tactics
+              How Red Sentinel crowdsourced red teaming maps to ATLAS tactics
             </p>
           </motion.div>
 
@@ -307,7 +307,7 @@ export function MITREATLASContent() {
                       </ul>
                     </div>
                     <div className="bg-[#F7F9FF] p-4 border-l-4 border-[#C871FF]">
-                      <div className="font-medium mb-1">How Sui Sentinel Helps:</div>
+                      <div className="font-medium mb-1">How Red Sentinel Helps:</div>
                       <p className="text-sm text-[#5F5C5C]">{tactic.howWeHelp}</p>
                     </div>
                   </div>
@@ -427,7 +427,7 @@ export function MITREATLASContent() {
               • coverage
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-[48px] font-medium mb-6">
-              Sui Sentinel <span className="text-[#C871FF]">Coverage</span>
+              Red Sentinel <span className="text-[#C871FF]">Coverage</span>
             </h2>
           </motion.div>
 

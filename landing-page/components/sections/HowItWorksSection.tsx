@@ -38,7 +38,7 @@ export function HowItWorksSection() {
             >
               <Image
                 src="/img/howItWorksLG.png"
-                alt="How Sui Sentinel Works: Deploy, Attack & Earn, Evolve & Profit (Desktop)"
+                alt="How Red Sentinel Works: Deploy, Attack & Earn, Evolve & Profit (Desktop)"
                 width={1120}
                 height={600}
                 className="hidden lg:block w-full h-auto object-contain"
@@ -46,7 +46,7 @@ export function HowItWorksSection() {
               />
               <Image
                 src="/img/howItWorksSM.png"
-                alt="How Sui Sentinel Works: Deploy, Attack & Earn, Evolve & Profit (Mobile)"
+                alt="How Red Sentinel Works: Deploy, Attack & Earn, Evolve & Profit (Mobile)"
                 width={500}
                 height={800}
                 className="block lg:hidden w-full h-auto max-w-md mx-auto object-contain"

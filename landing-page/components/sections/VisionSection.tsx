@@ -50,7 +50,7 @@ export function VisionSection() {
             </div>
 
             <p className="text-lg md:text-xl leading-relaxed mb-8">
-              Sui Sentinel is built on this fundamental truth. We provide the first-ever platform
+              Red Sentinel is built on this fundamental truth. We provide the first-ever platform
               for <span className="font-semibold">&quot;Prompt-First Security.&quot;</span> This
               isn&apos;t just a game; it&apos;s the necessary evolution of smart contract audits for
               the AI era. We battle-test the models that will soon underpin the decentralized world.

@@ -115,10 +115,10 @@ export function ManifestoSection() {
             </div>
 
             <div className="px-2 pt-4">
-              <h5 className="text-sm font-medium mb-1">The Sui Sentinel Solution</h5>
+              <h5 className="text-sm font-medium mb-1">The Red Sentinel Solution</h5>
               <div className="text-[#484848] text-[11px] space-y-2">
                 <p>
-                  Sui Sentinel turns AI safety into a cryptoeconomic immune system. Continuous
+                  Red Sentinel turns AI safety into a cryptoeconomic immune system. Continuous
                   adversarial testing. Real incentives. Verifiable results.
                 </p>
                 <ul className="list-disc pl-4 space-y-1">
