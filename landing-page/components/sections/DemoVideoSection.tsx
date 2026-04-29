@@ -24,7 +24,7 @@ export function DemoVideoSection() {
         >
           <div className="badge-pink w-fit mx-auto mb-6">• Watch Demo</div>
           <h2 className="text-3xl md:text-[48px] font-medium mb-4">
-            See Sui Sentinel in <span className="text-[#C871FF]">Action</span>
+            See Red Sentinel in <span className="text-[#C871FF]">Action</span>
           </h2>
           <p className="text-lg md:text-xl text-[#5F5C5C] max-w-2xl mx-auto">
             Watch how attackers break AI systems, how defenses evolve, and how rewards flow
@@ -43,7 +43,7 @@ export function DemoVideoSection() {
             {isPlaying && YOUTUBE_VIDEO_ID && (
               <iframe
                 src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&controls=1&rel=0&modestbranding=1`}
-                title="Sui Sentinel Demo"
+                title="Red Sentinel Demo"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
                 className="absolute inset-0 w-full h-full"

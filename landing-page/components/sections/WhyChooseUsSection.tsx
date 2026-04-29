@@ -18,7 +18,7 @@ export function WhyChooseUsSection() {
         >
           <div className="badge-pink min-w-40 mb-6">• why us</div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium mb-6 max-w-[282px] md:max-w-none">
-            Why Sui Sentinel?
+            Why Red Sentinel?
           </h2>
           <p className="text-base md:text-2xl mx-auto max-w-[320px] md:max-w-3xl">
             the first crowdsource AI red teaming platform. Cryptographic verification. Instant

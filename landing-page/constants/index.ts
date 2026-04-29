@@ -21,11 +21,11 @@ export const supabaseUrl = process.env.SUPABASE_URL || "";
 export const supabaseServiceRoleKey =
   process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 
-export const SUI_SENTINEL_LANDING_PAGE_URL = "https://suisentinel.xyz/";
-export const SUI_SENTINEL_APP_URL = "https://app.suisentinel.xyz/";
+export const SUI_SENTINEL_LANDING_PAGE_URL = "https://redsentinel.xyz/";
+export const SUI_SENTINEL_APP_URL = "https://app.redsentinel.xyz/";
 export const SUI_SENTINEL_DOCS_URL = "https://docs.suisentinel.xyz/";
 export const SUI_SENTINEL_X_URL =
-  "https://twitter.com/intent/follow?screen_name=suisentinal";
+  "https://twitter.com/intent/follow?screen_name=redsentinel_ai";
 export const SUI_SENTINEL_GITHUB_URL =
   "https://github.com/sui-sentinel/contracts";
 export const SUI_SENTINEL_TELEGRAM_URL = "https://t.me/suisentinel";

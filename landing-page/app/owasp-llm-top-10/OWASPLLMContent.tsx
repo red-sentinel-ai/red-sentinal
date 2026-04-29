@@ -128,9 +128,9 @@ const faqs = [
       'The OWASP Top 10 for Large Language Model Applications is a standard awareness document for developers and security teams about the most critical security risks specific to LLM-based applications. It is maintained by the Open Web Application Security Project (OWASP) foundation.',
   },
   {
-    question: 'How does Sui Sentinel help with OWASP compliance?',
+    question: 'How does Red Sentinel help with OWASP compliance?',
     answer:
-      'Sui Sentinel provides continuous, real-world testing for the vulnerabilities that can be tested through adversarial interaction (7 of the 10 categories). Our community attempts the same attacks real adversaries would use, giving you actionable data on your security posture.',
+      'Red Sentinel provides continuous, real-world testing for the vulnerabilities that can be tested through adversarial interaction (7 of the 10 categories). Our community attempts the same attacks real adversaries would use, giving you actionable data on your security posture.',
   },
   {
     question: 'Which OWASP items can not be tested through red teaming?',
@@ -140,7 +140,7 @@ const faqs = [
   {
     question: 'How often should I test against OWASP categories?',
     answer:
-      'OWASP recommends continuous testing as models, prompts, and configurations change. Sui Sentinel provides 24/7 testing, ensuring you catch new vulnerabilities as they emerge, not just during annual audits.',
+      'OWASP recommends continuous testing as models, prompts, and configurations change. Red Sentinel provides 24/7 testing, ensuring you catch new vulnerabilities as they emerge, not just during annual audits.',
   },
 ]
 
@@ -205,7 +205,7 @@ export function OWASPLLMContent() {
               <div className="flex items-center gap-2 text-[#C871FF]">
                 <Target className="w-5 h-5" />
                 <span className="font-medium">
-                  Sui Sentinel tests 7 of 10 categories through adversarial red teaming
+                  Red Sentinel tests 7 of 10 categories through adversarial red teaming
                 </span>
               </div>
             </motion.div>
@@ -257,7 +257,7 @@ export function OWASPLLMContent() {
               The <span className="text-[#C871FF]">10 Categories</span>
             </h2>
             <p className="text-lg text-[#5F5C5C] max-w-2xl mx-auto">
-              Each category includes how Sui Sentinel red teaming addresses it
+              Each category includes how Red Sentinel red teaming addresses it
             </p>
           </motion.div>
 
@@ -296,7 +296,7 @@ export function OWASPLLMContent() {
                   <div className="px-6 pb-6 pl-[104px]">
                     <p className="text-[#5F5C5C] mb-4">{item.description}</p>
                     <div className="bg-[#F7F9FF] p-4 border-l-4 border-[#C871FF]">
-                      <div className="font-medium mb-1">How Sui Sentinel Tests This:</div>
+                      <div className="font-medium mb-1">How Red Sentinel Tests This:</div>
                       <p className="text-sm text-[#5F5C5C]">{item.howWeTest}</p>
                     </div>
                   </div>

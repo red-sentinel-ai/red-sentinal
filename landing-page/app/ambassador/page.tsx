@@ -297,7 +297,7 @@ function AmbassadorPageContent() {
           >
             <div className="text-white max-w-4xl mx-auto px-4">
               <h1 className="text-2xl md:text-5xl font-bold">
-                Sui Sentinel Ambassador Program
+                Red Sentinel Ambassador Program
                 <br />
                 Application
               </h1>
@@ -312,7 +312,7 @@ function AmbassadorPageContent() {
               <CheckCircle className="size-16 text-green-600 mx-auto" />
               <h2 className="text-3xl font-bold mt-6 mb-2">Application Submitted!</h2>
               <p className="text-lg text-gray-700 mb-6">
-                Thank you for applying to become a Sui Sentinel Ambassador. We&apos;ve received your
+                Thank you for applying to become a Red Sentinel Ambassador. We&apos;ve received your
                 application and will review it shortly.
               </p>
               <p className="text-gray-600 mb-8">
@@ -350,7 +350,7 @@ function AmbassadorPageContent() {
         >
           <div className="text-white max-w-4xl mx-auto px-4">
             <h1 className="text-2xl md:text-5xl font-bold leading-snug">
-              Sui Sentinel Ambassador Program
+              Red Sentinel Ambassador Program
               <br />
               Application
             </h1>

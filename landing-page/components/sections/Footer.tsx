@@ -16,14 +16,14 @@ export function Footer() {
             <div className="flex items-center text-sm md:text-base md:justify-start gap-3 mb-4">
               <Image
                 src="/icons/logo_large.svg"
-                alt="Sui Sentinel Logo"
+                alt="Red Sentinel Logo"
                 style={{ objectFit: 'contain' }}
                 height={49}
                 width={198}
               />
             </div>
             <p className="text-black leading-relaxed">
-              Sui Sentinel is a Decentralized AI safety platform built on Sui. Stress-test models,
+              Red Sentinel is a Decentralized AI safety platform built on Sui. Stress-test models,
               find vulnerabilities, earn rewards. Every judgment cryptographically verified
               on-chain.
             </p>

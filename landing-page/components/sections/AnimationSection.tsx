@@ -18,7 +18,7 @@ export const AnimationSection = () => {
             </span>
           </h2>
           <p className="max-w-[984px] text-base md:text-2xl mt-8 mx-auto md:mx-0 text-[#5F5C5C]">
-            Sui Sentinel is a crowdsourced AI red teaming marketplace. Companies deploy their AI as
+            Red Sentinel is a crowdsourced AI red teaming marketplace. Companies deploy their AI as
             &quot;Sentinels&quot;, defenders stake capital, attackers pay to break them, and every
             successful exploit is verified cryptographically. Built on Sui for trustless, instant
             settlement.
