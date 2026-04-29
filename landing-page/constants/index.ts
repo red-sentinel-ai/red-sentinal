@@ -23,7 +23,7 @@ export const supabaseServiceRoleKey =
 
 export const SUI_SENTINEL_LANDING_PAGE_URL = "https://redsentinel.xyz/";
 export const SUI_SENTINEL_APP_URL = "https://app.redsentinel.xyz/";
-export const SUI_SENTINEL_DOCS_URL = "https://docs.suisentinel.xyz/";
+export const SUI_SENTINEL_DOCS_URL = "https://docs.redsentinel.xyz/";
 export const SUI_SENTINEL_X_URL =
   "https://twitter.com/intent/follow?screen_name=redsentinel_ai";
 export const SUI_SENTINEL_GITHUB_URL =
