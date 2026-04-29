@@ -63,7 +63,7 @@ export const TIMEZONES = [
   { value: 'UTC+13:00', label: '(UTC+13:00) Nuku\'alofa' },
 ] as const
 
-export const AMBASSADOR_INTRO_TEXT = `Sui Sentinel Ambassador Program Early Access
+export const AMBASSADOR_INTRO_TEXT = `Red Sentinel Ambassador Program Early Access
 
 We're onboarding our first wave of ambassadors and we want to be upfront about where we are:
 
@@ -72,6 +72,6 @@ We're onboarding our first wave of ambassadors and we want to be upfront about w
 3. Tokens launching soon, early ambassadors rewarded accordingly
 4. No payment promises yet, but no fine print either
 
-What we're looking for right now are people motivated by the mission, helping make AI security accessible, growing the Sui Sentinel community, and getting enterprise teams on the platform.
+What we're looking for right now are people motivated by the mission, helping make AI security accessible, growing the Red Sentinel community, and getting enterprise teams on the platform.
 
 If that's you, we'd love to hear from you.`

@@ -59,7 +59,7 @@ export function ManifestoModal({ isOpen, onClose }: ManifestoModalProps) {
 
                     <div className="max-w-4xl mx-auto px-4 py-8">
                       <h1 className="text-3xl md:text-4xl font-bold mb-8 text-gray-900">
-                        The Sui Sentinel Manifesto
+                        The Red Sentinel Manifesto
                       </h1>
 
                       {/* Section: The Systems We Can't Control */}
@@ -281,14 +281,14 @@ export function ManifestoModal({ isOpen, onClose }: ManifestoModalProps) {
 
                       <hr className="my-8 border-gray-200" />
 
-                      {/* Section: The Sui Sentinel Solution */}
+                      {/* Section: The Red Sentinel Solution */}
                       <div className="pt-4">
                         <h2 className="text-xl md:text-2xl font-medium mb-3">
-                          The Sui Sentinel Solution: Economic Incentives Meet Adversarial Testing
+                          The Red Sentinel Solution: Economic Incentives Meet Adversarial Testing
                         </h2>
                         <div className="text-[#484848] text-sm md:text-base leading-relaxed">
                           <p className="my-6">
-                            Sui Sentinel offers a different path. ne that harnesses the same
+                            Red Sentinel offers a different path. ne that harnesses the same
                             competitive dynamics driving the AI race, but redirects them toward
                             safety instead of speed.
                           </p>
@@ -335,7 +335,7 @@ export function ManifestoModal({ isOpen, onClose }: ManifestoModalProps) {
                             The Economic Engine
                           </h3>
                           <p className="mb-4">
-                            Sui Sentinel transforms AI safety from a cost center into an economic
+                            Red Sentinel transforms AI safety from a cost center into an economic
                             opportunity:
                           </p>
                           <ul className="space-y-4">
@@ -366,7 +366,7 @@ export function ManifestoModal({ isOpen, onClose }: ManifestoModalProps) {
                             Why This Matters
                           </h3>
                           <p className="mb-4">
-                            The AI companies are racing toward power. Sui Sentinel creates a
+                            The AI companies are racing toward power. Red Sentinel creates a
                             parallel race toward robustness.
                           </p>
                           <ul className="list-disc pl-5 my-6 space-y-2">
@@ -394,7 +394,7 @@ export function ManifestoModal({ isOpen, onClose }: ManifestoModalProps) {
                         </h2>
                         <div className="text-[#484848] text-sm md:text-base leading-relaxed">
                           <p className="my-6">
-                            Sui Sentinel combines blockchain transparency with cryptographic privacy
+                            Red Sentinel combines blockchain transparency with cryptographic privacy
                             through a dual-layer architecture: off-chain TEE computation using{' '}
                             <a
                               href="https://www.sui.io/nautilus"
@@ -477,7 +477,7 @@ export function ManifestoModal({ isOpen, onClose }: ManifestoModalProps) {
                             Those are the only two outcomes where humanity survives.
                           </p>
                           <p className="my-6">
-                            Sui Sentinel represents a third path between two bad outcomes:
+                            Red Sentinel represents a third path between two bad outcomes:
                           </p>
                           <p className="my-6">
                             Not the centralized dystopia where AI is controlled by a handful of
@@ -542,7 +542,7 @@ export function ManifestoModal({ isOpen, onClose }: ManifestoModalProps) {
                             The future isn&apos;t inevitable. It&apos;s a choice we make together.
                           </p>
                           <p className="my-6">
-                            Sui Sentinel is that choice, where economic incentives align with human
+                            Red Sentinel is that choice, where economic incentives align with human
                             survival, where competitive dynamics drive safety instead of
                             recklessness, and where we prove that humans can remain in control of
                             the intelligence we create.
@@ -555,15 +555,15 @@ export function ManifestoModal({ isOpen, onClose }: ManifestoModalProps) {
                       {/* Footer Section */}
                       <div className="pt-8 text-center">
                         <h3 className="text-xl font-bold mb-3">
-                          Sui Sentinel: Making AI Safety Profitable, One Sentinel at a Time
+                          Red Sentinel: Making AI Safety Profitable, One Sentinel at a Time
                         </h3>
                         <p className="text-[#484848] text-sm md:text-base">
                           Start now at{' '}
                           <a
-                            href="https://app.suisentinel.xyz"
+                            href="https://app.redsentinel.xyz"
                             className="text-[#C871FF] underline font-medium"
                           >
-                            app.suisentinel.xyz
+                            app.redsentinel.xyz
                           </a>{' '}
                           • Testnet live now • Mainnet coming soon
                         </p>

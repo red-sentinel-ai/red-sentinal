@@ -10,7 +10,7 @@ interface MobileNavProps {
 
 export const MobileNav = ({ onItemClick }: MobileNavProps) => {
   return (
-    <ul className="flex w-full flex-col items-center gap-4 font-medium text-black">
+    <ul className="flex w-full flex-col items-center gap-4 font-medium text-[var(--color-text-primary)]">
       <li>
         <Link href="/" onClick={onItemClick}>
           Home

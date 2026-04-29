@@ -5,7 +5,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { User, Folder, Activity, Loader2, Camera, Gift, BarChart3 } from 'lucide-react'
-import { useCurrentAccount } from '@mysten/dapp-kit'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { UserActivity } from '@/components/profile/UserActivity'
@@ -16,6 +15,7 @@ import { ConnectPrompt } from '@/components/ConnectPrompt'
 import { EditProfileModal } from '@/components/profile/EditProfileModal'
 import { SocialConnectionsSectionWrapper } from '@/components/profile/SocialConnectionsSectionWrapper'
 import { useUserProfile, useUpdateAvatar } from '@/hooks/profile/useUserProfile'
+import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 import { SENTINEL_GIFS, USER_IMAGES } from '@/constants/asset_paths'
 import { useTokenBalance } from '@/hooks/useTokenBalance'
@@ -37,7 +37,7 @@ function ProfileContent() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isImagePickerOpen, setIsImagePickerOpen] = useState(false)
 
-  const account = useCurrentAccount()
+  const { address: connectedAddress, chain: activeChain } = useConnectedAddress()
   const { data: profile, isLoading: isLoadingProfile } = useUserProfile()
   const { formattedBalance: sentinelBalance } = useTokenBalance(
     SUI_CONFIG.SENTINEL_COIN_TYPE,
@@ -75,7 +75,7 @@ function ProfileContent() {
     updateAvatar(formData)
   }
 
-  if (!account?.address) {
+  if (!connectedAddress) {
     return (
       <ConnectPrompt
         title="Join the Red Team"
@@ -84,6 +84,8 @@ function ProfileContent() {
       />
     )
   }
+
+  const isSolana = activeChain === 'solana'
 
   if (isLoadingProfile) {
     return (
@@ -116,35 +118,37 @@ function ProfileContent() {
                   <User className="h-12 w-12 text-[var(--color-text-muted)]" />
                 </div>
               )}
-              <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-overlay)] opacity-0 transition-opacity group-hover:opacity-100">
-                <Camera className="h-8 w-8 text-white" />
+              <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-text-primary)]/40 opacity-0 transition-opacity group-hover:opacity-100">
+                <Camera className="h-8 w-8 text-[var(--color-bg-surface)]" />
               </div>
             </div>
 
-            <div className="min-w-0 flex-1 pt-2">
+            <div className="order-3 min-w-0 flex-1 pt-2 md:order-2">
               <h1 className="font-display truncate text-2xl font-semibold text-[var(--color-text-primary)] leading-snug sm:text-3xl">
                 {profile?.display_name || 'Your Profile'}
               </h1>
               <p className="font-body mb-3 mt-1 font-medium text-[var(--color-text-secondary)]">@{profile?.username}</p>
 
-              <Link
-                href={SENTINEL_TOKEN_EXPLORER_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mb-5 flex min-h-10 w-fit items-center justify-center gap-2 rounded-xl bg-[var(--color-bg-surface)] px-3 py-1 shadow-[var(--shadow-card)] transition-opacity hover:opacity-80"
-              >
-                <Image
-                  src="/icons/dollar_coin.png"
-                  width={24}
-                  height={24}
-                  alt="coin"
-                  className="flex-shrink-0"
-                />
-                <span className="font-body text-sm font-medium text-[var(--color-text-primary)] sm:text-base">
-                  Sentinel Balance:{` `}
-                  <span className="text-[var(--color-gold-primary)] underline">{sentinelBalance} SENTINEL</span>
-                </span>
-              </Link>
+              {!isSolana && (
+                <Link
+                  href={SENTINEL_TOKEN_EXPLORER_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mb-5 flex min-h-10 w-fit items-center justify-center gap-2 rounded-xl bg-[var(--color-bg-surface)] px-3 py-1 shadow-[var(--shadow-card)] transition-opacity hover:opacity-80"
+                >
+                  <Image
+                    src="/icons/dollar_coin.png"
+                    width={24}
+                    height={24}
+                    alt="coin"
+                    className="flex-shrink-0"
+                  />
+                  <span className="font-body text-sm font-medium text-[var(--color-text-primary)] sm:text-base">
+                    Sentinel Balance:{` `}
+                    <span className="text-[var(--color-gold-primary)] underline">{sentinelBalance} SENTINEL</span>
+                  </span>
+                </Link>
+              )}
 
               <button
                 onClick={() => setIsEditModalOpen(true)}
@@ -153,7 +157,7 @@ function ProfileContent() {
                 Edit Profile
               </button>
             </div>
-            <div className="flex w-full flex-wrap items-center justify-start gap-2 pt-2 sm:ml-auto sm:w-auto sm:justify-end">
+            <div className="order-2 flex w-full flex-wrap items-center justify-start gap-2 pt-2 sm:ml-auto sm:w-auto sm:justify-end md:order-3 md:pt-0">
               <Link
                 className="font-body btn h-[50px] bg-[var(--color-gold-primary)] text-[var(--color-text-on-gold)] hover:bg-[var(--color-gold-light)] text-sm sm:text-base"
                 href="/defend"
@@ -183,10 +187,10 @@ function ProfileContent() {
 
           <div className="px-4 md:px-8">
             <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-              <TabsList className="grid w-full grid-cols-4 gap-2 bg-[var(--color-bg-subtle)] lg:flex lg:w-auto lg:justify-start">
+              <TabsList className="flex w-full justify-start gap-0 bg-transparent lg:w-auto">
                 <TabsTrigger
                   value={PROFILE_TABS.AGENTS}
-                  className="font-body flex items-center gap-2 text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
+                  className="font-body flex items-center gap-2 rounded-none text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
                 >
                   <Folder className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="truncate">Sentinels</span>
@@ -194,7 +198,7 @@ function ProfileContent() {
 
                 <TabsTrigger
                   value={PROFILE_TABS.ACTIVITY}
-                  className="font-body flex items-center gap-2 text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
+                  className="font-body flex items-center gap-2 rounded-none text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
                 >
                   <Activity className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="truncate">Activity</span>
@@ -202,7 +206,7 @@ function ProfileContent() {
 
                 <TabsTrigger
                   value={PROFILE_TABS.STATS}
-                  className="font-body flex items-center gap-2 text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
+                  className="font-body flex items-center gap-2 rounded-none text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
                 >
                   <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="truncate">Stats</span>
@@ -210,7 +214,7 @@ function ProfileContent() {
 
                 <TabsTrigger
                   value={PROFILE_TABS.REWARDS}
-                  className="font-body flex items-center gap-2 text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
+                  className="font-body flex items-center gap-2 rounded-none text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
                 >
                   <Gift className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="truncate">My Rewards</span>

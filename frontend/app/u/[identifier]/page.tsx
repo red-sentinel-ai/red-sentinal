@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { User, Folder } from 'lucide-react'
-import { formatAddress } from '@mysten/sui/utils'
+import { truncateAddress } from '@/lib/utils'
 import { supabaseServiceClient } from '@/db/config/server'
 import { FeaturedAgentCard } from '@/components/FeaturedAgentCard'
 import { type AgentDetails } from '@/hooks/agents/useAllAgents'
@@ -65,16 +65,16 @@ export default async function PublicProfilePage({
   const { user, agents } = profileData
 
   return (
-    <div className="min-h-body container mx-auto px-4 pb-12 pt-24 text-black">
+    <div className="min-h-body container mx-auto px-4 pb-12 pt-24 text-[var(--color-text-primary)]">
       <div className="mx-auto max-w-6xl">
         <div className="mb-12">
           <div className="mb-6 flex flex-col items-start gap-6 sm:flex-row sm:items-center">
-            <div className="relative h-28 w-28 flex-shrink-0 overflow-hidden rounded-full border-2 border-gray-200">
+            <div className="relative h-28 w-28 flex-shrink-0 overflow-hidden rounded-full border-2 border-[var(--color-border-subtle)]">
               {user.avatar_url ? (
                 <Image src={user.avatar_url} alt="User Avatar" fill className="object-cover" />
               ) : (
-                <div className="flex h-full w-full items-center justify-center bg-gray-100">
-                  <User className="h-14 w-14 text-gray-400" />
+                <div className="flex h-full w-full items-center justify-center bg-[var(--color-bg-subtle)]">
+                  <User className="h-14 w-14 text-[var(--color-text-faint)]" />
                 </div>
               )}
             </div>
@@ -82,17 +82,17 @@ export default async function PublicProfilePage({
               <h1 className="text-3xl font-bold sm:text-4xl">
                 {user.display_name || user.username}
               </h1>
-              <p className="mt-1 text-gray-500">@{user.username}</p>
+              <p className="mt-1 text-[var(--color-text-muted)]">@{user.username}</p>
               {user.wallet_addresses?.[0] && (
                 <div className="mt-3 flex flex-col items-start gap-1 sm:flex-row sm:items-center">
-                  <p className="text-sm font-medium text-gray-600">Wallet Address:</p>
+                  <p className="text-sm font-medium text-[var(--color-text-secondary)]">Wallet Address:</p>
                   <Link
                     href={`${EXPLORER_BASE_URL}/address/${user.wallet_addresses[0]}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-mono text-sm text-blue-600 hover:underline"
+                    className="font-mono text-sm text-[var(--color-info)] hover:underline"
                   >
-                    {formatAddress(user.wallet_addresses[0])}
+                    {truncateAddress(user.wallet_addresses[0])}
                   </Link>
                 </div>
               )}
@@ -102,7 +102,7 @@ export default async function PublicProfilePage({
 
         <div>
           <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold">
-            <Folder className="h-6 w-6 text-blue-500" />
+            <Folder className="h-6 w-6 text-[var(--color-gold-primary)]" />
             <span>
               {user.display_name}&apos;s Sentinels ({agents.length})
             </span>
@@ -114,8 +114,8 @@ export default async function PublicProfilePage({
               ))}
             </div>
           ) : (
-            <div className="rounded-lg border border-gray-200 bg-gray-50 py-16 text-center">
-              <p className="text-gray-500">This user has not launched any Sentinels yet.</p>
+            <div className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] py-16 text-center">
+              <p className="text-[var(--color-text-muted)]">This user has not launched any Sentinels yet.</p>
             </div>
           )}
         </div>

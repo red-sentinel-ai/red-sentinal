@@ -328,7 +328,7 @@ export function SocialMissionModal({
               <div className="space-y-3">
                 {config.telegramField && (
                   <div>
-                    <label className="mb-1 block text-xs font-medium text-gray-700 md:text-sm">
+                    <label className="mb-1 block text-xs font-medium text-[var(--color-text-secondary)] md:text-sm">
                       {config.telegramField.label}{' '}
                       {config.telegramField.required && <span className="text-red-500">*</span>}
                     </label>
@@ -336,45 +336,45 @@ export function SocialMissionModal({
                       value={telegramUsername}
                       onChange={e => setTelegramUsername(e.target.value)}
                       placeholder={config.telegramField.placeholder}
-                      className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs focus:border-black focus:outline-none focus:ring-1 focus:ring-black md:text-sm"
+                      className="w-full rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-3 py-2 text-xs text-[var(--color-text-primary)] focus:border-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-text-primary)] md:text-sm"
                     />
                   </div>
                 )}
 
                 {config.usernameField && (
                   <div>
-                    <label className="mb-1 block text-xs font-medium text-gray-700 md:text-sm">
+                    <label className="mb-1 block text-xs font-medium text-[var(--color-text-secondary)] md:text-sm">
                       {config.usernameField.label}{' '}
                       {config.usernameField.required ? (
                         <span className="text-red-500">*</span>
                       ) : (
-                        <span className="text-gray-400">(optional)</span>
+                        <span className="text-[var(--color-text-muted)]">(optional)</span>
                       )}
                     </label>
                     <input
                       value={twitterUsername}
                       onChange={e => setTwitterUsername(e.target.value)}
                       placeholder={config.usernameField.placeholder}
-                      className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs focus:border-black focus:outline-none focus:ring-1 focus:ring-black md:text-sm"
+                      className="w-full rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-3 py-2 text-xs text-[var(--color-text-primary)] focus:border-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-text-primary)] md:text-sm"
                     />
                   </div>
                 )}
 
                 {config.contentLinkField && (
                   <div>
-                    <label className="mb-1 block text-xs font-medium text-gray-700 md:text-sm">
+                    <label className="mb-1 block text-xs font-medium text-[var(--color-text-secondary)] md:text-sm">
                       {config.contentLinkField.label}{' '}
                       {config.contentLinkField.required ? (
                         <span className="text-red-500">*</span>
                       ) : (
-                        <span className="text-gray-400">(optional)</span>
+                        <span className="text-[var(--color-text-muted)]">(optional)</span>
                       )}
                     </label>
                     <input
                       value={contentLink}
                       onChange={e => setContentLink(e.target.value)}
                       placeholder={config.contentLinkField.placeholder}
-                      className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs focus:border-black focus:outline-none focus:ring-1 focus:ring-black md:text-sm"
+                      className="w-full rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-3 py-2 text-xs text-[var(--color-text-primary)] focus:border-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-text-primary)] md:text-sm"
                     />
                   </div>
                 )}

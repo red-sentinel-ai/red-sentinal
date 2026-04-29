@@ -30,7 +30,7 @@ export const sendManifestoConfirmationEmail = async (toEmail: string) => {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Sui Sentinel Manifesto</title>
+      <title>Red Sentinel Manifesto</title>
     </head>
     <body style="margin: 0; padding: 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: ${bgGray}; color: ${textBlack};">
       
@@ -42,7 +42,7 @@ export const sendManifestoConfirmationEmail = async (toEmail: string) => {
               
               <tr>
                 <td align="center" style="padding: 40px 40px 20px 40px;">
-                  <img src="${logoUrl}" alt="Sui Sentinel" width="180" style="display: block; border: 0; max-width: 100%; height: auto;" />
+                  <img src="${logoUrl}" alt="Red Sentinel" width="180" style="display: block; border: 0; max-width: 100%; height: auto;" />
                 </td>
               </tr>
 
@@ -63,7 +63,7 @@ export const sendManifestoConfirmationEmail = async (toEmail: string) => {
                   </p>
 
                   <p style="margin: 0 0 24px 0; font-size: 16px; line-height: 1.6; color: ${textGray}; text-align: center;">
-                    You have successfully signed the <strong>Sui Sentinel Manifesto</strong>. You have joined a legion of defenders committed to protecting intelligence in the age of artificial minds.
+                    You have successfully signed the <strong>Red Sentinel Manifesto</strong>. You have joined a legion of defenders committed to protecting intelligence in the age of artificial minds.
                   </p>
 
                   <div style="background-color: #FAFAFA; border: 1px dashed #CCCCCC; border-radius: 8px; padding: 15px; margin-bottom: 20px; text-align: center;">
@@ -76,7 +76,7 @@ export const sendManifestoConfirmationEmail = async (toEmail: string) => {
               <tr>
                 <td style="background-color: #111111; padding: 20px; text-align: center;">
                   <p style="margin: 0; font-size: 12px; color: #666666;">
-                    © 2025 Sui Sentinel. All Rights Reserved.
+                    © 2025 Red Sentinel. All Rights Reserved.
                   </p>
                   <p style="margin: 5px 0 0 0; font-size: 12px; color: #444444;">
                     Securing the future of On-Chain AI.
@@ -88,7 +88,7 @@ export const sendManifestoConfirmationEmail = async (toEmail: string) => {
             <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 500px; margin-top: 20px;">
               <tr>
                 <td align="center">
-                  <a href="https://x.com/suisentinal" style="font-size: 12px; color: #888888; text-decoration: none; margin: 0 10px;">Twitter</a>
+                  <a href="https://x.com/redsentinel_ai" style="font-size: 12px; color: #888888; text-decoration: none; margin: 0 10px;">Twitter</a>
                   <a href="https://t.me/suisentinel" style="font-size: 12px; color: #888888; text-decoration: none; margin: 0 10px;">Telegram</a>
                 </td>
               </tr>
@@ -117,7 +117,7 @@ export const sendManifestoConfirmationEmail = async (toEmail: string) => {
           Charset: "UTF-8",
         },
         Text: {
-          Data: `The Oath is Sealed. Welcome, Guardian.\n\nYou have successfully signed the Sui Sentinel Manifesto using ${toEmail}.\n\n© 2025 Sui Sentinel.`,
+          Data: `The Oath is Sealed. Welcome, Guardian.\n\nYou have successfully signed the Red Sentinel Manifesto using ${toEmail}.\n\n© 2025 Red Sentinel.`,
           Charset: "UTF-8",
         },
       },
@@ -152,7 +152,7 @@ export const sendAmbassadorConfirmationEmail = async (toEmail: string) => {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Sui Sentinel Ambassador Program</title>
+      <title>Red Sentinel Ambassador Program</title>
     </head>
     <body style="margin: 0; padding: 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: ${bgGray}; color: ${textBlack};">
 
@@ -164,7 +164,7 @@ export const sendAmbassadorConfirmationEmail = async (toEmail: string) => {
 
               <tr>
                 <td align="center" style="padding: 40px 40px 20px 40px;">
-                  <img src="${logoUrl}" alt="Sui Sentinel" width="180" style="display: block; border: 0; max-width: 100%; height: auto;" />
+                  <img src="${logoUrl}" alt="Red Sentinel" width="180" style="display: block; border: 0; max-width: 100%; height: auto;" />
                 </td>
               </tr>
 
@@ -185,7 +185,7 @@ export const sendAmbassadorConfirmationEmail = async (toEmail: string) => {
                   </p>
 
                   <p style="margin: 0 0 24px 0; font-size: 16px; line-height: 1.6; color: ${textGray}; text-align: center;">
-                    We've received your application for the <strong>Sui Sentinel Ambassador Program</strong>. Our team will review your submission and get back to you shortly.
+                    We've received your application for the <strong>Red Sentinel Ambassador Program</strong>. Our team will review your submission and get back to you shortly.
                   </p>
 
                   <div style="background-color: #FAFAFA; border: 1px dashed #CCCCCC; border-radius: 8px; padding: 15px; margin-bottom: 20px; text-align: center;">
@@ -198,7 +198,7 @@ export const sendAmbassadorConfirmationEmail = async (toEmail: string) => {
               <tr>
                 <td style="background-color: #111111; padding: 20px; text-align: center;">
                   <p style="margin: 0; font-size: 12px; color: #666666;">
-                    © 2025 Sui Sentinel. All Rights Reserved.
+                    © 2025 Red Sentinel. All Rights Reserved.
                   </p>
                   <p style="margin: 5px 0 0 0; font-size: 12px; color: #444444;">
                     Securing the future of On-Chain AI.
@@ -211,7 +211,7 @@ export const sendAmbassadorConfirmationEmail = async (toEmail: string) => {
               <tr>
                 <td align="center">
                   <a href="https://x.com/suisentinal" style="font-size: 12px; color: #888888; text-decoration: none; margin: 0 10px;">Twitter</a>
-                  <a href="https://t.me/suisentinel" style="font-size: 12px; color: #888888; text-decoration: none; margin: 0 10px;">Telegram</a>
+                  <a href="https://x.com/redsentinel_ai" style="font-size: 12px; color: #888888; text-decoration: none; margin: 0 10px;">Telegram</a>
                 </td>
               </tr>
             </table>
@@ -230,7 +230,7 @@ export const sendAmbassadorConfirmationEmail = async (toEmail: string) => {
     },
     Message: {
       Subject: {
-        Data: "Application Received: Sui Sentinel Ambassador Program",
+        Data: "Application Received: Red Sentinel Ambassador Program",
         Charset: "UTF-8",
       },
       Body: {
@@ -239,7 +239,7 @@ export const sendAmbassadorConfirmationEmail = async (toEmail: string) => {
           Charset: "UTF-8",
         },
         Text: {
-          Data: `Application Received. Thank you for applying, Guardian.\n\nWe've received your application for the Sui Sentinel Ambassador Program. Our team will review your submission and get back to you shortly.\n\nSubmitted by: ${toEmail}\n\n© 2025 Sui Sentinel.`,
+          Data: `Application Received. Thank you for applying, Guardian.\n\nWe've received your application for the Red Sentinel Ambassador Program. Our team will review your submission and get back to you shortly.\n\nSubmitted by: ${toEmail}\n\n© 2025 Red Sentinel.`,
           Charset: "UTF-8",
         },
       },
@@ -274,7 +274,7 @@ export const sendDemoRequestConfirmationEmail = async (toEmail: string, firstNam
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Sui Sentinel Enterprise Demo</title>
+      <title>Red Sentinel Enterprise Demo</title>
     </head>
     <body style="margin: 0; padding: 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: ${bgGray}; color: ${textBlack};">
 
@@ -286,7 +286,7 @@ export const sendDemoRequestConfirmationEmail = async (toEmail: string, firstNam
 
               <tr>
                 <td align="center" style="padding: 40px 40px 20px 40px;">
-                  <img src="${logoUrl}" alt="Sui Sentinel" width="180" style="display: block; border: 0; max-width: 100%; height: auto;" />
+                  <img src="${logoUrl}" alt="Red Sentinel" width="180" style="display: block; border: 0; max-width: 100%; height: auto;" />
                 </td>
               </tr>
 
@@ -307,7 +307,7 @@ export const sendDemoRequestConfirmationEmail = async (toEmail: string, firstNam
                   </p>
 
                   <p style="margin: 0 0 24px 0; font-size: 16px; line-height: 1.6; color: ${textGray}; text-align: center;">
-                    Thank you for your interest in <strong>Sui Sentinel Enterprise</strong>. We've received your demo request and our team will reach out within 24-48 hours to schedule your personalized demonstration.
+                    Thank you for your interest in <strong>Red Sentinel Enterprise</strong>. We've received your demo request and our team will reach out within 24-48 hours to schedule your personalized demonstration.
                   </p>
 
                   <div style="background-color: #FAFAFA; border: 1px dashed #CCCCCC; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
@@ -329,7 +329,7 @@ export const sendDemoRequestConfirmationEmail = async (toEmail: string, firstNam
               <tr>
                 <td style="background-color: #111111; padding: 20px; text-align: center;">
                   <p style="margin: 0; font-size: 12px; color: #666666;">
-                    © 2025 Sui Sentinel. All Rights Reserved.
+                    © 2025 Red Sentinel. All Rights Reserved.
                   </p>
                   <p style="margin: 5px 0 0 0; font-size: 12px; color: #444444;">
                     Securing the future of On-Chain AI.
@@ -341,7 +341,7 @@ export const sendDemoRequestConfirmationEmail = async (toEmail: string, firstNam
             <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 500px; margin-top: 20px;">
               <tr>
                 <td align="center">
-                  <a href="https://x.com/suisentinal" style="font-size: 12px; color: #888888; text-decoration: none; margin: 0 10px;">Twitter</a>
+                  <a href="https://x.com/redsentinel_ai" style="font-size: 12px; color: #888888; text-decoration: none; margin: 0 10px;">Twitter</a>
                   <a href="https://t.me/suisentinel" style="font-size: 12px; color: #888888; text-decoration: none; margin: 0 10px;">Telegram</a>
                 </td>
               </tr>
@@ -361,7 +361,7 @@ export const sendDemoRequestConfirmationEmail = async (toEmail: string, firstNam
     },
     Message: {
       Subject: {
-        Data: "Demo Request Received | Sui Sentinel Enterprise",
+        Data: "Demo Request Received | Red Sentinel Enterprise",
         Charset: "UTF-8",
       },
       Body: {
@@ -370,7 +370,7 @@ export const sendDemoRequestConfirmationEmail = async (toEmail: string, firstNam
           Charset: "UTF-8",
         },
         Text: {
-          Data: `Demo Request Received.\n\nHello ${firstName},\n\nThank you for your interest in Sui Sentinel Enterprise. We've received your demo request and our team will reach out within 24-48 hours to schedule your personalized demonstration.\n\nWhat to Expect:\n- Live platform walkthrough tailored to your use case\n- Discussion of your AI security requirements\n- Q&A with our product specialists\n- Custom pricing and deployment options\n\n© 2025 Sui Sentinel.`,
+          Data: `Demo Request Received.\n\nHello ${firstName},\n\nThank you for your interest in Red Sentinel Enterprise. We've received your demo request and our team will reach out within 24-48 hours to schedule your personalized demonstration.\n\nWhat to Expect:\n- Live platform walkthrough tailored to your use case\n- Discussion of your AI security requirements\n- Q&A with our product specialists\n- Custom pricing and deployment options\n\n© 2025 Red Sentinel.`,
           Charset: "UTF-8",
         },
       },

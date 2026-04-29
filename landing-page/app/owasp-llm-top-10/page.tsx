@@ -2,9 +2,9 @@ import type { Metadata } from 'next'
 import { OWASPLLMContent } from './OWASPLLMContent'
 
 export const metadata: Metadata = {
-  title: 'OWASP LLM Top 10 2025 | AI Security Framework | Sui Sentinel',
+  title: 'OWASP LLM Top 10 2025 | AI Security Framework | Red Sentinel',
   description:
-    'Understand the OWASP Top 10 for LLM Applications 2025. Learn how Sui Sentinel crowdsourced red teaming helps you test for prompt injection, data exposure, and other critical LLM vulnerabilities.',
+    'Understand the OWASP Top 10 for LLM Applications 2025. Learn how Red Sentinel crowdsourced red teaming helps you test for prompt injection, data exposure, and other critical LLM vulnerabilities.',
   keywords: [
     'OWASP LLM Top 10',
     'OWASP 2025',
@@ -16,10 +16,10 @@ export const metadata: Metadata = {
     'LLM risk assessment',
   ],
   openGraph: {
-    title: 'OWASP LLM Top 10 2025 | Sui Sentinel',
+    title: 'OWASP LLM Top 10 2025 | Red Sentinel',
     description:
       'Comprehensive guide to OWASP LLM Top 10 2025 vulnerabilities and how crowdsourced red teaming addresses them.',
-    url: 'https://suisentinel.xyz/owasp-llm-top-10',
+    url: 'https://www.redsentinel.xyz/owasp-llm-top-10',
     type: 'article',
   },
 }

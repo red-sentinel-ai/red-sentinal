@@ -49,7 +49,7 @@ export function EarnWhileDefendingSection() {
           Every successful attack pays instantly. No delays, no disputes, pure meritocracy.
         </h2>
         <p className="mt-6 text-lg md:text-xl text-[#5F5C5C] max-w-4xl">
-          Unlike bug bounties that take weeks to process, Sui Sentinel settles rewards on-chain the
+          Unlike bug bounties that take weeks to process, Red Sentinel settles rewards on-chain the
           moment your exploit is verified. Your skills, your profits, your schedule.
         </p>
         <div className="mt-10 flex gap-4">

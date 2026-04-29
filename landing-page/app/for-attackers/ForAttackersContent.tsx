@@ -485,7 +485,7 @@ export function ForAttackersContent() {
           >
             <div className="badge-pink w-fit mx-auto mb-6">• why hunt here</div>
             <h2 className="text-3xl md:text-4xl lg:text-[48px] font-medium mb-6">
-              Why Hunt on <span className="text-[#C871FF]">Sui Sentinel?</span>
+              Why Hunt on <span className="text-[#C871FF]">Red Sentinel?</span>
             </h2>
           </motion.div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

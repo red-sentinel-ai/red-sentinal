@@ -50,18 +50,9 @@ export const RED_TEAM_API_URL = `https://redteam.suisentinel.xyz/`
 export const SUI_SENTINEL_API_URL =
   process.env.NEXT_PUBLIC_SUI_SENTINEL_API_URL || 'https://api.suisentinel.xyz'
 
-export const APP_NETWORK: 'mainnet' | 'testnet' =
-  process.env.NEXT_PUBLIC_APP_NETWORK === 'testnet' ? 'testnet' : 'mainnet'
-
-// Supported token type — single source of truth for all token metadata
-export type SupportedToken = {
-  symbol: string
-  name: string
-  coinType: string
-  decimals: number
-  icon: string
-  minimumAmount: number
-}
+// Re-export shared types and constants (extracted to break circular dependency with solana.ts)
+export { APP_NETWORK, type SupportedToken } from './shared'
+import { APP_NETWORK, type SupportedToken } from './shared'
 export const SUI_COIN_TYPE = '0x2::sui::SUI'
 export const SENTINEL_TOKEN_DECIMALS = 0
 
@@ -201,9 +192,13 @@ export const MAINNET_SUPPORTED_TOKENS: SupportedToken[] = [
 export const SUPPORTED_TOKENS: SupportedToken[] =
   APP_NETWORK === 'mainnet' ? MAINNET_SUPPORTED_TOKENS : TESTNET_SUPPORTED_TOKENS
 
+import { SOLANA_SUPPORTED_TOKENS } from './solana'
+
+const ALL_SUPPORTED_TOKENS = [...SUPPORTED_TOKENS, ...SOLANA_SUPPORTED_TOKENS]
+
 export function getTokenForCoinType(coinType?: string): SupportedToken {
   if (!coinType) return SUI_TOKEN
-  return SUPPORTED_TOKENS.find(t => t.coinType === coinType) ?? SUI_TOKEN
+  return ALL_SUPPORTED_TOKENS.find(t => t.coinType === coinType) ?? SUI_TOKEN
 }
 
 // New multi-token contract (Mar 2026 testnet deployment)
@@ -659,6 +654,7 @@ export const TELEGRAM_NOTIFICATION_API =
 export const SUI_SENTINEL_ALERTS_TELEGRAM_GROUP_ID =
   process.env.SUI_SENTINEL_ALERTS_TELEGRAM_GROUP_ID
 export const ADMIN_API_TOKEN = process.env.ADMIN_API_TOKEN
+export const SS_ADMIN_TOKEN = process.env.SS_ADMIN_TOKEN
 
 export const WITHDRAWAL_LOCK_MS = 1_209_600_000 // 14 days in milliseconds
 

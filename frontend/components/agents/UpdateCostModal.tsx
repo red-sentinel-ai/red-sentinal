@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { useUpdateAgent } from '@/hooks/agents/useUpdateAgent'
+import { useUpdateAgentSolana } from '@/hooks/agents/useUpdateAgentSolana'
 import { AgentUpdateDialog } from './AgentUpdateDialog'
 import { getTokenForCoinType } from '@/constants'
+import type { SupportedChain } from '@/constants/chains'
 
 interface UpdateCostModalProps {
   open: boolean
@@ -10,6 +12,7 @@ interface UpdateCostModalProps {
   agentObjectId: string
   currentCost?: number
   coinType?: string
+  chain?: SupportedChain
 }
 
 export const UpdateCostModal = ({
@@ -19,17 +22,27 @@ export const UpdateCostModal = ({
   agentObjectId,
   currentCost = 0,
   coinType,
+  chain = 'sui',
 }: UpdateCostModalProps) => {
   const initialCost = currentCost ? currentCost : 0
 
   const [cost, setCost] = useState(initialCost.toString())
-  const { updateCost, isLoading } = useUpdateAgent()
+  const { updateCost: updateCostSui, isLoading: isSuiLoading } = useUpdateAgent()
+  const { updateCost: updateCostSolana, isLoading: isSolanaLoading } = useUpdateAgentSolana()
   const token = getTokenForCoinType(coinType)
+
+  const isSolana = chain === 'solana'
+  const isLoading = isSolana ? isSolanaLoading : isSuiLoading
 
   const handleUpdate = () => {
     const costNum = parseFloat(cost)
     if (isNaN(costNum) || costNum < 0) return
-    updateCost(agentId, agentObjectId, costNum, coinType, onClose)
+    if (isSolana) {
+      const costInBaseUnits = BigInt(Math.floor(costNum * Math.pow(10, token.decimals)))
+      updateCostSolana(agentId, costInBaseUnits, onClose)
+    } else {
+      updateCostSui(agentId, agentObjectId, costNum, coinType, onClose)
+    }
   }
 
   return (
@@ -42,17 +55,17 @@ export const UpdateCostModal = ({
       confirmText="Update Fee"
       isConfirmDisabled={isLoading || !cost}
     >
-      <label className="mb-2 block text-sm font-medium text-gray-700">Fee per Message ({token.symbol})</label>
+      <label className="mb-2 block text-sm font-medium text-[var(--color-text-secondary)]">Fee per Message ({token.symbol})</label>
       <input
         type="number"
         value={cost}
         onChange={e => setCost(e.target.value)}
-        className="w-full rounded-xl border border-gray-300 bg-white p-3 outline-none focus:ring-1 focus:ring-black"
+        className="w-full rounded-xl border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 text-[var(--color-text-primary)] outline-none placeholder:text-[var(--color-text-faint)] focus:ring-1 focus:ring-[var(--color-gold-primary)]"
         placeholder="0.00"
         min="0"
         step="0.01"
       />
-      <p className="mt-2 text-xs text-gray-500">
+      <p className="mt-2 text-xs text-[var(--color-text-muted)]">
         This is the amount attackers must pay to send one message to your agent.
       </p>
     </AgentUpdateDialog>

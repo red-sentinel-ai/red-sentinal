@@ -40,9 +40,9 @@ export const AgentListView = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useAllAgents(sortField, sortDirection, selectedCoinType)
+  } = useAllAgents(sortField, sortDirection, selectedCoinType, true)
 
-  const { data: featuredAgents, isPending: isFetchingFeaturedAgents } = useFeaturedAgents()
+  const { data: featuredAgents, isPending: isFetchingFeaturedAgents } = useFeaturedAgents(true)
   const { data: availableTokens = [] } = useAgentCoinTypes()
 
   // Flatten all pages of agents

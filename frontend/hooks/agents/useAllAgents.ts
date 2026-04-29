@@ -1,5 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { SUI_SENTINEL_API_URL, APP_NETWORK } from '@/constants'
+import { useActiveChain } from '@/context/ActiveChainContext'
 
 export interface PrizePoolHistory {
   history: { time: string; value: number }[]
@@ -33,7 +34,8 @@ export interface AgentDetails {
   unlock_timestamp?: string
   accumulated_fees?: number
   coin_type?: string
-  current_cost_per_message?: string 
+  current_cost_per_message?: string
+  chain?: 'sui' | 'solana'
 }
 
 export type SortField = 'total_balance' | 'cost_per_message' | 'total_attacks' | 'agent_id' | 'change7d' | null
@@ -51,10 +53,14 @@ interface AgentsResponse {
 export const useAllAgents = (
   sortField: SortField = 'total_balance',
   sortDirection: SortDirection = 'desc',
-  coinTypeFilter?: string
+  coinTypeFilter?: string,
+  skipChainFilter?: boolean
 ) => {
+  const { activeChain } = useActiveChain()
+  const chainFilter = skipChainFilter ? undefined : activeChain
+
   return useInfiniteQuery<AgentsResponse, Error>({
-    queryKey: [ALL_AGENTS_QUERY_KEY, sortField, sortDirection, coinTypeFilter],
+    queryKey: [ALL_AGENTS_QUERY_KEY, sortField, sortDirection, coinTypeFilter, chainFilter ?? 'all'],
     queryFn: async ({ pageParam }) => {
       const offset = pageParam as number
 
@@ -65,6 +71,10 @@ export const useAllAgents = (
         include_prize_pool: 'true',
         min_balance: '1',
       })
+
+      if (chainFilter) {
+        params.append('chain', chainFilter)
+      }
 
       // Add sort params if provided
       if (sortField) {

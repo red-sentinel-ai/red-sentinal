@@ -44,35 +44,35 @@ export default function InstructionTemplatesPage() {
         <div className="mb-8">
           <Link
             href="/defend"
-            className="mb-4 inline-flex items-center gap-2 text-gray-500 transition-colors hover:text-black"
+            className="mb-4 inline-flex items-center gap-2 text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-primary)]"
           >
             <ChevronLeft className="h-5 w-5" />
             <span>Back to Deploy</span>
           </Link>
 
           <div className="mb-3">
-            <h1 className="mb-3 text-2xl font-medium sm:text-4xl md:text-5xl">Sentinel Templates</h1>
-            <p className="max-w-3xl text-base text-[#5E5E5E] sm:text-xl">
+            <h1 className="mb-3 text-2xl font-medium sm:text-4xl md:text-5xl text-[var(--color-text-primary)]">Sentinel Templates</h1>
+            <p className="max-w-3xl text-base text-[var(--color-text-muted)] sm:text-xl">
               Fun, pre-configured sentinel characters ready to deploy. Pick a template, customize it
               if you want, and deploy your defender with all fields auto-filled.
             </p>
           </div>
         </div>
 
-        <div className="mb-8 rounded-xl border border-amber-200 bg-amber-50 p-6">
+        <div className="mb-8 rounded-xl border border-[var(--color-warning)]/20 bg-[var(--color-warning)]/5 p-6">
           <div className="flex gap-4">
-            <AlertTriangle className="mt-1 h-6 w-6 flex-shrink-0 text-amber-600" />
+            <AlertTriangle className="mt-1 h-6 w-6 flex-shrink-0 text-[var(--color-warning)]" />
             <div>
-              <h3 className="mb-2 font-semibold text-amber-900">
+              <h3 className="mb-2 font-semibold text-[var(--color-text-primary)]">
                 No Perfect Defense But These Help
               </h3>
-              <p className="text-sm text-amber-800">
+              <p className="text-sm text-[var(--color-text-secondary)]">
                 These templates draw from security research including{' '}
                 <Link
                   href={GARAK_GITHUB_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="underline hover:text-amber-900"
+                  className="underline hover:text-[var(--color-gold-primary)]"
                 >
                   garak
                 </Link>
@@ -81,7 +81,7 @@ export default function InstructionTemplatesPage() {
                   href={PROMPTFOO_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="underline hover:text-amber-900"
+                  className="underline hover:text-[var(--color-gold-primary)]"
                 >
                   promptfoo
                 </Link>
@@ -90,7 +90,7 @@ export default function InstructionTemplatesPage() {
                   href={PETRI_GITHUB_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="underline hover:text-amber-900"
+                  className="underline hover:text-[var(--color-gold-primary)]"
                 >
                   petri
                 </Link>
@@ -99,7 +99,7 @@ export default function InstructionTemplatesPage() {
                   href={BLOOM_GITHUB_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="underline hover:text-amber-900"
+                  className="underline hover:text-[var(--color-gold-primary)]"
                 >
                   bloom
                 </Link>
@@ -120,8 +120,8 @@ export default function InstructionTemplatesPage() {
                 className={cn(
                   'rounded-xl px-4 py-2 text-sm font-medium transition-all sm:px-6 sm:py-3 sm:text-base',
                   selectedCategory === category
-                    ? 'bg-black text-white'
-                    : 'border border-[#5E5E5E] bg-white hover:border-black'
+                    ? 'bg-[var(--color-gold-primary)] text-[var(--color-text-on-gold)]'
+                    : 'border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] hover:border-[var(--color-gold-primary)]'
                 )}
               >
                 {category === 'all' ? 'All Templates' : category === 'basic' ? 'Basic' : 'RAG'}
@@ -130,7 +130,7 @@ export default function InstructionTemplatesPage() {
           </div>
           <button
             onClick={handleCreateClick}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-black px-6 py-2.5 sm:py-3 text-sm font-medium text-white transition-all hover:bg-black/90 shrink-0 sm:text-base"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--color-gold-primary)] px-6 py-2.5 sm:py-3 text-sm font-medium text-[var(--color-text-on-gold)] transition-all hover:bg-[var(--color-gold-light)] shrink-0 sm:text-base"
           >
             <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
             Create Template
@@ -147,28 +147,28 @@ export default function InstructionTemplatesPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.03 }}
-              className="cursor-pointer rounded-xl border border-[#5E5E5E] bg-white p-6 transition-all hover:border-black hover:shadow-md"
+              className="cursor-pointer rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-6 transition-all hover:border-[var(--color-gold-primary)] hover:shadow-[var(--shadow-elevated)]"
               onClick={() => setSelectedTemplate(template)}
             >
               <div className="mb-3 flex items-start justify-between">
-                <h3 className="text-lg font-semibold leading-tight">{template.name}</h3>
+                <h3 className="text-lg font-semibold leading-tight text-[var(--color-text-primary)]">{template.name}</h3>
                 <span
                   className={cn(
                     'ml-2 shrink-0 rounded-full border px-2.5 py-0.5 text-xs font-medium',
                     template.sentinel_type === 'rag'
-                      ? 'border-purple-200 bg-purple-100 text-purple-800'
-                      : 'border-blue-200 bg-blue-100 text-blue-800'
+                      ? 'border-[var(--color-gold-primary)]/20 bg-[var(--color-gold-muted)] text-[var(--color-gold-primary)]'
+                      : 'border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] text-[var(--color-text-muted)]'
                   )}
                 >
                   {template.sentinel_type}
                 </span>
               </div>
 
-              <p className="mb-4 line-clamp-3 text-sm text-[#5E5E5E]">
+              <p className="mb-4 line-clamp-3 text-sm text-[var(--color-text-muted)]">
                 {template.public_instructions}
               </p>
 
-              <div className="flex items-center gap-2 text-xs text-gray-500">
+              <div className="flex items-center gap-2 text-xs text-[var(--color-text-muted)]">
                 <Crosshair className="h-3.5 w-3.5" />
                 <span className="line-clamp-1">{template.attack_goal}</span>
               </div>

@@ -15,7 +15,7 @@ export const PrizePoolChangeDisplay = ({
   variant = 'list',
 }: PrizePoolChangeDisplayProps) => {
   if (!prizePoolHistory || prizePoolHistory.history.length === 0) {
-    return <span className="text-sm text-gray-400">-</span>
+    return <span className="text-sm text-[var(--color-text-faint)]">-</span>
   }
 
   const percentage = prizePoolHistory.change7d.percentage ?? Infinity
@@ -29,7 +29,7 @@ export const PrizePoolChangeDisplay = ({
     <div
       className={cn(
         'flex items-center font-medium',
-        isPositive ? 'text-[#1FAD57]' : 'text-red-500',
+        isPositive ? 'text-[var(--color-success)]' : 'text-[var(--color-danger)]',
         textSize
       )}
     >
@@ -45,7 +45,7 @@ export const PrizePoolChangeDisplay = ({
       )}
       <span>{displayText}</span>
       {variant === 'card' && isFinite(percentage) && (
-        <span className="ml-1 text-[10px] font-medium text-[#1FAD57]">(7d)</span>
+        <span className="ml-1 text-[10px] font-medium text-[var(--color-success)]">(7d)</span>
       )}
     </div>
   )

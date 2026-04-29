@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { useUpdateAgent } from '@/hooks/agents/useUpdateAgent'
+import { useUpdateAgentSolana } from '@/hooks/agents/useUpdateAgentSolana'
 import { SYSTEM_PROMPT_MAX_TOKENS } from '@/constants'
 import { useTokenCount } from '@/hooks/useTokenCount'
 import { AgentUpdateDialog } from './AgentUpdateDialog'
+import type { SupportedChain } from '@/constants/chains'
 
 interface UpdatePromptModalProps {
   open: boolean
@@ -11,6 +13,7 @@ interface UpdatePromptModalProps {
   agentObjectId: string
   currentPrompt?: string
   coinType?: string
+  chain?: SupportedChain
 }
 
 export const UpdatePromptModal = ({
@@ -20,14 +23,23 @@ export const UpdatePromptModal = ({
   agentObjectId,
   currentPrompt = '',
   coinType,
+  chain = 'sui',
 }: UpdatePromptModalProps) => {
   const [prompt, setPrompt] = useState(currentPrompt)
-  const { updatePrompt, isLoading } = useUpdateAgent()
+  const { updatePrompt: updatePromptSui, isLoading: isSuiLoading } = useUpdateAgent()
+  const { updatePrompt: updatePromptSolana, isLoading: isSolanaLoading } = useUpdateAgentSolana()
   const { tokenCount, countTokens } = useTokenCount()
+
+  const isSolana = chain === 'solana'
+  const isLoading = isSolana ? isSolanaLoading : isSuiLoading
 
   const handleUpdate = () => {
     if (tokenCount > SYSTEM_PROMPT_MAX_TOKENS) return
-    updatePrompt(agentId, agentObjectId, prompt, coinType, onClose)
+    if (isSolana) {
+      updatePromptSolana(agentId, prompt, onClose)
+    } else {
+      updatePromptSui(agentId, agentObjectId, prompt, coinType, onClose)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -47,15 +59,15 @@ export const UpdatePromptModal = ({
       confirmText="Update Prompt"
       isConfirmDisabled={isLoading || isInvalid}
     >
-      <label className="mb-2 block text-sm font-medium text-gray-700">System Prompt</label>
+      <label className="mb-2 block text-sm font-medium text-[var(--color-text-secondary)]">System Prompt</label>
       <textarea
         value={prompt}
         onChange={handleChange}
-        className="min-h-[200px] w-full resize-none rounded-xl border border-gray-300 bg-white p-4 outline-none focus:ring-1 focus:ring-black"
+        className="min-h-[200px] w-full resize-none rounded-xl border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-4 text-[var(--color-text-primary)] outline-none placeholder:text-[var(--color-text-faint)] focus:ring-1 focus:ring-[var(--color-gold-primary)]"
         placeholder="Enter new instructions..."
       />
       <div className="mt-2 flex justify-between text-xs">
-        <span className={tokenCount > SYSTEM_PROMPT_MAX_TOKENS ? 'text-red-500' : 'text-gray-500'}>
+        <span className={tokenCount > SYSTEM_PROMPT_MAX_TOKENS ? 'text-[var(--color-danger)]' : 'text-[var(--color-text-muted)]'}>
           {tokenCount} / {SYSTEM_PROMPT_MAX_TOKENS} Tokens
         </span>
       </div>

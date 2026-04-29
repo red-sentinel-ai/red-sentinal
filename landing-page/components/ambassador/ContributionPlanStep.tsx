@@ -18,7 +18,7 @@ export default function ContributionPlanStep({ form, disabled }: ContributionPla
     <div className="space-y-6">
       <div>
         <label htmlFor="why_become_ambassador" className="block text-2xl font-medium">
-          Why do you want to become a Sui Sentinel Ambassador? <span className="text-red-500">*</span>
+          Why do you want to become a Red Sentinel Ambassador? <span className="text-red-500">*</span>
         </label>
         <textarea
           id="why_become_ambassador"
@@ -35,7 +35,7 @@ export default function ContributionPlanStep({ form, disabled }: ContributionPla
 
       <div>
         <label htmlFor="first_30_days_plan" className="block text-2xl font-medium">
-          What will you do for Sui Sentinel in your first 30 days? <span className="text-red-500">*</span>
+          What will you do for Red Sentinel in your first 30 days? <span className="text-red-500">*</span>
         </label>
         <textarea
           id="first_30_days_plan"

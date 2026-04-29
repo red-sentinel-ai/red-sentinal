@@ -4,15 +4,18 @@ import { Loader2, X } from 'lucide-react'
 import { Dialog } from '@/components/Dialog'
 import { getTokenForCoinType } from '@/constants'
 import { useWithdrawAgent } from '@/hooks/agents/useWithdrawAgent'
+import { useWithdrawAgentSolana } from '@/hooks/agents/useWithdrawAgentSolana'
+import type { SupportedChain } from '@/constants/chains'
 
 export interface WithdrawAgentModalProps {
   open: boolean
   onClose: () => void
   agentObjectId: string
   agentId: string
-  agentBalanceRaw: number  
+  agentBalanceRaw: number
   coinType?: string
   onSuccess?: () => void
+  chain?: SupportedChain
 }
 
 export const WithdrawAgentModal = ({
@@ -23,13 +26,17 @@ export const WithdrawAgentModal = ({
   agentBalanceRaw,
   coinType,
   onSuccess,
+  chain = 'sui',
 }: WithdrawAgentModalProps) => {
   const [amount, setAmount] = useState('')
   const [error, setError] = useState('')
   const token = getTokenForCoinType(coinType)
   const agentBalanceHuman = agentBalanceRaw / Math.pow(10, token.decimals)
+  const isSolana = chain === 'solana'
 
-  const { withdrawAgent, isLoading } = useWithdrawAgent()
+  const { withdrawAgent: withdrawAgentSui, isLoading: isSuiLoading } = useWithdrawAgent()
+  const { withdrawAgent: withdrawAgentSolana, isLoading: isSolanaLoading } = useWithdrawAgentSolana()
+  const isLoading = isSolana ? isSolanaLoading : isSuiLoading
 
   useEffect(() => {
     if (open) {
@@ -70,7 +77,19 @@ export const WithdrawAgentModal = ({
     if (!validateAmount()) return
 
     try {
-      await withdrawAgent({ agentObjectId, agentId, amount: +amount })
+      if (isSolana) {
+        if (!agentId) throw new Error('Missing agent id')
+        if (!coinType) throw new Error('Missing token mint')
+        await withdrawAgentSolana({
+          agentId,
+          tokenMint: coinType,
+          amount: +amount,
+          decimals: token.decimals,
+          symbol: token.symbol,
+        })
+      } else {
+        await withdrawAgentSui({ agentObjectId, agentId, amount: +amount })
+      }
       onSuccess?.()
       onClose()
     } catch (err) {
@@ -87,7 +106,7 @@ export const WithdrawAgentModal = ({
           <h2 className="text-2xl font-bold">Withdraw Funds</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 transition-colors hover:text-black"
+            className="text-[var(--color-text-faint)] transition-colors hover:text-[var(--color-text-primary)]"
             disabled={isLoading}
           >
             <X className="h-6 w-6" />
@@ -96,15 +115,15 @@ export const WithdrawAgentModal = ({
 
         <div>
           <div className="mb-2 flex items-center justify-between">
-            <label className="block text-sm font-medium">Amount ({token.symbol})</label>
-            <span className="text-xs text-gray-500">Max: {agentBalanceHuman.toFixed(4)}</span>
+            <label className="block text-sm font-medium text-[var(--color-text-primary)]">Amount ({token.symbol})</label>
+            <span className="text-xs text-[var(--color-text-muted)]">Max: {agentBalanceHuman.toFixed(4)}</span>
           </div>
           <div className="relative">
             <input
               type="number"
               value={amount}
               onChange={handleAmountChange}
-              className="w-full rounded-lg border border-gray-300 bg-white p-3 pr-16 placeholder:text-gray-400 focus:ring-1 focus:ring-black"
+              className="w-full rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 pr-16 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:ring-1 focus:ring-[var(--color-gold-primary)]"
               placeholder="0.00"
               min="0"
               step="0.001"
@@ -118,7 +137,7 @@ export const WithdrawAgentModal = ({
               Max
             </button>
           </div>
-          {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+          {error && <p className="mt-1 text-sm text-[var(--color-danger)]">{error}</p>}
         </div>
 
         <button
