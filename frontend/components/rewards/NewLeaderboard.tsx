@@ -40,7 +40,7 @@ import {
 } from '@/constants'
 import { useDefendersLeaderboard, mapApiDefender } from '@/hooks/rewards/useDefendersLeaderboard'
 import { useAttackersLeaderboard, mapApiAttacker } from '@/hooks/rewards/useAttackersLeaderboard'
-import { formatAddress } from '@mysten/sui/utils'
+import { truncateAddress } from '@/lib/utils'
 
 export type DefenderTier = 'Bronze' | 'Silver' | 'Gold' | 'Diamond' | 'Legendary'
 export type AttackerTier = 'Recruit' | 'Hunter' | 'Specialist' | 'Elite' | 'Apex Predator'
@@ -307,7 +307,7 @@ function IdentityCell({
           rel="noopener noreferrer"
           className="block font-mono text-xs text-gray-400 hover:underline"
         >
-          {formatAddress(walletAddress)}
+          {truncateAddress(walletAddress)}
         </Link>
       </div>
     </div>

@@ -6,7 +6,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Dialog } from '@/components/Dialog'
 import { TruncatedText } from '@/components/TruncatedText'
 import { ConsumePromptApiResponse } from '@/types'
-import { SUIVISION_TXBLOCK_URL } from '@/constants'
+import { useActiveChain } from '@/context/ActiveChainContext'
+import { getExplorerTxUrl } from '@/lib/explorer'
 import { cn } from '@/lib/utils'
 import { SpinPassPromo } from '@/components/rewards/SpinPassPromo'
 
@@ -24,6 +25,9 @@ export const AttackStatusModal = ({
   txnHash,
 }: AttackStatusModalProps) => {
   const [isExplanationOpen, setIsExplanationOpen] = useState(true)
+  const { activeChain } = useActiveChain()
+
+  const txExplorerUrl = getExplorerTxUrl(txnHash, activeChain)
 
   const success = apiResponse?.response.data.success
   const originalScore = apiResponse?.response.data.score || 0
@@ -85,7 +89,7 @@ export const AttackStatusModal = ({
                 Your Attack Score: <span className="text-sm font-bold">{score}/100</span>
               </span>
               <Link
-                href={`${SUIVISION_TXBLOCK_URL}/${txnHash}`}
+                href={txExplorerUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="ml-1 mt-0.5 flex items-center text-[10px] font-medium text-[#989898] hover:text-black hover:underline"

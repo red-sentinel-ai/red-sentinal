@@ -1,8 +1,7 @@
 'use client'
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useCurrentAccount } from '@mysten/dapp-kit'
 import { useQueryClient } from '@tanstack/react-query'
 import posthog from 'posthog-js'
 
@@ -11,17 +10,21 @@ import type { ConsumePromptApiResponse } from '@/types'
 import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from '@/components/ui'
 import { AgentChallengePageSkeleton } from '@/components/ui/skeletons/AgentChallengePageSkeleton'
 import { useConsumePrompt } from '@/hooks/useConsumePrompt'
+import { useConsumeSolanaPrompt } from '@/hooks/useConsumeSolanaPrompt'
 import { useAgentDetails, AGENT_DETAILS_FULL_QUERY_KEY } from '@/hooks/agents/useAgentDetails'
 import { useAgentChatHistory, AGENT_CHAT_QUERY_KEY } from '@/hooks/agents/useAgentChatHistory'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { useActiveChain } from '@/context/ActiveChainContext'
+import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
 import ChatInterface from '@/components/agents/ChatInterface'
 import { AgentSidebar } from '@/components/agents/AgentSidebar'
 import { MobileAgentHeader } from './MobileAgentHeader'
 
 export default function AgentChallengePage({ slug }: { slug: string }) {
-  const account = useCurrentAccount()
   const queryClient = useQueryClient()
+  const { activeChain } = useActiveChain()
+  const { address: connectedAddress } = useConnectedAddress()
 
   const { data: agent, isLoading, error, refetch } = useAgentDetails(slug)
   const { data: chat, isLoading: chatLoading, refetch: refetchChat } = useAgentChatHistory(
@@ -30,50 +33,70 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
   const [isReadMoreOpen, setIsReadMoreOpen] = useState(false)
 
-  const { consumePrompt } = useConsumePrompt({
+  const handleAttackComplete = useCallback((apiResponse: ConsumePromptApiResponse, txDigest: string) => {
+    setApiResponse(apiResponse)
+    setTxnHash(txDigest)
+    setShowResultModal(true)
+
+    setTimeout(() => {
+      refetch()
+      refetchChat()
+      queryClient.invalidateQueries({
+        queryKey: [AGENT_DETAILS_FULL_QUERY_KEY, slug, APP_NETWORK],
+      })
+      queryClient.invalidateQueries({
+        queryKey: [AGENT_CHAT_QUERY_KEY, agent?.agent_id, APP_NETWORK],
+      })
+    }, 1000)
+
+    if (connectedAddress && agent) {
+      const isWinner = apiResponse.response.data.success
+
+      posthog.capture('sentinel_attacked', {
+        agent_id: agent.agent_id,
+        agent_name: agent.agent_name,
+        attacker_address: connectedAddress,
+        is_successful: isWinner,
+        attack_score: apiResponse.response.data.score,
+        tx_digest: txDigest,
+        cost_to_attack: Number(agent.cost_per_message) / Math.pow(10, getTokenForCoinType(agent.coin_type).decimals),
+        chain: activeChain,
+      })
+
+      if (isWinner) {
+        posthog.capture('sentinel_defeated', {
+          agent_id: agent.agent_id,
+          prize_pool_won: Number(agent.total_balance) / Math.pow(10, getTokenForCoinType(agent.coin_type).decimals),
+          winner_address: connectedAddress,
+          chain: activeChain,
+        })
+      }
+    }
+  }, [connectedAddress, agent, slug, refetch, refetchChat, queryClient, activeChain])
+
+  const { consumePrompt: suiConsumePrompt } = useConsumePrompt({
     showToasts: true,
     onError: err => {
       setSubmitError(err.message || 'Something went wrong')
     },
     onComplete: ({ apiResponse, transactionResult }) => {
-      setApiResponse(apiResponse)
-      setTxnHash(transactionResult.digest)
-      setShowResultModal(true)
-
-      setTimeout(() => {
-        refetch()
-        refetchChat()
-        queryClient.invalidateQueries({
-          queryKey: [AGENT_DETAILS_FULL_QUERY_KEY, slug, APP_NETWORK],
-        })
-        queryClient.invalidateQueries({
-          queryKey: [AGENT_CHAT_QUERY_KEY, agent?.agent_id, APP_NETWORK],
-        })
-      }, 1000)
-
-      if (account?.address && agent) {
-        const isWinner = apiResponse.response.data.success
-
-        posthog.capture('sentinel_attacked', {
-          agent_id: agent?.agent_id,
-          agent_name: agent?.agent_name,
-          attacker_address: account?.address,
-          is_successful: isWinner,
-          attack_score: apiResponse.response.data.score,
-          tx_digest: transactionResult.digest,
-          cost_to_attack: agent ? Number(agent.cost_per_message) / Math.pow(10, getTokenForCoinType(agent.coin_type).decimals) : 0,
-        })
-
-        if (isWinner) {
-          posthog.capture('sentinel_defeated', {
-            agent_id: agent?.agent_id,
-            prize_pool_won: agent ? Number(agent.total_balance) / Math.pow(10, getTokenForCoinType(agent.coin_type).decimals) : 0,
-            winner_address: account?.address,
-          })
-        }
-      }
+      handleAttackComplete(apiResponse, transactionResult.digest)
     },
   })
+
+  const { consumePrompt: solanaConsumePrompt } = useConsumeSolanaPrompt({
+    showToasts: true,
+    onError: err => {
+      setSubmitError(err.message || 'Something went wrong')
+    },
+    onComplete: ({ apiResponse, transactionDigest }) => {
+      handleAttackComplete(apiResponse, transactionDigest)
+    },
+  })
+
+  const agentChain = agent?.chain ?? 'sui'
+  const chainMismatch = agent && agentChain !== activeChain ? agentChain : null
+  const consumePrompt = agentChain === 'solana' ? solanaConsumePrompt : suiConsumePrompt
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -85,12 +108,16 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   const isMobile = useMediaQuery('(max-width: 768px)')
 
   const handleSendMessage = async (prompt: string) => {
-    if (!account?.address) {
-      setSubmitError('Please connect your wallet')
-      return
-    }
     if (!agent) {
       setSubmitError('Agent not loaded')
+      return
+    }
+    if (chainMismatch) {
+      setSubmitError(`Switch to ${chainMismatch === 'solana' ? 'Solana' : 'Sui'} to attack this sentinel`)
+      return
+    }
+    if (!connectedAddress) {
+      setSubmitError('Please connect your wallet')
       return
     }
     if (prompt.length === 0) {
@@ -187,6 +214,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
                   isSubmitting={isSubmitting}
                   submitError={submitError}
                   refetchAgent={refetch}
+                  chainMismatch={chainMismatch}
                 />
               )}
             </div>
@@ -220,6 +248,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
           isSubmitting={isSubmitting}
           submitError={submitError}
           refetchAgent={refetch}
+          chainMismatch={chainMismatch}
         />
       </div>
 

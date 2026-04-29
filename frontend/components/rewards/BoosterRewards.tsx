@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useCurrentAccount } from '@mysten/dapp-kit'
 import { Loader2, TrendingUp, Sparkles, Clock, RefreshCw } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatDistanceToNow } from 'date-fns'
@@ -10,12 +9,13 @@ import { SpinHistory } from './SpinHistory'
 import { SpinFeed } from './SpinFeed'
 import { useUserBoosters, useSpinHistory } from '@/hooks/rewards/useBoosters'
 import { useClaimReward } from '@/hooks/rewards/useClaimReward'
+import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import type { Booster, SpinResponse } from '@/types'
 import { BOOSTER_TIERS, SUI_SENTINEL_X_USERNAME, getTierAsset, getTierStyleConfig, getTierTextConfig } from '@/constants'
 import Image from 'next/image'
 
 export const BoosterRewards = () => {
-  const account = useCurrentAccount()
+  const { address: connectedAddress } = useConnectedAddress()
   const [selectedBooster, setSelectedBooster] = useState<Booster | null>(null)
   const [shareToTwitter, setShareToTwitter] = useState(false)
   const [lastSpinResult, setLastSpinResult] = useState<SpinResponse | null>(null)
@@ -26,17 +26,17 @@ export const BoosterRewards = () => {
     data: boostersData,
     isLoading: isLoadingBoosters,
     refetch: refetchBoosters,
-  } = useUserBoosters(account?.address)
-  const { data: spinHistoryData, isLoading: isLoadingHistory } = useSpinHistory(account?.address)
+  } = useUserBoosters(connectedAddress)
+  const { data: spinHistoryData, isLoading: isLoadingHistory } = useSpinHistory(connectedAddress)
   const { mutateAsync: claimReward } = useClaimReward()
 
   // Auto-claim pending rewards when component mounts
   useEffect(() => {
     const claimPendingRewards = async () => {
-      if (!account?.address) return
+      if (!connectedAddress) return
 
       try {
-        const result = await claimReward({ recipient: account.address })
+        const result = await claimReward({ recipient: connectedAddress })
         if (result.claimed && result.boosterAwarded) {
           toast.success(
             `🎉 ${result.boosterAwarded.tier} Spin Pass Claimed! ${result.boosterAwarded.multiplier}x Multiplier`,
@@ -52,7 +52,7 @@ export const BoosterRewards = () => {
     }
 
     claimPendingRewards()
-  }, [account?.address])
+  }, [connectedAddress])
 
   const activeBoosters = boostersData?.boosters.filter(b => b.status === 'active') || []
   const expiredBoosters = boostersData?.boosters.filter(b => b.status === 'expired') || []
@@ -93,11 +93,11 @@ export const BoosterRewards = () => {
   }
 
   const handleManualRefresh = async () => {
-    if (!account?.address || isRefreshing) return
+    if (!connectedAddress || isRefreshing) return
 
     setIsRefreshing(true)
     try {
-      const result = await claimReward({ recipient: account.address })
+      const result = await claimReward({ recipient: connectedAddress })
       if (result.claimed && result.boosterAwarded) {
         toast.success(
           `🎉 ${result.boosterAwarded.tier} Spin Pass Claimed! ${result.boosterAwarded.multiplier}x Multiplier`,

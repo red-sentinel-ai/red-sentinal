@@ -6,8 +6,9 @@ import { motion } from 'framer-motion'
 import clsx from 'clsx'
 import { formatDistanceToNow } from 'date-fns'
 import { Trophy } from 'lucide-react'
-import { formatAddress } from '@mysten/sui/utils'
-import { DEFAULT_PROFILE_URL, SUIVISION_TXBLOCK_URL } from '@/constants'
+import { DEFAULT_PROFILE_URL } from '@/constants'
+import { getExplorerTxUrl } from '@/lib/explorer'
+import { truncateAddress } from '@/lib/utils'
 import type { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { type ChatMessage as ChatMessageType } from './ChatInterface'
 import Link from 'next/link'
@@ -25,6 +26,7 @@ type ChatMessageProps = {
 
 export const ChatMessage = ({
   message,
+  agent,
   senderProfile,
   isWinningPrompt,
   onShowJury,
@@ -43,7 +45,7 @@ export const ChatMessage = ({
 
   const avatarUrl = senderProfile?.avatar_url || DEFAULT_PROFILE_URL
   const displayName =
-    senderProfile?.username || (message.sender ? formatAddress(message.sender) : 'User')
+    senderProfile?.username || (message.sender ? truncateAddress(message.sender) : 'User')
   const profileLink = `/u/${senderProfile?.username || message.sender}`
 
   return (
@@ -131,12 +133,12 @@ export const ChatMessage = ({
               <div className="absolute bottom-1 right-3 flex gap-3 whitespace-nowrap text-right text-[11px] text-[#666666]">
                 {message.type === 'agent' && message.txDigest && (
                   <a
-                    href={`${SUIVISION_TXBLOCK_URL}/${message.txDigest}`}
+                    href={getExplorerTxUrl(message.txDigest, agent.chain)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="break-all lowercase text-[#0F23A7] underline"
                   >
-                    {formatAddress(message.txDigest)}
+                    {truncateAddress(message.txDigest)}
                   </a>
                 )}
                 {message.type === 'agent' && message.score !== undefined && (
