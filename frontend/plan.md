@@ -1,4 +1,4 @@
-# Sui Sentinel — Rewards Page UI Spec
+# Red Sentinel — Rewards Page UI Spec
 
 ## Context & Purpose
 
@@ -195,11 +195,11 @@ Every mission is rendered as a card with these fields:
 | # | Mission | Type | Booster | Input | Requirements | Limit |
 |---|---------|------|---------|-------|--------------|-------|
 | 1 | Follow @suisentinal | Verify | 1x Common | [Verify] button (OAuth or manual check) | Verified account, one-time | Lifetime: 1 |
-| 2 | Like official tweet | Submit link | 1x Common | Tweet URL input | Must be an official Sui Sentinel tweet | 3/day |
-| 3 | Repost official tweet | Submit link | 2x Uncommon | Tweet URL input | Must be an official Sui Sentinel tweet | 3/day |
+| 2 | Like official tweet | Submit link | 1x Common | Tweet URL input | Must be an official Red Sentinel tweet | 3/day |
+| 3 | Repost official tweet | Submit link | 2x Uncommon | Tweet URL input | Must be an official Red Sentinel tweet | 3/day |
 | 4 | Quote tweet with insight | Submit link | 5x Rare | Tweet URL input | Min 50 characters of original text | 2/day |
 | 5 | Tag 3 friends | Submit link | 2x Uncommon | Tweet URL input | Tagged accounts must be real | 1/day |
-| 6 | Create thread (5+ tweets) | Submit link | 10x Epic | Thread URL input | Must be educational/informational about Sui Sentinel | 1/day |
+| 6 | Create thread (5+ tweets) | Submit link | 10x Epic | Thread URL input | Must be educational/informational about Red Sentinel | 1/day |
 | 7 | Thread goes viral (1K+ impressions) | Auto-detected | 25x Legendary | N/A (auto-verified from previously submitted threads) | Verified analytics | Unlimited |
 
 **Note:** Missions 1–6 are user-submitted. Mission 7 is auto-detected by the backend when a previously submitted thread hits the impression threshold — no separate submission needed. Show it as an info card explaining the bonus exists.
@@ -218,7 +218,7 @@ Every mission is rendered as a card with these fields:
 | 8 | Viral content (10K+ views) | Auto-detected | 100x Divine | N/A | Verified metrics from previously submitted content | Unlimited |
 
 **Review Queue Note:** Content missions go into a manual review queue. Show a banner at the top of this tab:
-> "Content submissions are reviewed by our team within 48 hours. Quality content that accurately represents Sui Sentinel earns boosters."
+> "Content submissions are reviewed by our team within 48 hours. Quality content that accurately represents Red Sentinel earns boosters."
 
 ### Tab 3: Community
 
@@ -497,7 +497,7 @@ RewardsPage
 
 ## Design Notes for Implementation
 
-- Match existing Sui Sentinel app styling (dark theme, brand colors)
+- Match existing Red Sentinel app styling (dark theme, brand colors)
 - Booster tier colors are a core visual element — use them consistently across badges, dots, card accents
 - Mission cards should feel like achievable tasks, not a wall of text
 - The "How It Works" section should be visually engaging enough to hook someone who's never heard of the system

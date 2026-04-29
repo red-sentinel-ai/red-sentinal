@@ -24,7 +24,7 @@ export async function sendEmailVerificationLink(toEmail: string, verificationUrl
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Verify your email – Sui Sentinel</title>
+      <title>Verify your email – Red Sentinel</title>
     </head>
     <body style="margin: 0; padding: 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: ${BG_GRAY}; color: #000000;">
       <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color: ${BG_GRAY}; padding: 40px 20px;">
@@ -34,7 +34,7 @@ export async function sendEmailVerificationLink(toEmail: string, verificationUrl
 
               <tr>
                 <td align="center" style="padding: 40px 40px 20px 40px;">
-                  <img src="${LOGO_URL}" alt="Sui Sentinel" width="180" style="display: block; border: 0; max-width: 100%; height: auto;" />
+                  <img src="${LOGO_URL}" alt="Red Sentinel" width="180" style="display: block; border: 0; max-width: 100%; height: auto;" />
                 </td>
               </tr>
 
@@ -51,7 +51,7 @@ export async function sendEmailVerificationLink(toEmail: string, verificationUrl
                   </h1>
 
                   <p style="margin: 0 0 16px 0; font-size: 16px; line-height: 1.6; color: ${TEXT_GRAY}; text-align: center;">
-                    Click the button below to connect <strong>${toEmail}</strong> to your Sui Sentinel profile.
+                    Click the button below to connect <strong>${toEmail}</strong> to your Red Sentinel profile.
                   </p>
 
                   <p style="margin: 0 0 24px 0; font-size: 14px; line-height: 1.6; color: ${TEXT_GRAY}; text-align: center;">
@@ -77,7 +77,7 @@ export async function sendEmailVerificationLink(toEmail: string, verificationUrl
 
               <tr>
                 <td style="background-color: #111111; padding: 20px; text-align: center;">
-                  <p style="margin: 0; font-size: 12px; color: #666666;">© 2026 Sui Sentinel. All Rights Reserved.</p>
+                  <p style="margin: 0; font-size: 12px; color: #666666;">© 2026 Red Sentinel. All Rights Reserved.</p>
                   <p style="margin: 5px 0 0 0; font-size: 12px; color: #444444;">Securing the future of On-Chain AI.</p>
                 </td>
               </tr>
@@ -102,11 +102,11 @@ export async function sendEmailVerificationLink(toEmail: string, verificationUrl
     Source: FROM_ADDRESS,
     Destination: { ToAddresses: [toEmail] },
     Message: {
-      Subject: { Data: 'Verify your email – Sui Sentinel', Charset: 'UTF-8' },
+      Subject: { Data: 'Verify your email – Red Sentinel', Charset: 'UTF-8' },
       Body: {
         Html: { Data: htmlContent, Charset: 'UTF-8' },
         Text: {
-          Data: `Verify your email address\n\nClick the link below to connect ${toEmail} to your Sui Sentinel profile. This link expires in 15 minutes.\n\n${verificationUrl}\n\nIf you didn't request this, you can safely ignore this email.\n\n© 2026 Sui Sentinel.`,
+          Data: `Verify your email address\n\nClick the link below to connect ${toEmail} to your Red Sentinel profile. This link expires in 15 minutes.\n\n${verificationUrl}\n\nIf you didn't request this, you can safely ignore this email.\n\n© 2026 Red Sentinel.`,
           Charset: 'UTF-8',
         },
       },

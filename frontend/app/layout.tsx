@@ -53,8 +53,8 @@ export const metadata: Metadata = {
   metadataBase: new URL(SUI_SENTINEL_APP_URL),
 
   title: {
-    default: 'Sui Sentinel | Crowdsourced AI Red Teaming on Sui Blockchain',
-    template: '%s | Sui Sentinel',
+    default: 'Red Sentinel | Crowdsourced AI Red Teaming on Sui Blockchain',
+    template: '%s | Red Sentinel',
   },
   description:
     'The first crowdsource AI red teaming platform. Attack AI systems, earn SUI/USDC rewards instantly. Deploy Sentinels, get real-world security testing. Every attack verified cryptographically on-chain.',
@@ -95,17 +95,17 @@ export const metadata: Metadata = {
   },
 
   openGraph: {
-    title: 'Sui Sentinel | Ship AI Agents Without Fear',
+    title: 'Red Sentinel | Ship AI Agents Without Fear',
     description:
       'Crowdsourced AI red teaming platform. Test AI defenses against real attacks, earn instant rewards. Every exploit verified cryptographically on Sui.',
     url: SUI_SENTINEL_APP_URL,
-    siteName: 'Sui Sentinel',
+    siteName: 'Red Sentinel',
     images: [
       {
         url: '/og-image-v6.png',
         width: 1200,
         height: 630,
-        alt: 'Sui Sentinel - Crowdsourced AI Red Teaming Platform on Sui',
+        alt: 'Red Sentinel - Crowdsourced AI Red Teaming Platform on Sui',
       },
     ],
     locale: 'en_US',
@@ -114,7 +114,7 @@ export const metadata: Metadata = {
 
   twitter: {
     card: 'summary_large_image',
-    title: 'Sui Sentinel | Break AI, Earn Crypto, Make Systems Safer',
+    title: 'Red Sentinel | Break AI, Earn Crypto, Make Systems Safer',
     description:
       'The first crowdsource AI red teaming platform. Attack AI systems → get paid instantly in SUI/USDC. Deploy Sentinels → get battle-tested security.',
     creator: `@${SUI_SENTINEL_X_USERNAME}`,
@@ -137,9 +137,9 @@ export const metadata: Metadata = {
     },
   },
 
-  authors: [{ name: 'Sui Sentinel', url: SUI_SENTINEL_APP_URL }],
-  creator: 'Sui Sentinel',
-  publisher: 'Sui Sentinel',
+  authors: [{ name: 'Red Sentinel', url: SUI_SENTINEL_APP_URL }],
+  creator: 'Red Sentinel',
+  publisher: 'Red Sentinel',
   category: 'Technology',
 }
 
@@ -148,7 +148,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const organizationSchema = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Sui Sentinel',
+    name: 'Red Sentinel',
     url: SUI_SENTINEL_APP_URL,
     logo: `${SUI_SENTINEL_APP_URL}/icons/logo-sm.svg`,
     sameAs: [`https://twitter.com/${SUI_SENTINEL_X_USERNAME}`, SUI_SENTINEL_GITHUB_URL],
@@ -171,7 +171,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const softwareSchema = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
-    name: 'Sui Sentinel',
+    name: 'Red Sentinel',
     applicationCategory: 'SecurityApplication',
     operatingSystem: 'Web',
     offers: {
@@ -201,7 +201,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const websiteSchema = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'Sui Sentinel',
+    name: 'Red Sentinel',
     url: SUI_SENTINEL_APP_URL,
     potentialAction: {
       '@type': 'SearchAction',
@@ -220,15 +220,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     mainEntity: [
       {
         '@type': 'Question',
-        name: 'What is Sui Sentinel?',
+        name: 'What is Red Sentinel?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Sui Sentinel is a crowdsourced AI red teaming platform built on the Sui blockchain. Companies deploy AI systems as "Sentinels" and security researchers attempt to break them through adversarial attacks like prompt injection and jailbreaking. Successful exploits are verified cryptographically and rewarded instantly.',
+          text: 'Red Sentinel is a crowdsourced AI red teaming platform built on the Sui blockchain. Companies deploy AI systems as "Sentinels" and security researchers attempt to break them through adversarial attacks like prompt injection and jailbreaking. Successful exploits are verified cryptographically and rewarded instantly.',
         },
       },
       {
         '@type': 'Question',
-        name: 'How do I earn rewards on Sui Sentinel?',
+        name: 'How do I earn rewards on Red Sentinel?',
         acceptedAnswer: {
           '@type': 'Answer',
           text: 'As an attacker (red teamer), pay per message to challenge Sentinels. Use your prompt engineering skills to jailbreak AI systems or extract sensitive information. Every verified successful attack pays instantly in SUI or USDC. As a defender, earn a share of attack fees while gathering valuable security data to improve your AI.',
@@ -236,7 +236,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       },
       {
         '@type': 'Question',
-        name: 'Why is Sui Sentinel on blockchain?',
+        name: 'Why is Red Sentinel on blockchain?',
         acceptedAnswer: {
           '@type': 'Answer',
           text: 'Blockchain enables trustless verification of attacks through TEE (Trusted Execution Environment) attestations and instant settlement of rewards. Neither party can dispute outcomes or delay payments — the protocol enforces everything transparently on-chain. This is impossible with traditional Web2 platforms.',
@@ -247,7 +247,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         name: 'What is AI red teaming?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'AI red teaming is the practice of testing AI systems for vulnerabilities by attempting to break their safety measures. This includes prompt injection attacks, jailbreaks, and adversarial prompts that can make AI leak data or perform unintended actions. Sui Sentinel makes this process continuous, crowdsourced, and economically incentivized.',
+          text: 'AI red teaming is the practice of testing AI systems for vulnerabilities by attempting to break their safety measures. This includes prompt injection attacks, jailbreaks, and adversarial prompts that can make AI leak data or perform unintended actions. Red Sentinel makes this process continuous, crowdsourced, and economically incentivized.',
         },
       },
     ],

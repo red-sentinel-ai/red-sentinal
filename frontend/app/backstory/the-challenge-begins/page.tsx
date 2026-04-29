@@ -107,7 +107,7 @@ export default function Page() {
           <br />
           <span className="text-3xl font-black">“Break us if you can.”</span>
           <br />
-          This is where the Sui Sentinel universe begins.
+          This is where the Red Sentinel universe begins.
         </p>
       </div>
 

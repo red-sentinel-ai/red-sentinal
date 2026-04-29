@@ -1,4 +1,4 @@
-Sui Sentinel frontend application
+Red Sentinel frontend application
 
 ## Getting Started
 
@@ -19,5 +19,5 @@ bun install
 bun dev
 ```
 
-Install slush wallet from https://slush.app/ as slush wallet is being used for login in Sui Sentinel.
+Install slush wallet from https://slush.app/ as slush wallet is being used for login in Red Sentinel.
 

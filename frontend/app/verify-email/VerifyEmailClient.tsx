@@ -55,7 +55,7 @@ export default function VerifyEmailClient() {
         </div>
 
         <div className="bg-[var(--color-text-primary)] px-5 py-5 text-center">
-          <p className="text-xs text-[var(--color-text-muted)]">© 2026 Sui Sentinel. All Rights Reserved.</p>
+          <p className="text-xs text-[var(--color-text-muted)]">© 2026 Red Sentinel. All Rights Reserved.</p>
           <p className="mt-1 text-xs text-[var(--color-text-faint)]">Securing the future of On-Chain AI.</p>
         </div>
       </div>

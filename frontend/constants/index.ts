@@ -706,21 +706,21 @@ export const MISSION_STEP1_CONFIG: Record<string, {
     urlPlaceholder: 'https://x.com/yourusername/status/...',
   },
   tag_friends: {
-    heading: 'Tag 3 friends in a tweet about Sui Sentinel',
+    heading: 'Tag 3 friends in a tweet about Red Sentinel',
     hint: 'Mention 3 real, active friends in your tweet about the platform.',
     actionLabel: 'Post on X',
     actionUrl: X_URL,
     urlPlaceholder: 'https://x.com/yourusername/status/...',
   },
   create_thread: {
-    heading: 'Create an educational thread about Sui Sentinel (5+ tweets)',
+    heading: 'Create an educational thread about Red Sentinel (5+ tweets)',
     hint: 'Write informational content covering platform features, attack/defend mechanics, or tokenomics.',
     actionLabel: 'Post on X',
     actionUrl: X_URL,
     urlPlaceholder: 'https://x.com/yourusername/status/... (first tweet in thread)',
   },
   short_video: {
-    heading: 'Create a short video showcasing Sui Sentinel (< 2 min)',
+    heading: 'Create a short video showcasing Red Sentinel (< 2 min)',
     hint: 'Ensure quality production with clear audio and video. Upload to YouTube, X, or similar.',
     urlPlaceholder: 'https://youtube.com/watch?v=... or https://x.com/...',
   },
@@ -730,7 +730,7 @@ export const MISSION_STEP1_CONFIG: Record<string, {
     urlPlaceholder: 'https://youtube.com/watch?v=... or https://x.com/...',
   },
   written_article: {
-    heading: 'Write a comprehensive article about Sui Sentinel (800+ words)',
+    heading: 'Write a comprehensive article about Red Sentinel (800+ words)',
     hint: 'Publish on X, Substack, Medium, or your own blog.',
     actionLabel: 'Go to X / Substack',
     actionUrl: X_URL,

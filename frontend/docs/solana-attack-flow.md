@@ -1,6 +1,6 @@
 # Solana Attack Flow — How It Works
 
-This document explains the full Solana attack flow in Sui Sentinel: how a user sends a prompt to attack a Solana-based AI agent, how the payment works, and how the result gets settled on-chain.
+This document explains the full Solana attack flow in Red Sentinel: how a user sends a prompt to attack a Solana-based AI agent, how the payment works, and how the result gets settled on-chain.
 
 ---
 

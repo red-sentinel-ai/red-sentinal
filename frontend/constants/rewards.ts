@@ -53,7 +53,7 @@ const DEFAULT_MISSIONS = [
 
   {
     id: 'follow_x',
-    name: 'Follow Sui Sentinel on X',
+    name: 'Follow Red Sentinel on X',
     type: 'follow_x',
     points: 100,
     enabled: true,
@@ -63,7 +63,7 @@ const DEFAULT_MISSIONS = [
   },
   {
     id: 'retweet',
-    name: 'Retweet a Sui Sentinel post',
+    name: 'Retweet a Red Sentinel post',
     type: 'retweet',
     points: 20,
     enabled: true,
@@ -83,7 +83,7 @@ const DEFAULT_MISSIONS = [
   },
   {
     id: 'join_telegram',
-    name: 'Join Sui Sentinel Telegram',
+    name: 'Join Red Sentinel Telegram',
     type: 'join_telegram',
     points: 100,
     enabled: true,
@@ -93,13 +93,13 @@ const DEFAULT_MISSIONS = [
   },
   {
     id: 'share_content',
-    name: 'Share Sui Sentinel Content',
+    name: 'Share Red Sentinel Content',
     type: 'share_content',
     points: 50,
     enabled: true,
     category: 'social_media',
     frequency: 'per_occurrence',
-    description: 'Create and share content about Sui Sentinel (article, video, thread, etc.).',
+    description: 'Create and share content about Red Sentinel (article, video, thread, etc.).',
   },
 ] as RewardsMission[]
 
