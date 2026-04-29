@@ -177,9 +177,9 @@ We're focused on several fronts:
 The arena is open. Whether you're a defender who wants to stress-test your AI system with real adversaries, or a red teamer looking to sharpen your skills and earn rewards — Red Sentinel is live.
 
 - **App**: [app.redsentinel.xyz](https://app.redsentinel.xyz/)
-- **Docs**: [docs.suisentinel.xyz](https://docs.suisentinel.xyz/)
+- **Docs**: [docs.redsentinel.xyz](https://docs.redsentinel.xyz/)
 - **Smart Contracts**: [github.com/sui-sentinel/contracts](https://github.com/sui-sentinel/contracts)
-- **Security Audit**: [OtterSec Report](https://www.suisentinel.xyz/pdfs/audit_final.pdf)
+- **Security Audit**: [OtterSec Report](https://www.redsentinel.xyz/pdfs/audit_final.pdf)
 - **Twitter/X**: [@suisentinal](https://x.com/suisentinal)
 - **Telegram**: [t.me/suisentinel](https://t.me/suisentinel)
 
