@@ -77,7 +77,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Red Sentinel | Break AI, Earn Crypto, Make Systems Safer',
     description:
-      'The first crowdsource AI red teaming platform. Attack AI systems → get paid instantly in SUI/USDC. Deploy Sentinels → get battle-tested.',
+      'The first crowdsource AI red teaming platform. Attack AI systems → get paid instantly in tokens. Deploy Sentinels → get battle-tested.',
     creator: `@${SUI_SENTINEL_X_USERNAME}`,
     images: ['/og-image-v6.png'],
   },
@@ -140,7 +140,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       'Cryptographic Verification',
       'Instant On-Chain Settlement',
       'TEE-based Attack Verification',
-      'Bounty Rewards in SUI/USDC',
+      'Bounty Rewards in Real Value Tokens',
     ],
     url: SUI_SENTINEL_APP_URL,
     screenshot: `${SUI_SENTINEL_LANDING_PAGE_URL}/og-image-v6.png`,

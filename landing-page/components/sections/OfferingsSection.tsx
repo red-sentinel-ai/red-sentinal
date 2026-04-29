@@ -49,7 +49,7 @@ export function OfferingsSection() {
 
               <p className="text-base md:text-[20px] leading-relaxed text-[#939393]">
                 Browse active Sentinels, pay per attack, and use your prompt engineering skills to
-                break AI defenses. Every successful exploit pays instantly in SUI/USDC. The ultimate
+                break AI defenses. Every successful exploit pays instantly in real tokens. The ultimate
                 test of your red teaming skills.
               </p>
 
