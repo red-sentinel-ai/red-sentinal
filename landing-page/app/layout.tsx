@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     siteName: 'Red Sentinel',
     images: [
       {
-        url: '/og-image-v5.png',
+        url: '/og-image-v6.png',
         width: 1200,
         height: 630,
         alt: 'Red Sentinel: Crowdsourced AI Red Teaming Platform',
@@ -77,7 +77,7 @@ export const metadata: Metadata = {
     description:
       'The first crowdsource AI red teaming platform. Attack AI systems → get paid instantly in SUI/USDC. Deploy Sentinels → get battle-tested.',
     creator: `@${SUI_SENTINEL_X_USERNAME}`,
-    images: ['/og-image-v5.png'],
+    images: ['/og-image-v6.png'],
   },
   alternates: {
     canonical: SUI_SENTINEL_LANDING_PAGE_URL,
@@ -141,7 +141,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       'Bounty Rewards in SUI/USDC',
     ],
     url: SUI_SENTINEL_APP_URL,
-    screenshot: `${SUI_SENTINEL_LANDING_PAGE_URL}/og-image-v5.png`,
+    screenshot: `${SUI_SENTINEL_LANDING_PAGE_URL}/og-image-v6.png`,
   }
 
   // WebSite Schema with Search
