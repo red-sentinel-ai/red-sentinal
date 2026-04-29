@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { User, Folder } from 'lucide-react'
-import { formatAddress } from '@mysten/sui/utils'
+import { truncateAddress } from '@/lib/utils'
 import { supabaseServiceClient } from '@/db/config/server'
 import { FeaturedAgentCard } from '@/components/FeaturedAgentCard'
 import { type AgentDetails } from '@/hooks/agents/useAllAgents'
@@ -92,7 +92,7 @@ export default async function PublicProfilePage({
                     rel="noopener noreferrer"
                     className="font-mono text-sm text-blue-600 hover:underline"
                   >
-                    {formatAddress(user.wallet_addresses[0])}
+                    {truncateAddress(user.wallet_addresses[0])}
                   </Link>
                 </div>
               )}

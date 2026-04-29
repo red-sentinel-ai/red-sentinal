@@ -1,10 +1,32 @@
 'use client'
 import { FundAgentModal, FundAgentModalProps } from '@/components/FundAgentModal'
 import React, { useState } from 'react'
+import type { SupportedChain } from '@/constants/chains'
+
+interface OpenFundAgentModalArgs {
+  agentObjectId: string
+  agentId: string
+  coinType?: string
+  tokenSymbol?: string
+  tokenDecimals?: number
+  chain?: SupportedChain
+}
 
 interface UseFundAgentModalReturn {
-  openModal: (agentObjectId: string, agentId: string, coinType?: string, tokenSymbol?: string, tokenDecimals?: number) => void
-  Modal: React.FC<Omit<FundAgentModalProps, 'open' | 'onClose' | 'agentObjectId' | 'agentId' | 'coinType' | 'tokenSymbol' | 'tokenDecimals'>>
+  openModal: (args: OpenFundAgentModalArgs) => void
+  Modal: React.FC<
+    Omit<
+      FundAgentModalProps,
+      | 'open'
+      | 'onClose'
+      | 'agentObjectId'
+      | 'agentId'
+      | 'coinType'
+      | 'tokenSymbol'
+      | 'tokenDecimals'
+      | 'chain'
+    >
+  >
 }
 
 /**
@@ -20,13 +42,22 @@ export function useFundAgentModal(): UseFundAgentModalReturn {
   const [currentCoinType, setCurrentCoinType] = useState<string | undefined>(undefined)
   const [currentTokenSymbol, setCurrentTokenSymbol] = useState<string | undefined>(undefined)
   const [currentTokenDecimals, setCurrentTokenDecimals] = useState<number | undefined>(undefined)
+  const [currentChain, setCurrentChain] = useState<SupportedChain>('sui')
 
-  const openModal = (agentObjectId: string, agentId: string, coinType?: string, tokenSymbol?: string, tokenDecimals?: number) => {
+  const openModal = ({
+    agentObjectId,
+    agentId,
+    coinType,
+    tokenSymbol,
+    tokenDecimals,
+    chain = 'sui',
+  }: OpenFundAgentModalArgs) => {
     setCurrentObjectId(agentObjectId)
     setCurrentAgentId(agentId)
     setCurrentCoinType(coinType)
     setCurrentTokenSymbol(tokenSymbol)
     setCurrentTokenDecimals(tokenDecimals)
+    setCurrentChain(chain)
     setIsOpen(true)
   }
 
@@ -37,7 +68,17 @@ export function useFundAgentModal(): UseFundAgentModalReturn {
   }
 
   const Modal: React.FC<
-    Omit<FundAgentModalProps, 'open' | 'onClose' | 'agentObjectId' | 'agentId' | 'coinType' | 'tokenSymbol' | 'tokenDecimals'>
+    Omit<
+      FundAgentModalProps,
+      | 'open'
+      | 'onClose'
+      | 'agentObjectId'
+      | 'agentId'
+      | 'coinType'
+      | 'tokenSymbol'
+      | 'tokenDecimals'
+      | 'chain'
+    >
   > = props => (
     <FundAgentModal
       open={isOpen}
@@ -47,6 +88,7 @@ export function useFundAgentModal(): UseFundAgentModalReturn {
       coinType={currentCoinType}
       tokenSymbol={currentTokenSymbol}
       tokenDecimals={currentTokenDecimals}
+      chain={currentChain}
       {...props}
     />
   )

@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { toast } from 'sonner'
-import { useCurrentAccount } from '@mysten/dapp-kit'
 import { SlotReel } from './SlotReel'
 import { useSpinBooster } from '@/hooks/rewards/useBoosters'
+import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import type { Booster, SpinResponse } from '@/types'
 
 interface SlotMachineProps {
@@ -19,7 +19,7 @@ export const SlotMachine = ({
   onError,
   shareToTwitter = false,
 }: SlotMachineProps) => {
-  const account = useCurrentAccount()
+  const { address: connectedAddress } = useConnectedAddress()
   const [isSpinning, setIsSpinning] = useState(false)
   const [hasWon, setHasWon] = useState(false)
   const [result, setResult] = useState<number[]>([4, 5, 4])
@@ -58,7 +58,7 @@ export const SlotMachine = ({
 
     clickAudioRef.current?.play().catch(e => console.error('Audio play failed', e))
 
-    if (!account?.address) {
+    if (!connectedAddress) {
       toast.error('Please connect your wallet first')
       return
     }
@@ -74,7 +74,7 @@ export const SlotMachine = ({
 
     try {
       const data = await spinBooster({
-        walletAddress: account.address,
+        walletAddress: connectedAddress,
         boosterId: booster._id,
         shareToTwitter,
       })

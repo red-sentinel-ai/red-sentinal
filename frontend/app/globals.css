@@ -738,3 +738,53 @@ body::-webkit-scrollbar-thumb:hover {
     padding: 1px 8px;
   }
 }
+
+/* ── Solana Wallet Adapter – light theme overrides ─────────────────────────── */
+.wallet-adapter-modal-wrapper {
+  background: #ffffff;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.wallet-adapter-modal-title {
+  color: #111827;
+  padding: 40px 40px 24px;
+  font-size: 20px;
+}
+
+.wallet-adapter-button {
+  color: #111827;
+}
+
+.wallet-adapter-button:not([disabled]):hover {
+  background-color: #f3f4f6;
+}
+
+.wallet-adapter-modal-list .wallet-adapter-button {
+  border-radius: 12px;
+  margin: 0 12px;
+  width: calc(100% - 24px);
+}
+
+.wallet-adapter-modal-list .wallet-adapter-button span {
+  color: #6b7280;
+}
+
+.wallet-adapter-modal-button-close {
+  background: #f3f4f6;
+}
+
+.wallet-adapter-modal-button-close svg {
+  fill: #6b7280;
+}
+
+.wallet-adapter-modal-button-close:hover svg {
+  fill: #111827;
+}
+
+/* Hide the "More wallets" toggle – not-installed wallets do nothing when clicked */
+.wallet-adapter-modal-list-more {
+  display: none;
+}
+/* ─────────────────────────────────────────────────────────────────────────── */

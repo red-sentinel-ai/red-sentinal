@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (c), Mysten Labs, Inc.
+# Copyright (c), Sui Sentinel
 # SPDX-License-Identifier: Apache-2.0
 
 # - Setup script for nautilus-server that acts as an init script
@@ -25,9 +25,12 @@ echo "127.0.0.1   localhost" > /etc/hosts
 echo "127.0.0.64   api.anthropic.com" >> /etc/hosts
 echo "127.0.0.65   oauth2.googleapis.com" >> /etc/hosts
 echo "127.0.0.66   us-central1-aiplatform.googleapis.com" >> /etc/hosts
-echo "127.0.0.67   fullnode.testnet.sui.io" >> /etc/hosts
-echo "127.0.0.68   fullnode.mainnet.sui.io" >> /etc/hosts
-echo "127.0.0.69   redteam.suisentinel.xyz" >> /etc/hosts
+# Solana RPC endpoints
+echo "127.0.0.67   api.devnet.solana.com" >> /etc/hosts
+echo "127.0.0.68   api.testnet.solana.com" >> /etc/hosts
+echo "127.0.0.69   api.mainnet-beta.solana.com" >> /etc/hosts
+# Sentinel backend
+echo "127.0.0.70   redteam.suisentinel.xyz" >> /etc/hosts
 
 
 # End of hosts record
@@ -51,9 +54,12 @@ rm -f /tmp/kvpairs
 python3 /traffic_forwarder.py 127.0.0.64 443 3 8101 &
 python3 /traffic_forwarder.py 127.0.0.65 443 3 8102 &
 python3 /traffic_forwarder.py 127.0.0.66 443 3 8103 &
+# Solana RPC endpoints
 python3 /traffic_forwarder.py 127.0.0.67 443 3 8104 &
 python3 /traffic_forwarder.py 127.0.0.68 443 3 8105 &
 python3 /traffic_forwarder.py 127.0.0.69 443 3 8106 &
+# Sentinel backend
+python3 /traffic_forwarder.py 127.0.0.70 443 3 8107 &
 
 
 # End of traffic-forwarder-block

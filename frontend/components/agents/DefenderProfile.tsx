@@ -1,9 +1,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { User, Wallet } from 'lucide-react'
-import { formatAddress } from '@mysten/sui/utils'
 import { type Tables } from '@/lib/database.types'
 import { DEFAULT_PROFILE_URL } from '@/constants'
+import { truncateAddress } from '@/lib/utils'
 import { Skeleton } from '@/components/ui/skeleton'
 
 type UserProfile = Pick<Tables<'ss_users'>, 'username' | 'avatar_url'> | null | undefined
@@ -63,7 +63,7 @@ export const DefenderProfile = ({ ownerAddress, profile, isLoading }: DefenderPr
             onClick={e => e.preventDefault()}
           >
             <Wallet className="h-2.5 w-2.5 flex-shrink-0 md:h-3 md:w-3" />
-            {formatAddress(ownerAddress)}
+            {truncateAddress(ownerAddress)}
           </div>
         </div>
       </Link>

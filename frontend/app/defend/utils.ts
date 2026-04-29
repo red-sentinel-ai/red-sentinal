@@ -1,3 +1,5 @@
+import type { SupportedChain } from '@/constants/chains'
+
 export const registerAgentUtil = async (
   systemPrompt: string,
   feePerMessage: number,
@@ -7,12 +9,14 @@ export const registerAgentUtil = async (
   privatePrompt: string,
   attackGoal: string,
   juryPrompt: string,
+  chain: SupportedChain = 'sui',
   customProviderDetails?: {
     apiBaseUrl: string
     apiKey: string
   }
 ) => {
   const body: Record<string, any> = {
+    chain,
     system_prompt: systemPrompt,
     cost_per_message: feePerMessage,
     creator: creatorAddress,
