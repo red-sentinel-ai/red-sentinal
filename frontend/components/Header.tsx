@@ -6,6 +6,9 @@ import Link from 'next/link'
 import { MenuIcon, X } from 'lucide-react'
 
 import { APP_NETWORK, X_URL } from '@/constants'
+import { CHAINS, SUPPORTED_CHAINS } from '@/constants/chains'
+import { useActiveChain } from '@/context/ActiveChainContext'
+import { cn } from '@/lib/utils'
 import { ConnectButton } from './ConnectButton'
 import { ChainSwitcher } from './ChainSwitcher'
 import { DesktopNav } from './DesktopNav'
@@ -18,6 +21,7 @@ const LOGO_SMALL_SRC = '/icons/logo-sm.svg'
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { activeChain, setActiveChain } = useActiveChain()
 
   return (
     <header className="fixed left-0 right-0 top-0 z-50 w-full">
@@ -94,13 +98,37 @@ export const Header = () => {
               className="fixed inset-0 top-[96px] z-40 bg-[var(--color-overlay)] backdrop-blur-sm md:top-[100px] xl:hidden"
               onClick={() => setMobileMenuOpen(false)}
             />
-            <div className="absolute left-0 right-0 top-full z-50 border-b border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)]/95 px-4 pb-6 pt-2 shadow-[var(--shadow-elevated)] backdrop-blur-xl xl:hidden">
+            <div className="absolute left-0 right-0 top-full z-50 border-b border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] px-4 pb-6 pt-2 shadow-[var(--shadow-elevated)] xl:hidden">
               <div className="border-t border-[var(--color-border-subtle)] pt-4">
                 <MobileNav onItemClick={() => setMobileMenuOpen(false)} />
               </div>
-              <div className="mt-4 flex items-center justify-center gap-2">
-                <ChainSwitcher />
-                <ConnectButton />
+              <div className="mt-4 space-y-3">
+                <div className="flex items-center gap-1 rounded-full border border-[var(--color-border-subtle)] p-1">
+                  {SUPPORTED_CHAINS.map(chainId => (
+                    <button
+                      key={chainId}
+                      onClick={() => setActiveChain(chainId)}
+                      className={cn(
+                        'flex flex-1 items-center justify-center gap-1.5 rounded-full px-3 py-2 text-sm font-medium transition-colors',
+                        activeChain === chainId
+                          ? 'bg-[var(--color-bg-subtle)] text-[var(--color-text-primary)]'
+                          : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'
+                      )}
+                    >
+                      <Image
+                        src={CHAINS[chainId].icon}
+                        alt={CHAINS[chainId].name}
+                        width={16}
+                        height={16}
+                        className="rounded-full"
+                      />
+                      {CHAINS[chainId].name}
+                    </button>
+                  ))}
+                </div>
+                <div className="flex justify-center">
+                  <ConnectButton />
+                </div>
               </div>
             </div>
           </>

@@ -42,7 +42,7 @@ export function WalletDropdown({ address, rawAddress, balanceLabel, isLoadingBal
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="w-64 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)]/80 p-2 text-[var(--color-text-primary)] backdrop-blur-xl sm:w-72"
+        className="w-64 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-2 text-[var(--color-text-primary)] shadow-xl sm:w-72"
         align="end"
       >
         <DropdownMenuLabel className="px-2 pt-2 text-lg font-bold text-[var(--color-text-primary)]">
