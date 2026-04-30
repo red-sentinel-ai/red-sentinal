@@ -7,7 +7,6 @@ import { MenuIcon, X } from 'lucide-react'
 
 import { APP_NETWORK, X_URL } from '@/constants'
 import { ConnectButton } from './ConnectButton'
-import { ChainSwitcher } from './ChainSwitcher'
 import { DesktopNav } from './DesktopNav'
 import { MobileNav } from './MobileNav'
 import SentinelStatsBar from './statbar/StatBar'
@@ -61,10 +60,6 @@ export const Header = () => {
             Support on X
           </Link>
 
-          <div className="ms-4 hidden xl:block">
-            <ChainSwitcher />
-          </div>
-
           <div className="ms-2 hidden xl:block">
             <ConnectButton />
           </div>
@@ -99,7 +94,6 @@ export const Header = () => {
                 <MobileNav onItemClick={() => setMobileMenuOpen(false)} />
               </div>
               <div className="mt-4 flex items-center justify-center gap-2">
-                <ChainSwitcher />
                 <ConnectButton />
               </div>
             </div>
