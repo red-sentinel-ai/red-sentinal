@@ -480,7 +480,7 @@ export default function DefendPageClient() {
                   onChange={handleChangeWithProviderReset}
                   className="font-body h-full flex-1 bg-transparent px-4 text-base text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:outline-none"
                   placeholder="0.00"
-                  step="0.1"
+                  step="any"
                   min={activeMinimumAmount.toString()}
                   autoComplete="off"
                 />
@@ -506,7 +506,7 @@ export default function DefendPageClient() {
               error={errors.feePerMessage}
               type="number"
               placeholder="0.00"
-              step="0.1"
+              step="any"
               className="h-full"
             />
           </div>
