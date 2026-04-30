@@ -59,7 +59,7 @@ export const AgentsList = ({
           <LeaderboardSkeleton />
         ) : (
           <div className="flex flex-col gap-1">
-            <div className="mb-2 hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-deepest)] p-3 text-lg font-medium shadow-[var(--shadow-card)] md:grid md:grid-cols-12 md:gap-4">
+            <div className="mb-2 hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-deepest)] p-3 text-lg font-medium shadow-[var(--shadow-card)] md:grid md:gap-4 md:[grid-template-columns:repeat(13,minmax(0,1fr))]">
               <div className="col-span-1 flex items-center">
                 <span>#</span>
               </div>
@@ -70,6 +70,7 @@ export const AgentsList = ({
                 <span>ID</span>
                 <SortIcon field="agent_id" />
               </div>
+              <div className="col-span-1 flex items-center">Chain</div>
               <div className="col-span-2 flex items-center">Sentinel</div>
               <div
                 className="col-span-2 flex cursor-pointer items-center hover:text-gray-600"
@@ -121,13 +122,6 @@ export const AgentsList = ({
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <span className="">#{idx + 1}</span>
-                          <Image
-                            src={CHAINS[agent.chain ?? 'sui'].icon}
-                            alt={CHAINS[agent.chain ?? 'sui'].name}
-                            width={14}
-                            height={14}
-                            className="shrink-0 rounded-full"
-                          />
                           <span className="truncate">{agent.agent_name}</span>
                           {agent.is_featured && (
                             <Image
@@ -180,22 +174,27 @@ export const AgentsList = ({
                           <p>{agent.total_attacks || 0}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-[var(--color-text-muted)]">7d Change</p>
-                          <PrizePoolChangeDisplay
-                            prizePoolHistory={agent.prizePoolHistory}
-                            variant="list"
-                          />
+                          <p className="text-xs text-[var(--color-text-muted)]">Chain</p>
+                          <div className="flex items-center gap-1">
+                            <Image
+                              src={CHAINS[agent.chain ?? 'sui'].icon}
+                              alt={CHAINS[agent.chain ?? 'sui'].name}
+                              width={14}
+                              height={14}
+                              className="rounded-full"
+                            />
+                            <p>{CHAINS[agent.chain ?? 'sui'].name}</p>
+                          </div>
                         </div>
                       </div>
                     </div>
 
-                    <div className="hidden items-center md:grid md:grid-cols-12 md:gap-4">
+                    <div className="hidden items-center md:grid md:gap-4 md:[grid-template-columns:repeat(13,minmax(0,1fr))]">
                       <div className="col-span-1 flex items-center">
                         <span>{idx + 1}</span>
                       </div>
                       <div className="col-span-1 flex items-center">{agent.agent_id}</div>
-
-                      <div className="col-span-2 flex items-center gap-1">
+                      <div className="col-span-1 flex items-center gap-1.5">
                         <Image
                           src={CHAINS[agent.chain ?? 'sui'].icon}
                           alt={CHAINS[agent.chain ?? 'sui'].name}
@@ -203,6 +202,10 @@ export const AgentsList = ({
                           height={16}
                           className="shrink-0 rounded-full"
                         />
+                        <span className="text-sm">{CHAINS[agent.chain ?? 'sui'].name}</span>
+                      </div>
+
+                      <div className="col-span-2 flex min-w-0 items-center gap-1.5">
                         <span className="truncate">{agent.agent_name}</span>
                         {agent.is_featured && (
                           <Image

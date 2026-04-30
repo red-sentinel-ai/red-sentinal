@@ -9,6 +9,7 @@ import { useFundAgentModal } from '@/hooks/useFundAgentModal'
 import { useFeatureAgentModal } from '@/hooks/useFeatureAgentModal'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { getTokenForCoinType } from '@/constants'
+import { CHAINS } from '@/constants/chains'
 import { AgentDropdown } from './agents/AgentCardDropdown'
 import { useWithdrawAgentModal } from '@/hooks/agents/useWithdrawAgentModal'
 import { formatDuration } from '@/lib/utils'
@@ -191,6 +192,18 @@ export const FeaturedAgentCard = ({
                 className="size-4 sm:size-5"
               />
             )}
+          </div>
+          <div className="mb-2 flex items-center justify-center gap-1">
+            <Image
+              src={CHAINS[agent.chain ?? 'sui'].icon}
+              alt={CHAINS[agent.chain ?? 'sui'].name}
+              width={13}
+              height={13}
+              className="rounded-full"
+            />
+            <span className="text-xs text-[var(--color-text-muted)]">
+              {CHAINS[agent.chain ?? 'sui'].name}
+            </span>
           </div>
           <div className="mx-auto flex max-w-[394px] border-t border-[var(--color-border-subtle)]"></div>
         </div>

@@ -4,7 +4,9 @@ import { APP_NETWORK, type SupportedToken } from './shared'
 export const SOLANA_CLUSTER = APP_NETWORK === 'mainnet' ? 'mainnet-beta' : 'devnet'
 
 export const SOLANA_RPC_URL =
-  process.env.NEXT_PUBLIC_SOLANA_RPC_URL ?? clusterApiUrl(SOLANA_CLUSTER)
+  APP_NETWORK === 'mainnet'
+    ? (process.env.NEXT_PUBLIC_SOLANA_RPC_URL ?? clusterApiUrl(SOLANA_CLUSTER))
+    : clusterApiUrl(SOLANA_CLUSTER)
 
 export const SOLANA_SUPPORTED_WALLETS = [
   'Phantom',
