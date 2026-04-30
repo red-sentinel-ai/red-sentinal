@@ -18,6 +18,8 @@ import { useFundAgentModal } from '@/hooks/useFundAgentModal'
 import { useWithdrawAgentModal } from '@/hooks/agents/useWithdrawAgentModal'
 import { useFeatureAgentModal } from '@/hooks/useFeatureAgentModal'
 import { TokenFilterDropdown } from '@/components/agents/TokenFilterDropdown'
+import { ChainFilterDropdown } from '@/components/agents/ChainFilterDropdown'
+import { type SupportedChain, CHAINS } from '@/constants/chains'
 
 const BIG_BOUNTY_THRESHOLD_MIST = BigInt(20_000_000_000) // 20 SUI
 
@@ -28,6 +30,7 @@ export const AgentListView = () => {
   const [sortField, setSortField] = useState<SortField>('total_balance')
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
   const [selectedCoinType, setSelectedCoinType] = useState<string | undefined>(undefined)
+  const [selectedChain, setSelectedChain] = useState<SupportedChain | undefined>(undefined)
 
   // Single instance of modals at parent level to avoid duplicate hook calls
   const { Modal: FundModal, openModal: openFundModal } = useFundAgentModal()
@@ -40,7 +43,7 @@ export const AgentListView = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useAllAgents(sortField, sortDirection, selectedCoinType, true)
+  } = useAllAgents(sortField, sortDirection, selectedCoinType, true, selectedChain)
 
   const { data: featuredAgents, isPending: isFetchingFeaturedAgents } = useFeaturedAgents(true)
   const { data: availableTokens = [] } = useAgentCoinTypes()
@@ -160,6 +163,10 @@ export const AgentListView = () => {
           </div>
 
           <div className="flex items-center gap-2">
+            <ChainFilterDropdown
+              selectedChain={selectedChain}
+              onSelect={setSelectedChain}
+            />
             <TokenFilterDropdown
               availableTokens={availableTokens}
               selectedCoinType={selectedCoinType}
@@ -191,25 +198,45 @@ export const AgentListView = () => {
         </div>
       </div>
 
-      {selectedCoinType && selectedToken && (
-        <div className="mb-3 flex items-center gap-2">
+      {(selectedCoinType || selectedChain) && (
+        <div className="mb-3 flex flex-wrap items-center gap-2">
           <span className="font-body text-xs text-[var(--color-text-muted)]">Filtered by:</span>
-          <span className="font-body flex items-center gap-1.5 rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] px-2.5 py-0.5 text-xs font-medium text-[var(--color-text-primary)]">
-            <Image
-              src={selectedToken.icon}
-              alt={selectedToken.symbol}
-              width={14}
-              height={14}
-              className="rounded-full"
-            />
-            {selectedToken.symbol}
-            <button
-              onClick={() => setSelectedCoinType(undefined)}
-              className="ml-0.5 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
-            >
-              <X className="h-3 w-3" />
-            </button>
-          </span>
+          {selectedChain && (
+            <span className="font-body flex items-center gap-1.5 rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] px-2.5 py-0.5 text-xs font-medium text-[var(--color-text-primary)]">
+              <Image
+                src={CHAINS[selectedChain].icon}
+                alt={CHAINS[selectedChain].name}
+                width={14}
+                height={14}
+                className="rounded-full"
+              />
+              {CHAINS[selectedChain].name}
+              <button
+                onClick={() => setSelectedChain(undefined)}
+                className="ml-0.5 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </span>
+          )}
+          {selectedCoinType && selectedToken && (
+            <span className="font-body flex items-center gap-1.5 rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] px-2.5 py-0.5 text-xs font-medium text-[var(--color-text-primary)]">
+              <Image
+                src={selectedToken.icon}
+                alt={selectedToken.symbol}
+                width={14}
+                height={14}
+                className="rounded-full"
+              />
+              {selectedToken.symbol}
+              <button
+                onClick={() => setSelectedCoinType(undefined)}
+                className="ml-0.5 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </span>
+          )}
         </div>
       )}
 

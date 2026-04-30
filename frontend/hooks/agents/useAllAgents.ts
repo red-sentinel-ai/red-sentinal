@@ -54,10 +54,16 @@ export const useAllAgents = (
   sortField: SortField = 'total_balance',
   sortDirection: SortDirection = 'desc',
   coinTypeFilter?: string,
-  skipChainFilter?: boolean
+  skipChainFilter?: boolean,
+  explicitChainFilter?: 'sui' | 'solana'
 ) => {
   const { activeChain } = useActiveChain()
-  const chainFilter = skipChainFilter ? undefined : activeChain
+  const chainFilter =
+    explicitChainFilter !== undefined
+      ? explicitChainFilter
+      : skipChainFilter
+        ? undefined
+        : activeChain
 
   return useInfiniteQuery<AgentsResponse, Error>({
     queryKey: [ALL_AGENTS_QUERY_KEY, sortField, sortDirection, coinTypeFilter, chainFilter ?? 'all'],
