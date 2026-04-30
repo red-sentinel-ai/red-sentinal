@@ -3,7 +3,7 @@ import crypto from 'crypto'
 import { sendEmailVerificationLink } from '@/lib/emailUtils'
 
 const SECRET = process.env.NEXTAUTH_SECRET || ''
-const APP_URL = process.env.NEXTAUTH_URL || 'https://app.suisentinel.xyz'
+const APP_URL = process.env.NEXTAUTH_URL || 'https://app.redsentinel.xyz'
 const TOKEN_TTL_MS = 15 * 60 * 1000 // 15 minutes
 
 function createToken(email: string, walletAddress: string): string {

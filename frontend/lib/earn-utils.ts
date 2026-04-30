@@ -10,7 +10,7 @@ import { SUI_SENTINEL_APP_URL } from '@/constants'
 export const TWITTER_MISSIONS: EarnMission[] = [
   {
     id: 'follow_x',
-    title: 'Follow @suisentinal',
+    title: 'Follow @redsentinel_ai',
     description: 'Follow our X account to earn a Common Spin Pass (1x booster).',
     boosterTier: 'COMMON',
     multiplier: 1,
@@ -26,7 +26,7 @@ export const TWITTER_MISSIONS: EarnMission[] = [
   {
     id: 'like_tweet',
     title: 'Like Official Tweet',
-    description: 'Like any official tweet from @suisentinal to show your support.',
+    description: 'Like any official tweet from @redsentinel_ai to show your support.',
     boosterTier: 'COMMON',
     multiplier: 1,
     requirements: {
@@ -40,7 +40,7 @@ export const TWITTER_MISSIONS: EarnMission[] = [
   {
     id: 'repost_tweet',
     title: 'Repost Official Tweet',
-    description: 'Repost an official tweet from @suisentinal to help spread the word.',
+    description: 'Repost an official tweet from @redsentinel_ai to help spread the word.',
     boosterTier: 'UNCOMMON',
     multiplier: 2,
     requirements: {

@@ -28,7 +28,7 @@ const MISSION_CONFIG = {
     title: 'Follow Red Sentinel on X',
     icon: '/icons/x_black.png',
     iconAlt: 'X',
-    instructions: 'Follow @suisentinal on X to earn Sentinel tokens.',
+    instructions: 'Follow @redsentinel_ai on X to earn Sentinel tokens.',
     actionLabel: 'Follow on X',
     actionUrl: SUI_SENTINEL_X_URL,
     usernameField: {
@@ -44,8 +44,8 @@ const MISSION_CONFIG = {
     title: 'Retweet a Red Sentinel Post',
     icon: '/icons/x_black.png',
     iconAlt: 'X',
-    instructions: 'Retweet any post from @suisentinal and paste the URL of your retweet.',
-    actionLabel: 'Go to @suisentinal',
+    instructions: 'Retweet any post from @redsentinel_ai and paste the URL of your retweet.',
+    actionLabel: 'Go to @redsentinel_ai',
     actionUrl: SUI_SENTINEL_X_URL,
     usernameField: {
       label: 'Your Twitter/X Username',
@@ -62,10 +62,10 @@ const MISSION_CONFIG = {
       'Paste the URL of your retweet. Optionally add your username for faster verification.',
   },
   share_with_hashtag: {
-    title: 'Share with #SuiSentinel',
+    title: 'Share with #RedSentinel',
     icon: '/icons/x_black.png',
     iconAlt: 'X',
-    instructions: 'Post about Red Sentinel with #SuiSentinel and paste the URL of your tweet.',
+    instructions: 'Post about Red Sentinel with #RedSentinel and paste the URL of your tweet.',
     actionLabel: 'Post on X',
     actionUrl: SUI_SENTINEL_CHECKOUT_URL,
     usernameField: {
@@ -79,7 +79,7 @@ const MISSION_CONFIG = {
       required: true,
     },
     telegramField: null,
-    submitHint: 'Paste the URL of your tweet containing #SuiSentinel.',
+    submitHint: 'Paste the URL of your tweet containing #RedSentinel.',
   },
   join_telegram: {
     title: 'Join Red Sentinel Telegram',

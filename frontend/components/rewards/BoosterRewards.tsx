@@ -82,7 +82,7 @@ export const BoosterRewards = () => {
 
     const tierInfo = BOOSTER_TIERS[selectedBooster.tier]
     const tweetText = encodeURIComponent(
-      `🎰 Just spun ${spinResponse.spin.finalAmount.toLocaleString()} SENTINEL on my ${tierInfo.name} booster (${selectedBooster.multiplier}x) on @${SUI_SENTINEL_X_USERNAME}! 🔥 #SuiSentinel #AI #Web3`
+      `🎰 Just spun ${spinResponse.spin.finalAmount.toLocaleString()} SENTINEL on my ${tierInfo.name} booster (${selectedBooster.multiplier}x) on @${SUI_SENTINEL_X_USERNAME}! 🔥 #RedSentinel #AI #Web3`
     )
     const twitterUrl = `https://twitter.com/intent/tweet?text=${tweetText}`
 

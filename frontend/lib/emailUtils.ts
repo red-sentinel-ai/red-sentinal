@@ -10,7 +10,7 @@ const sesClient = new SESClient({
 })
 
 const FROM_ADDRESS = process.env.AWS_FROM_EMAIL || 'updates@suisentinel.xyz'
-const APP_URL = process.env.NEXTAUTH_URL || 'https://app.suisentinel.xyz'
+const APP_URL = process.env.NEXTAUTH_URL || 'https://app.redsentinel.xyz'
 
 const SENTINEL_PINK = '#F445AB'
 const TEXT_GRAY = '#5F5C5C'
