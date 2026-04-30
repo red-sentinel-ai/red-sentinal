@@ -73,13 +73,13 @@ const DEFAULT_MISSIONS = [
   },
   {
     id: 'share_with_hashtag',
-    name: 'Share a post with #SuiSentinel',
+    name: 'Share a post with #RedSentinel',
     type: 'share_with_hashtag',
     points: 30,
     enabled: true,
     category: 'social_media',
     frequency: 'per_occurrence',
-    description: 'Share our posts with the #SuiSentinel hashtag.',
+    description: 'Share our posts with the #RedSentinel hashtag.',
   },
   {
     id: 'join_telegram',

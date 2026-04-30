@@ -29,7 +29,7 @@ const ONE_TIME_MISSIONS: SocialMissionType[] = ['follow_x', 'join_telegram']
 const MISSION_LABELS: Record<SocialMissionType, string> = {
   follow_x: 'Follow Red Sentinel on X',
   retweet: 'Retweet a Red Sentinel post',
-  share_with_hashtag: 'Share with #SuiSentinel',
+  share_with_hashtag: 'Share with #RedSentinel',
   join_telegram: 'Join Red Sentinel Telegram',
   share_content: 'Share Red Sentinel Content',
   // Twitter/X missions

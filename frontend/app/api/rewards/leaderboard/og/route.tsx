@@ -318,7 +318,7 @@ export async function GET(request: Request) {
             border: '1px solid rgba(139, 92, 246, 0.2)',
           }}
         >
-          suisentinel.xyz • Updated every minute
+          redsentinel.xyz • Updated every minute
         </div>
       </div>,
       {
