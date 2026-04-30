@@ -110,11 +110,17 @@ export const useConsumeSolanaPrompt = (options: UseConsumeSolanaPromptOptions = 
 
     const tx = new Transaction()
 
-    // If native SOL, ensure wrapped SOL ATA exists and has enough balance
+    // If native SOL, ensure wrapped SOL ATAs exist (attacker's and protocol wallet's)
     if (isNativeSol) {
-      const ataInfo = await connection.getAccountInfo(attackerAta)
+      const [ataInfo, protocolWalletAtaInfo] = await Promise.all([
+        connection.getAccountInfo(attackerAta),
+        connection.getAccountInfo(protocolWalletAta),
+      ])
       if (!ataInfo) {
         tx.add(createAssociatedTokenAccountInstruction(publicKey, attackerAta, publicKey, NATIVE_MINT))
+      }
+      if (!protocolWalletAtaInfo) {
+        tx.add(createAssociatedTokenAccountInstruction(publicKey, protocolWalletAta, protocolWallet, NATIVE_MINT))
       }
 
       // Transfer enough SOL to cover the cost + buffer for dynamic pricing
