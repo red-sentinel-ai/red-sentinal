@@ -16,6 +16,7 @@ import {
 } from '@/constants'
 import { SOLANA_SUPPORTED_TOKENS } from '@/constants/solana'
 import { SENTINEL_GIFS, SENTINEL_IMAGES } from '@/constants/asset_paths'
+import { CHAINS, SUPPORTED_CHAINS } from '@/constants/chains'
 import { useActiveChain } from '@/context/ActiveChainContext'
 import { useTokenCount } from '@/hooks/useTokenCount'
 import { useSolanaWallet } from '@/hooks/useSolanaWallet'
@@ -24,6 +25,7 @@ import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 import { TokenSelectDropdown } from '@/components/defend/TokenSelectDropdown'
 import { RewardsConditions } from '@/components/defend/RewardsConditions'
 import { SuccessModal } from '@/components/DefenderSuccessModal'
+import { cn } from '@/lib/utils'
 import { formatCompact, TokenAmount } from '@/components/ui/common/TokenAmount'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
@@ -38,7 +40,7 @@ import { useDeployAgent } from './hooks/useDeployAgent'
 import { useTemplateLoader } from './hooks/useTemplateLoader'
 
 export default function DefendPageClient() {
-  const { activeChain } = useActiveChain()
+  const { activeChain, setActiveChain } = useActiveChain()
   const isSolana = activeChain === 'solana'
 
   // Sui wallet
@@ -451,9 +453,33 @@ export default function DefendPageClient() {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div className="flex flex-col gap-2">
               <div>
-                <label className="font-display text-lg font-medium text-[var(--color-text-primary)] sm:text-xl">
-                  Bounty Pool
-                </label>
+                <div className="mb-2 flex items-center justify-between">
+                  <label className="font-display text-lg font-medium text-[var(--color-text-primary)] sm:text-xl">
+                    Bounty Pool
+                  </label>
+                  <div className="flex items-center gap-1.5">
+                    {SUPPORTED_CHAINS.map(chainId => {
+                      const chain = CHAINS[chainId]
+                      const isActive = chainId === activeChain
+                      return (
+                        <button
+                          key={chainId}
+                          type="button"
+                          onClick={() => setActiveChain(chainId)}
+                          className={cn(
+                            'flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-colors',
+                            isActive
+                              ? 'border-[var(--color-gold-primary)] bg-[var(--color-gold-primary)]/10 text-[var(--color-gold-primary)]'
+                              : 'border-[var(--color-border-subtle)] text-[var(--color-text-muted)] hover:bg-[var(--color-bg-subtle)]'
+                          )}
+                        >
+                          <Image src={chain.icon} alt={chain.name} width={14} height={14} className="rounded-full" />
+                          {chain.name}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
                 <span className="font-body mt-1 block text-sm text-[var(--color-text-secondary)] sm:text-base">
                   Minimum {formatCompact(activeMinimumAmount , 3)} {activeTokenSymbol} required to deploy.
                 </span>
