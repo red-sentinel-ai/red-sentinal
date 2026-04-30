@@ -32,7 +32,7 @@ export function ChainSwitcher() {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="w-44 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)]/80 p-2 backdrop-blur-xl"
+        className="w-44 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-2 shadow-xl"
         align="end"
       >
         {SUPPORTED_CHAINS.map(chainId => {
