@@ -193,7 +193,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
         }}
       >
         <ResizablePanelGroup direction="horizontal" className="w-full">
-          <ResizablePanel defaultSize={25} minSize={20} maxSize={40} className="bg-[var(--color-bg-subtle)]">
+          <ResizablePanel defaultSize={25} minSize={20} maxSize={40}>
             <AgentSidebar
               agent={agent}
               onReadMore={() => setIsReadMoreOpen(true)}
