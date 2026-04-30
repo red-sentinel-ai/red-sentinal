@@ -455,7 +455,7 @@ export default function DefendPageClient() {
                   Bounty Pool
                 </label>
                 <span className="font-body mt-1 block text-sm text-[var(--color-text-secondary)] sm:text-base">
-                  Minimum {formatCompact(activeMinimumAmount)} {activeTokenSymbol} required to deploy.
+                  Minimum {formatCompact(activeMinimumAmount , 3)} {activeTokenSymbol} required to deploy.
                 </span>
                 {isWalletConnected && (
                   <span className="font-body mt-0.5 flex items-center gap-1 text-sm text-[var(--color-text-muted)]">
@@ -499,7 +499,7 @@ export default function DefendPageClient() {
 
             <FormInput
               label={`Fee Per Message (${activeTokenSymbol})`}
-              subLabel={`You earn this fee whenever users interact with your Sentinel. Minimum 0.1 ${activeTokenSymbol}.`}
+              subLabel={`You earn this fee whenever users interact with your Sentinel. Minimum 0.001 ${activeTokenSymbol}.`}
               name="feePerMessage"
               value={formData.feePerMessage}
               onChange={handleChangeWithProviderReset}

@@ -30,13 +30,13 @@ export const SOL_TOKEN: SupportedToken = {
   coinType: NATIVE_SOL_MINT,
   decimals: 9,
   icon: '/icons/tokens/sol.png',
-  minimumAmount: 0.5,
+  minimumAmount: 0.001,
 }
 
 export const SOLANA_DEVNET_SUPPORTED_TOKENS: SupportedToken[] = [SOL_TOKEN]
 
 export const SOLANA_MAINNET_SUPPORTED_TOKENS: SupportedToken[] = [
-  { ...SOL_TOKEN, minimumAmount: 1 },
+  { ...SOL_TOKEN, minimumAmount: 0.001 },
 ]
 
 export const SOLANA_SUPPORTED_TOKENS: SupportedToken[] =
@@ -51,7 +51,7 @@ const SOLANA_DEVNET_CONFIG = {
 }
 
 const SOLANA_MAINNET_CONFIG = {
-  PROGRAM_ID: '',
+  PROGRAM_ID: 'Di4JaK3QBbA869f6UNGYMef5RFcxxXyxTMiBymnMb5Gz',
 }
 
 export const SOLANA_CONFIG =

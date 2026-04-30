@@ -113,7 +113,7 @@ export function useDefendForm({
     const minimumAmount = activeMinimumAmount ?? selectedToken.minimumAmount
 
     const fee = parseFloat(formData.feePerMessage)
-    if (isNaN(fee) || fee < 0.1) {
+    if (isNaN(fee) || fee < 0.001) {
       newErrors.feePerMessage = `Fee must be at least 0.1 ${tokenSymbol}`
     }
 
