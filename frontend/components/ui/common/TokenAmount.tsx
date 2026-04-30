@@ -15,7 +15,12 @@ export function formatCompact(value: number, precision = 2): string {
   if (value >= 1_000_000_000) return `${parseFloat((value / 1_000_000_000).toFixed(2))}B`
   if (value >= 1_000_000) return `${parseFloat((value / 1_000_000).toFixed(2))}M`
   if (value >= 1_000) return `${parseFloat((value / 1_000).toFixed(2))}K`
-  return value.toFixed(precision)
+  const formatted = value.toFixed(precision)
+  // Prevent a non-zero value from displaying as "0.00" due to rounding (e.g. 0.001 with precision=2)
+  if (value !== 0 && parseFloat(formatted) === 0) {
+    return parseFloat(value.toPrecision(2)).toString()
+  }
+  return formatted
 }
 
 export function TokenAmount({
