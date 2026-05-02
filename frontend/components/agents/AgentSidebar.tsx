@@ -169,7 +169,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
 
   return (
     <>
-      <div className="mr-2 flex h-screen w-full flex-col overflow-x-hidden overflow-y-scroll px-3 py-1 md:mr-4 md:h-[calc(100vh-127px)] md:px-4 lg:px-6 lg:py-2">
+      <div className="mr-2 flex min-h-0 w-full flex-col overflow-x-hidden overflow-y-scroll px-3 py-1 md:mr-4 md:h-[calc(100vh-127px)] md:px-4 lg:px-6 lg:py-2">
         <div>
           <Link
             href="/attack"
