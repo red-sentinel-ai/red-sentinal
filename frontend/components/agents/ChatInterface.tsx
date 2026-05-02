@@ -277,7 +277,7 @@ export default function ChatInterface({
 
       <div
         ref={chatContainerRef}
-        className="ios-scroll max-h-[calc(100vh-160px)] flex-1 space-y-2 overflow-y-auto p-2 pt-1 sm:max-h-[calc(100vh-210px)] sm:space-y-6 sm:p-6"
+        className="ios-scroll min-h-0 flex-1 space-y-2 overflow-y-auto p-2 pt-1 sm:space-y-6 sm:p-6"
       >
         {displayedMessages.length === 0 && !eventsLoading && (
           <div className="py-6 text-center text-[var(--color-text-muted)] sm:py-12">
@@ -400,7 +400,7 @@ export default function ChatInterface({
           </div>
         </div>
       ) : (
-        <div>
+        <div className="pb-safe">
           <form onSubmit={handleSubmit} className="relative">
             <div className="relative">
               {/* Premium mobile-like chat input container */}
@@ -413,7 +413,7 @@ export default function ChatInterface({
                       setPromptInput(e.target.value)
                       countTokens(e.target.value)
                     }}
-                    className="min-h-[80px] w-full resize-none border-none bg-transparent p-3 pb-9 pr-12 text-[15px] leading-relaxed text-[var(--color-text-primary)] outline-none placeholder:text-[var(--color-text-muted)] focus:ring-0 sm:min-h-[100px] sm:p-4 sm:pb-10 sm:pr-14 sm:text-base"
+                    className="min-h-[60px] w-full resize-none border-none bg-transparent p-3 pb-9 pr-12 text-[15px] leading-relaxed text-[var(--color-text-primary)] outline-none placeholder:text-[var(--color-text-muted)] focus:ring-0 sm:min-h-[100px] sm:p-4 sm:pb-10 sm:pr-14 sm:text-base"
                     disabled={isSubmitting}
                     placeholder="Craft your attack prompt..."
                     rows={1}
