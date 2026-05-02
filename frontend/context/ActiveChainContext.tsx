@@ -14,7 +14,7 @@ const ActiveChainContext = createContext<ActiveChainContextValue>({
 })
 
 export function ActiveChainProvider({ children }: { children: React.ReactNode }) {
-  const [activeChain, setActiveChainState] = useState<SupportedChain>('sui')
+  const [activeChain, setActiveChainState] = useState<SupportedChain>('solana')
 
   // Hydrate from localStorage after mount to avoid SSR mismatch
   useEffect(() => {
