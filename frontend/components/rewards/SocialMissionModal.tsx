@@ -262,7 +262,7 @@ export function SocialMissionModal({
 
   return (
     <Dialog open={isOpen} onClose={handleClose} disableBackdropClick className="max-w-[600px]">
-      <div className="w-full rounded-xl bg-white text-black md:rounded-2xl">
+      <div className="w-full rounded-xl bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] md:rounded-2xl">
         <div className="mb-4 flex items-center justify-between md:mb-6">
           <div className="flex items-center gap-1.5 md:gap-2">
             <Image
@@ -272,11 +272,11 @@ export function SocialMissionModal({
               alt={config.iconAlt}
               className="md:h-6 md:w-6"
             />
-            <h2 className="text-base font-bold md:text-lg">{config.title}</h2>
+            <h2 className="text-base font-bold text-[var(--color-text-primary)] md:text-lg">{config.title}</h2>
           </div>
           <button
             onClick={handleClose}
-            className="text-gray-500 transition-colors hover:text-black"
+            className="text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-primary)]"
           >
             <X className="h-4 w-4 md:h-5 md:w-5" />
           </button>
@@ -284,14 +284,14 @@ export function SocialMissionModal({
 
         {isSubmitted ? (
           <div className="flex flex-col items-center justify-center space-y-3 py-4 text-center duration-300 animate-in fade-in zoom-in md:space-y-4 md:py-6">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100 md:h-16 md:w-16">
-              <CheckCircle className="h-6 w-6 text-green-600 md:h-8 md:w-8" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-success-muted)] md:h-16 md:w-16">
+              <CheckCircle className="h-6 w-6 text-[var(--color-success)] md:h-8 md:w-8" />
             </div>
             <div>
-              <h3 className="mb-1.5 text-base font-bold text-black md:mb-2 md:text-lg">
+              <h3 className="mb-1.5 text-base font-bold text-[var(--color-text-primary)] md:mb-2 md:text-lg">
                 Submission Received!
               </h3>
-              <p className="mx-auto max-w-xs text-xs text-gray-600 md:text-sm">
+              <p className="mx-auto max-w-xs text-xs text-[var(--color-text-secondary)] md:text-sm">
                 Our team will review your submission and send Sentinel tokens to your wallet once
                 verified.
               </p>
@@ -305,9 +305,9 @@ export function SocialMissionModal({
           </div>
         ) : (
           <div className="space-y-4 md:space-y-5">
-            <div>
-              <p className="mb-1 text-xs font-medium text-gray-500 md:text-sm">Step 1</p>
-              <p className="mb-2 text-sm font-medium md:text-base">{config.instructions}</p>
+            <div className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] p-4">
+              <p className="mb-1 text-xs font-medium text-[var(--color-text-muted)] md:text-sm">Step 1</p>
+              <p className="mb-3 text-sm font-medium text-[var(--color-text-primary)] md:text-base">{config.instructions}</p>
               <a
                 href={actionUrlOverride ?? config.actionUrl}
                 target="_blank"
@@ -319,11 +319,11 @@ export function SocialMissionModal({
               </a>
             </div>
 
-            <div className="border-t border-gray-200" />
+            <div className="border-t border-[var(--color-border-subtle)]" />
 
             <div>
-              <p className="mb-1 text-xs font-medium text-gray-500 md:text-sm">Step 2</p>
-              <p className="mb-3 text-sm font-medium md:text-base">Submit proof of completion</p>
+              <p className="mb-1 text-xs font-medium text-[var(--color-text-muted)] md:text-sm">Step 2</p>
+              <p className="mb-3 text-sm font-medium text-[var(--color-text-primary)] md:text-base">Submit proof of completion</p>
 
               <div className="space-y-3">
                 {config.telegramField && (
@@ -380,16 +380,16 @@ export function SocialMissionModal({
                 )}
 
                 <div>
-                  <label className="mb-1 block text-xs font-medium text-gray-700 md:text-sm">
+                  <label className="mb-1 block text-xs font-medium text-[var(--color-text-secondary)] md:text-sm">
                     Screenshot{' '}
-                    <span className="text-gray-400">(optional — helpful for mobile)</span>
+                    <span className="text-[var(--color-text-muted)]">(optional — helpful for mobile)</span>
                   </label>
                   <div
                     onClick={() => fileInputRef.current?.click()}
                     className={`flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-4 transition-colors md:p-5 ${
                       screenshotPreview
-                        ? 'border-black bg-gray-50'
-                        : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
+                        ? 'border-[var(--color-gold-primary)] bg-[var(--color-bg-subtle)]'
+                        : 'border-[var(--color-border-subtle)] hover:border-[var(--color-border-default)] hover:bg-[var(--color-bg-subtle)]'
                     }`}
                   >
                     {screenshotPreview ? (
@@ -408,18 +408,18 @@ export function SocialMissionModal({
                             setScreenshotPreview(null)
                             if (fileInputRef.current) fileInputRef.current.value = ''
                           }}
-                          className="absolute right-0 top-0 rounded-full bg-white p-0.5 text-gray-500 shadow hover:text-black"
+                          className="absolute right-0 top-0 rounded-full bg-[var(--color-bg-surface)] p-0.5 text-[var(--color-text-muted)] shadow hover:text-[var(--color-text-primary)]"
                         >
                           <X className="h-3.5 w-3.5" />
                         </button>
                       </div>
                     ) : (
                       <>
-                        <Upload className="mb-1.5 h-5 w-5 text-gray-400 md:h-6 md:w-6" />
-                        <p className="text-xs text-gray-500 md:text-sm">
+                        <Upload className="mb-1.5 h-5 w-5 text-[var(--color-text-muted)] md:h-6 md:w-6" />
+                        <p className="text-xs text-[var(--color-text-secondary)] md:text-sm">
                           Click to upload screenshot
                         </p>
-                        <p className="text-[10px] text-gray-400 md:text-xs">
+                        <p className="text-[10px] text-[var(--color-text-muted)] md:text-xs">
                           PNG, JPG, GIF or WebP up to 5MB
                         </p>
                       </>
@@ -434,7 +434,7 @@ export function SocialMissionModal({
                   />
                 </div>
 
-                <p className="text-[10px] text-gray-400 md:text-xs">{config.submitHint}</p>
+                <p className="text-[10px] text-[var(--color-text-muted)] md:text-xs">{config.submitHint}</p>
               </div>
             </div>
 
