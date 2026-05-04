@@ -52,19 +52,31 @@ export const AgentListView = () => {
   const allAgents = allAgentsData?.pages.flatMap(page => page.agents) || []
   const totalAgents = allAgentsData?.pages[0]?.total ?? 0
 
-  const activeFeaturedAgents =
-    featuredAgents?.filter(agent => agent.state !== 'defeated') || []
+  const activeFeaturedAgents = [...(featuredAgents?.filter(agent => agent.state !== 'defeated') || [])].sort(
+    (a, b) => {
+      if (a.chain === 'solana' && b.chain !== 'solana') return -1
+      if (a.chain !== 'solana' && b.chain === 'solana') return 1
+      return 0
+    },
+  )
 
-  const filteredAgents =
-    activeTab === 'big_bounties'
-      ? allAgents.filter(agent => {
-          try {
-            return BigInt(agent.total_balance) >= BIG_BOUNTY_THRESHOLD_MIST
-          } catch {
-            return false
-          }
-        })
-      : allAgents
+  const filteredAgents = (() => {
+    const base =
+      activeTab === 'big_bounties'
+        ? allAgents.filter(agent => {
+            try {
+              return BigInt(agent.total_balance) >= BIG_BOUNTY_THRESHOLD_MIST
+            } catch {
+              return false
+            }
+          })
+        : allAgents
+    return [...base].sort((a, b) => {
+      if (a.chain === 'solana' && b.chain !== 'solana') return -1
+      if (a.chain !== 'solana' && b.chain === 'solana') return 1
+      return 0
+    })
+  })()
 
   const bigBountiesCount = allAgents.filter(agent => {
     try {
