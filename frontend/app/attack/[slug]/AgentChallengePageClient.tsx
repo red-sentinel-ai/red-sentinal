@@ -1,6 +1,5 @@
 'use client'
 import { useState, useCallback } from 'react'
-import { X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useQueryClient } from '@tanstack/react-query'
 import posthog from 'posthog-js'
@@ -19,6 +18,7 @@ import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
 import ChatInterface from '@/components/agents/ChatInterface'
 import { AgentSidebar } from '@/components/agents/AgentSidebar'
+import { AgentReadMoreModal } from '@/components/agents/AgentReadMoreModal'
 import { MobileAgentHeader } from './MobileAgentHeader'
 
 export default function AgentChallengePage({ slug }: { slug: string }) {
@@ -137,30 +137,6 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
     }
   }
 
-  const ReadMoreModal = () => (
-    <div className="ios-scroll absolute inset-0 flex flex-col overflow-hidden duration-200 animate-in fade-in">
-      <div className="flex shrink-0 items-center justify-between py-6 md:py-8">
-        <h2 className="text-2xl font-medium text-[var(--color-text-primary)]">Instructions</h2>
-        <button onClick={() => setIsReadMoreOpen(false)} className="touch-manipulation p-2 text-[var(--color-text-secondary)]">
-          <X size={24} />
-        </button>
-      </div>
-
-      <div className="ios-scroll overflow-y-auto whitespace-pre-wrap px-1">
-        {agent.prompt || 'No instructions available.'}
-      </div>
-
-      <div className="pb-safe shrink-0 pt-8">
-        <button
-          onClick={() => setIsReadMoreOpen(false)}
-          className="btn btn-black touch-manipulation"
-        >
-          CLOSE
-        </button>
-      </div>
-    </div>
-  )
-
   if (isLoading) {
     return <AgentChallengePageSkeleton />
   }
@@ -202,19 +178,21 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
           <ResizableHandle withHandle={true} />
           <ResizablePanel defaultSize={75}>
             <div className="max-w-v1 relative mx-auto h-full w-full">
-              {isReadMoreOpen ? (
-                <ReadMoreModal />
-              ) : (
-                <ChatInterface
-                  agent={agent}
-                  chatEvents={chat?.messages ?? []}
-                  eventsLoading={chatLoading}
-                  apiResponse={apiResponse}
-                  onSendMessage={handleSendMessage}
-                  isSubmitting={isSubmitting}
-                  submitError={submitError}
-                  refetchAgent={refetch}
-                  chainMismatch={chainMismatch}
+              <ChatInterface
+                agent={agent}
+                chatEvents={chat?.messages ?? []}
+                eventsLoading={chatLoading}
+                apiResponse={apiResponse}
+                onSendMessage={handleSendMessage}
+                isSubmitting={isSubmitting}
+                submitError={submitError}
+                refetchAgent={refetch}
+                chainMismatch={chainMismatch}
+              />
+              {isReadMoreOpen && (
+                <AgentReadMoreModal
+                  prompt={agent.prompt}
+                  onClose={() => setIsReadMoreOpen(false)}
                 />
               )}
             </div>
@@ -281,7 +259,12 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
         )}
       </AnimatePresence>
 
-      {isReadMoreOpen && <ReadMoreModal />}
+      {isReadMoreOpen && (
+        <AgentReadMoreModal
+          prompt={agent.prompt}
+          onClose={() => setIsReadMoreOpen(false)}
+        />
+      )}
 
       {apiResponse && txnHash && (
         <AttackStatusModal
