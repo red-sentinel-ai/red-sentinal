@@ -12,6 +12,7 @@ import {
 } from 'recharts'
 import { format } from 'date-fns'
 import { Dialog } from '@/components/Dialog'
+import { formatCompact } from '@/components/ui/common/TokenAmount'
 
 export interface ChartDataPoint {
   time: Date
@@ -42,7 +43,7 @@ const CustomTooltip = ({ active, payload, label, tokenSymbol = 'SUI' }: CustomTo
     return (
       <div className="rounded-lg border border-gray-300 bg-white/80 p-3 shadow-lg backdrop-blur-md">
         <p className="text-xs text-gray-500">{format(new Date(label || 0), 'MMM d, yyyy p')}</p>
-        <p className="text-base font-bold text-black">{`${payload[0].value.toFixed(2)} ${tokenSymbol}`}</p>
+        <p className="text-base font-bold text-black">{`${formatCompact(payload[0].value, 4)} ${tokenSymbol}`}</p>
       </div>
     )
   }
