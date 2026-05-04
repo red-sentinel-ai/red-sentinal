@@ -100,7 +100,7 @@ function ProfileContent() {
       <div className="relative bg-[var(--color-bg-base)]">
         <div className="min-h-screen relative mx-auto max-w-[1440px] pb-12">
           <div
-            className="mb-6 flex min-h-[300px] w-full flex-col items-start gap-4 bg-cover bg-bottom bg-no-repeat px-4 pb-8 pt-4 sm:min-h-[376px] sm:items-end sm:pb-20 md:flex-row md:px-12"
+            className="mb-6 flex min-h-[300px] w-full flex-col items-start gap-4 bg-cover bg-bottom bg-no-repeat px-4 pb-8 pt-4 sm:min-h-[376px] sm:pb-20 md:flex-row md:items-end md:px-12"
             style={{ backgroundImage: 'url("/img/footer-bg.png")' }}
           >
             <div
@@ -123,7 +123,7 @@ function ProfileContent() {
               </div>
             </div>
 
-            <div className="order-3 min-w-0 flex-1 pt-2 md:order-2">
+            <div className="order-2 min-w-0 flex-1 pt-2 md:order-2">
               <h1 className="font-display truncate text-2xl font-semibold text-[var(--color-text-primary)] leading-snug sm:text-3xl">
                 {profile?.display_name || 'Your Profile'}
               </h1>
@@ -157,7 +157,7 @@ function ProfileContent() {
                 Edit Profile
               </button>
             </div>
-            <div className="order-2 flex w-full flex-wrap items-center justify-start gap-2 pt-2 sm:ml-auto sm:w-auto sm:justify-end md:order-3 md:pt-0">
+            <div className="order-3 flex w-full flex-wrap items-center justify-start gap-2 pt-2 sm:ml-auto sm:w-auto sm:justify-end md:order-3 md:pt-0">
               <Link
                 className="font-body btn h-[50px] bg-[var(--color-gold-primary)] text-[var(--color-text-on-gold)] hover:bg-[var(--color-gold-light)] text-sm sm:text-base"
                 href="/defend"
@@ -187,7 +187,7 @@ function ProfileContent() {
 
           <div className="px-4 md:px-8">
             <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-              <TabsList className="flex w-full justify-start gap-0 bg-transparent lg:w-auto">
+              <TabsList className="scrollbar-hide flex w-full justify-start gap-0 overflow-x-auto bg-transparent lg:w-auto">
                 <TabsTrigger
                   value={PROFILE_TABS.AGENTS}
                   className="font-body flex items-center gap-2 rounded-none text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
