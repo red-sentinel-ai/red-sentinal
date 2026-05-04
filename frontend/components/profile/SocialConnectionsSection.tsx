@@ -7,14 +7,13 @@ import { Check, Mail, X } from 'lucide-react'
 import posthog from 'posthog-js'
 import { Button, Badge, Card } from '@/components/ui'
 import { toast } from 'sonner'
-import { useCurrentAccount } from '@mysten/dapp-kit'
 import { useSocialStatus } from '@/hooks/profile/useSocialStatus'
 import { useSendEmailVerification } from '@/hooks/profile/useSendEmailVerification'
 import { useDisconnectProvider } from '@/hooks/rewards/useDisconnectProvider'
+import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 
 export function SocialConnectionsSection() {
-  const account = useCurrentAccount()
-  const address = account?.address
+  const { address } = useConnectedAddress()
   const { data: socialStatus, isLoading, refetch } = useSocialStatus(address || undefined)
   const { mutate: disconnect, isPending: isDisconnecting } = useDisconnectProvider()
   const searchParams = useSearchParams()
