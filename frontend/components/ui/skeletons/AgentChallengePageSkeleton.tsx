@@ -3,14 +3,20 @@ import { Skeleton } from '@/components/ui'
 export const AgentChallengePageSkeleton = () => {
   return (
     <div
-      className="flex h-[calc(100vh-128px)] bg-no-repeat"
+      className="flex h-[calc(100dvh-96px)] flex-col bg-no-repeat md:h-[calc(100vh-128px)] md:flex-row"
       style={{
         backgroundImage: 'url(/img/chat_bg.png)',
         backgroundPosition: '0% 17%',
         backgroundSize: '100% auto',
       }}
     >
-      <div className="flex w-[25%] min-w-[200px] max-w-[40%] flex-col gap-4 bg-[var(--color-bg-subtle)]/50 px-6 py-4">
+      {/* Mobile header skeleton */}
+      <div className="flex shrink-0 items-center gap-2 border-b border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] px-3 py-2 md:hidden">
+        <Skeleton className="h-8 w-8 rounded-full bg-[var(--color-border-subtle)]" />
+        <Skeleton className="h-4 w-32 bg-[var(--color-border-subtle)]" />
+      </div>
+
+      <div className="hidden w-[25%] min-w-[200px] max-w-[40%] flex-col gap-4 bg-[var(--color-bg-subtle)]/50 px-6 py-4 md:flex">
         <Skeleton className="h-4 w-28 bg-[var(--color-border-subtle)]" />
 
         <div className="flex items-center gap-3 rounded-xl border border-[var(--color-border-subtle)] p-3">

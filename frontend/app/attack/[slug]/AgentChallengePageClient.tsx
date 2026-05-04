@@ -235,7 +235,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   }
 
   return (
-    <div className="ios-scroll flex h-[100dvh] flex-col bg-[var(--color-bg-surface)] pt-16">
+    <div className="ios-scroll flex h-[calc(100dvh-96px)] flex-col bg-[var(--color-bg-surface)]">
       <MobileAgentHeader agentName={agent.agent_name} onInfoClick={() => setIsSidebarOpen(true)} />
 
       <div className="min-h-0 flex-1 overflow-hidden">

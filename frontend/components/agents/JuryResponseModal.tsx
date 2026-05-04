@@ -15,9 +15,9 @@ export function JuryResponseModal({ isOpen, onClose, response }: JuryResponseMod
     <Dialog
       open={isOpen}
       onClose={onClose}
-      className="z-[100] w-full max-w-[600px] overflow-hidden rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-0"
+      className="z-[100] w-[90vw] max-w-[600px] overflow-hidden rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-0"
     >
-      <div className="relative w-full p-10">
+      <div className="relative w-full p-4 sm:p-10">
         <div className="flex items-center justify-between pb-6">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
@@ -36,7 +36,7 @@ export function JuryResponseModal({ isOpen, onClose, response }: JuryResponseMod
         </div>
 
         <div className="flex items-center justify-center">
-          <Image src="/img/july_table.png" width="400" height="282" alt="Jury Table" />
+          <Image src="/img/july_table.png" width="400" height="282" alt="Jury Table" className="w-full max-w-[400px]" />
         </div>
 
         <div className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] p-3 text-center shadow-sm">

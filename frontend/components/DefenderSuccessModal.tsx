@@ -33,7 +33,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9 }}
         transition={{ duration: 0.3 }}
-        className="relative w-full max-w-[600px] rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-8 text-[var(--color-text-primary)] shadow-2xl"
+        className="relative w-full max-w-[600px] rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-4 text-[var(--color-text-primary)] shadow-2xl sm:p-8"
       >
         <button
           onClick={onClose}
