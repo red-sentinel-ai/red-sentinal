@@ -39,14 +39,14 @@ export const AttackStatusModal = ({
     <Dialog
       open={showResultModal && !!apiResponse}
       onClose={() => setShowResultModal(false)}
-      className="flex max-h-[calc(100vh-40px)] w-full max-w-[773px] flex-col overflow-hidden rounded-xl border border-[#9A9A9A] bg-white p-0"
+      className="flex max-h-[90dvh] w-[90vw] max-w-[773px] flex-col overflow-hidden rounded-xl border border-[#9A9A9A] bg-white p-0"
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.3 }}
-        className="relative flex h-full w-full flex-col overflow-hidden"
+        className="relative flex min-h-0 flex-1 flex-col overflow-hidden"
       >
         <button
           onClick={() => setShowResultModal(false)}
@@ -82,7 +82,7 @@ export const AttackStatusModal = ({
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto">
-          <div className="px-8 pb-4">
+          <div className="px-4 pb-4 sm:px-8">
             <div className="mb-4 flex items-center">
               <span className="mr-2 text-base">⚔️</span>
               <span className="text-[15px] font-medium text-black">
