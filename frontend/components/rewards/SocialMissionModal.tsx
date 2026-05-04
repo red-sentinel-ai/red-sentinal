@@ -305,9 +305,9 @@ export function SocialMissionModal({
           </div>
         ) : (
           <div className="space-y-4 md:space-y-5">
-            <div className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] p-4">
+            <div>
               <p className="mb-1 text-xs font-medium text-[var(--color-text-muted)] md:text-sm">Step 1</p>
-              <p className="mb-3 text-sm font-medium text-[var(--color-text-primary)] md:text-base">{config.instructions}</p>
+              <p className="mb-2 text-sm font-medium text-[var(--color-text-primary)] md:text-base">{config.instructions}</p>
               <a
                 href={actionUrlOverride ?? config.actionUrl}
                 target="_blank"
