@@ -181,20 +181,20 @@ export function SocialConnectionsSection() {
                       </button>
                     </div>
                   ) : (
-                    <div className="flex gap-2">
+                    <div className="flex flex-col gap-2 sm:flex-row">
                       <input
                         type="email"
                         placeholder="your@email.com"
                         value={emailInput}
                         onChange={e => setEmailInput(e.target.value)}
                         onKeyDown={e => { if (e.key === 'Enter') sendVerificationLink() }}
-                        className="h-8 flex-1 rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] px-3 text-xs text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)] sm:h-9 sm:text-sm"
+                        className="h-9 w-full rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] px-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)] sm:flex-1"
                       />
                       <Button
                         onClick={sendVerificationLink}
                         size="sm"
                         disabled={isSending || !emailInput.trim()}
-                        className="btn btn-outline h-8 min-w-[100px] text-xs sm:h-9 sm:text-sm"
+                        className="btn btn-outline h-9 w-full text-sm sm:w-auto sm:min-w-[100px]"
                       >
                         {isSending ? (
                           <div className="h-3 w-3 animate-spin rounded-full border border-current border-t-transparent" />
