@@ -1,4 +1,4 @@
-import { FileText, Github, Handshake, Presentation, Shield, Calculator } from 'lucide-react'
+import { FileText, Github, Globe, Handshake, Presentation, Shield, Calculator } from 'lucide-react'
 export const supabaseUrl = process.env.SUPABASE_URL || ''
 export const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || ''
 export const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
@@ -6,6 +6,7 @@ export const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '
 export const SYSTEM_PROMPT_MAX_TOKENS = 600
 export const ATTACK_PROMPT_MAX_TOKENS = 600
 
+export const SUI_SENTINEL_LANDING_URL = 'https://www.redsentinel.xyz'
 export const SUI_SENTINEL_APP_URL = 'https://app.redsentinel.xyz'
 export const SUI_SENTINEL_DOCS_URL = 'https://docs.redsentinel.xyz/'
 export const SUI_SENTINEL_X_URL = 'https://twitter.com/intent/follow?screen_name=redsentinel_ai'
@@ -640,6 +641,14 @@ export const socialLinks = [
     isImage: false,
     alt: 'Reward Calculator',
     name: 'Reward Calculator',
+    isOutside: true,
+  },
+  {
+    href: SUI_SENTINEL_LANDING_URL,
+    icon: Globe,
+    isImage: false,
+    alt: 'Website',
+    name: 'Website',
     isOutside: true,
   },
 ]
