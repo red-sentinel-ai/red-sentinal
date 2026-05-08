@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SUI_SENTINEL_APP_URL),
 
   title: {
-    default: 'Red Sentinel | AI Security Literacy for the Age of Agents',
+    default: 'Red Sentinel | The Ultimate AI Security Arena',
     template: '%s | Red Sentinel',
   },
   description:
@@ -105,7 +105,7 @@ export const metadata: Metadata = {
   },
 
   openGraph: {
-    title: 'Red Sentinel | AI Security Literacy for the Age of Agents',
+    title: 'Red Sentinel | The Ultimate AI Security Arena',
     description:
       'AI agents will manage money, data, and decisions. Red Sentinel helps you learn AI security by attacking live Sentinels, competing for real bounties, and proving skill on-chain.',
     url: SUI_SENTINEL_APP_URL,
@@ -115,7 +115,7 @@ export const metadata: Metadata = {
         url: '/og-image-v6.png',
         width: 1200,
         height: 630,
-        alt: 'Red Sentinel - AI Security Literacy for the Age of Agents',
+        alt: 'Red Sentinel - The Ultimate AI Security Arena',
       },
     ],
     locale: 'en_US',

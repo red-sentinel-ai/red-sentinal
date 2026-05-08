@@ -22,7 +22,7 @@ const satoshi = localFont({
 })
 
 export const metadata: Metadata = {
-  title: 'Red Sentinel | AI Security Literacy for the Age of Agents',
+  title: 'Red Sentinel | The Ultimate AI Security Arena',
   description:
     'Red Sentinel is a real-stakes AI security arena. Attack live Sentinels, learn how AI agents fail, earn real bounties, and build on-chain proof of skill.',
 
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
     'Prompt Engineering',
   ],
   openGraph: {
-    title: 'Red Sentinel | AI Security Literacy for the Age of Agents',
+    title: 'Red Sentinel | The Ultimate AI Security Arena',
     description:
       'AI agents will manage money, data, and decisions. Red Sentinel helps you learn AI security by attacking live Sentinels, competing for real bounties, and proving skill on-chain.',
     url: SUI_SENTINEL_LANDING_PAGE_URL,
@@ -79,7 +79,7 @@ export const metadata: Metadata = {
         url: '/og-image-v6.png',
         width: 1200,
         height: 630,
-        alt: 'Red Sentinel - AI Security Literacy for the Age of Agents',
+        alt: 'Red Sentinel - The Ultimate AI Security Arena',
       },
     ],
     locale: 'en_US',
