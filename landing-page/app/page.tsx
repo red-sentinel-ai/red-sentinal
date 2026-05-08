@@ -17,14 +17,14 @@ export default function LandingPage() {
   return (
     <>
       <HeroSection />
-      <SocialProofSection />
+      {/* <SocialProofSection /> */}
       <AnimationSection />
       <VulnerabilitySection />
       <HowItWorksSection />
       <DemoVideoSection />
-      <DashboardPreviewSection />
+      {/* <DashboardPreviewSection /> */}
       <OfferingsSection />
-      <EarnWhileDefendingSection />
+      {/* <EarnWhileDefendingSection /> */}
       <WhyChooseUsSection />
       <AuditSection />
       <ManifestoSection />

@@ -53,39 +53,49 @@ export const metadata: Metadata = {
   metadataBase: new URL(SUI_SENTINEL_APP_URL),
 
   title: {
-    default: 'Red Sentinel | Crowdsourced AI Red Teaming on Sui Blockchain',
+    default: 'Red Sentinel | AI Security Literacy for the Age of Agents',
     template: '%s | Red Sentinel',
   },
   description:
-    'The first crowdsource AI red teaming platform. Attack AI systems, earn SUI/USDC rewards instantly. Deploy Sentinels, get real-world security testing. Every attack verified cryptographically on-chain.',
+    'Red Sentinel is a real-stakes AI security arena. Attack live Sentinels, learn how AI agents fail, earn real bounties, and build on-chain proof of skill.',
 
   keywords: [
+    'AI Security Literacy',
+    'AI Security Training',
+    'AI Security Arena',
     'AI Red Teaming',
-    'AI Security',
     'AI Safety',
+    'AI Agents',
+    'AI Agent Security',
+    'AI Agent Safety',
+    'LLM Security',
     'Prompt Injection',
+    'Prompt Injection Training',
     'Jailbreak AI',
+    'AI Jailbreak',
+    'Adversarial AI',
     'AI Vulnerability',
+    'AI Threat Education',
+    'AI Security Education',
+    'AI Penetration Testing',
+    'AI Bounty Platform',
     'Bug Bounty AI',
     'Crowdsourced Security',
-    'Sui Blockchain',
-    'Sui',
-    'Sui Network',
+    'Real-Stakes AI Security',
+    'On-Chain Verification',
+    'Verifiable Credentials',
+    'Blockchain AI Security',
     'Web3 AI',
     'Decentralized AI',
-    'AI Agents',
-    'LLM Security',
-    'AI Alignment',
-    'Adversarial AI',
-    'AI Penetration Testing',
-    'Smart Contract Audit',
+    'Sui Blockchain',
+    'Sui Network',
+    'Solana',
+    'Solana Blockchain',
+    'SUI Rewards',
+    'USDC Rewards',
     'TEE',
     'Trusted Execution Environment',
-    'On-Chain Verification',
     'Prompt Engineering',
-    'AI Bounty Platform',
-    'Blockchain Security',
-    'Cryptoeconomic Security',
   ],
 
   icons: {
@@ -95,9 +105,9 @@ export const metadata: Metadata = {
   },
 
   openGraph: {
-    title: 'Red Sentinel | Ship AI Agents Without Fear',
+    title: 'Red Sentinel | AI Security Literacy for the Age of Agents',
     description:
-      'Crowdsourced AI red teaming platform. Test AI defenses against real attacks, earn instant rewards. Every exploit verified cryptographically on Sui.',
+      'AI agents will manage money, data, and decisions. Red Sentinel helps you learn AI security by attacking live Sentinels, competing for real bounties, and proving skill on-chain.',
     url: SUI_SENTINEL_APP_URL,
     siteName: 'Red Sentinel',
     images: [
@@ -105,7 +115,7 @@ export const metadata: Metadata = {
         url: '/og-image-v6.png',
         width: 1200,
         height: 630,
-        alt: 'Red Sentinel - Crowdsourced AI Red Teaming Platform on Sui',
+        alt: 'Red Sentinel - AI Security Literacy for the Age of Agents',
       },
     ],
     locale: 'en_US',
@@ -114,9 +124,9 @@ export const metadata: Metadata = {
 
   twitter: {
     card: 'summary_large_image',
-    title: 'Red Sentinel | Break AI, Earn Crypto, Make Systems Safer',
+    title: 'Red Sentinel | Learn How AI Breaks',
     description:
-      'The first crowdsource AI red teaming platform. Attack AI systems → get paid instantly in SUI/USDC. Deploy Sentinels → get battle-tested security.',
+      'Attack live AI Sentinels, learn how agents fail, earn real bounties for verified exploits, and build on-chain proof of skill.',
     creator: `@${SUI_SENTINEL_X_USERNAME}`,
     images: ['/og-image-v6.png'],
   },
@@ -152,8 +162,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     url: SUI_SENTINEL_APP_URL,
     logo: `${SUI_SENTINEL_APP_URL}/icons/logo-sm.svg`,
     sameAs: [`https://twitter.com/${SUI_SENTINEL_X_USERNAME}`, SUI_SENTINEL_GITHUB_URL],
-    description: 'The first crowdsource AI red teaming platform on Sui blockchain',
-    foundingDate: '2024',
+    description:
+      'AI security arena for the age of agents. Attack live Sentinels, learn how AI systems fail, earn real bounties for verified exploits, and build reputation on-chain.',
+    foundingDate: '2025',
     areaServed: 'Global',
     knowsAbout: [
       'AI Security',
@@ -185,6 +196,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       ratingCount: '1',
     },
     featureList: [
+      'AI Security Training',
+      'AI Security Arena',
       'AI Red Teaming',
       'Cryptographic Verification',
       'Instant On-Chain Settlement',
@@ -223,7 +236,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         name: 'What is Red Sentinel?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Red Sentinel is a crowdsourced AI red teaming platform built on the Sui blockchain. Companies deploy AI systems as "Sentinels" and security researchers attempt to break them through adversarial attacks like prompt injection and jailbreaking. Successful exploits are verified cryptographically and rewarded instantly.',
+          text: 'Red Sentinel is a real-stakes AI security training arena for the age of agents. Users learn how AI systems fail by attacking and defending live AI Sentinels in adversarial challenges. Successful exploits, defenses, rewards, and reputation signals are verified on-chain.',
         },
       },
       {
@@ -231,7 +244,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         name: 'How do I earn rewards on Red Sentinel?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'As an attacker (red teamer), pay per message to challenge Sentinels. Use your prompt engineering skills to jailbreak AI systems or extract sensitive information. Every verified successful attack pays instantly in SUI or USDC. As a defender, earn a share of attack fees while gathering valuable security data to improve your AI.',
+          text: 'Attackers pay a small fee to challenge live AI Sentinels. If they discover a verified exploit, they earn an instant reward from the bounty pool. Failed attacks help grow the bounty pool and reward defenders, creating a real-stakes training loop where skill, persistence, and security judgment matter.',
         },
       },
       {
@@ -239,9 +252,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         name: 'Why is Red Sentinel on blockchain?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Blockchain enables trustless verification of attacks through TEE (Trusted Execution Environment) attestations and instant settlement of rewards. Neither party can dispute outcomes or delay payments — the protocol enforces everything transparently on-chain. This is impossible with traditional Web2 platforms.',
+          text: 'Blockchain gives Red Sentinel verifiable outcomes, transparent bounty pools, instant reward settlement, and portable reputation. Every mission, exploit, defense, and payout can be recorded on-chain, so users can prove what they completed and rewards can be distributed without relying on a central gatekeeper.',
         },
       },
+
       {
         '@type': 'Question',
         name: 'What is AI red teaming?',

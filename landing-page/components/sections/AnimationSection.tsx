@@ -12,20 +12,18 @@ export const AnimationSection = () => {
       <div className="relative flex items-center max-w-[1340px] mx-auto pt-12 md:py-24 overflow-visible">
         <div className="relative z-10 w-full text-left">
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[48px] leading-snug font-medium">
-            AI systems are attacked through language by anyone, not just expert hackers.
+            AI agents will soon handle your finances, your health data, your work.{' '}
             <span className="text-[#C871FF]">
-              Existing security tools weren&apos;t built for this.
+              The people who understand how they break will have an edge.
             </span>
           </h2>
           <p className="max-w-[984px] text-base md:text-2xl mt-8 mx-auto md:mx-0 text-[#5F5C5C]">
-            Red Sentinel is a crowdsourced AI red teaming marketplace. Companies deploy their AI as
-            &quot;Sentinels&quot;, defenders stake capital, attackers pay to break them, and every
-            successful exploit is verified cryptographically. Built on Sui for trustless, instant
-            settlement.
+            Red Sentinel is the arena where those skills are forged. Attack live AI systems. Defend
+            your own. Real stakes. Instant payouts. On-chain proof of everything you accomplish.
           </p>
           <div className="flex flex-row gap-6 mt-10 justify-start">
             <Link href={SUI_SENTINEL_APP_URL} target="_blank">
-              <button className="btn btn-black px-6">Explore Platform</button>
+              <button className="btn btn-black px-6">Start Training</button>
             </Link>
             <Link href={SUI_SENTINEL_TELEGRAM_URL} target="_blank">
               <button className="btn btn-outline px-6">Join Community</button>
