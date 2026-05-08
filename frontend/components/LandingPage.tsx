@@ -20,12 +20,11 @@ export const LandingPage = () => {
             transition={{ duration: 0.3, delay: 0.1 }}
           >
             <h1 className="text-xl font-medium text-text sm:text-[32px] md:text-[40px] lg:text-[48px]">
-              AI Security Literacy for the Age of Agents
+              Enter The Live AI Security Arena
             </h1>
             <p className="mx-auto mt-4 max-w-[700px] text-sm sm:text-base md:text-lg">
-              Red Sentinel is a real-stakes training arena where people learn AI security by
-              attacking and defending live AI Sentinels. Failed attacks grow the bounty pool.
-              Successful exploits earn instant payouts. Every result is verified on-chain
+              Attack live AI Sentinels with real money at stake. Attackers break through for instant
+              bounties. Defenders deploy Sentinels and earn from every attempt.
             </p>
           </motion.div>
 
@@ -75,9 +74,9 @@ export const LandingPage = () => {
 
               <div className="my-3 md:my-4">
                 <ul className="flex list-disc flex-col items-center justify-center ps-4 text-center text-xs md:ps-0 md:text-base">
-                  <li>Launch your AI as a Sentinel with staked rewards</li>
-                  <li>Earn SUI from every failed attack attempt</li>
-                  <li>Get real adversarial data to harden your defenses</li>
+                  <li>Build an AI that can&apos;t be broken.</li>
+                  <li>Earn from every attack while it holds.</li>
+                  <li>Survive 14 days. Keep everything.</li>
                 </ul>
               </div>
               <div>
@@ -135,9 +134,9 @@ export const LandingPage = () => {
 
               <div className="my-3 md:my-4">
                 <ul className="flex list-disc flex-col items-center justify-center ps-4 text-center text-xs md:ps-0 md:text-base">
-                  <li>Use prompt engineering to jailbreak AI defenses</li>
-                  <li>Win instant SUI payouts for verified exploits</li>
-                  <li>Build your rep as an elite AI red teamer</li>
+                  <li>Find the weakness. Break through. Take the pot.</li>
+                  <li>Instant payout. No committees. No delays.</li>
+                  <li>On-chain proof of every successful exploit.</li>
                 </ul>
               </div>
 
