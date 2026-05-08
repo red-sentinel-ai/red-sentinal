@@ -20,11 +20,12 @@ export const LandingPage = () => {
             transition={{ duration: 0.3, delay: 0.1 }}
           >
             <h1 className="text-xl font-medium text-text sm:text-[32px] md:text-[40px] lg:text-[48px]">
-              Ship AI Agents Without Fear
+              AI Security Literacy for the Age of Agents
             </h1>
             <p className="mx-auto mt-4 max-w-[700px] text-sm sm:text-base md:text-lg">
-              The first crowdsourced AI red teaming platform on Sui. Deploy agents, break defenses,
-              and earn instant rewards.
+              Red Sentinel is a real-stakes training arena where people learn AI security by
+              attacking and defending live AI Sentinels. Failed attacks grow the bounty pool.
+              Successful exploits earn instant payouts. Every result is verified on-chain
             </p>
           </motion.div>
 
@@ -151,7 +152,7 @@ export const LandingPage = () => {
             </motion.div>
           </div>
         </div>
-        <div className="absolute left-1/2 top-[23%] h-[600px] w-full -translate-x-1/2 rounded-full bg-[var(--color-gold-primary)]/8 blur-3xl md:w-[1000px]"></div>
+        <div className="bg-[var(--color-gold-primary)]/8 absolute left-1/2 top-[23%] h-[600px] w-full -translate-x-1/2 rounded-full blur-3xl md:w-[1000px]"></div>
       </motion.div>
     </AnimatePresence>
   )

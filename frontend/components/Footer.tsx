@@ -50,9 +50,9 @@ const Footer = () => {
               />
             </div>
             <p className="py-2 text-sm leading-relaxed text-black sm:py-4 sm:text-base">
-              The first crowdsource AI red teaming platform on Sui. Deploy Sentinels, break AI
-              defenses, earn instant rewards. Every attack verified cryptographically. Every payout
-              trustless.
+              Red Sentinel is a real-stakes AI security arena for the age of agents. Attack live
+              Sentinels, learn how AI systems fail, earn rewards for verified exploits, and build
+              reputation on-chain.
             </p>
 
             <div className="my-4 flex flex-row flex-wrap justify-center gap-2 md:hidden">
@@ -74,7 +74,7 @@ const Footer = () => {
               ))}
             </div>
 
-            <div className="mt-auto text-xs sm:text-sm md:text-base text-white ">
+            <div className="mt-auto text-xs text-white sm:text-sm md:text-base">
               <span>Powered by </span>
               <a
                 href={NAUTILUS_URL}

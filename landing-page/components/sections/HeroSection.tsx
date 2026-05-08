@@ -20,21 +20,22 @@ export function HeroSection() {
 
       <div className="relative z-10 w-full">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[56px] xl:text-[64px] max-w-[320px] sm:max-w-[550px] md:max-w-[700px] lg:max-w-[850px] italic text-white leading-[1.1] mx-auto md:mx-0">
-          Ship AI Agents Without Fear. Test Them Against Real Attacks.
+          AI Security Literacy for the Age of Agents
         </h1>
         <div className="mt-8 flex flex-col md:flex-row items-center md:items-end justify-between gap-10">
           <p className="max-w-[300px] sm:max-w-[450px] md:max-w-[600px] lg:max-w-[750px] text-black text-sm sm:text-base font-medium md:text-lg lg:text-[22px] mb-8 md:mb-32 mx-auto md:mx-0">
-            The crowdsourced AI red teaming platform where security researchers break AI systems and
-            get paid. Every attack verified on-chain. Every payout instant.{' '}
-            <span className="bold">Live on Sui & Solana Mainnet.</span>
+            AI agents will manage your money, data, and decisions. The edge belongs to people who
+            know how they fail. Red Sentinel lets you learn AI security by attacking live AI
+            Sentinels, competing for real bounties, and building verifiable proof on-chain. Live on
+            Sui and Solana.
           </p>
           <div className="flex gap-6 shrink-0 w-auto">
             <Link href={SUI_SENTINEL_APP_URL} target="_blank">
-              <button className="px-6 btn font-bold btn-white shadow-v1">Launch App</button>
+              <button className="px-6 btn font-bold btn-white shadow-v1">Enter the Arena</button>
             </Link>
             <Link href={SUI_SENTINEL_DOCS_URL} target="_blank">
               <button className="px-6 btn font-bold btn-outline-white backdrop-blur-md">
-                Read Docs
+                How It Works
               </button>
             </Link>
           </div>
