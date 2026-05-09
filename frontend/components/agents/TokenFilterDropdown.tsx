@@ -13,18 +13,18 @@ import { SupportedToken } from '@/constants'
 
 interface TokenFilterDropdownProps {
   availableTokens: SupportedToken[]
-  selectedCoinType: string | undefined
-  onSelect: (coinType: string | undefined) => void
+  selectedSymbol: string | undefined
+  onSelect: (symbol: string | undefined) => void
 }
 
 export function TokenFilterDropdown({
   availableTokens,
-  selectedCoinType,
+  selectedSymbol,
   onSelect,
 }: TokenFilterDropdownProps) {
   if (availableTokens.length <= 1) return null
 
-  const selectedToken = availableTokens.find(t => t.coinType === selectedCoinType)
+  const selectedToken = availableTokens.find(t => t.symbol === selectedSymbol)
 
   return (
     <DropdownMenu>
@@ -54,15 +54,15 @@ export function TokenFilterDropdown({
       <DropdownMenuContent align="end" className="min-w-[140px] bg-[var(--color-bg-elevated)] border-[var(--color-border-subtle)]">
         <DropdownMenuItem
           onClick={() => onSelect(undefined)}
-          className={!selectedCoinType ? 'bg-[var(--color-bg-subtle)] font-medium text-[var(--color-text-primary)]' : 'text-[var(--color-text-secondary)]'}
+          className={!selectedSymbol ? 'bg-[var(--color-bg-subtle)] font-medium text-[var(--color-text-primary)]' : 'text-[var(--color-text-secondary)]'}
         >
           All Tokens
         </DropdownMenuItem>
         {availableTokens.map(token => (
           <DropdownMenuItem
-            key={token.coinType}
-            onClick={() => onSelect(token.coinType)}
-            className={selectedCoinType === token.coinType ? 'bg-[var(--color-bg-subtle)] font-medium text-[var(--color-text-primary)]' : 'text-[var(--color-text-secondary)]'}
+            key={token.symbol}
+            onClick={() => onSelect(token.symbol)}
+            className={selectedSymbol === token.symbol ? 'bg-[var(--color-bg-subtle)] font-medium text-[var(--color-text-primary)]' : 'text-[var(--color-text-secondary)]'}
           >
             <Image
               src={token.icon}
