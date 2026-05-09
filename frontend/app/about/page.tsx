@@ -3,9 +3,9 @@ import Link from 'next/link'
 import { SUI_SENTINEL_APP_URL } from '@/constants'
 
 export const metadata: Metadata = {
-  title: 'About | AI Red Teaming Platform on Sui',
+  title: 'Red Sentinel | The Ultimate AI Security Arena',
   description:
-    'Learn about Red Sentinel — the first crowdsource AI red teaming platform. Discover how we use cryptoeconomics and TEE verification to make AI systems safer.',
+    'Red Sentinel is a real-stakes AI security arena. Attack live Sentinels, learn how AI agents fail, earn real bounties, and build on-chain proof of skill.',
   alternates: {
     canonical: `${SUI_SENTINEL_APP_URL}/about`,
   },
@@ -17,13 +17,17 @@ export default function ProjectInfo() {
       <div className="mx-auto max-w-4xl px-8 py-20">
         <div className="mb-16 text-center">
           <h1 className="mb-4 text-4xl font-bold uppercase md:text-[64px]">Red Sentinel</h1>
-          <p className="text-xl text-[var(--color-text-secondary)]">The First Crowdsource AI Red Teaming Platform</p>
+          <p className="text-xl text-[var(--color-text-secondary)]">
+            The Ultimate AI Security Arena
+          </p>
           <div className="mx-auto mt-8 flex max-w-[600px] border-t border-[var(--color-border-default)]"></div>
         </div>
 
         <div className="space-y-12 text-lg leading-relaxed">
           <section className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] p-8">
-            <h2 className="mb-6 text-2xl font-bold text-[var(--color-info)]">The Problem: AI Ships Blind</h2>
+            <h2 className="mb-6 text-2xl font-bold text-[var(--color-info)]">
+              The Problem: AI Ships Blind
+            </h2>
             <p className="mb-4 text-[var(--color-text-secondary)]">
               We are in the age of AI. LLMs are being integrated everywhere, managing finances,
               running DAOs, and making autonomous decisions. But there is a critical vulnerability:
@@ -31,7 +35,8 @@ export default function ProjectInfo() {
             </p>
             <p className="text-[var(--color-text-secondary)]">
               A single cleverly crafted sentence can make an AI completely disregard its rules. This
-              is called <span className="font-semibold text-[var(--color-info)]">prompt injection</span>. Most
+              is called{' '}
+              <span className="font-semibold text-[var(--color-info)]">prompt injection</span>. Most
               companies ship AI agents with no real way to stress-test them against real-world
               attacks. Existing security tools were not built for this.
             </p>
@@ -67,10 +72,10 @@ export default function ProjectInfo() {
             </h2>
             <p className="mb-4 text-[var(--color-text-secondary)]">
               Red Sentinel leverages the{' '}
-              <span className="font-semibold text-[var(--color-info)]">Nautilus framework</span> developed by
-              the Mysten Labs team for verifiable off-chain computation. Our AI agent server runs
-              within a Trusted Execution Environment (TEE) using AWS Nitro Enclaves, ensuring
-              complete isolation and tamper-proof execution.
+              <span className="font-semibold text-[var(--color-info)]">Nautilus framework</span>{' '}
+              developed by the Mysten Labs team for verifiable off-chain computation. Our AI agent
+              server runs within a Trusted Execution Environment (TEE) using AWS Nitro Enclaves,
+              ensuring complete isolation and tamper-proof execution.
             </p>
             <p className="mb-4 text-[var(--color-text-secondary)]">
               Every AI response is cryptographically signed within the TEE and verified on-chain
@@ -126,8 +131,10 @@ export default function ProjectInfo() {
             </div>
           </section>
 
-          <section className="rounded-lg border border-[var(--color-info)]/30 bg-[var(--color-bg-subtle)] p-8 text-center">
-            <h2 className="mb-4 text-2xl font-bold text-[var(--color-text-primary)]">Ready to Join the Red Team?</h2>
+          <section className="border-[var(--color-info)]/30 rounded-lg border bg-[var(--color-bg-subtle)] p-8 text-center">
+            <h2 className="mb-4 text-2xl font-bold text-[var(--color-text-primary)]">
+              Ready to Join the Red Team?
+            </h2>
             <p className="mb-6 text-[var(--color-text-secondary)]">
               Ship AI agents without fear. Test your prompt engineering skills against real systems.
               Be part of the crowdsourced security revolution.

@@ -20,11 +20,11 @@ export const LandingPage = () => {
             transition={{ duration: 0.3, delay: 0.1 }}
           >
             <h1 className="text-xl font-medium text-text sm:text-[32px] md:text-[40px] lg:text-[48px]">
-              Ship AI Agents Without Fear
+              Enter The Live AI Security Arena
             </h1>
             <p className="mx-auto mt-4 max-w-[700px] text-sm sm:text-base md:text-lg">
-              The first crowdsourced AI red teaming platform on Sui. Deploy agents, break defenses,
-              and earn instant rewards.
+              Attack live AI Sentinels with real money at stake. Attackers break through for instant
+              bounties. Defenders deploy Sentinels and earn from every attempt.
             </p>
           </motion.div>
 
@@ -74,9 +74,9 @@ export const LandingPage = () => {
 
               <div className="my-3 md:my-4">
                 <ul className="flex list-disc flex-col items-center justify-center ps-4 text-center text-xs md:ps-0 md:text-base">
-                  <li>Launch your AI as a Sentinel with staked rewards</li>
-                  <li>Earn SUI from every failed attack attempt</li>
-                  <li>Get real adversarial data to harden your defenses</li>
+                  <li>Build an AI that can&apos;t be broken.</li>
+                  <li>Earn from every attack while it holds.</li>
+                  <li>Survive 14 days. Keep everything.</li>
                 </ul>
               </div>
               <div>
@@ -134,9 +134,9 @@ export const LandingPage = () => {
 
               <div className="my-3 md:my-4">
                 <ul className="flex list-disc flex-col items-center justify-center ps-4 text-center text-xs md:ps-0 md:text-base">
-                  <li>Use prompt engineering to jailbreak AI defenses</li>
-                  <li>Win instant SUI payouts for verified exploits</li>
-                  <li>Build your rep as an elite AI red teamer</li>
+                  <li>Find the weakness. Break through. Take the pot.</li>
+                  <li>Instant payout. No committees. No delays.</li>
+                  <li>On-chain proof of every successful exploit.</li>
                 </ul>
               </div>
 
@@ -151,7 +151,7 @@ export const LandingPage = () => {
             </motion.div>
           </div>
         </div>
-        <div className="absolute left-1/2 top-[23%] h-[600px] w-full -translate-x-1/2 rounded-full bg-[var(--color-gold-primary)]/8 blur-3xl md:w-[1000px]"></div>
+        <div className="bg-[var(--color-gold-primary)]/8 absolute left-1/2 top-[23%] h-[600px] w-full -translate-x-1/2 rounded-full blur-3xl md:w-[1000px]"></div>
       </motion.div>
     </AnimatePresence>
   )
