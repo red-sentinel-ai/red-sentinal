@@ -2,7 +2,7 @@ import type { SupportedChain } from '@/constants/chains'
 
 export const registerAgentUtil = async (
   systemPrompt: string,
-  feePerMessage: number,
+  feePerMessage: number | string,
   creatorAddress: string,
   modelProvider: string,
   modelName: string,
