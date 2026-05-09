@@ -40,3 +40,20 @@ export interface SolanaTeeResponse {
   }
   signature: string // hex-encoded Ed25519 signature (64 bytes)
 }
+
+// EVM TEE response shape (from tee-evm.suisentinel.xyz)
+export interface EvmTeeResponse {
+  response: {
+    intent: number
+    timestamp: number // milliseconds (i64 in Rust)
+    data: {
+      agent_id: string
+      cost_per_message: number
+      prompt_hash: number[] // 32 bytes (SHA-256 of system prompt)
+      is_defeated: boolean
+      creator: number[] // 20 bytes (EVM address)
+    }
+  }
+  signature: string // hex-encoded secp256k1 r+s (64 bytes, without 0x prefix)
+  recovery_id: number // 0 or 1 — append as v = 27 + recovery_id for EVM ECDSA.recover()
+}

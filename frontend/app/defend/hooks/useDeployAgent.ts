@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { parseUnits } from 'viem'
 import { toast } from 'sonner'
 import posthog from 'posthog-js'
 import { useActiveChain } from '@/context/ActiveChainContext'
@@ -8,12 +9,14 @@ import { type SupportedToken } from '@/constants'
 import { registerAgentUtil } from '../utils'
 import { useDeploySuiAgent } from './useDeploySuiAgent'
 import { useDeploySolanaAgent } from './useDeploySolanaAgent'
+import { useDeployEvmAgent } from './useDeployEvmAgent'
 import type { DefendFormData } from './useDefendForm'
 
 interface UseDeployAgentOptions {
   formData: DefendFormData
   selectedToken: SupportedToken // Sui token
   selectedSolanaToken: SupportedToken // Solana token (coinType = mint address)
+  selectedEvmToken: SupportedToken // EVM token (ERC-20 address)
   tokenCount: number
   agentImage: File | null
   selectedImage: { url: string; isCustom: boolean; file?: File | null } | null
@@ -23,6 +26,7 @@ export function useDeployAgent({
   formData,
   selectedToken,
   selectedSolanaToken,
+  selectedEvmToken,
   tokenCount,
   agentImage,
   selectedImage,
@@ -31,23 +35,26 @@ export function useDeployAgent({
   const { addAgentObjectIdWithName } = useAgentObjectNames()
   const { mutate: createAgent } = useCreateAgent()
 
-  // Chain-specific deploy hooks (both always called — hooks can't be conditional)
+  // All chain-specific deploy hooks must be called unconditionally (hook rules)
   const suiDeploy = useDeploySuiAgent({ formData, selectedToken })
   const solanaDeploy = useDeploySolanaAgent({ formData, selectedSolanaToken })
+  const evmDeploy = useDeployEvmAgent({ formData, selectedEvmToken })
 
   const [isLoading, setIsLoading] = useState(false)
   const [deployedAgentPath, setDeployedAgentPath] = useState<string | null>(null)
   const [transactionDigest, setTransactionDigest] = useState('')
   const [showSuccessModal, setShowSuccessModal] = useState(false)
 
-  // Get the active chain's wallet address
   const getWalletAddress = (): string | null => {
-    return activeChain === 'solana' ? solanaDeploy.walletAddress : suiDeploy.walletAddress
+    if (activeChain === 'solana') return solanaDeploy.walletAddress
+    if (activeChain === 'bnb') return evmDeploy.walletAddress
+    return suiDeploy.walletAddress
   }
 
-  // Get the active chain's token decimals
   const getActiveTokenDecimals = (): number => {
-    return activeChain === 'solana' ? selectedSolanaToken.decimals : selectedToken.decimals
+    if (activeChain === 'solana') return selectedSolanaToken.decimals
+    if (activeChain === 'bnb') return selectedEvmToken.decimals
+    return selectedToken.decimals
   }
 
   const handleOffChainSuccess = (
@@ -125,7 +132,9 @@ export function useDeployAgent({
 
       // 2. Register with TEE (chain-aware)
       const decimals = getActiveTokenDecimals()
-      const feePerMessage = parseFloat(formData.feePerMessage) * Math.pow(10, decimals)
+      const feePerMessage = activeChain === 'bnb'
+        ? Number(parseUnits(formData.feePerMessage, decimals))
+        : parseFloat(formData.feePerMessage) * Math.pow(10, decimals)
       const isCustom = formData.llmProvider === 'custom'
 
       const teeResponse = await registerAgentUtil(
@@ -146,12 +155,14 @@ export function useDeployAgent({
 
       if (activeChain === 'solana') {
         result = await solanaDeploy.executeTransaction(teeResponse)
+      } else if (activeChain === 'bnb') {
+        result = await evmDeploy.executeTransaction(teeResponse)
       } else {
         result = await suiDeploy.executeTransaction(teeResponse)
       }
 
       // 4. Handle off-chain success (Supabase storage)
-      const agentId = teeResponse.response?.data?.agent_id ?? teeResponse.response?.data?.agent_id
+      const agentId = teeResponse.response?.data?.agent_id
       handleOffChainSuccess(result.objectId, result.digest, formData.agentName, agentId, walletAddress)
     } catch (error) {
       console.error('Deployment error:', error)
