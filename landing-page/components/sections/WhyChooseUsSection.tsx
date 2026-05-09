@@ -21,8 +21,7 @@ export function WhyChooseUsSection() {
             Why Red Sentinel?
           </h2>
           <p className="text-base md:text-2xl mx-auto max-w-[320px] md:max-w-3xl">
-            the first crowdsource AI red teaming platform. Cryptographic verification. Instant
-            settlement. No middlemen.
+            Talk is cheap. Your on-chain record isn&apos;t.{' '}
           </p>
         </motion.div>
 
@@ -30,16 +29,39 @@ export function WhyChooseUsSection() {
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            viewport={{ once: true }}
+            className="p-6 md:p-8 bg-[#F5F5F5] flex flex-col border-x border-t border-black lg:border-t-0 lg:border-x-0 lg:border-l min-h-[350px]"
+          >
+            <h3 className="text-xl md:text-2xl font-medium mb-4">Real Stakes</h3>
+
+            <p className="mt-auto text-sm md:text-base text-[#939393]">
+              This isn&apos;t a sandbox. Real money on the line. Real payouts when you win. The
+              stakes make you take it seriously,and that&apos;s how skills develop.
+            </p>
+
+            <div className="flex items-center justify-center h-full">
+              <Image
+                width={367}
+                height={243}
+                src="/img/incentivizedIntelligence.png"
+                alt="evolving security art"
+                className="w-full max-w-[250px] sm:max-w-[300px] md:max-w-[340px] lg:max-w-[367px] h-auto"
+              />
+            </div>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
             className="p-6 md:p-8 bg-[#F5F5F5] flex flex-col border-x border-black lg:border-x-0 lg:border-l min-h-[350px]"
           >
-            <h3 className="text-xl md:text-2xl font-medium mb-4">Cryptographic Proof</h3>
+            <h3 className="text-xl md:text-2xl font-medium mb-4">Verified Results</h3>
 
             <p className="mt-auto text-sm md:text-base text-[#939393]">
-              Every attack is verified inside a Trusted Execution Environment (TEE) with
-              cryptographic attestations. No fake exploits. No disputed payouts. Pure, verifiable
-              truth on-chain.
+              Every attack judged inside a Trusted Execution Environment. No disputes. No
+              committees. If you broke through, you win. Instantly.
             </p>
             <div className="flex items-center justify-center h-full">
               <Image
@@ -55,42 +77,15 @@ export function WhyChooseUsSection() {
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            viewport={{ once: true }}
-            className="p-6 md:p-8 bg-[#F5F5F5] flex flex-col border-x border-t border-black lg:border-t-0 lg:border-x-0 lg:border-l min-h-[350px]"
-          >
-            <h3 className="text-xl md:text-2xl font-medium mb-4">Instant Settlement</h3>
-
-            <p className="mt-auto text-sm md:text-base text-[#939393]">
-              No waiting for bug bounty committees. No paperwork. Successful attacks pay out
-              instantly via Sui&apos;s parallel execution. Your reward hits your wallet the moment
-              verification completes.
-            </p>
-
-            <div className="flex items-center justify-center h-full">
-              <Image
-                width={367}
-                height={243}
-                src="/img/incentivizedIntelligence.png"
-                alt="evolving security art"
-                className="w-full max-w-[250px] sm:max-w-[300px] md:max-w-[340px] lg:max-w-[367px] h-auto"
-              />
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
             viewport={{ once: true }}
             className="p-6 md:p-8 bg-[#F5F5F5] flex flex-col border-x  border-t border-black lg:border-t-0 lg:border-x-0 lg:border-l lg:border-r min-h-[350px]"
           >
-            <h3 className="text-xl md:text-2xl font-medium mb-4">Scalable Marketplace</h3>
+            <h3 className="text-xl md:text-2xl font-medium mb-4">Portable Proof</h3>
 
             <div className="mt-auto text-sm md:text-base text-[#939393]">
-              Web2 competitors charge for red teaming as a service. We built it as a marketplace
-              that scales without us doing the work. More Sentinels = more attackers = more security
-              data = stronger AI for everyone.
+              Your attack history is on-chain. Verifiable. Permanent. Not claims on a resume, proof
+              of what you&apos;ve actually done.
             </div>
 
             <div className="flex items-center justify-center h-full">

@@ -23,11 +23,10 @@ export function Footer() {
               />
             </div>
             <p className="text-black leading-relaxed">
-              Red Sentinel is a Decentralized AI safety platform built on Sui. Stress-test models,
-              find vulnerabilities, earn rewards. Every judgment cryptographically verified
-              on-chain.
+              Red Sentinel is a real-stakes AI security arena for the age of agents. Attack live
+              Sentinels, learn how AI systems fail, earn rewards for verified exploits, and build
+              reputation on-chain.
             </p>
-
           </div>
 
           <div className="flex w-full max-w-[280px] sm:max-w-xs md:max-w-none md:flex-1 md:min-w-0 mx-auto items-end justify-center gap-2 mt-8 md:mt-auto order-3 md:order-2">
