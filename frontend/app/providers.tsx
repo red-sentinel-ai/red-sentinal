@@ -13,6 +13,7 @@ import { ProfileInitializer } from '@/components/profile/ProfileInitializer'
 import { FeedbackButton } from '@/components/feedback/FeedbackButton'
 import { APP_NETWORK } from '@/constants'
 import { SolanaWalletProvider } from '@/app/SolanaWalletProvider'
+import { EVMWalletProvider } from '@/app/EVMWalletProvider'
 import { ActiveChainProvider } from '@/context/ActiveChainContext'
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -47,6 +48,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <PHProvider client={posthog}>
       <SessionProvider>
         <QueryClientProvider client={queryClient}>
+          <EVMWalletProvider>
           <SuiClientProvider networks={networks} defaultNetwork={APP_NETWORK}>
             <WalletProvider autoConnect theme={lightTheme}>
               <SolanaWalletProvider>
@@ -63,6 +65,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
               </SolanaWalletProvider>
             </WalletProvider>
           </SuiClientProvider>
+          </EVMWalletProvider>
         </QueryClientProvider>
       </SessionProvider>
     </PHProvider>

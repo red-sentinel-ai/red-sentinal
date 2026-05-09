@@ -1,6 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { SUI_SENTINEL_API_URL, APP_NETWORK } from '@/constants'
 import { useActiveChain } from '@/context/ActiveChainContext'
+import type { SupportedChain } from '@/constants/chains'
 
 export interface PrizePoolHistory {
   history: { time: string; value: number }[]
@@ -35,7 +36,7 @@ export interface AgentDetails {
   accumulated_fees?: number
   coin_type?: string
   current_cost_per_message?: string
-  chain?: 'sui' | 'solana'
+  chain?: SupportedChain
 }
 
 export type SortField = 'total_balance' | 'cost_per_message' | 'total_attacks' | 'agent_id' | 'change7d' | null
@@ -55,7 +56,7 @@ export const useAllAgents = (
   sortDirection: SortDirection = 'desc',
   coinTypeFilter?: string,
   skipChainFilter?: boolean,
-  explicitChainFilter?: 'sui' | 'solana'
+  explicitChainFilter?: SupportedChain
 ) => {
   const { activeChain } = useActiveChain()
   const chainFilter =
