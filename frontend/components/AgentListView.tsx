@@ -20,6 +20,7 @@ import { useFeatureAgentModal } from '@/hooks/useFeatureAgentModal'
 import { TokenFilterDropdown } from '@/components/agents/TokenFilterDropdown'
 import { ChainFilterDropdown } from '@/components/agents/ChainFilterDropdown'
 import { type SupportedChain, CHAINS } from '@/constants/chains'
+import { getTokenForCoinType } from '@/constants'
 
 const BIG_BOUNTY_THRESHOLD_MIST = BigInt(20_000_000_000) // 20 SUI
 
@@ -29,7 +30,7 @@ export const AgentListView = () => {
   const [activeTab, setActiveTab] = useState<BountyTab>('all')
   const [sortField, setSortField] = useState<SortField>('total_balance')
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
-  const [selectedCoinType, setSelectedCoinType] = useState<string | undefined>(undefined)
+  const [selectedSymbol, setSelectedSymbol] = useState<string | undefined>(undefined)
   const [selectedChain, setSelectedChain] = useState<SupportedChain | undefined>(undefined)
 
   // Single instance of modals at parent level to avoid duplicate hook calls
@@ -43,7 +44,7 @@ export const AgentListView = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useAllAgents(sortField, sortDirection, selectedCoinType, true, selectedChain)
+  } = useAllAgents(sortField, sortDirection, undefined, true, selectedChain)
 
   const { data: featuredAgents, isPending: isFetchingFeaturedAgents } = useFeaturedAgents(true)
   const { data: availableTokens = [] } = useAgentCoinTypes()
@@ -61,7 +62,7 @@ export const AgentListView = () => {
   )
 
   const filteredAgents = (() => {
-    const base =
+    let base =
       activeTab === 'big_bounties'
         ? allAgents.filter(agent => {
             try {
@@ -71,6 +72,9 @@ export const AgentListView = () => {
             }
           })
         : allAgents
+    if (selectedSymbol) {
+      base = base.filter(agent => getTokenForCoinType(agent.coin_type).symbol === selectedSymbol)
+    }
     return [...base].sort((a, b) => {
       if (a.chain === 'solana' && b.chain !== 'solana') return -1
       if (a.chain !== 'solana' && b.chain === 'solana') return 1
@@ -95,7 +99,7 @@ export const AgentListView = () => {
     }
   }
 
-  const selectedToken = availableTokens.find(t => t.coinType === selectedCoinType)
+  const selectedToken = availableTokens.find(t => t.symbol === selectedSymbol)
 
   return (
     <div className="mx-auto max-w-[1560px] px-2 py-4 md:px-8 md:py-16">
@@ -181,8 +185,8 @@ export const AgentListView = () => {
             />
             <TokenFilterDropdown
               availableTokens={availableTokens}
-              selectedCoinType={selectedCoinType}
-              onSelect={setSelectedCoinType}
+              selectedSymbol={selectedSymbol}
+              onSelect={setSelectedSymbol}
             />
 
             <Tabs value={activeTab} onValueChange={v => setActiveTab(v as BountyTab)}>
@@ -210,7 +214,7 @@ export const AgentListView = () => {
         </div>
       </div>
 
-      {(selectedCoinType || selectedChain) && (
+      {(selectedSymbol || selectedChain) && (
         <div className="mb-3 flex flex-wrap items-center gap-2">
           <span className="font-body text-xs text-[var(--color-text-muted)]">Filtered by:</span>
           {selectedChain && (
@@ -231,7 +235,7 @@ export const AgentListView = () => {
               </button>
             </span>
           )}
-          {selectedCoinType && selectedToken && (
+          {selectedSymbol && selectedToken && (
             <span className="font-body flex items-center gap-1.5 rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] px-2.5 py-0.5 text-xs font-medium text-[var(--color-text-primary)]">
               <Image
                 src={selectedToken.icon}
@@ -242,7 +246,7 @@ export const AgentListView = () => {
               />
               {selectedToken.symbol}
               <button
-                onClick={() => setSelectedCoinType(undefined)}
+                onClick={() => setSelectedSymbol(undefined)}
                 className="ml-0.5 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
               >
                 <X className="h-3 w-3" />
