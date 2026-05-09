@@ -214,14 +214,14 @@ export const socialLinks = [
     name: "Audit Report",
     isOutside: true,
   },
-  {
-    href: "/pdfs/pitch_deck.pdf",
-    icon: PresentationChartBarIcon,
-    isImage: false,
-    alt: "Pitch Deck",
-    name: "Pitch Deck",
-    isOutside: true,
-  },
+  // {
+  //   href: "/pdfs/pitch_deck.pdf",
+  //   icon: PresentationChartBarIcon,
+  //   isImage: false,
+  //   alt: "Pitch Deck",
+  //   name: "Pitch Deck",
+  //   isOutside: true,
+  // },
 ];
 
 export const JOB_APPLICATIONS_BUCKET_NAME = "job-applications";

@@ -627,14 +627,14 @@ export const socialLinks = [
     name: 'Audit Report',
     isOutside: true,
   },
-  {
-    href: '/pdfs/pitch_deck.pdf',
-    icon: Presentation,
-    isImage: false,
-    alt: 'Pitch Deck',
-    name: 'Pitch Deck',
-    isOutside: true,
-  },
+  // {
+  //   href: '/pdfs/pitch_deck.pdf',
+  //   icon: Presentation,
+  //   isImage: false,
+  //   alt: 'Pitch Deck',
+  //   name: 'Pitch Deck',
+  //   isOutside: true,
+  // },
   {
     href: REWARD_CALCULATOR_URL,
     icon: Calculator,
