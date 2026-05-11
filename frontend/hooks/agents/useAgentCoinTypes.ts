@@ -8,7 +8,16 @@ export const useAgentCoinTypes = () => {
       const res = await fetch(`${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}/available-coin-types`)
       if (!res.ok) throw new Error('Failed to fetch available coin types')
       const data = await res.json()
-      return (data.coin_types as string[]).map(ct => getTokenForCoinType(ct))
+      const seen = new Set<string>()
+      const tokens: SupportedToken[] = []
+      for (const ct of data.coin_types as string[]) {
+        const token = getTokenForCoinType(ct)
+        if (!seen.has(token.symbol)) {
+          seen.add(token.symbol)
+          tokens.push(token)
+        }
+      }
+      return tokens
     },
     staleTime: 5 * 60 * 1000,
   })
