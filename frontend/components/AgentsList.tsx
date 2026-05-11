@@ -107,6 +107,7 @@ export const AgentsList = ({
             <AnimatePresence mode="popLayout">
               {agents.map((agent, idx) => {
                 const agentToken = getTokenForCoinType(agent.coin_type)
+                const chainData = CHAINS[agent.chain as keyof typeof CHAINS] ?? CHAINS.sui
 
                 return (
                   <motion.div
@@ -177,13 +178,13 @@ export const AgentsList = ({
                           <p className="text-xs text-[var(--color-text-muted)]">Chain</p>
                           <div className="flex items-center gap-1">
                             <Image
-                              src={CHAINS[agent.chain ?? 'sui'].icon}
-                              alt={CHAINS[agent.chain ?? 'sui'].name}
+                              src={chainData.icon}
+                              alt={chainData.name}
                               width={14}
                               height={14}
                               className="rounded-full"
                             />
-                            <p>{CHAINS[agent.chain ?? 'sui'].name}</p>
+                            <p>{chainData.name}</p>
                           </div>
                         </div>
                       </div>
@@ -196,13 +197,13 @@ export const AgentsList = ({
                       <div className="col-span-1 flex items-center">{agent.agent_id}</div>
                       <div className="col-span-1 flex items-center gap-1.5">
                         <Image
-                          src={CHAINS[agent.chain ?? 'sui'].icon}
-                          alt={CHAINS[agent.chain ?? 'sui'].name}
+                          src={chainData.icon}
+                          alt={chainData.name}
                           width={16}
                           height={16}
                           className="shrink-0 rounded-full"
                         />
-                        <span className="text-sm">{CHAINS[agent.chain ?? 'sui'].name}</span>
+                        <span className="text-sm">{chainData.name}</span>
                       </div>
 
                       <div className="col-span-2 flex min-w-0 items-center gap-1.5">
