@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useUpdateAgent } from '@/hooks/agents/useUpdateAgent'
 import { useUpdateAgentSolana } from '@/hooks/agents/useUpdateAgentSolana'
+import { useUpdateAgentEVM } from '@/hooks/agents/useUpdateAgentEVM'
 import { AgentUpdateDialog } from './AgentUpdateDialog'
 import { getTokenForCoinType } from '@/constants'
 import type { SupportedChain } from '@/constants/chains'
@@ -29,15 +30,20 @@ export const UpdateCostModal = ({
   const [cost, setCost] = useState(initialCost.toString())
   const { updateCost: updateCostSui, isLoading: isSuiLoading } = useUpdateAgent()
   const { updateCost: updateCostSolana, isLoading: isSolanaLoading } = useUpdateAgentSolana()
+  const { updateCost: updateCostEvm, isLoading: isEvmLoading } = useUpdateAgentEVM()
   const token = getTokenForCoinType(coinType)
 
   const isSolana = chain === 'solana'
-  const isLoading = isSolana ? isSolanaLoading : isSuiLoading
+  const isEvm = chain === 'bnb'
+  const isLoading = isEvm ? isEvmLoading : isSolana ? isSolanaLoading : isSuiLoading
 
   const handleUpdate = () => {
     const costNum = parseFloat(cost)
     if (isNaN(costNum) || costNum < 0) return
-    if (isSolana) {
+    if (isEvm) {
+      const costInBaseUnits = BigInt(Math.floor(costNum * Math.pow(10, token.decimals)))
+      updateCostEvm(agentId, costInBaseUnits, onClose)
+    } else if (isSolana) {
       const costInBaseUnits = BigInt(Math.floor(costNum * Math.pow(10, token.decimals)))
       updateCostSolana(agentId, costInBaseUnits, onClose)
     } else {
