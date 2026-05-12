@@ -75,6 +75,43 @@ export const SENTINEL_ABI = [
       },
     ],
   },
+  {
+    type: 'function',
+    name: 'fundAgent',
+    stateMutability: 'nonpayable',
+    inputs: [
+      { name: 'agentId', type: 'string' },
+      { name: 'amount', type: 'uint256' },
+    ],
+    outputs: [],
+  },
+  {
+    type: 'function',
+    name: 'withdrawFromAgent',
+    stateMutability: 'nonpayable',
+    inputs: [
+      { name: 'agentId', type: 'string' },
+      { name: 'amount', type: 'uint256' },
+    ],
+    outputs: [],
+  },
+  {
+    type: 'function',
+    name: 'claimFees',
+    stateMutability: 'nonpayable',
+    inputs: [{ name: 'agentId', type: 'string' }],
+    outputs: [],
+  },
+  {
+    type: 'function',
+    name: 'updateAgentCost',
+    stateMutability: 'nonpayable',
+    inputs: [
+      { name: 'agentId', type: 'string' },
+      { name: 'newCost', type: 'uint256' },
+    ],
+    outputs: [],
+  },
   // Events for reference
   {
     type: 'event',
