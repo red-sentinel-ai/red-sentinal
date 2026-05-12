@@ -8,7 +8,6 @@ import { BNB_CONFIG } from '@/constants/evm'
 import { SENTINEL_ABI, ERC20_ABI } from '@/lib/evm/abi'
 import { buildEvmSignature } from '@/lib/evm/signature'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
-import { getTokenForCoinType } from '@/constants'
 import type { ConsumePromptApiResponse } from '@/types'
 import type { AgentDetails } from './agents/useAllAgents'
 
@@ -64,8 +63,8 @@ export function useConsumeEvmPrompt({
         return
       }
 
-      const token = getTokenForCoinType(agentDetails.coin_type)
-      const tokenAddress = token.coinType as `0x${string}`
+
+      const tokenAddress = (agentDetails.coin_type ?? '') as `0x${string}`
       const costRaw = BigInt(
         agentDetails.current_cost_per_message ?? agentDetails.cost_per_message
       )
