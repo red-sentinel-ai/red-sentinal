@@ -23,7 +23,7 @@ export const USDC_TOKEN: SupportedToken = {
   symbol: 'USDC',
   name: 'USD Coin',
   coinType: APP_NETWORK === 'testnet' ? USDC_TESTNET_ADDRESS : USDC_MAINNET_ADDRESS,
-  decimals: APP_NETWORK === 'testnet' ? 6 : 18,
+  decimals: 18,
   icon: '/icons/tokens/usdc.png',
   minimumAmount: 0.01,
 }
