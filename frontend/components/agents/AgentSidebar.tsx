@@ -65,12 +65,13 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
   const { address: connectedAddress, chain: connectedChain } = useConnectedAddress()
   // Only claim ownership when the active chain matches the agent's chain — cross-chain
   // address strings can't collide format-wise, but this is the correct invariant.
-  const isOwner = connectedChain === agent.chain && connectedAddress === agent.creator
+  const isOwner = connectedChain === agent.chain && connectedAddress?.toLowerCase() === agent.creator?.toLowerCase()
 
   const prizePoolData = agent.prizePoolHistory ?? null
 
-  const { data: userProfilesMap, isLoading: isLoadingProfile } = useUserProfiles([agent.creator])
-  const defenderProfile = userProfilesMap?.[agent.creator]
+  const creatorLower = agent.creator?.toLowerCase() ?? ''
+  const { data: userProfilesMap, isLoading: isLoadingProfile } = useUserProfiles(creatorLower ? [creatorLower] : [])
+  const defenderProfile = userProfilesMap?.[creatorLower]
 
   useEffect(() => {
     const currentUrl = window.location.href
