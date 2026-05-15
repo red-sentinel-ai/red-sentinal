@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { SUI_SENTINEL_API_URL, APP_NETWORK } from '@/constants'
+import type { SupportedChain } from '@/constants/chains'
 
 export interface PrizePoolHistory {
   history: { time: string; value: number }[]
@@ -38,7 +39,7 @@ export interface AgentDetailsFull {
   prizePoolHistory: PrizePoolHistory | null
   coin_type?: string
   current_cost_per_message?: string
-  chain?: 'sui' | 'solana'
+  chain?: SupportedChain
 }
 
 export const AGENT_DETAILS_FULL_QUERY_KEY = 'agentDetailsFull'

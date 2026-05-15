@@ -23,7 +23,7 @@ export function useUserProfiles(walletAddresses: string[]) {
       for (const profile of profiles) {
         if (profile.wallet_addresses) {
           for (const address of profile.wallet_addresses) {
-            profilesMap[address] = profile
+            profilesMap[address.toLowerCase()] = profile
           }
         }
       }

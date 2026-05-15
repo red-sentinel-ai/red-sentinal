@@ -1,5 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getAddress, isAddress } from 'viem'
 import { supabaseServiceClient } from '@/db/config/server'
+
+const toChecksumIfEvm = (addr: string) => {
+  try {
+    if (isAddress(addr)) return getAddress(addr)
+  } catch {}
+  return addr
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,7 +20,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const orQuery = walletAddresses.map(addr => `wallet_addresses.cs.{${addr}}`).join(',')
+    const normalizedAddresses = walletAddresses.map(toChecksumIfEvm)
+    const orQuery = normalizedAddresses.map((addr: string) => `wallet_addresses.cs.{${addr}}`).join(',')
 
     const { data, error } = await supabaseServiceClient
       .from('ss_users')
