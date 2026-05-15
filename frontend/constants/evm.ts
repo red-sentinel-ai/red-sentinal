@@ -53,4 +53,4 @@ export const BNB_MAINNET_CONFIG = {
 
 export const BNB_CONFIG = APP_NETWORK === 'testnet' ? BNB_TESTNET_CONFIG : BNB_MAINNET_CONFIG
 
-export const EVM_SUPPORTED_TOKENS: SupportedToken[] = [WBNB_TOKEN, USDC_TOKEN]
+export const EVM_SUPPORTED_TOKENS: SupportedToken[] = [USDC_TOKEN]
