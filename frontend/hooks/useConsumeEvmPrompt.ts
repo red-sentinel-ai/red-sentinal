@@ -6,7 +6,6 @@ import {  decodeEventLog } from 'viem'
 import { toast } from 'sonner'
 import { BNB_CONFIG } from '@/constants/evm'
 import { SENTINEL_ABI, ERC20_ABI } from '@/lib/evm/abi'
-import { buildEvmSignature } from '@/lib/evm/signature'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
 import type { ConsumePromptApiResponse } from '@/types'
 import type { AgentDetails } from './agents/useAllAgents'
@@ -65,9 +64,6 @@ export function useConsumeEvmPrompt({
 
 
       const tokenAddress = (agentDetails.coin_type ?? '') as `0x${string}`
-      const costRaw = BigInt(
-        agentDetails.current_cost_per_message ?? agentDetails.cost_per_message
-      )
 
       setIsLoading(true)
       setError(null)
@@ -75,6 +71,15 @@ export function useConsumeEvmPrompt({
       const txArgs = { account: walletAddress, chain: currentChain ?? null }
 
       try {
+        // Fetch effective cost from contract (accounts for attack count multiplier)
+        if (!publicClient) throw new Error('No public client available')
+        const costRaw = await publicClient.readContract({
+          address: BNB_CONFIG.contractAddress,
+          abi: SENTINEL_ABI,
+          functionName: 'getEffectiveCost',
+          args: [agentDetails.agent_id],
+        } as any) as bigint
+        console.log({costRaw})
         // Step 1: Approve payment token
         if (showToasts) toast.info('Approving payment...')
         await writeContractAsync({
@@ -127,6 +132,8 @@ export function useConsumeEvmPrompt({
           }
         }
 
+        console.log({attackId})
+
         if (attackId === undefined) {
           throw new Error('Could not retrieve attackId from AttackRequested event')
         }
@@ -137,8 +144,10 @@ export function useConsumeEvmPrompt({
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            attack_id: Number(attackId),
+            agent_id: String(agentDetails.agent_id),
             message,
+            attack_id: Number(attackId),
+            attacker: walletAddress,
           }),
         })
 
@@ -149,18 +158,31 @@ export function useConsumeEvmPrompt({
 
         const teeData: EvmConsumePromptResponse = await teeRes.json()
 
+        let consumeSignature = teeData.signature;
+        if (!consumeSignature.startsWith("0x")) {
+          consumeSignature = "0x" + consumeSignature;
+        }
+        const consumeRecoveryId = teeData.recovery_id;
+        const consumeV = (27 + consumeRecoveryId).toString(16).padStart(2, '0');
+        consumeSignature = consumeSignature + consumeV;
+
+        const timestampMs = BigInt(teeData.response.timestamp);
+
+
         // Build 65-byte EVM signature
-        const fullSignature = buildEvmSignature(teeData.signature, teeData.recovery_id)
-        const timestampMs = BigInt(teeData.response.timestamp)
+        // const fullSignature = buildEvmSignature(teeData.signature, teeData.recovery_id)
+
 
         // Step 4: Execute consumePrompt on-chain
+
+
         if (showToasts) toast.info('Finalizing transaction...')
         const consumeTxHash = await writeContractAsync({
           ...txArgs,
           address: BNB_CONFIG.contractAddress,
           abi: SENTINEL_ABI,
           functionName: 'consumePrompt',
-          args: [
+          args: [ 
             teeData.response.data.agent_id,
             teeData.response.data.success,
             teeData.response.data.agent_response,
@@ -168,7 +190,7 @@ export function useConsumeEvmPrompt({
             message,
             teeData.response.data.score,
             timestampMs,
-            fullSignature,
+            consumeSignature as any,
             attackId,
           ],
         })
