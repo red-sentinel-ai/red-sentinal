@@ -47,8 +47,7 @@ export const BNB_TESTNET_CONFIG = {
 export const BNB_MAINNET_CONFIG = {
   chainId: 56,
   rpcUrl: process.env.NEXT_PUBLIC_BNB_MAINNET_RPC_URL ?? 'https://bsc-dataseed.binance.org/',
-  // Mainnet contract not deployed yet
-  contractAddress: '0x0000000000000000000000000000000000000000' as `0x${string}`,
+  contractAddress: '0x5edD3650E090192f0f54EDdC870B25536F5CaB29' as `0x${string}`,
   explorerUrl: 'https://bscscan.com',
 }
 
