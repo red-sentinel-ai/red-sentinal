@@ -1,4 +1,7 @@
 import { FileText, Github, Globe, Handshake, Presentation, Shield, Calculator } from 'lucide-react'
+import { SOLANA_SUPPORTED_TOKENS } from './solana'
+import { EVM_SUPPORTED_TOKENS } from './evm'
+
 export const supabaseUrl = process.env.SUPABASE_URL || ''
 export const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || ''
 export const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
@@ -193,13 +196,15 @@ export const MAINNET_SUPPORTED_TOKENS: SupportedToken[] = [
 export const SUPPORTED_TOKENS: SupportedToken[] =
   APP_NETWORK === 'mainnet' ? MAINNET_SUPPORTED_TOKENS : TESTNET_SUPPORTED_TOKENS
 
-import { SOLANA_SUPPORTED_TOKENS } from './solana'
 
-const ALL_SUPPORTED_TOKENS = [...SUPPORTED_TOKENS, ...SOLANA_SUPPORTED_TOKENS]
+const ALL_SUPPORTED_TOKENS = [...SUPPORTED_TOKENS, ...SOLANA_SUPPORTED_TOKENS, ...EVM_SUPPORTED_TOKENS]
 
 export function getTokenForCoinType(coinType?: string): SupportedToken {
   if (!coinType) return SUI_TOKEN
-  return ALL_SUPPORTED_TOKENS.find(t => t.coinType === coinType) ?? SUI_TOKEN
+  const found = ALL_SUPPORTED_TOKENS.find(
+    t => t.coinType === coinType || t.coinType.toLowerCase() === coinType.toLowerCase()
+  )
+  return found ?? SUI_TOKEN
 }
 
 // New multi-token contract (Mar 2026 testnet deployment)

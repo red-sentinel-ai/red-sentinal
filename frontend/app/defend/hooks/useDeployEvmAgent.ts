@@ -1,0 +1,76 @@
+'use client'
+
+import { useWriteContract, useAccount } from 'wagmi'
+import { parseUnits } from 'viem'
+import { BNB_CONFIG } from '@/constants/evm'
+import { SENTINEL_ABI, ERC20_ABI } from '@/lib/evm/abi'
+import { buildEvmSignature, bytesToHex32 } from '@/lib/evm/signature'
+import type { SupportedToken } from '@/constants'
+import type { ChainDeployHook, EvmTeeResponse, DeployTransactionResult } from '../types'
+
+interface UseDeployEvmAgentOptions {
+  formData: { initialBalance: string }
+  selectedEvmToken: SupportedToken
+}
+
+export function useDeployEvmAgent({
+  formData,
+  selectedEvmToken,
+}: UseDeployEvmAgentOptions): ChainDeployHook {
+  const { address: walletAddress, chain: currentChain } = useAccount()
+  const { writeContractAsync } = useWriteContract()
+
+  const executeTransaction = async (
+    teeResponse: EvmTeeResponse
+  ): Promise<DeployTransactionResult> => {
+    if (!walletAddress) throw new Error('EVM wallet not connected')
+
+    const { response: teeData, signature: sigHex, recovery_id } = teeResponse
+    const { data } = teeData
+
+    const tokenAddress = selectedEvmToken.coinType as `0x${string}`
+    const initialFundRaw = parseUnits(formData.initialBalance, selectedEvmToken.decimals)
+    const promptHash = bytesToHex32(data.prompt_hash)
+    const fullSignature = buildEvmSignature(sigHex, recovery_id)
+    const timestampMs = BigInt(teeData.timestamp)
+    const costPerMessage = BigInt(data.cost_per_message)
+
+    const txArgs = { account: walletAddress, chain: currentChain ?? null }
+
+    await writeContractAsync({
+      ...txArgs,
+      address: tokenAddress,
+      abi: ERC20_ABI,
+      functionName: 'approve',
+      args: [BNB_CONFIG.contractAddress, initialFundRaw],
+    })
+
+    await new Promise(r => setTimeout(r, 3000))
+
+    const registerTxHash = await writeContractAsync({
+      ...txArgs,
+      address: BNB_CONFIG.contractAddress,
+      abi: SENTINEL_ABI,
+      functionName: 'registerAgent',
+      args: [
+        data.agent_id,
+        timestampMs,
+        costPerMessage,
+        promptHash,
+        tokenAddress,
+        initialFundRaw,
+        fullSignature,
+      ],
+    })
+
+    return {
+      objectId: registerTxHash, // use tx hash as object ID for EVM agents
+      digest: registerTxHash,
+    }
+  }
+
+  return {
+    walletAddress: walletAddress ?? null,
+    executeTransaction,
+  }
+}

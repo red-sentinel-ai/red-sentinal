@@ -8,7 +8,9 @@ import { useCurrentAccount } from '@mysten/dapp-kit'
 import { Dialog } from '@/components/Dialog'
 import { useFundAgent } from '@/hooks/useFundAgent'
 import { useFundAgentSolana } from '@/hooks/useFundAgentSolana'
+import { useFundAgentEVM } from '@/hooks/useFundAgentEVM'
 import { useSolanaWallet } from '@/hooks/useSolanaWallet'
+import { useEVMWallet } from '@/hooks/useEVMWallet'
 import { getTokenForCoinType } from '@/constants'
 import { getDefenderBoosterTier } from '@/lib/earn-utils'
 import { BoosterPassBadge } from '@/components/BoosterPassBadge'
@@ -44,12 +46,15 @@ export const FundAgentModal = ({
   const [fundedTier, setFundedTier] = useState('')
   const account = useCurrentAccount()
   const { publicKey: solanaPublicKey } = useSolanaWallet()
+  const { address: evmAddress } = useEVMWallet()
   const token = getTokenForCoinType(coinType)
   const isSolana = chain === 'solana'
+  const isEvm = chain === 'bnb'
 
   const { fundAgent: fundAgentSui, isLoading: isSuiLoading } = useFundAgent()
   const { fundAgent: fundAgentSolana, isLoading: isSolanaLoading } = useFundAgentSolana()
-  const isLoading = isSolana ? isSolanaLoading : isSuiLoading
+  const { fundAgent: fundAgentEvm, isLoading: isEvmLoading } = useFundAgentEVM()
+  const isLoading = isEvm ? isEvmLoading : isSolana ? isSolanaLoading : isSuiLoading
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAmount(e.target.value)
@@ -68,7 +73,16 @@ export const FundAgentModal = ({
     if (!validateAmount()) return
 
     try {
-      if (isSolana) {
+      if (isEvm) {
+        if (!agentId) throw new Error('Missing agent id')
+        await fundAgentEvm({
+          agentId,
+          tokenAddress: coinType,
+          amount: +amount,
+          decimals: tokenDecimals,
+          symbol: tokenSymbol,
+        })
+      } else if (isSolana) {
         if (!agentId) throw new Error('Missing agent id')
         await fundAgentSolana({
           agentId,
@@ -88,7 +102,7 @@ export const FundAgentModal = ({
         })
       }
 
-      const funderAddress = isSolana ? solanaPublicKey?.toBase58() : account?.address
+      const funderAddress = isEvm ? evmAddress : isSolana ? solanaPublicKey?.toBase58() : account?.address
       posthog.capture('sentinel_funded', {
         agent_object_id: agentObjectId,
         amount_sui: parseFloat(amount),

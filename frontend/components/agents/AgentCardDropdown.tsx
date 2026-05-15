@@ -86,19 +86,21 @@ export const AgentDropdown = ({
                 <>
                   {!isFeatured && <DropdownMenuSeparator />}
 
-                  <DropdownMenuItem
-                    onClick={handleOpenPromptModal}
-                    className="cursor-pointer gap-2"
-                    disabled={isUpdateWindowExpired}
-                    title={
-                      isUpdateWindowExpired
-                        ? 'Updates are only allowed within 3 hours of launch'
-                        : undefined
-                    }
-                  >
-                    <Edit className="h-4 w-4" />
-                    Update Instructions
-                  </DropdownMenuItem>
+                  {chain !== 'bnb' && (
+                    <DropdownMenuItem
+                      onClick={handleOpenPromptModal}
+                      className="cursor-pointer gap-2"
+                      disabled={isUpdateWindowExpired}
+                      title={
+                        isUpdateWindowExpired
+                          ? 'Updates are only allowed within 3 hours of launch'
+                          : undefined
+                      }
+                    >
+                      <Edit className="h-4 w-4" />
+                      Update Instructions
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem
                     onClick={handleOpenCostModal}
                     className="cursor-pointer gap-2"

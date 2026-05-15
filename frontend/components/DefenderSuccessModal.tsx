@@ -11,7 +11,7 @@ interface SuccessModalProps {
   agentName: string
   transactionDigest: string
   agentPath: string
-  chain?: 'sui' | 'solana'
+  chain?: import('@/constants/chains').SupportedChain
 }
 
 export const SuccessModal: React.FC<SuccessModalProps> = ({
