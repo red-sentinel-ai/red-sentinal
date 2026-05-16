@@ -5,6 +5,7 @@ import { useWriteContract, usePublicClient, useAccount } from 'wagmi'
 import {  decodeEventLog } from 'viem'
 import { toast } from 'sonner'
 import { BNB_CONFIG } from '@/constants/evm'
+import { ethers } from "ethers";
 import { SENTINEL_ABI, ERC20_ABI } from '@/lib/evm/abi'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
 import type { ConsumePromptApiResponse } from '@/types'
@@ -73,13 +74,15 @@ export function useConsumeEvmPrompt({
       try {
         // Fetch effective cost from contract (accounts for attack count multiplier)
         if (!publicClient) throw new Error('No public client available')
-        const costRaw = await publicClient.readContract({
+        const latestEffectiveCost = await publicClient.readContract({
           address: BNB_CONFIG.contractAddress,
           abi: SENTINEL_ABI,
           functionName: 'getEffectiveCost',
           args: [agentDetails.agent_id],
         } as any) as bigint
-        console.log({costRaw})
+        const paymentAmount = (latestEffectiveCost * 101n) / 100n
+        const paymentFormatted = ethers.formatUnits(paymentAmount, 18)
+        console.log({ latestEffectiveCost, paymentAmount, paymentFormatted })
         // Step 1: Approve payment token
         if (showToasts) toast.info('Approving payment...')
         await writeContractAsync({
@@ -87,7 +90,7 @@ export function useConsumeEvmPrompt({
           address: tokenAddress,
           abi: ERC20_ABI,
           functionName: 'approve',
-          args: [BNB_CONFIG.contractAddress, costRaw],
+          args: [BNB_CONFIG.contractAddress, paymentAmount],
         })
         // Wait for BSC block (~3s)
         await new Promise(r => setTimeout(r, 3000))
@@ -99,7 +102,7 @@ export function useConsumeEvmPrompt({
           address: BNB_CONFIG.contractAddress,
           abi: SENTINEL_ABI,
           functionName: 'requestAttack',
-          args: [agentDetails.agent_id, costRaw],
+          args: [agentDetails.agent_id, paymentAmount],
         })
 
         // Wait for the tx to be mined and extract attackId from AttackRequested event
@@ -158,36 +161,40 @@ export function useConsumeEvmPrompt({
 
         const teeData: EvmConsumePromptResponse = await teeRes.json()
 
-        let consumeSignature = teeData.signature;
-        if (!consumeSignature.startsWith("0x")) {
-          consumeSignature = "0x" + consumeSignature;
-        }
+    // Prepare signature with recovery byte
+      let consumeSignature = teeData.signature;
+      if (!consumeSignature.startsWith("0x")) {
+        consumeSignature = "0x" + consumeSignature;
+      }
+      // Only add v byte if signature is 64 bytes (130 hex chars with 0x prefix)
+      // If it's already 65 bytes (132 hex chars), v is already included
+      if (consumeSignature.length === 130) {
         const consumeRecoveryId = teeData.recovery_id;
         const consumeV = (27 + consumeRecoveryId).toString(16).padStart(2, '0');
         consumeSignature = consumeSignature + consumeV;
+      }
 
-        const timestampMs = BigInt(teeData.response.timestamp);
+      const timestampMs = BigInt(teeData.response.timestamp);
 
-
-        // Build 65-byte EVM signature
-        // const fullSignature = buildEvmSignature(teeData.signature, teeData.recovery_id)
-
+      // Convert message_hash from number[] to bytes32 hex string (same logic as promptHash)
+      const messageHashArray: number[] = teeData.response.data.message_hash;
+      const messageHashBytes = new Uint8Array(32);
+      for (let i = 0; i < Math.min(messageHashArray.length, 32); i++) {
+        messageHashBytes[i] = messageHashArray[i];
+      }
+      const messageHash = ethers.hexlify(messageHashBytes);
 
         // Step 4: Execute consumePrompt on-chain
-
-
         if (showToasts) toast.info('Finalizing transaction...')
         const consumeTxHash = await writeContractAsync({
           ...txArgs,
           address: BNB_CONFIG.contractAddress,
           abi: SENTINEL_ABI,
           functionName: 'consumePrompt',
-          args: [ 
+          args: [
             teeData.response.data.agent_id,
             teeData.response.data.success,
-            teeData.response.data.agent_response,
-            teeData.response.data.jury_response,
-            message,
+            messageHash as any,
             teeData.response.data.score,
             timestampMs,
             consumeSignature as any,
