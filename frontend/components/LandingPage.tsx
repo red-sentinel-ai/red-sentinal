@@ -28,6 +28,22 @@ export const LandingPage = () => {
             </p>
           </motion.div>
 
+          <motion.div
+            className="mx-4 mt-6 rounded-md bg-[var(--color-danger)] py-2.5 text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3, delay: 0.15 }}
+          >
+            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-white sm:text-sm">
+              Red Sentinel is live on{' '}
+              <strong className="font-extrabold">SUI</strong>
+              <span className="mx-2 opacity-60">·</span>
+              <strong className="font-extrabold">SOLANA</strong>
+              <span className="mx-2 opacity-60">·</span>
+              <strong className="font-extrabold">BNB Chain</strong>
+            </p>
+          </motion.div>
+
           <div className="relative z-10 grid grid-cols-1 justify-center gap-8 overflow-hidden px-4 pb-4 pt-12 text-center md:gap-9 md:pt-20 lg:grid-cols-2">
             {/* DEFEND Card */}
             <motion.div
