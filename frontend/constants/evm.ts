@@ -40,7 +40,7 @@ export const BNB_TOKEN: SupportedToken = {
 export const BNB_TESTNET_CONFIG = {
   chainId: 97,
   rpcUrl: process.env.NEXT_PUBLIC_BNB_TESTNET_RPC_URL ?? 'https://data-seed-prebsc-1-s1.bnbchain.org:8545',
-  contractAddress: '0x487a0eFB1DbdA5C7C339699f22bFAED8986B554A' as `0x${string}`,
+  contractAddress: '0x2346caecCcE1dFbca22fD8974Af77CFA42F7238D' as `0x${string}`,
   explorerUrl: 'https://testnet.bscscan.com',
 }
 

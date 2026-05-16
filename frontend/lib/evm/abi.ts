@@ -34,9 +34,7 @@ export const SENTINEL_ABI = [
     inputs: [
       { name: 'agentId', type: 'string' },
       { name: 'success', type: 'bool' },
-      { name: 'agentResponse', type: 'string' },
-      { name: 'juryResponse', type: 'string' },
-      { name: 'prompt', type: 'string' },
+      { name: 'messageHash', type: 'bytes32' },
       { name: 'score', type: 'uint8' },
       { name: 'timestampMs', type: 'uint256' },
       { name: 'signature', type: 'bytes' },

@@ -4,8 +4,13 @@
  * a 65-byte signature: r (32) + s (32) + v (1), where v = 27 + recovery_id.
  */
 export function buildEvmSignature(signatureHex: string, recoveryId: number): `0x${string}` {
-  const v = 27 + recoveryId
-  return `0x${signatureHex}${v.toString(16).padStart(2, '0')}`
+  const withPrefix = signatureHex.startsWith('0x') ? signatureHex : `0x${signatureHex}`
+  // Only append v if signature is 64 bytes (r+s only). 65-byte sigs already have v.
+  if (withPrefix.length === 130) {
+    const v = (27 + recoveryId).toString(16).padStart(2, '0')
+    return `${withPrefix}${v}` as `0x${string}`
+  }
+  return withPrefix as `0x${string}`
 }
 
 /**
