@@ -5,6 +5,7 @@ import { Dialog } from '@/components/Dialog'
 import { getTokenForCoinType } from '@/constants'
 import { useWithdrawAgent } from '@/hooks/agents/useWithdrawAgent'
 import { useWithdrawAgentSolana } from '@/hooks/agents/useWithdrawAgentSolana'
+import { useWithdrawAgentEVM } from '@/hooks/agents/useWithdrawAgentEVM'
 import type { SupportedChain } from '@/constants/chains'
 
 export interface WithdrawAgentModalProps {
@@ -33,10 +34,12 @@ export const WithdrawAgentModal = ({
   const token = getTokenForCoinType(coinType)
   const agentBalanceHuman = agentBalanceRaw / Math.pow(10, token.decimals)
   const isSolana = chain === 'solana'
+  const isEvm = chain === 'bnb'
 
   const { withdrawAgent: withdrawAgentSui, isLoading: isSuiLoading } = useWithdrawAgent()
   const { withdrawAgent: withdrawAgentSolana, isLoading: isSolanaLoading } = useWithdrawAgentSolana()
-  const isLoading = isSolana ? isSolanaLoading : isSuiLoading
+  const { withdrawAgent: withdrawAgentEvm, isLoading: isEvmLoading } = useWithdrawAgentEVM()
+  const isLoading = isEvm ? isEvmLoading : isSolana ? isSolanaLoading : isSuiLoading
 
   useEffect(() => {
     if (open) {
@@ -77,7 +80,14 @@ export const WithdrawAgentModal = ({
     if (!validateAmount()) return
 
     try {
-      if (isSolana) {
+      if (isEvm) {
+        await withdrawAgentEvm({
+          agentId,
+          amount: +amount,
+          decimals: token.decimals,
+          symbol: token.symbol,
+        })
+      } else if (isSolana) {
         if (!agentId) throw new Error('Missing agent id')
         if (!coinType) throw new Error('Missing token mint')
         await withdrawAgentSolana({

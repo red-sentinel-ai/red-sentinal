@@ -23,6 +23,7 @@
     "@radix-ui/react-slot": "^1.1.2",
     "@radix-ui/react-tabs": "^1.1.2",
     "@radix-ui/react-tooltip": "^1.2.8",
+    "@rainbow-me/rainbowkit": "^2.2.11",
     "@rive-app/react-canvas": "^4.22.1",
     "@solana/spl-token": "^0.4.14",
     "@solana/wallet-adapter-base": "^0.9.27",
@@ -39,6 +40,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.5.2",
+    "ethers": "^6.16.0",
     "framer-motion": "^12.4.7",
     "lucide-react": "^0.473.0",
     "next": "15.1.9",
@@ -59,7 +61,9 @@
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "tiktoken": "^1.0.20",
-    "use-debounce": "^10.0.4"
+    "use-debounce": "^10.0.4",
+    "viem": "^2.48.11",
+    "wagmi": "2"
   },
   "overrides": {
     "@mysten/sui": "^1.30.0"

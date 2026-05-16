@@ -64,7 +64,8 @@ export const AgentDropdown = ({
     setIsCostModalOpen(true)
   }
 
-  const hasItems = !isFeatured || isOwner
+  const hasOwnerItems = isOwner && chain !== 'bnb'
+  const hasItems = !isFeatured || hasOwnerItems
 
   return (
     <>
@@ -82,23 +83,25 @@ export const AgentDropdown = ({
                 </DropdownMenuItem>
               )}
 
-              {isOwner && (
+              {hasOwnerItems && (
                 <>
                   {!isFeatured && <DropdownMenuSeparator />}
 
-                  <DropdownMenuItem
-                    onClick={handleOpenPromptModal}
-                    className="cursor-pointer gap-2"
-                    disabled={isUpdateWindowExpired}
-                    title={
-                      isUpdateWindowExpired
-                        ? 'Updates are only allowed within 3 hours of launch'
-                        : undefined
-                    }
-                  >
-                    <Edit className="h-4 w-4" />
-                    Update Instructions
-                  </DropdownMenuItem>
+                  {chain !== 'solana' && (
+                    <DropdownMenuItem
+                      onClick={handleOpenPromptModal}
+                      className="cursor-pointer gap-2"
+                      disabled={isUpdateWindowExpired}
+                      title={
+                        isUpdateWindowExpired
+                          ? 'Updates are only allowed within 3 hours of launch'
+                          : undefined
+                      }
+                    >
+                      <Edit className="h-4 w-4" />
+                      Update Instructions
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem
                     onClick={handleOpenCostModal}
                     className="cursor-pointer gap-2"

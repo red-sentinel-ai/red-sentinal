@@ -54,7 +54,7 @@ export const FeaturedAgentCard = ({
   
   const router = useRouter()
   const { address: connectedAddress } = useConnectedAddress()
-  const isOwner = !!connectedAddress && connectedAddress === agent.creator
+  const isOwner = !!connectedAddress && connectedAddress.toLowerCase() === agent.creator?.toLowerCase()
 
   const [isWithdrawalLocked, setIsWithdrawalLocked] = useState(true)
   const [timeRemaining, setTimeRemaining] = useState('')
