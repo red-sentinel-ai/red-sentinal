@@ -17,7 +17,7 @@ export const WBNB_TOKEN: SupportedToken = {
 }
 
 export const USDC_TESTNET_ADDRESS = '0x64544969ed7EBf5f083679233325356EbE738930' as `0x${string}`
-export const USDC_MAINNET_ADDRESS = '0xAE3B5C52Aee124F0C9466B8d57f1eED17ccebF6d' as `0x${string}`
+export const USDC_MAINNET_ADDRESS = '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d' as `0x${string}`
 
 export const USDC_TOKEN: SupportedToken = {
   symbol: 'USDC',
