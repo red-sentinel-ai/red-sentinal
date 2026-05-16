@@ -20,6 +20,7 @@ import {
   WITHDRAWAL_LOCK_MS,
   SUI_SENTINEL_X_USERNAME,
 } from '@/constants'
+import { CHAINS } from '@/constants/chains'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { getExplorerObjectUrl } from '@/lib/explorer'
 import type { AgentDetailsFull } from '@/hooks/agents/useAgentDetails'
@@ -215,6 +216,22 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
               <p className="text-sm font-semibold md:text-base">{agent.attack_goal}</p>
             </div>
           )}
+
+          <div className="flex flex-col gap-1 md:gap-2">
+            <h3 className="text-xs font-medium uppercase text-[var(--color-text-secondary)] md:text-sm">
+              Chain
+            </h3>
+            <div className="flex items-center gap-1.5">
+              <Image
+                src={CHAINS[agent.chain].icon}
+                width={18}
+                height={18}
+                alt={CHAINS[agent.chain].name}
+                className="flex-shrink-0 rounded-full"
+              />
+              <p className="text-sm font-semibold md:text-base">{CHAINS[agent.chain].name}</p>
+            </div>
+          </div>
 
           <div className="flex flex-col gap-1 md:gap-2">
             <h3 className="text-xs font-medium uppercase text-[var(--color-text-secondary)] md:text-sm">
