@@ -2,7 +2,9 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { useUpdateAgent } from '@/hooks/agents/useUpdateAgent'
 import { useClaimFeesSolana } from '@/hooks/agents/useClaimFeesSolana'
+import { useClaimFeesEVM } from '@/hooks/agents/useClaimFeesEVM'
 import { useSolanaWallet } from '@/hooks/useSolanaWallet'
+import { useEVMWallet } from '@/hooks/useEVMWallet'
 import { AgentUpdateDialog } from './AgentUpdateDialog'
 import { getTokenForCoinType } from '@/constants'
 import { TokenAmount } from '../ui/common/TokenAmount'
@@ -29,17 +31,32 @@ export const ClaimFeesModal = ({
 }: ClaimFeesModalProps) => {
   const { claimFees: claimFeesSui, isLoading: isSuiLoading } = useUpdateAgent()
   const { claimFees: claimFeesSolana, isLoading: isSolanaLoading } = useClaimFeesSolana()
+  const { claimFees: claimFeesEvm, isLoading: isEvmLoading } = useClaimFeesEVM()
   const queryClient = useQueryClient()
   const account = useCurrentAccount()
   const { publicKey: solanaPublicKey } = useSolanaWallet()
+  const { address: evmAddress } = useEVMWallet()
 
   const isSolana = chain === 'solana'
-  const isLoading = isSolana ? isSolanaLoading : isSuiLoading
+  const isEvm = chain === 'bnb'
+  const isLoading = isEvm ? isEvmLoading : isSolana ? isSolanaLoading : isSuiLoading
   const token = getTokenForCoinType(coinType)
   const hasFees = accumulatedFees > 0
 
   const handleClaim = async () => {
     if (!hasFees) return
+    if (isEvm) {
+      try {
+        await claimFeesEvm(agentId)
+        onClose()
+        setTimeout(() => {
+          queryClient.invalidateQueries({ queryKey: ['agents-by-owner', evmAddress] })
+        }, 3000)
+      } catch (err) {
+        console.error('Claim fees error:', err)
+      }
+      return
+    }
     if (isSolana) {
       if (!coinType) return
       try {

@@ -1,4 +1,4 @@
-export const SUPPORTED_CHAINS = ['sui', 'solana'] as const
+export const SUPPORTED_CHAINS = ['sui', 'solana', 'bnb'] as const
 export type SupportedChain = (typeof SUPPORTED_CHAINS)[number]
 
 export const ACTIVE_CHAIN_STORAGE_KEY = 'ss-active-chain'
@@ -22,5 +22,11 @@ export const CHAINS = {
     name: 'Solana',
     icon: '/icons/tokens/sol.png',
     nativeToken: 'SOL',
+  },
+  bnb: {
+    id: 'bnb' as const,
+    name: 'BNB Chain',
+    icon: '/icons/tokens/bnb.png',
+    nativeToken: 'BNB',
   },
 } satisfies Record<SupportedChain, ChainConfig>

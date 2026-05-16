@@ -15,6 +15,10 @@ import {
   type SupportedToken,
 } from '@/constants'
 import { SOLANA_SUPPORTED_TOKENS } from '@/constants/solana'
+import { EVM_SUPPORTED_TOKENS } from '@/constants/evm'
+import { useEVMWallet } from '@/hooks/useEVMWallet'
+import { useEVMBalance } from '@/hooks/useEVMBalance'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { SENTINEL_GIFS, SENTINEL_IMAGES } from '@/constants/asset_paths'
 import { useActiveChain } from '@/context/ActiveChainContext'
 import { useTokenCount } from '@/hooks/useTokenCount'
@@ -40,12 +44,17 @@ import { useTemplateLoader } from './hooks/useTemplateLoader'
 export default function DefendPageClient() {
   const { activeChain } = useActiveChain()
   const isSolana = activeChain === 'solana'
+  const isEvm = activeChain === 'bnb'
 
   // Sui wallet
   const account = useCurrentAccount()
   // Solana wallet
   const { publicKey: solanaPublicKey } = useSolanaWallet()
   const { setVisible: setSolanaWalletModalVisible } = useWalletModal()
+  // EVM wallet
+  const { address: evmAddress } = useEVMWallet()
+  const { balance: evmBalance, isLoading: isEvmBalanceLoading } = useEVMBalance()
+  const { openConnectModal: openEvmConnectModal } = useConnectModal()
 
   const [agentImage, setAgentImage] = useState<File | null>(null)
   const [imagePickerOpen, setImagePickerOpen] = useState(false)
@@ -69,12 +78,23 @@ export default function DefendPageClient() {
     isLoading: isSolanaTokenBalanceLoading,
   } = useSolanaTokenBalance(selectedSolanaToken.coinType, selectedSolanaToken.decimals)
 
+  // EVM token selection
+  const [selectedEvmToken, setSelectedEvmToken] = useState<SupportedToken>(EVM_SUPPORTED_TOKENS[0])
+
   // Determine if a wallet is connected based on active chain
-  const isWalletConnected = isSolana ? !!solanaPublicKey : !!account
+  const isWalletConnected = isEvm ? !!evmAddress : isSolana ? !!solanaPublicKey : !!account
 
   // Active chain's token info for display
-  const activeTokenSymbol = isSolana ? selectedSolanaToken.symbol : selectedToken.symbol
-  const activeMinimumAmount = isSolana ? selectedSolanaToken.minimumAmount : selectedToken.minimumAmount
+  const activeTokenSymbol = isEvm
+    ? selectedEvmToken.symbol
+    : isSolana
+      ? selectedSolanaToken.symbol
+      : selectedToken.symbol
+  const activeMinimumAmount = isEvm
+    ? selectedEvmToken.minimumAmount
+    : isSolana
+      ? selectedSolanaToken.minimumAmount
+      : selectedToken.minimumAmount
 
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
   const { tokenCount: privateTokenCount, countTokens: countPrivateTokens, isDebouncing: isPrivateTokenCountDebouncing } = useTokenCount()
@@ -89,8 +109,8 @@ export default function DefendPageClient() {
       countPrivateTokens,
       countAttackGoalTokens,
       countJuryPromptTokens,
-      activeTokenSymbol: isSolana ? selectedSolanaToken.symbol : undefined,
-      activeMinimumAmount: isSolana ? selectedSolanaToken.minimumAmount : undefined,
+      activeTokenSymbol: isEvm ? selectedEvmToken.symbol : isSolana ? selectedSolanaToken.symbol : undefined,
+      activeMinimumAmount: isEvm ? selectedEvmToken.minimumAmount : isSolana ? selectedSolanaToken.minimumAmount : undefined,
     })
 
   const customProvider = useCustomProvider(setFormData)
@@ -118,7 +138,7 @@ export default function DefendPageClient() {
     setShowSuccessModal,
     deploy,
     resetDeployState,
-  } = useDeployAgent({ formData, selectedToken, selectedSolanaToken, tokenCount, agentImage, selectedImage })
+  } = useDeployAgent({ formData, selectedToken, selectedSolanaToken, selectedEvmToken, tokenCount, agentImage, selectedImage })
 
   const [isGeneratingConfig, setIsGeneratingConfig] = useState(false)
 
@@ -460,7 +480,15 @@ export default function DefendPageClient() {
                 {isWalletConnected && (
                   <span className="font-body mt-0.5 flex items-center gap-1 text-sm text-[var(--color-text-muted)]">
                     Balance:{' '}
-                    {(isSolana ? isSolanaTokenBalanceLoading : isTokenBalanceLoading) ? (
+                    {isEvm ? (
+                      isEvmBalanceLoading ? (
+                        <Skeleton className="inline-block h-4 w-20 align-middle" />
+                      ) : (
+                        <span className="font-medium text-[var(--color-text-primary)]">
+                          {evmBalance?.toFixed(4) ?? '0.0000'} {selectedEvmToken.symbol}
+                        </span>
+                      )
+                    ) : (isSolana ? isSolanaTokenBalanceLoading : isTokenBalanceLoading) ? (
                       <Skeleton className="inline-block h-4 w-20 align-middle" />
                     ) : (
                       <TokenAmount
@@ -486,9 +514,9 @@ export default function DefendPageClient() {
                 />
                 <div className="flex shrink-0 items-center border-l border-[var(--color-border-subtle)]">
                   <TokenSelectDropdown
-                    tokens={isSolana ? SOLANA_SUPPORTED_TOKENS : SUPPORTED_TOKENS}
-                    selected={isSolana ? selectedSolanaToken : selectedToken}
-                    onSelect={isSolana ? setSelectedSolanaToken : setSelectedToken}
+                    tokens={isEvm ? EVM_SUPPORTED_TOKENS : isSolana ? SOLANA_SUPPORTED_TOKENS : SUPPORTED_TOKENS}
+                    selected={isEvm ? selectedEvmToken : isSolana ? selectedSolanaToken : selectedToken}
+                    onSelect={isEvm ? setSelectedEvmToken : isSolana ? setSelectedSolanaToken : setSelectedToken}
                   />
                 </div>
               </div>
@@ -544,6 +572,15 @@ export default function DefendPageClient() {
                   >
                     <Wallet className="h-5 w-5" />
                     Connect Wallet
+                  </button>
+                ) : isEvm ? (
+                  <button
+                    type="button"
+                    onClick={openEvmConnectModal}
+                    className="font-display flex h-full w-full items-center justify-center gap-3 rounded-lg bg-[var(--color-gold-primary)] text-xl font-semibold text-[var(--color-text-on-gold)] shadow-[var(--shadow-card)] transition-all hover:bg-[var(--color-gold-light)]"
+                  >
+                    <Wallet className="h-5 w-5" />
+                    Connect BNB Wallet
                   </button>
                 ) : (
                   <ConnectButton className="h-full w-full !rounded-lg !text-xl" />

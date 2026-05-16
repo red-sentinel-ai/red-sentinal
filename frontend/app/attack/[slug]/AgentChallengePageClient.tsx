@@ -10,10 +10,12 @@ import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from '@/componen
 import { AgentChallengePageSkeleton } from '@/components/ui/skeletons/AgentChallengePageSkeleton'
 import { useConsumePrompt } from '@/hooks/useConsumePrompt'
 import { useConsumeSolanaPrompt } from '@/hooks/useConsumeSolanaPrompt'
+import { useConsumeEvmPrompt } from '@/hooks/useConsumeEvmPrompt'
 import { useAgentDetails, AGENT_DETAILS_FULL_QUERY_KEY } from '@/hooks/agents/useAgentDetails'
 import { useAgentChatHistory, AGENT_CHAT_QUERY_KEY } from '@/hooks/agents/useAgentChatHistory'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useActiveChain } from '@/context/ActiveChainContext'
+import type { SupportedChain } from '@/constants/chains'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
 import ChatInterface from '@/components/agents/ChatInterface'
@@ -94,9 +96,23 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
     },
   })
 
-  const agentChain = agent?.chain ?? 'sui'
-  const chainMismatch = agent && agentChain !== activeChain ? agentChain : null
-  const consumePrompt = agentChain === 'solana' ? solanaConsumePrompt : suiConsumePrompt
+  const { consumePrompt: evmConsumePrompt } = useConsumeEvmPrompt({
+    showToasts: true,
+    onError: err => {
+      setSubmitError(err.message || 'Something went wrong')
+    },
+    onComplete: ({ apiResponse, transactionDigest }) => {
+      handleAttackComplete(apiResponse, transactionDigest)
+    },
+  })
+
+  const agentChain: SupportedChain = agent?.chain ?? 'sui'
+  const chainMismatch: SupportedChain | null = agent && agentChain !== activeChain ? agentChain : null
+  let consumePrompt = suiConsumePrompt
+  switch (agentChain) {
+    case 'solana': consumePrompt = solanaConsumePrompt; break
+    case 'bnb': consumePrompt = evmConsumePrompt as typeof suiConsumePrompt; break
+  }
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -113,7 +129,12 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
       return
     }
     if (chainMismatch) {
-      setSubmitError(`Switch to ${chainMismatch === 'solana' ? 'Solana' : 'Sui'} to attack this sentinel`)
+      let chainName = 'Sui'
+      switch (chainMismatch) {
+        case 'solana': chainName = 'Solana'; break
+        case 'bnb': chainName = 'BNB Chain'; break
+      }
+      setSubmitError(`Switch to ${chainName} to attack this sentinel`)
       return
     }
     if (!connectedAddress) {
