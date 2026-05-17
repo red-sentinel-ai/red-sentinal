@@ -126,6 +126,14 @@ export function Footer() {
             >
               Code of Conduct
             </Link>
+            <span className="text-black/30">|</span>
+            <Link
+              href="/pdfs/redsentinel_whitepaper.pdf"
+              target="_blank"
+              className="text-black font-medium hover:underline whitespace-nowrap"
+            >
+              Whitepaper
+            </Link>
           </div>
         </div>
 
