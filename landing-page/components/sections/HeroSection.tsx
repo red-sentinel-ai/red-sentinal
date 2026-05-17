@@ -29,14 +29,23 @@ export function HeroSection() {
             break. Attack live AI Sentinels. Compete for real bounties. Build verifiable proof
             on-chain.
           </p>
-          <div className="flex gap-6 shrink-0 w-auto">
-            <Link href={SUI_SENTINEL_APP_URL} target="_blank">
-              <button className="px-6 btn font-bold btn-white shadow-v1">Enter the Arena</button>
-            </Link>
-            <Link href={SUI_SENTINEL_DOCS_URL} target="_blank">
-              <button className="px-6 btn font-bold btn-outline-white backdrop-blur-md">
-                How It Works
-              </button>
+          <div className="flex flex-col items-center md:items-end gap-4 shrink-0 w-auto">
+            <div className="flex gap-6">
+              <Link href={SUI_SENTINEL_APP_URL} target="_blank">
+                <button className="px-6 btn font-bold btn-white shadow-v1">Enter the Arena</button>
+              </Link>
+              <Link href={SUI_SENTINEL_DOCS_URL} target="_blank">
+                <button className="px-6 btn font-bold btn-outline-white backdrop-blur-md">
+                  How It Works
+                </button>
+              </Link>
+            </div>
+            <Link
+              href="/pdfs/redsentinel_whitepaper.pdf"
+              target="_blank"
+              className="text-white/80 hover:text-white text-sm underline underline-offset-2 transition-colors"
+            >
+              Read the Whitepaper
             </Link>
           </div>
         </div>
