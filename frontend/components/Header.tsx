@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { MenuIcon, X } from 'lucide-react'
+import { FileText, MenuIcon, X } from 'lucide-react'
 
 import { APP_NETWORK, X_URL } from '@/constants'
 import { CHAINS, SUPPORTED_CHAINS } from '@/constants/chains'
@@ -55,6 +55,15 @@ export const Header = () => {
               <DesktopNav />
             </div>
           </div>
+
+          <Link
+            href="/pdfs/redsentinel_whitepaper.pdf"
+            target="_blank"
+            className="btn btn-outline ms-4 hidden h-[50px] items-center justify-center gap-2 !rounded-[25px] !px-6 text-base font-medium text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-bg-subtle)] xl:flex"
+          >
+            <FileText size={20} />
+            Whitepaper
+          </Link>
 
           <Link
             href={X_URL}
