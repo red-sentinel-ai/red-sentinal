@@ -1,6 +1,6 @@
 'use client'
 import { useRouter } from 'next/navigation'
-import { ArrowUp, ArrowDown } from 'lucide-react'
+import { ArrowUp, ArrowDown, Flame } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 
 import { Badge } from '@/components/ui'
@@ -121,16 +121,25 @@ export const AgentsList = ({
                   >
                     <div className="space-y-3 md:hidden">
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="">#{idx + 1}</span>
-                          <span className="truncate">{agent.agent_name}</span>
+                        <div className="min-w-0 flex flex-1 items-center gap-2">
+                          <span className="shrink-0">#{idx + 1}</span>
+                          <span className="min-w-0 flex-1 truncate">{agent.agent_name}</span>
                           {agent.is_featured && (
                             <Image
                               src="/icons/check-mark.svg"
                               width={14}
                               height={14}
                               alt="checkmark"
+                              className="shrink-0"
                             />
+                          )}
+                          {agent.trending && (
+                            <span className="inline-flex shrink-0 items-center gap-0.5 rounded-full border border-amber-400/40 bg-amber-100 px-1.5 py-0.5 text-[10px] font-medium leading-none text-amber-700">
+                              <Flame className="h-2.5 w-2.5 shrink-0" />
+                              {agent.trending_window === '24h' || !agent.trending_window
+                                ? 'Trending'
+                                : `Trending ${agent.trending_window}`}
+                            </span>
                           )}
                         </div>
                         <Badge
@@ -207,14 +216,23 @@ export const AgentsList = ({
                       </div>
 
                       <div className="col-span-2 flex min-w-0 items-center gap-1.5">
-                        <span className="truncate">{agent.agent_name}</span>
+                        <span className="min-w-0 flex-1 truncate">{agent.agent_name}</span>
                         {agent.is_featured && (
                           <Image
                             src="/icons/check-mark.svg"
                             width={20}
                             height={20}
                             alt="checkmark"
+                            className="shrink-0"
                           />
+                        )}
+                        {agent.trending && (
+                          <span className="inline-flex shrink-0 items-center gap-0.5 rounded-full border border-amber-400/40 bg-amber-100 px-1.5 py-0.5 text-[10px] font-medium leading-none text-amber-700">
+                            <Flame className="h-2.5 w-2.5 shrink-0" />
+                            {agent.trending_window === '24h' || !agent.trending_window
+                              ? 'Trending'
+                              : `Trending ${agent.trending_window}`}
+                          </span>
                         )}
                       </div>
                       <div className="col-span-2 flex items-center"><TokenAmount rawAmount={agent.total_balance} token={agentToken} precision={2} /></div>
