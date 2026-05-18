@@ -53,7 +53,12 @@ export const AgentListView = () => {
   const allAgents = allAgentsData?.pages.flatMap(page => page.agents) || []
   const totalAgents = allAgentsData?.pages[0]?.total ?? 0
 
-  const activeFeaturedAgents = [...(featuredAgents?.filter(agent => agent.state !== 'defeated') || [])].sort(
+  const activeFeaturedAgents = [...(featuredAgents?.filter(agent => {
+    if (agent.state === 'defeated') return false
+    const unlockTs = Number(agent.unlock_timestamp)
+    const isAttackPaused = unlockTs > 0 && unlockTs <= Date.now()
+    return !isAttackPaused
+  }) || [])].sort(
     (a, b) => {
       if (a.chain === 'solana' && b.chain !== 'solana') return -1
       if (a.chain !== 'solana' && b.chain === 'solana') return 1
