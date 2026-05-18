@@ -53,7 +53,6 @@ export default function DefendPageClient() {
   const { setVisible: setSolanaWalletModalVisible } = useWalletModal()
   // EVM wallet
   const { address: evmAddress } = useEVMWallet()
-  const { balance: evmBalance, isLoading: isEvmBalanceLoading } = useEVMBalance()
   const { openConnectModal: openEvmConnectModal } = useConnectModal()
 
   const [agentImage, setAgentImage] = useState<File | null>(null)
@@ -80,6 +79,9 @@ export default function DefendPageClient() {
 
   // EVM token selection
   const [selectedEvmToken, setSelectedEvmToken] = useState<SupportedToken>(EVM_SUPPORTED_TOKENS[0])
+  const { balance: evmBalance, isLoading: isEvmBalanceLoading } = useEVMBalance(
+    selectedEvmToken.coinType as `0x${string}`
+  )
 
   // Determine if a wallet is connected based on active chain
   const isWalletConnected = isEvm ? !!evmAddress : isSolana ? !!solanaPublicKey : !!account

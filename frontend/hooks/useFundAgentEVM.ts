@@ -2,7 +2,9 @@
 
 import { useState, useCallback } from 'react'
 import { useWriteContract, useAccount } from 'wagmi'
+import { waitForTransactionReceipt } from '@wagmi/core'
 import { toast } from 'sonner'
+import { wagmiConfig } from '@/lib/wagmi'
 import { BNB_CONFIG } from '@/constants/evm'
 import { SENTINEL_ABI, ERC20_ABI } from '@/lib/evm/abi'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
@@ -47,7 +49,7 @@ export const useFundAgentEVM = (options: UseFundAgentEVMOptions = {}) => {
 
       try {
         if (showToasts) toast.info('Approving token...')
-        await writeContractAsync({
+        const approveTxHash = await writeContractAsync({
           ...txArgs,
           address: tokenAddress as `0x${string}`,
           abi: ERC20_ABI,
@@ -55,7 +57,7 @@ export const useFundAgentEVM = (options: UseFundAgentEVMOptions = {}) => {
           args: [BNB_CONFIG.contractAddress, amountRaw],
         })
 
-        await new Promise(r => setTimeout(r, 3000))
+        await waitForTransactionReceipt(wagmiConfig, { hash: approveTxHash })
 
         if (showToasts) toast.info('Adding funds...')
         const txHash = await writeContractAsync({
