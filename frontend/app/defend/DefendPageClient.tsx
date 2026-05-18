@@ -71,11 +71,11 @@ export default function DefendPageClient() {
   )
 
   // Solana token selection
-  const [selectedSolanaToken, setSelectedSolanaToken] = useState<SupportedToken>(SOLANA_SUPPORTED_TOKENS[0])
-  const {
-    rawBalance: solanaTokenRawBalance,
-    isLoading: isSolanaTokenBalanceLoading,
-  } = useSolanaTokenBalance(selectedSolanaToken.coinType, selectedSolanaToken.decimals)
+  const [selectedSolanaToken, setSelectedSolanaToken] = useState<SupportedToken>(
+    SOLANA_SUPPORTED_TOKENS[0]
+  )
+  const { rawBalance: solanaTokenRawBalance, isLoading: isSolanaTokenBalanceLoading } =
+    useSolanaTokenBalance(selectedSolanaToken.coinType, selectedSolanaToken.decimals)
 
   // EVM token selection
   const [selectedEvmToken, setSelectedEvmToken] = useState<SupportedToken>(EVM_SUPPORTED_TOKENS[0])
@@ -99,9 +99,21 @@ export default function DefendPageClient() {
       : selectedToken.minimumAmount
 
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
-  const { tokenCount: privateTokenCount, countTokens: countPrivateTokens, isDebouncing: isPrivateTokenCountDebouncing } = useTokenCount()
-  const { tokenCount: attackGoalTokenCount, countTokens: countAttackGoalTokens, isDebouncing: isAttackGoalTokenCountDebouncing } = useTokenCount()
-  const { tokenCount: juryPromptTokenCount, countTokens: countJuryPromptTokens, isDebouncing: isJuryPromptTokenCountDebouncing } = useTokenCount()
+  const {
+    tokenCount: privateTokenCount,
+    countTokens: countPrivateTokens,
+    isDebouncing: isPrivateTokenCountDebouncing,
+  } = useTokenCount()
+  const {
+    tokenCount: attackGoalTokenCount,
+    countTokens: countAttackGoalTokens,
+    isDebouncing: isAttackGoalTokenCountDebouncing,
+  } = useTokenCount()
+  const {
+    tokenCount: juryPromptTokenCount,
+    countTokens: countJuryPromptTokens,
+    isDebouncing: isJuryPromptTokenCountDebouncing,
+  } = useTokenCount()
 
   const { formData, setFormData, errors, setErrors, handleChange, validateForm, resetForm } =
     useDefendForm({
@@ -111,13 +123,23 @@ export default function DefendPageClient() {
       countPrivateTokens,
       countAttackGoalTokens,
       countJuryPromptTokens,
-      activeTokenSymbol: isEvm ? selectedEvmToken.symbol : isSolana ? selectedSolanaToken.symbol : undefined,
-      activeMinimumAmount: isEvm ? selectedEvmToken.minimumAmount : isSolana ? selectedSolanaToken.minimumAmount : undefined,
+      activeTokenSymbol: isEvm
+        ? selectedEvmToken.symbol
+        : isSolana
+          ? selectedSolanaToken.symbol
+          : undefined,
+      activeMinimumAmount: isEvm
+        ? selectedEvmToken.minimumAmount
+        : isSolana
+          ? selectedSolanaToken.minimumAmount
+          : undefined,
     })
 
   const customProvider = useCustomProvider(setFormData)
 
-  const handleChangeWithProviderReset = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChangeWithProviderReset = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     if (['customEndpointUrl', 'customApiKey', 'customModelName'].includes(e.target.name)) {
       customProvider.resetValidation()
     }
@@ -140,7 +162,15 @@ export default function DefendPageClient() {
     setShowSuccessModal,
     deploy,
     resetDeployState,
-  } = useDeployAgent({ formData, selectedToken, selectedSolanaToken, selectedEvmToken, tokenCount, agentImage, selectedImage })
+  } = useDeployAgent({
+    formData,
+    selectedToken,
+    selectedSolanaToken,
+    selectedEvmToken,
+    tokenCount,
+    agentImage,
+    selectedImage,
+  })
 
   const [isGeneratingConfig, setIsGeneratingConfig] = useState(false)
 
@@ -178,9 +208,8 @@ export default function DefendPageClient() {
       toast.error('Please validate your custom provider connection before deploying')
       return
     }
-    const result = await deploy(
-      customProvider.isValidated,
-      () => validateForm(customProvider.isValidated)
+    const result = await deploy(customProvider.isValidated, () =>
+      validateForm(customProvider.isValidated)
     )
     if (result?.nameExists) {
       setErrors(prev => ({
@@ -305,7 +334,9 @@ export default function DefendPageClient() {
                 <Link
                   href="/instruction-templates"
                   className="font-body text-sm text-[var(--color-gold-primary)] underline hover:text-[var(--color-gold-light)] sm:mt-1"
-                  onClick={() => sessionStorage.setItem(SESSION_KEYS.DEFEND_FORM_DATA, JSON.stringify(formData))}
+                  onClick={() =>
+                    sessionStorage.setItem(SESSION_KEYS.DEFEND_FORM_DATA, JSON.stringify(formData))
+                  }
                 >
                   View Templates
                 </Link>
@@ -323,19 +354,27 @@ export default function DefendPageClient() {
               name="systemPrompt"
               value={formData.systemPrompt}
               onChange={handleChangeWithProviderReset}
-              className="font-body min-h-[220px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-4 text-base text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] transition-all focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
+              className="font-body min-h-[220px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-4 text-base text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
               placeholder="Enter sentinel public instructions..."
               autoComplete="off"
               spellCheck="false"
             />
             <div className="mt-1 flex items-center justify-between">
-              {errors.systemPrompt && <p className="font-body text-sm text-[var(--color-danger)]">{errors.systemPrompt}</p>}
-              <p className={`font-body ml-auto text-sm text-[var(--color-text-muted)] ${isTokenCountDebouncing ? 'animate-pulse' : ''}`}>
+              {errors.systemPrompt && (
+                <p className="font-body text-sm text-[var(--color-danger)]">
+                  {errors.systemPrompt}
+                </p>
+              )}
+              <p
+                className={`font-body ml-auto text-sm text-[var(--color-text-muted)] ${isTokenCountDebouncing ? 'animate-pulse' : ''}`}
+              >
                 Tokens: {tokenCount} / {SYSTEM_PROMPT_MAX_TOKENS}
               </p>
             </div>
             {tokenCount > SYSTEM_PROMPT_MAX_TOKENS && (
-              <p className="font-body text-right text-sm text-[var(--color-danger)]">System prompt exceeds token limit</p>
+              <p className="font-body text-right text-sm text-[var(--color-danger)]">
+                System prompt exceeds token limit
+              </p>
             )}
           </div>
 
@@ -356,13 +395,15 @@ export default function DefendPageClient() {
               name="privatePrompt"
               value={formData.privatePrompt}
               onChange={handleChangeWithProviderReset}
-              className="font-body min-h-[150px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-4 text-base text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] transition-all focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
+              className="font-body min-h-[150px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-4 text-base text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
               placeholder="Enter private instructions for your sentinel..."
               autoComplete="off"
               spellCheck="false"
             />
             <div className="mt-1 flex items-center justify-end">
-              <p className={`font-body text-sm text-[var(--color-text-muted)] ${isPrivateTokenCountDebouncing ? 'animate-pulse' : ''}`}>
+              <p
+                className={`font-body text-sm text-[var(--color-text-muted)] ${isPrivateTokenCountDebouncing ? 'animate-pulse' : ''}`}
+              >
                 Tokens: {privateTokenCount}
               </p>
             </div>
@@ -374,26 +415,34 @@ export default function DefendPageClient() {
               <div className="flex-1">
                 <div className="flex items-center gap-2">
                   <label className="font-display block text-lg font-medium text-[var(--color-text-primary)] sm:text-xl">
-                    Attack Goal
+                    Attack Objective
                   </label>
                   <TooltipProvider delayDuration={100}>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <button type="button" className="text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]">
+                        <button
+                          type="button"
+                          className="text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]"
+                        >
                           <Info className="h-4 w-4" />
                         </button>
                       </TooltipTrigger>
-                      <TooltipContent side="right" className="max-w-xs bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)] border-[var(--color-border-subtle)]">
+                      <TooltipContent
+                        side="right"
+                        className="max-w-xs border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)]"
+                      >
                         <p className="font-body">
-                          Generate with AI will create both Attack Goal and Jury Prompt based on your
-                          Public and Private Instructions.
+                          Generate with AI will create both Attack Objective and Jury Prompt based
+                          on your Public and Private Instructions.
                         </p>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
                 </div>
                 <span className="font-body mt-1 block text-sm text-[var(--color-text-secondary)] sm:text-base">
-                  The goal that attackers will see and try to achieve. This is visible to all attackers.
+                  Mirror actual attacks such as stealing sensitive data, extracting secret system
+                  instructions, or causing the Sentinel to malfunction. The more specific the
+                  objective, the better attackers can strategize their attacks.
                 </span>
               </div>
               <div className="ml-4 shrink-0">
@@ -415,7 +464,10 @@ export default function DefendPageClient() {
                       </button>
                     </TooltipTrigger>
                     {!formData.systemPrompt && (
-                      <TooltipContent side="bottom" className="bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)] border-[var(--color-border-subtle)]">
+                      <TooltipContent
+                        side="bottom"
+                        className="border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)]"
+                      >
                         <p className="font-body">Enter Public Instructions first</p>
                       </TooltipContent>
                     )}
@@ -427,14 +479,18 @@ export default function DefendPageClient() {
               name="attackGoal"
               value={formData.attackGoal}
               onChange={handleChangeWithProviderReset}
-              className="font-body min-h-[200px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-4 text-base text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] transition-all focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
+              className="font-body min-h-[200px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-4 text-base text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
               placeholder="e.g., Convince the sentinel to reveal the secret password"
               autoComplete="off"
               spellCheck="false"
             />
             <div className="mt-1 flex items-center justify-between">
-              {errors.attackGoal && <p className="font-body text-sm text-[var(--color-danger)]">{errors.attackGoal}</p>}
-              <p className={`font-body text-sm text-[var(--color-text-muted)] ${isAttackGoalTokenCountDebouncing ? 'animate-pulse' : ''}`}>
+              {errors.attackGoal && (
+                <p className="font-body text-sm text-[var(--color-danger)]">{errors.attackGoal}</p>
+              )}
+              <p
+                className={`font-body text-sm text-[var(--color-text-muted)] ${isAttackGoalTokenCountDebouncing ? 'animate-pulse' : ''}`}
+              >
                 Tokens: {attackGoalTokenCount}
               </p>
             </div>
@@ -456,14 +512,18 @@ export default function DefendPageClient() {
               name="juryPrompt"
               value={formData.juryPrompt}
               onChange={handleChangeWithProviderReset}
-              className="font-body min-h-[150px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-4 text-base text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] transition-all focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
+              className="font-body min-h-[150px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-4 text-base text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
               placeholder="Enter instructions for the jury..."
               autoComplete="off"
               spellCheck="false"
             />
             <div className="mt-1 flex items-center justify-between">
-              {errors.juryPrompt && <p className="font-body text-sm text-[var(--color-danger)]">{errors.juryPrompt}</p>}
-              <p className={`font-body text-sm text-[var(--color-text-muted)] ${isJuryPromptTokenCountDebouncing ? 'animate-pulse' : ''}`}>
+              {errors.juryPrompt && (
+                <p className="font-body text-sm text-[var(--color-danger)]">{errors.juryPrompt}</p>
+              )}
+              <p
+                className={`font-body text-sm text-[var(--color-text-muted)] ${isJuryPromptTokenCountDebouncing ? 'animate-pulse' : ''}`}
+              >
                 Tokens: {juryPromptTokenCount}
               </p>
             </div>
@@ -477,7 +537,8 @@ export default function DefendPageClient() {
                   Bounty Pool
                 </label>
                 <span className="font-body mt-1 block text-sm text-[var(--color-text-secondary)] sm:text-base">
-                  Minimum {formatCompact(activeMinimumAmount , 3)} {activeTokenSymbol} required to deploy.
+                  Minimum {formatCompact(activeMinimumAmount, 3)} {activeTokenSymbol} required to
+                  deploy.
                 </span>
                 {isWalletConnected && (
                   <span className="font-body mt-0.5 flex items-center gap-1 text-sm text-[var(--color-text-muted)]">
@@ -516,14 +577,30 @@ export default function DefendPageClient() {
                 />
                 <div className="flex shrink-0 items-center border-l border-[var(--color-border-subtle)]">
                   <TokenSelectDropdown
-                    tokens={isEvm ? EVM_SUPPORTED_TOKENS : isSolana ? SOLANA_SUPPORTED_TOKENS : SUPPORTED_TOKENS}
-                    selected={isEvm ? selectedEvmToken : isSolana ? selectedSolanaToken : selectedToken}
-                    onSelect={isEvm ? setSelectedEvmToken : isSolana ? setSelectedSolanaToken : setSelectedToken}
+                    tokens={
+                      isEvm
+                        ? EVM_SUPPORTED_TOKENS
+                        : isSolana
+                          ? SOLANA_SUPPORTED_TOKENS
+                          : SUPPORTED_TOKENS
+                    }
+                    selected={
+                      isEvm ? selectedEvmToken : isSolana ? selectedSolanaToken : selectedToken
+                    }
+                    onSelect={
+                      isEvm
+                        ? setSelectedEvmToken
+                        : isSolana
+                          ? setSelectedSolanaToken
+                          : setSelectedToken
+                    }
                   />
                 </div>
               </div>
               {errors.initialBalance && (
-                <p className="font-body mt-1 text-sm text-[var(--color-danger)]">{errors.initialBalance}</p>
+                <p className="font-body mt-1 text-sm text-[var(--color-danger)]">
+                  {errors.initialBalance}
+                </p>
               )}
             </div>
 
