@@ -23,7 +23,8 @@ export const USDC_TOKEN: SupportedToken = {
   symbol: 'USDC',
   name: 'USD Coin',
   coinType: APP_NETWORK === 'testnet' ? USDC_TESTNET_ADDRESS : USDC_MAINNET_ADDRESS,
-  decimals: 18,
+  // Testnet USDC (Aave mock 0x64544...) has 6 decimals; BSC mainnet Binance-Peg USDC has 18.
+  decimals: APP_NETWORK === 'testnet' ? 6 : 18,
   icon: '/icons/tokens/usdc.png',
   minimumAmount: 0.01,
 }
