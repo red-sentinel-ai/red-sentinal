@@ -5,12 +5,12 @@ import { formatUnits } from 'viem'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
 
 /**
- * Returns the native BNB balance for the connected EVM wallet.
- * Mirrors the useSolanaBalance return shape { balance, isLoading }.
+ * Returns the balance for the connected EVM wallet.
+ * Pass a tokenAddress to get an ERC-20 token balance; omit it for native BNB.
  */
-export function useEVMBalance() {
+export function useEVMBalance(tokenAddress?: `0x${string}`) {
   const { address } = useEVMWallet()
-  const { data, isLoading } = useBalance({ address })
+  const { data, isLoading } = useBalance({ address, token: tokenAddress })
 
   return {
     balance: data ? parseFloat(formatUnits(data.value, data.decimals)) : null,

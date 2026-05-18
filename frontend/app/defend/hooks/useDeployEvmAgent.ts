@@ -1,7 +1,9 @@
 'use client'
 
 import { useWriteContract, useAccount } from 'wagmi'
+import { waitForTransactionReceipt } from '@wagmi/core'
 import { parseUnits } from 'viem'
+import { wagmiConfig } from '@/lib/wagmi'
 import { BNB_CONFIG } from '@/constants/evm'
 import { SENTINEL_ABI, ERC20_ABI } from '@/lib/evm/abi'
 import { buildEvmSignature, bytesToHex32 } from '@/lib/evm/signature'
@@ -37,7 +39,7 @@ export function useDeployEvmAgent({
 
     const txArgs = { account: walletAddress, chain: currentChain ?? null }
 
-    await writeContractAsync({
+    const approveTxHash = await writeContractAsync({
       ...txArgs,
       address: tokenAddress,
       abi: ERC20_ABI,
@@ -45,7 +47,7 @@ export function useDeployEvmAgent({
       args: [BNB_CONFIG.contractAddress, initialFundRaw],
     })
 
-    await new Promise(r => setTimeout(r, 3000))
+    await waitForTransactionReceipt(wagmiConfig, { hash: approveTxHash })
 
     const registerTxHash = await writeContractAsync({
       ...txArgs,
