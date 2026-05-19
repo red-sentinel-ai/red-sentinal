@@ -37,6 +37,10 @@ export interface AgentDetails {
   coin_type?: string
   current_cost_per_message?: string
   chain?: SupportedChain
+  // Trending (top 10, best available window: 24h → 7d → 30d)
+  trending?: boolean
+  trending_rank?: number | null
+  trending_window?: '24h' | '7d' | '30d' | null
 }
 
 export type SortField = 'total_balance' | 'cost_per_message' | 'total_attacks' | 'agent_id' | 'change7d' | null
