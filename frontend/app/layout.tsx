@@ -9,6 +9,7 @@ import './globals.css'
 import '@rainbow-me/rainbowkit/styles.css'
 import { Providers } from './providers'
 import Footer from '@/components/Footer'
+import { FloatingHelpButton } from '@/components/FloatingHelpButton'
 import { SUI_SENTINEL_APP_URL, SUI_SENTINEL_X_USERNAME, SUI_SENTINEL_GITHUB_URL } from '@/constants'
 
 // Light Theme Fonts
@@ -296,6 +297,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <NextTopLoader color="#000000" showSpinner={false} />
           <main className="w-full flex-grow">{children}</main>
           <Footer />
+          <FloatingHelpButton />
           <Toaster
             position="top-right"
             toastOptions={{

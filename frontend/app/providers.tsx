@@ -10,7 +10,6 @@ import { getFullnodeUrl } from '@mysten/sui/client'
 import { Header } from '@/components/Header'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ProfileInitializer } from '@/components/profile/ProfileInitializer'
-import { FeedbackButton } from '@/components/feedback/FeedbackButton'
 import { APP_NETWORK } from '@/constants'
 import { SolanaWalletProvider } from '@/app/SolanaWalletProvider'
 import { EVMWalletProvider } from '@/app/EVMWalletProvider'
@@ -59,7 +58,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
                     <div className="mt-[96px] md:mt-[100px]"></div>
                     <ProfileInitializer />
                     {children}
-                    <FeedbackButton />
                   </div>
                 </ActiveChainProvider>
               </SolanaWalletProvider>
