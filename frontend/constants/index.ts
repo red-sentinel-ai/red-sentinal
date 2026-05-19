@@ -1,4 +1,4 @@
-import { FileText, Github, Globe, Handshake, Presentation, Shield, Calculator } from 'lucide-react'
+import { FileText, Github, Globe, Handshake, Shield, Calculator } from 'lucide-react'
 import { SOLANA_SUPPORTED_TOKENS } from './solana'
 import { EVM_SUPPORTED_TOKENS } from './evm'
 
