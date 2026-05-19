@@ -16,6 +16,7 @@ import { formatDuration } from '@/lib/utils'
 import { PrizePoolChangeDisplay } from './agents/PrizePoolChangeDisplay'
 import { ClaimFeesModal } from './agents/ClaimFeesModal'
 import { TokenAmount } from './ui/common/TokenAmount'
+import { Flame } from 'lucide-react'
 
 
 type FeaturedAgentCardProps = {
@@ -161,6 +162,15 @@ export const FeaturedAgentCard = ({
               />
               {agent.state === 'active' ? 'Active' : 'Defeated'}
             </div>
+
+            {agent.trending && (
+              <div className="absolute bottom-2 left-2 z-20 flex items-center gap-1 rounded-full border border-amber-400/40 bg-amber-100 px-2 py-0.5 text-[10px] font-medium leading-none text-amber-700 sm:px-2.5 sm:py-1 sm:text-xs">
+                <Flame className="size-2.5 sm:size-3" />
+                {agent.trending_window === '24h' || !agent.trending_window
+                  ? 'Trending'
+                  : `Trending ${agent.trending_window}`}
+              </div>
+            )}
 
             <AgentDropdown
               isOwner={isOwner}
