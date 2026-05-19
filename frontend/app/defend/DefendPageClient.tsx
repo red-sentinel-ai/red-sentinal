@@ -157,6 +157,8 @@ export default function DefendPageClient() {
   const {
     isLoading,
     deployedAgentPath,
+    deployedAgentId,
+    deployedOwner,
     transactionDigest,
     showSuccessModal,
     setShowSuccessModal,
@@ -676,6 +678,8 @@ export default function DefendPageClient() {
           transactionDigest={transactionDigest}
           agentPath={deployedAgentPath}
           chain={activeChain}
+          agentId={deployedAgentId}
+          walletAddress={deployedOwner}
         />
       </div>
     </div>

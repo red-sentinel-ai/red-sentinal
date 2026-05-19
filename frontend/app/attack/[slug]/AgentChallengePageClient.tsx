@@ -227,6 +227,11 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
             showResultModal={showResultModal}
             setShowResultModal={setShowResultModal}
             txnHash={txnHash}
+            agentId={agent.agent_id}
+            agentName={agent.agent_name}
+            agentPath={agent.agent_path}
+            agentChain={agentChain}
+            walletAddress={connectedAddress}
           />
         )}
       </div>
@@ -294,6 +299,11 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
           showResultModal={showResultModal}
           setShowResultModal={setShowResultModal}
           txnHash={txnHash}
+          agentId={agent.agent_id}
+          agentName={agent.agent_name}
+          agentPath={agent.agent_path}
+          agentChain={agentChain}
+          walletAddress={connectedAddress}
         />
       )}
     </div>

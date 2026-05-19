@@ -10,12 +10,19 @@ import { useActiveChain } from '@/context/ActiveChainContext'
 import { getExplorerTxUrl } from '@/lib/explorer'
 import { cn } from '@/lib/utils'
 import { SpinPassPromo } from '@/components/rewards/SpinPassPromo'
+import { AttackPageTelegramCTA } from '@/components/telegram/AttackPageTelegramCTA'
+import type { SupportedChain } from '@/constants/chains'
 
 type AttackStatusModalProps = {
   apiResponse: ConsumePromptApiResponse
   showResultModal: boolean
   setShowResultModal: (show: boolean) => void
   txnHash: string
+  agentId?: string | null
+  agentName?: string | null
+  agentPath?: string | null
+  agentChain?: SupportedChain
+  walletAddress?: string | null
 }
 
 export const AttackStatusModal = ({
@@ -23,6 +30,11 @@ export const AttackStatusModal = ({
   showResultModal,
   setShowResultModal,
   txnHash,
+  agentId,
+  agentName,
+  agentPath,
+  agentChain,
+  walletAddress,
 }: AttackStatusModalProps) => {
   const [isExplanationOpen, setIsExplanationOpen] = useState(true)
   const { activeChain } = useActiveChain()
@@ -140,6 +152,16 @@ export const AttackStatusModal = ({
           <div className="border-t border-[#E5E5E5]">
             <SpinPassPromo description="You've received a free spin pass for your attack!" />
           </div>
+
+          {agentId ? (
+            <AttackPageTelegramCTA
+              chain={(agentChain ?? 'sui') as 'sui' | 'solana' | 'evm' | 'bnb'}
+              agentId={agentId}
+              walletAddress={walletAddress ?? undefined}
+              agentName={agentName ?? undefined}
+              agentPath={agentPath ?? undefined}
+            />
+          ) : null}
         </div>
       </motion.div>
     </Dialog>

@@ -5,6 +5,7 @@ import { User, Folder } from 'lucide-react'
 import { truncateAddress } from '@/lib/utils'
 import { supabaseServiceClient } from '@/db/config/server'
 import { FeaturedAgentCard } from '@/components/FeaturedAgentCard'
+import { TelegramSubscriptionsSectionWrapper } from '@/components/profile/TelegramSubscriptionsSectionWrapper'
 import { type AgentDetails } from '@/hooks/agents/useAllAgents'
 import { APP_NETWORK, EXPLORER_BASE_URL, SUI_SENTINEL_API_URL } from '@/constants'
 
@@ -99,6 +100,10 @@ export default async function PublicProfilePage({
             </div>
           </div>
         </div>
+
+        <TelegramSubscriptionsSectionWrapper
+          profileWalletAddresses={user.wallet_addresses ?? []}
+        />
 
         <div>
           <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold">

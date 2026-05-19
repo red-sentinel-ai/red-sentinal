@@ -42,6 +42,8 @@ export function useDeployAgent({
 
   const [isLoading, setIsLoading] = useState(false)
   const [deployedAgentPath, setDeployedAgentPath] = useState<string | null>(null)
+  const [deployedAgentId, setDeployedAgentId] = useState<string | null>(null)
+  const [deployedOwner, setDeployedOwner] = useState<string | null>(null)
   const [transactionDigest, setTransactionDigest] = useState('')
   const [showSuccessModal, setShowSuccessModal] = useState(false)
 
@@ -66,6 +68,8 @@ export function useDeployAgent({
   ) => {
     addAgentObjectIdWithName(`${objectId} ${agentName}`)
     setTransactionDigest(digest)
+    setDeployedAgentId(agentId)
+    setDeployedOwner(ownerAddress)
     setShowSuccessModal(true)
 
     posthog.capture('sentinel_deployed', {
@@ -174,6 +178,8 @@ export function useDeployAgent({
 
   const resetDeployState = () => {
     setDeployedAgentPath(null)
+    setDeployedAgentId(null)
+    setDeployedOwner(null)
     setTransactionDigest('')
     setShowSuccessModal(false)
   }
@@ -181,6 +187,8 @@ export function useDeployAgent({
   return {
     isLoading,
     deployedAgentPath,
+    deployedAgentId,
+    deployedOwner,
     transactionDigest,
     showSuccessModal,
     setShowSuccessModal,

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { CheckCircle, X } from 'lucide-react'
 import Link from 'next/link'
 import { SpinPassPromo } from '@/components/rewards/SpinPassPromo'
+import { ConnectTelegramCard } from '@/components/telegram/ConnectTelegramCard'
 
 interface SuccessModalProps {
   open: boolean
@@ -12,6 +13,8 @@ interface SuccessModalProps {
   transactionDigest: string
   agentPath: string
   chain?: import('@/constants/chains').SupportedChain
+  agentId?: string | null
+  walletAddress?: string | null
 }
 
 export const SuccessModal: React.FC<SuccessModalProps> = ({
@@ -21,6 +24,8 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
   transactionDigest,
   agentPath,
   chain = 'sui',
+  agentId,
+  walletAddress,
 }) => {
   if (!open) return null
 
@@ -73,6 +78,19 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
             </button>
           </Link>
         </div>
+
+        {agentId ? (
+          <div className="mt-6">
+            <ConnectTelegramCard
+              chain={chain === 'bnb' ? 'bnb' : (chain as 'sui' | 'solana')}
+              agentId={agentId}
+              role="defender"
+              walletAddress={walletAddress ?? undefined}
+              agentName={agentName}
+              agentPath={agentPath}
+            />
+          </div>
+        ) : null}
 
         <div className="mt-2 border-t border-[var(--color-border-subtle)]">
           <SpinPassPromo description="You've received a free spin pass for deploying your Sentinel!" buttonVariant="secondary" />
