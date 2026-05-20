@@ -1,6 +1,14 @@
 import type { Metadata } from 'next'
 import { AgentListView } from '@/components/AgentListView'
+import { ChainLogos } from '@/components/ui/common/ChainLogos'
 import { SUI_SENTINEL_APP_URL } from '@/constants'
+
+const chains = [
+  { name: 'Solana', logo: '/chain-logos/sol.webp' },
+  { name: 'Monad', logo: '/chain-logos/mon.webp', rounded: true },
+  { name: 'Ethereum', logo: '/chain-logos/eth.webp' },
+  { name: 'Arbitrum', logo: '/chain-logos/arb.svg', active: true },
+]
 
 export const metadata: Metadata = {
   title: 'Attack AI Sentinels | Claim Bounties on Sui',
@@ -32,6 +40,9 @@ export const metadata: Metadata = {
 export default function AttackPage() {
   return (
     <div className="relative min-h-[calc(100vh-60px)] flex-col items-end justify-center bg-[var(--color-bg-base)] md:mt-0 md:items-center md:px-4">
+      <div className="w-full max-w-4xl px-4 pt-8">
+        <ChainLogos chains={chains} />
+      </div>
       <AgentListView />
     </div>
   )
