@@ -418,10 +418,10 @@ function RewardCalculatorBanner() {
         href={REWARD_CALCULATOR_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="btn btn-black flex items-center gap-2 text-sm sm:text-base"
+        className="inline-flex items-center gap-1.5 rounded-md border border-[var(--color-border-default)] bg-[var(--color-bg-subtle)] px-2.5 py-1.5 text-xs font-medium text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text-primary)]"
       >
         Reward Calculator
-        <ExternalLink className="h-3.5 w-3.5" />
+        <ExternalLink className="h-3 w-3" />
       </Link>
     </div>
   )
@@ -1181,7 +1181,7 @@ export function NewLeaderboard() {
                     placeholder="Search by username or wallet…"
                     value={defenderSearch}
                     onChange={e => setDefenderSearch(e.target.value)}
-                    className="pl-9"
+                    className="h-9 border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] pl-9 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus-visible:border-[var(--color-border-default)] focus-visible:ring-0"
                   />
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -1288,7 +1288,7 @@ export function NewLeaderboard() {
                     placeholder="Search by username or wallet…"
                     value={attackerSearch}
                     onChange={e => setAttackerSearch(e.target.value)}
-                    className="pl-9"
+                    className="h-9 border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] pl-9 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus-visible:border-[var(--color-border-default)] focus-visible:ring-0"
                   />
                 </div>
                 <div className="flex flex-wrap gap-2">
