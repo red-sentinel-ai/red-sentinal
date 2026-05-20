@@ -46,10 +46,8 @@ export function EarnHero() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <h1 className="font-display mb-4 text-3xl font-bold uppercase text-[var(--color-text-primary)] sm:text-4xl md:text-5xl">
-          Every Action Earns SENTINEL
-        </h1>
-        <p className="font-body mx-auto mb-10 max-w-2xl text-base text-[var(--color-text-secondary)] sm:text-xl md:mb-12">
+        <h1 className="page-heading mb-3 text-center">Every Action Earns SENTINEL</h1>
+        <p className="page-subheading mx-auto mb-10 text-center md:mb-12">
           Complete missions, defend or attack Sentinels, and create content to earn Spin Passes. Use
           your passes at the slot machine to win{' '}
           <Link

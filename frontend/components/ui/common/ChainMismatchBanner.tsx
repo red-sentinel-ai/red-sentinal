@@ -28,8 +28,8 @@ export function ChainMismatchBanner({
     <div
       className={
         variant === 'block'
-          ? 'border-t border-amber-200 bg-amber-50 p-4'
-          : 'flex items-center gap-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs'
+          ? 'border-t border-amber-500/20 bg-amber-900/15 p-4'
+          : 'flex items-center gap-2 rounded-md border border-amber-500/20 bg-amber-900/15 px-3 py-2 text-xs'
       }
     >
       <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
@@ -42,7 +42,7 @@ export function ChainMismatchBanner({
         <button
           type="button"
           onClick={() => setActiveChain(agentChain)}
-          className="flex items-center gap-1.5 rounded-full border border-amber-700 bg-white px-3 py-1.5 text-xs font-semibold text-amber-900 transition-colors hover:bg-amber-100"
+          className="flex items-center gap-1.5 rounded-full border border-amber-500/40 bg-amber-900/20 px-3 py-1.5 text-xs font-semibold text-amber-400 transition-colors hover:bg-amber-900/30"
         >
           <Image
             src={target.icon}

@@ -106,10 +106,8 @@ export const AgentListView = () => {
   return (
     <div className="mx-auto max-w-[1560px] px-4 py-6 md:px-8 md:py-10">
       <div className="mb-8 md:mb-12">
-        <h1 className="font-display text-2xl font-bold text-[var(--color-text-primary)] sm:text-4xl md:text-5xl">
-          Prepare Yourself for Age of Agents
-        </h1>
-        <p className="font-body mt-3 max-w-3xl text-sm text-[var(--color-text-secondary)] sm:text-base md:mt-4 md:text-lg">
+        <h1 className="page-heading">Prepare Yourself for Age of Agents</h1>
+        <p className="page-subheading mt-2">
           Agents are everywhere. we all need to upskill to make most of this new era. learn by doing.
           Red Sentinel is the ultimate playground to build, defend, and attack with AI agents. Are
           you ready to test your skills and earn rewards in the most exciting way possible?
@@ -123,10 +121,10 @@ export const AgentListView = () => {
       {(isFetchingFeatured || featuredForRow.length > 0) && (
         <section className="mb-10 md:mb-14">
           <div className="mb-4 md:mb-6">
-            <h2 className="font-display text-xl font-medium text-[var(--color-text-primary)] md:text-2xl">
+            <h2 className="text-base font-medium text-[var(--color-text-primary)]">
               Featured Sentinels
             </h2>
-            <p className="font-body text-sm text-[var(--color-text-secondary)]">
+            <p className="text-xs text-[var(--color-text-muted)]">
               Curated high-value targets. Bigger pools, proven resilience.
             </p>
           </div>
@@ -142,10 +140,10 @@ export const AgentListView = () => {
       {(isFetchingTrending || trendingForRow.length > 0) && (
         <section className="mb-10 md:mb-14">
           <div className="mb-4 md:mb-6">
-            <h2 className="font-display text-xl font-medium text-[var(--color-text-primary)] md:text-2xl">
+            <h2 className="text-base font-medium text-[var(--color-text-primary)]">
               Trending Sentinels
             </h2>
-            <p className="font-body text-sm text-[var(--color-text-secondary)]">
+            <p className="text-xs text-[var(--color-text-muted)]">
               The most-attacked sentinels right now. Where the action is.
             </p>
           </div>
@@ -161,7 +159,7 @@ export const AgentListView = () => {
         <div className="mb-3 flex flex-col gap-3 md:mb-6 md:flex-row md:items-center md:justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="font-display text-lg font-medium text-[var(--color-text-primary)] md:text-2xl">
+              <h2 className="text-base font-medium text-[var(--color-text-primary)]">
                 All Sentinels
               </h2>
               {!isFetchingAllAgents && totalAgents > 0 && (

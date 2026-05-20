@@ -35,7 +35,7 @@ export function WalletDropdown({ address, rawAddress, balanceLabel, isLoadingBal
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="group flex items-center gap-2 rounded-full border border-[var(--color-text-primary)] px-4 py-2 text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-bg-subtle)]">
+        <button className="group flex items-center gap-2 rounded-full border border-[var(--color-border-default)] px-3 py-1.5 text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-border-strong)] hover:bg-[var(--color-bg-subtle)] hover:text-[var(--color-text-primary)]">
           <Image width={31} height={31} src="/icons/wallet.png" alt="wallet icon" />
           <span className="text-sm font-medium">{address}</span>
           <ChevronDown className="h-4 w-4 transition-colors" />

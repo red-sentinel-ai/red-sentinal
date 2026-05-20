@@ -12,12 +12,10 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarSeparator,
   useSidebar,
 } from '@/components/ui/sidebar'
 
@@ -30,15 +28,12 @@ type NavItem = {
   icon: LucideIcon
 }
 
-const PRIMARY_ITEMS: NavItem[] = [
-  { title: 'Attack', href: '/attack', icon: Swords },
-  { title: 'Defend', href: '/defend', icon: ShieldHalf },
-  { title: 'Profile', href: '/profile', icon: User },
-]
-
-const SECONDARY_ITEMS: NavItem[] = [
+const NAV_ITEMS: NavItem[] = [
+  { title: 'Home', href: '/attack', icon: Swords },
+  { title: 'Create Sentinel', href: '/defend', icon: ShieldHalf },
   { title: 'Leaderboard', href: '/leaderboard', icon: Trophy },
   { title: 'Rewards', href: '/rewards', icon: Gift },
+  { title: 'Profile', href: '/profile', icon: User },
 ]
 
 function isItemActive(pathname: string, href: string) {
@@ -57,7 +52,7 @@ export function AppSidebar() {
     const active = isItemActive(pathname, item.href)
     return (
       <SidebarMenuItem key={item.href}>
-        <SidebarMenuButton asChild isActive={active} tooltip={item.title} size="lg">
+        <SidebarMenuButton asChild isActive={active} tooltip={item.title} size="default">
           <Link href={item.href} onClick={() => isMobile && setOpenMobile(false)}>
             <Icon />
             <span className="font-medium group-data-[collapsible=icon]:hidden">{item.title}</span>
@@ -105,16 +100,7 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu>{PRIMARY_ITEMS.map(renderItem)}</SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarSeparator />
-
-        <SidebarGroup>
-          <SidebarGroupLabel>More</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>{SECONDARY_ITEMS.map(renderItem)}</SidebarMenu>
+            <SidebarMenu>{NAV_ITEMS.map(renderItem)}</SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>

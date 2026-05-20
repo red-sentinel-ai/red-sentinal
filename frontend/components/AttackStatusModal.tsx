@@ -39,7 +39,7 @@ export const AttackStatusModal = ({
     <Dialog
       open={showResultModal && !!apiResponse}
       onClose={() => setShowResultModal(false)}
-      className="flex max-h-[90dvh] w-[90vw] max-w-[773px] flex-col overflow-hidden rounded-xl border border-[#9A9A9A] bg-white p-0"
+      className="flex max-h-[90dvh] w-[90vw] max-w-[773px] flex-col overflow-hidden rounded-xl border border-white/10 bg-[#1a1919] p-0"
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -50,7 +50,7 @@ export const AttackStatusModal = ({
       >
         <button
           onClick={() => setShowResultModal(false)}
-          className="absolute right-5 top-5 z-20 flex h-8 w-8 items-center justify-center rounded-full text-2xl leading-none text-black transition-colors hover:bg-gray-100"
+          className="absolute right-5 top-5 z-20 flex h-8 w-8 items-center justify-center rounded-full text-2xl leading-none text-white/60 transition-colors hover:bg-white/10 hover:text-white"
           aria-label="Close modal"
         >
           ×
@@ -67,7 +67,7 @@ export const AttackStatusModal = ({
               <span className="text-lg font-bold text-white">{success ? '✓' : '!'}</span>
             </div>
             <div>
-              <h2 className="text-xl font-bold leading-tight text-black">
+              <h2 className="text-xl font-bold leading-tight text-white">
                 {success ? 'Attack Successful' : 'Attack Failed'}
               </h2>
               <p className="text-[15px] leading-snug text-[#989898]">
@@ -78,21 +78,21 @@ export const AttackStatusModal = ({
             </div>
           </div>
 
-          <div className="my-5 h-[1px] w-full bg-[#E5E5E5]" />
+          <div className="my-5 h-[1px] w-full bg-white/10" />
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto">
           <div className="px-4 pb-4 sm:px-8">
             <div className="mb-4 flex items-center">
               <span className="mr-2 text-base">⚔️</span>
-              <span className="text-[15px] font-medium text-black">
+              <span className="text-[15px] font-medium text-white">
                 Your Attack Score: <span className="text-sm font-bold">{score}/100</span>
               </span>
               <Link
                 href={txExplorerUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="ml-1 mt-0.5 flex items-center text-[10px] font-medium text-[#989898] hover:text-black hover:underline"
+                className="ml-1 mt-0.5 flex items-center text-[10px] font-medium text-white/40 hover:text-white hover:underline"
               >
                 view on explorer
               </Link>
@@ -103,8 +103,8 @@ export const AttackStatusModal = ({
                 onClick={() => setIsExplanationOpen(!isExplanationOpen)}
                 className="group flex w-full items-center justify-between text-left"
               >
-                <h3 className="text-[15px] font-medium text-black">Explanation</h3>
-                <span className="text-gray-500 transition-colors group-hover:text-black">
+                <h3 className="text-[15px] font-medium text-white">Explanation</h3>
+                <span className="text-white/40 transition-colors group-hover:text-white">
                   {isExplanationOpen ? '▲' : '▼'}
                 </span>
               </button>
@@ -127,7 +127,7 @@ export const AttackStatusModal = ({
             </div>
 
             <div className="mb-2 mt-4">
-              <h3 className="text-[15px] font-medium text-black">Jury Response</h3>
+              <h3 className="text-[15px] font-medium text-white">Jury Response</h3>
 
               <div className="overflow-hidden">
                 <TruncatedText
@@ -137,7 +137,7 @@ export const AttackStatusModal = ({
             </div>
           </div>
 
-          <div className="border-t border-[#E5E5E5]">
+          <div className="border-t border-white/10">
             <SpinPassPromo description="You've received a free spin pass for your attack!" />
           </div>
         </div>
