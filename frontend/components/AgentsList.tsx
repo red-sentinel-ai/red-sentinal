@@ -247,46 +247,23 @@ export const AgentsList = ({
                       </div>
 
                       <div className="col-span-1 flex items-center justify-end">
-                        <Badge
-                          variant={agent.state === 'active' ? 'secondary' : 'destructive'}
-                          className={`${
+                        <span
+                          className={`inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-medium ${
                             agent.state === 'active'
-                              ? 'border-[#1FAD57]/40 bg-[#1FAD57]/10 text-[#1FAD57]'
+                              ? 'border-[#1FAD57]/30 bg-[#1FAD57]/10 text-[#1FAD57]'
                               : 'border-red-500/20 bg-red-500/10 text-red-400'
-                          } rounded-xl text-sm`}
+                          }`}
                         >
-                          {agent.state === 'active' ? (
-                            <Image
-                              src="/icons/shield-green.png"
-                              width={14}
-                              height={14}
-                              alt="shield green"
-                              className="mr-1"
-                            />
-                          ) : (
-                            <Image
-                              src="/icons/shield-red.png"
-                              width={14}
-                              height={14}
-                              alt="shield red"
-                              className="mr-1"
-                            />
-                          )}
+                          <span className={`h-1.5 w-1.5 rounded-full ${agent.state === 'active' ? 'bg-[#1FAD57]' : 'bg-red-400'}`} />
                           {agent.state === 'active' ? 'Active' : 'Defeated'}
-                        </Badge>
+                        </span>
                       </div>
                       <div className="col-span-1 flex items-center justify-end">
                         <button
                           onClick={() => router.push(`/attack/${agent.agent_path}`)}
-                          className="badge-black text-sm"
+                          className="inline-flex items-center gap-1 rounded-md border border-[var(--color-border-default)] bg-[var(--color-bg-subtle)] px-2 py-1 text-[10px] font-medium text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text-primary)]"
                         >
-                          <Image
-                            src="/icons/swords-white.png"
-                            width="14"
-                            height="14"
-                            alt="swords"
-                            className="mr-1"
-                          />
+                          <Image src="/icons/swords-white.png" width={10} height={10} alt="swords" className="opacity-60" />
                           Attack
                         </button>
                       </div>
