@@ -20,11 +20,10 @@ export const LandingPage = () => {
             transition={{ duration: 0.3, delay: 0.1 }}
           >
             <h1 className="text-xl font-medium text-text sm:text-[32px] md:text-[40px] lg:text-[48px]">
-              Enter The Live AI Security Arena
+              Prepare Yourself for Age of Agents
             </h1>
             <p className="mx-auto mt-4 max-w-[700px] text-sm sm:text-base md:text-lg">
-              Attack live AI Sentinels with real money at stake. Attackers break through for instant
-              bounties. Defenders deploy Sentinels and earn from every attempt.
+              Agents are everywhere. we all need to upskill to make most of this new era. learn by doing. Red Sentinel is the ultimate playground to build, defend, and attack with AI agents. Are you ready to test your skills and earn rewards in the most exciting way possible?
             </p>
           </motion.div>
 

@@ -296,7 +296,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Providers>
           <NextTopLoader color="#000000" showSpinner={false} />
           <main className="w-full flex-grow">{children}</main>
-          <Footer />
+          {/* <Footer /> */}
           <FloatingHelpButton />
           <Toaster
             position="top-right"

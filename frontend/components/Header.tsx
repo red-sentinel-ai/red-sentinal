@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { MenuIcon, X } from 'lucide-react'
 
-import { APP_NETWORK, X_URL } from '@/constants'
+import { APP_NETWORK } from '@/constants'
 import { CHAINS, SUPPORTED_CHAINS } from '@/constants/chains'
 import { useActiveChain } from '@/context/ActiveChainContext'
 import { cn } from '@/lib/utils'
@@ -56,15 +56,6 @@ export const Header = () => {
             </div>
           </div>
 
-          <Link
-            href={X_URL}
-            target="_blank"
-            className="btn btn-outline ms-4 hidden h-[50px] items-center justify-center gap-2 !rounded-[25px] !px-6 text-base font-medium text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-bg-subtle)] xl:flex"
-          >
-            <Image src="/icons/x_black.png" width={20} height={20} alt="x" />
-            Support on X
-          </Link>
-
           <div className="ms-4 hidden xl:block">
             <ChainSwitcher />
           </div>
@@ -80,16 +71,6 @@ export const Header = () => {
           >
             {mobileMenuOpen ? <X /> : <MenuIcon />}
           </button>
-
-          <Link href="/profile" className="ms-4 hidden rounded-full bg-[var(--color-bg-subtle)] xl:block">
-            <Image
-              src="/icons/default_profile.png"
-              width={32}
-              height={32}
-              alt="profile"
-              className="mix-blend-luminosity"
-            />
-          </Link>
         </div>
 
         {mobileMenuOpen && (
