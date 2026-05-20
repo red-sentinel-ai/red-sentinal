@@ -58,7 +58,7 @@ export function BackstoryGridWrapper({ stories }: { stories: StoryItem[] }) {
         if (isActive) {
           backgroundClass = story.activeGradient
           grayscaleClass = 'grayscale-0'
-          textColorClass = 'text-black'
+          textColorClass = 'text-white'
         } else {
           textColorClass = 'text-[#5F5C5C]'
           if (isFirstCard) {

@@ -330,7 +330,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
               {prizePoolData && prizePoolData.history.length > 0 && (
                 <Button
                   onClick={() => setIsChartModalOpen(true)}
-                  className="mt-1.5 w-full border border-[#558EB4]/50 bg-transparent text-xs font-semibold text-[#558EB4] transition-colors duration-300 hover:bg-[#558EB4]/20 hover:text-black md:mt-2 md:text-sm"
+                  className="mt-1.5 w-full border border-[#558EB4]/50 bg-transparent text-xs font-semibold text-[#558EB4] transition-colors duration-300 hover:bg-[#558EB4]/20 hover:text-white md:mt-2 md:text-sm"
                   size="sm"
                 >
                   See Growth Chart

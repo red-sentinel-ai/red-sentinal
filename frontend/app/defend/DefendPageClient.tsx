@@ -244,10 +244,8 @@ export default function DefendPageClient() {
           {/* Header */}
           <div className="flex flex-col-reverse items-center gap-6 sm:flex-row sm:items-start sm:justify-between">
             <div className="text-center sm:text-left">
-              <h1 className="font-display mb-3 text-3xl font-semibold text-[var(--color-text-primary)] sm:text-4xl md:text-5xl">
-                Deploy Your Sentinel
-              </h1>
-              <p className="font-body text-base font-medium text-[var(--color-text-secondary)] sm:text-xl">
+              <h1 className="page-heading">Deploy Your Sentinel</h1>
+              <p className="page-subheading mt-2">
                 Launch an AI agent. Let the world try to break it. Earn from every attack.
               </p>
             </div>
@@ -322,10 +320,10 @@ export default function DefendPageClient() {
           <div className="flex flex-col gap-2">
             <div className="mb-1 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <label className="font-display block text-lg font-medium text-[var(--color-text-primary)] sm:text-xl">
+                <label className="block text-sm font-medium text-[var(--color-text-secondary)]">
                   Public Instructions
                 </label>
-                <span className="font-body mt-1 block text-sm text-[var(--color-text-secondary)] sm:text-base">
+                <span className="mt-1 block text-xs text-[var(--color-text-muted)]">
                   Define how your Sentinel thinks, acts, and responds. Describe its role, tone,
                   constraints, and objectives.
                 </span>
@@ -382,10 +380,10 @@ export default function DefendPageClient() {
           <div className="flex flex-col gap-2">
             <div className="mb-1 flex items-start justify-between">
               <div>
-                <label className="font-display block text-lg font-medium text-[var(--color-text-primary)] sm:text-xl">
+                <label className="block text-sm font-medium text-[var(--color-text-secondary)]">
                   Private Instructions
                 </label>
-                <span className="font-body mt-1 block text-sm text-[var(--color-text-secondary)] sm:text-base">
+                <span className="mt-1 block text-xs text-[var(--color-text-muted)]">
                   Instructions only accessible to the Sentinel agent. Attackers will not be able to
                   see this.
                 </span>
@@ -414,7 +412,7 @@ export default function DefendPageClient() {
             <div className="mb-1 flex items-start justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <label className="font-display block text-lg font-medium text-[var(--color-text-primary)] sm:text-xl">
+                  <label className="block text-sm font-medium text-[var(--color-text-secondary)]">
                     Attack Objective
                   </label>
                   <TooltipProvider delayDuration={100}>
@@ -439,7 +437,7 @@ export default function DefendPageClient() {
                     </Tooltip>
                   </TooltipProvider>
                 </div>
-                <span className="font-body mt-1 block text-sm text-[var(--color-text-secondary)] sm:text-base">
+                <span className="mt-1 block text-xs text-[var(--color-text-muted)]">
                   Mirror actual attacks such as stealing sensitive data, extracting secret system
                   instructions, or causing the Sentinel to malfunction. The more specific the
                   objective, the better attackers can strategize their attacks.
@@ -500,10 +498,10 @@ export default function DefendPageClient() {
           <div className="flex flex-col gap-2">
             <div className="mb-1 flex items-start justify-between">
               <div>
-                <label className="font-display block text-lg font-medium text-[var(--color-text-primary)] sm:text-xl">
+                <label className="block text-sm font-medium text-[var(--color-text-secondary)]">
                   Jury Prompt
                 </label>
-                <span className="font-body mt-1 block text-sm text-[var(--color-text-secondary)] sm:text-base">
+                <span className="mt-1 block text-xs text-[var(--color-text-muted)]">
                   Instructions for the jury to evaluate whether an attack was successful.
                 </span>
               </div>
@@ -533,10 +531,10 @@ export default function DefendPageClient() {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div className="flex flex-col gap-2">
               <div>
-                <label className="font-display text-lg font-medium text-[var(--color-text-primary)] sm:text-xl">
+                <label className="block text-sm font-medium text-[var(--color-text-secondary)]">
                   Bounty Pool
                 </label>
-                <span className="font-body mt-1 block text-sm text-[var(--color-text-secondary)] sm:text-base">
+                <span className="mt-1 block text-xs text-[var(--color-text-muted)]">
                   Minimum {formatCompact(activeMinimumAmount, 3)} {activeTokenSymbol} required to
                   deploy.
                 </span>
@@ -630,7 +628,7 @@ export default function DefendPageClient() {
                   tokenCount > SYSTEM_PROMPT_MAX_TOKENS ||
                   (formData.llmProvider === 'custom' && !customProvider.isValidated)
                 }
-                className="font-display flex h-[65px] w-full items-center justify-center gap-3 rounded-lg bg-[var(--color-gold-primary)] text-xl font-semibold text-[var(--color-text-on-gold)] shadow-[var(--shadow-card)] transition-all hover:bg-[var(--color-gold-light)] disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-gold-primary)] text-sm font-medium text-[var(--color-text-on-gold)] shadow-[var(--shadow-card)] transition-all hover:bg-[var(--color-gold-light)] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isLoading ? (
                   <>
@@ -642,12 +640,12 @@ export default function DefendPageClient() {
                 )}
               </button>
             ) : (
-              <div className="h-[65px]">
+              <div className="h-12">
                 {isSolana ? (
                   <button
                     type="button"
                     onClick={() => setSolanaWalletModalVisible(true)}
-                    className="font-display flex h-full w-full items-center justify-center gap-3 rounded-lg bg-[var(--color-gold-primary)] text-xl font-semibold text-[var(--color-text-on-gold)] shadow-[var(--shadow-card)] transition-all hover:bg-[var(--color-gold-light)]"
+                    className="flex h-full w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-gold-primary)] text-sm font-medium text-[var(--color-text-on-gold)] shadow-[var(--shadow-card)] transition-all hover:bg-[var(--color-gold-light)]"
                   >
                     <Wallet className="h-5 w-5" />
                     Connect Wallet
@@ -656,13 +654,13 @@ export default function DefendPageClient() {
                   <button
                     type="button"
                     onClick={openEvmConnectModal}
-                    className="font-display flex h-full w-full items-center justify-center gap-3 rounded-lg bg-[var(--color-gold-primary)] text-xl font-semibold text-[var(--color-text-on-gold)] shadow-[var(--shadow-card)] transition-all hover:bg-[var(--color-gold-light)]"
+                    className="flex h-full w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-gold-primary)] text-sm font-medium text-[var(--color-text-on-gold)] shadow-[var(--shadow-card)] transition-all hover:bg-[var(--color-gold-light)]"
                   >
                     <Wallet className="h-5 w-5" />
                     Connect BNB Wallet
                   </button>
                 ) : (
-                  <ConnectButton className="h-full w-full !rounded-lg !text-xl" />
+                  <ConnectButton className="h-full w-full !rounded-lg !text-sm" />
                 )}
               </div>
             )}

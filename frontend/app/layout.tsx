@@ -47,7 +47,7 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: 'cover',
-  themeColor: '#F5F1EB',
+  themeColor: '#100f0f',
 }
 
 export const metadata: Metadata = {
@@ -293,7 +293,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         style={{ fontFamily: 'var(--font-body)' }}
       >
         <Providers>
-          <NextTopLoader color="#000000" showSpinner={false} />
+          <NextTopLoader color="#c8384f" showSpinner={false} />
           <main className="w-full flex-grow">{children}</main>
           {/* <Footer /> */}
           <FloatingHelpButton />
@@ -301,13 +301,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             position="top-right"
             toastOptions={{
               style: {
-                background: '#fff',
-                border: '1px solid rgba(0,0,0,0.08)',
+                background: '#1a1919',
+                border: '1px solid rgba(255,255,255,0.08)',
                 borderRadius: '12px',
                 padding: '12px 16px',
                 fontSize: '14px',
                 fontWeight: '500',
-                boxShadow: '0 4px 24px -2px rgba(0,0,0,0.1)',
+                color: '#ffffff',
+                boxShadow: '0 4px 24px rgba(0,0,0,0.5)',
               },
             }}
             mobileOffset={{ top: 80, right: 16 }}

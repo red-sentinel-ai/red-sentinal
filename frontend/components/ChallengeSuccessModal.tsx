@@ -383,7 +383,7 @@ export const ChallengeSuccessModal = ({
           <div>
             <Link
               href="/"
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-white py-2.5 font-medium text-black transition-all duration-300 hover:bg-white/90 hover:shadow-md"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-white/10 py-2.5 font-medium text-white transition-all duration-300 hover:bg-white/15 hover:shadow-md"
             >
               Home
             </Link>
