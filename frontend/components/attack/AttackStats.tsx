@@ -41,23 +41,17 @@ function buildStats(data: PlatformStatsResponse): StatDef[] {
       format: 'integer',
     },
     { id: 'active', label: 'Active Sentinels', value: data.activeSentinels, format: 'integer' },
-    {
-      id: 'token',
-      label: '$SENTINEL Distributed',
-      value: data.totalSentinelTokensDistributed,
-      format: 'compact',
-    },
   ]
 }
 
-const STAT_PLACEHOLDERS = ['tvl', 'bounties', 'attacks', 'breached', 'active', 'token']
+const STAT_PLACEHOLDERS = ['tvl', 'bounties', 'attacks', 'breached', 'active']
 
 export function AttackStats() {
   const { data, isLoading } = usePlatformStats()
   const stats = data ? buildStats(data) : []
 
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
       {isLoading || !data
         ? STAT_PLACEHOLDERS.map(id => (
             <div

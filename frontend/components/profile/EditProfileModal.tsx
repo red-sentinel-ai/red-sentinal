@@ -45,10 +45,10 @@ export function EditProfileModal({ open, onClose, profile }: EditProfileModalPro
 
   return (
     <>
-      <Dialog open={open} onClose={handleClose} className="max-w-md bg-[var(--color-bg-elevated)]/90">
-        <div className="space-y-6">
+      <Dialog open={open} onClose={handleClose} className="max-w-sm bg-[var(--color-bg-elevated)]/90">
+        <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold text-[var(--color-text-primary)]">Edit Profile</h2>
+            <h2 className="text-sm font-medium text-[var(--color-text-primary)]">Edit Profile</h2>
             <button onClick={handleClose} className="text-[var(--color-text-primary)]">
               <X className="h-5 w-5" />
             </button>
@@ -56,18 +56,18 @@ export function EditProfileModal({ open, onClose, profile }: EditProfileModalPro
 
           <div className="flex justify-center">
             <div
-              className="group relative h-24 w-24 cursor-pointer overflow-hidden rounded-full border-2 border-[var(--color-border-subtle)]"
+              className="group relative h-16 w-16 cursor-pointer overflow-hidden rounded-full border border-[var(--color-border-default)]"
               onClick={() => setIsImagePickerOpen(true)}
             >
               {displayAvatarUrl ? (
                 <Image src={displayAvatarUrl} alt="User Avatar" fill className="object-cover" />
               ) : (
                 <div className="flex h-full w-full items-center justify-center bg-[var(--color-bg-subtle)]">
-                  <User className="h-12 w-12 text-[var(--color-text-muted)]" />
+                  <User className="h-8 w-8 text-[var(--color-text-muted)]" />
                 </div>
               )}
               <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-text-primary)]/40 opacity-0 transition-opacity group-hover:opacity-100">
-                <Camera className="h-8 w-8 text-[var(--color-bg-surface)]" />
+                <Camera className="h-5 w-5 text-[var(--color-bg-surface)]" />
               </div>
             </div>
           </div>

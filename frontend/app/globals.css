@@ -3,8 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --font-satoshi: var(--font-satoshi), sans-serif;
-  font-family: var(--font-satoshi);
+  font-family: var(--font-inter, "Inter"), sans-serif;
 
   /* ─── DARK THEME: Aave Pro-inspired ─── */
   /* Background tiers */
@@ -63,9 +62,9 @@
   --radius: 0.625rem;
 
   /* Fonts */
-  --font-display: "Cinzel", Georgia, serif;
-  --font-body: "Josefin Sans", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-display: var(--font-inter, "Inter"), sans-serif;
+  --font-body: var(--font-inter, "Inter"), sans-serif;
+  --font-mono: var(--font-jetbrains, "JetBrains Mono"), ui-monospace, monospace;
 
   /* Legacy compatibility */
   --background: var(--color-bg-base);
@@ -112,6 +111,7 @@
 @layer base {
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-inter, "Inter"), sans-serif;
   }
   html {
     scrollbar-gutter: stable;
