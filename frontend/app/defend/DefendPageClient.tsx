@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ChevronLeft, CameraIcon, Info, Loader2, Sparkles, Wallet } from 'lucide-react'
+import { CameraIcon, Info, Loader2, Sparkles, Wallet } from 'lucide-react'
 import { toast } from 'sonner'
 import { ConnectButton, useCurrentAccount } from '@mysten/dapp-kit'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'
@@ -232,15 +232,6 @@ export default function DefendPageClient() {
     <div className="min-h-screen bg-[var(--color-bg-base)] pb-8 pt-10">
       <div className="container mx-auto px-4 py-4">
         <form onSubmit={handleSubmit} className="relative mx-auto max-w-[969px] space-y-8 px-4">
-          {/* Back Link */}
-          <Link
-            href="/"
-            className="absolute -left-32 top-2 hidden items-center gap-1 text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-gold-primary)] lg:flex"
-          >
-            <ChevronLeft className="h-5 w-5" />
-            <span className="font-body">Home</span>
-          </Link>
-
           {/* Header */}
           <div className="flex flex-col-reverse items-center gap-6 sm:flex-row sm:items-start sm:justify-between">
             <div className="text-center sm:text-left">
