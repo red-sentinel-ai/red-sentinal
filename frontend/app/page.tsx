@@ -1,14 +1,20 @@
-'use client'
-import { LandingPage } from '@/components/LandingPage'
+import type { Metadata } from 'next'
+import { AgentListView } from '@/components/AgentListView'
+import { SUI_SENTINEL_APP_URL } from '@/constants'
+
+export const metadata: Metadata = {
+  title: 'Attack AI Sentinels | Claim Bounties',
+  description:
+    'Enter the arena. Browse active AI Sentinels, engineer your attack, and claim the bounty. Every successful breach is verified on-chain and pays out instantly.',
+  alternates: {
+    canonical: SUI_SENTINEL_APP_URL,
+  },
+}
 
 export default function Home() {
   return (
-    <div className="min-h-body relative">
-      <div className="flex flex-col justify-center">
-        <div className="vertical-line left-4"></div>
-        <div className="vertical-line right-4"></div>
-        <LandingPage />
-      </div>
+    <div className="relative min-h-full bg-[var(--color-bg-base)]">
+      <AgentListView />
     </div>
   )
 }
