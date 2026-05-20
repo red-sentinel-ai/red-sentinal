@@ -3,7 +3,7 @@ import { Skeleton } from '@/components/ui'
 export const AgentChallengePageSkeleton = () => {
   return (
     <div
-      className="flex h-[calc(100dvh-96px)] flex-col bg-no-repeat md:h-[calc(100vh-128px)] md:flex-row"
+      className="flex h-[calc(100dvh-64px)] flex-col bg-no-repeat md:h-[calc(100vh-64px)] md:flex-row"
       style={{
         backgroundImage: 'url(/img/chat_bg.png)',
         backgroundPosition: '0% 17%',

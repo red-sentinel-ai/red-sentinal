@@ -41,6 +41,16 @@
   --color-border-default: #8E8678;
   --color-border-strong: #766E62;
 
+  /* Sidebar (shadcn) — mapped to parchment palette */
+  --sidebar: #FDF8F0;
+  --sidebar-foreground: #1A1814;
+  --sidebar-primary: #7A1830;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #E8E0D4;
+  --sidebar-accent-foreground: #1A1814;
+  --sidebar-border: #C4BCB0;
+  --sidebar-ring: #8E8678;
+
   /* Shadows */
   --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
   --shadow-elevated: 0 4px 16px rgba(0, 0, 0, 0.08);
@@ -114,6 +124,12 @@
     animation: marquee2 25s linear infinite;
   }
   .pause-animation:hover {
+    animation-play-state: paused;
+  }
+  .marquee-track {
+    animation: scroll 60s linear infinite;
+  }
+  .marquee-track:hover {
     animation-play-state: paused;
   }
   .min-h-body {
@@ -417,6 +433,18 @@ body::-webkit-scrollbar-thumb:hover {
   }
 }
 
+/* Used by .marquee-track (auto-scrolling sentinel rows). Defined here so the
+   keyframes always exist — Tailwind only emits its own `scroll` keyframes when
+   the `animate-scroll` class is present in markup. */
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @keyframes rotate {
   to {
     --angle: 360deg;
@@ -427,6 +455,16 @@ body::-webkit-scrollbar-thumb:hover {
   syntax: '<angle>';
   initial-value: 0deg;
   inherits: false;
+}
+
+/* Respect users who prefer reduced motion: stop the auto-scrolling rows */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track,
+  .animate-scroll,
+  .animate-marquee,
+  .animate-marquee2 {
+    animation: none !important;
+  }
 }
 
 .shadow-glow-blue {

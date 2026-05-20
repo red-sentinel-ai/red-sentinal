@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 
 export default function AttackPage() {
   return (
-    <div className="relative min-h-[calc(100vh-60px)] flex-col items-end justify-center bg-[var(--color-bg-base)] md:mt-0 md:items-center md:px-4">
+    <div className="relative min-h-full bg-[var(--color-bg-base)]">
       <AgentListView />
     </div>
   )

@@ -7,7 +7,7 @@ import { PostHogProvider as PHProvider } from 'posthog-js/react'
 import { SessionProvider } from 'next-auth/react'
 import { SuiClientProvider, WalletProvider, lightTheme } from '@mysten/dapp-kit'
 import { getFullnodeUrl } from '@mysten/sui/client'
-import { Header } from '@/components/Header'
+import { AppShell } from '@/components/layout/AppShell'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ProfileInitializer } from '@/components/profile/ProfileInitializer'
 import { APP_NETWORK } from '@/constants'
@@ -52,13 +52,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
             <WalletProvider autoConnect theme={lightTheme}>
               <SolanaWalletProvider>
                 <ActiveChainProvider>
-                  <div className="flex flex-col">
-                    {/* <LaunchMainnetBanner /> */}
-                    <Header />
-                    <div className="mt-[96px] md:mt-[100px]"></div>
-                    <ProfileInitializer />
-                    {children}
-                  </div>
+                  <ProfileInitializer />
+                  <AppShell>{children}</AppShell>
                 </ActiveChainProvider>
               </SolanaWalletProvider>
             </WalletProvider>
