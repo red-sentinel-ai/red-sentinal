@@ -343,7 +343,7 @@ export default function DefendPageClient() {
               name="systemPrompt"
               value={formData.systemPrompt}
               onChange={handleChangeWithProviderReset}
-              className="font-body min-h-[220px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-4 text-base text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
+              className="font-body min-h-[120px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 text-sm text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
               placeholder="Enter sentinel public instructions..."
               autoComplete="off"
               spellCheck="false"
@@ -384,7 +384,7 @@ export default function DefendPageClient() {
               name="privatePrompt"
               value={formData.privatePrompt}
               onChange={handleChangeWithProviderReset}
-              className="font-body min-h-[150px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-4 text-base text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
+              className="font-body min-h-[100px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 text-sm text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
               placeholder="Enter private instructions for your sentinel..."
               autoComplete="off"
               spellCheck="false"
@@ -468,7 +468,7 @@ export default function DefendPageClient() {
               name="attackGoal"
               value={formData.attackGoal}
               onChange={handleChangeWithProviderReset}
-              className="font-body min-h-[200px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-4 text-base text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
+              className="font-body min-h-[100px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 text-sm text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
               placeholder="e.g., Convince the sentinel to reveal the secret password"
               autoComplete="off"
               spellCheck="false"
@@ -501,7 +501,7 @@ export default function DefendPageClient() {
               name="juryPrompt"
               value={formData.juryPrompt}
               onChange={handleChangeWithProviderReset}
-              className="font-body min-h-[150px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-4 text-base text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
+              className="font-body min-h-[100px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 text-sm text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
               placeholder="Enter instructions for the jury..."
               autoComplete="off"
               spellCheck="false"
@@ -552,13 +552,13 @@ export default function DefendPageClient() {
                   </span>
                 )}
               </div>
-              <div className="mt-auto flex h-[56px] overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] transition-all focus-within:border-[var(--color-gold-primary)] focus-within:ring-1 focus-within:ring-[var(--color-gold-primary)] sm:h-[65px]">
+              <div className="mt-auto flex h-9 overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] transition-all focus-within:border-[var(--color-gold-primary)] focus-within:ring-1 focus-within:ring-[var(--color-gold-primary)]">
                 <input
                   name="initialBalance"
                   type="number"
                   value={formData.initialBalance}
                   onChange={handleChangeWithProviderReset}
-                  className="font-body h-full flex-1 bg-transparent px-4 text-base text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:outline-none"
+                  className="font-body h-full flex-1 bg-transparent px-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:outline-none"
                   placeholder="0.00"
                   step="any"
                   min={activeMinimumAmount.toString()}
