@@ -67,25 +67,23 @@ export function SocialMissionsSection() {
   const missions = getMissionsByTab()
 
   return (
-    <section id="missions" className="scroll-mt-20 bg-[var(--color-bg-subtle)] py-16 md:py-20">
+    <section id="missions" className="scroll-mt-20 bg-[var(--color-bg-subtle)] py-10 md:py-12">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.4 }}
-          className="mb-12 text-center"
+          className="mb-8 text-center"
         >
-          <h2 className="font-display mb-4 text-3xl font-bold uppercase text-[var(--color-text-primary)] sm:text-4xl">
-            Missions
-          </h2>
-          <p className="font-body mx-auto max-w-2xl text-base text-[var(--color-text-secondary)] md:text-lg">
+          <h2 className="page-heading mb-2">Missions</h2>
+          <p className="page-subheading mx-auto text-center">
             Attack, defend, create content, and engage with the community to earn Spin Passes
           </p>
         </motion.div>
 
-        <Card className="rounded-2xl border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] shadow-[var(--shadow-card)]">
-          <CardContent className="p-6 md:p-8">
+        <Card className="rounded-xl border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] shadow-[var(--shadow-card)]">
+          <CardContent className="p-4 md:p-6">
             <MissionTabNav activeTab={activeTab} onTabChange={setActiveTab} />
 
             {activeTab === 'defender' && (

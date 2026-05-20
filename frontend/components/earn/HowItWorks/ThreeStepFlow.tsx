@@ -45,15 +45,15 @@ export function ThreeStepFlow() {
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: index * 0.1 }}
           >
-            <Card className="h-full rounded-2xl border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] transition-all duration-300 hover:border-[var(--color-border-default)] hover:shadow-sm">
-              <CardContent className="flex flex-col items-center p-6 text-center md:p-8">
+            <Card className="h-full rounded-xl border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] transition-all duration-300 hover:border-[var(--color-border-default)]">
+              <CardContent className="flex flex-col items-center p-4 text-center md:p-5">
                 <div
-                  className={`mb-4 flex h-16 w-16 items-center justify-center rounded-full ${step.iconBg}`}
+                  className={`mb-3 flex h-10 w-10 items-center justify-center rounded-full ${step.iconBg}`}
                 >
-                  <Icon className={`h-8 w-8 ${step.iconColor}`} />
+                  <Icon className={`h-5 w-5 ${step.iconColor}`} />
                 </div>
-                <h3 className="font-display mb-3 text-xl font-bold text-[var(--color-text-primary)]">{step.title}</h3>
-                <p className="font-body text-sm leading-relaxed text-[var(--color-text-secondary)] md:text-base">
+                <h3 className="mb-1.5 text-sm font-medium text-[var(--color-text-primary)]">{step.title}</h3>
+                <p className="text-xs leading-relaxed text-[var(--color-text-muted)]">
                   {step.description}
                 </p>
               </CardContent>

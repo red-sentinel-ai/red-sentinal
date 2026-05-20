@@ -2,8 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import NextTopLoader from 'nextjs-toploader'
 import { Toaster } from 'sonner'
-import localFont from 'next/font/local'
-import { Cinzel, Josefin_Sans, JetBrains_Mono } from 'next/font/google'
+import { Inter, JetBrains_Mono } from 'next/font/google'
 
 import './globals.css'
 import '@rainbow-me/rainbowkit/styles.css'
@@ -11,17 +10,9 @@ import { Providers } from './providers'
 import { FloatingHelpButton } from '@/components/FloatingHelpButton'
 import { SUI_SENTINEL_APP_URL, SUI_SENTINEL_X_USERNAME, SUI_SENTINEL_GITHUB_URL } from '@/constants'
 
-// Light Theme Fonts
-const cinzel = Cinzel({
+const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-cinzel',
-  display: 'swap',
-  weight: ['400', '500', '600', '700'],
-})
-
-const josefin = Josefin_Sans({
-  subsets: ['latin'],
-  variable: '--font-josefin',
+  variable: '--font-inter',
   display: 'swap',
   weight: ['300', '400', '500', '600', '700'],
 })
@@ -29,15 +20,6 @@ const josefin = Josefin_Sans({
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-jetbrains',
-  display: 'swap',
-})
-
-const satoshi = localFont({
-  src: [
-    { path: '../public/fonts/Satoshi-Variable.ttf', style: 'normal' },
-    { path: '../public/fonts/Satoshi-VariableItalic.ttf', style: 'italic' },
-  ],
-  variable: '--font-satoshi',
   display: 'swap',
 })
 
@@ -289,8 +271,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body
-        className={`${satoshi.className} ${cinzel.variable} ${josefin.variable} ${jetbrainsMono.variable} flex min-h-screen flex-col bg-[var(--color-bg-base)] text-[var(--color-text-primary)]`}
-        style={{ fontFamily: 'var(--font-body)' }}
+        className={`${inter.variable} ${jetbrainsMono.variable} flex min-h-screen flex-col bg-[var(--color-bg-base)] text-[var(--color-text-primary)]`}
       >
         <Providers>
           <NextTopLoader color="#c8384f" showSpinner={false} />

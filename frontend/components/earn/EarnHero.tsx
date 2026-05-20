@@ -39,7 +39,7 @@ export function EarnHero() {
   ]
 
   return (
-    <section className="container mx-auto px-4 py-12 md:py-16">
+    <section className="container mx-auto px-4 py-8 md:py-10">
       <motion.div
         className="text-center"
         initial={{ opacity: 0, y: 20 }}
@@ -47,7 +47,7 @@ export function EarnHero() {
         transition={{ duration: 0.4 }}
       >
         <h1 className="page-heading mb-3 text-center">Every Action Earns SENTINEL</h1>
-        <p className="page-subheading mx-auto mb-10 text-center md:mb-12">
+        <p className="page-subheading mx-auto mb-6 text-center md:mb-8">
           Complete missions, defend or attack Sentinels, and create content to earn Spin Passes. Use
           your passes at the slot machine to win{' '}
           <Link
@@ -62,7 +62,7 @@ export function EarnHero() {
         </p>
 
         {/* Stats Cards */}
-        <Card className="mb-8 rounded-2xl border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] shadow-[var(--shadow-card)] md:mb-10">
+        <Card className="mb-6 rounded-xl border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] shadow-[var(--shadow-card)] md:mb-8">
           <CardContent className="p-0">
             <div className="grid grid-cols-1 divide-y divide-[var(--color-border-subtle)] md:grid-cols-3 md:divide-x md:divide-y-0">
               {statCards.map((stat, index) => {
@@ -73,26 +73,26 @@ export function EarnHero() {
                 return (
                   <motion.div
                     key={stat.label}
-                    className="p-6 md:p-8"
+                    className="p-4 md:p-5"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.1 }}
                   >
-                    <div className="flex items-center justify-center gap-4">
+                    <div className="flex items-center justify-center gap-3">
                       <div
-                        className={`flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full ${stat.iconBg} md:h-16 md:w-16`}
+                        className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full ${stat.iconBg}`}
                       >
-                        <Icon className={`h-7 w-7 ${stat.iconColor} md:h-8 md:w-8`} />
+                        <Icon className={`h-4 w-4 ${stat.iconColor}`} />
                       </div>
                       <div className="text-left">
-                        <div className="font-display flex items-center gap-2 text-2xl font-bold text-[var(--color-text-primary)] md:text-3xl">
+                        <div className="flex items-center gap-2 text-lg font-semibold text-[var(--color-text-primary)]">
                           {isLoading ? (
-                            <Loader2 className="h-6 w-6 animate-spin text-[var(--color-text-muted)]" />
+                            <Loader2 className="h-4 w-4 animate-spin text-[var(--color-text-muted)]" />
                           ) : (
                             displayValue
                           )}
                         </div>
-                        <div className="font-body text-sm font-medium text-[var(--color-text-muted)] md:text-base">
+                        <div className="text-xs text-[var(--color-text-muted)]">
                           {stat.label}
                         </div>
                       </div>
@@ -108,7 +108,7 @@ export function EarnHero() {
         {account ? (
           <Link href="/profile?tab=rewards">
             <motion.button
-              className="font-body btn bg-[var(--color-gold-primary)] px-8 py-3 text-base text-[var(--color-text-on-gold)] hover:bg-[var(--color-gold-light)] md:text-lg"
+              className="btn bg-[var(--color-gold-primary)] px-6 py-2 text-sm text-[var(--color-text-on-gold)] hover:bg-[var(--color-gold-light)]"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -117,7 +117,7 @@ export function EarnHero() {
           </Link>
         ) : (
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <button className="font-body btn bg-[var(--color-gold-primary)] px-8 py-3 text-base text-[var(--color-text-on-gold)] hover:bg-[var(--color-gold-light)] md:text-lg">
+            <button className="btn bg-[var(--color-gold-primary)] px-6 py-2 text-sm text-[var(--color-text-on-gold)] hover:bg-[var(--color-gold-light)]">
               Connect Wallet to Start Earning
             </button>
           </motion.div>
