@@ -26,7 +26,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const normalizedAddresses = walletAddresses.map(toChecksumIfEvm)
+    const normalizedAddresses = walletAddresses.map((a: string) => {
+      const lower = a.toLowerCase()
+      return toChecksumIfEvm(lower)
+    })
 
     // Query wallet connections with user data
     const { data: walletConnections, error } = await supabaseServiceClient

@@ -3,7 +3,8 @@ import { supabaseServiceClient } from '@/db/config/server'
 
 export async function POST(request: Request) {
   try {
-    const { walletAddress, provider } = await request.json()
+    const { walletAddress: rawWalletAddress, provider } = await request.json()
+    const walletAddress = rawWalletAddress?.toLowerCase()
 
     if (!walletAddress || !provider) {
       return NextResponse.json({ error: 'Missing wallet address or provider' }, { status: 400 })

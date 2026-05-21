@@ -42,7 +42,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid or expired verification link' }, { status: 400 })
     }
 
-    const { email, walletAddress } = verified
+    const { email, walletAddress: rawWalletAddress } = verified
+    const walletAddress = rawWalletAddress.toLowerCase()
 
     // Find user by wallet address via ss_wallet_connections
     const { data: walletConnection, error: walletError } = await supabaseServiceClient
