@@ -81,12 +81,12 @@ export const ChatMessage = ({
 
         <div
           className={clsx(
-            'relative min-w-[350px] rounded-2xl text-[var(--color-text-primary)] shadow-sm backdrop-blur-sm',
+            'relative min-w-[240px] rounded-2xl text-[var(--color-text-primary)] sm:min-w-[300px]',
             {
               'border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)]': message.type === 'agent',
-              'border border-[var(--color-gold-primary)]/10 bg-gradient-to-tr from-[var(--color-gold-primary)]/10 to-[var(--color-gold-light)]/5':
+              'border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)]':
                 message.type === 'user' && !isWinningPrompt,
-              'border border-[var(--color-gold-primary)]/25 bg-gradient-to-tr from-[var(--color-gold-primary)]/20 to-[var(--color-gold-light)]/10 shadow-md shadow-[var(--color-gold-primary)]/10': isWinningPrompt,
+              'border border-[var(--color-gold-primary)]/40 bg-[var(--color-gold-muted)]': isWinningPrompt,
             }
           )}
         >

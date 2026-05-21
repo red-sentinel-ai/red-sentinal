@@ -20,7 +20,7 @@ import type { AgentDetailsFull } from '@/hooks/agents/useAgentDetails'
 import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
 import { DefenderProfile } from './DefenderProfile'
 import { formatDuration, cn, buildAgentShareTweetUrl, truncateAddress } from '@/lib/utils'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, Button } from '@/components/ui'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, Button, Skeleton } from '@/components/ui'
 import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
 import { SparklineChart } from '../ui/common/SparklineChart'
 import { TokenAmount } from '../ui/common/TokenAmount'
@@ -162,7 +162,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
 
   return (
     <>
-      <div className="mr-2 flex min-h-0 w-full flex-col overflow-x-hidden overflow-y-scroll px-3 py-1 md:mr-4 md:h-[calc(100vh-127px)] md:px-4 lg:px-6 lg:py-2">
+      <div className="mr-2 flex min-h-0 w-full flex-col overflow-x-hidden overflow-y-auto px-3 py-1 md:mr-4 md:h-[calc(100vh-127px)] md:px-4 lg:px-6 lg:py-2">
         <div>
           <Link
             href="/attack"
@@ -172,7 +172,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
           </Link>
         </div>
 
-        <div className="bg-[var(--color-bg-surface]/80 my-2 w-full rounded-lg border border-[var(--color-border-subtle)] px-3 py-2 text-xs shadow-md sm:text-sm md:my-4 md:rounded-xl md:px-4 md:py-[10px] md:shadow-lg">
+        <div className="my-2 w-full rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] px-3 py-2 text-xs sm:text-sm md:my-4 md:rounded-xl md:px-4 md:py-[10px]">
           <div className="flex items-center gap-2 md:gap-4">
             <div className="h-8 w-8 shrink-0 grow-0 basis-auto overflow-hidden rounded-full md:h-10 md:w-10">
               <Image
@@ -200,7 +200,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
 
         <div className="flex flex-col gap-3 py-2 md:gap-4 md:py-3 lg:gap-6 lg:py-4">
           {agent.attack_goal && (
-            <div className="border-[var(--color-text-primary)]/20 flex flex-col gap-1.5 rounded-md border p-2 md:gap-2 md:p-3">
+            <div className="flex flex-col gap-1.5 rounded-md border border-[var(--color-border-subtle)] p-2 md:gap-2 md:p-3">
               <h3 className="text-xs font-medium uppercase text-[var(--color-text-secondary)] md:text-sm">
                 Attack Objective
               </h3>
@@ -294,7 +294,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
                   <div
                     className={cn(
                       'flex items-center gap-1 text-[10px] font-medium md:text-xs',
-                      prizePoolData.change7d.percentage >= 0 ? 'text-green-500' : 'text-red-500'
+                      prizePoolData.change7d.percentage >= 0 ? 'text-[var(--color-success)]' : 'text-[var(--color-danger)]'
                     )}
                   >
                     {prizePoolData.change7d.percentage >= 0 ? (
@@ -330,7 +330,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
               {prizePoolData && prizePoolData.history.length > 0 && (
                 <Button
                   onClick={() => setIsChartModalOpen(true)}
-                  className="mt-1.5 w-full border border-[#558EB4]/50 bg-transparent text-xs font-semibold text-[#558EB4] transition-colors duration-300 hover:bg-[#558EB4]/20 hover:text-white md:mt-2 md:text-sm"
+                  className="mt-1.5 w-full border border-[var(--color-border-default)] bg-transparent text-xs font-medium text-[var(--color-text-secondary)] transition-colors duration-200 hover:bg-white/5 hover:text-[var(--color-text-primary)] md:mt-2 md:text-sm"
                   size="sm"
                 >
                   See Growth Chart
@@ -389,7 +389,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
           {!isDrained && (
             <div className="flex flex-col gap-1 md:gap-2">
               <div className="flex items-center gap-1">
-                <h3 className="text-[var(--color-text-primary)]/70 text-xs font-semibold uppercase md:text-sm">
+                <h3 className="text-xs font-medium uppercase text-[var(--color-text-secondary)] md:text-sm">
                   Active Since
                 </h3>
                 <TooltipProvider>
@@ -398,7 +398,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
                       <Info
                         width={10}
                         height={10}
-                        className="text-[var(--color-text-primary)]/60 md:h-3 md:w-3"
+                        className="text-[var(--color-text-muted)] md:h-3 md:w-3"
                       />
                     </TooltipTrigger>
                     <TooltipContent>
@@ -437,18 +437,18 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
                 <p
                   className={cn(
                     'inline-block text-base font-semibold md:text-lg lg:text-xl',
-                    timeRemaining === 'Withdrawal Unlocked' ? 'text-green-600' : 'text-yellow-700'
+                    timeRemaining === 'Withdrawal Unlocked' ? 'text-[var(--color-success)]' : 'text-[var(--color-warning)]'
                   )}
                 >
                   {timeRemaining}
                 </p>
               ) : (
-                <div className="h-5 w-32 animate-pulse rounded bg-[var(--color-bg-subtle)] md:h-7 md:w-40"></div>
+                <Skeleton className="h-5 w-32 md:h-7 md:w-40" />
               )}
             </div>
           )}
         </div>
-        <div className="border-t-[var(--color-text-primary)]/20 border-t"></div>
+        <div className="border-t border-[var(--color-border-subtle)]"></div>
 
         <div className="z-20 mt-2 flex flex-col rounded-xl p-0 text-xs md:mt-4 md:text-sm">
           <div className="flex flex-col gap-1.5 md:gap-2">
@@ -474,7 +474,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
         </div>
 
         <div className="flex flex-col gap-3 py-2 md:gap-4 md:py-3 lg:gap-6 lg:py-4">
-          <div className="border-t-[var(--color-text-primary)]/20 border-t"></div>
+          <div className="border-t border-[var(--color-border-subtle)]"></div>
           <div className="flex justify-between">
             <div className="flex flex-col gap-1 md:gap-2">
               <h3 className="text-xs font-medium uppercase text-[var(--color-text-secondary)] md:text-sm">
@@ -497,13 +497,13 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
 
         <Button
           onClick={handleCopyLink}
-          className="mt-2 flex w-full items-center gap-1.5 border border-[#558EB4] bg-transparent text-xs font-semibold text-[#558EB4] transition-colors duration-300 hover:bg-[#558EB4]/20 md:mt-4 md:gap-2 md:text-sm"
+          className="mt-2 flex w-full items-center gap-1.5 border border-[var(--color-border-default)] bg-transparent text-xs font-medium text-[var(--color-text-secondary)] transition-colors duration-200 hover:bg-white/5 hover:text-[var(--color-text-primary)] md:mt-4 md:gap-2 md:text-sm"
         >
           Share {agent.agent_name} Link
           <LinkIcon className="h-3 w-3 md:h-4 md:w-4" />
         </Button>
 
-        <div className="border-[var(--color-text-primary)]/20 mt-3 border-t pt-3 md:mt-4 md:pt-4 lg:mt-6 lg:pt-6">
+        <div className="mt-3 border-t border-[var(--color-border-subtle)] pt-3 md:mt-4 md:pt-4 lg:mt-6 lg:pt-6">
           <h3 className="mb-1.5 text-sm font-bold leading-tight text-[var(--color-text-primary)] md:mb-2 md:text-base">
             Earn Sentinel Tokens
           </h3>
@@ -524,7 +524,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
           isLoading={isLoadingProfile}
         />
 
-        <div className="border-[var(--color-text-primary)]/20 mt-auto border-t pt-3 md:pt-4 lg:pt-6">
+        <div className="mt-auto border-t border-[var(--color-border-subtle)] pt-3 md:pt-4 lg:pt-6">
           <h3 className="text-[var(--color-text-primary)]/80 mb-2 text-center text-xs font-semibold md:mb-3 md:text-sm lg:mb-4">
             Scan this QR Code if you want to try to attack this agent using slush mobile wallet
           </h3>
@@ -534,7 +534,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
                 value={deepLinkUrl}
                 size={96}
                 bgColor="#ffffff00"
-                fgColor="var(--color-text-primary)"
+                fgColor="#ffffff"
                 level="L"
                 includeMargin={true}
                 className="h-20 w-20 md:h-24 md:w-24 lg:h-32 lg:w-32"

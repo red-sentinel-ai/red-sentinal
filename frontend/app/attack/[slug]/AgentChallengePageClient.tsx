@@ -164,14 +164,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
   if (error || !agent) {
     return (
-      <div
-        className="h-[calc(100vh-64px)] bg-no-repeat p-4 text-[var(--color-text-primary)]"
-        style={{
-          backgroundImage: 'url(/img/chat_bg.png)',
-          backgroundPosition: '0% 17%',
-          backgroundSize: '100% auto',
-        }}
-      >
+      <div className="h-[calc(100vh-64px)] bg-[var(--color-bg-base)] p-4 text-[var(--color-text-primary)]">
         <div className="flex min-h-[400px] items-center justify-center">
           <p className="text-lg text-[var(--color-text-secondary)]">{error?.message || 'Agent not found'}</p>
         </div>
@@ -181,14 +174,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
   if (!isMobile) {
     return (
-      <div
-        className="flex h-[calc(100vh-64px)] items-end bg-no-repeat"
-        style={{
-          backgroundImage: 'url(/img/chat_bg.png)',
-          backgroundPosition: '0% 17%',
-          backgroundSize: '100% auto',
-        }}
-      >
+      <div className="flex h-[calc(100vh-64px)] items-end bg-[var(--color-bg-base)]">
         <ResizablePanelGroup direction="horizontal" className="w-full">
           <ResizablePanel defaultSize={25} minSize={20} maxSize={40}>
             <AgentSidebar
