@@ -322,7 +322,7 @@ export default function DefendPageClient() {
               <div className="flex shrink-0 gap-4 sm:ml-4">
                 <Link
                   href="/instruction-templates"
-                  className="font-body text-sm text-[var(--color-gold-primary)] underline hover:text-[var(--color-gold-light)] sm:mt-1"
+                  className="text-xs text-[var(--color-gold-primary)] underline hover:text-[var(--color-gold-light)]"
                   onClick={() =>
                     sessionStorage.setItem(SESSION_KEYS.DEFEND_FORM_DATA, JSON.stringify(formData))
                   }
@@ -332,7 +332,7 @@ export default function DefendPageClient() {
                 <Link
                   href={`${SUI_SENTINEL_DOCS_URL}/guides/defender-guide`}
                   target="_blank"
-                  className="font-body text-sm text-[var(--color-gold-primary)] underline hover:text-[var(--color-gold-light)] sm:mt-1"
+                  className="text-xs text-[var(--color-gold-primary)] underline hover:text-[var(--color-gold-light)]"
                 >
                   Docs Example
                 </Link>
@@ -355,7 +355,7 @@ export default function DefendPageClient() {
                 </p>
               )}
               <p
-                className={`font-body ml-auto text-sm text-[var(--color-text-muted)] ${isTokenCountDebouncing ? 'animate-pulse' : ''}`}
+                className={`font-body ml-auto text-xs text-[var(--color-text-muted)] ${isTokenCountDebouncing ? 'animate-pulse' : ''}`}
               >
                 Tokens: {tokenCount} / {SYSTEM_PROMPT_MAX_TOKENS}
               </p>
@@ -391,7 +391,7 @@ export default function DefendPageClient() {
             />
             <div className="mt-1 flex items-center justify-end">
               <p
-                className={`font-body text-sm text-[var(--color-text-muted)] ${isPrivateTokenCountDebouncing ? 'animate-pulse' : ''}`}
+                className={`font-body text-xs text-[var(--color-text-muted)] ${isPrivateTokenCountDebouncing ? 'animate-pulse' : ''}`}
               >
                 Tokens: {privateTokenCount}
               </p>
@@ -478,7 +478,7 @@ export default function DefendPageClient() {
                 <p className="font-body text-sm text-[var(--color-danger)]">{errors.attackGoal}</p>
               )}
               <p
-                className={`font-body text-sm text-[var(--color-text-muted)] ${isAttackGoalTokenCountDebouncing ? 'animate-pulse' : ''}`}
+                className={`font-body text-xs text-[var(--color-text-muted)] ${isAttackGoalTokenCountDebouncing ? 'animate-pulse' : ''}`}
               >
                 Tokens: {attackGoalTokenCount}
               </p>
@@ -511,7 +511,7 @@ export default function DefendPageClient() {
                 <p className="font-body text-sm text-[var(--color-danger)]">{errors.juryPrompt}</p>
               )}
               <p
-                className={`font-body text-sm text-[var(--color-text-muted)] ${isJuryPromptTokenCountDebouncing ? 'animate-pulse' : ''}`}
+                className={`font-body text-xs text-[var(--color-text-muted)] ${isJuryPromptTokenCountDebouncing ? 'animate-pulse' : ''}`}
               >
                 Tokens: {juryPromptTokenCount}
               </p>

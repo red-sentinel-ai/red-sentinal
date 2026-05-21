@@ -147,7 +147,7 @@ export const FeaturedAgentCard = ({
             )}
 
             <div
-              className={`absolute left-2 top-2 z-20 flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium sm:px-2.5 sm:py-1 sm:text-xs ${
+              className={`absolute left-2 top-2 z-20 flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${
                 agent.state === 'active'
                   ? 'border border-[var(--color-success)] bg-[var(--color-success-muted)] text-[var(--color-success)]'
                   : 'border border-[var(--color-danger)]/20 bg-[var(--color-danger-muted)] text-[var(--color-danger)]'
@@ -250,7 +250,7 @@ export const FeaturedAgentCard = ({
           </div>
         )}
         {fromProfile && isOwner && isAttackPaused && (
-          <div className="mb-2 rounded-md border border-[var(--color-warning)]/20 bg-[var(--color-warning)]/10 px-2 py-1 text-center text-[10px] text-[var(--color-warning)]">
+          <div className="mb-2 rounded-md border border-yellow-500/20 bg-yellow-500/10 px-2 py-1 text-center text-[10px] text-yellow-400">
             Attacks are paused, add funds to resume
           </div>
         )}
@@ -279,7 +279,7 @@ export const FeaturedAgentCard = ({
                     chain: agent.chain,
                   })
                 }}
-                className="btn btn-black w-1/2 px-2 py-1.5 text-[10px] sm:px-4 sm:py-2.5 sm:text-sm"
+                className="btn btn-black w-1/2 px-2 py-1.5 text-[10px]"
               >
                 Add Funds
               </button>
@@ -293,7 +293,7 @@ export const FeaturedAgentCard = ({
                     chain: agent.chain,
                   })
                 }
-                className="btn btn-outline w-1/2 px-2 py-1.5 text-[10px] sm:px-4 sm:py-2.5 sm:text-sm"
+                className="btn btn-outline w-1/2 px-2 py-1.5 text-[10px]"
                 disabled={isWithdrawalLocked || Number(agent.total_balance) === 0}
                 title={
                   isWithdrawalLocked
@@ -314,12 +314,12 @@ export const FeaturedAgentCard = ({
                 setIsClaimFeesModalOpen(true)
               }}
               disabled={!hasEarnings}
-              className="btn btn-outline w-full px-2 py-1.5 text-[10px] disabled:opacity-50 sm:px-4 sm:py-2.5 sm:text-sm"
+              className="btn btn-outline w-full px-2 py-1.5 text-[10px] disabled:opacity-50"
               title={hasEarnings ? 'Collect your earned fees' : 'No earnings to claim yet'}
             >
               {hasEarnings ? (
                 <span className="inline-flex items-center gap-1">
-                  Claim <TokenAmount rawAmount={agent.accumulated_fees || 0} token={token} precision={2} iconSize={16} />
+                  Claim <TokenAmount rawAmount={agent.accumulated_fees || 0} token={token} precision={2} iconSize={12} />
                 </span>
               ) : 'No Earnings Yet'}
             </button>
