@@ -81,7 +81,7 @@ export const ChatMessage = ({
 
         <div
           className={clsx(
-            'relative min-w-[240px] rounded-2xl text-[var(--color-text-primary)] sm:min-w-[300px]',
+            'relative min-w-[240px] rounded-2xl text-[var(--color-text-secondary)] sm:min-w-[300px]',
             {
               'border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)]': message.type === 'agent',
               'border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)]':
@@ -93,7 +93,7 @@ export const ChatMessage = ({
           <div className="relative p-3 sm:p-4">
             {message.type === 'user' && message.sender && (
               <div className="-mt-1 mb-2 flex items-center justify-between gap-1 text-xs">
-                <Link href={profileLink} className="font-semibold text-[var(--color-text-primary)] hover:underline">
+                <Link href={profileLink} className="font-medium text-[var(--color-text-secondary)] hover:underline">
                   {displayName}
                 </Link>
                 {isWinningPrompt && (
@@ -108,7 +108,7 @@ export const ChatMessage = ({
               <p
                 ref={contentRef}
                 className={clsx(
-                  'break-words text-xs leading-relaxed text-[var(--color-text-primary)] transition-all duration-200 ease-in-out sm:text-sm',
+                  'break-words text-xs leading-relaxed text-[var(--color-text-secondary)] transition-all duration-200 ease-in-out sm:text-sm',
                   !isExpanded && 'line-clamp-4'
                 )}
               >
@@ -142,7 +142,7 @@ export const ChatMessage = ({
                   </a>
                 )}
                 {message.type === 'agent' && message.score !== undefined && (
-                  <span className="font-medium text-[var(--color-text-primary)]">Score: {message.score}/100</span>
+                  <span className="font-medium text-[var(--color-text-secondary)]">Score: {message.score}/100</span>
                 )}
                 {message.type === 'agent' && message.juryResponse && onShowJury && (
                   <button
