@@ -6,7 +6,7 @@ export async function GET(
   { params }: { params: Promise<{ walletAddress: string }> }
 ) {
   try {
-    const walletAddress = (await params).walletAddress
+    const walletAddress = decodeURIComponent((await params).walletAddress)
     const result = await checkSocialConnections(walletAddress)
 
     return NextResponse.json({

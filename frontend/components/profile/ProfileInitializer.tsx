@@ -30,19 +30,7 @@ export function ProfileInitializer() {
   const authAttemptedRef = useRef<string | null>(null)
 
   useEffect(() => {
-    // Skip if:
-    // - Not connected
-    // - Auth is still loading
-    // - Currently authenticating
-    // - Already attempted for this wallet
-    // - Solana chain (not supported yet)
-    if (
-      !isConnected ||
-      !address ||
-      authLoading ||
-      isAuthenticating ||
-      chain === 'solana'
-    ) {
+    if (!isConnected || !address || authLoading || isAuthenticating) {
       return
     }
 

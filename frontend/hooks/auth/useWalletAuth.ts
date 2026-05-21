@@ -89,11 +89,20 @@ export function useWalletAuth(): UseWalletAuthReturn {
       }
     }
 
-    // Solana not supported for auth yet (would need backend support)
     if (activeChain === 'solana') {
       if (!solanaPublicKey || !signSolanaMessage) return null
-      // Solana signature format is different - not implemented yet
-      return null
+      return {
+        chainType: 'solana',
+        walletAddress: solanaPublicKey.toBase58(),
+        chainId: undefined,
+        signMessage: async (message: string) => {
+          const messageBytes = new TextEncoder().encode(message)
+          const signatureBytes = await signSolanaMessage(messageBytes)
+          // bs58 is available via @solana/web3.js transitively
+          const { encode } = await import('bs58')
+          return encode(signatureBytes)
+        },
+      }
     }
 
     return null
