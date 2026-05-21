@@ -9,7 +9,7 @@
     "lint": "next lint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "generate:types:prod": "export $(cat .env.production | xargs) && supabase gen types typescript --project-id ${SUPABASE_PROJECT_REF} --schema public > lib/database.types.ts"
+    "generate:types:prod": "export $(cat .env.production | xargs) && bunx supabase gen types typescript --project-id ${SUPABASE_PROJECT_REF} --schema sentinel > lib/database.types.ts"
   },
   "dependencies": {
     "@aws-sdk/client-ses": "^3.1019.0",
@@ -79,6 +79,7 @@
     "postcss": "^8",
     "prettier": "^3.8.0",
     "prettier-plugin-tailwindcss": "^0.7.2",
+    "supabase": "^2.100.1",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   },
