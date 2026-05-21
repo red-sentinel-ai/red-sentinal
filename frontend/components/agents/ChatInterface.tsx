@@ -249,7 +249,7 @@ export default function ChatInterface({
   }
 
   return (
-    <div className="flex h-full flex-1 flex-col justify-between pb-2 text-[var(--color-text-primary)] sm:pb-6">
+    <div className="flex h-full flex-1 flex-col justify-between pb-2 text-[var(--color-text-secondary)] sm:pb-6">
       <JuryResponseModal
         isOpen={isJuryModalOpen}
         onClose={() => setIsJuryModalOpen(false)}
@@ -290,7 +290,7 @@ export default function ChatInterface({
             />
             {activeTab === 'mine' ? (
               <>
-                <p className="text-base sm:text-lg">
+                <p className="text-sm sm:text-base">
                   {connectedAddress
                     ? "You haven't attacked yet."
                     : 'Connect your wallet to see your chats.'}
@@ -303,7 +303,7 @@ export default function ChatInterface({
               </>
             ) : (
               <>
-                <p className="text-base sm:text-lg">No messages yet. Start attacking the agent!</p>
+                <p className="text-sm sm:text-base">No messages yet. Start attacking the agent!</p>
                 <p className="mt-2 px-4 text-xs opacity-75 sm:text-sm">
                   Try to break through their defenses with clever prompts.
                 </p>
@@ -361,7 +361,7 @@ export default function ChatInterface({
       ) : isAttackPaused ? (
         <div className="border-t border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] p-4">
           <div className="w-full text-center">
-            <h3 className="text-lg font-bold text-[var(--color-warning)]">Attacks Paused</h3>
+            <h3 className="text-base font-semibold text-[var(--color-warning)]">Attacks Paused</h3>
             <p className="text-xs text-[var(--color-text-secondary)]">
               The owner&apos;s lock period has expired and they can currently withdraw funds. Attacks
               will resume once the sentinel is re-funded.
@@ -371,7 +371,7 @@ export default function ChatInterface({
       ) : isAgentDrained ? (
         <div className="border-t border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] p-4">
           <div className="w-full text-center">
-            <h3 className="text-lg font-bold text-[var(--color-danger)]">This Sentinel is Drained</h3>
+            <h3 className="text-base font-semibold text-[var(--color-danger)]">This Sentinel is Drained</h3>
             <p className="mb-2 text-xs text-[var(--color-text-muted)]">
               The sentinel has been successfully defeated.
             </p>
@@ -392,7 +392,7 @@ export default function ChatInterface({
 
                   <div className="flex w-full items-baseline justify-center gap-x-2 px-3 sm:w-auto">
                     <p className="shrink-0 text-xs font-semibold text-[var(--color-text-secondary)]">Amount:</p>
-                    <p className="text-base font-bold text-[var(--color-success)]">{winnerInfo.wonAmount} SUI</p>
+                    <p className="text-sm font-semibold text-[var(--color-success)]">{winnerInfo.wonAmount} SUI</p>
                   </div>
                 </div>
               </div>
