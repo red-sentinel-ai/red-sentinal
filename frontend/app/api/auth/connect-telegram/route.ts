@@ -44,15 +44,18 @@ export async function GET(request: Request) {
       return NextResponse.redirect(new URL('/profile?error=telegram-auth', url.origin))
     }
 
-    const { data: user, error: userError } = await supabaseServiceClient
-      .from('ss_users')
-      .select('id')
-      .contains('wallet_addresses', [walletAddress])
+    // Find user by wallet address via ss_wallet_connections
+    const { data: walletConnection, error: userError } = await supabaseServiceClient
+      .from('ss_wallet_connections')
+      .select('user_id')
+      .eq('wallet_address', walletAddress)
       .single()
 
-    if (userError || !user) {
+    if (userError || !walletConnection) {
       return NextResponse.redirect(new URL('/profile?error=telegram-auth', url.origin))
     }
+
+    const user = { id: walletConnection.user_id }
 
     const username = params.get('username') ||
       [params.get('first_name'), params.get('last_name')].filter(Boolean).join(' ') ||

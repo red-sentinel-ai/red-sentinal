@@ -44,15 +44,18 @@ export async function POST(request: Request) {
 
     const { email, walletAddress } = verified
 
-    const { data: user, error: userError } = await supabaseServiceClient
-      .from('ss_users')
-      .select('id')
-      .contains('wallet_addresses', [walletAddress])
+    // Find user by wallet address via ss_wallet_connections
+    const { data: walletConnection, error: walletError } = await supabaseServiceClient
+      .from('ss_wallet_connections')
+      .select('user_id')
+      .eq('wallet_address', walletAddress)
       .single()
 
-    if (userError || !user) {
+    if (walletError || !walletConnection) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
+
+    const user = { id: walletConnection.user_id }
 
     const { error: upsertError } = await supabaseServiceClient
       .from('ss_social_connections')

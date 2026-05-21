@@ -9,15 +9,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing wallet address or provider' }, { status: 400 })
     }
 
-    const { data: user, error: userError } = await supabaseServiceClient
-      .from('ss_users')
-      .select('id')
-      .contains('wallet_addresses', [walletAddress])
+    // Find user by wallet address via ss_wallet_connections
+    const { data: walletConnection, error: walletError } = await supabaseServiceClient
+      .from('ss_wallet_connections')
+      .select('user_id')
+      .eq('wallet_address', walletAddress)
       .single()
 
-    if (!user || userError) {
+    if (!walletConnection || walletError) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
+
+    const user = { id: walletConnection.user_id }
 
     const { error: deleteError } = await supabaseServiceClient
       .from('ss_social_connections')

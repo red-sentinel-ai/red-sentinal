@@ -14,6 +14,7 @@ import { APP_NETWORK } from '@/constants'
 import { SolanaWalletProvider } from '@/app/SolanaWalletProvider'
 import { EVMWalletProvider } from '@/app/EVMWalletProvider'
 import { ActiveChainProvider } from '@/context/ActiveChainContext'
+import { AuthProvider } from '@/context/AuthContext'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -52,8 +53,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
             <WalletProvider autoConnect theme={lightTheme}>
               <SolanaWalletProvider>
                 <ActiveChainProvider>
-                  <ProfileInitializer />
-                  <AppShell>{children}</AppShell>
+                  <AuthProvider>
+                    <ProfileInitializer />
+                    <AppShell>{children}</AppShell>
+                  </AuthProvider>
                 </ActiveChainProvider>
               </SolanaWalletProvider>
             </WalletProvider>

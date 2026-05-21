@@ -14,15 +14,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Wallet address is required' }, { status: 400 })
     }
 
-    const { data: user, error: findError } = await supabaseServiceClient
-      .from('ss_users')
-      .select('id')
-      .contains('wallet_addresses', [walletAddress])
+    // Find user by wallet address via ss_wallet_connections
+    const { data: walletConnection, error: findError } = await supabaseServiceClient
+      .from('ss_wallet_connections')
+      .select('user_id')
+      .eq('wallet_address', walletAddress)
       .single()
 
-    if (findError || !user) {
+    if (findError || !walletConnection) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
+
+    const user = { id: walletConnection.user_id }
 
     let newAvatarUrl: string | null = null
 

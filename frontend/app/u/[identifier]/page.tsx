@@ -27,27 +27,66 @@ async function fetchAgentsByCreator(walletAddress: string): Promise<AgentDetails
 async function getUserProfile(identifier: string) {
   const isWalletAddress = identifier.startsWith('0x') && identifier.length > 60
 
-  let query = supabaseServiceClient.from('ss_users').select('*')
+  let userId: string | null = null
 
   if (isWalletAddress) {
-    query = query.contains('wallet_addresses', [identifier])
+    // Find user by wallet address in ss_wallet_connections
+    const { data: walletConnection, error: walletError } = await supabaseServiceClient
+      .from('ss_wallet_connections')
+      .select('user_id')
+      .eq('wallet_address', identifier)
+      .single()
+
+    if (walletError || !walletConnection) {
+      console.error('Wallet lookup error:', walletError?.message)
+      return null
+    }
+    userId = walletConnection.user_id
   } else {
-    query = query.eq('username', identifier)
+    // Find user by username
+    const { data: userByUsername, error: usernameError } = await supabaseServiceClient
+      .from('ss_users')
+      .select('id')
+      .eq('username', identifier)
+      .single()
+
+    if (usernameError || !userByUsername) {
+      console.error('Username lookup error:', usernameError?.message)
+      return null
+    }
+    userId = userByUsername.id
   }
 
-  const { data: user, error: userError } = await query.single()
+  // Fetch user data
+  const { data: user, error: userError } = await supabaseServiceClient
+    .from('ss_users')
+    .select('*')
+    .eq('id', userId)
+    .single()
 
-  if (userError || !user || !user.wallet_addresses) {
+  if (userError || !user) {
     console.error('User lookup error:', userError?.message)
     return null
   }
 
+  // Fetch wallet addresses from ss_wallet_connections
+  const { data: walletConnections } = await supabaseServiceClient
+    .from('ss_wallet_connections')
+    .select('wallet_address')
+    .eq('user_id', userId)
+
+  const walletAddresses = walletConnections?.map(w => w.wallet_address) || []
+
+  if (walletAddresses.length === 0) {
+    return { user: { ...user, wallet_addresses: [] }, agents: [] }
+  }
+
   const agentsByWallet = await Promise.all(
-    user.wallet_addresses.map((addr: string) => fetchAgentsByCreator(addr))
+    walletAddresses.map((addr: string) => fetchAgentsByCreator(addr))
   )
   const agents = agentsByWallet.flat()
 
-  return { user, agents }
+  return { user: { ...user, wallet_addresses: walletAddresses }, agents }
 }
 
 export default async function PublicProfilePage({
