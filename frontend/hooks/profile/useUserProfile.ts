@@ -1,35 +1,45 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import type { Tables } from '@/lib/database.types'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
+import { useAuth } from '@/context/AuthContext'
 
 type UserProfile = Tables<{ schema: 'sentinel' }, 'ss_users'>
 
 export const USER_PROFILE_QUERY_KEY = 'userProfile'
 
+// Returns the authenticated user's profile from AuthContext.
+// Profile creation/login now happens entirely through the backend
+// /auth/wallet-connect flow (signature-verified), not get-or-create.
 export function useUserProfile() {
+  const { user, isLoading } = useAuth()
   const { address: walletAddress, chain } = useConnectedAddress()
 
-  return useQuery<UserProfile | null>({
-    queryKey: [USER_PROFILE_QUERY_KEY, chain, walletAddress],
-    queryFn: async () => {
-      if (!walletAddress) return null
+  // Map the AuthContext UserProfile shape to the Supabase ss_users shape
+  // that the rest of the app expects. Both have the same core fields.
+  const data = user
+    ? ({
+        id: user.id,
+        username: user.username,
+        display_name: user.display_name,
+        avatar_url: user.avatar_url,
+        email: user.email,
+        total_points: user.total_points,
+        lifetime_points: user.lifetime_points,
+        rewards_tier: user.rewards_tier,
+        email_notifications: user.email_notifications,
+        created_at: user.created_at,
+      } as unknown as UserProfile)
+    : null
 
-      const response = await fetch('/api/profile/get-or-create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ walletAddress }),
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to get or create profile')
-      }
-      return response.json() as Promise<UserProfile>
-    },
-    enabled: !!walletAddress,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    refetchOnWindowFocus: false,
-  })
+  return {
+    data,
+    isLoading,
+    // Expose query-compatible shape so callers don't need to change
+    error: null,
+    walletAddress,
+    chain,
+  }
 }
 
 interface UseUpdateProfileOptions {
@@ -38,8 +48,8 @@ interface UseUpdateProfileOptions {
 }
 
 export function useUpdateProfile(options: UseUpdateProfileOptions = {}) {
-  const queryClient = useQueryClient()
-  const { address: walletAddress, chain } = useConnectedAddress()
+  const { address: walletAddress } = useConnectedAddress()
+  const { refreshProfile } = useAuth()
 
   return useMutation({
     mutationFn: async (formData: FormData) => {
@@ -57,9 +67,9 @@ export function useUpdateProfile(options: UseUpdateProfileOptions = {}) {
       }
       return response.json()
     },
-    onSuccess: updatedProfile => {
+    onSuccess: async updatedProfile => {
       toast.success('Profile updated successfully!')
-      queryClient.setQueryData([USER_PROFILE_QUERY_KEY, chain, walletAddress], updatedProfile)
+      await refreshProfile()
       options.onSuccess?.(updatedProfile)
     },
     onError: (error: Error) => {
@@ -70,8 +80,8 @@ export function useUpdateProfile(options: UseUpdateProfileOptions = {}) {
 }
 
 export function useUpdateAvatar(options: UseUpdateProfileOptions = {}) {
-  const queryClient = useQueryClient()
-  const { address: walletAddress, chain } = useConnectedAddress()
+  const { address: walletAddress } = useConnectedAddress()
+  const { refreshProfile } = useAuth()
 
   return useMutation({
     mutationFn: async (formData: FormData) => {
@@ -89,9 +99,9 @@ export function useUpdateAvatar(options: UseUpdateProfileOptions = {}) {
       }
       return (await response.json()).data as UserProfile
     },
-    onSuccess: updatedProfile => {
+    onSuccess: async updatedProfile => {
       toast.success('Profile picture updated!')
-      queryClient.setQueryData([USER_PROFILE_QUERY_KEY, chain, walletAddress], updatedProfile)
+      await refreshProfile()
       options.onSuccess?.(updatedProfile)
     },
     onError: (error: Error) => {
