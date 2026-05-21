@@ -34,8 +34,8 @@ export function LLMProviderSection({
   onValidate,
 }: LLMProviderSectionProps) {
   return (
-    <div className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-4">
-      <h3 className="mb-4 text-sm font-medium text-[var(--color-text-primary)]">LLM provider</h3>
+    <div className="flex flex-col gap-2">
+      <label className="block text-sm font-medium text-[var(--color-text-secondary)]">LLM Provider</label>
       <div className="flex flex-col gap-4 md:flex-row">
         <CustomDropdown
           label="Select service"

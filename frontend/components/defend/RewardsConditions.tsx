@@ -5,8 +5,8 @@ import { SUI_SENTINEL_DEFENDER_REWARDS_DOCS_URL } from '@/constants'
 
 export const RewardsConditions = () => {
   return (
-    <div className="w-full rounded-[var(--radius-lg)] border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] px-4 py-3.5 shadow-[var(--shadow-card)]">
-      <h3 className="mb-3 text-sm font-medium text-[var(--color-text-primary)]">
+    <div className="w-full rounded-[var(--radius-lg)] border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] px-4 py-3.5">
+      <h3 className="mb-3 text-sm font-medium text-[var(--color-text-secondary)]">
         Reward Conditions
       </h3>
 
