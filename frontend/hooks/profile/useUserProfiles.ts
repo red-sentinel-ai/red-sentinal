@@ -1,7 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
-import type { Tables } from '@/lib/database.types'
 
-type UserProfile = Pick<Tables<'ss_users'>, 'username' | 'avatar_url' | 'wallet_addresses'>
+type UserProfile = {
+  username: string
+  avatar_url: string | null
+  wallet_addresses: string[]
+}
 
 export function useUserProfiles(walletAddresses: string[]) {
   return useQuery<Record<string, UserProfile>>({

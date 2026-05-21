@@ -413,6 +413,13 @@ export type Database = {
             foreignKeyName: "ss_rewards_activity_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "ss_user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ss_rewards_activity_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "ss_users"
             referencedColumns: ["id"]
           },
@@ -458,6 +465,13 @@ export type Database = {
             foreignKeyName: "ss_social_connections_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "ss_user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ss_social_connections_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "ss_users"
             referencedColumns: ["id"]
           },
@@ -475,8 +489,8 @@ export type Database = {
           rewards_tier: string | null
           rewards_updated_at: string | null
           total_points: number | null
+          updated_at: string | null
           username: string
-          wallet_addresses: string[] | null
         }
         Insert: {
           avatar_url?: string | null
@@ -489,8 +503,8 @@ export type Database = {
           rewards_tier?: string | null
           rewards_updated_at?: string | null
           total_points?: number | null
+          updated_at?: string | null
           username: string
-          wallet_addresses?: string[] | null
         }
         Update: {
           avatar_url?: string | null
@@ -503,10 +517,62 @@ export type Database = {
           rewards_tier?: string | null
           rewards_updated_at?: string | null
           total_points?: number | null
+          updated_at?: string | null
           username?: string
-          wallet_addresses?: string[] | null
         }
         Relationships: []
+      }
+      ss_wallet_connections: {
+        Row: {
+          chain_id: string | null
+          chain_type: string
+          connected_at: string | null
+          id: string
+          is_primary: boolean | null
+          user_id: string
+          wallet_address: string
+        }
+        Insert: {
+          chain_id?: string | null
+          chain_type: string
+          connected_at?: string | null
+          id?: string
+          is_primary?: boolean | null
+          user_id: string
+          wallet_address: string
+        }
+        Update: {
+          chain_id?: string | null
+          chain_type?: string
+          connected_at?: string | null
+          id?: string
+          is_primary?: boolean | null
+          user_id?: string
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ss_wallet_connections_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "ss_rewards_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "ss_wallet_connections_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "ss_user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ss_wallet_connections_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "ss_users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
@@ -529,9 +595,60 @@ export type Database = {
         }
         Relationships: []
       }
+      ss_user_profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          display_name: string | null
+          email: string | null
+          email_notifications: boolean | null
+          id: string | null
+          lifetime_points: number | null
+          rewards_tier: string | null
+          social_connections: Json | null
+          total_points: number | null
+          updated_at: string | null
+          username: string | null
+          wallets: Json | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          email?: string | null
+          email_notifications?: boolean | null
+          id?: string | null
+          lifetime_points?: number | null
+          rewards_tier?: string | null
+          social_connections?: never
+          total_points?: number | null
+          updated_at?: string | null
+          username?: string | null
+          wallets?: never
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          email?: string | null
+          email_notifications?: boolean | null
+          id?: string | null
+          lifetime_points?: number | null
+          rewards_tier?: string | null
+          social_connections?: never
+          total_points?: number | null
+          updated_at?: string | null
+          username?: string | null
+          wallets?: never
+        }
+        Relationships: []
+      }
     }
     Functions: {
-      [_ in never]: never
+      merge_user_accounts: {
+        Args: { merging_user_id: string; surviving_user_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
