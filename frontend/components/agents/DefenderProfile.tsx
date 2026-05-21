@@ -6,7 +6,7 @@ import { DEFAULT_PROFILE_URL } from '@/constants'
 import { truncateAddress } from '@/lib/utils'
 import { Skeleton } from '@/components/ui/skeleton'
 
-type UserProfile = Pick<Tables<'ss_users'>, 'username' | 'avatar_url'> | null | undefined
+type UserProfile = Pick<Tables<{ schema: 'sentinel' }, 'ss_users'>, 'username' | 'avatar_url'> | null | undefined
 
 interface DefenderProfileProps {
   ownerAddress: string

@@ -14,7 +14,7 @@ type SelectedImage = {
 
 interface ProfileEditFormProps {
   onSuccess?: () => void
-  profile: Tables<'ss_users'> | null
+  profile: Tables<{ schema: 'sentinel' }, 'ss_users'> | null
   selectedImage: SelectedImage | null
 }
 

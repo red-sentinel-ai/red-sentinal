@@ -19,7 +19,7 @@ type SelectedImage = {
 interface EditProfileModalProps {
   open: boolean
   onClose: () => void
-  profile: Tables<'ss_users'> | null
+  profile: Tables<{ schema: 'sentinel' }, 'ss_users'> | null
 }
 
 export function EditProfileModal({ open, onClose, profile }: EditProfileModalProps) {

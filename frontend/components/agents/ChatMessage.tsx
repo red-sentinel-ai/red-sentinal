@@ -14,7 +14,7 @@ import { type ChatMessage as ChatMessageType } from './ChatInterface'
 import Link from 'next/link'
 import type { Tables } from '@/lib/database.types'
 
-type UserProfile = Pick<Tables<'ss_users'>, 'username' | 'avatar_url'> | null
+type UserProfile = Pick<Tables<{ schema: 'sentinel' }, 'ss_users'>, 'username' | 'avatar_url'> | null
 
 type ChatMessageProps = {
   message: ChatMessageType
