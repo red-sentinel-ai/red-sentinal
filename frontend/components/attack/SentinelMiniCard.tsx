@@ -47,7 +47,7 @@ export function SentinelMiniCard({
               'absolute left-2 top-2 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold leading-none',
               variant === 'featured'
                 ? 'bg-[var(--color-gold-primary)] text-[var(--color-text-on-gold)]'
-                : 'border border-amber-400/40 bg-amber-100 text-amber-700'
+                : 'border border-amber-400/30 bg-amber-900/20 text-amber-400'
             )}
           >
             {variant === 'featured' ? (
@@ -80,7 +80,7 @@ export function SentinelMiniCard({
               Prize Pool
             </p>
             <div className="truncate text-sm font-semibold text-[var(--color-text-primary)]">
-              <TokenAmount rawAmount={agent.total_balance} token={token} precision={2} />
+              <TokenAmount rawAmount={agent.total_balance} token={token} precision={2} iconSize={12} />
             </div>
           </div>
           <div className="min-w-0 text-right">
@@ -88,7 +88,7 @@ export function SentinelMiniCard({
               Cost
             </p>
             <div className="truncate text-sm text-[var(--color-text-secondary)]">
-              <TokenAmount rawAmount={agent.cost_per_message} token={token} precision={2} />
+              <TokenAmount rawAmount={agent.cost_per_message} token={token} precision={2} iconSize={12} />
             </div>
           </div>
         </div>

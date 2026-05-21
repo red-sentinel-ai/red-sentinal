@@ -59,7 +59,7 @@ export const CustomDropdown = ({
                   onSelect(option)
                   setIsOpen(false)
                 }}
-                className="flex w-full items-center justify-between px-4 py-3 text-left text-[var(--color-text-primary)] hover:bg-[var(--color-bg-subtle)]"
+                className="flex w-full items-center justify-between px-3 py-2 text-left text-sm text-[var(--color-text-primary)] hover:bg-[var(--color-bg-subtle)]"
               >
                 <div className="flex items-center gap-2">
                   {label === 'Select service' && (

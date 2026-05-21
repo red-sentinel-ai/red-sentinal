@@ -103,7 +103,7 @@ export function SocialConnectionsSection() {
       <Card className="border-[var(--color-border-subtle)] bg-gradient-to-r from-[var(--color-bg-surface)]/60 to-[var(--color-bg-subtle)]/60 p-4">
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-medium text-[var(--color-text-primary)] sm:text-xl">
+            <h3 className="text-sm font-medium text-[var(--color-text-primary)]">
               Connect your socials to unlock rewards
             </h3>
             {hasAnyConnection && (
@@ -129,7 +129,7 @@ export function SocialConnectionsSection() {
                     )}
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-[var(--color-text-primary)] sm:text-base">Connect Email</p>
+                    <p className="text-sm font-medium text-[var(--color-text-primary)]">Connect Email</p>
                     <p className="text-xs text-[var(--color-text-muted)]">
                       {hasEmail && 'Email connected'}
                     </p>
@@ -213,17 +213,17 @@ export function SocialConnectionsSection() {
                 <div className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-[var(--color-border-subtle)] sm:h-10 sm:w-10">
                   <Image
                     src="/icons/telegram_black.png"
-                    width={24}
-                    height={24}
+                    width={20}
+                    height={20}
                     alt="Telegram"
-                    className="rounded"
+                    className="rounded brightness-0 invert opacity-70"
                   />
                   {hasTelegram && (
                     <div className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-[var(--color-bg-surface)] bg-[var(--color-success)]"></div>
                   )}
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-[var(--color-text-primary)] sm:text-base">Connect Telegram</p>
+                  <p className="text-sm font-medium text-[var(--color-text-primary)]">Connect Telegram</p>
                   <p className="text-xs text-[var(--color-text-muted)]">
                     {hasTelegram ? 'Connected' : 'Not connected'}
                   </p>

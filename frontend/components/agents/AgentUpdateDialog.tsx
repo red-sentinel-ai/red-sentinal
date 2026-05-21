@@ -24,12 +24,12 @@ export const AgentUpdateDialog = ({
   children,
 }: AgentUpdateDialogProps) => {
   return (
-    <Dialog open={open} onClose={onClose} className="p-4 sm:p-6">
-      <div className="space-y-4 sm:space-y-6">
+    <Dialog open={open} onClose={onClose} className="p-4">
+      <div className="space-y-4">
         <div className="flex items-center justify-between gap-2">
-          <h2 className="text-xl font-bold sm:text-2xl">{title}</h2>
+          <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">{title}</h2>
           <button onClick={onClose} className="text-[var(--color-text-faint)] hover:text-[var(--color-text-primary)]">
-            <X className="size-5 sm:size-6" />
+            <X className="size-4" />
           </button>
         </div>
 
