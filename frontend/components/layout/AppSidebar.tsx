@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Swords, ShieldHalf, User, Trophy, Gift, ChevronLeft, type LucideIcon } from 'lucide-react'
+import { Home, ShieldHalf, User, Trophy, Gift, ChevronLeft, type LucideIcon } from 'lucide-react'
 
 import { APP_NETWORK } from '@/constants'
 import { cn } from '@/lib/utils'
@@ -29,7 +29,7 @@ type NavItem = {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { title: 'Home', href: '/attack', icon: Swords },
+  { title: 'Home', href: '/attack', icon: Home },
   { title: 'Create Sentinel', href: '/defend', icon: ShieldHalf },
   { title: 'Leaderboard', href: '/leaderboard', icon: Trophy },
   { title: 'Rewards', href: '/rewards', icon: Gift },
