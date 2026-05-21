@@ -52,7 +52,7 @@ const ADMIN_API_TOKEN = process.env.BACKEND_API_ADMIN_TOKEN || ""
 export async function POST(req: NextRequest) {
   try {
     const {
-      wallet_address,
+      wallet_address: raw_wallet_address,
       mission_type,
       username,
       telegram_username,
@@ -62,6 +62,8 @@ export async function POST(req: NextRequest) {
       network,
       agent_path
     } = await req.json()
+
+    const wallet_address = raw_wallet_address?.toLowerCase()
 
     if (!wallet_address || !mission_type) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })

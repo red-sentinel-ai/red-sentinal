@@ -5,11 +5,13 @@ import { generateGradientAvatar } from '@/lib/utils'
 
 export async function POST(request: Request) {
   try {
-    const { walletAddress, chainType = 'sui', chainId } = await request.json()
+    const { walletAddress: rawWalletAddress, chainType = 'sui', chainId } = await request.json()
 
-    if (!walletAddress) {
+    if (!rawWalletAddress) {
       return NextResponse.json({ error: 'Wallet address is required' }, { status: 400 })
     }
+
+    const walletAddress = rawWalletAddress.toLowerCase()
 
     // Find existing user by wallet address in ss_wallet_connections
     const { data: existingWallet, error: findError } = await supabaseServiceClient
