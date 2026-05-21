@@ -90,12 +90,12 @@ export const ClaimFeesModal = ({
       confirmText="Claim Fees"
       isConfirmDisabled={isLoading || !hasFees}
     >
-      <div className="flex flex-col items-center justify-center space-y-2 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] py-4 sm:py-6">
-        <span className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)] sm:text-sm">
+      <div className="flex flex-col items-center justify-center space-y-1.5 rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] py-4">
+        <span className="text-[10px] font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
           Available to Claim
         </span>
-        <div className="text-2xl font-extrabold tracking-tight text-[var(--color-text-primary)] sm:text-4xl">
-          <TokenAmount rawAmount={accumulatedFees} token={token} precision={4} iconSize={24} />
+        <div className="text-xl font-bold tracking-tight text-[var(--color-text-primary)]">
+          <TokenAmount rawAmount={accumulatedFees} token={token} precision={4} iconSize={16} />
         </div>
       </div>
 

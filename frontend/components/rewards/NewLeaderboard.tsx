@@ -1055,10 +1055,10 @@ function SkeletonRows({ cols }: { cols: number }) {
   return (
     <>
       {Array.from({ length: 5 }).map((_, i) => (
-        <tr key={i} className="animate-pulse border-b border-gray-100">
+        <tr key={i} className="animate-pulse border-b border-[var(--color-border-subtle)]">
           {Array.from({ length: cols }).map((__, j) => (
-            <td key={j} className="px-3 py-4">
-              <div className="h-4 rounded bg-gray-100" />
+            <td key={j} className="px-3 py-3">
+              <div className="h-3 rounded bg-[var(--color-bg-elevated)]" />
             </td>
           ))}
         </tr>

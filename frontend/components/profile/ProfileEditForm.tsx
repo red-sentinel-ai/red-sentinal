@@ -75,44 +75,44 @@ export function ProfileEditForm({ onSuccess, profile, selectedImage }: ProfileEd
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="mb-2 block text-base font-medium text-[var(--color-text-primary)]">Display Name</label>
+        <label className="mb-1.5 block text-xs font-medium text-[var(--color-text-secondary)]">Display Name</label>
         <input
           type="text"
           value={displayName}
           onChange={e => setDisplayName(e.target.value)}
-          className="w-full rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] p-3 text-[var(--color-text-primary)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
+          className="w-full rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] px-3 py-2 text-sm text-[var(--color-text-primary)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
         />
       </div>
 
       <div>
-        <label className="mb-2 block text-base font-medium text-[var(--color-text-primary)]">Username</label>
+        <label className="mb-1.5 block text-xs font-medium text-[var(--color-text-secondary)]">Username</label>
         <div className="relative">
           <input
             type="text"
             value={username}
             onChange={e => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
-            className="w-full rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] p-3 pr-10 text-[var(--color-text-primary)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
+            className="w-full rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] px-3 py-2 pr-10 text-sm text-[var(--color-text-primary)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
           />
           <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-            {isChecking && <Loader2 className="h-5 w-5 animate-spin text-[var(--color-text-muted)]" />}
-            {isAvailable === true && <CheckCircle className="h-5 w-5 text-[var(--color-success)]" />}
-            {isAvailable === false && <XCircle className="h-5 w-5 text-[var(--color-danger)]" />}
+            {isChecking && <Loader2 className="h-4 w-4 animate-spin text-[var(--color-text-muted)]" />}
+            {isAvailable === true && <CheckCircle className="h-4 w-4 text-[var(--color-success)]" />}
+            {isAvailable === false && <XCircle className="h-4 w-4 text-[var(--color-danger)]" />}
           </div>
         </div>
-        <p className="mt-2 text-sm text-[var(--color-text-muted)]">
-          URL-friendly, lowercase letters, numbers, and underscores only.
+        <p className="mt-1 text-xs text-[var(--color-text-muted)]">
+          Lowercase letters, numbers, and underscores only.
         </p>
       </div>
 
       <button
         type="submit"
         disabled={isUpdating || isChecking || isAvailable === false}
-        className="btn btn-black !min-h-[50px] w-full"
+        className="btn btn-black h-8 w-full text-xs"
       >
-        {isUpdating ? <Loader2 className="animate-spin" /> : <ArrowDownToLine />}
-        <span className="ms-2">Save Changes</span>
+        {isUpdating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ArrowDownToLine className="h-3.5 w-3.5" />}
+        <span className="ms-1.5">Save Changes</span>
       </button>
     </form>
   )

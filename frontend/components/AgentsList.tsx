@@ -173,11 +173,11 @@ export const AgentsList = ({
                       <div className="grid grid-cols-2 gap-2 text-sm">
                         <div>
                           <p className="text-xs text-[var(--color-text-muted)]">Reward</p>
-                          <p className="text-sm"><TokenAmount rawAmount={agent.total_balance} token={agentToken} precision={2} /></p>
+                          <p className="text-sm"><TokenAmount rawAmount={agent.total_balance} token={agentToken} precision={2} iconSize={13} /></p>
                         </div>
                         <div>
                           <p className="text-xs text-[var(--color-text-muted)]">Message Price</p>
-                          <p className="text-sm"><TokenAmount rawAmount={agent.cost_per_message} token={agentToken} precision={2} /></p>
+                          <p className="text-sm"><TokenAmount rawAmount={agent.cost_per_message} token={agentToken} precision={2} iconSize={13} /></p>
                         </div>
                         <div>
                           <p className="text-xs text-[var(--color-text-muted)]">Attacks</p>
@@ -235,8 +235,8 @@ export const AgentsList = ({
                           </span>
                         )}
                       </div>
-                      <div className="col-span-2 flex items-center"><TokenAmount rawAmount={agent.total_balance} token={agentToken} precision={2} /></div>
-                      <div className="col-span-2 flex items-center"><TokenAmount rawAmount={agent.cost_per_message} token={agentToken} precision={2} /></div>
+                      <div className="col-span-2 flex items-center"><TokenAmount rawAmount={agent.total_balance} token={agentToken} precision={2} iconSize={13} /></div>
+                      <div className="col-span-2 flex items-center"><TokenAmount rawAmount={agent.cost_per_message} token={agentToken} precision={2} iconSize={13} /></div>
                       <div className="col-span-1 flex items-center">{agent.total_attacks || 0}</div>
 
                       <div className="col-span-1 flex items-center">

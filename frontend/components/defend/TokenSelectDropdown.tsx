@@ -27,8 +27,8 @@ export function TokenSelectDropdown({ tokens, selected, onSelect }: TokenSelectD
           <Image
             src={selected.icon}
             alt={selected.symbol}
-            width={22}
-            height={22}
+            width={14}
+            height={14}
             className="rounded-full"
           />
           <span className="text-sm font-medium">{selected.symbol}</span>
@@ -46,12 +46,12 @@ export function TokenSelectDropdown({ tokens, selected, onSelect }: TokenSelectD
             onClick={() => onSelect(token)}
             className="flex items-center justify-between px-3 py-2.5 text-[var(--color-text-primary)] hover:bg-[var(--color-bg-subtle)] focus:bg-[var(--color-bg-subtle)]"
           >
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <Image
                 src={token.icon}
                 alt={token.symbol}
-                width={24}
-                height={24}
+                width={16}
+                height={16}
                 className="rounded-full"
               />
               <div>
