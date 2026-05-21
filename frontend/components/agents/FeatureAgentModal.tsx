@@ -181,7 +181,7 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
                       alt="X (Twitter)"
                       width={12}
                       height={12}
-                      className="transition-transform duration-300"
+                      className="brightness-0 invert opacity-70"
                     />
                     Twitter Username
                   </label>
@@ -205,9 +205,9 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
                     <Image
                       src="/icons/telegram_black.png"
                       alt="Telegram"
-                      width={16}
-                      height={16}
-                      className="transition-transform duration-300"
+                      width={14}
+                      height={14}
+                      className="brightness-0 invert opacity-70"
                     />
                     Telegram Username
                   </label>
