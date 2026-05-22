@@ -59,12 +59,12 @@ export const AgentsList = ({
           <LeaderboardSkeleton />
         ) : (
           <div className="flex flex-col gap-1">
-            <div className="mb-2 hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-deepest)] p-3 text-lg font-medium shadow-[var(--shadow-card)] md:grid md:gap-4 md:[grid-template-columns:repeat(13,minmax(0,1fr))]">
+            <div className="mb-2 hidden rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-deepest)] px-3 py-2 text-xs font-medium uppercase tracking-wide text-[var(--color-text-muted)] shadow-[var(--shadow-card)] md:grid md:gap-4 md:[grid-template-columns:repeat(13,minmax(0,1fr))]">
               <div className="col-span-1 flex items-center">
                 <span>#</span>
               </div>
               <div
-                className="col-span-1 flex cursor-pointer items-center hover:text-gray-600"
+                className="col-span-1 flex cursor-pointer items-center hover:text-[var(--color-text-primary)]"
                 onClick={() => onSort('agent_id')}
               >
                 <span>ID</span>
@@ -73,28 +73,28 @@ export const AgentsList = ({
               <div className="col-span-1 flex items-center">Chain</div>
               <div className="col-span-2 flex items-center">Sentinel</div>
               <div
-                className="col-span-2 flex cursor-pointer items-center hover:text-gray-600"
+                className="col-span-2 flex cursor-pointer items-center hover:text-[var(--color-text-primary)]"
                 onClick={() => onSort('total_balance')}
               >
                 <span>Bounty Pool</span>
                 <SortIcon field="total_balance" />
               </div>
               <div
-                className="col-span-2 flex cursor-pointer items-center hover:text-gray-600"
+                className="col-span-2 flex cursor-pointer items-center hover:text-[var(--color-text-primary)]"
                 onClick={() => onSort('cost_per_message')}
               >
                 <span>Cost per Attack</span>
                 <SortIcon field="cost_per_message" />
               </div>
               <div
-                className="col-span-1 flex cursor-pointer items-center hover:text-gray-600"
+                className="col-span-1 flex cursor-pointer items-center hover:text-[var(--color-text-primary)]"
                 onClick={() => onSort('total_attacks')}
               >
                 <span>Attacks</span>
                 <SortIcon field="total_attacks" />
               </div>
               <div
-                className="col-span-1 flex cursor-pointer items-center hover:text-gray-600"
+                className="col-span-1 flex cursor-pointer items-center hover:text-[var(--color-text-primary)]"
                 onClick={() => onSort('change7d')}
               >
                 <span>7d Activity</span>
@@ -116,7 +116,7 @@ export const AgentsList = ({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.15 }}
-                    className="cursor-pointer rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] p-3 text-xl shadow-[var(--shadow-card)] hover:border-[var(--color-border-default)]"
+                    className="cursor-pointer rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] p-3 text-sm shadow-[var(--shadow-card)] hover:border-[var(--color-border-default)]"
                     onClick={() => router.push(`/attack/${agent.agent_path}`)}
                   >
                     <div className="space-y-3 md:hidden">
@@ -134,7 +134,7 @@ export const AgentsList = ({
                             />
                           )}
                           {agent.trending && (
-                            <span className="inline-flex shrink-0 items-center gap-0.5 rounded-full border border-amber-400/40 bg-amber-100 px-1.5 py-0.5 text-[10px] font-medium leading-none text-amber-700">
+                            <span className="inline-flex shrink-0 items-center gap-0.5 rounded-full border border-amber-400/30 bg-amber-900/20 px-1.5 py-0.5 text-[10px] font-medium leading-none text-amber-400">
                               <Flame className="h-2.5 w-2.5 shrink-0" />
                               {agent.trending_window === '24h' || !agent.trending_window
                                 ? 'Trending'
@@ -146,7 +146,7 @@ export const AgentsList = ({
                           variant={agent.state === 'active' ? 'secondary' : 'destructive'}
                           className={`${
                             agent.state === 'active'
-                              ? 'border-[#1FAD57] bg-[#D1E6DB] text-[#1FAD57]'
+                              ? 'border-[#1FAD57]/40 bg-[#1FAD57]/10 text-[#1FAD57]'
                               : 'border-red-500/20 bg-red-500/10 text-red-400'
                           } rounded-xl text-xs`}
                         >
@@ -173,11 +173,11 @@ export const AgentsList = ({
                       <div className="grid grid-cols-2 gap-2 text-sm">
                         <div>
                           <p className="text-xs text-[var(--color-text-muted)]">Reward</p>
-                          <p className="text-sm"><TokenAmount rawAmount={agent.total_balance} token={agentToken} precision={2} /></p>
+                          <p className="text-sm"><TokenAmount rawAmount={agent.total_balance} token={agentToken} precision={2} iconSize={13} /></p>
                         </div>
                         <div>
                           <p className="text-xs text-[var(--color-text-muted)]">Message Price</p>
-                          <p className="text-sm"><TokenAmount rawAmount={agent.cost_per_message} token={agentToken} precision={2} /></p>
+                          <p className="text-sm"><TokenAmount rawAmount={agent.cost_per_message} token={agentToken} precision={2} iconSize={13} /></p>
                         </div>
                         <div>
                           <p className="text-xs text-[var(--color-text-muted)]">Attacks</p>
@@ -227,7 +227,7 @@ export const AgentsList = ({
                           />
                         )}
                         {agent.trending && (
-                          <span className="inline-flex shrink-0 items-center gap-0.5 rounded-full border border-amber-400/40 bg-amber-100 px-1.5 py-0.5 text-[10px] font-medium leading-none text-amber-700">
+                          <span className="inline-flex shrink-0 items-center gap-0.5 rounded-full border border-amber-400/30 bg-amber-900/20 px-1.5 py-0.5 text-[10px] font-medium leading-none text-amber-400">
                             <Flame className="h-2.5 w-2.5 shrink-0" />
                             {agent.trending_window === '24h' || !agent.trending_window
                               ? 'Trending'
@@ -235,8 +235,8 @@ export const AgentsList = ({
                           </span>
                         )}
                       </div>
-                      <div className="col-span-2 flex items-center"><TokenAmount rawAmount={agent.total_balance} token={agentToken} precision={2} /></div>
-                      <div className="col-span-2 flex items-center"><TokenAmount rawAmount={agent.cost_per_message} token={agentToken} precision={2} /></div>
+                      <div className="col-span-2 flex items-center"><TokenAmount rawAmount={agent.total_balance} token={agentToken} precision={2} iconSize={13} /></div>
+                      <div className="col-span-2 flex items-center"><TokenAmount rawAmount={agent.cost_per_message} token={agentToken} precision={2} iconSize={13} /></div>
                       <div className="col-span-1 flex items-center">{agent.total_attacks || 0}</div>
 
                       <div className="col-span-1 flex items-center">
@@ -247,46 +247,23 @@ export const AgentsList = ({
                       </div>
 
                       <div className="col-span-1 flex items-center justify-end">
-                        <Badge
-                          variant={agent.state === 'active' ? 'secondary' : 'destructive'}
-                          className={`${
+                        <span
+                          className={`inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-medium ${
                             agent.state === 'active'
-                              ? 'border-[#1FAD57] bg-[#D1E6DB] text-[#1FAD57]'
+                              ? 'border-[#1FAD57]/30 bg-[#1FAD57]/10 text-[#1FAD57]'
                               : 'border-red-500/20 bg-red-500/10 text-red-400'
-                          } rounded-xl text-sm`}
+                          }`}
                         >
-                          {agent.state === 'active' ? (
-                            <Image
-                              src="/icons/shield-green.png"
-                              width={14}
-                              height={14}
-                              alt="shield green"
-                              className="mr-1"
-                            />
-                          ) : (
-                            <Image
-                              src="/icons/shield-red.png"
-                              width={14}
-                              height={14}
-                              alt="shield red"
-                              className="mr-1"
-                            />
-                          )}
+                          <span className={`h-1.5 w-1.5 rounded-full ${agent.state === 'active' ? 'bg-[#1FAD57]' : 'bg-red-400'}`} />
                           {agent.state === 'active' ? 'Active' : 'Defeated'}
-                        </Badge>
+                        </span>
                       </div>
                       <div className="col-span-1 flex items-center justify-end">
                         <button
                           onClick={() => router.push(`/attack/${agent.agent_path}`)}
-                          className="badge-black text-sm"
+                          className="inline-flex items-center gap-1 rounded-md border border-[var(--color-border-default)] bg-[var(--color-bg-subtle)] px-2 py-1 text-[10px] font-medium text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text-primary)]"
                         >
-                          <Image
-                            src="/icons/swords-white.png"
-                            width="14"
-                            height="14"
-                            alt="swords"
-                            className="mr-1"
-                          />
+                          <Image src="/icons/swords-white.png" width={10} height={10} alt="swords" className="opacity-60" />
                           Attack
                         </button>
                       </div>

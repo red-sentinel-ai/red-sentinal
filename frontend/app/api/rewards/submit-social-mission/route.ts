@@ -52,7 +52,7 @@ const ADMIN_API_TOKEN = process.env.BACKEND_API_ADMIN_TOKEN || ""
 export async function POST(req: NextRequest) {
   try {
     const {
-      wallet_address,
+      wallet_address: raw_wallet_address,
       mission_type,
       username,
       telegram_username,
@@ -62,6 +62,8 @@ export async function POST(req: NextRequest) {
       network,
       agent_path
     } = await req.json()
+
+    const wallet_address = raw_wallet_address?.toLowerCase()
 
     if (!wallet_address || !mission_type) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -99,16 +101,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Content link is required' }, { status: 400 })
     }
 
-    // Find user by wallet address
-    const { data: user, error: userError } = await supabaseServiceClient
-      .from('ss_users')
-      .select('id, username')
-      .contains('wallet_addresses', [wallet_address])
+    // Find user by wallet address via ss_wallet_connections
+    const { data: walletConnection, error: walletError } = await supabaseServiceClient
+      .from('ss_wallet_connections')
+      .select('user_id, ss_users(id, username)')
+      .eq('wallet_address', wallet_address)
       .single()
 
-    if (userError || !user) {
+    if (walletError || !walletConnection?.ss_users) {
       return NextResponse.json({ error: 'User profile not found' }, { status: 404 })
     }
+
+    const user = walletConnection.ss_users as { id: string; username: string }
 
     // For one-time missions, prevent duplicate submissions
     if (ONE_TIME_MISSIONS.includes(missionType)) {

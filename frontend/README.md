@@ -1,6 +1,9 @@
-Red Sentinel frontend application
 
-## Getting Started
+
+
+
+
+## Local Development
 
 First, run the development server:
 
@@ -19,5 +22,4 @@ bun install
 bun dev
 ```
 
-Install slush wallet from https://slush.app/ as slush wallet is being used for login in Red Sentinel.
 

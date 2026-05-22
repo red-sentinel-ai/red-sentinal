@@ -14,7 +14,7 @@ import { type ChatMessage as ChatMessageType } from './ChatInterface'
 import Link from 'next/link'
 import type { Tables } from '@/lib/database.types'
 
-type UserProfile = Pick<Tables<'ss_users'>, 'username' | 'avatar_url'> | null
+type UserProfile = Pick<Tables<{ schema: 'sentinel' }, 'ss_users'>, 'username' | 'avatar_url'> | null
 
 type ChatMessageProps = {
   message: ChatMessageType
@@ -81,19 +81,19 @@ export const ChatMessage = ({
 
         <div
           className={clsx(
-            'relative min-w-[350px] rounded-2xl text-[var(--color-text-primary)] shadow-sm backdrop-blur-sm',
+            'relative min-w-[240px] rounded-2xl text-[var(--color-text-secondary)] sm:min-w-[300px]',
             {
               'border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)]': message.type === 'agent',
-              'border border-[var(--color-gold-primary)]/10 bg-gradient-to-tr from-[var(--color-gold-primary)]/10 to-[var(--color-gold-light)]/5':
+              'border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)]':
                 message.type === 'user' && !isWinningPrompt,
-              'border border-[var(--color-gold-primary)]/25 bg-gradient-to-tr from-[var(--color-gold-primary)]/20 to-[var(--color-gold-light)]/10 shadow-md shadow-[var(--color-gold-primary)]/10': isWinningPrompt,
+              'border border-[var(--color-gold-primary)]/40 bg-[var(--color-gold-muted)]': isWinningPrompt,
             }
           )}
         >
           <div className="relative p-3 sm:p-4">
             {message.type === 'user' && message.sender && (
               <div className="-mt-1 mb-2 flex items-center justify-between gap-1 text-xs">
-                <Link href={profileLink} className="font-semibold text-[var(--color-text-primary)] hover:underline">
+                <Link href={profileLink} className="font-medium text-[var(--color-text-secondary)] hover:underline">
                   {displayName}
                 </Link>
                 {isWinningPrompt && (
@@ -108,7 +108,7 @@ export const ChatMessage = ({
               <p
                 ref={contentRef}
                 className={clsx(
-                  'break-words text-xs leading-relaxed text-[var(--color-text-primary)] transition-all duration-200 ease-in-out sm:text-sm',
+                  'break-words text-xs leading-relaxed text-[var(--color-text-secondary)] transition-all duration-200 ease-in-out sm:text-sm',
                   !isExpanded && 'line-clamp-4'
                 )}
               >
@@ -142,7 +142,7 @@ export const ChatMessage = ({
                   </a>
                 )}
                 {message.type === 'agent' && message.score !== undefined && (
-                  <span className="font-medium text-[var(--color-text-primary)]">Score: {message.score}/100</span>
+                  <span className="font-medium text-[var(--color-text-secondary)]">Score: {message.score}/100</span>
                 )}
                 {message.type === 'agent' && message.juryResponse && onShowJury && (
                   <button

@@ -9,7 +9,7 @@ const sesClient = new SESClient({
   region: process.env.AWS_REGION || 'us-east-1',
 })
 
-const FROM_ADDRESS = process.env.AWS_FROM_EMAIL || 'updates@suisentinel.xyz'
+const FROM_ADDRESS = process.env.AWS_FROM_EMAIL || 'updates@redsentinel.xyz'
 const APP_URL = process.env.NEXTAUTH_URL || 'https://app.redsentinel.xyz'
 
 const SENTINEL_PINK = '#F445AB'

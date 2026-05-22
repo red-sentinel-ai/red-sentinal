@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ChevronLeft, CameraIcon, Info, Loader2, Sparkles, Wallet } from 'lucide-react'
+import { CameraIcon, Info, Loader2, Sparkles, Wallet } from 'lucide-react'
 import { toast } from 'sonner'
 import { ConnectButton, useCurrentAccount } from '@mysten/dapp-kit'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'
@@ -232,22 +232,11 @@ export default function DefendPageClient() {
     <div className="min-h-screen bg-[var(--color-bg-base)] pb-8 pt-10">
       <div className="container mx-auto px-4 py-4">
         <form onSubmit={handleSubmit} className="relative mx-auto max-w-[969px] space-y-8 px-4">
-          {/* Back Link */}
-          <Link
-            href="/"
-            className="absolute -left-32 top-2 hidden items-center gap-1 text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-gold-primary)] lg:flex"
-          >
-            <ChevronLeft className="h-5 w-5" />
-            <span className="font-body">Home</span>
-          </Link>
-
           {/* Header */}
           <div className="flex flex-col-reverse items-center gap-6 sm:flex-row sm:items-start sm:justify-between">
             <div className="text-center sm:text-left">
-              <h1 className="font-display mb-3 text-3xl font-semibold text-[var(--color-text-primary)] sm:text-4xl md:text-5xl">
-                Deploy Your Sentinel
-              </h1>
-              <p className="font-body text-base font-medium text-[var(--color-text-secondary)] sm:text-xl">
+              <h1 className="page-heading">Deploy Your Sentinel</h1>
+              <p className="page-subheading mt-2">
                 Launch an AI agent. Let the world try to break it. Earn from every attack.
               </p>
             </div>
@@ -322,10 +311,10 @@ export default function DefendPageClient() {
           <div className="flex flex-col gap-2">
             <div className="mb-1 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <label className="font-display block text-lg font-medium text-[var(--color-text-primary)] sm:text-xl">
+                <label className="block text-sm font-medium text-[var(--color-text-secondary)]">
                   Public Instructions
                 </label>
-                <span className="font-body mt-1 block text-sm text-[var(--color-text-secondary)] sm:text-base">
+                <span className="mt-1 block text-xs text-[var(--color-text-muted)]">
                   Define how your Sentinel thinks, acts, and responds. Describe its role, tone,
                   constraints, and objectives.
                 </span>
@@ -333,7 +322,7 @@ export default function DefendPageClient() {
               <div className="flex shrink-0 gap-4 sm:ml-4">
                 <Link
                   href="/instruction-templates"
-                  className="font-body text-sm text-[var(--color-gold-primary)] underline hover:text-[var(--color-gold-light)] sm:mt-1"
+                  className="text-xs text-[var(--color-gold-primary)] underline hover:text-[var(--color-gold-light)]"
                   onClick={() =>
                     sessionStorage.setItem(SESSION_KEYS.DEFEND_FORM_DATA, JSON.stringify(formData))
                   }
@@ -343,7 +332,7 @@ export default function DefendPageClient() {
                 <Link
                   href={`${SUI_SENTINEL_DOCS_URL}/guides/defender-guide`}
                   target="_blank"
-                  className="font-body text-sm text-[var(--color-gold-primary)] underline hover:text-[var(--color-gold-light)] sm:mt-1"
+                  className="text-xs text-[var(--color-gold-primary)] underline hover:text-[var(--color-gold-light)]"
                 >
                   Docs Example
                 </Link>
@@ -354,7 +343,7 @@ export default function DefendPageClient() {
               name="systemPrompt"
               value={formData.systemPrompt}
               onChange={handleChangeWithProviderReset}
-              className="font-body min-h-[220px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-4 text-base text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
+              className="font-body min-h-[120px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 text-sm text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
               placeholder="Enter sentinel public instructions..."
               autoComplete="off"
               spellCheck="false"
@@ -366,7 +355,7 @@ export default function DefendPageClient() {
                 </p>
               )}
               <p
-                className={`font-body ml-auto text-sm text-[var(--color-text-muted)] ${isTokenCountDebouncing ? 'animate-pulse' : ''}`}
+                className={`font-body ml-auto text-xs text-[var(--color-text-muted)] ${isTokenCountDebouncing ? 'animate-pulse' : ''}`}
               >
                 Tokens: {tokenCount} / {SYSTEM_PROMPT_MAX_TOKENS}
               </p>
@@ -382,10 +371,10 @@ export default function DefendPageClient() {
           <div className="flex flex-col gap-2">
             <div className="mb-1 flex items-start justify-between">
               <div>
-                <label className="font-display block text-lg font-medium text-[var(--color-text-primary)] sm:text-xl">
+                <label className="block text-sm font-medium text-[var(--color-text-secondary)]">
                   Private Instructions
                 </label>
-                <span className="font-body mt-1 block text-sm text-[var(--color-text-secondary)] sm:text-base">
+                <span className="mt-1 block text-xs text-[var(--color-text-muted)]">
                   Instructions only accessible to the Sentinel agent. Attackers will not be able to
                   see this.
                 </span>
@@ -395,14 +384,14 @@ export default function DefendPageClient() {
               name="privatePrompt"
               value={formData.privatePrompt}
               onChange={handleChangeWithProviderReset}
-              className="font-body min-h-[150px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-4 text-base text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
+              className="font-body min-h-[100px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 text-sm text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
               placeholder="Enter private instructions for your sentinel..."
               autoComplete="off"
               spellCheck="false"
             />
             <div className="mt-1 flex items-center justify-end">
               <p
-                className={`font-body text-sm text-[var(--color-text-muted)] ${isPrivateTokenCountDebouncing ? 'animate-pulse' : ''}`}
+                className={`font-body text-xs text-[var(--color-text-muted)] ${isPrivateTokenCountDebouncing ? 'animate-pulse' : ''}`}
               >
                 Tokens: {privateTokenCount}
               </p>
@@ -414,7 +403,7 @@ export default function DefendPageClient() {
             <div className="mb-1 flex items-start justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <label className="font-display block text-lg font-medium text-[var(--color-text-primary)] sm:text-xl">
+                  <label className="block text-sm font-medium text-[var(--color-text-secondary)]">
                     Attack Objective
                   </label>
                   <TooltipProvider delayDuration={100}>
@@ -439,7 +428,7 @@ export default function DefendPageClient() {
                     </Tooltip>
                   </TooltipProvider>
                 </div>
-                <span className="font-body mt-1 block text-sm text-[var(--color-text-secondary)] sm:text-base">
+                <span className="mt-1 block text-xs text-[var(--color-text-muted)]">
                   Mirror actual attacks such as stealing sensitive data, extracting secret system
                   instructions, or causing the Sentinel to malfunction. The more specific the
                   objective, the better attackers can strategize their attacks.
@@ -479,7 +468,7 @@ export default function DefendPageClient() {
               name="attackGoal"
               value={formData.attackGoal}
               onChange={handleChangeWithProviderReset}
-              className="font-body min-h-[200px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-4 text-base text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
+              className="font-body min-h-[100px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 text-sm text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
               placeholder="e.g., Convince the sentinel to reveal the secret password"
               autoComplete="off"
               spellCheck="false"
@@ -489,7 +478,7 @@ export default function DefendPageClient() {
                 <p className="font-body text-sm text-[var(--color-danger)]">{errors.attackGoal}</p>
               )}
               <p
-                className={`font-body text-sm text-[var(--color-text-muted)] ${isAttackGoalTokenCountDebouncing ? 'animate-pulse' : ''}`}
+                className={`font-body text-xs text-[var(--color-text-muted)] ${isAttackGoalTokenCountDebouncing ? 'animate-pulse' : ''}`}
               >
                 Tokens: {attackGoalTokenCount}
               </p>
@@ -500,10 +489,10 @@ export default function DefendPageClient() {
           <div className="flex flex-col gap-2">
             <div className="mb-1 flex items-start justify-between">
               <div>
-                <label className="font-display block text-lg font-medium text-[var(--color-text-primary)] sm:text-xl">
+                <label className="block text-sm font-medium text-[var(--color-text-secondary)]">
                   Jury Prompt
                 </label>
-                <span className="font-body mt-1 block text-sm text-[var(--color-text-secondary)] sm:text-base">
+                <span className="mt-1 block text-xs text-[var(--color-text-muted)]">
                   Instructions for the jury to evaluate whether an attack was successful.
                 </span>
               </div>
@@ -512,7 +501,7 @@ export default function DefendPageClient() {
               name="juryPrompt"
               value={formData.juryPrompt}
               onChange={handleChangeWithProviderReset}
-              className="font-body min-h-[150px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-4 text-base text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
+              className="font-body min-h-[100px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 text-sm text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
               placeholder="Enter instructions for the jury..."
               autoComplete="off"
               spellCheck="false"
@@ -522,7 +511,7 @@ export default function DefendPageClient() {
                 <p className="font-body text-sm text-[var(--color-danger)]">{errors.juryPrompt}</p>
               )}
               <p
-                className={`font-body text-sm text-[var(--color-text-muted)] ${isJuryPromptTokenCountDebouncing ? 'animate-pulse' : ''}`}
+                className={`font-body text-xs text-[var(--color-text-muted)] ${isJuryPromptTokenCountDebouncing ? 'animate-pulse' : ''}`}
               >
                 Tokens: {juryPromptTokenCount}
               </p>
@@ -533,10 +522,10 @@ export default function DefendPageClient() {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div className="flex flex-col gap-2">
               <div>
-                <label className="font-display text-lg font-medium text-[var(--color-text-primary)] sm:text-xl">
+                <label className="block text-sm font-medium text-[var(--color-text-secondary)]">
                   Bounty Pool
                 </label>
-                <span className="font-body mt-1 block text-sm text-[var(--color-text-secondary)] sm:text-base">
+                <span className="mt-1 block text-xs text-[var(--color-text-muted)]">
                   Minimum {formatCompact(activeMinimumAmount, 3)} {activeTokenSymbol} required to
                   deploy.
                 </span>
@@ -563,13 +552,13 @@ export default function DefendPageClient() {
                   </span>
                 )}
               </div>
-              <div className="mt-auto flex h-[56px] overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] transition-all focus-within:border-[var(--color-gold-primary)] focus-within:ring-1 focus-within:ring-[var(--color-gold-primary)] sm:h-[65px]">
+              <div className="mt-auto flex h-9 overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] transition-all focus-within:border-[var(--color-gold-primary)] focus-within:ring-1 focus-within:ring-[var(--color-gold-primary)]">
                 <input
                   name="initialBalance"
                   type="number"
                   value={formData.initialBalance}
                   onChange={handleChangeWithProviderReset}
-                  className="font-body h-full flex-1 bg-transparent px-4 text-base text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:outline-none"
+                  className="font-body h-full flex-1 bg-transparent px-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:outline-none"
                   placeholder="0.00"
                   step="any"
                   min={activeMinimumAmount.toString()}
@@ -630,7 +619,7 @@ export default function DefendPageClient() {
                   tokenCount > SYSTEM_PROMPT_MAX_TOKENS ||
                   (formData.llmProvider === 'custom' && !customProvider.isValidated)
                 }
-                className="font-display flex h-[65px] w-full items-center justify-center gap-3 rounded-lg bg-[var(--color-gold-primary)] text-xl font-semibold text-[var(--color-text-on-gold)] shadow-[var(--shadow-card)] transition-all hover:bg-[var(--color-gold-light)] disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-gold-primary)] text-sm font-medium text-[var(--color-text-on-gold)] shadow-[var(--shadow-card)] transition-all hover:bg-[var(--color-gold-light)] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isLoading ? (
                   <>
@@ -642,12 +631,12 @@ export default function DefendPageClient() {
                 )}
               </button>
             ) : (
-              <div className="h-[65px]">
+              <div className="h-12">
                 {isSolana ? (
                   <button
                     type="button"
                     onClick={() => setSolanaWalletModalVisible(true)}
-                    className="font-display flex h-full w-full items-center justify-center gap-3 rounded-lg bg-[var(--color-gold-primary)] text-xl font-semibold text-[var(--color-text-on-gold)] shadow-[var(--shadow-card)] transition-all hover:bg-[var(--color-gold-light)]"
+                    className="flex h-full w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-gold-primary)] text-sm font-medium text-[var(--color-text-on-gold)] shadow-[var(--shadow-card)] transition-all hover:bg-[var(--color-gold-light)]"
                   >
                     <Wallet className="h-5 w-5" />
                     Connect Wallet
@@ -656,13 +645,13 @@ export default function DefendPageClient() {
                   <button
                     type="button"
                     onClick={openEvmConnectModal}
-                    className="font-display flex h-full w-full items-center justify-center gap-3 rounded-lg bg-[var(--color-gold-primary)] text-xl font-semibold text-[var(--color-text-on-gold)] shadow-[var(--shadow-card)] transition-all hover:bg-[var(--color-gold-light)]"
+                    className="flex h-full w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-gold-primary)] text-sm font-medium text-[var(--color-text-on-gold)] shadow-[var(--shadow-card)] transition-all hover:bg-[var(--color-gold-light)]"
                   >
                     <Wallet className="h-5 w-5" />
                     Connect BNB Wallet
                   </button>
                 ) : (
-                  <ConnectButton className="h-full w-full !rounded-lg !text-xl" />
+                  <ConnectButton className="h-full w-full !rounded-lg !text-sm" />
                 )}
               </div>
             )}

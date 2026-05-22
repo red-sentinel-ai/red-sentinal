@@ -2,8 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import NextTopLoader from 'nextjs-toploader'
 import { Toaster } from 'sonner'
-import localFont from 'next/font/local'
-import { Cinzel, Josefin_Sans, JetBrains_Mono } from 'next/font/google'
+import { Inter, JetBrains_Mono } from 'next/font/google'
 
 import './globals.css'
 import '@rainbow-me/rainbowkit/styles.css'
@@ -11,17 +10,9 @@ import { Providers } from './providers'
 import { FloatingHelpButton } from '@/components/FloatingHelpButton'
 import { SUI_SENTINEL_APP_URL, SUI_SENTINEL_X_USERNAME, SUI_SENTINEL_GITHUB_URL } from '@/constants'
 
-// Light Theme Fonts
-const cinzel = Cinzel({
+const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-cinzel',
-  display: 'swap',
-  weight: ['400', '500', '600', '700'],
-})
-
-const josefin = Josefin_Sans({
-  subsets: ['latin'],
-  variable: '--font-josefin',
+  variable: '--font-inter',
   display: 'swap',
   weight: ['300', '400', '500', '600', '700'],
 })
@@ -32,22 +23,13 @@ const jetbrainsMono = JetBrains_Mono({
   display: 'swap',
 })
 
-const satoshi = localFont({
-  src: [
-    { path: '../public/fonts/Satoshi-Variable.ttf', style: 'normal' },
-    { path: '../public/fonts/Satoshi-VariableItalic.ttf', style: 'italic' },
-  ],
-  variable: '--font-satoshi',
-  display: 'swap',
-})
-
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
   viewportFit: 'cover',
-  themeColor: '#F5F1EB',
+  themeColor: '#100f0f',
 }
 
 export const metadata: Metadata = {
@@ -289,11 +271,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body
-        className={`${satoshi.className} ${cinzel.variable} ${josefin.variable} ${jetbrainsMono.variable} flex min-h-screen flex-col bg-[var(--color-bg-base)] text-[var(--color-text-primary)]`}
-        style={{ fontFamily: 'var(--font-body)' }}
+        className={`${inter.variable} ${jetbrainsMono.variable} flex min-h-screen flex-col bg-[var(--color-bg-base)] text-[var(--color-text-primary)]`}
       >
         <Providers>
-          <NextTopLoader color="#000000" showSpinner={false} />
+          <NextTopLoader color="#c8384f" showSpinner={false} />
           <main className="w-full flex-grow">{children}</main>
           {/* <Footer /> */}
           <FloatingHelpButton />
@@ -301,13 +282,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             position="top-right"
             toastOptions={{
               style: {
-                background: '#fff',
-                border: '1px solid rgba(0,0,0,0.08)',
+                background: '#1a1919',
+                border: '1px solid rgba(255,255,255,0.08)',
                 borderRadius: '12px',
                 padding: '12px 16px',
                 fontSize: '14px',
                 fontWeight: '500',
-                boxShadow: '0 4px 24px -2px rgba(0,0,0,0.1)',
+                color: '#ffffff',
+                boxShadow: '0 4px 24px rgba(0,0,0,0.5)',
               },
             }}
             mobileOffset={{ top: 80, right: 16 }}

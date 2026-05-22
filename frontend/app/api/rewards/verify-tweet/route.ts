@@ -8,21 +8,25 @@ import {
 
 export async function POST(req: NextRequest) {
   try {
-    const { wallet_address, tweet_url, agent_name, agent_id } = await req.json()
+    const { wallet_address: raw_wallet_address, tweet_url, agent_name, agent_id } = await req.json()
+    const wallet_address = raw_wallet_address?.toLowerCase()
 
     if (!wallet_address || !tweet_url) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    const { data: user, error: userError } = await supabaseServiceClient
-      .from('ss_users')
-      .select('id, username')
-      .contains('wallet_addresses', [wallet_address])
+    // Find user by wallet address via ss_wallet_connections
+    const { data: walletConnection, error: walletError } = await supabaseServiceClient
+      .from('ss_wallet_connections')
+      .select('user_id, ss_users(id, username)')
+      .eq('wallet_address', wallet_address)
       .single()
 
-    if (userError || !user) {
+    if (walletError || !walletConnection?.ss_users) {
       return NextResponse.json({ error: 'User profile not found' }, { status: 404 })
     }
+
+    const user = walletConnection.ss_users as { id: string; username: string }
 
     const { error: dbError } = await supabaseServiceClient.from('ss_rewards_activity').insert({
       user_id: user.id,

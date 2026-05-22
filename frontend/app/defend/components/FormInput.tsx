@@ -42,13 +42,13 @@ export const FormInput: React.FC<FormInputProps> = ({
       <div className="flex items-start justify-between">
         <div className="flex flex-col">
           <div className="flex items-center gap-2">
-            <label className="font-display text-lg font-medium leading-tight text-[var(--color-text-primary)] sm:text-xl">
+            <label className="text-sm font-medium text-[var(--color-text-secondary)]">
               {label}
             </label>
             {rightElement}
           </div>
           {subLabel && (
-            <span className="font-body mt-1 text-sm text-[var(--color-text-secondary)] sm:text-base">
+            <span className="mt-0.5 text-xs text-[var(--color-text-muted)]">
               {subLabel}
             </span>
           )}
@@ -60,8 +60,8 @@ export const FormInput: React.FC<FormInputProps> = ({
         type={isTextarea ? undefined : type}
         value={value}
         onChange={onChange}
-        className={`font-body w-full rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-4 text-base text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] transition-all focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)] ${
-          isTextarea ? 'min-h-[200px] resize-none' : 'h-[56px] sm:h-[65px]'
+        className={`font-body w-full rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] transition-all focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)] ${
+          isTextarea ? 'min-h-[120px] resize-y' : 'h-9'
         }`}
         placeholder={placeholder}
         required={required}

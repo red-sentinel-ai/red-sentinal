@@ -19,7 +19,7 @@ export function ChainSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-2 rounded-full border border-[var(--color-text-primary)] px-3 py-2 text-sm font-medium text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-bg-subtle)]">
+        <button className="flex items-center gap-2 rounded-full border border-[var(--color-border-default)] px-3 py-1.5 text-sm font-medium text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-border-strong)] hover:bg-[var(--color-bg-subtle)] hover:text-[var(--color-text-primary)]">
           <Image
             src={active.icon}
             alt={active.name}

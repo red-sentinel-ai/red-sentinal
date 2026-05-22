@@ -1,30 +1,39 @@
 'use client'
 
 import { useState } from 'react'
-import { AgentsList } from './AgentsList'
-import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import { Loader2, X } from 'lucide-react'
 
-import { FeaturedAgentCard } from './FeaturedAgentCard'
-import { FeaturedAgentsSkeleton } from './ui/skeletons/FeaturedAgentsSkeleton'
+import { AgentsList } from './AgentsList'
 import { useAllAgents, SortField, SortDirection } from '@/hooks/agents/useAllAgents'
 import { useFeaturedAgents } from '@/hooks/agents/useFeaturedAgents'
+import { useTrendingAgents } from '@/hooks/agents/useTrendingAgents'
 import { useAgentCoinTypes } from '@/hooks/agents/useAgentCoinTypes'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { TEXT_COPIES } from '@/constants/text_copies'
-import { useFundAgentModal } from '@/hooks/useFundAgentModal'
-import { useWithdrawAgentModal } from '@/hooks/agents/useWithdrawAgentModal'
-import { useFeatureAgentModal } from '@/hooks/useFeatureAgentModal'
 import { TokenFilterDropdown } from '@/components/agents/TokenFilterDropdown'
 import { ChainFilterDropdown } from '@/components/agents/ChainFilterDropdown'
 import { type SupportedChain, CHAINS } from '@/constants/chains'
 import { getTokenForCoinType } from '@/constants'
+import { AttackStats } from '@/components/attack/AttackStats'
+import { SentinelMarquee } from '@/components/attack/SentinelMarquee'
+import { SentinelRowSkeleton } from '@/components/attack/SentinelRowSkeleton'
+import { AnimatePresence, motion } from 'framer-motion'
+import { ChainLogos } from './ui/common/ChainLogos'
 
 const BIG_BOUNTY_THRESHOLD_MIST = BigInt(20_000_000_000) // 20 SUI
 
 type BountyTab = 'all' | 'big_bounties'
+
+// A sentinel is browsable in a row when it's active and not in a withdrawal
+// (attack-paused) window.
+function isBrowsable(agent: { state: string; unlock_timestamp?: string | number }) {
+  if (agent.state === 'defeated') return false
+  const unlockTs = Number(agent.unlock_timestamp)
+  const isAttackPaused = unlockTs > 0 && unlockTs <= Date.now()
+  return !isAttackPaused
+}
 
 export const AgentListView = () => {
   const [activeTab, setActiveTab] = useState<BountyTab>('all')
@@ -32,11 +41,6 @@ export const AgentListView = () => {
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
   const [selectedSymbol, setSelectedSymbol] = useState<string | undefined>(undefined)
   const [selectedChain, setSelectedChain] = useState<SupportedChain | undefined>(undefined)
-
-  // Single instance of modals at parent level to avoid duplicate hook calls
-  const { Modal: FundModal, openModal: openFundModal } = useFundAgentModal()
-  const { Modal: WithdrawModal, openModal: openWithdrawModal } = useWithdrawAgentModal()
-  const { Modal: FeatureModal, openModal: openFeatureModal } = useFeatureAgentModal()
 
   const {
     data: allAgentsData,
@@ -46,25 +50,20 @@ export const AgentListView = () => {
     isFetchingNextPage,
   } = useAllAgents(sortField, sortDirection, undefined, true, selectedChain)
 
-  const { data: featuredAgents, isPending: isFetchingFeaturedAgents } = useFeaturedAgents(true)
+  const { data: featuredAgents, isPending: isFetchingFeatured } = useFeaturedAgents(true)
+  const { data: trendingAgents, isPending: isFetchingTrending } = useTrendingAgents(true)
   const { data: availableTokens = [] } = useAgentCoinTypes()
 
   // Flatten all pages of agents
   const allAgents = allAgentsData?.pages.flatMap(page => page.agents) || []
   const totalAgents = allAgentsData?.pages[0]?.total ?? 0
 
-  const activeFeaturedAgents = [...(featuredAgents?.filter(agent => {
-    if (agent.state === 'defeated') return false
-    const unlockTs = Number(agent.unlock_timestamp)
-    const isAttackPaused = unlockTs > 0 && unlockTs <= Date.now()
-    return !isAttackPaused
-  }) || [])].sort(
-    (a, b) => {
-      if (a.chain === 'solana' && b.chain !== 'solana') return -1
-      if (a.chain !== 'solana' && b.chain === 'solana') return 1
-      return 0
-    },
-  )
+  const featuredForRow = (featuredAgents || []).filter(isBrowsable)
+  const featuredIds = new Set(featuredForRow.map(a => a.agent_id))
+
+  const trendingForRow = (trendingAgents || [])
+    .filter(isBrowsable)
+    .filter(a => !featuredIds.has(a.agent_id))
 
   const filteredAgents = (() => {
     let base =
@@ -107,69 +106,71 @@ export const AgentListView = () => {
   const selectedToken = availableTokens.find(t => t.symbol === selectedSymbol)
 
   return (
-    <div className="mx-auto max-w-[1560px] px-2 py-4 md:px-8 md:py-16">
-      <div className="mb-4 md:mb-20">
-        <h1
-          className="font-display hidden text-center text-2xl font-bold text-[var(--color-text-primary)] sm:text-4xl md:block md:text-5xl"
-          id="leaderboard"
-        >
-          Enter the Arena
-        </h1>
-        <div className="mx-auto my-3 flex max-w-[800px] md:my-4">
-          <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-[var(--color-border-subtle)]"></div>
-          <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-[var(--color-border-subtle)]"></div>
-        </div>
-        <p className="font-body mx-auto hidden max-w-[650px] px-4 text-center text-base text-[var(--color-text-secondary)] sm:text-xl md:block">
-          Select a Sentinel, engineer your attack, and claim the bounty. Verified on-chain, paid
-          instantly.
+    <div className="mx-auto max-w-[1560px] px-4 py-6 md:px-8 md:py-10">
+      <div className="mb-8 md:mb-12">
+        <h1 className="page-heading text-center">Prepare Yourself for Age of Agents</h1>
+        <p className="page-subheading mt-2 text-center">
+          Agents are already in our life. Learn how they think, where they break, and how to
+          outsmart them by actually doing it.
         </p>
       </div>
+      <AnimatePresence mode="wait">
+        <motion.div
+          className="mt-4 flex justify-center"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
+        >
+          <ChainLogos />
+        </motion.div>
+      </AnimatePresence>
 
-      {isFetchingFeaturedAgents ? (
-        <FeaturedAgentsSkeleton />
-      ) : (
-        <>
-          {activeFeaturedAgents?.length > 0 && (
-            <div className="mb-8 md:mb-16">
-              <div className="mb-4 md:mb-8">
-                <h2 className="font-display mb-2 text-xl font-medium text-[var(--color-text-primary)] md:text-3xl">
-                  Featured Sentinels
-                </h2>
-                <p className="font-body text-sm text-[var(--color-text-secondary)] md:text-base">
-                  Curated high-value targets. Bigger pools, proven resilience. The prestige kills.
-                </p>
-              </div>
+      <div className="mb-10 md:mb-14">
+        <AttackStats />
+      </div>
 
-              <AnimatePresence mode="wait">
-                <motion.div
-                  className="mx-auto grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {activeFeaturedAgents.map((agent, index) => (
-                    <FeaturedAgentCard
-                      key={agent.agent_id}
-                      agent={agent}
-                      index={index}
-                      ctaHeading="Attack Sentinel"
-                      onFund={openFundModal}
-                      onWithdraw={openWithdrawModal}
-                      onFeature={openFeatureModal}
-                    />
-                  ))}
-                </motion.div>
-              </AnimatePresence>
-            </div>
+      {(isFetchingFeatured || featuredForRow.length > 0) && (
+        <section className="mb-10 md:mb-14">
+          <div className="mb-4 md:mb-6">
+            <h2 className="text-base font-medium text-[var(--color-text-primary)]">
+              Featured Sentinels
+            </h2>
+            <p className="text-xs text-[var(--color-text-muted)]">
+              Curated high-value targets. Bigger pools, proven resilience.
+            </p>
+          </div>
+          {isFetchingFeatured ? (
+            <SentinelRowSkeleton />
+          ) : (
+            <SentinelMarquee agents={featuredForRow} variant="featured" />
           )}
-        </>
+        </section>
+      )}
+
+      {/* Trending Sentinels — auto-scrolling row (deduped against Featured) */}
+      {(isFetchingTrending || trendingForRow.length > 0) && (
+        <section className="mb-10 md:mb-14">
+          <div className="mb-4 md:mb-6">
+            <h2 className="text-base font-medium text-[var(--color-text-primary)]">
+              Trending Sentinels
+            </h2>
+            <p className="text-xs text-[var(--color-text-muted)]">
+              The most-attacked sentinels right now. Where the action is.
+            </p>
+          </div>
+          {isFetchingTrending ? (
+            <SentinelRowSkeleton />
+          ) : (
+            <SentinelMarquee agents={trendingForRow} variant="trending" />
+          )}
+        </section>
       )}
 
       <div>
         <div className="mb-3 flex flex-col gap-3 md:mb-6 md:flex-row md:items-center md:justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="font-display text-lg font-medium text-[var(--color-text-primary)] md:text-3xl">
+              <h2 className="text-base font-medium text-[var(--color-text-primary)]">
                 All Sentinels
               </h2>
               {!isFetchingAllAgents && totalAgents > 0 && (
@@ -184,10 +185,7 @@ export const AgentListView = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <ChainFilterDropdown
-              selectedChain={selectedChain}
-              onSelect={setSelectedChain}
-            />
+            <ChainFilterDropdown selectedChain={selectedChain} onSelect={setSelectedChain} />
             <TokenFilterDropdown
               availableTokens={availableTokens}
               selectedSymbol={selectedSymbol}
@@ -217,87 +215,82 @@ export const AgentListView = () => {
             </Tabs>
           </div>
         </div>
-      </div>
 
-      {(selectedSymbol || selectedChain) && (
-        <div className="mb-3 flex flex-wrap items-center gap-2">
-          <span className="font-body text-xs text-[var(--color-text-muted)]">Filtered by:</span>
-          {selectedChain && (
-            <span className="font-body flex items-center gap-1.5 rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] px-2.5 py-0.5 text-xs font-medium text-[var(--color-text-primary)]">
-              <Image
-                src={CHAINS[selectedChain].icon}
-                alt={CHAINS[selectedChain].name}
-                width={14}
-                height={14}
-                className="rounded-full"
-              />
-              {CHAINS[selectedChain].name}
-              <button
-                onClick={() => setSelectedChain(undefined)}
-                className="ml-0.5 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
-              >
-                <X className="h-3 w-3" />
-              </button>
-            </span>
-          )}
-          {selectedSymbol && selectedToken && (
-            <span className="font-body flex items-center gap-1.5 rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] px-2.5 py-0.5 text-xs font-medium text-[var(--color-text-primary)]">
-              <Image
-                src={selectedToken.icon}
-                alt={selectedToken.symbol}
-                width={14}
-                height={14}
-                className="rounded-full"
-              />
-              {selectedToken.symbol}
-              <button
-                onClick={() => setSelectedSymbol(undefined)}
-                className="ml-0.5 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
-              >
-                <X className="h-3 w-3" />
-              </button>
-            </span>
-          )}
-        </div>
-      )}
-
-      <AgentsList
-        agents={filteredAgents}
-        isFetchingAgents={isFetchingAllAgents}
-        sortField={sortField}
-        sortDirection={sortDirection}
-        onSort={handleSort}
-      />
-
-      {/* Load More Button */}
-      {hasNextPage && !isFetchingAllAgents && (
-        <div className="mt-6 flex justify-center">
-          <Button
-            onClick={() => fetchNextPage()}
-            disabled={isFetchingNextPage}
-            variant="outline"
-            className="font-body min-w-[200px] border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-subtle)] hover:text-[var(--color-text-primary)]"
-          >
-            {isFetchingNextPage ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Loading...
-              </>
-            ) : (
-              'Load More'
+        {(selectedSymbol || selectedChain) && (
+          <div className="mb-3 flex flex-wrap items-center gap-2">
+            <span className="font-body text-xs text-[var(--color-text-muted)]">Filtered by:</span>
+            {selectedChain && (
+              <span className="font-body flex items-center gap-1.5 rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] px-2.5 py-0.5 text-xs font-medium text-[var(--color-text-primary)]">
+                <Image
+                  src={CHAINS[selectedChain].icon}
+                  alt={CHAINS[selectedChain].name}
+                  width={14}
+                  height={14}
+                  className="rounded-full"
+                />
+                {CHAINS[selectedChain].name}
+                <button
+                  onClick={() => setSelectedChain(undefined)}
+                  className="ml-0.5 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </span>
             )}
-          </Button>
-        </div>
-      )}
+            {selectedSymbol && selectedToken && (
+              <span className="font-body flex items-center gap-1.5 rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] px-2.5 py-0.5 text-xs font-medium text-[var(--color-text-primary)]">
+                <Image
+                  src={selectedToken.icon}
+                  alt={selectedToken.symbol}
+                  width={14}
+                  height={14}
+                  className="rounded-full"
+                />
+                {selectedToken.symbol}
+                <button
+                  onClick={() => setSelectedSymbol(undefined)}
+                  className="ml-0.5 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </span>
+            )}
+          </div>
+        )}
 
-      <p className="font-body mt-4 text-xs text-[var(--color-text-muted)]">
-        {TEXT_COPIES.LOW_POOL_BALANCE_HIDDEN_MESSAGE}
-      </p>
+        <AgentsList
+          agents={filteredAgents}
+          isFetchingAgents={isFetchingAllAgents}
+          sortField={sortField}
+          sortDirection={sortDirection}
+          onSort={handleSort}
+        />
 
-      {/* Single instance of modals - prevents duplicate hook calls */}
-      <FundModal onSuccess={() => console.log('Funded successfully!')} />
-      <WithdrawModal onSuccess={() => console.log('Withdrew successfully!')} />
-      <FeatureModal />
+        {/* Load More Button */}
+        {hasNextPage && !isFetchingAllAgents && (
+          <div className="mt-6 flex justify-center">
+            <Button
+              onClick={() => fetchNextPage()}
+              disabled={isFetchingNextPage}
+              variant="outline"
+              className="font-body min-w-[200px] border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-subtle)] hover:text-[var(--color-text-primary)]"
+            >
+              {isFetchingNextPage ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Loading...
+                </>
+              ) : (
+                'Load More'
+              )}
+            </Button>
+          </div>
+        )}
+
+        <p className="font-body mt-4 text-xs text-[var(--color-text-muted)]">
+          {TEXT_COPIES.LOW_POOL_BALANCE_HIDDEN_MESSAGE}
+        </p>
+      </div>
     </div>
   )
 }

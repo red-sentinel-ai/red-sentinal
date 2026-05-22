@@ -12,7 +12,7 @@ const SES_CONFIG = {
 const sesClient = new SESClient(SES_CONFIG);
 
 export const sendManifestoConfirmationEmail = async (toEmail: string) => {
-  const fromAddress = process.env.AWS_FROM_EMAIL || "updates@suisentinel.xyz";
+  const fromAddress = process.env.AWS_FROM_EMAIL || "updates@redsentinel.xyz";
 
   if (!fromAddress) {
     throw new Error("AWS_FROM_EMAIL is not defined in environment variables");
@@ -134,7 +134,7 @@ export const sendManifestoConfirmationEmail = async (toEmail: string) => {
 };
 
 export const sendAmbassadorConfirmationEmail = async (toEmail: string) => {
-  const fromAddress = process.env.AWS_FROM_EMAIL || "updates@suisentinel.xyz";
+  const fromAddress = process.env.AWS_FROM_EMAIL || "updates@redsentinel.xyz";
 
   if (!fromAddress) {
     throw new Error("AWS_FROM_EMAIL is not defined in environment variables");
@@ -256,7 +256,7 @@ export const sendAmbassadorConfirmationEmail = async (toEmail: string) => {
 };
 
 export const sendDemoRequestConfirmationEmail = async (toEmail: string, firstName: string) => {
-  const fromAddress = process.env.AWS_FROM_EMAIL || "updates@suisentinel.xyz";
+  const fromAddress = process.env.AWS_FROM_EMAIL || "updates@redsentinel.xyz";
 
   if (!fromAddress) {
     throw new Error("AWS_FROM_EMAIL is not defined in environment variables");

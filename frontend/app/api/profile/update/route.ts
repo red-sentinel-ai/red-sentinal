@@ -2,14 +2,14 @@ import { NextResponse, NextRequest } from 'next/server'
 import { supabaseServiceClient } from '@/db/config/server'
 import type { Database } from '@/lib/database.types'
 
-type SsUsersUpdate = Database['public']['Tables']['ss_users']['Update']
+type SsUsersUpdate = Database['sentinel']['Tables']['ss_users']['Update']
 
 const AVATARS_BUCKET_NAME = 'ss-avatars'
 
 export async function PUT(request: NextRequest) {
   try {
     const formData = await request.formData()
-    const walletAddress = formData.get('walletAddress') as string
+    const walletAddress = (formData.get('walletAddress') as string)?.toLowerCase()
     const username = formData.get('username') as string
     const displayName = formData.get('displayName') as string
     const email = formData.get('email') as string | null
@@ -21,15 +21,18 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required text fields' }, { status: 400 })
     }
 
-    const { data: user, error: findError } = await supabaseServiceClient
-      .from('ss_users')
-      .select('id')
-      .contains('wallet_addresses', [walletAddress])
+    // Find user by wallet address via ss_wallet_connections
+    const { data: walletConnection, error: findError } = await supabaseServiceClient
+      .from('ss_wallet_connections')
+      .select('user_id')
+      .eq('wallet_address', walletAddress)
       .single()
 
-    if (findError || !user) {
+    if (findError || !walletConnection) {
       return NextResponse.json({ error: 'User not found or unauthorized' }, { status: 404 })
     }
+
+    const user = { id: walletConnection.user_id }
 
     const { data: existingUsername } = await supabaseServiceClient
       .from('ss_users')

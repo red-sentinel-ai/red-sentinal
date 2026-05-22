@@ -41,9 +41,9 @@ interface CustomTooltipProps {
 const CustomTooltip = ({ active, payload, label, tokenSymbol = 'SUI' }: CustomTooltipProps) => {
   if (active && payload && payload.length) {
     return (
-      <div className="rounded-lg border border-gray-300 bg-white/80 p-3 shadow-lg backdrop-blur-md">
-        <p className="text-xs text-gray-500">{format(new Date(label || 0), 'MMM d, yyyy p')}</p>
-        <p className="text-base font-bold text-black">{`${formatCompact(payload[0].value, 4)} ${tokenSymbol}`}</p>
+      <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-elevated)] p-3 shadow-lg backdrop-blur-md">
+        <p className="text-xs text-white/40">{format(new Date(label || 0), 'MMM d, yyyy p')}</p>
+        <p className="text-base font-bold text-white">{`${formatCompact(payload[0].value, 4)} ${tokenSymbol}`}</p>
       </div>
     )
   }
@@ -58,16 +58,16 @@ export const PrizePoolChartModal = ({
   tokenSymbol = 'SUI',
 }: PrizePoolChartModalProps) => {
   return (
-    <Dialog open={open} onClose={onClose} className="max-w-3xl border-gray-200 bg-white p-4 sm:p-6">
+    <Dialog open={open} onClose={onClose} className="max-w-3xl border-white/10 bg-[#1a1919] p-4 sm:p-6">
       <div className="mb-3 flex items-start justify-between sm:mb-4">
         <div>
-          <h2 className="flex items-center gap-2 text-base font-bold text-black sm:text-xl">
-            <TrendingUp className="size-5 text-[#1FAD57] sm:size-6" />
+          <h2 className="flex items-center gap-2 text-base font-bold text-white sm:text-xl">
+            <TrendingUp className="size-5 text-[#4ade80] sm:size-6" />
             Prize Pool History
           </h2>
-          <p className="text-sm text-gray-600 sm:text-base">For Sentinel: {agentName}</p>
+          <p className="text-sm text-white/50 sm:text-base">For Sentinel: {agentName}</p>
         </div>
-        <button onClick={onClose} className="text-gray-500 transition-colors hover:text-black">
+        <button onClick={onClose} className="text-white/40 transition-colors hover:text-white">
           <X className="size-5 sm:size-6" />
         </button>
       </div>
