@@ -15,7 +15,6 @@ export const useFeaturedAgents = (skipChainFilter?: boolean) => {
       const params = new URLSearchParams({
         is_featured: 'true',
         limit: '50',
-        include_prize_pool: 'true',
         min_balance: '1',
         status: 'active',
       })
@@ -36,6 +35,6 @@ export const useFeaturedAgents = (skipChainFilter?: boolean) => {
           : agent.agent_object_id,
       }))
     },
-    staleTime: 60 * 1000,
+    staleTime: 5 * 60 * 1000,
   })
 }

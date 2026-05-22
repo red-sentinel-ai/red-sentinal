@@ -28,7 +28,7 @@ export function TokenAmount({
   token,
   precision = 4,
   className,
-  iconSize = 16,
+  iconSize = 14,
 }: TokenAmountProps) {
   const value = Number(rawAmount) / Math.pow(10, token.decimals)
   const displayAmount = formatCompact(value, precision)

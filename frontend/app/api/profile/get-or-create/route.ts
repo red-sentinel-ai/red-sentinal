@@ -5,16 +5,20 @@ import { generateGradientAvatar } from '@/lib/utils'
 
 export async function POST(request: Request) {
   try {
-    const { walletAddress } = await request.json()
+    const { walletAddress: rawWalletAddress, chainType = 'sui', chainId } = await request.json()
 
-    if (!walletAddress) {
+    if (!rawWalletAddress) {
       return NextResponse.json({ error: 'Wallet address is required' }, { status: 400 })
     }
 
-    const { data: existingUser, error: findError } = await supabaseServiceClient
-      .from('ss_users')
-      .select('*')
-      .contains('wallet_addresses', [walletAddress])
+    const walletAddress = rawWalletAddress.toLowerCase()
+
+    // Find existing user by wallet address in ss_wallet_connections
+    const { data: existingWallet, error: findError } = await supabaseServiceClient
+      .from('ss_wallet_connections')
+      .select('user_id, ss_users(*)')
+      .eq('wallet_address', walletAddress)
+      .eq('chain_type', chainType)
       .single()
 
     if (findError && findError.code !== 'PGRST116') {
@@ -22,10 +26,11 @@ export async function POST(request: Request) {
       throw findError
     }
 
-    if (existingUser) {
-      return NextResponse.json(existingUser)
+    if (existingWallet?.ss_users) {
+      return NextResponse.json(existingWallet.ss_users)
     }
 
+    // Generate unique username
     let newUsername = ''
     let isUsernameUnique = false
     let attempts = 0
@@ -50,10 +55,10 @@ export async function POST(request: Request) {
 
     const avatarUrl = generateGradientAvatar(walletAddress)
 
+    // Create user in ss_users
     const { data: newUser, error: createError } = await supabaseServiceClient
       .from('ss_users')
       .insert({
-        wallet_addresses: [walletAddress],
         username: newUsername,
         display_name: newUsername,
         avatar_url: avatarUrl,
@@ -63,6 +68,21 @@ export async function POST(request: Request) {
 
     if (createError) {
       throw createError
+    }
+
+    // Add wallet to ss_wallet_connections
+    const { error: walletError } = await supabaseServiceClient.from('ss_wallet_connections').insert({
+      user_id: newUser.id,
+      chain_type: chainType,
+      chain_id: chainId || null,
+      wallet_address: walletAddress,
+      is_primary: true,
+    })
+
+    if (walletError) {
+      // Rollback user creation if wallet insert fails
+      await supabaseServiceClient.from('ss_users').delete().eq('id', newUser.id)
+      throw walletError
     }
 
     return NextResponse.json(newUser)

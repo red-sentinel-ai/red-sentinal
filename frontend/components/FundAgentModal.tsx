@@ -133,12 +133,12 @@ export const FundAgentModal = ({
   return (
     <Dialog open={open} onClose={handleClose}>
       {funded ? (
-        <div className="space-y-5 text-center">
+        <div className="space-y-4 text-center">
           <div className="flex items-center justify-between">
-            <span className="w-6" />
-            <h2 className="flex-grow text-center text-xl font-bold">Sentinel Funded!</h2>
+            <span className="w-4" />
+            <h2 className="flex-grow text-center text-sm font-semibold text-[var(--color-text-primary)]">Sentinel Funded!</h2>
             <button onClick={handleClose} className="text-[var(--color-text-faint)] transition-colors hover:text-[var(--color-text-primary)]">
-              <X className="h-6 w-6" />
+              <X className="h-4 w-4" />
             </button>
           </div>
 
@@ -166,19 +166,19 @@ export const FundAgentModal = ({
           </Link>
         </div>
       ) : (
-        <div className="space-y-5">
+        <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold">Fund Your Sentinel</h2>
+            <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">Fund Your Sentinel</h2>
             <button
               onClick={handleClose}
               className="text-[var(--color-text-faint)] transition-colors hover:text-[var(--color-text-primary)]"
               disabled={isLoading}
             >
-              <X className="h-6 w-6" />
+              <X className="h-4 w-4" />
             </button>
           </div>
 
-          <p className="text-[var(--color-text-secondary)]">
+          <p className="text-xs text-[var(--color-text-secondary)]">
             Add funds to your reward pool to list your sentinel on the attack page. The bigger the
             bounty, the more attackers you&apos;ll attract.
           </p>
@@ -202,7 +202,7 @@ export const FundAgentModal = ({
             {error && <p className="mt-1 text-sm text-[var(--color-danger)]">{error}</p>}
           </div>
 
-          <p className="flex items-center gap-1 text-xs text-[var(--color-text-muted)]">
+          <p className="flex items-center gap-1 text-[11px] text-[var(--color-text-muted)]">
             Sentinels with less than 0.1
             <Image src={token.icon} alt={tokenSymbol} width={12} height={12} className="rounded-full" />
             {tokenSymbol} balance won&apos;t be visible to attackers.

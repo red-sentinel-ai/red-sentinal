@@ -1,20 +1,22 @@
-# CLAUDE.md
-
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
 ## Project Overview
 
-**Red Sentinel** is a decentralized AI security platform built on Sui blockchain. Users create AI agents ("sentinels") that must resist prompt injection attacks, or attack other agents to claim bounties.
+Red Sentinel is a crowdsourced, gamified AI red teaming platform. We are building on the premise that AI agents are everywhere in 2026 and we all need to learn how these agents behave and learn about security as well.
+
+As a user, you can interact with Red Sentinel platform by either launching a sentinel (defend) or attacking existing sentinels.
+
+**Multi-Chain Support:**
+- **Sui** - Primary chain, fully supported (mainnet + testnet)
+- **Solana** - Supported with wallet integration
+- **EVM** - Supported with wallet integration
 
 **Tech Stack:**
 - Next.js 15 (App Router) + TypeScript
 - Bun (package manager)
 - Tailwind CSS + shadcn/ui components
-- @mysten/dapp-kit (Sui blockchain SDK)
 - Supabase (PostgreSQL database)
 - NextAuth.js (Twitter & Discord OAuth)
 - React Query (@tanstack/react-query)
-- Slush wallet integration
+- @mysten/dapp-kit (Sui wallet)
 
 **Development Commands:**
 ```bash
@@ -26,41 +28,102 @@ bun lint                 # Run ESLint
 bun run generate:types:prod  # Generate Supabase TypeScript types from database
 ```
 
+## Quick Start
+
+### 1. Clone and Install
+```bash
+git clone <repo-url>
+cd nautilus/frontend
+bun install
+```
+
+### 2. Environment Setup
+```bash
+cp .env.example .env.local
+```
+
+Required environment variables:
+| Variable | Description |
+|----------|-------------|
+| `SUPABASE_URL` | Supabase project URL |
+| `SUPABASE_ANON_KEY` | Supabase anonymous key |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (server-side only) |
+| `NEXTAUTH_URL` | `http://localhost:3000` for dev |
+| `NEXTAUTH_SECRET` | Generate with `openssl rand -base64 32` |
+| `DISCORD_CLIENT_ID` / `DISCORD_CLIENT_SECRET` | Discord OAuth app credentials |
+| `NEXT_PUBLIC_APP_NETWORK` | `mainnet` or `testnet` |
+| `NEXT_PUBLIC_POSTHOG_KEY` | PostHog analytics key |
+
+Optional:
+| Variable | Description |
+|----------|-------------|
+| `KV_REST_API_URL` / `KV_REST_API_TOKEN` | Vercel KV for rate limiting |
+| `NEXT_PUBLIC_SOLANA_RPC_URL` | Private Solana RPC (recommended for production) |
+
+### 3. Run Development Server
+```bash
+bun dev
+```
+
+### 4. Generate Types (after DB schema changes)
+```bash
+bun run generate:types:prod
+```
+
 ## Architecture
 
 ### High-Level Structure
 
 ```
-Frontend (Next.js) → Supabase (Database) → Custom Backend API → Sui Blockchain
+Frontend (Next.js) → Supabase (Database) → TEE Backend API → Blockchain
                                     ↘
                                    NextAuth (OAuth)
 ```
 
 **Key Concepts:**
-- **On-chain data**: Agent deployments, funding, bounties via Sui blockchain
+- **On-chain data**: Agent deployments, funding, bounties via blockchain
 - **Off-chain data**: User profiles, agents metadata, rewards tracked in Supabase
-- **Authentication**: Wallet-first (Slush) with optional social linking via NextAuth
-- **AI Interactions**: Proxied through external backend API (LOCAL_API_PATH env var)
+- **AI Interactions**: Proxied through TEE backend (`https://tee.suisentinel.xyz`)
+
+### Backend API
+
+The frontend proxies AI agent interactions through a Trusted Execution Environment (TEE) backend:
+- **Production URL**: `https://tee.suisentinel.xyz`
+- Defined in `constants/index.ts` as `LOCAL_API_PATH`
+- Agent prompts are sent via `POST /api/consume-prompt`
+- Agent registration via `POST /api/register-agent`
 
 ### Data Flow
 
 **Attack Mode:**
 1. User browses agents at `/attack/[slug]`
-2. Submits prompt to agent via `POST /api/consume-prompt` (proxies to backend)
+2. Submits prompt to agent via `POST /api/consume-prompt` (proxies to TEE backend)
 3. Backend returns response with attack success/failure
 4. Successful attacks trigger on-chain bounty claim transaction
 
 **Defend Mode:**
 1. User creates agent at `/defend` with system prompt, model, and cost settings
-2. Funds agent with SUI tokens via wallet transaction
+2. Funds agent with tokens via wallet transaction
 3. Agent deployed to blockchain
 4. Defender earns passive income when their agent resists attacks
-5. Withdrawal available after lock period via `useWithdrawAgentModal` hook
+5. Withdrawal available after **14-day lock period** via `useWithdrawAgentModal` hook
 
 **Rewards System:**
 - Missions tracked in Supabase (`ss_rewards_activity`, `ss_rewards_leaderboard`)
 - Complete missions via `POST /api/rewards/complete`
 - Leaderboard fetched from `GET /api/rewards/leaderboard`
+
+### Supported AI Models
+
+Defined in `constants/index.ts` under `PROVIDER_MODELS`:
+
+| Provider | Models |
+|----------|--------|
+| OpenAI | gpt-4o, gpt-4.1, gpt-4o-mini, gpt-3.5-turbo |
+| Anthropic | claude-opus-4-6, claude-sonnet-4-6, claude-haiku-4-5 |
+| DeepSeek | deepseek-chat, deepseek-reasoner |
+| Amazon Bedrock | mistral.mistral-large-3-675b-instruct, openai.gpt-oss-120b-1:0, us.meta.llama4-maverick-17b-instruct-v1:0, us.meta.llama3-2-90b-instruct-v1:0, us.meta.llama3-3-70b-instruct-v1:0 |
+| Custom | User-provided endpoints |
 
 ### Directory Structure
 
@@ -97,14 +160,17 @@ lib/
 └── utils.ts                # General utilities (cn, formatting)
 
 constants/
-└── index.ts                # All constants (package IDs, URLs, config)
+├── index.ts                # All constants (package IDs, URLs, config)
+├── shared.ts               # Shared types to avoid circular deps
+├── solana.ts               # Solana-specific constants
+└── evm.ts                  # EVM-specific constants
 ```
 
 ## Key Files to Understand First
 
-1. **`/constants/index.ts`** - All package IDs, URLs, and configuration
+1. **`/constants/index.ts`** - All package IDs, URLs, tokens, and configuration
 2. **`/lib/database.types.ts`** - Supabase schema (auto-generated)
-3. **`/app/providers.tsx`** - Provider hierarchy (QueryClient, SuiClient, Wallet)
+3. **`/app/providers.tsx`** - Provider hierarchy (PostHog → Session → Query → EVM → Sui → Solana → ActiveChain → Auth)
 4. **`/lib/auth.ts`** - NextAuth OAuth setup
 5. **`/hooks/agents/`** - Agent business logic hooks
 6. **`/types.ts`** - Core type definitions
@@ -139,46 +205,59 @@ constants/
 - Service client used for Supabase queries in server routes
 - Some routes proxy to external backend (LOCAL_API_PATH)
 
-## Environment Setup
+## Wallet Integration
 
-Required environment variables (see `.env.example`):
-- **Supabase**: URL, anon key, service role key
-- **OAuth**: Twitter/Discord client IDs and secrets
-- **NextAuth**: URL and secret
-- **Vercel KV**: REST API URL and token
-- **Application**: Base URL, PostHog key, admin API URL
-- **Supabase Project Ref**: For type generation
+### Sui (Primary)
+- Uses `@mysten/dapp-kit` with `WalletProvider`
+- Auto-connect enabled
+- Supports all Sui-compatible wallets (Slush, Sui Wallet, etc.)
+- Connect button: `components/SuiConnectButton.tsx`
+
+### Solana
+- Uses `@solana/wallet-adapter-react`
+- Provider: `app/SolanaWalletProvider.tsx`
+- Connect button: `components/SolanaConnectButton.tsx`
+- **Note**: Use a private RPC for production (public endpoints are rate-limited)
+
+### EVM
+- Provider: `app/EVMWalletProvider.tsx`
+- Connect button: `components/EVMConnectButton.tsx`
+
+### Active Chain Context
+- `context/ActiveChainContext.tsx` tracks which chain the user is currently interacting with
+- Components can use this to show relevant wallet/token options
 
 ## Blockchain Integration
-
-**Sui SDK Usage:**
-- Wallet connection via `@mysten/dapp-kit` (Slush wallet)
-- Transactions executed via `signAndExecuteTransaction`
-- On-chain events queried via `useSuiClientQuery`
-- Object reading for agent details
-- **Network**: Sui testnet (hardcoded in providers)
 
 **Key Transaction Types:**
 - Agent funding (deploy + stake)
 - Bounty claims (successful attacks)
-- Withdrawals (after lock period)
+- Withdrawals (after 14-day lock period)
+
+**Key Constants:**
+- `WITHDRAWAL_LOCK_MS`: 14 days (1,209,600,000 ms)
+- `MIST_PER_SUI`: 1,000,000,000 (SUI has 9 decimals)
+- Token minimum amounts vary by token (see `SUPPORTED_TOKENS`)
+
+**Sui Contract Configs:**
+- Mainnet: `SUI_MAINNET_CONFIG`
+- Testnet: `SUI_TESTNET_CONFIG`
+- Legacy (single-token): `SUI_MAINNET_LEGACY_CONFIG` / `SUI_TESTNET_LEGACY_CONFIG`
 
 ## Database Schema (Supabase)
 
+See `lib/database.types.ts` for full schema.
+
 Key tables:
-- `ss_agents`: Agent registry (owner, name, slug, model, prompt, funding)
-- `ss_users`: User profiles (wallet address, social links)
-- `ss_rewards_leaderboard`: User points and tier tracking
-- `ss_rewards_activity`: Mission completion history
-- `ss_social_connections`: OAuth account linking
-- `ss_feature_requests`: Agent feature requests
+- `ss_agents` - Agent metadata
+- `ss_rewards_activity` - User mission completions
+- `ss_rewards_leaderboard` - Leaderboard data
+- `ss_profiles` - User profiles linked to wallets
 
 ## Engineering Principles
 
 ### Single source of truth for config
 Never hardcode values that already exist in constants. Always trace back to the canonical definition:
-- Use `SUI_TOKEN.coinType` / `SUI_TOKEN.decimals`, not `'0x2::sui::SUI'` / `9`
-- Use `SUI_CONFIG.SENTINEL_COIN_TYPE`, not an inline address string
 - If a value needs to change in the future, it should change in exactly one place
 
 ### Extract pure components into their own files
@@ -228,11 +307,62 @@ const { rawBalance, balance, formattedBalance, isLoading } = useTokenBalance(
 
 Note: `getCoins()` is still appropriate inside transaction-building hooks (e.g. `useFundAgent`) where actual coin objects are needed for PTBs — this is different from balance display.
 
+## Troubleshooting
+
+### Common Issues
+
+**"Cannot connect wallet"**
+- Ensure you have a Sui-compatible wallet extension installed (Slush, Sui Wallet)
+- Check that you're on the correct network (mainnet vs testnet) - set via `NEXT_PUBLIC_APP_NETWORK`
+- Try refreshing the page or disconnecting/reconnecting
+
+**"Supabase types out of sync"**
+- Run `bun run generate:types:prod` to regenerate types
+- Ensure your `SUPABASE_URL` points to the correct project
+
+**"Agent creation fails"**
+- Verify wallet is connected and has sufficient balance (minimum amounts vary by token)
+- Check browser console for specific error messages
+- Ensure the TEE backend is reachable (`https://tee.suisentinel.xyz`)
+
+**"OAuth login not working"**
+- Verify `NEXTAUTH_URL` matches your current environment
+- Check that OAuth app credentials are correctly set
+- For local dev, ensure `NEXTAUTH_URL=http://localhost:3000`
+
+**"Transaction failed"**
+- Check you have enough SUI for gas fees
+- Verify the contract package IDs are up to date in constants
+- Check Sui network status if transactions consistently fail
+
+**Build errors with "Module not found"**
+- Run `bun install` to ensure all dependencies are installed
+- Delete `.next` folder and rebuild: `rm -rf .next && bun build`
+
+### Debugging Tips
+
+1. **Check React Query DevTools** - Enable in development to inspect query states
+2. **PostHog** - Check analytics dashboard for error tracking
+3. **Supabase Dashboard** - View database logs and API requests
+4. **Sui Explorer** - Verify on-chain transactions at `suivision.xyz`
+5. **Network tab** - Inspect API calls to `/api/*` routes and TEE backend
+
+### Adding a New Feature Checklist
+
+1. [ ] Create types in `/types.ts` or relevant type file
+2. [ ] Add any new constants to `/constants/index.ts`
+3. [ ] Create hook in appropriate `/hooks/` subdirectory
+4. [ ] Create component(s) in appropriate `/components/` subdirectory
+5. [ ] Add API route if needed in `/app/api/`
+6. [ ] Update Supabase types if schema changed: `bun run generate:types:prod`
+7. [ ] Follow existing patterns (skeletons, error handling, etc.)
+
 ## Important Notes
 
 - **No testing framework** is currently configured
 - **TypeScript strict mode** is disabled
-- **Wallet connection required** for core features (Slush wallet)
+- **Wallet connection required** for core features
 - **Social authentication optional** but encouraged for profile completion
 - **Service role key** used in server-side API routes (admin access)
-- **Package IDs** stored in constants and may need updates
+- **Package IDs** stored in constants and may need updates when contracts are redeployed
+- **14-day withdrawal lock** applies to all agent funds

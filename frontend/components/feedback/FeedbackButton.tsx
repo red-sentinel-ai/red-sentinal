@@ -27,14 +27,14 @@ export const FeedbackButton = () => {
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetContent
           side="right"
-          className="w-full overflow-y-auto bg-white text-black sm:w-[480px]"
+          className="w-full overflow-y-auto bg-[#1a1919] text-white sm:w-[480px]"
         >
-          <SheetHeader className="border-b border-gray-200 pb-4">
-            <SheetTitle className="flex items-center gap-2 text-xl font-semibold text-black">
-              <MessageSquare className="h-5 w-5 text-gray-700" />
+          <SheetHeader className="border-b border-white/10 pb-4">
+            <SheetTitle className="flex items-center gap-2 text-xl font-semibold text-white">
+              <MessageSquare className="h-5 w-5 text-white/60" />
               Help us make Red Sentinel better!
             </SheetTitle>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-white/50">
               Share genuine feedback or report bugs and earn Sentinel Points as a thank you.
             </p>
           </SheetHeader>

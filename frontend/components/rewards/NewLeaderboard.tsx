@@ -107,9 +107,9 @@ function formatTimeAgo(iso: string) {
 }
 
 function breachRateColor(pct: number) {
-  if (pct <= 5) return 'text-emerald-600'
-  if (pct <= 10) return 'text-amber-600'
-  return 'text-red-500'
+  if (pct <= 5) return 'text-emerald-400'
+  if (pct <= 10) return 'text-amber-400'
+  return 'text-red-400'
 }
 
 // ─── Tier Config ─────────────────────────────────────────────────────────────
@@ -119,37 +119,37 @@ const DEFENDER_TIER_CONFIG: Record<
   { bg: string; text: string; border: string; dot: string; label: string }
 > = {
   Bronze: {
-    bg: 'bg-amber-50',
-    text: 'text-amber-700',
-    border: 'border-amber-200',
+    bg: 'bg-amber-900/20',
+    text: 'text-amber-400',
+    border: 'border-amber-500/30',
     dot: 'bg-amber-500',
     label: 'Bronze',
   },
   Silver: {
-    bg: 'bg-slate-100',
-    text: 'text-slate-600',
-    border: 'border-slate-300',
+    bg: 'bg-slate-700/30',
+    text: 'text-slate-300',
+    border: 'border-slate-500/30',
     dot: 'bg-slate-400',
     label: 'Silver',
   },
   Gold: {
-    bg: 'bg-yellow-50',
-    text: 'text-yellow-700',
-    border: 'border-yellow-300',
+    bg: 'bg-yellow-900/20',
+    text: 'text-yellow-400',
+    border: 'border-yellow-500/30',
     dot: 'bg-yellow-500',
     label: 'Gold',
   },
   Diamond: {
-    bg: 'bg-cyan-50',
-    text: 'text-cyan-700',
-    border: 'border-cyan-200',
+    bg: 'bg-cyan-900/20',
+    text: 'text-cyan-400',
+    border: 'border-cyan-500/30',
     dot: 'bg-cyan-500',
     label: 'Diamond',
   },
   Legendary: {
-    bg: 'bg-purple-50',
-    text: 'text-purple-700',
-    border: 'border-purple-300',
+    bg: 'bg-purple-900/20',
+    text: 'text-purple-400',
+    border: 'border-purple-500/30',
     dot: 'bg-purple-500',
     label: 'Legendary',
   },
@@ -160,37 +160,37 @@ const ATTACKER_TIER_CONFIG: Record<
   { bg: string; text: string; border: string; dot: string; label: string }
 > = {
   Recruit: {
-    bg: 'bg-gray-100',
-    text: 'text-gray-600',
-    border: 'border-gray-300',
-    dot: 'bg-gray-400',
+    bg: 'bg-white/10',
+    text: 'text-white/60',
+    border: 'border-white/15',
+    dot: 'bg-white/40',
     label: 'Recruit',
   },
   Hunter: {
-    bg: 'bg-green-50',
-    text: 'text-green-700',
-    border: 'border-green-200',
+    bg: 'bg-green-900/20',
+    text: 'text-green-400',
+    border: 'border-green-500/30',
     dot: 'bg-green-500',
     label: 'Hunter',
   },
   Specialist: {
-    bg: 'bg-blue-50',
-    text: 'text-blue-700',
-    border: 'border-blue-200',
+    bg: 'bg-blue-900/20',
+    text: 'text-blue-400',
+    border: 'border-blue-500/30',
     dot: 'bg-blue-500',
     label: 'Specialist',
   },
   Elite: {
-    bg: 'bg-orange-50',
-    text: 'text-orange-700',
-    border: 'border-orange-200',
+    bg: 'bg-orange-900/20',
+    text: 'text-orange-400',
+    border: 'border-orange-500/30',
     dot: 'bg-orange-500',
     label: 'Elite',
   },
   'Apex Predator': {
-    bg: 'bg-red-50',
-    text: 'text-red-700',
-    border: 'border-red-300',
+    bg: 'bg-red-900/20',
+    text: 'text-red-400',
+    border: 'border-red-500/30',
     dot: 'bg-red-500',
     label: 'Apex Predator',
   },
@@ -238,7 +238,7 @@ function RankCell({ rank }: { rank: number }) {
       <div className="flex items-center justify-center">
         <div className="relative">
           <Crown className="h-6 w-6 text-yellow-500" />
-          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white bg-yellow-500 text-[9px] font-bold text-white">
+          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-[var(--color-bg-surface)] bg-yellow-500 text-[9px] font-bold text-white">
             1
           </span>
         </div>
@@ -249,7 +249,7 @@ function RankCell({ rank }: { rank: number }) {
       <div className="flex items-center justify-center">
         <div className="relative">
           <Trophy className="h-5 w-5 text-slate-400" />
-          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white bg-slate-400 text-[9px] font-bold text-white">
+          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-[var(--color-bg-surface)] bg-slate-400 text-[9px] font-bold text-white">
             2
           </span>
         </div>
@@ -260,7 +260,7 @@ function RankCell({ rank }: { rank: number }) {
       <div className="flex items-center justify-center">
         <div className="relative">
           <Medal className="h-5 w-5 text-amber-700" />
-          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white bg-amber-700 text-[9px] font-bold text-white">
+          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-[var(--color-bg-surface)] bg-amber-700 text-[9px] font-bold text-white">
             3
           </span>
         </div>
@@ -268,7 +268,7 @@ function RankCell({ rank }: { rank: number }) {
     )
   return (
     <div className="flex items-center justify-center">
-      <span className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-gray-50 text-xs font-semibold text-gray-500">
+      <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-xs font-semibold text-white/50">
         {rank}
       </span>
     </div>
@@ -286,7 +286,7 @@ function IdentityCell({
 }) {
   return (
     <div className="flex min-w-0 items-center gap-3">
-      <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full border border-gray-200 bg-gray-100 text-gray-400">
+      <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/10 text-white/40">
         {avatarUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={avatarUrl} alt={username} className="h-9 w-9 rounded-full object-cover" />
@@ -297,7 +297,7 @@ function IdentityCell({
       <div className="min-w-0">
         <Link
           href={`/u/${username}`}
-          className="truncate text-sm font-semibold text-gray-900 hover:underline"
+          className="truncate text-sm font-semibold text-white hover:underline"
         >
           {username}
         </Link>
@@ -305,7 +305,7 @@ function IdentityCell({
           href={`${EXPLORER_BASE_URL}/address/${walletAddress}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="block font-mono text-xs text-gray-400 hover:underline"
+          className="block font-mono text-xs text-white/40 hover:underline"
         >
           {truncateAddress(walletAddress)}
         </Link>
@@ -315,11 +315,11 @@ function IdentityCell({
 }
 
 function SortIcon({ active, dir }: { active: boolean; dir: SortDir }) {
-  if (!active) return <ChevronsUpDown className="ml-1 h-3 w-3 text-gray-400" />
+  if (!active) return <ChevronsUpDown className="ml-1 h-3 w-3 text-white/30" />
   return dir === 'asc' ? (
-    <ArrowUp className="ml-1 h-3 w-3 text-black" />
+    <ArrowUp className="ml-1 h-3 w-3 text-white" />
   ) : (
-    <ArrowDown className="ml-1 h-3 w-3 text-black" />
+    <ArrowDown className="ml-1 h-3 w-3 text-white" />
   )
 }
 
@@ -341,7 +341,7 @@ function ColHeader({
   const active = currentSort === sortKey
   return (
     <th
-      className="max-w-[100px] cursor-pointer select-none px-1 py-3 text-center text-xs font-semibold tracking-wide text-gray-500 hover:text-gray-800"
+      className="max-w-[100px] cursor-pointer select-none px-1 py-3 text-center text-xs font-semibold tracking-wide text-white/50 hover:text-white"
       onClick={() => onSort(sortKey)}
     >
       <div className="flex items-center gap-1">
@@ -350,7 +350,7 @@ function ColHeader({
           <Tooltip>
             <TooltipTrigger asChild>
               <Info
-                className="h-3 w-3 text-gray-400 hover:text-gray-600"
+                className="h-3 w-3 text-white/30 hover:text-white/60"
                 onClick={e => e.stopPropagation()}
               />
             </TooltipTrigger>
@@ -382,7 +382,7 @@ function ShareButton({ rank, tab }: { rank: number; tab: 'defenders' | 'attacker
       <TooltipTrigger asChild>
         <button
           onClick={handleShare}
-          className="flex h-7 w-7 items-center justify-center rounded-md border border-gray-200 bg-white text-gray-400 transition-colors hover:border-gray-300 hover:text-gray-700"
+          className="flex h-7 w-7 items-center justify-center rounded-md border border-white/10 bg-white/5 text-white/40 transition-colors hover:border-white/20 hover:text-white"
         >
           {copied ? (
             <Check className="h-3.5 w-3.5 text-emerald-500" />
@@ -402,14 +402,14 @@ function ShareButton({ rank, tab }: { rank: number; tab: 'defenders' | 'attacker
 
 function RewardCalculatorBanner() {
   return (
-    <div className="mb-4 flex flex-col items-start justify-between gap-3 rounded-xl border border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50 px-5 py-4 sm:flex-row sm:items-center">
+    <div className="mb-4 flex flex-col items-start justify-between gap-3 rounded-xl border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-5 py-4 sm:flex-row sm:items-center">
       <div className="flex items-start gap-3">
-        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100">
-          <Calculator className="h-5 w-5" />
+        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-blue-500/15">
+          <Calculator className="h-5 w-5 text-blue-400" />
         </div>
         <div>
-          <p className="text-sm font-semibold">Estimate your defender earnings</p>
-          <p className="mt-0.5 text-xs">
+          <p className="text-sm font-semibold text-[var(--color-text-primary)]">Estimate your defender earnings</p>
+          <p className="mt-0.5 text-xs text-[var(--color-text-muted)]">
             Use our Reward Calculator to project returns based on pool size and attack volume.
           </p>
         </div>
@@ -418,10 +418,10 @@ function RewardCalculatorBanner() {
         href={REWARD_CALCULATOR_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="btn btn-black flex items-center gap-2 text-sm sm:text-base"
+        className="inline-flex items-center gap-1.5 rounded-md border border-[var(--color-border-default)] bg-[var(--color-bg-subtle)] px-2.5 py-1.5 text-xs font-medium text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text-primary)]"
       >
         Reward Calculator
-        <ExternalLink className="h-3.5 w-3.5" />
+        <ExternalLink className="h-3 w-3" />
       </Link>
     </div>
   )
@@ -448,9 +448,9 @@ function DocsQuickLinks() {
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900"
+          className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/60 transition-colors hover:border-white/20 hover:bg-white/10 hover:text-white"
         >
-          {Icon && <Icon className="h-3.5 w-3.5 text-gray-400" />}
+          {Icon && <Icon className="h-3.5 w-3.5 text-white/40" />}
           {label}
           <ExternalLink className="h-2.5 w-2.5 opacity-50" />
         </Link>
@@ -464,13 +464,13 @@ function DocsQuickLinks() {
 function DefenderCard({ entry }: { entry: DefenderEntry }) {
   const [expanded, setExpanded] = useState(false)
   const rankColors: Record<number, string> = {
-    1: 'border-yellow-300 bg-yellow-50/50',
-    2: 'border-slate-300 bg-slate-50/50',
-    3: 'border-amber-300 bg-amber-50/50',
+    1: 'border-yellow-500/30 bg-yellow-900/20',
+    2: 'border-slate-500/30 bg-slate-800/30',
+    3: 'border-amber-500/30 bg-amber-900/20',
   }
   const borderClass = entry.isCurrentUser
-    ? 'border-blue-200 bg-blue-50/30'
-    : rankColors[entry.rank] || 'border-gray-200 bg-white'
+    ? 'border-blue-500/30 bg-blue-900/15'
+    : rankColors[entry.rank] || 'border-white/10 bg-white/5'
 
   return (
     <motion.div layout className={cn('rounded-xl border p-4 transition-colors', borderClass)}>
@@ -486,7 +486,7 @@ function DefenderCard({ entry }: { entry: DefenderEntry }) {
         <div className="flex flex-col items-end gap-1.5">
           <DefenderTierBadge tier={entry.defenderTier} />
           {entry.isCurrentUser && (
-            <span className="rounded-full border border-blue-200 bg-blue-100 px-2 py-0.5 text-[10px] font-semibold text-blue-700">
+            <span className="rounded-full border border-blue-500/30 bg-blue-900/20 px-2 py-0.5 text-[10px] font-semibold text-blue-400">
               You
             </span>
           )}
@@ -494,13 +494,13 @@ function DefenderCard({ entry }: { entry: DefenderEntry }) {
       </div>
 
       <div className="mt-3 grid grid-cols-2 gap-2">
-        <div className="rounded-lg bg-gray-50 px-3 py-2">
-          <p className="text-[10px] uppercase tracking-wide text-gray-500">Score</p>
-          <p className="text-sm font-bold text-gray-900">{entry.compositeScore.toLocaleString()}</p>
+        <div className="rounded-lg bg-white/5 px-3 py-2">
+          <p className="text-[10px] uppercase tracking-wide text-white/40">Score</p>
+          <p className="text-sm font-bold text-white">{entry.compositeScore.toLocaleString()}</p>
         </div>
-        <div className="rounded-lg bg-gray-50 px-3 py-2">
-          <p className="text-[10px] uppercase tracking-wide text-gray-500">TVL</p>
-          <p className="text-sm font-bold text-gray-900">{formatUsd(entry.tvlUsd)}</p>
+        <div className="rounded-lg bg-white/5 px-3 py-2">
+          <p className="text-[10px] uppercase tracking-wide text-white/40">TVL</p>
+          <p className="text-sm font-bold text-white">{formatUsd(entry.tvlUsd)}</p>
         </div>
       </div>
 
@@ -535,10 +535,10 @@ function DefenderCard({ entry }: { entry: DefenderEntry }) {
               ].map(({ label, value, colorClass, span }) => (
                 <div
                   key={label}
-                  className={cn('rounded-lg bg-gray-50 px-3 py-2', span && 'col-span-2')}
+                  className={cn('rounded-lg bg-white/5 px-3 py-2', span && 'col-span-2')}
                 >
-                  <p className="text-[10px] uppercase tracking-wide text-gray-500">{label}</p>
-                  <p className={cn('text-sm font-semibold text-gray-900', colorClass)}>{value}</p>
+                  <p className="text-[10px] uppercase tracking-wide text-white/40">{label}</p>
+                  <p className={cn('text-sm font-semibold text-white', colorClass)}>{value}</p>
                 </div>
               ))}
             </div>
@@ -549,7 +549,7 @@ function DefenderCard({ entry }: { entry: DefenderEntry }) {
       <div className="mt-3 flex items-center justify-between">
         <button
           onClick={() => setExpanded(v => !v)}
-          className="flex items-center gap-1 text-xs font-medium text-gray-500 hover:text-gray-800"
+          className="flex items-center gap-1 text-xs font-medium text-white/50 hover:text-white"
         >
           {expanded ? (
             <>
@@ -583,13 +583,13 @@ function DefenderCard({ entry }: { entry: DefenderEntry }) {
 function AttackerCard({ entry }: { entry: AttackerEntry }) {
   const [expanded, setExpanded] = useState(false)
   const rankColors: Record<number, string> = {
-    1: 'border-yellow-300 bg-yellow-50/50',
-    2: 'border-slate-300 bg-slate-50/50',
-    3: 'border-amber-300 bg-amber-50/50',
+    1: 'border-yellow-500/30 bg-yellow-900/20',
+    2: 'border-slate-500/30 bg-slate-800/30',
+    3: 'border-amber-500/30 bg-amber-900/20',
   }
   const borderClass = entry.isCurrentUser
-    ? 'border-blue-200 bg-blue-50/30'
-    : rankColors[entry.rank] || 'border-gray-200 bg-white'
+    ? 'border-blue-500/30 bg-blue-900/15'
+    : rankColors[entry.rank] || 'border-white/10 bg-white/5'
 
   return (
     <motion.div layout className={cn('rounded-xl border p-4', borderClass)}>
@@ -605,7 +605,7 @@ function AttackerCard({ entry }: { entry: AttackerEntry }) {
         <div className="flex flex-col items-end gap-1.5">
           <AttackerTierBadge tier={entry.attackerTier} />
           {entry.isCurrentUser && (
-            <span className="rounded-full border border-blue-200 bg-blue-100 px-2 py-0.5 text-[10px] font-semibold text-blue-700">
+            <span className="rounded-full border border-blue-500/30 bg-blue-900/20 px-2 py-0.5 text-[10px] font-semibold text-blue-400">
               You
             </span>
           )}
@@ -613,15 +613,15 @@ function AttackerCard({ entry }: { entry: AttackerEntry }) {
       </div>
 
       <div className="mt-3 grid grid-cols-2 gap-2">
-        <div className="rounded-lg bg-gray-50 px-3 py-2">
-          <p className="text-[10px] uppercase tracking-wide text-gray-500">Bounty Won</p>
-          <p className="text-sm font-bold text-gray-900">
+        <div className="rounded-lg bg-white/5 px-3 py-2">
+          <p className="text-[10px] uppercase tracking-wide text-white/40">Bounty Won</p>
+          <p className="text-sm font-bold text-white">
             {formatUsd(entry.totalBountyWonUsd)}
           </p>
         </div>
-        <div className="rounded-lg bg-gray-50 px-3 py-2">
-          <p className="text-[10px] uppercase tracking-wide text-gray-500">Breaches</p>
-          <p className="text-sm font-bold text-gray-900">{entry.successfulBreaches}</p>
+        <div className="rounded-lg bg-white/5 px-3 py-2">
+          <p className="text-[10px] uppercase tracking-wide text-white/40">Breaches</p>
+          <p className="text-sm font-bold text-white">{entry.successfulBreaches}</p>
         </div>
       </div>
 
@@ -652,9 +652,9 @@ function AttackerCard({ entry }: { entry: AttackerEntry }) {
                 { label: '$SENTINEL Earned', value: entry.sentinelTokensEarned.toLocaleString() },
                 { label: 'Last Active', value: formatTimeAgo(entry.lastActiveTimestamp) },
               ].map(({ label, value, colorClass }) => (
-                <div key={label} className="rounded-lg bg-gray-50 px-3 py-2">
-                  <p className="text-[10px] uppercase tracking-wide text-gray-500">{label}</p>
-                  <p className={cn('text-sm font-semibold text-gray-900', colorClass)}>{value}</p>
+                <div key={label} className="rounded-lg bg-white/5 px-3 py-2">
+                  <p className="text-[10px] uppercase tracking-wide text-white/40">{label}</p>
+                  <p className={cn('text-sm font-semibold text-white', colorClass)}>{value}</p>
                 </div>
               ))}
             </div>
@@ -665,7 +665,7 @@ function AttackerCard({ entry }: { entry: AttackerEntry }) {
       <div className="mt-3 flex items-center justify-between">
         <button
           onClick={() => setExpanded(v => !v)}
-          className="flex items-center gap-1 text-xs font-medium text-gray-500 hover:text-gray-800"
+          className="flex items-center gap-1 text-xs font-medium text-white/50 hover:text-white"
         >
           {expanded ? (
             <>
@@ -710,14 +710,14 @@ function DefendersTable({ entries }: { entries: DefenderEntry[] }) {
   const colProps = { currentSort: sortKey, currentDir: sortDir, onSort: handleSort }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-gray-200">
+    <div className="overflow-x-auto rounded-xl border border-white/10">
       <table className="w-full min-w-[1380px] border-collapse text-sm">
         <thead>
-          <tr className="border-b border-gray-200 bg-gray-50">
-            <th className="w-14 px-3 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
+          <tr className="border-b border-white/10 bg-white/5">
+            <th className="w-14 px-3 py-3 text-center text-xs font-semibold uppercase tracking-wide text-white/50">
               #
             </th>
-            <th className="min-w-[200px] px-1 py-3 text-xs font-semibold tracking-wide text-gray-500">
+            <th className="min-w-[200px] px-1 py-3 text-xs font-semibold tracking-wide text-white/50">
               Defender
             </th>
             <ColHeader
@@ -776,19 +776,19 @@ function DefendersTable({ entries }: { entries: DefenderEntry[] }) {
               sortKey="totalSentinelsDeployed"
               {...colProps}
             />
-            <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+            <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-white/50">
               Actions
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100">
+        <tbody className="divide-y divide-[var(--color-border-subtle)]">
           {sorted.map((entry, i) => {
             const isTop3 = entry.rank <= 3
             const rowBg = entry.isCurrentUser
               ? 'bg-blue-50/60 hover:bg-blue-50'
               : isTop3
-                ? 'bg-white hover:bg-gray-50/80'
-                : 'bg-white hover:bg-gray-50/60'
+                ? 'bg-transparent hover:bg-white/5'
+                : 'bg-transparent hover:bg-white/[0.04]'
             const leftBorder =
               entry.rank === 1
                 ? 'border-l-2 border-l-yellow-400'
@@ -819,41 +819,41 @@ function DefendersTable({ entries }: { entries: DefenderEntry[] }) {
                       avatarUrl={entry.avatarUrl}
                     />
                     {entry.isCurrentUser && (
-                      <span className="ml-12 w-fit rounded-full border border-blue-200 bg-blue-100 px-2 py-0.5 text-[10px] font-semibold text-blue-700">
+                      <span className="ml-12 w-fit rounded-full border border-blue-500/30 bg-blue-900/20 px-2 py-0.5 text-[10px] font-semibold text-blue-400">
                         You
                       </span>
                     )}
                   </div>
                 </td>
                 <td className="px-3 py-3">
-                  <span className="font-bold text-gray-900">
+                  <span className="font-bold text-white">
                     {entry.compositeScore.toLocaleString()}
                   </span>
                 </td>
                 <td className="px-3 py-3">
                   <DefenderTierBadge tier={entry.defenderTier} />
                 </td>
-                <td className="px-3 py-3 text-gray-700">{formatUsd(entry.totalFeesEarnedUsd)}</td>
+                <td className="px-3 py-3 text-white/70">{formatUsd(entry.totalFeesEarnedUsd)}</td>
                 <td className="px-3 py-3 font-medium text-purple-700">
                   {entry.sentinelTokensEarned.toLocaleString()}
                 </td>
                 <td className="px-3 py-3">
                   <div className="flex items-center gap-1.5">
-                    <span className="font-medium text-gray-900">{formatUsd(entry.tvlUsd)}</span>
+                    <span className="font-medium text-white">{formatUsd(entry.tvlUsd)}</span>
                   </div>
                 </td>
 
-                <td className="px-3 py-3 font-mono text-xs text-gray-700">
+                <td className="px-3 py-3 font-mono text-xs text-white/60">
                   {formatSurvivalTime(entry.longestSurvivingHours)}
                 </td>
-                <td className="px-3 py-3 font-medium text-gray-900">
+                <td className="px-3 py-3 font-medium text-white">
                   {entry.totalAttacksSurvived.toLocaleString()}
                 </td>
                 <td className={cn('px-3 py-3 font-semibold', breachRateColor(entry.breachRatePct))}>
                   {entry.breachRatePct.toFixed(1)}%
                 </td>
-                <td className="px-3 py-3 text-gray-700">{entry.activeSentinels}</td>
-                <td className="px-3 py-3 text-gray-700">{entry.totalSentinelsDeployed}</td>
+                <td className="px-3 py-3 text-white/70">{entry.activeSentinels}</td>
+                <td className="px-3 py-3 text-white/70">{entry.totalSentinelsDeployed}</td>
                 <td className="px-3 py-3">
                   <ShareButton rank={entry.rank} tab="defenders" />
                 </td>
@@ -893,14 +893,14 @@ function AttackersTable({ entries }: { entries: AttackerEntry[] }) {
   const colProps = { currentSort: sortKey, currentDir: sortDir, onSort: handleSort }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-gray-200">
+    <div className="overflow-x-auto rounded-xl border border-white/10">
       <table className="w-full min-w-[1200px] border-collapse text-sm">
         <thead>
-          <tr className="border-b border-gray-200 bg-gray-50">
-            <th className="w-14 px-3 py-3 text-center text-xs font-semibold tracking-wide text-gray-500">
+          <tr className="border-b border-white/10 bg-white/5">
+            <th className="w-14 px-3 py-3 text-center text-xs font-semibold tracking-wide text-white/50">
               #
             </th>
-            <th className="min-w-[200px] px-3 py-3 text-xs font-semibold tracking-wide text-gray-500">
+            <th className="min-w-[200px] px-3 py-3 text-xs font-semibold tracking-wide text-white/50">
               Attacker
             </th>
             <ColHeader label="Tier" sortKey="attackerTier" {...colProps} />
@@ -947,19 +947,19 @@ function AttackersTable({ entries }: { entries: AttackerEntry[] }) {
               {...colProps}
             />
             <ColHeader label="Last Active" sortKey="lastActiveTimestamp" {...colProps} />
-            <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+            <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-white/50">
               Actions
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100">
+        <tbody className="divide-y divide-[var(--color-border-subtle)]">
           {sorted.map((entry, i) => {
             const isTop3 = entry.rank <= 3
             const rowBg = entry.isCurrentUser
               ? 'bg-blue-50/60 hover:bg-blue-50'
               : isTop3
-                ? 'bg-white hover:bg-gray-50/80'
-                : 'bg-white hover:bg-gray-50/60'
+                ? 'bg-transparent hover:bg-white/5'
+                : 'bg-transparent hover:bg-white/[0.04]'
             const leftBorder =
               entry.rank === 1
                 ? 'border-l-2 border-l-yellow-400'
@@ -990,7 +990,7 @@ function AttackersTable({ entries }: { entries: AttackerEntry[] }) {
                       avatarUrl={entry.avatarUrl}
                     />
                     {entry.isCurrentUser && (
-                      <span className="ml-12 w-fit rounded-full border border-blue-200 bg-blue-100 px-2 py-0.5 text-[10px] font-semibold text-blue-700">
+                      <span className="ml-12 w-fit rounded-full border border-blue-500/30 bg-blue-900/20 px-2 py-0.5 text-[10px] font-semibold text-blue-400">
                         You
                       </span>
                     )}
@@ -999,13 +999,13 @@ function AttackersTable({ entries }: { entries: AttackerEntry[] }) {
                 <td className="px-3 py-3">
                   <AttackerTierBadge tier={entry.attackerTier} />
                 </td>
-                <td className="px-3 py-3 font-bold text-gray-900">
+                <td className="px-3 py-3 font-bold text-white">
                   {formatUsd(entry.totalBountyWonUsd)}
                 </td>
-                <td className="px-3 py-3 text-gray-700">
+                <td className="px-3 py-3 text-white/70">
                   {entry.totalAttacksSent.toLocaleString()}
                 </td>
-                <td className="px-3 py-3 font-medium text-gray-900">{entry.successfulBreaches}</td>
+                <td className="px-3 py-3 font-medium text-white">{entry.successfulBreaches}</td>
                 <td
                   className={cn(
                     'px-3 py-3 font-semibold',
@@ -1018,7 +1018,7 @@ function AttackersTable({ entries }: { entries: AttackerEntry[] }) {
                 >
                   {entry.breachRatePct.toFixed(1)}%
                 </td>
-                <td className="px-3 py-3 text-gray-700">
+                <td className="px-3 py-3 text-white/70">
                   {formatUsd(entry.largestSingleBountyUsd)}
                 </td>
                 <td className="px-3 py-3">
@@ -1055,10 +1055,10 @@ function SkeletonRows({ cols }: { cols: number }) {
   return (
     <>
       {Array.from({ length: 5 }).map((_, i) => (
-        <tr key={i} className="animate-pulse border-b border-gray-100">
+        <tr key={i} className="animate-pulse border-b border-[var(--color-border-subtle)]">
           {Array.from({ length: cols }).map((__, j) => (
-            <td key={j} className="px-3 py-4">
-              <div className="h-4 rounded bg-gray-100" />
+            <td key={j} className="px-3 py-3">
+              <div className="h-3 rounded bg-[var(--color-bg-elevated)]" />
             </td>
           ))}
         </tr>
@@ -1073,7 +1073,7 @@ function LoadMoreButton({ onClick, isLoading }: { onClick: () => void; isLoading
       <button
         onClick={onClick}
         disabled={isLoading}
-        className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-5 py-2 text-sm font-medium text-gray-600 transition-colors hover:border-gray-300 hover:text-gray-900 disabled:opacity-50"
+        className="flex items-center gap-2 rounded-lg border border-[var(--color-border-default)] bg-transparent px-5 py-2 text-sm font-medium text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text-primary)] disabled:opacity-50"
       >
         {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
         Load more
@@ -1144,15 +1144,13 @@ export function NewLeaderboard() {
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-gray-100">
-                  <Trophy className="h-5 w-5 text-black" />
+                <div className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-border-default)] bg-[var(--color-bg-surface)]">
+                  <Trophy className="h-5 w-5 text-[var(--color-text-primary)]" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold uppercase tracking-tight text-black sm:text-3xl">
-                    Leaderboard
-                  </h1>
-                  <p className="text-sm text-gray-500">
-                    Track top defenders & attackers in the Red Sentinel ecosystem
+                  <h1 className="page-heading">Leaderboard</h1>
+                  <p className="page-subheading mt-1">
+                    Track top defenders &amp; attackers in the Red Sentinel ecosystem
                   </p>
                 </div>
               </div>
@@ -1164,7 +1162,7 @@ export function NewLeaderboard() {
 
           {/* ── Tabs ── */}
           <Tabs defaultValue="defenders">
-            <TabsList className="mb-6 border-b border-gray-200 bg-transparent pb-0">
+            <TabsList className="mb-6 border-b border-[var(--color-border-subtle)] bg-transparent pb-0">
               <TabsTrigger value="defenders" className="flex items-center gap-2 px-4 py-2 text-sm">
                 Defenders
               </TabsTrigger>
@@ -1178,12 +1176,12 @@ export function NewLeaderboard() {
 
               <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-text-muted)]" />
                   <Input
                     placeholder="Search by username or wallet…"
                     value={defenderSearch}
                     onChange={e => setDefenderSearch(e.target.value)}
-                    className="pl-9"
+                    className="h-9 border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] pl-9 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus-visible:border-[var(--color-border-default)] focus-visible:ring-0"
                   />
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -1192,8 +1190,8 @@ export function NewLeaderboard() {
                     className={cn(
                       'rounded-full border px-3 py-1.5 text-xs font-medium transition-colors',
                       defenderTierFilter === ''
-                        ? 'border-black bg-black text-white'
-                        : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                        ? 'border-[var(--color-gold-primary)] bg-[var(--color-gold-primary)] text-white'
+                        : 'border-[var(--color-border-default)] bg-transparent text-[var(--color-text-muted)] hover:border-[var(--color-border-strong)] hover:text-[var(--color-text-primary)]'
                     )}
                   >
                     All Tiers
@@ -1209,7 +1207,7 @@ export function NewLeaderboard() {
                           'rounded-full border px-3 py-1.5 text-xs font-medium transition-colors',
                           active
                             ? `${cfg.bg} ${cfg.text} ${cfg.border}`
-                            : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                            : 'border-[var(--color-border-default)] bg-transparent text-[var(--color-text-muted)] hover:border-[var(--color-border-strong)] hover:text-[var(--color-text-primary)]'
                         )}
                       >
                         {tier}
@@ -1224,7 +1222,7 @@ export function NewLeaderboard() {
                 {defendersQuery.isError ? (
                   <EmptyState message="Failed to load defenders. Please try again." />
                 ) : defendersQuery.isLoading ? (
-                  <div className="overflow-x-auto rounded-xl border border-gray-200">
+                  <div className="overflow-x-auto rounded-xl border border-white/10">
                     <table className="w-full min-w-[1380px] border-collapse text-sm">
                       <tbody>
                         <SkeletonRows cols={13} />
@@ -1246,18 +1244,18 @@ export function NewLeaderboard() {
                   Array.from({ length: 3 }).map((_, i) => (
                     <div
                       key={i}
-                      className="animate-pulse rounded-xl border border-gray-200 bg-white p-4"
+                      className="animate-pulse rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] p-4"
                     >
                       <div className="mb-3 flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-full bg-gray-100" />
+                        <div className="h-8 w-8 rounded-full bg-white/10" />
                         <div className="flex-1 space-y-1.5">
-                          <div className="h-3.5 w-32 rounded bg-gray-100" />
-                          <div className="h-3 w-24 rounded bg-gray-100" />
+                          <div className="h-3.5 w-32 rounded bg-white/10" />
+                          <div className="h-3 w-24 rounded bg-white/10" />
                         </div>
                       </div>
                       <div className="grid grid-cols-2 gap-2">
-                        <div className="h-14 rounded-lg bg-gray-100" />
-                        <div className="h-14 rounded-lg bg-gray-100" />
+                        <div className="h-14 rounded-lg bg-white/10" />
+                        <div className="h-14 rounded-lg bg-white/10" />
                       </div>
                     </div>
                   ))
@@ -1275,7 +1273,7 @@ export function NewLeaderboard() {
                 />
               )}
 
-              <p className="mt-4 text-center text-xs text-gray-400">
+              <p className="mt-4 text-center text-xs text-[var(--color-text-faint)]">
                 Sorted by Composite Defender Score · Scores recompute every 5 minutes
               </p>
             </TabsContent>
@@ -1285,12 +1283,12 @@ export function NewLeaderboard() {
               {/* Search + Filter */}
               <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-text-muted)]" />
                   <Input
                     placeholder="Search by username or wallet…"
                     value={attackerSearch}
                     onChange={e => setAttackerSearch(e.target.value)}
-                    className="pl-9"
+                    className="h-9 border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] pl-9 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus-visible:border-[var(--color-border-default)] focus-visible:ring-0"
                   />
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -1299,8 +1297,8 @@ export function NewLeaderboard() {
                     className={cn(
                       'rounded-full border px-3 py-1.5 text-xs font-medium transition-colors',
                       attackerTierFilter === ''
-                        ? 'border-black bg-black text-white'
-                        : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                        ? 'border-[var(--color-gold-primary)] bg-[var(--color-gold-primary)] text-white'
+                        : 'border-[var(--color-border-default)] bg-transparent text-[var(--color-text-muted)] hover:border-[var(--color-border-strong)] hover:text-[var(--color-text-primary)]'
                     )}
                   >
                     All Tiers
@@ -1316,7 +1314,7 @@ export function NewLeaderboard() {
                           'rounded-full border px-3 py-1.5 text-xs font-medium transition-colors',
                           active
                             ? `${cfg.bg} ${cfg.text} ${cfg.border}`
-                            : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                            : 'border-[var(--color-border-default)] bg-transparent text-[var(--color-text-muted)] hover:border-[var(--color-border-strong)] hover:text-[var(--color-text-primary)]'
                         )}
                       >
                         {tier}
@@ -1331,7 +1329,7 @@ export function NewLeaderboard() {
                 {attackersQuery.isError ? (
                   <EmptyState message="Failed to load attackers. Please try again." />
                 ) : attackersQuery.isLoading ? (
-                  <div className="overflow-x-auto rounded-xl border border-gray-200">
+                  <div className="overflow-x-auto rounded-xl border border-white/10">
                     <table className="w-full min-w-[1200px] border-collapse text-sm">
                       <tbody>
                         <SkeletonRows cols={11} />
@@ -1353,18 +1351,18 @@ export function NewLeaderboard() {
                   Array.from({ length: 3 }).map((_, i) => (
                     <div
                       key={i}
-                      className="animate-pulse rounded-xl border border-gray-200 bg-white p-4"
+                      className="animate-pulse rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] p-4"
                     >
                       <div className="mb-3 flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-full bg-gray-100" />
+                        <div className="h-8 w-8 rounded-full bg-white/10" />
                         <div className="flex-1 space-y-1.5">
-                          <div className="h-3.5 w-32 rounded bg-gray-100" />
-                          <div className="h-3 w-24 rounded bg-gray-100" />
+                          <div className="h-3.5 w-32 rounded bg-white/10" />
+                          <div className="h-3 w-24 rounded bg-white/10" />
                         </div>
                       </div>
                       <div className="grid grid-cols-2 gap-2">
-                        <div className="h-14 rounded-lg bg-gray-100" />
-                        <div className="h-14 rounded-lg bg-gray-100" />
+                        <div className="h-14 rounded-lg bg-white/10" />
+                        <div className="h-14 rounded-lg bg-white/10" />
                       </div>
                     </div>
                   ))
@@ -1382,7 +1380,7 @@ export function NewLeaderboard() {
                 />
               )}
 
-              <p className="mt-4 text-center text-xs text-gray-400">
+              <p className="mt-4 text-center text-xs text-[var(--color-text-faint)]">
                 Sorted by Total Bounty Won · Data recomputes every 5 minutes
               </p>
             </TabsContent>

@@ -5,7 +5,7 @@ import { useState, useRef, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import clsx from 'clsx'
-import { Loader2 } from 'lucide-react'
+import { Loader2, ArrowUp } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ConnectModal, useCurrentAccount } from '@mysten/dapp-kit'
 
@@ -249,7 +249,7 @@ export default function ChatInterface({
   }
 
   return (
-    <div className="flex h-full flex-1 flex-col justify-between pb-2 text-[var(--color-text-primary)] sm:pb-6">
+    <div className="flex h-full flex-1 flex-col justify-between pb-2 text-[var(--color-text-secondary)] sm:pb-6">
       <JuryResponseModal
         isOpen={isJuryModalOpen}
         onClose={() => setIsJuryModalOpen(false)}
@@ -290,7 +290,7 @@ export default function ChatInterface({
             />
             {activeTab === 'mine' ? (
               <>
-                <p className="text-base sm:text-lg">
+                <p className="text-sm sm:text-base">
                   {connectedAddress
                     ? "You haven't attacked yet."
                     : 'Connect your wallet to see your chats.'}
@@ -303,7 +303,7 @@ export default function ChatInterface({
               </>
             ) : (
               <>
-                <p className="text-base sm:text-lg">No messages yet. Start attacking the agent!</p>
+                <p className="text-sm sm:text-base">No messages yet. Start attacking the agent!</p>
                 <p className="mt-2 px-4 text-xs opacity-75 sm:text-sm">
                   Try to break through their defenses with clever prompts.
                 </p>
@@ -361,7 +361,7 @@ export default function ChatInterface({
       ) : isAttackPaused ? (
         <div className="border-t border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] p-4">
           <div className="w-full text-center">
-            <h3 className="text-lg font-bold text-[var(--color-warning)]">Attacks Paused</h3>
+            <h3 className="text-base font-semibold text-[var(--color-warning)]">Attacks Paused</h3>
             <p className="text-xs text-[var(--color-text-secondary)]">
               The owner&apos;s lock period has expired and they can currently withdraw funds. Attacks
               will resume once the sentinel is re-funded.
@@ -371,7 +371,7 @@ export default function ChatInterface({
       ) : isAgentDrained ? (
         <div className="border-t border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] p-4">
           <div className="w-full text-center">
-            <h3 className="text-lg font-bold text-[var(--color-danger)]">This Sentinel is Drained</h3>
+            <h3 className="text-base font-semibold text-[var(--color-danger)]">This Sentinel is Drained</h3>
             <p className="mb-2 text-xs text-[var(--color-text-muted)]">
               The sentinel has been successfully defeated.
             </p>
@@ -392,7 +392,7 @@ export default function ChatInterface({
 
                   <div className="flex w-full items-baseline justify-center gap-x-2 px-3 sm:w-auto">
                     <p className="shrink-0 text-xs font-semibold text-[var(--color-text-secondary)]">Amount:</p>
-                    <p className="text-base font-bold text-[var(--color-success)]">{winnerInfo.wonAmount} SUI</p>
+                    <p className="text-sm font-semibold text-[var(--color-success)]">{winnerInfo.wonAmount} SUI</p>
                   </div>
                 </div>
               </div>
@@ -401,105 +401,87 @@ export default function ChatInterface({
         </div>
       ) : (
         <div className="pb-safe">
-          <form onSubmit={handleSubmit} className="relative">
-            <div className="relative">
-              {/* Premium mobile-like chat input container */}
-              <div className="relative z-10 w-full overflow-hidden rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] shadow-lg transition-all duration-200 focus-within:border-[var(--color-border-default)] focus-within:shadow-xl sm:rounded-2xl sm:border-[var(--color-border-default)]">
-                <div className="relative">
-                  <textarea
-                    ref={textareaRef}
-                    value={promptInput}
-                    onChange={e => {
-                      setPromptInput(e.target.value)
-                      countTokens(e.target.value)
-                    }}
-                    className="min-h-[60px] w-full resize-none border-none bg-transparent p-3 pb-9 pr-12 text-[15px] leading-relaxed text-[var(--color-text-primary)] outline-none placeholder:text-[var(--color-text-muted)] focus:ring-0 sm:min-h-[100px] sm:p-4 sm:pb-10 sm:pr-14 sm:text-base"
-                    disabled={isSubmitting}
-                    placeholder="Craft your attack prompt..."
-                    rows={1}
-                    style={{ overflow: 'hidden' }}
-                    autoComplete="off"
-                    spellCheck="false"
-                    onKeyDown={e => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault()
-                        handleSubmit(e)
-                      }
-                    }}
-                  />
-
-                  {/* Token count - bottom right corner */}
-                  <div
-                    className={clsx(
-                      'absolute bottom-2 right-16 text-[10px] font-medium tracking-wide sm:bottom-3 sm:right-[72px]',
-                      tokenCount > ATTACK_PROMPT_MAX_TOKENS ? 'text-[var(--color-danger)]' : 'text-[var(--color-text-muted)]'
-                    )}
-                  >
-                    <span className={clsx({ 'animate-pulse': isTokenCountDebouncing })}>
-                      {tokenCount}/{ATTACK_PROMPT_MAX_TOKENS}
-                    </span>
-                  </div>
-
-                  {/* Desktop: Circular send button */}
-                  <button
-                    type="submit"
-                    disabled={
-                      isSubmitting ||
-                      promptInput.length === 0 ||
-                      tokenCount > ATTACK_PROMPT_MAX_TOKENS
+          <form onSubmit={handleSubmit}>
+            {/* Clean chat input container */}
+            <div className="w-full overflow-hidden rounded-2xl border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] transition-colors duration-200 focus-within:border-[var(--color-border-strong)]">
+              <div className="relative">
+                <textarea
+                  ref={textareaRef}
+                  value={promptInput}
+                  onChange={e => {
+                    setPromptInput(e.target.value)
+                    countTokens(e.target.value)
+                  }}
+                  className="min-h-[60px] w-full resize-none border-none bg-transparent p-3 pb-9 pr-12 text-[15px] leading-relaxed text-[var(--color-text-primary)] outline-none placeholder:text-[var(--color-text-muted)] focus:ring-0 sm:min-h-[100px] sm:p-4 sm:pb-10 sm:pr-14 sm:text-base"
+                  disabled={isSubmitting}
+                  placeholder="Craft your attack prompt..."
+                  rows={1}
+                  style={{ overflow: 'hidden' }}
+                  autoComplete="off"
+                  spellCheck="false"
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault()
+                      handleSubmit(e)
                     }
-                    className="absolute bottom-3 right-3 hidden h-11 w-11 items-center justify-center rounded-full bg-[var(--color-text-primary)] text-[var(--color-bg-surface)] shadow-md transition-all duration-200 hover:scale-105 hover:bg-[var(--color-text-secondary)] hover:shadow-lg active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 sm:flex"
-                  >
-                    {isSubmitting ? (
-                      <Loader2 className="h-5 w-5 animate-spin" />
-                    ) : (
-                      <Image
-                        src="/icons/top-arrow.svg"
-                        width={22}
-                        height={22}
-                        alt="send"
-                        className="invert filter"
-                      />
-                    )}
-                  </button>
+                  }}
+                />
 
-                  {/* Mobile: Floating send button */}
-                  <button
-                    type="submit"
-                    disabled={
-                      isSubmitting ||
-                      promptInput.length === 0 ||
-                      tokenCount > ATTACK_PROMPT_MAX_TOKENS
-                    }
-                    className="absolute bottom-2 right-2 flex h-10 w-10 touch-manipulation items-center justify-center rounded-full bg-[var(--color-text-primary)] text-[var(--color-bg-surface)] shadow-md transition-all duration-200 hover:bg-[var(--color-text-secondary)] active:scale-90 disabled:cursor-not-allowed disabled:opacity-50 sm:hidden"
-                  >
-                    {isSubmitting ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Image
-                        src="/icons/top-arrow.svg"
-                        width={18}
-                        height={18}
-                        alt="send"
-                        className="invert filter"
-                      />
-                    )}
-                  </button>
+                {/* Token count - bottom right corner */}
+                <div
+                  className={clsx(
+                    'absolute bottom-2 right-16 text-[10px] font-medium tracking-wide sm:bottom-3 sm:right-[72px]',
+                    tokenCount > ATTACK_PROMPT_MAX_TOKENS ? 'text-[var(--color-danger)]' : 'text-[var(--color-text-muted)]'
+                  )}
+                >
+                  <span className={clsx({ 'animate-pulse': isTokenCountDebouncing })}>
+                    {tokenCount}/{ATTACK_PROMPT_MAX_TOKENS}
+                  </span>
                 </div>
-              </div>
 
-              {/* Premium gradient glow effect */}
-              <div className="pointer-events-none absolute -inset-1 z-0 rounded-[20px] bg-gradient-to-r from-purple-500/30 via-pink-500/30 to-purple-500/30 opacity-60 blur-lg transition-opacity duration-300 group-focus-within:opacity-100 sm:rounded-[16px]"></div>
-              <div className="pointer-events-none absolute left-1/2 top-1/2 z-0 w-[95%] -translate-x-1/2 -translate-y-1/2 rounded-[16px] bg-[#F49BEE]/80 blur-md sm:min-h-[100px]"></div>
+                {/* Desktop: Circular send button */}
+                <button
+                  type="submit"
+                  disabled={
+                    isSubmitting ||
+                    promptInput.length === 0 ||
+                    tokenCount > ATTACK_PROMPT_MAX_TOKENS
+                  }
+                  className="absolute bottom-3 right-3 hidden h-10 w-10 items-center justify-center rounded-full bg-[var(--color-gold-primary)] text-white transition-colors duration-200 hover:bg-[var(--color-gold-light)] active:scale-95 disabled:cursor-not-allowed disabled:bg-[var(--color-bg-subtle)] disabled:text-[var(--color-text-faint)] sm:flex"
+                >
+                  {isSubmitting ? (
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  ) : (
+                    <ArrowUp className="h-5 w-5" strokeWidth={2.5} />
+                  )}
+                </button>
+
+                {/* Mobile: Floating send button */}
+                <button
+                  type="submit"
+                  disabled={
+                    isSubmitting ||
+                    promptInput.length === 0 ||
+                    tokenCount > ATTACK_PROMPT_MAX_TOKENS
+                  }
+                  className="absolute bottom-2 right-2 flex h-9 w-9 touch-manipulation items-center justify-center rounded-full bg-[var(--color-gold-primary)] text-white transition-colors duration-200 hover:bg-[var(--color-gold-light)] active:scale-90 disabled:cursor-not-allowed disabled:bg-[var(--color-bg-subtle)] disabled:text-[var(--color-text-faint)] sm:hidden"
+                >
+                  {isSubmitting ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <ArrowUp className="h-[18px] w-[18px]" strokeWidth={2.5} />
+                  )}
+                </button>
+              </div>
             </div>
 
             {submitError && (
-              <div className="relative z-10 mt-2 rounded-lg border border-red-200 bg-red-100 p-2 text-xs text-red-600 sm:text-sm">
+              <div className="mt-2 rounded-lg border border-[var(--color-danger)]/30 bg-[var(--color-danger-muted)] p-2 text-xs text-[var(--color-danger)] sm:text-sm">
                 {submitError}
               </div>
             )}
             {tokenCount > ATTACK_PROMPT_MAX_TOKENS && (
-              <div className="relative z-10 mt-2 rounded-lg border border-red-200 bg-red-100 p-2 text-xs text-red-600 sm:text-sm">
+              <div className="mt-2 rounded-lg border border-[var(--color-danger)]/30 bg-[var(--color-danger-muted)] p-2 text-xs text-[var(--color-danger)] sm:text-sm">
                 Your prompt exceeds the token limit.
               </div>
             )}

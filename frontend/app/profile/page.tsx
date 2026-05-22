@@ -124,10 +124,10 @@ function ProfileContent() {
             </div>
 
             <div className="order-2 min-w-0 flex-1 pt-2 md:order-2">
-              <h1 className="font-display truncate text-2xl font-semibold text-[var(--color-text-primary)] leading-snug sm:text-3xl">
+              <h1 className="truncate text-xl font-semibold text-[var(--color-text-primary)] leading-snug">
                 {profile?.display_name || 'Your Profile'}
               </h1>
-              <p className="font-body mb-3 mt-1 font-medium text-[var(--color-text-secondary)]">@{profile?.username}</p>
+              <p className="mb-3 mt-0.5 text-sm text-[var(--color-text-muted)]">@{profile?.username}</p>
 
               {!isSolana && (
                 <Link
@@ -143,42 +143,28 @@ function ProfileContent() {
                     alt="coin"
                     className="flex-shrink-0"
                   />
-                  <span className="font-body text-sm font-medium text-[var(--color-text-primary)] sm:text-base">
-                    Sentinel Balance:{` `}
-                    <span className="text-[var(--color-gold-primary)] underline">{sentinelBalance} SENTINEL</span>
+                  <span className="text-xs font-medium text-[var(--color-text-secondary)]">
+                    Balance:{` `}
+                    <span className="text-[var(--color-gold-primary)]">{sentinelBalance} SENTINEL</span>
                   </span>
                 </Link>
               )}
 
-              <button
-                onClick={() => setIsEditModalOpen(true)}
-                className="font-body btn btn-outline h-[50px] font-medium text-[var(--color-text-primary)] border-[var(--color-border-default)] hover:bg-[var(--color-bg-subtle)]"
-              >
-                Edit Profile
-              </button>
-            </div>
-            <div className="order-3 flex w-full flex-wrap items-center justify-start gap-2 pt-2 sm:ml-auto sm:w-auto sm:justify-end md:order-3 md:pt-0">
-              <Link
-                className="font-body btn h-[50px] bg-[var(--color-gold-primary)] text-[var(--color-text-on-gold)] hover:bg-[var(--color-gold-light)] text-sm sm:text-base"
-                href="/defend"
-              >
-                Launch Sentinel
-              </Link>
-
-              <Link
-                className="font-body btn btn-outline text-sm sm:text-base text-[var(--color-text-primary)] border-[var(--color-border-default)] hover:bg-[var(--color-bg-subtle)]"
-                href="/attack"
-              >
-                Attack Sentinel
-              </Link>
-
-              {profile?.username && (
-                <Link href={`/u/${profile.username}`}>
-                  <button className="font-body btn btn-outline h-[30px] text-xs sm:text-sm text-[var(--color-text-muted)] border-[var(--color-border-subtle)] hover:bg-[var(--color-bg-subtle)]">
-                    View Profile as Public
-                  </button>
-                </Link>
-              )}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setIsEditModalOpen(true)}
+                  className="font-body btn btn-outline h-8 text-xs font-medium text-[var(--color-text-secondary)] border-[var(--color-border-default)] hover:bg-[var(--color-bg-subtle)] hover:text-[var(--color-text-primary)]"
+                >
+                  Edit Profile
+                </button>
+                {profile?.username && (
+                  <Link href={`/u/${profile.username}`}>
+                    <button className="font-body btn btn-outline h-8 text-xs text-[var(--color-text-muted)] border-[var(--color-border-subtle)] hover:bg-[var(--color-bg-subtle)]">
+                      View as Public
+                    </button>
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
           <div className="mb-6">
@@ -190,7 +176,7 @@ function ProfileContent() {
               <TabsList className="scrollbar-hide flex w-full justify-start gap-0 overflow-x-auto bg-transparent lg:w-auto">
                 <TabsTrigger
                   value={PROFILE_TABS.AGENTS}
-                  className="font-body flex items-center gap-2 rounded-none text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
+                  className="flex items-center gap-1.5 rounded-none text-sm text-[var(--color-text-muted)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)]"
                 >
                   <Folder className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="truncate">Sentinels</span>
@@ -198,7 +184,7 @@ function ProfileContent() {
 
                 <TabsTrigger
                   value={PROFILE_TABS.ACTIVITY}
-                  className="font-body flex items-center gap-2 rounded-none text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
+                  className="flex items-center gap-1.5 rounded-none text-sm text-[var(--color-text-muted)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)]"
                 >
                   <Activity className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="truncate">Activity</span>
@@ -206,7 +192,7 @@ function ProfileContent() {
 
                 <TabsTrigger
                   value={PROFILE_TABS.STATS}
-                  className="font-body flex items-center gap-2 rounded-none text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
+                  className="flex items-center gap-1.5 rounded-none text-sm text-[var(--color-text-muted)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)]"
                 >
                   <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="truncate">Stats</span>
@@ -214,7 +200,7 @@ function ProfileContent() {
 
                 <TabsTrigger
                   value={PROFILE_TABS.REWARDS}
-                  className="font-body flex items-center gap-2 rounded-none text-sm text-[var(--color-text-secondary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)] sm:text-lg"
+                  className="flex items-center gap-1.5 rounded-none text-sm text-[var(--color-text-muted)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)]"
                 >
                   <Gift className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="truncate">My Rewards</span>

@@ -29,14 +29,14 @@ export const CustomDropdown = ({
 
   return (
     <div className="min-w-[200px] flex-1" ref={dropdownRef}>
-      <label className="block text-[18px] font-medium text-[var(--color-text-primary)]">{label}</label>
-      <p className="mb-2 text-[14px] text-[var(--color-text-muted)]">{subLabel}</p>
+      <label className="block text-sm font-medium text-[var(--color-text-secondary)]">{label}</label>
+      <p className="mb-1.5 mt-0.5 text-xs text-[var(--color-text-muted)]">{subLabel}</p>
 
       <div className="relative">
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-[55px] w-full items-center justify-between rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] px-4 text-[var(--color-text-primary)] transition-colors hover:border-[var(--color-gold-primary)]"
+          className="flex h-9 w-full items-center justify-between rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] px-3 text-sm text-[var(--color-text-primary)] transition-colors hover:border-[var(--color-gold-primary)]"
         >
           <div className="flex items-center gap-2">
             {label === 'Select service' && (
@@ -59,7 +59,7 @@ export const CustomDropdown = ({
                   onSelect(option)
                   setIsOpen(false)
                 }}
-                className="flex w-full items-center justify-between px-4 py-3 text-left text-[var(--color-text-primary)] hover:bg-[var(--color-bg-subtle)]"
+                className="flex w-full items-center justify-between px-3 py-2 text-left text-sm text-[var(--color-text-primary)] hover:bg-[var(--color-bg-subtle)]"
               >
                 <div className="flex items-center gap-2">
                   {label === 'Select service' && (

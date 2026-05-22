@@ -3,7 +3,7 @@ import { toast } from 'sonner'
 import type { Tables } from '@/lib/database.types'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 
-type UserProfile = Tables<'ss_users'>
+type UserProfile = Tables<{ schema: 'sentinel' }, 'ss_users'>
 
 export const USER_PROFILE_QUERY_KEY = 'userProfile'
 
@@ -24,7 +24,7 @@ export function useUserProfile() {
       if (!response.ok) {
         throw new Error('Failed to get or create profile')
       }
-      return response.json()
+      return response.json() as Promise<UserProfile>
     },
     enabled: !!walletAddress,
     staleTime: 1000 * 60 * 5, // 5 minutes

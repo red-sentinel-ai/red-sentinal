@@ -111,15 +111,15 @@ export const WithdrawAgentModal = ({
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <div className="space-y-6">
+      <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">Withdraw Funds</h2>
+          <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">Withdraw Funds</h2>
           <button
             onClick={onClose}
             className="text-[var(--color-text-faint)] transition-colors hover:text-[var(--color-text-primary)]"
             disabled={isLoading}
           >
-            <X className="h-6 w-6" />
+            <X className="h-4 w-4" />
           </button>
         </div>
 

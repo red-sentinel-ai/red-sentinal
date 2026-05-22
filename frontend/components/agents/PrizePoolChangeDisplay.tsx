@@ -1,7 +1,6 @@
 'use client'
 
 import { ArrowDown, ArrowUp } from 'lucide-react'
-import clsx from 'clsx'
 import { cn } from '@/lib/utils'
 import { PrizePoolHistory } from '@/hooks/agents/useAllAgents'
 
@@ -23,7 +22,7 @@ export const PrizePoolChangeDisplay = ({
 
   const displayText = !isFinite(percentage) ? 'New' : `${Math.abs(percentage).toFixed(1)}%`
 
-  const textSize = variant === 'card' ? 'text-[10px]' : 'text-xl'
+  const textSize = variant === 'card' ? 'text-[10px]' : 'text-xs'
 
   return (
     <div
@@ -34,12 +33,7 @@ export const PrizePoolChangeDisplay = ({
       )}
     >
       {isPositive ? (
-        <ArrowUp
-          className={clsx({
-            'h-3 w-3': variant === 'card',
-            'h-5 w-5': variant === 'list',
-          })}
-        />
+        <ArrowUp className="h-3 w-3" />
       ) : (
         <ArrowDown className="h-3 w-3" />
       )}

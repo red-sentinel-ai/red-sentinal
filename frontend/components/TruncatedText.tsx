@@ -13,14 +13,14 @@ export const TruncatedText = ({ text, limit = 200 }: TruncatedTextProps) => {
   if (!text) return null
 
   if (text.length <= limit) {
-    return <p className="mt-1 pr-2 text-sm leading-relaxed text-[#575757]">{text}</p>
+    return <p className="mt-1 pr-2 text-sm leading-relaxed text-white/50">{text}</p>
   }
 
   return (
     <div className="mt-1 pr-2">
       <div
         className={cn(
-          'text-sm leading-relaxed text-[#575757] transition-all',
+          'text-sm leading-relaxed text-white/50 transition-all',
           isExpanded && 'max-h-[150px] overflow-y-auto'
         )}
       >
@@ -31,7 +31,7 @@ export const TruncatedText = ({ text, limit = 200 }: TruncatedTextProps) => {
           e.stopPropagation()
           setIsExpanded(!isExpanded)
         }}
-        className="mt-1 text-xs font-medium text-[#989898] underline decoration-1 underline-offset-2 hover:text-black"
+        className="mt-1 text-xs font-medium text-white/40 underline decoration-1 underline-offset-2 hover:text-white"
       >
         {isExpanded ? 'Read Less' : 'Read More'}
       </button>

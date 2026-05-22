@@ -34,9 +34,9 @@ export function LLMProviderSection({
   onValidate,
 }: LLMProviderSectionProps) {
   return (
-    <div className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-6">
-      <h3 className="mb-6 text-[20px] font-medium text-[var(--color-text-primary)]">LLM provider</h3>
-      <div className="flex flex-col gap-6 md:flex-row">
+    <div className="flex flex-col gap-2">
+      <label className="block text-sm font-medium text-[var(--color-text-secondary)]">LLM Provider</label>
+      <div className="flex flex-col gap-4 md:flex-row">
         <CustomDropdown
           label="Select service"
           subLabel="Select the service that hosts and serves the LLM."
@@ -56,33 +56,33 @@ export function LLMProviderSection({
         ) : (
           <div className="flex min-w-[200px] flex-1 flex-col gap-4">
             <div>
-              <label className="block text-[18px] font-medium text-[var(--color-text-primary)]">Endpoint URL</label>
-              <p className="mb-2 text-[14px] text-[var(--color-text-muted)]">OpenAI-compatible API endpoint URL</p>
+              <label className="block text-sm font-medium text-[var(--color-text-secondary)]">Endpoint URL</label>
+              <p className="mb-1.5 mt-0.5 text-xs text-[var(--color-text-muted)]">OpenAI-compatible API endpoint URL</p>
               <input
                 name="customEndpointUrl"
                 type="url"
                 value={formData.customEndpointUrl}
                 onChange={onChange}
-                className="h-[56px] w-full rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] px-4 text-[16px] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] transition-all focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)] sm:h-[55px] sm:text-base"
+                className="h-9 w-full rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] px-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] transition-all focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
                 placeholder="https://api.example.com/v1"
                 autoComplete="off"
                 spellCheck="false"
               />
               {errors.customEndpointUrl && (
-                <p className="mt-1 text-sm text-[var(--color-danger)]">{errors.customEndpointUrl}</p>
+                <p className="mt-1 text-xs text-[var(--color-danger)]">{errors.customEndpointUrl}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-[18px] font-medium text-[var(--color-text-primary)]">API Key</label>
-              <p className="mb-2 text-[14px] text-[var(--color-text-muted)]">Your API key for authentication</p>
+              <label className="block text-sm font-medium text-[var(--color-text-secondary)]">API Key</label>
+              <p className="mb-1.5 mt-0.5 text-xs text-[var(--color-text-muted)]">Your API key for authentication</p>
               <div className="relative">
                 <input
                   name="customApiKey"
                   type={showApiKey ? 'text' : 'password'}
                   value={formData.customApiKey}
                   onChange={onChange}
-                  className="h-[56px] w-full rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] px-4 pr-12 text-[16px] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] transition-all focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)] sm:h-[55px] sm:text-base"
+                  className="h-9 w-full rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] px-3 pr-10 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] transition-all focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
                   placeholder="sk-..."
                   autoComplete="off"
                   spellCheck="false"
@@ -101,8 +101,8 @@ export function LLMProviderSection({
             </div>
 
             <div>
-              <label className="block text-[18px] font-medium text-[var(--color-text-primary)]">Model Name</label>
-              <p className="mb-2 text-[14px] text-[var(--color-text-muted)]">
+              <label className="block text-sm font-medium text-[var(--color-text-secondary)]">Model Name</label>
+              <p className="mb-1.5 mt-0.5 text-xs text-[var(--color-text-muted)]">
                 The model identifier to use (e.g., gpt-4o, claude-3-opus)
               </p>
               <input
@@ -110,13 +110,13 @@ export function LLMProviderSection({
                 type="text"
                 value={formData.customModelName}
                 onChange={onChange}
-                className="h-[56px] w-full rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] px-4 text-[16px] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] transition-all focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)] sm:h-[55px] sm:text-base"
+                className="h-9 w-full rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] px-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] transition-all focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
                 placeholder="e.g., kimi-k2-turbo-preview"
                 autoComplete="off"
                 spellCheck="false"
               />
               {errors.customModelName && (
-                <p className="mt-1 text-sm text-[var(--color-danger)]">{errors.customModelName}</p>
+                <p className="mt-1 text-xs text-[var(--color-danger)]">{errors.customModelName}</p>
               )}
             </div>
 
