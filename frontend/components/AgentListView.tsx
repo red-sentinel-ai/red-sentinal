@@ -107,23 +107,23 @@ export const AgentListView = () => {
 
   return (
     <div className="mx-auto max-w-[1560px] px-4 py-6 md:px-8 md:py-10">
-      <div className="mb-8 md:mb-12">
+      <div className="mb-10 md:mb-14">
         <h1 className="page-heading text-center">Prepare Yourself for Age of Agents</h1>
-        <p className="page-subheading mt-2 text-center">
+        <p className="page-subheading mx-auto mt-4 text-center">
           Agents are already in our life. Learn how they think, where they break, and how to
           outsmart them by actually doing it.
         </p>
+        <AnimatePresence mode="wait">
+          <motion.div
+            className="mt-6 flex justify-center"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
+          >
+            <ChainLogos />
+          </motion.div>
+        </AnimatePresence>
       </div>
-      <AnimatePresence mode="wait">
-        <motion.div
-          className="mt-4 flex justify-center"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.2 }}
-        >
-          <ChainLogos />
-        </motion.div>
-      </AnimatePresence>
 
       <div className="mb-10 md:mb-14">
         <AttackStats />

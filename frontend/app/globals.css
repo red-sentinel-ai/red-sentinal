@@ -120,7 +120,7 @@
 
 @layer components {
   .page-heading {
-    font-size: 1.75rem;
+    font-size: 2rem;
     font-weight: 500;
     line-height: 1.2;
     color: var(--color-text-primary);
