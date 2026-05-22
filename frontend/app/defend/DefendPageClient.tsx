@@ -40,8 +40,12 @@ import { useDefendForm } from './hooks/useDefendForm'
 import { useCustomProvider } from './hooks/useCustomProvider'
 import { useDeployAgent } from './hooks/useDeployAgent'
 import { useTemplateLoader } from './hooks/useTemplateLoader'
+import { SyndicateLaunchFlow } from '@/components/syndicate/SyndicateLaunchFlow'
+
+type DefendMode = 'individual' | 'syndicate'
 
 export default function DefendPageClient() {
+  const [defendMode, setDefendMode] = useState<DefendMode>('individual')
   const { activeChain } = useActiveChain()
   const isSolana = activeChain === 'solana'
   const isEvm = activeChain === 'bnb'
@@ -231,6 +235,46 @@ export default function DefendPageClient() {
   return (
     <div className="min-h-screen bg-[var(--color-bg-base)] pb-8 pt-10">
       <div className="container mx-auto px-4 py-4">
+        {/* Mode tabs */}
+        <div className="mx-auto mb-8 max-w-[969px] px-4">
+          <div className="flex w-full overflow-hidden rounded-xl border border-[var(--color-border-default)] bg-[var(--color-bg-surface)]">
+            {(['individual', 'syndicate'] as DefendMode[]).map(mode => (
+              <button
+                key={mode}
+                type="button"
+                onClick={() => setDefendMode(mode)}
+                className={`flex flex-1 flex-col items-center gap-0.5 py-3 text-sm font-medium transition-all ${
+                  defendMode === mode
+                    ? 'bg-[var(--color-gold-primary)] text-[var(--color-text-on-gold)]'
+                    : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]'
+                }`}
+              >
+                {mode === 'individual' ? 'Individual Mode' : 'Syndicate Mode'}
+                <span
+                  className={`text-[10px] font-normal ${defendMode === mode ? 'opacity-80' : 'opacity-60'}`}
+                >
+                  {mode === 'individual' ? 'Solo sentinel deployment' : 'Group-funded sentinel'}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Syndicate Mode */}
+        {defendMode === 'syndicate' && (
+          <div className="mx-auto max-w-[640px] px-4">
+            <div className="mb-6">
+              <h1 className="page-heading">Launch a Syndicate Sentinel</h1>
+              <p className="page-subheading mt-2">
+                Pool funds with others, share fees, and defend together.
+              </p>
+            </div>
+            <SyndicateLaunchFlow />
+          </div>
+        )}
+
+        {/* Individual Mode */}
+        {defendMode === 'individual' && (
         <form onSubmit={handleSubmit} className="relative mx-auto max-w-[969px] space-y-8 px-4">
           {/* Header */}
           <div className="flex flex-col-reverse items-center gap-6 sm:flex-row sm:items-start sm:justify-between">
@@ -657,6 +701,7 @@ export default function DefendPageClient() {
             )}
           </div>
         </form>
+        )} {/* end individual mode */}
 
         <SuccessModal
           open={showSuccessModal}
