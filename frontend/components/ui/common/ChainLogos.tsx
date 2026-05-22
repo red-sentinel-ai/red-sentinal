@@ -9,35 +9,21 @@ interface ChainLogosProps {
 }
 
 export function ChainLogos({ className }: ChainLogosProps) {
-  const duration = Object.keys(CHAINS).length * 1.5
-
   return (
-    <div
-      className={cn(
-        'flex min-h-14 w-full flex-row flex-wrap items-end justify-center gap-5',
-        className
-      )}
-    >
-      {Object.values(CHAINS).map((chain, index) => (
-        <div
+    <div className={cn('flex flex-wrap items-center justify-center gap-2', className)}>
+      <span className="text-sm text-[var(--color-text-muted)]">Live on</span>
+      {Object.values(CHAINS).map(chain => (
+        <span
           key={chain.name}
-          title={chain.name}
-          className={cn(
-            'relative flex size-12 shrink-0 origin-bottom items-center justify-center overflow-hidden rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)]',
-            chain.active && 'z-10'
-          )}
-          style={{
-            animation: `chain-breathe ${duration}s ease-in-out infinite`,
-            animationDelay: `${index * 1.5}s`,
-          }}
+          className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] px-3 py-1.5"
         >
           {chain.rounded ? (
-            <span className="flex size-8 shrink-0 overflow-hidden rounded-full">
+            <span className="flex size-4 shrink-0 overflow-hidden rounded-full">
               <Image
                 src={chain.logo}
                 alt={chain.name}
-                width={32}
-                height={32}
+                width={16}
+                height={16}
                 className="object-contain"
               />
             </span>
@@ -45,12 +31,15 @@ export function ChainLogos({ className }: ChainLogosProps) {
             <Image
               src={chain.logo}
               alt={chain.name}
-              width={32}
-              height={32}
+              width={16}
+              height={16}
               className="object-contain"
             />
           )}
-        </div>
+          <span className="text-sm font-medium text-[var(--color-text-primary)]">
+            {chain.name}
+          </span>
+        </span>
       ))}
     </div>
   )
