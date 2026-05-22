@@ -9,7 +9,7 @@ const AVATARS_BUCKET_NAME = 'ss-avatars'
 export async function PUT(request: NextRequest) {
   try {
     const formData = await request.formData()
-    const walletAddress = formData.get('walletAddress') as string
+    const walletAddress = (formData.get('walletAddress') as string)?.toLowerCase()
     const username = formData.get('username') as string
     const displayName = formData.get('displayName') as string
     const email = formData.get('email') as string | null

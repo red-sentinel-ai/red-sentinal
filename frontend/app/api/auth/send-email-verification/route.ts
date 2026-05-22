@@ -16,9 +16,9 @@ function createToken(email: string, walletAddress: string): string {
 
 export async function POST(request: Request) {
   try {
-    const { email, walletAddress } = await request.json()
+    const { email, walletAddress: rawWalletAddress } = await request.json()
 
-    if (!email || !walletAddress) {
+    if (!email || !rawWalletAddress) {
       return NextResponse.json({ error: 'Missing email or walletAddress' }, { status: 400 })
     }
 
@@ -27,6 +27,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid email address' }, { status: 400 })
     }
 
+    // Normalize to lowercase so verify-email lookup always matches the DB
+    const walletAddress = rawWalletAddress.toLowerCase()
     const token = createToken(email, walletAddress)
     const verificationUrl = `${APP_URL}/verify-email?token=${encodeURIComponent(token)}`
 

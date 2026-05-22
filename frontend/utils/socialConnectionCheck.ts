@@ -7,13 +7,17 @@ export interface SocialConnectionStatus {
   hasAnyConnection: boolean
 }
 
-export async function checkSocialConnections(walletAddress: string): Promise<SocialConnectionStatus> {
-  // Find user by wallet address in ss_wallet_connections
-  const { data: walletConnection } = await supabaseServiceClient
+export async function checkSocialConnections(rawWalletAddress: string): Promise<SocialConnectionStatus> {
+  const walletAddress = rawWalletAddress.toLowerCase()
+
+  // ilike + limit(1) — handles multiple rows from pre-normalization mixed-case duplicates
+  const { data: walletConnections } = await supabaseServiceClient
     .from('ss_wallet_connections')
     .select('user_id')
-    .eq('wallet_address', walletAddress)
-    .single()
+    .ilike('wallet_address', walletAddress)
+    .limit(1)
+
+  const walletConnection = walletConnections?.[0] ?? null
 
   if (!walletConnection) {
     return {
