@@ -423,6 +423,21 @@ body::-webkit-scrollbar-thumb:hover {
   }
 }
 
+@keyframes chain-breathe {
+  0%, 100% {
+    transform: scale(1);
+  }
+  10% {
+    transform: scale(1.12);
+  }
+  25% {
+    transform: scale(1.12);
+  }
+  35% {
+    transform: scale(1);
+  }
+}
+
 @property --angle {
   syntax: '<angle>';
   initial-value: 0deg;

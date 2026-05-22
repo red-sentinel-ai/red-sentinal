@@ -10,10 +10,12 @@ interface ChainLogosProps {
 }
 
 export function ChainLogos({ chains, className }: ChainLogosProps) {
+  const duration = chains.length * 1.5
+
   return (
     <div
       className={cn(
-        'flex min-h-14 w-full flex-row flex-wrap items-end justify-center gap-5 lg:justify-start',
+        'flex min-h-14 w-full flex-row flex-wrap items-end justify-center gap-5',
         className,
       )}
     >
@@ -22,11 +24,12 @@ export function ChainLogos({ chains, className }: ChainLogosProps) {
           key={chain.name}
           title={chain.name}
           className={cn(
-            'chain-wave relative flex size-12 shrink-0 origin-bottom items-center justify-center overflow-hidden rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)]',
+            'relative flex size-12 shrink-0 origin-bottom items-center justify-center overflow-hidden rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)]',
             chain.active && 'z-10',
           )}
           style={{
-            animationDelay: `${index * 0.75}s`,
+            animation: `chain-breathe ${duration}s ease-in-out infinite`,
+            animationDelay: `${index * 1.5}s`,
           }}
         >
           {chain.rounded ? (
