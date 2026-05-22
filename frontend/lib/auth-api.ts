@@ -1,6 +1,6 @@
 import { SUI_SENTINEL_API_URL } from '@/constants'
 
-export type ChainType = 'sui' | 'evm'
+export type ChainType = 'sui' | 'evm' | 'solana'
 
 export type WalletConnection = {
   id: string

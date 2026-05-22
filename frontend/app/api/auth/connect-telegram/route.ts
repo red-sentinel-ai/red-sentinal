@@ -26,7 +26,7 @@ export async function GET(request: Request) {
   const params = url.searchParams
 
   try {
-    const walletAddress = params.get('wallet')
+    const walletAddress = params.get('wallet')?.toLowerCase()
     const id = params.get('id')
     const hash = params.get('hash')
     const auth_date = params.get('auth_date')

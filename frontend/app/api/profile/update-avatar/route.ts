@@ -6,7 +6,7 @@ const AVATARS_BUCKET_NAME = 'ss-avatars'
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData()
-    const walletAddress = formData.get('walletAddress') as string
+    const walletAddress = (formData.get('walletAddress') as string)?.toLowerCase()
     const imageFile = formData.get('image') as File | null
     const imageUrlString = formData.get('image_url') as string | null
 

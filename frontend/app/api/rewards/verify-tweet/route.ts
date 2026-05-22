@@ -8,7 +8,8 @@ import {
 
 export async function POST(req: NextRequest) {
   try {
-    const { wallet_address, tweet_url, agent_name, agent_id } = await req.json()
+    const { wallet_address: raw_wallet_address, tweet_url, agent_name, agent_id } = await req.json()
+    const wallet_address = raw_wallet_address?.toLowerCase()
 
     if (!wallet_address || !tweet_url) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
