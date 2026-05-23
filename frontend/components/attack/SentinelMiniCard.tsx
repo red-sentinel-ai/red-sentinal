@@ -15,39 +15,57 @@ type Variant = 'featured' | 'trending'
 export function SentinelMiniCard({
   agent,
   variant,
+  index = 0,
 }: {
   agent: AgentDetails
   variant?: Variant
+  index?: number
 }) {
   const token = getTokenForCoinType(agent.coin_type)
   const chain = CHAINS[agent.chain ?? 'sui']
+  const isFeatured = variant === 'featured'
+  const isPrimaryFeatured = isFeatured && index === 0
 
   return (
     <Link
       href={`/attack/${agent.agent_path}`}
-      className="group block w-[230px] shrink-0 overflow-hidden rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] shadow-[var(--shadow-card)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--color-border-default)] hover:shadow-[var(--shadow-elevated)] sm:w-[250px]"
+      className={cn(
+        'group flex h-full min-w-0 flex-col overflow-hidden border bg-[var(--color-bg-surface)] shadow-[var(--shadow-card)] transition-all duration-200 hover:border-[var(--color-gold-primary)] hover:shadow-[var(--shadow-elevated)]',
+        isPrimaryFeatured
+          ? 'tactical-glow border-[var(--color-gold-primary)]'
+          : 'border-[var(--color-border-default)]'
+      )}
     >
-      <div className="relative h-32 w-full overflow-hidden bg-[var(--color-bg-subtle)]">
+      <div
+        className={cn(
+          'relative w-full overflow-hidden bg-[var(--color-bg-subtle)]',
+          isFeatured ? 'h-44' : 'h-32'
+        )}
+      >
         {agent.agent_image ? (
           <Image
             src={agent.agent_image}
             alt={agent.agent_name ?? 'Sentinel'}
             fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            className={cn(
+              'object-cover transition-all duration-500 group-hover:scale-105 group-hover:grayscale-0',
+              isPrimaryFeatured ? 'grayscale-0' : 'grayscale'
+            )}
             sizes="250px"
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-3xl font-semibold text-[var(--color-text-muted)]">
+          <div className="font-display flex h-full items-center justify-center text-3xl font-bold text-[var(--color-text-muted)]">
             {agent.agent_name?.charAt(0).toUpperCase() ?? '?'}
           </div>
         )}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-70" />
         {variant && (
           <span
             className={cn(
-              'absolute left-2 top-2 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold leading-none',
+              'absolute left-2 top-2 inline-flex items-center gap-1 px-2 py-1 font-mono text-[9px] font-bold uppercase leading-none',
               variant === 'featured'
                 ? 'bg-[var(--color-gold-primary)] text-[var(--color-text-on-gold)]'
-                : 'border border-amber-400/30 bg-amber-900/20 text-amber-400'
+                : 'bg-[var(--color-gold-light)] text-[var(--color-accent-fg)]'
             )}
           >
             {variant === 'featured' ? (
@@ -60,42 +78,56 @@ export function SentinelMiniCard({
         )}
       </div>
 
-      <div className="p-3">
-        <div className="flex items-center gap-1.5">
-          <h3 className="min-w-0 flex-1 truncate text-sm font-semibold text-[var(--color-text-primary)]">
+      <div className="flex flex-1 flex-col p-4">
+        <div className="mb-2 flex items-start gap-2">
+          <h3 className="min-w-0 flex-1 truncate font-mono text-sm font-bold uppercase tracking-[0.02em] text-[var(--color-text-primary)]">
             {agent.agent_name}
           </h3>
           <Image
             src={chain.icon}
             alt={chain.name}
-            width={14}
-            height={14}
-            className="shrink-0 rounded-full"
+            width={16}
+            height={16}
+            className="mt-0.5 shrink-0 rounded-full"
           />
         </div>
 
-        <div className="mt-2 flex items-end justify-between gap-2">
+        <div className="mb-4 grid grid-cols-2 gap-2">
           <div className="min-w-0">
-            <p className="text-[10px] uppercase tracking-wide text-[var(--color-text-muted)]">
+            <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-[var(--color-text-muted)]">
               Prize Pool
             </p>
-            <div className="truncate text-sm font-semibold text-[var(--color-text-primary)]">
-              <TokenAmount rawAmount={agent.total_balance} token={token} precision={2} iconSize={12} />
+            <div className="truncate font-mono text-xs font-bold text-[var(--color-gold-light)]">
+              <TokenAmount
+                rawAmount={agent.total_balance}
+                token={token}
+                precision={2}
+                iconSize={12}
+              />
             </div>
           </div>
           <div className="min-w-0 text-right">
-            <p className="text-[10px] uppercase tracking-wide text-[var(--color-text-muted)]">
+            <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-[var(--color-text-muted)]">
               Cost
             </p>
-            <div className="truncate text-sm text-[var(--color-text-secondary)]">
-              <TokenAmount rawAmount={agent.cost_per_message} token={token} precision={2} iconSize={12} />
+            <div className="truncate font-mono text-xs font-bold text-[var(--color-text-primary)]">
+              <TokenAmount
+                rawAmount={agent.cost_per_message}
+                token={token}
+                precision={2}
+                iconSize={12}
+              />
             </div>
           </div>
         </div>
 
-        <div className="mt-3 flex h-8 w-full items-center justify-center rounded-lg bg-[var(--color-gold-primary)] text-xs font-semibold text-[var(--color-text-on-gold)] transition-colors group-hover:bg-[var(--color-gold-light)]">
-          Attack Sentinel
-        </div>
+        {isPrimaryFeatured ? (
+          <div className="mt-auto flex h-10 w-full items-center justify-center bg-[var(--color-gold-primary)] font-mono text-xs font-bold uppercase tracking-[0.05em] text-[var(--color-text-on-gold)] transition-all group-hover:bg-[var(--color-gold-light)] group-active:scale-[0.98]">
+            Attack Sentinel
+          </div>
+        ) : (
+          <div className="mt-auto h-0" />
+        )}
       </div>
     </Link>
   )

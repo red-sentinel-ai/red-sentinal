@@ -28,10 +28,7 @@ export function EVMConnectButton() {
 
   if (!isConnected || !address) {
     return (
-      <button
-        onClick={openConnectModal}
-        className="min-w-[180px] rounded-full bg-black px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-900"
-      >
+      <button onClick={openConnectModal} className="rs-connect-button min-w-[180px] px-6 py-2">
         Connect Wallet
       </button>
     )

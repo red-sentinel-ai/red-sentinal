@@ -33,7 +33,7 @@ export function SuiConnectButton() {
   }, [account?.address])
 
   if (!account) {
-    return <DappKitConnectButton className="min-w-[180px]" />
+    return <DappKitConnectButton className="rs-connect-button min-w-[180px]" />
   }
 
   return (

@@ -9,6 +9,7 @@ import { AppTopbar } from './AppTopbar'
 export function AppShell({ children }: { children: ReactNode }) {
   return (
     <SidebarProvider>
+      <div className="scanline-overlay pointer-events-none fixed inset-0 z-[100] opacity-[0.08]" />
       <AppSidebar />
       <SidebarInset>
         <AppTopbar />

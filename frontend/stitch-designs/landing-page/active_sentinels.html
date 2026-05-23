@@ -1,0 +1,586 @@
+<!doctype html>
+
+<html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Arena Dashboard - Amber Variant</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&amp;family=Space+Grotesk:wght@600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              'primary-fixed-dim': '#ffba43',
+              'on-primary-fixed-variant': '#614000',
+              'tertiary-fixed': '#72ff70',
+              'surface-tint': '#ffba43',
+              'outline-variant': '#524533',
+              primary: '#ffd597',
+              'on-tertiary-container': '#005b10',
+              'surface-variant': '#353534',
+              'surface-container-lowest': '#0e0e0e',
+              surface: '#131313',
+              'secondary-fixed-dim': '#c8c6c5',
+              outline: '#9f8e78',
+              'secondary-container': '#474746',
+              'on-background': '#e5e2e1',
+              'tertiary-fixed-dim': '#00e639',
+              'inverse-on-surface': '#313030',
+              'inverse-surface': '#e5e2e1',
+              'surface-container-low': '#1c1b1b',
+              'inverse-primary': '#805600',
+              secondary: '#c8c6c5',
+              'on-tertiary-fixed-variant': '#00530e',
+              'surface-container': '#201f1f',
+              error: '#ffb4ab',
+              'on-surface-variant': '#d7c4ac',
+              'surface-container-highest': '#353534',
+              'on-tertiary': '#003907',
+              'on-error': '#690005',
+              'on-primary-container': '#6a4700',
+              'surface-dim': '#131313',
+              'on-primary': '#432c00',
+              'on-secondary-fixed': '#1c1b1b',
+              'surface-bright': '#3a3939',
+              'primary-container': '#ffb000',
+              background: '#131313',
+              'on-primary-fixed': '#281800',
+            },
+            borderRadius: {
+              DEFAULT: '0px',
+              lg: '0px',
+              xl: '0px',
+              full: '9999px',
+            },
+            spacing: {
+              'margin-desktop': '32px',
+              'panel-padding': '24px',
+              gutter: '16px',
+              unit: '4px',
+              'margin-mobile': '16px',
+            },
+            fontFamily: {
+              'body-md': ['JetBrains Mono'],
+              'label-md': ['JetBrains Mono'],
+              'headline-md': ['Space Grotesk'],
+              'headline-sm': ['Space Grotesk'],
+              'body-sm': ['JetBrains Mono'],
+              'label-sm': ['JetBrains Mono'],
+              'label-lg': ['JetBrains Mono'],
+              'headline-lg': ['Space Grotesk'],
+              'body-lg': ['JetBrains Mono'],
+            },
+            fontSize: {
+              'body-md': ['16px', { lineHeight: '1.5', fontWeight: '400' }],
+              'label-md': ['12px', { lineHeight: '1', fontWeight: '700' }],
+              'headline-md': [
+                '32px',
+                { lineHeight: '1.2', letterSpacing: '-0.01em', fontWeight: '600' },
+              ],
+              'headline-sm': ['24px', { lineHeight: '1.2', fontWeight: '600' }],
+              'body-sm': ['14px', { lineHeight: '1.5', fontWeight: '400' }],
+              'label-sm': ['10px', { lineHeight: '1', letterSpacing: '0.1em', fontWeight: '500' }],
+              'label-lg': ['14px', { lineHeight: '1', fontWeight: '700' }],
+              'headline-lg': [
+                '48px',
+                { lineHeight: '1.1', letterSpacing: '-0.02em', fontWeight: '700' },
+              ],
+              'body-lg': ['18px', { lineHeight: '1.6', fontWeight: '400' }],
+            },
+          },
+        },
+      }
+    </script>
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+      }
+      body {
+        background-color: #000000;
+        color: #e5e2e1;
+        font-family: 'JetBrains Mono', monospace;
+      }
+      .scanline-overlay {
+        background:
+          linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+          linear-gradient(
+            90deg,
+            rgba(255, 0, 0, 0.06),
+            rgba(0, 255, 0, 0.02),
+            rgba(0, 0, 255, 0.06)
+          );
+        background-size:
+          100% 2px,
+          3px 100%;
+        pointer-events: none;
+      }
+      .tactical-glow {
+        box-shadow: 0 0 15px rgba(255, 176, 0, 0.2);
+      }
+      .segmented-progress {
+        background-image: linear-gradient(90deg, #ffb000 70%, transparent 70%);
+        background-size: 10px 100%;
+      }
+      ::-webkit-scrollbar {
+        width: 4px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #000000;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #333333;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #ffb000;
+      }
+
+      input:focus,
+      select:focus {
+        outline: none;
+        border-color: #ffb000 !important;
+        box-shadow: 0 0 10px rgba(255, 176, 0, 0.1);
+      }
+      .hover-glow:hover {
+        box-shadow: 0 0 15px rgba(255, 176, 0, 0.4);
+      }
+    </style>
+  </head>
+  <body class="overflow-x-hidden bg-black">
+    <div class="scanline-overlay fixed inset-0 z-[100] opacity-10"></div>
+    <!-- SideNavBar -->
+    <aside
+      class="border-outline-variant bg-surface fixed left-0 top-0 z-50 flex h-full w-64 flex-col overflow-y-auto border-r"
+    >
+      <div class="border-outline-variant border-b p-6">
+        <img
+          alt="Red Sentinel Logo"
+          class="mb-2 h-8 w-auto"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8vTLMpWzd3LqeQd-Gq3u6gJkFcVDq6j8qiac0NDJwHu28uP75qYrhbRxT7BYtUSpe9q9j--2Bqmg-dKpGFVDydsONUBiZl1jYQhHl1PuCKp1WT9zIcGQhl9lxlh_EbGBxKnGrjcy3PLOXDWoqI9AtYfskInCpx_mDkwcG9wmBABOBXAxbfhayIo8vTEsnhaLSLUVgbtI2v1T4qe4-Dossr1ByrMM4uUxdeHzHj1bgIv-sJoC7QSjnCmmk2Q0MSB6TO15enWBlZu0"
+        />
+        <div class="font-label-sm text-primary text-[10px] uppercase tracking-[0.2em] opacity-80">
+          Tactical-OS V2.4
+        </div>
+      </div>
+      <nav class="mt-4 flex-1">
+        <div class="space-y-1">
+          <a
+            class="bg-primary/10 border-primary text-primary flex origin-left scale-95 items-center gap-3 border-l-4 px-4 py-3 font-bold transition-all duration-100"
+            href="#"
+          >
+            <span class="material-symbols-outlined">terminal</span>
+            <span class="font-label-md text-label-md">Home</span>
+          </a>
+          <a
+            class="text-on-surface-variant hover:text-primary hover:bg-surface-container-highest flex items-center gap-3 px-4 py-3 transition-all duration-150"
+            href="#"
+          >
+            <span class="material-symbols-outlined">add_box</span>
+            <span class="font-label-md text-label-md">Create</span>
+          </a>
+          <a
+            class="text-on-surface-variant hover:text-primary hover:bg-surface-container-highest flex items-center gap-3 px-4 py-3 transition-all duration-150"
+            href="#"
+          >
+            <span class="material-symbols-outlined">group_work</span>
+            <span class="font-label-md text-label-md">Syndicates</span>
+          </a>
+          <a
+            class="text-on-surface-variant hover:text-primary hover:bg-surface-container-highest flex items-center gap-3 px-4 py-3 transition-all duration-150"
+            href="#"
+          >
+            <span class="material-symbols-outlined">military_tech</span>
+            <span class="font-label-md text-label-md">Leaderboard</span>
+          </a>
+          <a
+            class="text-on-surface-variant hover:text-primary hover:bg-surface-container-highest flex items-center gap-3 px-4 py-3 transition-all duration-150"
+            href="#"
+          >
+            <span class="material-symbols-outlined">redeem</span>
+            <span class="font-label-md text-label-md">Rewards</span>
+          </a>
+          <a
+            class="text-on-surface-variant hover:text-primary hover:bg-surface-container-highest flex items-center gap-3 px-4 py-3 transition-all duration-150"
+            href="#"
+          >
+            <span class="material-symbols-outlined">account_circle</span>
+            <span class="font-label-md text-label-md">Profile</span>
+          </a>
+        </div>
+      </nav>
+      <div class="border-outline-variant mt-auto border-t p-4">
+        <div class="space-y-2">
+          <a
+            class="text-on-surface-variant hover:text-primary flex items-center gap-3 py-2"
+            href="#"
+          >
+            <span class="material-symbols-outlined text-[20px]">help</span>
+            <span class="font-label-sm text-label-sm">Support</span>
+          </a>
+          <a
+            class="text-on-surface-variant hover:text-primary flex items-center gap-3 py-2"
+            href="#"
+          >
+            <span class="material-symbols-outlined text-[20px]">description</span>
+            <span class="font-label-sm text-label-sm">Logs</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+    <!-- TopNavBar -->
+    <header
+      class="bg-surface-container-highest border-outline-variant fixed left-64 right-0 top-0 z-40 flex h-16 items-center justify-end border-b px-8"
+    >
+      <div class="flex items-center gap-6">
+        <div
+          class="bg-surface border-outline-variant text-primary font-label-sm hover:bg-primary/10 flex cursor-pointer items-center gap-2 border px-3 py-1.5 transition-colors"
+        >
+          <button
+            class="bg-primary-container text-on-primary-fixed font-label-sm px-4 py-1.5 uppercase"
+          >
+            Mainnet
+          </button>
+        </div>
+        <div
+          class="bg-surface border-outline-variant text-primary font-label-sm hover:bg-primary/10 flex cursor-pointer items-center gap-2 border px-3 py-1.5 transition-colors"
+        >
+          <button
+            class="bg-primary-container text-on-primary-fixed font-label-sm px-4 py-1.5 font-bold uppercase"
+          >
+            Connect Wallet
+          </button>
+        </div>
+      </div>
+    </header>
+    <!-- Main Content -->
+    <main class="ml-64 mt-16 min-h-screen p-8">
+      <!-- Global Terminal - Active Sentinels Section -->
+      <section>
+        <div class="mb-6 flex flex-col">
+          <h2
+            class="font-headline-sm text-headline-sm text-on-surface mb-4 uppercase tracking-[0.1em]"
+          >
+            GLOBAL TERMINAL - ACTIVE SENTINELS
+          </h2>
+          <!-- High-Density Control Bar -->
+          <div
+            class="bg-surface-container border-outline-variant flex flex-wrap items-center gap-3 border p-2"
+          >
+            <!-- Search Input -->
+            <div class="relative min-w-[240px] flex-1">
+              <span
+                class="material-symbols-outlined text-on-surface-variant/60 absolute left-3 top-1/2 -translate-y-1/2 text-[18px]"
+                >search</span
+              >
+              <input
+                class="border-outline-variant/30 text-label-sm font-label-sm text-on-surface placeholder:text-on-surface-variant/30 focus:ring-primary focus:border-primary w-full border bg-black px-10 py-2 transition-all focus:ring-1"
+                placeholder="SEARCH AGENTS..."
+                type="text"
+              />
+            </div>
+            <!-- Network Selector -->
+            <div
+              class="border-outline-variant/30 relative flex min-w-[160px] items-center border bg-black px-3 py-2"
+            >
+              <span class="material-symbols-outlined text-on-surface-variant/60 mr-2 text-[18px]"
+                >hub</span
+              >
+              <label class="sr-only">Network</label>
+              <select
+                class="text-on-surface font-label-sm flex-1 cursor-pointer appearance-none border-none bg-transparent p-0 text-[12px] uppercase tracking-wider focus:ring-0"
+              >
+                <option value="all">ALL NETWORKS</option>
+                <option value="bnb">BNB CHAIN</option>
+                <option value="solana">SOLANA</option>
+                <option value="sui">SUI</option>
+                <option value="eth">ETHEREUM</option>
+              </select>
+              <span
+                class="material-symbols-outlined text-on-surface-variant/60 pointer-events-none ml-1 text-[16px]"
+                >expand_more</span
+              >
+            </div>
+            <!-- Token Selector -->
+            <div
+              class="border-outline-variant/30 relative flex min-w-[140px] items-center border bg-black px-3 py-2"
+            >
+              <span class="material-symbols-outlined text-on-surface-variant/60 mr-2 text-[18px]"
+                >monetization_on</span
+              >
+              <label class="sr-only">Token</label>
+              <select
+                class="text-on-surface font-label-sm flex-1 cursor-pointer appearance-none border-none bg-transparent p-0 text-[12px] uppercase tracking-wider focus:ring-0"
+              >
+                <option value="all">ALL TOKENS</option>
+                <option value="usdc">USDC</option>
+                <option value="bnb">BNB</option>
+                <option value="sol">SOL</option>
+                <option value="sui">SUI</option>
+                <option value="eth">ETH</option>
+              </select>
+              <span
+                class="material-symbols-outlined text-on-surface-variant/60 pointer-events-none ml-1 text-[16px]"
+                >expand_more</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="bg-surface border-outline-variant overflow-x-auto border">
+          <table class="font-body-sm w-full min-w-[1000px] border-collapse text-left">
+            <thead>
+              <tr class="bg-surface-container-highest border-outline-variant border-b">
+                <th
+                  class="font-label-sm text-on-surface-variant px-6 py-3 text-[11px] uppercase tracking-widest"
+                >
+                  ID / AGENT NAME
+                </th>
+                <th
+                  class="font-label-sm text-on-surface-variant px-6 py-3 text-[11px] uppercase tracking-widest"
+                >
+                  STATUS
+                </th>
+                <th
+                  class="font-label-sm text-on-surface-variant px-6 py-3 text-[11px] uppercase tracking-widest"
+                >
+                  ATTACK FEE
+                </th>
+                <th
+                  class="font-label-sm text-on-surface-variant px-6 py-3 text-[11px] uppercase tracking-widest"
+                >
+                  TOTAL ATTACKS
+                </th>
+                <th
+                  class="font-label-sm text-on-surface-variant px-6 py-3 text-[11px] uppercase tracking-widest"
+                >
+                  REWARD POOL
+                </th>
+                <th
+                  class="font-label-sm text-on-surface-variant px-6 py-3 text-[11px] uppercase tracking-widest"
+                >
+                  ACTION
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-outline-variant/20 divide-y">
+              <!-- Row 1: ZEUS-V4 -->
+              <tr class="hover:bg-primary/5 group transition-colors">
+                <td class="px-6 py-3">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="border-outline-variant flex h-8 w-8 items-center justify-center border bg-black p-1.5"
+                    >
+                      <img
+                        alt="BNB"
+                        class="h-full w-full object-contain"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwzystCLnGLGLPD38vIOXP52s9H_QufUzo7AqyPQ4m0BKqGkX3WAUTlrzqaHe3tjdUDguSyuGVPZDT1eFuO1dVrP5H8vCZWqqfC5J9967NfVFHdZyEL1kA7yqjvXA-jYOvZGUgMWxdpdQA9nVVrjPIPQ6U_qb0ew4x_bKaWo_lENX1hNJWs6-venfNx3Ep6ECoWRCrhEC8KHhoLcLJRe8gQ4XfqU2pjpPKexgKCDxFoYjvR-vF-24KYmPgA-ddxqc_ZQU562COmHs"
+                      />
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-2">
+                        <span class="text-primary font-bold">ZEUS-V4</span>
+                      </div>
+                      <div class="text-on-surface-variant/40 font-mono text-[9px] tracking-tighter">
+                        SERIAL: 0x9823...11A
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-3">
+                  <div
+                    class="text-primary flex items-center gap-2 text-[10px] font-bold tracking-wider"
+                  >
+                    <span class="bg-primary h-1.5 w-1.5 animate-pulse rounded-full"></span>
+                    ACTIVE BREACHES
+                  </div>
+                </td>
+                <td class="text-on-surface font-label-sm px-6 py-3 text-[12px]">0.15 BNB</td>
+                <td class="text-on-surface-variant font-label-sm px-6 py-3 text-[12px]">2,482</td>
+                <td class="text-primary px-6 py-3 text-[13px] font-bold">14,200 USDC</td>
+                <td class="px-6 py-3">
+                  <button
+                    class="border-primary text-primary font-label-sm hover:bg-primary/20 hover-glow border px-5 py-1.5 text-[11px] font-bold uppercase tracking-widest transition-all"
+                  >
+                    ATTACK
+                  </button>
+                </td>
+              </tr>
+              <!-- Row 2: KRAKEN-S -->
+              <tr class="hover:bg-primary/5 group transition-colors">
+                <td class="px-6 py-3">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="border-outline-variant flex h-8 w-8 items-center justify-center border bg-black p-1.5"
+                    >
+                      <img
+                        alt="SOL"
+                        class="h-full w-full object-contain"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDl5jqbbZEdzgrL6jjxzJGEcjilHVmPO_ZBFh0mVxNCDw-wivQMmqlfsy5_0CloKJjeow0te4iQzDI2vqWWTJ9oKN7yVR1rmcNCnjcw9kTMo8FkWbg7h1iCkGFTpP_x67QCPkPLFxsgG6KjaADXZTlLHQKV4x2N_iRoQGJjzYSCQlsIDodVa62QAFTfDgKCi6NZqhG6NoSupEhqQbQyxmvsPlf2lKfgdlV5fLAEUttiR0JRGm78GT5wMp-86UUU2AOacAc7gvc0QxY"
+                      />
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-2">
+                        <span class="text-on-surface font-bold">KRAKEN-S</span>
+                      </div>
+                      <div class="text-on-surface-variant/40 font-mono text-[9px] tracking-tighter">
+                        SERIAL: 0x5112...99B
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-3">
+                  <div
+                    class="text-on-surface-variant/60 flex items-center gap-2 text-[10px] font-bold tracking-wider"
+                  >
+                    <span class="bg-on-surface-variant/60 h-1.5 w-1.5 rounded-full"></span>
+                    STABLE
+                  </div>
+                </td>
+                <td class="text-on-surface font-label-sm px-6 py-3 text-[12px]">0.05 SOL</td>
+                <td class="text-on-surface-variant font-label-sm px-6 py-3 text-[12px]">812</td>
+                <td class="text-primary px-6 py-3 text-[13px] font-bold">8,500 USDC</td>
+                <td class="px-6 py-3">
+                  <button
+                    class="border-primary text-primary font-label-sm hover:bg-primary/20 hover-glow border px-5 py-1.5 text-[11px] font-bold uppercase tracking-widest transition-all"
+                  >
+                    ATTACK
+                  </button>
+                </td>
+              </tr>
+              <!-- Row 3: NEXUS-CORE -->
+              <tr class="hover:bg-primary/5 group transition-colors">
+                <td class="px-6 py-3">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="border-outline-variant flex h-8 w-8 items-center justify-center border bg-black p-1.5"
+                    >
+                      <img
+                        alt="ETH"
+                        class="h-full w-full object-contain"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxFt2B4X2uoek1E2BOYSN1QO1GuDOggwJHgLIb-EeCBn5BQAvXS66CU16UYa1pl4x8O82aO3rFZ1J7wHmN3OFd1xxIWoG0SyzB3vLgO5IA3kKwWQidfFIPLjK1kambyWtg2NVNDuay6bi4sP5Bm-FdLSAUPiedKN-fjnnilZ_0pXUgxa9VNrJdQQ1UwBsoTa4G4IESkQkttpigM1huh_Y9XAl1w-SsluCq_7ABXHi6cX6PPO-jJEQmamBU9gshjWevpUuAFMGuQUk"
+                      />
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-2">
+                        <span class="text-on-surface font-bold">NEXUS-CORE</span>
+                      </div>
+                      <div class="text-on-surface-variant/40 font-mono text-[9px] tracking-tighter">
+                        SERIAL: 0xEE33...88C
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-3">
+                  <div
+                    class="text-on-surface-variant/60 flex items-center gap-2 text-[10px] font-bold tracking-wider"
+                  >
+                    <span class="bg-on-surface-variant/60 h-1.5 w-1.5 rounded-full"></span>
+                    STABLE
+                  </div>
+                </td>
+                <td class="text-on-surface font-label-sm px-6 py-3 text-[12px]">0.02 ETH</td>
+                <td class="text-on-surface-variant font-label-sm px-6 py-3 text-[12px]">154</td>
+                <td class="text-primary px-6 py-3 text-[13px] font-bold">25,000 USDC</td>
+                <td class="px-6 py-3">
+                  <button
+                    class="border-primary text-primary font-label-sm hover:bg-primary/20 hover-glow border px-5 py-1.5 text-[11px] font-bold uppercase tracking-widest transition-all"
+                  >
+                    ATTACK
+                  </button>
+                </td>
+              </tr>
+              <!-- Row 4: AEGIS-OS -->
+              <tr class="hover:bg-primary/5 group opacity-60 transition-colors">
+                <td class="px-6 py-3">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="border-outline-variant flex h-8 w-8 items-center justify-center border bg-black p-1.5"
+                    >
+                      <img
+                        alt="SUI"
+                        class="h-full w-full object-contain grayscale"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCm7tGnt-pn-871D0axYMND2PiZklMVYd2SkpNfxnA-Rx_TzzqtUT6jT4tWJTqe60VDbhytWxyjSQRpFD7MG37nFtAoady-0Q5THgYQl8VzxhyN2ZAoNy-qlo-OH3uTySrh075FbOSEhWbi72K-IeZTOzFraBEZK5Et_Fgeaqg_FCKSYPudwlfB6A94rPBU5sIB4ZlMFEf7wHRjO4WxR8uDQNDuTZAzDHM7GVylZWICZ-ISFohMpB05ESHVhkstvTl_lxDSnXVmGVU"
+                      />
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-2">
+                        <span class="text-on-surface-variant font-bold">AEGIS-OS</span>
+                      </div>
+                      <div class="text-on-surface-variant/40 font-mono text-[9px] tracking-tighter">
+                        SERIAL: 0x4421...33F
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-3">
+                  <div
+                    class="text-error flex items-center gap-2 text-[10px] font-bold tracking-wider"
+                  >
+                    <span class="bg-error h-1.5 w-1.5 rounded-full"></span>
+                    OFFLINE
+                  </div>
+                </td>
+                <td class="text-on-surface font-label-sm px-6 py-3 text-[12px] opacity-40">
+                  5.00 SUI
+                </td>
+                <td class="text-on-surface-variant font-label-sm px-6 py-3 text-[12px]">12,109</td>
+                <td class="text-on-surface-variant/50 px-6 py-3 text-[13px] font-bold">0 USDC</td>
+                <td class="px-6 py-3">
+                  <button
+                    class="border-outline-variant/30 text-on-surface-variant/40 font-label-sm cursor-not-allowed border px-5 py-1.5 text-[11px] uppercase tracking-widest"
+                    disabled=""
+                  >
+                    LOCKED
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div
+            class="bg-surface-container border-outline-variant font-label-sm text-on-surface-variant flex items-center justify-between border-t p-4 text-[11px]"
+          >
+            <span class="uppercase tracking-widest">Showing 4 of 173 agents</span>
+            <div class="flex gap-6">
+              <button
+                class="hover:text-primary flex items-center gap-1 transition-colors disabled:opacity-30"
+                disabled=""
+              >
+                <span class="material-symbols-outlined text-[16px]">chevron_left</span> PREV_STEP
+              </button>
+              <button class="hover:text-primary flex items-center gap-1 transition-colors">
+                NEXT_STEP <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script>
+      // Simple micro-interaction for tactical display feel
+      document.querySelectorAll('button:not([disabled])').forEach(btn => {
+        btn.addEventListener('click', () => {
+          btn.style.transform = 'scale(0.98)'
+          setTimeout(() => (btn.style.transform = 'scale(1)'), 100)
+        })
+      })
+
+      // Simulating some dynamic "data" flickers
+      setInterval(() => {
+        const flickerElements = document.querySelectorAll('.text-primary')
+        const target = flickerElements[Math.floor(Math.random() * flickerElements.length)]
+        if (target) {
+          target.classList.add('opacity-70')
+          setTimeout(() => target.classList.remove('opacity-70'), 40)
+        }
+      }, 4000)
+    </script>
+  </body>
+</html>
