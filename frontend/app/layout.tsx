@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import NextTopLoader from 'nextjs-toploader'
 import { Toaster } from 'sonner'
-import { Inter, JetBrains_Mono } from 'next/font/google'
+import { Inter, JetBrains_Mono, Space_Grotesk } from 'next/font/google'
 
 import './globals.css'
 import '@rainbow-me/rainbowkit/styles.css'
@@ -23,13 +23,20 @@ const jetbrainsMono = JetBrains_Mono({
   display: 'swap',
 })
 
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  variable: '--font-space-grotesk',
+  display: 'swap',
+  weight: ['600', '700'],
+})
+
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
   viewportFit: 'cover',
-  themeColor: '#100f0f',
+  themeColor: '#000000',
 }
 
 export const metadata: Metadata = {
@@ -271,10 +278,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} flex min-h-screen flex-col bg-[var(--color-bg-base)] text-[var(--color-text-primary)]`}
+        className={`${inter.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable} flex min-h-screen flex-col bg-[var(--color-bg-base)] text-[var(--color-text-primary)]`}
       >
         <Providers>
-          <NextTopLoader color="#c8384f" showSpinner={false} />
+          <NextTopLoader color="#ffb000" showSpinner={false} />
           <main className="w-full flex-grow">{children}</main>
           {/* <Footer /> */}
           <FloatingHelpButton />
@@ -282,9 +289,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             position="top-right"
             toastOptions={{
               style: {
-                background: '#1a1919',
-                border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: '12px',
+                background: '#131313',
+                border: '1px solid #524533',
+                borderRadius: '0px',
                 padding: '12px 16px',
                 fontSize: '14px',
                 fontWeight: '500',

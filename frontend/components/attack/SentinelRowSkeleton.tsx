@@ -5,7 +5,7 @@ export function SentinelRowSkeleton({ count = 5 }: { count?: number }) {
     <div className="flex overflow-hidden">
       {Array.from({ length: count }).map((_, i) => (
         <div key={i} className="pr-4">
-          <div className="w-[230px] shrink-0 overflow-hidden rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] sm:w-[250px]">
+          <div className="w-[230px] shrink-0 overflow-hidden border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] sm:w-[250px]">
             <Skeleton className="h-32 w-full rounded-none" />
             <div className="p-3">
               <Skeleton className="h-4 w-3/4" />
