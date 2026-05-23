@@ -44,27 +44,21 @@ export function SentinelMiniCard({
         {variant && (
           <span
             className={cn(
-              'absolute left-2 top-2 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold leading-none',
+              'absolute left-2 top-2 inline-flex items-center rounded-full p-1',
               variant === 'featured'
                 ? 'bg-[var(--color-gold-primary)] text-[var(--color-text-on-gold)]'
                 : 'border border-amber-400/30 bg-amber-900/20 text-amber-400'
             )}
           >
             {variant === 'featured' ? (
-              <Star className="h-2.5 w-2.5" />
+              <Star className="h-3 w-3 fill-current" />
             ) : (
-              <Flame className="h-2.5 w-2.5" />
+              <Flame className="h-3 w-3" />
             )}
-            {variant === 'featured' ? 'Featured' : 'Trending'}
           </span>
         )}
-      </div>
 
-      <div className="p-3">
-        <div className="flex items-center gap-1.5">
-          <h3 className="min-w-0 flex-1 truncate text-sm font-semibold text-[var(--color-text-primary)]">
-            {agent.agent_name}
-          </h3>
+        <span className="absolute right-2 top-2 z-20 rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-bg-base)]/80 p-1">
           <Image
             src={chain.icon}
             alt={chain.name}
@@ -72,6 +66,14 @@ export function SentinelMiniCard({
             height={14}
             className="shrink-0 rounded-full"
           />
+        </span>
+      </div>
+
+      <div className="p-3">
+        <div className="flex items-center">
+          <h3 className="min-w-0 flex-1 truncate text-sm font-semibold text-[var(--color-text-primary)]">
+            {agent.agent_name}
+          </h3>
         </div>
 
         <div className="mt-2 flex items-end justify-between gap-2">
@@ -93,7 +95,7 @@ export function SentinelMiniCard({
           </div>
         </div>
 
-        <div className="mt-3 flex h-8 w-full items-center justify-center rounded-lg bg-[var(--color-gold-primary)] text-xs font-semibold text-[var(--color-text-on-gold)] transition-colors group-hover:bg-[var(--color-gold-light)]">
+        <div className="mt-3 flex h-8 w-full items-center justify-center rounded-lg bg-[var(--color-gold-primary)] text-xs font-semibold text-[var(--color-text-on-gold)] opacity-0 transition-all duration-200 group-hover:bg-[var(--color-gold-light)] group-hover:opacity-100">
           Attack Sentinel
         </div>
       </div>

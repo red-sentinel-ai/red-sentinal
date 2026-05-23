@@ -16,7 +16,7 @@ import { formatDuration } from '@/lib/utils'
 import { PrizePoolChangeDisplay } from './agents/PrizePoolChangeDisplay'
 import { ClaimFeesModal } from './agents/ClaimFeesModal'
 import { TokenAmount } from './ui/common/TokenAmount'
-import { Flame } from 'lucide-react'
+import { Flame, Star } from 'lucide-react'
 
 
 type FeaturedAgentCardProps = {
@@ -146,29 +146,47 @@ export const FeaturedAgentCard = ({
               </div>
             )}
 
-            <div
-              className={`absolute left-2 top-2 z-20 flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${
-                agent.state === 'active'
-                  ? 'border border-[var(--color-success)] bg-[var(--color-success-muted)] text-[var(--color-success)]'
-                  : 'border border-[var(--color-danger)]/20 bg-[var(--color-danger-muted)] text-[var(--color-danger)]'
-              }`}
-            >
+            <div className="absolute left-2 top-2 z-20 flex items-center gap-1">
+              <span
+                className={`flex items-center rounded-full border p-1 ${
+                  agent.state === 'active'
+                    ? 'border-[var(--color-success)] bg-[var(--color-success-muted)]'
+                    : 'border-[var(--color-danger)]/20 bg-[var(--color-danger-muted)]'
+                }`}
+                title={agent.state === 'active' ? 'Active' : 'Defeated'}
+              >
+                <Image
+                  src={agent.state === 'active' ? '/icons/shield-green.png' : '/icons/shield-red.png'}
+                  width={14}
+                  height={14}
+                  alt={agent.state === 'active' ? 'Active' : 'Defeated'}
+                  className="size-3 sm:size-3.5"
+                />
+              </span>
+              {agent.is_featured && (
+                <span
+                  className="flex items-center rounded-full border border-yellow-500/30 bg-yellow-500/15 p-1"
+                  title="Featured"
+                >
+                  <Star className="size-3 fill-yellow-400 text-yellow-400 sm:size-3.5" />
+                </span>
+              )}
+            </div>
+
+            {/* Chain icon — top right */}
+            <div className="absolute right-2 top-2 z-20 rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-bg-base)]/80 p-1">
               <Image
-                src={agent.state === 'active' ? '/icons/shield-green.png' : '/icons/shield-red.png'}
-                width={14}
-                height={14}
-                alt={agent.state === 'active' ? 'Active' : 'Defeated'}
-                className="size-3 sm:size-3.5"
+                src={CHAINS[agent.chain ?? 'sui'].icon}
+                alt={CHAINS[agent.chain ?? 'sui'].name}
+                width={16}
+                height={16}
+                className="size-3.5 rounded-full sm:size-4"
               />
-              {agent.state === 'active' ? 'Active' : 'Defeated'}
             </div>
 
             {agent.trending && (
-              <div className="absolute bottom-2 left-2 z-20 flex items-center gap-1 rounded-full border border-amber-400/30 bg-amber-900/20 px-2 py-0.5 text-[10px] font-medium leading-none text-amber-400">
-                <Flame className="size-2.5 sm:size-3" />
-                {agent.trending_window === '24h' || !agent.trending_window
-                  ? 'Trending'
-                  : `Trending ${agent.trending_window}`}
+              <div className="absolute bottom-2 left-2 z-20 flex items-center rounded-full border border-amber-400/30 bg-amber-900/20 p-1 text-amber-400">
+                <Flame className="size-3 sm:size-3.5" />
               </div>
             )}
 
@@ -202,18 +220,6 @@ export const FeaturedAgentCard = ({
                 className="size-4 sm:size-5"
               />
             )}
-          </div>
-          <div className="mb-2 flex items-center justify-center gap-1">
-            <Image
-              src={CHAINS[agent.chain ?? 'sui'].icon}
-              alt={CHAINS[agent.chain ?? 'sui'].name}
-              width={13}
-              height={13}
-              className="rounded-full"
-            />
-            <span className="text-xs text-[var(--color-text-muted)]">
-              {CHAINS[agent.chain ?? 'sui'].name}
-            </span>
           </div>
           <div className="mx-auto flex max-w-[394px] border-t border-[var(--color-border-subtle)]"></div>
         </div>
@@ -255,7 +261,7 @@ export const FeaturedAgentCard = ({
           </div>
         )}
 
-        <div className="mt-auto flex flex-col gap-1.5 sm:gap-2">
+        <div className="mt-auto flex flex-col gap-1.5 opacity-0 transition-opacity duration-200 group-hover:opacity-100 sm:gap-2">
           <button
             onClick={e => {
               e.stopPropagation()
