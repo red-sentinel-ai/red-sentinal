@@ -127,3 +127,10 @@ export interface SentinelTemplate {
   attack_goal: string
   jury_prompt: string
 }
+
+export interface Chain {
+  name: string
+  logo: string
+  active?: boolean
+  rounded?: boolean
+}
