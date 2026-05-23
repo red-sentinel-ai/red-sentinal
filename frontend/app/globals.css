@@ -120,7 +120,7 @@
 
 @layer components {
   .page-heading {
-    font-size: 1.75rem;
+    font-size: 2rem;
     font-weight: 500;
     line-height: 1.2;
     color: var(--color-text-primary);
@@ -469,6 +469,21 @@ body::-webkit-scrollbar-thumb:hover {
 @keyframes rotate {
   to {
     --angle: 360deg;
+  }
+}
+
+@keyframes chain-breathe {
+  0%, 100% {
+    transform: scale(1);
+  }
+  10% {
+    transform: scale(1.12);
+  }
+  25% {
+    transform: scale(1.12);
+  }
+  35% {
+    transform: scale(1);
   }
 }
 

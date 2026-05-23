@@ -19,6 +19,8 @@ import { getTokenForCoinType } from '@/constants'
 import { AttackStats } from '@/components/attack/AttackStats'
 import { SentinelMarquee } from '@/components/attack/SentinelMarquee'
 import { SentinelRowSkeleton } from '@/components/attack/SentinelRowSkeleton'
+import { AnimatePresence, motion } from 'framer-motion'
+import { ChainLogos } from './ui/common/ChainLogos'
 
 const BIG_BOUNTY_THRESHOLD_MIST = BigInt(20_000_000_000) // 20 SUI
 
@@ -105,13 +107,22 @@ export const AgentListView = () => {
 
   return (
     <div className="mx-auto max-w-[1560px] px-4 py-6 md:px-8 md:py-10">
-      <div className="mb-8 md:mb-12">
-        <h1 className="page-heading">Prepare Yourself for Age of Agents</h1>
-        <p className="page-subheading mt-2">
-          Agents are everywhere. we all need to upskill to make most of this new era. learn by doing.
-          Red Sentinel is the ultimate playground to build, defend, and attack with AI agents. Are
-          you ready to test your skills and earn rewards in the most exciting way possible?
+      <div className="mb-10 md:mb-14">
+        <h1 className="page-heading text-center">Prepare Yourself for Age of Agents</h1>
+        <p className="page-subheading mx-auto mt-4 text-center">
+          Agents are already in our life. Learn how they think, where they break, and how to
+          outsmart them by actually doing it.
         </p>
+        <AnimatePresence mode="wait">
+          <motion.div
+            className="mt-6 flex justify-center"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
+          >
+            <ChainLogos />
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       <div className="mb-10 md:mb-14">
