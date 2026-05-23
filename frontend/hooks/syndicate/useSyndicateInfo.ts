@@ -1,7 +1,6 @@
 'use client'
 
 import { useReadContract, useReadContracts } from 'wagmi'
-import { formatUnits } from 'viem'
 import { SYNDICATE_ABI, SENTINEL_ABI } from '@/lib/evm/abi'
 import { BNB_CONFIG } from '@/constants/evm'
 

@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { CameraIcon, Info, Loader2, Sparkles, Wallet } from 'lucide-react'
@@ -45,7 +46,14 @@ import { SyndicateLaunchFlow } from '@/components/syndicate/SyndicateLaunchFlow'
 type DefendMode = 'individual' | 'syndicate'
 
 export default function DefendPageClient() {
-  const [defendMode, setDefendMode] = useState<DefendMode>('individual')
+  const searchParams = useSearchParams()
+  const [defendMode, setDefendMode] = useState<DefendMode>(
+    searchParams.get('mode') === 'syndicate' ? 'syndicate' : 'individual'
+  )
+
+  useEffect(() => {
+    if (searchParams.get('mode') === 'syndicate') setDefendMode('syndicate')
+  }, [searchParams])
   const { activeChain } = useActiveChain()
   const isSolana = activeChain === 'solana'
   const isEvm = activeChain === 'bnb'
