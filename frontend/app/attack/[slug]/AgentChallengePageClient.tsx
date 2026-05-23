@@ -21,6 +21,7 @@ import { AttackStatusModal } from '@/components/AttackStatusModal'
 import ChatInterface from '@/components/agents/ChatInterface'
 import { AgentSidebar } from '@/components/agents/AgentSidebar'
 import { AgentReadMoreModal } from '@/components/agents/AgentReadMoreModal'
+import { SentinelIntroScreen } from '@/components/agents/SentinelIntroScreen'
 import { MobileAgentHeader } from './MobileAgentHeader'
 
 export default function AgentChallengePage({ slug }: { slug: string }) {
@@ -121,6 +122,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   const [showResultModal, setShowResultModal] = useState(false)
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [showIntro, setShowIntro] = useState(true)
   const isMobile = useMediaQuery('(max-width: 768px)')
 
   const handleSendMessage = async (prompt: string) => {
@@ -174,37 +176,64 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
   if (!isMobile) {
     return (
-      <div className="flex h-[calc(100vh-64px)] items-end bg-[var(--color-bg-base)]">
-        <ResizablePanelGroup direction="horizontal" className="w-full">
-          <ResizablePanel defaultSize={25} minSize={20} maxSize={40}>
-            <AgentSidebar
-              agent={agent}
-              onReadMore={() => setIsReadMoreOpen(true)}
-            />
-          </ResizablePanel>
-          <ResizableHandle withHandle={true} />
-          <ResizablePanel defaultSize={75}>
-            <div className="max-w-v1 relative mx-auto h-full w-full">
-              <ChatInterface
+      <div className="relative flex h-[calc(100vh-64px)] items-end bg-[var(--color-bg-base)]">
+        <AnimatePresence mode="wait">
+          {showIntro ? (
+            <motion.div
+              key="intro"
+              className="absolute inset-0 z-20"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
+            >
+              <SentinelIntroScreen
                 agent={agent}
-                chatEvents={chat?.messages ?? []}
-                eventsLoading={chatLoading}
-                apiResponse={apiResponse}
-                onSendMessage={handleSendMessage}
-                isSubmitting={isSubmitting}
-                submitError={submitError}
-                refetchAgent={refetch}
-                chainMismatch={chainMismatch}
+                onStartAttack={() => setShowIntro(false)}
               />
-              {isReadMoreOpen && (
-                <AgentReadMoreModal
-                  prompt={agent.prompt}
-                  onClose={() => setIsReadMoreOpen(false)}
-                />
-              )}
-            </div>
-          </ResizablePanel>
-        </ResizablePanelGroup>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="chat"
+              className="flex w-full"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ResizablePanelGroup direction="horizontal" className="w-full">
+                <ResizablePanel defaultSize={25} minSize={20} maxSize={40}>
+                  <AgentSidebar
+                    agent={agent}
+                    onReadMore={() => setIsReadMoreOpen(true)}
+                  />
+                </ResizablePanel>
+                <ResizableHandle withHandle={true} />
+                <ResizablePanel defaultSize={75}>
+                  <div className="max-w-v1 relative mx-auto h-full w-full">
+                    <ChatInterface
+                      agent={agent}
+                      chatEvents={chat?.messages ?? []}
+                      eventsLoading={chatLoading}
+                      apiResponse={apiResponse}
+                      onSendMessage={handleSendMessage}
+                      isSubmitting={isSubmitting}
+                      submitError={submitError}
+                      refetchAgent={refetch}
+                      chainMismatch={chainMismatch}
+                    />
+                    {isReadMoreOpen && (
+                      <AgentReadMoreModal
+                        prompt={agent.prompt}
+                        onClose={() => setIsReadMoreOpen(false)}
+                      />
+                    )}
+                  </div>
+                </ResizablePanel>
+              </ResizablePanelGroup>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {apiResponse && txnHash && (
           <AttackStatusModal
@@ -223,19 +252,44 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
     <div className="ios-scroll flex h-[calc(100dvh-64px)] flex-col bg-[var(--color-bg-surface)]">
       <MobileAgentHeader agentName={agent.agent_name} onInfoClick={() => setIsSidebarOpen(true)} />
 
-      <div className="min-h-0 flex-1 overflow-hidden">
-        <ChatInterface
-          agent={agent}
-          chatEvents={chat?.messages ?? []}
-          eventsLoading={chatLoading}
-          apiResponse={apiResponse}
-          onSendMessage={handleSendMessage}
-          isSubmitting={isSubmitting}
-          submitError={submitError}
-          refetchAgent={refetch}
-          chainMismatch={chainMismatch}
-        />
-      </div>
+      <AnimatePresence mode="wait">
+        {showIntro ? (
+          <motion.div
+            key="intro"
+            className="absolute inset-0 z-20"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <SentinelIntroScreen
+              agent={agent}
+              onStartAttack={() => setShowIntro(false)}
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="chat"
+            className="min-h-0 flex-1 overflow-hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <ChatInterface
+              agent={agent}
+              chatEvents={chat?.messages ?? []}
+              eventsLoading={chatLoading}
+              apiResponse={apiResponse}
+              onSendMessage={handleSendMessage}
+              isSubmitting={isSubmitting}
+              submitError={submitError}
+              refetchAgent={refetch}
+              chainMismatch={chainMismatch}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {isSidebarOpen && (
