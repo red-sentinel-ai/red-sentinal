@@ -68,7 +68,6 @@ export const ChatMessage = ({
           <Link href={profileLink} className="transition-colors hover:text-white">
             @{displayName.toUpperCase()}
           </Link>
-          // eslint-disable-next-line react/jsx-no-comment-textnodes
           <span>//</span>
           <span>{timestamp.toUpperCase()} AGO</span>
           {isWinningPrompt && (
