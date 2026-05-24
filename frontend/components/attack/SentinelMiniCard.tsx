@@ -78,7 +78,7 @@ export function SentinelMiniCard({ agent, variant }: { agent: AgentDetails; vari
           </div>
           <div className="min-w-0 text-right">
             <p className="font-body mb-1 text-[8px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
-              Cost
+              Attack Fee
             </p>
             <div className="font-display truncate text-sm font-extrabold uppercase tracking-[0.04em] text-white">
               <TokenAmount
