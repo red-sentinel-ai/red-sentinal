@@ -27,7 +27,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
   const txExplorerUrl = getExplorerTxUrl(transactionDigest, chain)
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-bg-deepest)]/30 p-4 backdrop-blur-sm">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}

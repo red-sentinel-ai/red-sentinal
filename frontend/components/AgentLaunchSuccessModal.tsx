@@ -24,22 +24,22 @@ export const AgentLaunchSuccessModal = ({
       <div className="relative space-y-5 p-6">
         <button
           onClick={handleClose}
-          className="absolute right-0 top-0 p-2 text-gray-400 hover:text-white"
+          className="absolute right-0 top-0 p-2 text-[var(--color-text-muted)] hover:text-white"
           aria-label="Close"
         >
           <X className="h-5 w-5" />
         </button>
 
         <div className="text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-500/20">
-            <Check className="h-8 w-8 text-green-500" />
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-success)]/20">
+            <Check className="h-8 w-8 text-[var(--color-success)]" />
           </div>
           <h2 className="mb-2 text-2xl font-bold">Agent Launched Successfully!</h2>
 
           <div className="mb-4 space-y-3">
             <Link
               href={`/attack/${agentAddress}`}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-gray-800 py-2.5 font-medium text-white hover:bg-gray-700"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-bg-elevated)] py-2.5 font-medium text-white hover:bg-[var(--color-bg-subtle)]"
             >
               <ExternalLink className="h-4 w-4" />
               View Your Agent

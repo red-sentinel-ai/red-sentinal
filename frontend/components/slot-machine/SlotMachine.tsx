@@ -120,9 +120,9 @@ export const SlotMachine = ({
     <div className="relative mx-auto w-fit">
       {/* Tooltip positioned above everything */}
       {showTooltip && !booster && (
-        <div className="absolute left-1/2 -top-8 z-50 -translate-x-1/2 whitespace-nowrap rounded-lg bg-black px-4 py-2 text-sm text-white shadow-lg">
+        <div className="absolute left-1/2 -top-8 z-50 -translate-x-1/2 whitespace-nowrap rounded-lg bg-[var(--color-bg-base)] px-4 py-2 text-sm text-white shadow-lg">
           Select Spin Pass to spin
-          <div className="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 bg-black"></div>
+          <div className="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 bg-[var(--color-bg-base)]"></div>
         </div>
       )}
 

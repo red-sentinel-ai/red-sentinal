@@ -254,7 +254,7 @@ export default function ChatInterface({
   const operatorsOnline = 42
 
   return (
-    <div className="flex h-full flex-1 flex-col bg-black">
+    <div className="flex h-full flex-1 flex-col bg-[var(--color-bg-base)]">
       <JuryResponseModal
         isOpen={isJuryModalOpen}
         onClose={() => setIsJuryModalOpen(false)}
@@ -377,7 +377,7 @@ export default function ChatInterface({
       {chainMismatch ? (
         <ChainMismatchBanner agentChain={chainMismatch} />
       ) : isAttackPaused ? (
-        <div className="border-t border-[var(--color-border-strong)] bg-black p-6">
+        <div className="border-t border-[var(--color-border-strong)] bg-[var(--color-bg-base)] p-6">
           <div className="mx-auto max-w-4xl text-center">
             <h3 className="industrial-header text-accent text-sm">ATTACKS_PAUSED</h3>
             <p className="mt-2 font-mono text-[11px] uppercase text-[var(--color-text-muted)]">
@@ -387,7 +387,7 @@ export default function ChatInterface({
           </div>
         </div>
       ) : isAgentDrained ? (
-        <div className="border-t border-[var(--color-border-strong)] bg-black p-6">
+        <div className="border-t border-[var(--color-border-strong)] bg-[var(--color-bg-base)] p-6">
           <div className="mx-auto max-w-4xl text-center">
             <h3 className="industrial-header text-sm text-[var(--color-danger)]">
               SENTINEL_COMPROMISED
@@ -422,9 +422,9 @@ export default function ChatInterface({
           </div>
         </div>
       ) : (
-        <div className="border-t border-[var(--color-border-strong)] bg-black px-4 py-3 lg:px-6 lg:py-4">
+        <div className="border-t border-[var(--color-border-strong)] bg-[var(--color-bg-base)] px-4 py-3 lg:px-6 lg:py-4">
           <form onSubmit={handleSubmit} className="mx-auto max-w-4xl space-y-2">
-            <div className="border border-[var(--color-border-strong)] bg-black transition-all focus-within:border-white">
+            <div className="border border-[var(--color-border-strong)] bg-[var(--color-bg-base)] transition-all focus-within:border-white">
               <textarea
                 ref={textareaRef}
                 value={promptInput}
@@ -432,7 +432,7 @@ export default function ChatInterface({
                   setPromptInput(e.target.value)
                   countTokens(e.target.value)
                 }}
-                className="terminal-scrollbar placeholder:text-[var(--color-text-muted)]/30 min-h-[56px] w-full resize-none border-0 bg-black px-4 py-3 font-mono text-sm text-white focus:outline-none focus:ring-0"
+                className="terminal-scrollbar placeholder:text-[var(--color-text-muted)]/30 min-h-[56px] w-full resize-none border-0 bg-[var(--color-bg-base)] px-4 py-3 font-mono text-sm text-white focus:outline-none focus:ring-0"
                 disabled={isSubmitting}
                 placeholder="Craft your attack prompt here..."
                 rows={1}

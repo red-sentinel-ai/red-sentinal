@@ -28,13 +28,13 @@ export function ChainMismatchBanner({
     <div
       className={
         variant === 'block'
-          ? 'border-t border-[rgba(250,204,21,0.25)] bg-[rgba(26,25,25,0.96)] p-4'
-          : 'flex items-center gap-2 border border-[rgba(250,204,21,0.25)] bg-[rgba(26,25,25,0.96)] px-3 py-2 text-xs'
+          ? 'border-t border-[var(--color-warning)]/25 bg-[var(--color-bg-surface)] p-4'
+          : 'flex items-center gap-2 border border-[var(--color-warning)]/25 bg-[var(--color-bg-surface)] px-3 py-2 text-xs'
       }
     >
       <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-        <div className="flex items-center gap-2 text-[#fde047]">
-          <AlertTriangle className="h-4 w-4 flex-shrink-0 text-[#facc15]" />
+        <div className="flex items-center gap-2 text-[var(--color-warning)]">
+          <AlertTriangle className="h-4 w-4 flex-shrink-0 text-[var(--color-warning)]" />
           <span className={variant === 'block' ? 'text-sm font-medium' : 'text-xs font-medium'}>
             {message ?? defaultMessage}
           </span>

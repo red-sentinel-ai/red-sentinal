@@ -19,7 +19,7 @@ export function SentinelMiniCard({ agent, variant }: { agent: AgentDetails; vari
   return (
     <Link
       href={`/attack/${agent.agent_path}`}
-      className="group flex h-full min-w-0 flex-col overflow-hidden border border-[var(--color-border-default)] bg-black transition-colors hover:border-white/45"
+      className="group flex h-full min-w-0 flex-col overflow-hidden border border-[var(--color-border-default)] bg-[var(--color-bg-base)] transition-colors hover:border-white/45"
     >
       <div className="relative h-48 w-full overflow-hidden bg-[var(--color-bg-subtle)]">
         {agent.agent_image ? (
@@ -35,7 +35,7 @@ export function SentinelMiniCard({ agent, variant }: { agent: AgentDetails; vari
             {agent.agent_name?.charAt(0).toUpperCase() ?? '?'}
           </div>
         )}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[var(--color-bg-deepest)]/80 via-transparent to-transparent" />
         {variant && (
           <span className="font-body absolute left-4 top-4 inline-flex items-center gap-1 bg-white px-3 py-1 text-[9px] font-extrabold uppercase leading-none tracking-[0.1em] text-black">
             {variant === 'featured' ? (

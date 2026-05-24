@@ -33,7 +33,7 @@ export const Dialog = ({ open, onClose, children, className, disableBackdropClic
     <div
       className={cn(
         'fixed inset-0 z-50',
-        'bg-black/20 backdrop-blur-sm',
+        'bg-[var(--color-bg-deepest)]/20 backdrop-blur-sm',
         'flex items-center justify-center',
         'duration-200 animate-in fade-in-0'
       )}

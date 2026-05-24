@@ -58,11 +58,11 @@ export const PrizePoolChartModal = ({
   tokenSymbol = 'SUI',
 }: PrizePoolChartModalProps) => {
   return (
-    <Dialog open={open} onClose={onClose} className="max-w-3xl border-white/10 bg-[#1a1919] p-4 sm:p-6">
+    <Dialog open={open} onClose={onClose} className="max-w-3xl border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-4 sm:p-6">
       <div className="mb-3 flex items-start justify-between sm:mb-4">
         <div>
           <h2 className="flex items-center gap-2 text-base font-bold text-white sm:text-xl">
-            <TrendingUp className="size-5 text-[#4ade80] sm:size-6" />
+            <TrendingUp className="size-5 text-[var(--color-success)] sm:size-6" />
             Prize Pool History
           </h2>
           <p className="text-sm text-white/50 sm:text-base">For Sentinel: {agentName}</p>
@@ -77,14 +77,14 @@ export const PrizePoolChartModal = ({
           <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 20 }}>
             <defs>
               <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#1FAD57" stopOpacity={0.4} />
-                <stop offset="95%" stopColor="#1FAD57" stopOpacity={0} />
+                <stop offset="5%" stopColor="var(--color-success)" stopOpacity={0.4} />
+                <stop offset="95%" stopColor="var(--color-success)" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border-subtle)" />
             <XAxis
               dataKey="time"
-              stroke="#6b7280"
+              stroke="var(--color-text-muted)"
               fontSize={10}
               tickLine={false}
               axisLine={false}
@@ -92,7 +92,7 @@ export const PrizePoolChartModal = ({
               dy={10}
             />
             <YAxis
-              stroke="#6b7280"
+              stroke="var(--color-text-muted)"
               fontSize={10}
               tickLine={false}
               axisLine={false}
@@ -103,7 +103,7 @@ export const PrizePoolChartModal = ({
             <Area
               type="monotone"
               dataKey="value"
-              stroke="#1FAD57"
+              stroke="var(--color-success)"
               strokeWidth={2}
               fillOpacity={1}
               fill="url(#colorValue)"

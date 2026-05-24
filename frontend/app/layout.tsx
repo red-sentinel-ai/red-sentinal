@@ -36,7 +36,7 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: 'cover',
-  themeColor: '#000000',
+  themeColor: '#100f0f',
 }
 
 export const metadata: Metadata = {
@@ -289,13 +289,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             position="top-right"
             toastOptions={{
               style: {
-                background: '#131313',
-                border: '1px solid #222222',
+                background: 'var(--color-bg-surface)',
+                border: '1px solid var(--color-border-default)',
                 borderRadius: '0px',
                 padding: '12px 16px',
                 fontSize: '14px',
                 fontWeight: '500',
-                color: '#ffffff',
+                color: 'var(--color-text-primary)',
                 boxShadow: '0 4px 24px rgba(0,0,0,0.5)',
               },
             }}

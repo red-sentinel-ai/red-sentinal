@@ -166,7 +166,7 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
 
   return (
     <>
-      <div className="terminal-scrollbar flex h-[calc(100vh-64px)] w-full flex-col overflow-y-auto bg-black">
+      <div className="terminal-scrollbar flex h-[calc(100vh-64px)] w-full flex-col overflow-y-auto bg-[var(--color-bg-base)]">
         <div className="space-y-8 p-6 lg:p-8">
           {/* Agent Profile Card */}
           <div className="space-y-4">
@@ -205,7 +205,7 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
               <div className="industrial-header text-[10px] text-[var(--color-text-muted)]">
                 ATTACK_OBJECTIVE
               </div>
-              <div className="border-hairline bg-black p-4">
+              <div className="border-hairline bg-[var(--color-bg-base)] p-4">
                 <p className="font-mono text-[14px] leading-relaxed text-white">
                   {agent.attack_goal}
                 </p>
@@ -218,7 +218,7 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
             <div className="industrial-header text-[10px] text-[var(--color-text-muted)]">
               {isDrained ? 'TOTAL_BOUNTY_WON' : 'ACTIVE_BOUNTY'}
             </div>
-            <div className="border-hairline group relative overflow-hidden bg-black p-6">
+            <div className="border-hairline group relative overflow-hidden bg-[var(--color-bg-base)] p-6">
               {/* Background Graph */}
               <svg
                 className="pointer-events-none absolute inset-0 h-full w-full opacity-10"
@@ -289,7 +289,7 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
           {/* Technical Parameters Grid */}
           <div className="grid grid-cols-2 gap-px bg-[var(--color-border-strong)]">
             {agent.model_name && (
-              <div className="bg-black p-4">
+              <div className="bg-[var(--color-bg-base)] p-4">
                 <span className="industrial-header mb-1 block text-[9px] text-[var(--color-text-muted)]">
                   MODEL
                 </span>
@@ -299,7 +299,7 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
               </div>
             )}
             {agent.model_provider && (
-              <div className="bg-black p-4">
+              <div className="bg-[var(--color-bg-base)] p-4">
                 <span className="industrial-header mb-1 block text-[9px] text-[var(--color-text-muted)]">
                   PROVIDER
                 </span>
@@ -308,7 +308,7 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
                 </span>
               </div>
             )}
-            <div className="bg-black p-4">
+            <div className="bg-[var(--color-bg-base)] p-4">
               <span className="industrial-header mb-1 block text-[9px] text-[var(--color-text-muted)]">
                 OWNER
               </span>
@@ -319,7 +319,7 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
                 {truncateAddress(agent.creator)}
               </Link>
             </div>
-            <div className="bg-black p-4">
+            <div className="bg-[var(--color-bg-base)] p-4">
               <span className="industrial-header mb-1 block text-[9px] text-[var(--color-text-muted)]">
                 OWNER REWARD
               </span>
@@ -332,7 +332,7 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
             <div className="industrial-header text-[10px] text-[var(--color-text-muted)]">
               SENTINEL_INSTRUCTIONS
             </div>
-            <div className="border-hairline bg-black p-4">
+            <div className="border-hairline bg-[var(--color-bg-base)] p-4">
               <p
                 ref={instructionsRef}
                 className="line-clamp-4 whitespace-pre-wrap font-mono text-[11px] leading-relaxed text-[var(--color-text-muted)]"

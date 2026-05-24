@@ -99,9 +99,9 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
   )
 
   return (
-    <div className={cn(`flex items-center rounded-full bg-black p-1`, className)}>
+    <div className={cn(`flex items-center rounded-full bg-[var(--color-bg-surface)] p-1`, className)}>
       <div
-        className={`${sizeClasses[size].dot} ${sizeClasses[size].dotSpacing} rounded-full bg-[#00D369]`}
+        className={`${sizeClasses[size].dot} ${sizeClasses[size].dotSpacing} rounded-full bg-[var(--color-success)]`}
       />
       <div className={`flex ${sizeClasses[size].gap} ${sizeClasses[size].container}`}>
         {timeLeft.days > 0 && (
