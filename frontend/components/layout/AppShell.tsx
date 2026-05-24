@@ -3,18 +3,29 @@
 import type { ReactNode } from 'react'
 
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
+import { FocusModeProvider, useFocusMode } from '@/context/FocusModeContext'
 import { AppSidebar } from './AppSidebar'
 import { AppTopbar } from './AppTopbar'
 
-export function AppShell({ children }: { children: ReactNode }) {
+function AppShellContent({ children }: { children: ReactNode }) {
+  const { isFocusMode } = useFocusMode()
+
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={!isFocusMode}>
       <div className="scanline-overlay pointer-events-none fixed inset-0 z-[100] opacity-[0.035]" />
-      <AppSidebar />
-      <SidebarInset>
-        <AppTopbar />
+      {!isFocusMode && <AppSidebar />}
+      <SidebarInset className={isFocusMode ? 'ml-0' : undefined}>
+        {!isFocusMode && <AppTopbar />}
         <div className="min-w-0 flex-1">{children}</div>
       </SidebarInset>
     </SidebarProvider>
+  )
+}
+
+export function AppShell({ children }: { children: ReactNode }) {
+  return (
+    <FocusModeProvider>
+      <AppShellContent>{children}</AppShellContent>
+    </FocusModeProvider>
   )
 }

@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useQueryClient } from '@tanstack/react-query'
 import posthog from 'posthog-js'
 import { toast } from 'sonner'
+import { Info, X } from 'lucide-react'
 
 import { APP_NETWORK, getTokenForCoinType } from '@/constants'
 import type { ConsumePromptApiResponse } from '@/types'
@@ -16,6 +17,7 @@ import { useAgentDetails, AGENT_DETAILS_FULL_QUERY_KEY } from '@/hooks/agents/us
 import { useAgentChatHistory, AGENT_CHAT_QUERY_KEY } from '@/hooks/agents/useAgentChatHistory'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useActiveChain } from '@/context/ActiveChainContext'
+import { useFocusMode } from '@/context/FocusModeContext'
 import type { SupportedChain } from '@/constants/chains'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
@@ -28,6 +30,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   const queryClient = useQueryClient()
   const { activeChain } = useActiveChain()
   const { address: connectedAddress } = useConnectedAddress()
+  const { isFocusMode, disableFocusMode } = useFocusMode()
 
   const { data: agent, isLoading, error, refetch } = useAgentDetails(slug)
   const {
@@ -202,6 +205,97 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
             {error?.message || 'The requested sentinel could not be located'}
           </p>
         </div>
+      </div>
+    )
+  }
+
+  // Focus mode - full screen chat
+  if (isFocusMode) {
+    return (
+      <div className="flex h-screen flex-col bg-black">
+        {/* Focus mode header */}
+        <div className="flex h-12 shrink-0 items-center justify-between border-b border-[var(--color-border-strong)] px-4">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsSidebarOpen(true)}
+              className="flex items-center gap-2 border border-[var(--color-border-strong)] px-3 py-1.5 text-[var(--color-text-muted)] transition-colors hover:border-white hover:text-white"
+            >
+              <Info className="h-3.5 w-3.5" />
+              <span className="industrial-header text-[10px] tracking-widest">SENTINEL_INFO</span>
+            </button>
+            <span className="industrial-header text-[11px] tracking-widest text-white">
+              {agent.agent_name.toUpperCase().replace(/\s+/g, '_')}
+            </span>
+          </div>
+          <button
+            onClick={disableFocusMode}
+            className="flex items-center gap-2 border border-[var(--color-border-strong)] px-3 py-1.5 text-[var(--color-text-muted)] transition-colors hover:border-white hover:text-white"
+          >
+            <X className="h-3.5 w-3.5" />
+            <span className="industrial-header text-[10px] tracking-widest">EXIT_FOCUS</span>
+          </button>
+        </div>
+
+        {/* Full width chat */}
+        <div className="min-h-0 flex-1 overflow-hidden">
+          <ChatInterface
+            agent={agent}
+            chatEvents={chat?.messages ?? []}
+            eventsLoading={chatLoading}
+            apiResponse={apiResponse}
+            onSendMessage={handleSendMessage}
+            isSubmitting={isSubmitting}
+            submitError={submitError}
+            refetchAgent={refetch}
+            chainMismatch={chainMismatch}
+          />
+        </div>
+
+        {/* Sidebar drawer for focus mode */}
+        <AnimatePresence>
+          {isSidebarOpen && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsSidebarOpen(false)}
+                className="fixed inset-0 z-40 bg-black/80"
+              />
+              <motion.div
+                initial={{ x: '-100%' }}
+                animate={{ x: '0%' }}
+                exit={{ x: '-100%' }}
+                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                className="ios-scroll terminal-scrollbar fixed bottom-0 left-0 top-0 z-50 w-[400px] max-w-[90vw] overflow-y-auto border-r border-[var(--color-border-strong)] bg-black shadow-2xl"
+              >
+                <AgentSidebar
+                  agent={agent}
+                  onReadMore={() => {
+                    setIsSidebarOpen(false)
+                    setIsReadMoreOpen(true)
+                  }}
+                  onTextChat={handleTextChatClick}
+                  onVoiceChat={handleVoiceChatClick}
+                />
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
+
+        {isReadMoreOpen && (
+          <AgentReadMoreModal prompt={agent.prompt} onClose={() => setIsReadMoreOpen(false)} />
+        )}
+
+        {apiResponse && txnHash && (
+          <AttackStatusModal
+            key={txnHash}
+            apiResponse={apiResponse}
+            showResultModal={showResultModal}
+            setShowResultModal={setShowResultModal}
+            txnHash={txnHash}
+          />
+        )}
       </div>
     )
   }

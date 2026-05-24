@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-comment-textnodes */
 'use client'
 import type React from 'react'
 import { useState, useRef, useEffect } from 'react'
@@ -67,6 +68,7 @@ export const ChatMessage = ({
           <Link href={profileLink} className="transition-colors hover:text-white">
             @{displayName.toUpperCase()}
           </Link>
+          // eslint-disable-next-line react/jsx-no-comment-textnodes
           <span>//</span>
           <span>{timestamp.toUpperCase()} AGO</span>
           {isWinningPrompt && (
@@ -139,7 +141,7 @@ export const ChatMessage = ({
           <p
             ref={contentRef}
             className={clsx(
-              'mb-6 font-mono text-sm leading-relaxed text-[var(--color-text-secondary)]',
+              'mb-6 font-mono text-sm leading-relaxed text-white/80',
               !isExpanded && shouldTruncate && 'line-clamp-4'
             )}
           >

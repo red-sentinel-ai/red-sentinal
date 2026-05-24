@@ -53,13 +53,13 @@ export function AttackStats() {
   return (
     <div className="grid grid-cols-1 overflow-hidden border border-[var(--color-border-default)] bg-[var(--color-border-default)] sm:grid-cols-2 lg:grid-cols-5">
       {isLoading || !data
-        ? STAT_PLACEHOLDERS.map((id, index) => (
+        ? STAT_PLACEHOLDERS.map(id => (
             <div key={id} className="relative min-h-[126px] bg-black p-6 md:p-8">
               <Skeleton className="h-8 w-28 bg-white/10" />
               <Skeleton className="mt-5 h-3 w-32 bg-white/10" />
             </div>
           ))
-        : stats.map((stat, index) => (
+        : stats.map(stat => (
             <div
               key={stat.id}
               className="relative min-h-[126px] bg-black p-6 transition-colors hover:bg-white/[0.03] md:p-8"
