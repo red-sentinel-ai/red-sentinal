@@ -283,9 +283,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
           )}
         </AnimatePresence>
 
-        {isReadMoreOpen && (
-          <AgentReadMoreModal prompt={agent.prompt} onClose={() => setIsReadMoreOpen(false)} />
-        )}
+        <AgentReadMoreModal isOpen={isReadMoreOpen} prompt={agent.prompt} onClose={() => setIsReadMoreOpen(false)} />
 
         {apiResponse && txnHash && (
           <AttackStatusModal
@@ -326,12 +324,11 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
                 refetchAgent={refetch}
                 chainMismatch={chainMismatch}
               />
-              {isReadMoreOpen && (
-                <AgentReadMoreModal
-                  prompt={agent.prompt}
-                  onClose={() => setIsReadMoreOpen(false)}
-                />
-              )}
+              <AgentReadMoreModal
+                isOpen={isReadMoreOpen}
+                prompt={agent.prompt}
+                onClose={() => setIsReadMoreOpen(false)}
+              />
             </div>
           </ResizablePanel>
         </ResizablePanelGroup>
@@ -398,9 +395,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
         )}
       </AnimatePresence>
 
-      {isReadMoreOpen && (
-        <AgentReadMoreModal prompt={agent.prompt} onClose={() => setIsReadMoreOpen(false)} />
-      )}
+      <AgentReadMoreModal isOpen={isReadMoreOpen} prompt={agent.prompt} onClose={() => setIsReadMoreOpen(false)} />
 
       {apiResponse && txnHash && (
         <AttackStatusModal
