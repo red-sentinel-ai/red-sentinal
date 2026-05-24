@@ -28,13 +28,13 @@ export function ChainMismatchBanner({
     <div
       className={
         variant === 'block'
-          ? 'border-t border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] p-4'
-          : 'flex items-center gap-2 rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] px-3 py-2 text-xs'
+          ? 'border-t border-[rgba(250,204,21,0.25)] bg-[rgba(26,25,25,0.96)] p-4'
+          : 'flex items-center gap-2 border border-[rgba(250,204,21,0.25)] bg-[rgba(26,25,25,0.96)] px-3 py-2 text-xs'
       }
     >
       <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-        <div className="flex items-center gap-2 text-[var(--color-text-secondary)]">
-          <AlertTriangle className="h-4 w-4 flex-shrink-0 text-[var(--color-warning)]" />
+        <div className="flex items-center gap-2 text-[#fde047]">
+          <AlertTriangle className="h-4 w-4 flex-shrink-0 text-[#facc15]" />
           <span className={variant === 'block' ? 'text-sm font-medium' : 'text-xs font-medium'}>
             {message ?? defaultMessage}
           </span>
@@ -42,7 +42,7 @@ export function ChainMismatchBanner({
         <button
           type="button"
           onClick={() => setActiveChain(agentChain)}
-          className="flex items-center gap-1.5 rounded-full bg-[var(--color-gold-primary)] px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[var(--color-gold-light)]"
+          className="flex items-center gap-1.5 bg-[var(--color-text-primary)] px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-[var(--color-bg-deepest)] transition-colors hover:opacity-90"
         >
           <Image
             src={target.icon}
