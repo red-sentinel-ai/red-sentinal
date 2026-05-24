@@ -25,7 +25,7 @@ function formatValue(value: number, format: StatDef['format'], suffix = '') {
 
 function buildStats(data: PlatformStatsResponse): StatDef[] {
   return [
-    { id: 'tvl', label: 'Value Secured', value: data.tvl, suffix: ' USD', format: 'compact' },
+    { id: 'tvl', label: 'Available Bounties', value: data.tvl, suffix: ' USD', format: 'compact' },
     {
       id: 'bounties',
       label: 'Bounties Claimed',
