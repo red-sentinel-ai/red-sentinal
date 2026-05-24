@@ -250,9 +250,6 @@ export default function ChatInterface({
     setPromptInput('')
   }
 
-  // Dummy online operators count
-  const operatorsOnline = 42
-
   return (
     <div className="flex h-full flex-1 flex-col bg-[var(--color-bg-base)]">
       <JuryResponseModal
@@ -286,9 +283,6 @@ export default function ChatInterface({
           MY_ATTACKS
         </button>
         <div className="ml-auto flex items-center gap-4">
-          <span className="industrial-header text-[10px] text-[var(--color-text-muted)]">
-            OPERATORS_ONLINE: {operatorsOnline}
-          </span>
           {!isFocusMode && (
             <button
               onClick={enableFocusMode}

@@ -1,31 +1,44 @@
 'use client'
 
 import { X } from 'lucide-react'
+import { Dialog } from '@/components/Dialog'
 
 interface AgentReadMoreModalProps {
+  isOpen: boolean
   prompt: string | undefined
   onClose: () => void
 }
 
-export function AgentReadMoreModal({ prompt, onClose }: AgentReadMoreModalProps) {
+export function AgentReadMoreModal({ isOpen, prompt, onClose }: AgentReadMoreModalProps) {
   return (
-    <div className="ios-scroll absolute inset-0 z-10 flex flex-col overflow-hidden bg-[#f5efe4] duration-200 animate-in fade-in p-6">
-      <div className="flex shrink-0 items-center justify-between py-6 md:py-8">
-        <h2 className="text-2xl font-medium text-[var(--color-text-primary)]">Instructions</h2>
-        <button onClick={onClose} className="touch-manipulation p-2 text-[var(--color-text-secondary)]">
-          <X size={24} />
-        </button>
-      </div>
+    <Dialog
+      open={isOpen}
+      onClose={onClose}
+      className="z-[100] w-[90vw] max-w-[600px] overflow-hidden rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-0"
+    >
+      <div className="relative w-full p-4 sm:p-6">
+        <div className="flex items-center justify-between pb-4">
+          <h2 className="text-xl font-bold text-[var(--color-text-primary)]">Instructions</h2>
+          <button
+            onClick={onClose}
+            className="absolute right-4 top-4 rounded-full p-2 transition-colors hover:bg-[var(--color-bg-subtle)]"
+          >
+            <X className="h-5 w-5 text-[var(--color-text-primary)]" />
+          </button>
+        </div>
 
-      <div className="ios-scroll overflow-y-auto whitespace-pre-wrap px-1 text-[var(--color-text-primary)]">
-        {prompt || 'No instructions available.'}
-      </div>
+        <div className="ios-scroll max-h-[60vh] overflow-y-auto rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] p-4">
+          <p className="whitespace-pre-wrap text-sm text-[var(--color-text-secondary)]">
+            {prompt || 'No instructions available.'}
+          </p>
+        </div>
 
-      <div className="pb-safe shrink-0 pt-8">
-        <button onClick={onClose} className="btn btn-black touch-manipulation">
-          CLOSE
-        </button>
+        <div className="pt-4">
+          <button onClick={onClose} className="btn btn-black w-full touch-manipulation">
+            CLOSE
+          </button>
+        </div>
       </div>
-    </div>
+    </Dialog>
   )
 }
