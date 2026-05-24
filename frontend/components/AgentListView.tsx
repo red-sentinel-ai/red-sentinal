@@ -16,8 +16,6 @@ import { getTokenForCoinType } from '@/constants'
 import { AttackStats } from '@/components/attack/AttackStats'
 import { SentinelMarquee } from '@/components/attack/SentinelMarquee'
 import { SentinelRowSkeleton } from '@/components/attack/SentinelRowSkeleton'
-import { AnimatePresence, motion } from 'framer-motion'
-import { ChainLogos } from './ui/common/ChainLogos'
 
 const BIG_BOUNTY_THRESHOLD_MIST = BigInt(20_000_000_000) // 20 SUI
 
@@ -121,46 +119,71 @@ export const AgentListView = () => {
   const selectedToken = availableTokens.find(t => t.symbol === selectedSymbol)
 
   return (
-    <div className="mx-auto max-w-[1480px] px-4 py-6 md:px-8 md:py-8">
-      <div className="relative mb-10 overflow-hidden border border-[var(--color-border-subtle)] bg-[var(--color-bg-deepest)] px-4 py-10 text-center md:mb-12 md:px-8 md:py-14">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,176,0,0.10),transparent_42%)]" />
-        <div className="relative">
-          <h1 className="page-heading text-center">Prepare Yourself for Age of Agents</h1>
-          <p className="page-subheading mx-auto mt-4 max-w-3xl text-center">
-            Agents are already in our life. Learn how they think, where they break, and how to
-            outsmart them by actually doing it.
-          </p>
-          <AnimatePresence mode="wait">
-            <motion.div
-              className="mt-7 flex justify-center"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.2 }}
+    <div className="px-4 py-8 md:px-12 md:py-12">
+      <section className="mb-16 max-w-5xl py-8 text-left md:mb-20 md:py-12">
+        <h1 className="font-display text-4xl font-extrabold uppercase leading-[1.08] tracking-[0.04em] text-white sm:text-5xl md:text-7xl">
+          Prepare Yourself for Age of Agents
+        </h1>
+        <p className="font-body mt-6 max-w-2xl text-sm font-semibold uppercase leading-relaxed tracking-[0.08em] text-[var(--color-text-secondary)]">
+          Agents are already in our life. Learn how they think, where they break, and how to
+          outsmart them by actually doing it.
+        </p>
+        <div className="mt-12 flex flex-col gap-4 sm:flex-row sm:items-center">
+          <span className="font-body text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
+            Active Missions:
+          </span>
+          <div className="flex flex-wrap gap-4">
+            <button
+              type="button"
+              onClick={() => setSelectedChain(undefined)}
+              className={`font-body border px-5 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.1em] transition-colors ${
+                selectedChain
+                  ? 'border-[var(--color-border-default)] text-[var(--color-text-secondary)] hover:border-white hover:text-white'
+                  : 'border-white bg-white text-black'
+              }`}
             >
-              <ChainLogos />
-            </motion.div>
-          </AnimatePresence>
+              All
+            </button>
+            {SUPPORTED_CHAINS.map(chainId => {
+              const chain = CHAINS[chainId]
+              const active = selectedChain === chainId
+              return (
+                <button
+                  type="button"
+                  key={chainId}
+                  onClick={() => setSelectedChain(active ? undefined : chainId)}
+                  className={`font-body border px-5 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.1em] transition-colors ${
+                    active
+                      ? 'border-white bg-white text-black'
+                      : 'border-[var(--color-border-default)] text-[var(--color-text-secondary)] hover:border-white hover:text-white'
+                  }`}
+                >
+                  {chain.name}
+                </button>
+              )
+            })}
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div className="mb-10 md:mb-12">
+      <div className="mb-16 md:mb-20">
         <AttackStats />
       </div>
 
       {(isFetchingFeatured || featuredForRow.length > 0) && (
-        <section className="mb-10 md:mb-12">
-          <div className="mb-4 flex items-end justify-between gap-4 md:mb-5">
+        <section className="mb-16 md:mb-20">
+          <div className="mb-8 flex items-end justify-between gap-4">
             <div>
-              <h2 className="font-display text-xl font-bold text-[var(--color-text-primary)]">
+              <h2 className="font-display text-2xl font-extrabold uppercase tracking-[0.04em] text-white">
                 Featured Sentinels
               </h2>
-              <p className="font-mono text-xs text-[var(--color-text-muted)]">
+              <p className="font-body mt-2 text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] opacity-70">
                 Curated high-value targets. Bigger pools, proven resilience.
               </p>
             </div>
             <a
               href="#active-sentinels"
-              className="hidden items-center gap-1 font-mono text-xs font-bold uppercase tracking-[0.08em] text-[var(--color-gold-light)] hover:text-[var(--color-gold-primary)] sm:inline-flex"
+              className="font-body hidden items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.1em] text-white hover:underline sm:inline-flex"
             >
               View all <ArrowRight className="size-3.5" />
             </a>
@@ -175,19 +198,19 @@ export const AgentListView = () => {
 
       {/* Trending Sentinels — auto-scrolling row (deduped against Featured) */}
       {(isFetchingTrending || trendingForRow.length > 0) && (
-        <section className="mb-10 md:mb-12">
-          <div className="mb-4 flex items-end justify-between gap-4 md:mb-5">
+        <section className="mb-16 md:mb-20">
+          <div className="mb-8 flex items-end justify-between gap-4">
             <div>
-              <h2 className="font-display text-xl font-bold text-[var(--color-text-primary)]">
+              <h2 className="font-display text-2xl font-extrabold uppercase tracking-[0.04em] text-white">
                 Trending Sentinels
               </h2>
-              <p className="font-mono text-xs text-[var(--color-text-muted)]">
+              <p className="font-body mt-2 text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] opacity-70">
                 The most-attacked sentinels right now. Where the action is.
               </p>
             </div>
             <a
               href="#active-sentinels"
-              className="hidden items-center gap-1 font-mono text-xs font-bold uppercase tracking-[0.08em] text-[var(--color-gold-light)] hover:text-[var(--color-gold-primary)] sm:inline-flex"
+              className="font-body hidden items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.1em] text-white hover:underline sm:inline-flex"
             >
               View all <ArrowRight className="size-3.5" />
             </a>
@@ -202,36 +225,36 @@ export const AgentListView = () => {
 
       <div id="active-sentinels" className="scroll-mt-20">
         <div className="mb-6 flex flex-col">
-          <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+          <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
             <div>
-              <h2 className="font-display text-xl font-bold uppercase tracking-[0.1em] text-[var(--color-text-primary)]">
+              <h2 className="font-display text-2xl font-extrabold uppercase tracking-[0.04em] text-white">
                 Global Terminal - Active Sentinels
               </h2>
-              <p className="mt-1 font-mono text-xs text-[var(--color-text-muted)]">
+              <p className="font-body mt-2 text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] opacity-70">
                 Every active target, ranked and sortable. Find your edge.
               </p>
             </div>
             {!isFetchingAllAgents && totalAgents > 0 && (
-              <span className="border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--color-text-secondary)]">
+              <span className="font-body border border-[var(--color-border-default)] bg-black px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
                 Showing {filteredAgents.length} of {totalAgents}
               </span>
             )}
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 border border-[var(--color-border-default)] bg-[var(--color-bg-elevated)] p-2">
+          <div className="flex flex-wrap items-center gap-0 border border-[var(--color-border-default)] bg-black">
             <label className="relative min-w-[240px] flex-1">
-              <Search className="absolute left-3 top-1/2 size-[18px] -translate-y-1/2 text-[var(--color-text-muted)]" />
+              <Search className="absolute left-4 top-1/2 size-[18px] -translate-y-1/2 text-[var(--color-text-muted)]" />
               <span className="sr-only">Search agents</span>
               <input
                 value={searchQuery}
                 onChange={event => setSearchQuery(event.target.value)}
-                className="w-full border border-[rgba(159,142,120,0.3)] bg-black px-10 py-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
+                className="font-body h-12 w-full border-0 border-r border-[var(--color-border-default)] bg-black px-12 text-[10px] font-extrabold uppercase tracking-[0.1em] text-white transition-all placeholder:text-[var(--color-text-faint)] focus:outline-none focus:ring-1 focus:ring-white"
                 placeholder="SEARCH AGENTS..."
                 type="search"
               />
             </label>
 
-            <label className="relative flex min-w-[170px] items-center border border-[rgba(159,142,120,0.3)] bg-black px-3 py-2">
+            <label className="relative flex h-12 min-w-[170px] items-center border-r border-[var(--color-border-default)] bg-black px-4">
               <Network className="mr-2 size-[18px] text-[var(--color-text-muted)]" />
               <span className="sr-only">Network</span>
               <select
@@ -243,7 +266,7 @@ export const AgentListView = () => {
                       : (event.target.value as SupportedChain)
                   )
                 }
-                className="flex-1 cursor-pointer appearance-none border-none bg-transparent p-0 pr-5 font-mono text-xs font-bold uppercase tracking-[0.08em] text-[var(--color-text-primary)] focus:outline-none focus:ring-0"
+                className="font-body flex-1 cursor-pointer appearance-none border-none bg-transparent p-0 pr-5 text-[10px] font-extrabold uppercase tracking-[0.1em] text-white focus:outline-none focus:ring-0"
               >
                 <option value="all">All Networks</option>
                 {SUPPORTED_CHAINS.map(chainId => (
@@ -257,7 +280,7 @@ export const AgentListView = () => {
               </span>
             </label>
 
-            <label className="relative flex min-w-[150px] items-center border border-[rgba(159,142,120,0.3)] bg-black px-3 py-2">
+            <label className="relative flex h-12 min-w-[150px] items-center border-r border-[var(--color-border-default)] bg-black px-4">
               <Coins className="mr-2 size-[18px] text-[var(--color-text-muted)]" />
               <span className="sr-only">Token</span>
               <select
@@ -265,7 +288,7 @@ export const AgentListView = () => {
                 onChange={event =>
                   setSelectedSymbol(event.target.value === 'all' ? undefined : event.target.value)
                 }
-                className="flex-1 cursor-pointer appearance-none border-none bg-transparent p-0 pr-5 font-mono text-xs font-bold uppercase tracking-[0.08em] text-[var(--color-text-primary)] focus:outline-none focus:ring-0"
+                className="font-body flex-1 cursor-pointer appearance-none border-none bg-transparent p-0 pr-5 text-[10px] font-extrabold uppercase tracking-[0.1em] text-white focus:outline-none focus:ring-0"
               >
                 <option value="all">All Tokens</option>
                 {availableTokens.map(token => (
@@ -279,13 +302,13 @@ export const AgentListView = () => {
               </span>
             </label>
 
-            <label className="relative flex min-w-[170px] items-center border border-[rgba(159,142,120,0.3)] bg-black px-3 py-2">
+            <label className="relative flex h-12 min-w-[180px] items-center bg-black px-4">
               <SlidersHorizontal className="mr-2 size-[18px] text-[var(--color-text-muted)]" />
               <span className="sr-only">Pool filter</span>
               <select
                 value={activeTab}
                 onChange={event => setActiveTab(event.target.value as BountyTab)}
-                className="flex-1 cursor-pointer appearance-none border-none bg-transparent p-0 pr-5 font-mono text-xs font-bold uppercase tracking-[0.08em] text-[var(--color-text-primary)] focus:outline-none focus:ring-0"
+                className="font-body flex-1 cursor-pointer appearance-none border-none bg-transparent p-0 pr-5 text-[10px] font-extrabold uppercase tracking-[0.1em] text-white focus:outline-none focus:ring-0"
               >
                 <option value="all">All Sentinels</option>
                 <option value="big_bounties">Big Bounties ({bigBountiesCount})</option>
@@ -299,9 +322,11 @@ export const AgentListView = () => {
 
         {(selectedSymbol || selectedChain || searchQuery.trim()) && (
           <div className="mb-3 flex flex-wrap items-center gap-2">
-            <span className="font-body text-xs text-[var(--color-text-muted)]">Filtered by:</span>
+            <span className="font-body text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-muted)]">
+              Filtered by:
+            </span>
             {searchQuery.trim() && (
-              <span className="font-body flex items-center gap-1.5 rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] px-2.5 py-0.5 text-xs font-medium text-[var(--color-text-primary)]">
+              <span className="font-body flex items-center gap-1.5 border border-[var(--color-border-default)] bg-black px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-white">
                 Search: {searchQuery.trim()}
                 <button
                   onClick={() => setSearchQuery('')}
@@ -312,13 +337,13 @@ export const AgentListView = () => {
               </span>
             )}
             {selectedChain && (
-              <span className="font-body flex items-center gap-1.5 rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] px-2.5 py-0.5 text-xs font-medium text-[var(--color-text-primary)]">
+              <span className="font-body flex items-center gap-1.5 border border-[var(--color-border-default)] bg-black px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-white">
                 <Image
                   src={CHAINS[selectedChain].icon}
                   alt={CHAINS[selectedChain].name}
                   width={14}
                   height={14}
-                  className="rounded-full"
+                  className="rounded-full brightness-200 grayscale"
                 />
                 {CHAINS[selectedChain].name}
                 <button
@@ -330,7 +355,7 @@ export const AgentListView = () => {
               </span>
             )}
             {selectedSymbol && selectedToken && (
-              <span className="font-body flex items-center gap-1.5 rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] px-2.5 py-0.5 text-xs font-medium text-[var(--color-text-primary)]">
+              <span className="font-body flex items-center gap-1.5 border border-[var(--color-border-default)] bg-black px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-white">
                 <Image
                   src={selectedToken.icon}
                   alt={selectedToken.symbol}
@@ -365,12 +390,12 @@ export const AgentListView = () => {
               onClick={() => fetchNextPage()}
               disabled={isFetchingNextPage}
               variant="outline"
-              className="font-body min-w-[200px] border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-subtle)] hover:text-[var(--color-text-primary)]"
+              className="font-body min-w-[200px] rounded-full border-white bg-black text-[11px] font-extrabold uppercase tracking-[0.1em] text-white hover:bg-white hover:text-black"
             >
               {isFetchingNextPage ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Loading...
+                  Loading
                 </>
               ) : (
                 'Load More'
@@ -379,7 +404,7 @@ export const AgentListView = () => {
           </div>
         )}
 
-        <p className="font-body mt-4 text-xs text-[var(--color-text-muted)]">
+        <p className="font-body mt-4 text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--color-text-muted)]">
           {TEXT_COPIES.LOW_POOL_BALANCE_HIDDEN_MESSAGE}
         </p>
       </div>

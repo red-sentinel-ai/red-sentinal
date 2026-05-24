@@ -3,53 +3,53 @@
 @tailwind utilities;
 
 :root {
-  font-family: var(--font-jetbrains, 'JetBrains Mono'), ui-monospace, monospace;
+  font-family: var(--font-inter, 'Inter'), Arial, sans-serif;
 
-  /* Amber Sentinel: industrial tactical interface */
+  /* Mission Control: pure-black tactical interface */
   --color-bg-deepest: #000000;
-  --color-bg-base: #0a0a0a;
-  --color-bg-surface: #131313;
-  --color-bg-elevated: #1c1b1b;
-  --color-bg-subtle: #2a2a2a;
+  --color-bg-base: #000000;
+  --color-bg-surface: #000000;
+  --color-bg-elevated: #0a0a0a;
+  --color-bg-subtle: #111111;
 
-  --color-text-primary: #e5e2e1;
-  --color-text-secondary: #d7c4ac;
-  --color-text-muted: #9f8e78;
-  --color-text-faint: #5d5143;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #a1a1a1;
+  --color-text-muted: #737373;
+  --color-text-faint: #4a4a4a;
 
-  --color-gold-primary: #ffb000;
-  --color-gold-light: #ffd597;
-  --color-gold-dark: #805600;
-  --color-gold-muted: rgba(255, 176, 0, 0.16);
-  --color-accent-fg: #281800;
-  --color-text-on-gold: #281800;
+  --color-gold-primary: #ffffff;
+  --color-gold-light: #ffffff;
+  --color-gold-dark: #757575;
+  --color-gold-muted: rgba(255, 255, 255, 0.08);
+  --color-accent-fg: #000000;
+  --color-text-on-gold: #000000;
 
   /* Semantic */
   --color-success: #00ff41;
   --color-success-muted: rgba(0, 255, 65, 0.12);
   --color-danger: #ffb4ab;
   --color-danger-muted: rgba(255, 180, 171, 0.12);
-  --color-warning: #ffba43;
+  --color-warning: #f5f5f5;
   --color-info: #72ff70;
 
   /* Borders */
-  --color-border-subtle: rgba(255, 176, 0, 0.12);
-  --color-border-default: #524533;
-  --color-border-strong: #9f8e78;
+  --color-border-subtle: #111111;
+  --color-border-default: #222222;
+  --color-border-strong: #3a3a3f;
 
   /* Sidebar (shadcn) */
-  --sidebar: #0a0a0a;
-  --sidebar-foreground: #e5e2e1;
-  --sidebar-primary: #ffb000;
-  --sidebar-primary-foreground: #281800;
-  --sidebar-accent: rgba(255, 176, 0, 0.1);
-  --sidebar-accent-foreground: #ffd597;
-  --sidebar-border: #524533;
-  --sidebar-ring: rgba(255, 176, 0, 0.35);
+  --sidebar: #000000;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #ffffff;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: rgba(255, 255, 255, 0.05);
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #222222;
+  --sidebar-ring: rgba(255, 255, 255, 0.35);
 
   /* Shadows */
-  --shadow-card: 0 0 0 1px rgba(255, 176, 0, 0.08), 0 1px 0 rgba(255, 255, 255, 0.03);
-  --shadow-elevated: 0 0 18px rgba(255, 176, 0, 0.16), 0 8px 28px rgba(0, 0, 0, 0.7);
+  --shadow-card: 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --shadow-elevated: 0 12px 32px rgba(0, 0, 0, 0.75);
 
   /* Radius */
   --radius-sm: 0px;
@@ -59,18 +59,17 @@
   --radius: 0px;
 
   /* Fonts */
-  --font-display:
-    var(--font-space-grotesk, 'Space Grotesk'), var(--font-inter, 'Inter'), sans-serif;
-  --font-body: var(--font-jetbrains, 'JetBrains Mono'), ui-monospace, monospace;
+  --font-display: var(--font-inter, 'Inter'), Arial, sans-serif;
+  --font-body: var(--font-inter, 'Inter'), Arial, sans-serif;
   --font-mono: var(--font-jetbrains, 'JetBrains Mono'), ui-monospace, monospace;
 
   /* Legacy compatibility */
   --background: var(--color-bg-base);
   --foreground: var(--color-text-primary);
   --text: var(--color-text-primary);
-  --primary_pink: rgb(255, 176, 0);
-  --primary_pink_20: rgba(255, 176, 0, 0.2);
-  --primary_pink_light: rgba(255, 213, 151, 0.9);
+  --primary_pink: rgb(255, 255, 255);
+  --primary_pink_20: rgba(255, 255, 255, 0.2);
+  --primary_pink_light: rgba(255, 255, 255, 0.9);
   --primary_blue: rgb(0, 255, 65);
   --primary_blue_20: rgba(0, 255, 65, 0.2);
   --primary_blue_30: rgba(0, 255, 65, 0.3);
@@ -80,8 +79,8 @@
   --secondary_blue: rgb(0, 222, 55);
   --secondary_blue_60: rgba(0, 222, 55, 0.6);
 
-  --secondary_pink: rgb(128, 86, 0);
-  --secondary_pink_60: rgba(128, 86, 0, 0.6);
+  --secondary_pink: rgb(117, 117, 117);
+  --secondary_pink_60: rgba(117, 117, 117, 0.6);
 
   /* shadcn/ui tokens */
   --card: var(--color-bg-surface);
@@ -89,7 +88,7 @@
   --popover: var(--color-bg-surface);
   --popover-foreground: var(--color-text-primary);
   --primary: var(--color-gold-primary);
-  --primary-foreground: #281800;
+  --primary-foreground: #000000;
   --secondary: var(--color-bg-subtle);
   --secondary-foreground: var(--color-text-primary);
   --muted: var(--color-bg-subtle);
@@ -110,6 +109,7 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
   }
   html {
     scrollbar-gutter: stable;
@@ -120,10 +120,11 @@
   .page-heading {
     font-family: var(--font-display);
     font-size: clamp(2rem, 4.5vw, 3rem);
-    font-weight: 700;
-    line-height: 1.05;
-    color: var(--color-gold-light);
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--color-text-primary);
     text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
   .page-subheading {
     color: var(--color-text-muted);
@@ -141,9 +142,9 @@
       linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
       linear-gradient(
         90deg,
-        rgba(255, 176, 0, 0.05),
-        rgba(0, 255, 65, 0.015),
-        rgba(255, 176, 0, 0.04)
+        rgba(255, 255, 255, 0.025),
+        rgba(255, 255, 255, 0.005),
+        rgba(255, 255, 255, 0.02)
       );
     background-size:
       100% 2px,
@@ -152,7 +153,7 @@
   }
 
   .tactical-glow {
-    box-shadow: 0 0 15px rgba(255, 176, 0, 0.2);
+    box-shadow: none;
   }
 
   .segmented-progress {
@@ -291,7 +292,7 @@ html body[data-scroll-locked] {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #524533 #000000;
+  scrollbar-color: #333333 #000000;
 }
 
 body::-webkit-scrollbar {
@@ -303,12 +304,12 @@ body::-webkit-scrollbar-track {
 }
 
 body::-webkit-scrollbar-thumb {
-  background: #524533;
+  background: #333333;
   border-radius: 0;
 }
 
 body::-webkit-scrollbar-thumb:hover {
-  background: #ffb000;
+  background: #ffffff;
 }
 
 .black-gradient-border-vertical-top {
@@ -558,7 +559,7 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .btn {
-  border-radius: 0;
+  border-radius: 9999px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -577,13 +578,14 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .btn-white {
-  background-color: var(--color-bg-surface);
-  color: var(--color-text-primary);
-  border: 1px solid var(--color-border-default);
+  background-color: var(--color-text-primary);
+  color: var(--color-bg-deepest);
+  border: 1px solid var(--color-text-primary);
 }
 
 .btn-white:hover {
-  background-color: rgba(255, 176, 0, 0.08);
+  background-color: var(--color-text-primary);
+  opacity: 0.86;
 }
 
 .btn-outline {
@@ -593,32 +595,33 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .btn-outline:hover {
-  background-color: rgba(255, 176, 0, 0.08);
-  border-color: var(--color-gold-primary);
-  color: var(--color-gold-light);
+  background-color: var(--color-text-primary);
+  border-color: var(--color-text-primary);
+  color: var(--color-bg-deepest);
 }
 
 .btn-black {
-  background-color: var(--color-gold-primary);
+  background-color: var(--color-text-primary);
   color: var(--color-text-on-gold);
 }
 
 .btn-black:hover {
-  background-color: var(--color-gold-light);
+  background-color: var(--color-text-primary);
+  opacity: 0.86;
 }
 
 .rs-connect-button,
 .rs-connect-button button,
 .rs-connect-button [role='button'] {
   min-height: 34px !important;
-  border-radius: 0 !important;
-  border: 1px solid var(--color-border-default) !important;
+  border-radius: 9999px !important;
+  border: 1px solid var(--color-text-primary) !important;
   background: var(--color-bg-deepest) !important;
-  color: var(--color-gold-light) !important;
+  color: var(--color-text-primary) !important;
   font-family: var(--font-body) !important;
-  font-size: 0.75rem !important;
+  font-size: 0.6875rem !important;
   font-weight: 700 !important;
-  letter-spacing: 0.02em !important;
+  letter-spacing: 0.08em !important;
   text-transform: uppercase !important;
   box-shadow: none !important;
 }
@@ -626,8 +629,9 @@ body::-webkit-scrollbar-thumb:hover {
 .rs-connect-button:hover,
 .rs-connect-button button:hover,
 .rs-connect-button [role='button']:hover {
-  border-color: var(--color-gold-primary) !important;
-  background: rgba(255, 176, 0, 0.08) !important;
+  border-color: var(--color-text-primary) !important;
+  background: var(--color-text-primary) !important;
+  color: var(--color-bg-deepest) !important;
 }
 
 /* ========================================

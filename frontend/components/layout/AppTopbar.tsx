@@ -6,12 +6,12 @@ import { ConnectButton } from '@/components/ConnectButton'
 
 export function AppTopbar() {
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-2 border-b border-[var(--color-border-default)] bg-[var(--color-bg-subtle)] px-3 md:px-6">
+    <header className="sticky top-0 z-40 flex h-16 items-center gap-2 border-b border-[var(--color-border-default)] bg-black px-3 md:px-12">
       <SidebarTrigger
-        className="rounded-none border border-[var(--color-border-default)] bg-[var(--color-bg-deepest)] text-[var(--color-gold-light)] hover:bg-[rgba(255,176,0,0.08)] hover:text-[var(--color-gold-light)] md:hidden"
+        className="rounded-none border border-[var(--color-border-default)] bg-black text-white hover:bg-white hover:text-black md:hidden"
         aria-label="Open navigation"
       />
-      <div className="ml-auto flex items-center gap-2">
+      <div className="ml-auto flex items-center gap-3 md:gap-8">
         <ChainSwitcher />
         <ConnectButton />
       </div>

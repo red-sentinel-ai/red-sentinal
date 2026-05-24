@@ -45,57 +45,29 @@ function buildStats(data: PlatformStatsResponse): StatDef[] {
 }
 
 const STAT_PLACEHOLDERS = ['tvl', 'bounties', 'attacks', 'breached', 'active']
-const STAT_SERIALS = ['RS-358-V', 'RS-772-B', 'RS-912-L', 'RS-440-X', 'RS-001-A']
 
 export function AttackStats() {
   const { data, isLoading } = usePlatformStats()
   const stats = data ? buildStats(data) : []
 
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+    <div className="grid grid-cols-1 overflow-hidden border border-[var(--color-border-default)] bg-[var(--color-border-default)] sm:grid-cols-2 lg:grid-cols-5">
       {isLoading || !data
         ? STAT_PLACEHOLDERS.map((id, index) => (
-            <div
-              key={id}
-              className="relative min-h-[118px] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-4 md:p-5"
-            >
-              <span className="absolute right-2 top-2 font-mono text-[9px] text-[var(--color-text-faint)]">
-                {STAT_SERIALS[index]}
-              </span>
-              <Skeleton className="h-6 w-20" />
-              <Skeleton className="mt-2 h-3 w-24" />
+            <div key={id} className="relative min-h-[126px] bg-black p-6 md:p-8">
+              <Skeleton className="h-8 w-28 bg-white/10" />
+              <Skeleton className="mt-5 h-3 w-32 bg-white/10" />
             </div>
           ))
         : stats.map((stat, index) => (
             <div
               key={stat.id}
-              className={`relative min-h-[118px] border p-4 shadow-[var(--shadow-card)] transition-colors md:p-5 ${
-                index === 0
-                  ? 'tactical-glow border-[var(--color-gold-primary)] bg-[var(--color-gold-primary)] text-[var(--color-text-on-gold)]'
-                  : 'border-[var(--color-border-default)] bg-[var(--color-bg-surface)] hover:border-[var(--color-gold-primary)]'
-              }`}
+              className="relative min-h-[126px] bg-black p-6 transition-colors hover:bg-white/[0.03] md:p-8"
             >
-              {index > 0 && (
-                <span className="absolute right-2 top-2 font-mono text-[9px] text-[var(--color-text-faint)]">
-                  {STAT_SERIALS[index]}
-                </span>
-              )}
-              <p
-                className={`font-display text-lg font-bold tabular-nums md:text-2xl ${
-                  index === 0
-                    ? 'text-[var(--color-text-on-gold)]'
-                    : 'text-[var(--color-gold-light)]'
-                }`}
-              >
+              <p className="font-display text-2xl font-extrabold uppercase tabular-nums tracking-[0.04em] text-white md:text-3xl">
                 {formatValue(stat.value, stat.format, stat.suffix)}
               </p>
-              <p
-                className={`mt-4 max-w-[10rem] font-mono text-[10px] font-medium uppercase tracking-[0.14em] md:text-xs ${
-                  index === 0
-                    ? 'text-[var(--color-gold-dark)]'
-                    : 'text-[var(--color-text-secondary)]'
-                }`}
-              >
+              <p className="font-body mt-5 max-w-[10rem] text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] md:text-[11px]">
                 {stat.label}
               </p>
             </div>

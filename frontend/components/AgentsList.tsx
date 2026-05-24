@@ -63,8 +63,8 @@ export const AgentsList = ({
         {isFetchingAgents ? (
           <LeaderboardSkeleton />
         ) : (
-          <div className="overflow-hidden border border-[var(--color-border-default)] bg-[var(--color-bg-surface)]">
-            <div className="hidden border-b border-[var(--color-border-default)] bg-[var(--color-bg-subtle)] px-4 py-3 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--color-text-secondary)] md:grid md:gap-4 md:[grid-template-columns:minmax(260px,3fr)_minmax(145px,1.3fr)_minmax(130px,1.15fr)_minmax(120px,1fr)_minmax(150px,1.35fr)_minmax(96px,0.9fr)]">
+          <div className="overflow-x-auto overflow-y-hidden border border-[var(--color-border-default)] bg-black">
+            <div className="font-body hidden min-w-[980px] border-b border-[var(--color-border-default)] bg-[var(--color-bg-elevated)] px-8 py-5 text-[9px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] md:grid md:gap-4 md:[grid-template-columns:minmax(260px,2.4fr)_minmax(120px,1fr)_minmax(120px,1fr)_minmax(130px,1fr)_minmax(105px,0.85fr)_minmax(150px,1.2fr)_minmax(96px,0.8fr)]">
               <div
                 className="flex cursor-pointer items-center hover:text-[var(--color-text-primary)]"
                 onClick={() => onSort('agent_id')}
@@ -73,6 +73,7 @@ export const AgentsList = ({
                 <SortIcon field="agent_id" />
               </div>
               <div className="flex items-center">Status</div>
+              <div className="flex items-center">Network</div>
               <div
                 className="flex cursor-pointer items-center hover:text-[var(--color-text-primary)]"
                 onClick={() => onSort('cost_per_message')}
@@ -84,7 +85,7 @@ export const AgentsList = ({
                 className="flex cursor-pointer items-center hover:text-[var(--color-text-primary)]"
                 onClick={() => onSort('total_attacks')}
               >
-                <span>Total Attacks</span>
+                <span>Attacks</span>
                 <SortIcon field="total_attacks" />
               </div>
               <div
@@ -99,7 +100,7 @@ export const AgentsList = ({
 
             <AnimatePresence mode="popLayout">
               {agents.length === 0 && (
-                <div className="px-4 py-10 text-center font-mono text-xs font-bold uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
+                <div className="font-body px-4 py-10 text-center text-xs font-extrabold uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
                   No sentinels match current filters
                 </div>
               )}
@@ -115,7 +116,7 @@ export const AgentsList = ({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.15 }}
-                    className="cursor-pointer border-b border-[rgba(82,69,51,0.45)] bg-[var(--color-bg-surface)] p-3 font-mono text-sm transition-colors last:border-b-0 hover:bg-[rgba(255,176,0,0.05)]"
+                    className="font-body cursor-pointer border-b border-[var(--color-border-subtle)] bg-black p-4 text-sm transition-colors last:border-b-0 hover:bg-white/[0.04] md:px-8 md:py-6"
                     onClick={() => router.push(`/attack/${agent.agent_path}`)}
                   >
                     <div className="space-y-3 md:hidden">
@@ -145,7 +146,7 @@ export const AgentsList = ({
                               alt={chainData.name}
                               width={13}
                               height={13}
-                              className="shrink-0 rounded-full"
+                              className="shrink-0 rounded-full brightness-200 grayscale"
                             />
                           </div>
                           {agent.is_featured && (
@@ -164,16 +165,16 @@ export const AgentsList = ({
                             if (isActive) router.push(`/attack/${agent.agent_path}`)
                           }}
                           disabled={!isActive}
-                          className={`border px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.12em] ${
+                          className={`font-body rounded-full border px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.1em] transition-colors ${
                             isActive
-                              ? 'border-[var(--color-gold-primary)] text-[var(--color-gold-light)] hover:bg-[var(--color-gold-muted)]'
-                              : 'cursor-not-allowed border-[rgba(159,142,120,0.3)] text-[var(--color-text-faint)]'
+                              ? 'border-white text-white hover:bg-white hover:text-black'
+                              : 'cursor-not-allowed border-[var(--color-border-default)] text-[var(--color-text-faint)]'
                           }`}
                         >
                           {isActive ? 'Attack' : 'Locked'}
                         </button>
                       </div>
-                      <p className="pl-10 font-mono text-[9px] uppercase tracking-tighter text-[var(--color-text-faint)]">
+                      <p className="font-body pl-10 text-[9px] uppercase tracking-[0.08em] text-[var(--color-text-faint)]">
                         SERIAL: {formatSerial(agent.agent_object_id || agent.agent_id)}
                       </p>
                       <div className="grid grid-cols-2 gap-2 text-sm">
@@ -200,7 +201,7 @@ export const AgentsList = ({
                           <p className="text-xs uppercase text-[var(--color-text-muted)]">
                             Reward Pool
                           </p>
-                          <p className="text-sm font-bold text-[var(--color-gold-light)]">
+                          <p className="text-sm font-bold text-white">
                             <TokenAmount
                               rawAmount={agent.total_balance}
                               token={agentToken}
@@ -213,16 +214,12 @@ export const AgentsList = ({
                           <p className="text-xs uppercase text-[var(--color-text-muted)]">Status</p>
                           <div
                             className={`flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider ${
-                              isActive
-                                ? 'text-[var(--color-gold-primary)]'
-                                : 'text-[var(--color-danger)]'
+                              isActive ? 'text-white' : 'text-[var(--color-danger)]'
                             }`}
                           >
                             <span
                               className={`h-1.5 w-1.5 rounded-full ${
-                                isActive
-                                  ? 'animate-pulse bg-[var(--color-gold-primary)]'
-                                  : 'bg-[var(--color-danger)]'
+                                isActive ? 'animate-pulse bg-white' : 'bg-[var(--color-danger)]'
                               }`}
                             />
                             {isActive ? 'Active Breaches' : 'Offline'}
@@ -231,7 +228,7 @@ export const AgentsList = ({
                       </div>
                     </div>
 
-                    <div className="hidden items-center md:grid md:gap-4 md:[grid-template-columns:minmax(260px,3fr)_minmax(145px,1.3fr)_minmax(130px,1.15fr)_minmax(120px,1fr)_minmax(150px,1.35fr)_minmax(96px,0.9fr)]">
+                    <div className="hidden min-w-[980px] items-center md:grid md:gap-4 md:[grid-template-columns:minmax(260px,2.4fr)_minmax(120px,1fr)_minmax(120px,1fr)_minmax(130px,1fr)_minmax(105px,0.85fr)_minmax(150px,1.2fr)_minmax(96px,0.8fr)]">
                       <div className="flex min-w-0 items-center gap-3">
                         <div className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden border border-[var(--color-border-default)] bg-black">
                           {agent.agent_image ? (
@@ -243,7 +240,7 @@ export const AgentsList = ({
                               sizes="40px"
                             />
                           ) : (
-                            <span className="font-display text-sm font-bold text-[var(--color-text-muted)]">
+                            <span className="font-display text-sm font-extrabold text-[var(--color-text-muted)]">
                               {agent.agent_name?.charAt(0).toUpperCase() ?? '?'}
                             </span>
                           )}
@@ -252,9 +249,7 @@ export const AgentsList = ({
                           <div className="flex items-center gap-2">
                             <span
                               className={`truncate font-bold uppercase ${
-                                idx === 0
-                                  ? 'text-[var(--color-gold-light)]'
-                                  : 'text-[var(--color-text-primary)]'
+                                idx === 0 ? 'text-white' : 'text-[var(--color-text-primary)]'
                               }`}
                             >
                               {agent.agent_name}
@@ -264,7 +259,7 @@ export const AgentsList = ({
                               alt={chainData.name}
                               width={14}
                               height={14}
-                              className="shrink-0 rounded-full"
+                              className="shrink-0 rounded-full brightness-200 grayscale"
                             />
                             {agent.is_featured && (
                               <Image
@@ -276,26 +271,22 @@ export const AgentsList = ({
                               />
                             )}
                           </div>
-                          <span className="font-mono text-[9px] uppercase tracking-tighter text-[var(--color-text-faint)]">
+                          <span className="font-body text-[8px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-faint)]">
                             SERIAL: {formatSerial(agent.agent_object_id || agent.agent_id)}
                           </span>
                         </div>
                       </div>
                       <div
-                        className={`flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider ${
+                        className={`inline-flex w-fit items-center border px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-[0.1em] ${
                           isActive
-                            ? 'text-[var(--color-gold-primary)]'
-                            : 'text-[var(--color-danger)]'
+                            ? 'border-white/40 text-white'
+                            : 'border-white/20 text-[var(--color-text-muted)]'
                         }`}
                       >
-                        <span
-                          className={`h-1.5 w-1.5 rounded-full ${
-                            isActive
-                              ? 'animate-pulse bg-[var(--color-gold-primary)]'
-                              : 'bg-[var(--color-danger)]'
-                          }`}
-                        />
-                        {isActive ? 'Active Breaches' : 'Offline'}
+                        {isActive ? 'Active' : 'Locked'}
+                      </div>
+                      <div className="font-body text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
+                        {chainData.name}
                       </div>
                       <div className="flex items-center text-[var(--color-text-primary)]">
                         <TokenAmount
@@ -308,7 +299,7 @@ export const AgentsList = ({
                       <div className="flex items-center text-[var(--color-text-secondary)]">
                         {agent.total_attacks || 0}
                       </div>
-                      <div className="flex items-center font-bold text-[var(--color-gold-light)]">
+                      <div className="flex items-center font-extrabold text-white">
                         <TokenAmount
                           rawAmount={agent.total_balance}
                           token={agentToken}
@@ -323,10 +314,10 @@ export const AgentsList = ({
                             if (isActive) router.push(`/attack/${agent.agent_path}`)
                           }}
                           disabled={!isActive}
-                          className={`inline-flex items-center gap-1 border px-5 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.16em] transition-colors ${
+                          className={`font-body inline-flex items-center gap-1 rounded-full border px-6 py-2 text-[10px] font-extrabold uppercase tracking-[0.1em] transition-colors ${
                             isActive
-                              ? 'border-[var(--color-gold-primary)] bg-transparent text-[var(--color-gold-light)] hover:bg-[var(--color-gold-muted)] hover:text-[var(--color-gold-primary)]'
-                              : 'cursor-not-allowed border-[rgba(159,142,120,0.3)] text-[var(--color-text-faint)]'
+                              ? 'border-white bg-transparent text-white hover:bg-white hover:text-black'
+                              : 'cursor-not-allowed border-[var(--color-border-default)] text-[var(--color-text-faint)]'
                           }`}
                         >
                           {isActive ? 'Attack' : 'Locked'}

@@ -16,15 +16,15 @@ export function SentinelMarquee({
   return (
     <div
       className={cn(
-        'grid gap-4 md:gap-5',
+        'grid gap-4',
         variant === 'trending'
-          ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-6'
+          ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
           : 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-4'
       )}
       role="list"
     >
-      {agents.map((agent, index) => (
-        <SentinelMiniCard key={agent.agent_id} agent={agent} variant={variant} index={index} />
+      {agents.map(agent => (
+        <SentinelMiniCard key={agent.agent_id} agent={agent} variant={variant} />
       ))}
     </div>
   )

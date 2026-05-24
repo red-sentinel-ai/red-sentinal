@@ -19,20 +19,20 @@ export function ChainSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="flex min-h-[34px] items-center gap-2 border border-[var(--color-border-default)] bg-[var(--color-bg-deepest)] px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-[0.02em] text-[var(--color-gold-light)] transition-colors hover:border-[var(--color-gold-primary)] hover:bg-[rgba(255,176,0,0.08)]">
+        <button className="font-body flex min-h-[34px] items-center gap-2 bg-black px-1 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.1em] text-white transition-opacity hover:opacity-70 md:text-[11px]">
           <Image
             src={active.icon}
             alt={active.name}
             width={20}
             height={20}
-            className="rounded-full"
+            className="rounded-full brightness-200 grayscale"
           />
           <span className="hidden sm:inline">{active.name}</span>
           <ChevronDown className="h-3.5 w-3.5" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="w-44 rounded-none border border-[var(--color-border-default)] bg-[var(--color-bg-elevated)] p-1.5 shadow-[var(--shadow-elevated)]"
+        className="w-44 rounded-none border border-[var(--color-border-default)] bg-black p-1.5 shadow-[var(--shadow-elevated)]"
         align="end"
       >
         {SUPPORTED_CHAINS.map(chainId => {
@@ -43,8 +43,8 @@ export function ChainSwitcher() {
               key={chainId}
               onClick={() => setActiveChain(chainId)}
               className={cn(
-                'flex cursor-pointer items-center gap-3 rounded-none px-3 py-2 font-mono text-xs uppercase transition-colors hover:bg-[rgba(255,176,0,0.08)]',
-                isActive && 'bg-[rgba(255,176,0,0.12)]'
+                'font-body flex cursor-pointer items-center gap-3 rounded-none px-3 py-2 text-[10px] uppercase tracking-[0.1em] transition-colors hover:bg-white/[0.06]',
+                isActive && 'bg-white/[0.08]'
               )}
             >
               <Image
@@ -52,12 +52,12 @@ export function ChainSwitcher() {
                 alt={chain.name}
                 width={20}
                 height={20}
-                className="rounded-full"
+                className="rounded-full brightness-200 grayscale"
               />
               <span className="flex-1 font-bold text-[var(--color-text-primary)]">
                 {chain.name}
               </span>
-              {isActive && <Check className="h-4 w-4 text-[var(--color-gold-primary)]" />}
+              {isActive && <Check className="h-4 w-4 text-white" />}
             </DropdownMenuItem>
           )
         })}
