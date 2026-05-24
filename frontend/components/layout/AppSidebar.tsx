@@ -90,14 +90,11 @@ export function AppSidebar() {
             <Image
               src={LOGO_SRC}
               alt="Red Sentinel"
-              width={168}
+              width={268}
               height={42}
               quality={100}
-              className={cn('h-6 w-auto object-contain', APP_NETWORK !== 'testnet' && 'invert')}
+              className={cn('h-8 w-auto object-contain', APP_NETWORK !== 'testnet')}
             />
-            <span className="font-body text-[8px] font-extrabold uppercase tracking-[0.22em] text-[var(--color-text-muted)] opacity-70">
-              Tactical-OS V2.4
-            </span>
           </Link>
         </div>
       </SidebarHeader>

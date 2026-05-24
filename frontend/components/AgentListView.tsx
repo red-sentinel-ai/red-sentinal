@@ -120,30 +120,19 @@ export const AgentListView = () => {
 
   return (
     <div className="px-4 py-8 md:px-12 md:py-12">
-      <section className="mb-16 max-w-5xl py-8 text-left md:mb-20 md:py-12">
+      <section className="mx-auto mb-16 max-w-5xl py-8 text-center md:mb-20 md:py-12">
         <h1 className="font-display text-4xl font-extrabold uppercase leading-[1.08] tracking-[0.04em] text-white sm:text-5xl md:text-7xl">
           Prepare Yourself for Age of Agents
         </h1>
-        <p className="font-body mt-6 max-w-2xl text-sm font-semibold uppercase leading-relaxed tracking-[0.08em] text-[var(--color-text-secondary)]">
+        <p className="font-body mx-auto mt-6 max-w-2xl text-sm font-semibold leading-relaxed tracking-[0.08em] text-[var(--color-text-secondary)]">
           Agents are already in our life. Learn how they think, where they break, and how to
           outsmart them by actually doing it.
         </p>
-        <div className="mt-12 flex flex-col gap-4 sm:flex-row sm:items-center">
+        <div className="mt-12 flex flex-col justify-center gap-4 sm:flex-row sm:items-center">
           <span className="font-body text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
-            Active Missions:
+            LIVE ON:
           </span>
-          <div className="flex flex-wrap gap-4">
-            <button
-              type="button"
-              onClick={() => setSelectedChain(undefined)}
-              className={`font-body border px-5 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.1em] transition-colors ${
-                selectedChain
-                  ? 'border-[var(--color-border-default)] text-[var(--color-text-secondary)] hover:border-white hover:text-white'
-                  : 'border-white bg-white text-black'
-              }`}
-            >
-              All
-            </button>
+          <div className="flex flex-wrap justify-center gap-4">
             {SUPPORTED_CHAINS.map(chainId => {
               const chain = CHAINS[chainId]
               const active = selectedChain === chainId
@@ -152,12 +141,19 @@ export const AgentListView = () => {
                   type="button"
                   key={chainId}
                   onClick={() => setSelectedChain(active ? undefined : chainId)}
-                  className={`font-body border px-5 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.1em] transition-colors ${
+                  className={`font-body inline-flex items-center gap-2 border px-5 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.1em] transition-colors ${
                     active
                       ? 'border-white bg-white text-black'
                       : 'border-[var(--color-border-default)] text-[var(--color-text-secondary)] hover:border-white hover:text-white'
                   }`}
                 >
+                  <Image
+                    src={chain.icon}
+                    alt=""
+                    width={14}
+                    height={14}
+                    className={`rounded-full ${active ? 'brightness-0' : 'brightness-200'}`}
+                  />
                   {chain.name}
                 </button>
               )
