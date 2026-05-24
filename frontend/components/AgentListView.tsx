@@ -224,7 +224,7 @@ export const AgentListView = () => {
           <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
             <div>
               <h2 className="font-display text-2xl font-extrabold uppercase tracking-[0.04em] text-white">
-                Global Terminal - Active Sentinels
+                All Sentinels
               </h2>
               <p className="font-body mt-2 text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] opacity-70">
                 Every active target, ranked and sortable. Find your edge.

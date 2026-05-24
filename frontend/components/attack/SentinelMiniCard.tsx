@@ -27,7 +27,7 @@ export function SentinelMiniCard({ agent, variant }: { agent: AgentDetails; vari
             src={agent.agent_image}
             alt={agent.agent_name ?? 'Sentinel'}
             fill
-            className="scale-105 object-cover grayscale transition-all duration-700 group-hover:scale-100 group-hover:grayscale-0"
+            className="scale-105 object-cover transition-all duration-700 group-hover:scale-100"
             sizes="250px"
           />
         ) : (
