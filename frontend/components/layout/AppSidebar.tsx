@@ -4,11 +4,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
-  ChevronLeft,
   FileText,
   Gift,
   HelpCircle,
-  Home,
+  Terminal,
   Network,
   PlusSquare,
   Trophy,
@@ -41,7 +40,7 @@ type NavItem = {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { title: 'Home', href: '/attack', icon: Home },
+  { title: 'Home', href: '/attack', icon: Terminal },
   { title: 'Create', href: '/defend', icon: PlusSquare },
   { title: 'Syndicates', href: '/syndicates', icon: Network },
   { title: 'Leaderboard', href: '/leaderboard', icon: Trophy },
@@ -57,8 +56,7 @@ function isItemActive(pathname: string, href: string) {
 
 export function AppSidebar() {
   const pathname = usePathname()
-  const { state, isMobile, setOpenMobile, toggleSidebar } = useSidebar()
-  const collapsed = state === 'collapsed' && !isMobile
+  const { isMobile, setOpenMobile } = useSidebar()
 
   const renderItem = (item: NavItem) => {
     const Icon = item.icon
@@ -70,7 +68,7 @@ export function AppSidebar() {
           isActive={active}
           tooltip={item.title}
           size="default"
-          className="h-11 rounded-none border-l-4 border-l-transparent px-3 font-mono text-[11px] font-bold uppercase tracking-[0.02em] text-[var(--color-text-secondary)] hover:bg-[rgba(255,176,0,0.08)] hover:text-[var(--color-gold-light)] data-[active=true]:border-l-[var(--color-gold-primary)] data-[active=true]:bg-[rgba(255,176,0,0.12)] data-[active=true]:text-[var(--color-gold-light)] data-[active=true]:shadow-none [&>svg]:size-4"
+          className="font-body h-11 rounded-none px-4 text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] transition-colors hover:bg-white/[0.04] hover:text-white data-[active=true]:bg-white/[0.05] data-[active=true]:text-white data-[active=true]:shadow-none [&>svg]:size-5"
         >
           <Link href={item.href} onClick={() => isMobile && setOpenMobile(false)}>
             <Icon />
@@ -83,43 +81,28 @@ export function AppSidebar() {
 
   return (
     <Sidebar
-      collapsible="icon"
-      className="border-[var(--color-border-default)] bg-[var(--sidebar)]"
+      collapsible="offcanvas"
+      className="z-50 border-[var(--color-border-default)] bg-[var(--sidebar)]"
     >
-      <SidebarHeader className="border-b border-[var(--color-border-default)] p-4">
-        <div
-          className={cn(
-            'flex min-h-12 items-center gap-2',
-            collapsed ? 'justify-center' : 'justify-between'
-          )}
-        >
-          {!collapsed && (
-            <Link
-              href="/"
-              aria-label="Red Sentinel home"
-              className="flex min-w-0 flex-col gap-1 px-1"
-            >
-              <Image src={LOGO_SRC} alt="Red Sentinel" width={168} height={42} quality={100} />
-              <span className="text-[var(--color-gold-primary)]/80 font-mono text-[9px] font-bold uppercase tracking-[0.24em]">
-                Tactical-OS V2.4
-              </span>
-            </Link>
-          )}
-
-          <button
-            type="button"
-            onClick={toggleSidebar}
-            aria-label={collapsed ? 'Open sidebar' : 'Close sidebar'}
-            className="hidden h-7 w-7 shrink-0 items-center justify-center border border-[var(--color-border-default)] bg-[var(--color-bg-deepest)] text-[var(--color-gold-light)] transition-colors hover:border-[var(--color-gold-primary)] hover:bg-[rgba(255,176,0,0.08)] md:flex"
-          >
-            <ChevronLeft
-              className={cn('h-4 w-4 transition-transform duration-200', collapsed && 'rotate-180')}
+      <SidebarHeader className="p-8">
+        <div className="flex min-h-12 items-start">
+          <Link href="/" aria-label="Red Sentinel home" className="flex min-w-0 flex-col gap-1">
+            <Image
+              src={LOGO_SRC}
+              alt="Red Sentinel"
+              width={168}
+              height={42}
+              quality={100}
+              className={cn('h-6 w-auto object-contain', APP_NETWORK !== 'testnet' && 'invert')}
             />
-          </button>
+            <span className="font-body text-[8px] font-extrabold uppercase tracking-[0.22em] text-[var(--color-text-muted)] opacity-70">
+              Tactical-OS V2.4
+            </span>
+          </Link>
         </div>
       </SidebarHeader>
 
-      <SidebarContent className="py-3">
+      <SidebarContent className="px-4 py-0">
         <SidebarGroup className="p-0">
           <SidebarGroupContent>
             <SidebarMenu>{NAV_ITEMS.map(renderItem)}</SidebarMenu>
@@ -127,18 +110,18 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-[var(--color-border-default)] p-3">
-        <div className="space-y-1 group-data-[collapsible=icon]:hidden">
+      <SidebarFooter className="mt-auto border-t border-[var(--color-border-default)] p-8">
+        <div className="space-y-4">
           <Link
             href="mailto:support@redsentinel.ai"
-            className="flex h-8 items-center gap-3 px-2 font-mono text-[10px] font-bold uppercase tracking-[0.02em] text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-gold-light)]"
+            className="font-body flex items-center gap-3 text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] transition-colors hover:text-white"
           >
             <HelpCircle className="size-3.5" />
             Support
           </Link>
           <Link
             href="#"
-            className="flex h-8 items-center gap-3 px-2 font-mono text-[10px] font-bold uppercase tracking-[0.02em] text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-gold-light)]"
+            className="font-body flex items-center gap-3 text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] transition-colors hover:text-white"
           >
             <FileText className="size-3.5" />
             Logs

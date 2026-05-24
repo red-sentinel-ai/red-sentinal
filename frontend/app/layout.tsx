@@ -281,7 +281,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         className={`${inter.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable} flex min-h-screen flex-col bg-[var(--color-bg-base)] text-[var(--color-text-primary)]`}
       >
         <Providers>
-          <NextTopLoader color="#ffb000" showSpinner={false} />
+          <NextTopLoader color="#ffffff" showSpinner={false} />
           <main className="w-full flex-grow">{children}</main>
           {/* <Footer /> */}
           <FloatingHelpButton />
@@ -290,7 +290,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             toastOptions={{
               style: {
                 background: '#131313',
-                border: '1px solid #524533',
+                border: '1px solid #222222',
                 borderRadius: '0px',
                 padding: '12px 16px',
                 fontSize: '14px',
