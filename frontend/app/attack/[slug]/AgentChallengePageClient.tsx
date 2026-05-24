@@ -3,6 +3,7 @@ import { useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useQueryClient } from '@tanstack/react-query'
 import posthog from 'posthog-js'
+import { toast } from 'sonner'
 
 import { APP_NETWORK, getTokenForCoinType } from '@/constants'
 import type { ConsumePromptApiResponse } from '@/types'
@@ -29,52 +30,61 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   const { address: connectedAddress } = useConnectedAddress()
 
   const { data: agent, isLoading, error, refetch } = useAgentDetails(slug)
-  const { data: chat, isLoading: chatLoading, refetch: refetchChat } = useAgentChatHistory(
-    agent?.agent_id
-  )
+  const {
+    data: chat,
+    isLoading: chatLoading,
+    refetch: refetchChat,
+  } = useAgentChatHistory(agent?.agent_id)
 
   const [isReadMoreOpen, setIsReadMoreOpen] = useState(false)
 
-  const handleAttackComplete = useCallback((apiResponse: ConsumePromptApiResponse, txDigest: string) => {
-    setApiResponse(apiResponse)
-    setTxnHash(txDigest)
-    setShowResultModal(true)
+  const handleAttackComplete = useCallback(
+    (apiResponse: ConsumePromptApiResponse, txDigest: string) => {
+      setApiResponse(apiResponse)
+      setTxnHash(txDigest)
+      setShowResultModal(true)
 
-    setTimeout(() => {
-      refetch()
-      refetchChat()
-      queryClient.invalidateQueries({
-        queryKey: [AGENT_DETAILS_FULL_QUERY_KEY, slug, APP_NETWORK],
-      })
-      queryClient.invalidateQueries({
-        queryKey: [AGENT_CHAT_QUERY_KEY, agent?.agent_id, APP_NETWORK],
-      })
-    }, 1000)
+      setTimeout(() => {
+        refetch()
+        refetchChat()
+        queryClient.invalidateQueries({
+          queryKey: [AGENT_DETAILS_FULL_QUERY_KEY, slug, APP_NETWORK],
+        })
+        queryClient.invalidateQueries({
+          queryKey: [AGENT_CHAT_QUERY_KEY, agent?.agent_id, APP_NETWORK],
+        })
+      }, 1000)
 
-    if (connectedAddress && agent) {
-      const isWinner = apiResponse.response.data.success
+      if (connectedAddress && agent) {
+        const isWinner = apiResponse.response.data.success
 
-      posthog.capture('sentinel_attacked', {
-        agent_id: agent.agent_id,
-        agent_name: agent.agent_name,
-        attacker_address: connectedAddress,
-        is_successful: isWinner,
-        attack_score: apiResponse.response.data.score,
-        tx_digest: txDigest,
-        cost_to_attack: Number(agent.cost_per_message) / Math.pow(10, getTokenForCoinType(agent.coin_type).decimals),
-        chain: activeChain,
-      })
-
-      if (isWinner) {
-        posthog.capture('sentinel_defeated', {
+        posthog.capture('sentinel_attacked', {
           agent_id: agent.agent_id,
-          prize_pool_won: Number(agent.total_balance) / Math.pow(10, getTokenForCoinType(agent.coin_type).decimals),
-          winner_address: connectedAddress,
+          agent_name: agent.agent_name,
+          attacker_address: connectedAddress,
+          is_successful: isWinner,
+          attack_score: apiResponse.response.data.score,
+          tx_digest: txDigest,
+          cost_to_attack:
+            Number(agent.cost_per_message) /
+            Math.pow(10, getTokenForCoinType(agent.coin_type).decimals),
           chain: activeChain,
         })
+
+        if (isWinner) {
+          posthog.capture('sentinel_defeated', {
+            agent_id: agent.agent_id,
+            prize_pool_won:
+              Number(agent.total_balance) /
+              Math.pow(10, getTokenForCoinType(agent.coin_type).decimals),
+            winner_address: connectedAddress,
+            chain: activeChain,
+          })
+        }
       }
-    }
-  }, [connectedAddress, agent, slug, refetch, refetchChat, queryClient, activeChain])
+    },
+    [connectedAddress, agent, slug, refetch, refetchChat, queryClient, activeChain]
+  )
 
   const { consumePrompt: suiConsumePrompt } = useConsumePrompt({
     showToasts: true,
@@ -107,11 +117,16 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   })
 
   const agentChain: SupportedChain = agent?.chain ?? 'sui'
-  const chainMismatch: SupportedChain | null = agent && agentChain !== activeChain ? agentChain : null
+  const chainMismatch: SupportedChain | null =
+    agent && agentChain !== activeChain ? agentChain : null
   let consumePrompt = suiConsumePrompt
   switch (agentChain) {
-    case 'solana': consumePrompt = solanaConsumePrompt; break
-    case 'bnb': consumePrompt = evmConsumePrompt as typeof suiConsumePrompt; break
+    case 'solana':
+      consumePrompt = solanaConsumePrompt
+      break
+    case 'bnb':
+      consumePrompt = evmConsumePrompt as typeof suiConsumePrompt
+      break
   }
 
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -123,6 +138,16 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const isMobile = useMediaQuery('(max-width: 768px)')
 
+  const handleTextChatClick = useCallback(() => {
+    setIsSidebarOpen(false)
+    toast.info('Text chat selected')
+  }, [])
+
+  const handleVoiceChatClick = useCallback(() => {
+    setIsSidebarOpen(false)
+    toast.info('Voice chat handler placeholder')
+  }, [])
+
   const handleSendMessage = async (prompt: string) => {
     if (!agent) {
       setSubmitError('Agent not loaded')
@@ -131,8 +156,12 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
     if (chainMismatch) {
       let chainName = 'Sui'
       switch (chainMismatch) {
-        case 'solana': chainName = 'Solana'; break
-        case 'bnb': chainName = 'BNB Chain'; break
+        case 'solana':
+          chainName = 'Solana'
+          break
+        case 'bnb':
+          chainName = 'BNB Chain'
+          break
       }
       setSubmitError(`Switch to ${chainName} to attack this sentinel`)
       return
@@ -164,9 +193,14 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
   if (error || !agent) {
     return (
-      <div className="h-[calc(100vh-64px)] bg-[var(--color-bg-base)] p-4 text-[var(--color-text-primary)]">
-        <div className="flex min-h-[400px] items-center justify-center">
-          <p className="text-lg text-[var(--color-text-secondary)]">{error?.message || 'Agent not found'}</p>
+      <div className="flex h-[calc(100vh-64px)] items-center justify-center bg-black p-4">
+        <div className="text-center">
+          <p className="industrial-header text-sm text-[var(--color-text-muted)]">
+            {error?.message ? 'ERROR_LOADING_SENTINEL' : 'SENTINEL_NOT_FOUND'}
+          </p>
+          <p className="mt-2 font-mono text-xs text-[var(--color-text-muted)]">
+            {error?.message || 'The requested sentinel could not be located'}
+          </p>
         </div>
       </div>
     )
@@ -174,17 +208,19 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
   if (!isMobile) {
     return (
-      <div className="flex h-[calc(100vh-64px)] items-end bg-[var(--color-bg-base)]">
+      <div className="flex h-[calc(100vh-64px)] bg-black">
         <ResizablePanelGroup direction="horizontal" className="w-full">
-          <ResizablePanel defaultSize={25} minSize={20} maxSize={40}>
+          <ResizablePanel defaultSize={28} minSize={22} maxSize={40}>
             <AgentSidebar
               agent={agent}
               onReadMore={() => setIsReadMoreOpen(true)}
+              onTextChat={handleTextChatClick}
+              onVoiceChat={handleVoiceChatClick}
             />
           </ResizablePanel>
-          <ResizableHandle withHandle={true} />
-          <ResizablePanel defaultSize={75}>
-            <div className="max-w-v1 relative mx-auto h-full w-full">
+          <ResizableHandle withHandle={true} className="bg-[var(--color-border-strong)]" />
+          <ResizablePanel defaultSize={72}>
+            <div className="relative h-full w-full">
               <ChatInterface
                 agent={agent}
                 chatEvents={chat?.messages ?? []}
@@ -220,7 +256,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   }
 
   return (
-    <div className="ios-scroll flex h-[calc(100dvh-64px)] flex-col bg-[var(--color-bg-surface)]">
+    <div className="ios-scroll flex h-[calc(100dvh-64px)] flex-col bg-black">
       <MobileAgentHeader agentName={agent.agent_name} onInfoClick={() => setIsSidebarOpen(true)} />
 
       <div className="min-h-0 flex-1 overflow-hidden">
@@ -245,14 +281,14 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsSidebarOpen(false)}
-              className="fixed inset-0 z-40 bg-black/60"
+              className="fixed inset-0 z-40 bg-black/80"
             />
             <motion.div
               initial={{ x: '-100%' }}
               animate={{ x: '0%' }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="ios-scroll fixed bottom-0 left-0 top-0 z-50 w-[85%] max-w-sm overflow-y-auto bg-[var(--color-bg-subtle)] shadow-2xl"
+              className="ios-scroll terminal-scrollbar fixed bottom-0 left-0 top-0 z-50 w-[85%] max-w-sm overflow-y-auto bg-black shadow-2xl"
             >
               <AgentSidebar
                 agent={agent}
@@ -260,6 +296,8 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
                   setIsSidebarOpen(false)
                   setIsReadMoreOpen(true)
                 }}
+                onTextChat={handleTextChatClick}
+                onVoiceChat={handleVoiceChatClick}
               />
             </motion.div>
           </>
@@ -267,10 +305,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
       </AnimatePresence>
 
       {isReadMoreOpen && (
-        <AgentReadMoreModal
-          prompt={agent.prompt}
-          onClose={() => setIsReadMoreOpen(false)}
-        />
+        <AgentReadMoreModal prompt={agent.prompt} onClose={() => setIsReadMoreOpen(false)} />
       )}
 
       {apiResponse && txnHash && (

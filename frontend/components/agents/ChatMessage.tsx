@@ -2,19 +2,22 @@
 import type React from 'react'
 import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import clsx from 'clsx'
 import { formatDistanceToNow } from 'date-fns'
-import { Trophy } from 'lucide-react'
+import { Trophy, ExternalLink, Scale } from 'lucide-react'
 import { DEFAULT_PROFILE_URL } from '@/constants'
 import { getExplorerTxUrl } from '@/lib/explorer'
 import { truncateAddress } from '@/lib/utils'
 import type { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { type ChatMessage as ChatMessageType } from './ChatInterface'
-import Link from 'next/link'
 import type { Tables } from '@/lib/database.types'
 
-type UserProfile = Pick<Tables<{ schema: 'sentinel' }, 'ss_users'>, 'username' | 'avatar_url'> | null
+type UserProfile = Pick<
+  Tables<{ schema: 'sentinel' }, 'ss_users'>,
+  'username' | 'avatar_url'
+> | null
 
 type ChatMessageProps = {
   message: ChatMessageType
@@ -43,130 +46,174 @@ export const ChatMessage = ({
     }
   }, [message.content])
 
-  const avatarUrl = senderProfile?.avatar_url || DEFAULT_PROFILE_URL
   const displayName =
-    senderProfile?.username || (message.sender ? truncateAddress(message.sender) : 'User')
+    senderProfile?.username || (message.sender ? truncateAddress(message.sender) : 'OPERATOR')
   const profileLink = `/u/${senderProfile?.username || message.sender}`
 
+  const timestamp = formatDistanceToNow(new Date(Number.parseInt(message.timestamp)))
+
+  // User Message (right-aligned)
+  if (message.type === 'user') {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.3 }}
+        className="flex flex-col items-end gap-2"
+      >
+        {/* Header with username and timestamp */}
+        <div className="industrial-header flex items-center gap-2 text-[10px] text-[var(--color-text-muted)]">
+          <Link href={profileLink} className="transition-colors hover:text-white">
+            @{displayName.toUpperCase()}
+          </Link>
+          <span>//</span>
+          <span>{timestamp.toUpperCase()} AGO</span>
+          {isWinningPrompt && (
+            <span className="text-accent flex items-center gap-1">
+              <Trophy className="h-3 w-3" />
+              WINNER
+            </span>
+          )}
+        </div>
+
+        {/* Message Content */}
+        <div
+          className={clsx(
+            'max-w-[85%] border p-4 lg:max-w-[75%] lg:p-5',
+            isWinningPrompt ? 'border-accent/40 bg-accent/5' : 'border-white/20 bg-white/5'
+          )}
+        >
+          <p
+            ref={contentRef}
+            className={clsx(
+              'font-mono text-sm leading-relaxed text-white',
+              !isExpanded && shouldTruncate && 'line-clamp-4'
+            )}
+          >
+            {message.content}
+          </p>
+
+          {shouldTruncate && (
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="industrial-header mt-3 border-b border-white text-[10px] tracking-widest text-white transition-opacity hover:opacity-70"
+            >
+              {isExpanded ? 'COLLAPSE' : 'EXPAND'}
+            </button>
+          )}
+        </div>
+      </motion.div>
+    )
+  }
+
+  // Agent/Sentinel Message (left-aligned)
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.3 }}
-      className={clsx('flex', {
-        'justify-end': message.type === 'user',
-        'justify-start': message.type === 'agent',
-      })}
+      className="flex flex-col gap-3"
     >
-      <div
-        className={clsx('relative flex max-w-[85%] items-start gap-2 sm:max-w-[75%] sm:gap-3', {
-          'flex-row-reverse': message.type === 'user',
-        })}
-      >
-        {message.type === 'user' && (
-          <div className="flex-shrink-0">
-            <Link href={profileLink}>
-              <div className="relative h-7 w-7 rounded-full border border-[var(--color-border-subtle)]">
-                <Image
-                  src={avatarUrl}
-                  fill
-                  alt={displayName}
-                  className="rounded-full object-cover"
-                />
-              </div>
-            </Link>
-          </div>
-        )}
+      {/* Header with avatar and sentinel info */}
+      <div className="flex items-center gap-3">
+        <div className="flex h-8 w-8 items-center justify-center border border-[var(--color-border-strong)] bg-[var(--color-bg-elevated)]">
+          <Image
+            src={agent.agent_image || DEFAULT_PROFILE_URL}
+            width={32}
+            height={32}
+            alt={agent.agent_name}
+            className="h-full w-full object-cover grayscale"
+          />
+        </div>
+        <div className="industrial-header text-[10px] text-[var(--color-text-muted)]">
+          SENTINEL_{agent.agent_name.toUpperCase().replace(/\s+/g, '_')} //{' '}
+          {timestamp.toUpperCase()} AGO
+        </div>
+      </div>
 
-        <div
-          className={clsx(
-            'relative min-w-[240px] rounded-2xl text-[var(--color-text-secondary)] sm:min-w-[300px]',
-            {
-              'border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)]': message.type === 'agent',
-              'border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)]':
-                message.type === 'user' && !isWinningPrompt,
-              'border border-[var(--color-gold-primary)]/40 bg-[var(--color-gold-muted)]': isWinningPrompt,
-            }
+      {/* Message Content */}
+      <div className="border-hairline max-w-[90%] bg-[var(--color-bg-elevated)]">
+        <div className="p-5 lg:p-6">
+          <p
+            ref={contentRef}
+            className={clsx(
+              'mb-6 font-mono text-sm leading-relaxed text-[var(--color-text-secondary)]',
+              !isExpanded && shouldTruncate && 'line-clamp-4'
+            )}
+          >
+            {message.content}
+          </p>
+
+          {shouldTruncate && (
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="industrial-header mb-6 border-b border-white text-[10px] tracking-widest text-white transition-opacity hover:opacity-70"
+            >
+              {isExpanded ? 'COLLAPSE' : 'EXPAND'}
+            </button>
           )}
-        >
-          <div className="relative p-3 sm:p-4">
-            {message.type === 'user' && message.sender && (
-              <div className="-mt-1 mb-2 flex items-center justify-between gap-1 text-xs">
-                <Link href={profileLink} className="font-medium text-[var(--color-text-secondary)] hover:underline">
-                  {displayName}
-                </Link>
-                {isWinningPrompt && (
-                  <div className="flex items-center gap-1.5 rounded-full bg-[var(--color-gold-primary)]/15 px-2 py-0.5 text-xs font-semibold text-[var(--color-gold-primary)]">
-                    <Trophy className="h-3 w-3" />
-                    Winner
-                  </div>
-                )}
+
+          {/* Footer with score, jury, and tx link */}
+          <div className="flex flex-wrap items-center gap-4 border-t border-[var(--color-border-strong)] pt-4 lg:gap-6">
+            {/* Jury Logged Badge */}
+            {message.juryResponse && onShowJury && (
+              <button
+                onClick={e => {
+                  e.stopPropagation()
+                  onShowJury()
+                }}
+                className="industrial-header text-accent flex items-center gap-1.5 text-[10px] transition-opacity hover:opacity-70"
+              >
+                <Scale className="h-3.5 w-3.5" />
+                JURY_LOGGED
+              </button>
+            )}
+
+            {/* Threat Score */}
+            {message.score !== undefined && (
+              <div className="industrial-header text-[10px] text-white">
+                THREAT_SCORE:{' '}
+                <span
+                  className={clsx(
+                    'ml-1',
+                    message.score >= 80
+                      ? 'text-[var(--color-danger)]'
+                      : message.score >= 50
+                        ? 'text-accent'
+                        : 'text-accent'
+                  )}
+                >
+                  {String(message.score).padStart(2, '0')} / 100
+                </span>
               </div>
             )}
-            <div className="mb-2 sm:mb-3">
-              <p
-                ref={contentRef}
-                className={clsx(
-                  'break-words text-xs leading-relaxed text-[var(--color-text-secondary)] transition-all duration-200 ease-in-out sm:text-sm',
-                  !isExpanded && 'line-clamp-4'
-                )}
-              >
-                {message.content}
-              </p>
 
-              {shouldTruncate && (
-                <button
-                  onClick={() => setIsExpanded(!isExpanded)}
-                  className="mt-1 text-xs text-[var(--color-info)] hover:underline"
-                >
-                  {isExpanded ? 'Show less' : 'Show more'}
-                </button>
-              )}
-            </div>
-            <div
-              className={clsx(
-                'flex flex-col gap-2 text-xs sm:flex-row sm:items-center sm:justify-between'
-              )}
-            >
-              <div className="flex flex-col gap-1"></div>
-              <div className="absolute bottom-1 right-3 flex gap-3 whitespace-nowrap text-right text-[11px] text-[var(--color-text-muted)]">
-                {message.type === 'agent' && message.txDigest && (
-                  <a
-                    href={getExplorerTxUrl(message.txDigest, agent.chain)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="break-all lowercase text-[var(--color-info)] underline"
-                  >
-                    {truncateAddress(message.txDigest)}
-                  </a>
-                )}
-                {message.type === 'agent' && message.score !== undefined && (
-                  <span className="font-medium text-[var(--color-text-secondary)]">Score: {message.score}/100</span>
-                )}
-                {message.type === 'agent' && message.juryResponse && onShowJury && (
-                  <button
-                    onClick={e => {
-                      e.stopPropagation()
-                      onShowJury()
-                    }}
-                    className="flex w-fit cursor-pointer items-center gap-1.5 text-[10px] text-[var(--color-info)] underline transition-all hover:no-underline"
-                  >
-                    <Image
-                      src="/icons/court_house_blue.png"
-                      width="10"
-                      height="10"
-                      alt="Court House"
-                    />
-                    Jury Response
-                  </button>
-                )}
-                {formatDistanceToNow(new Date(Number.parseInt(message.timestamp)))} ago
-              </div>
-            </div>
+            {/* Transaction Link */}
+            {message.txDigest && (
+              <a
+                href={getExplorerTxUrl(message.txDigest, agent.chain)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="industrial-header ml-auto flex items-center gap-1 text-[10px] text-[var(--color-text-muted)] transition-colors hover:text-white"
+              >
+                VIEW_TRACE
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Success Banner */}
+      {message.isSuccess && (
+        <div className="border-[var(--color-success)]/30 border bg-[var(--color-success-muted)] p-4">
+          <div className="industrial-header text-center text-sm text-[var(--color-success)]">
+            SENTINEL_BREACHED // FUNDS_EXTRACTED
+          </div>
+        </div>
+      )}
     </motion.div>
   )
 }

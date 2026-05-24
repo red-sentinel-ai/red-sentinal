@@ -5,15 +5,14 @@ import { useState, useRef, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import clsx from 'clsx'
-import { Loader2, ArrowUp } from 'lucide-react'
+import { Loader2, Zap } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ConnectModal, useCurrentAccount } from '@mysten/dapp-kit'
 
-import { ATTACK_PROMPT_MAX_TOKENS, DEFAULT_PROFILE_URL } from '@/constants'
+import { ATTACK_PROMPT_MAX_TOKENS, DEFAULT_PROFILE_URL, getTokenForCoinType } from '@/constants'
 import type { SupportedChain } from '@/constants/chains'
 import { truncateAddress } from '@/lib/utils'
 import type { ConsumePromptApiResponse } from '@/types'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { ChatEvent } from '@/hooks/agents/useAgentChatHistory'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { useTokenCount } from '@/hooks/useTokenCount'
@@ -22,6 +21,7 @@ import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
 import { ChainMismatchBanner } from '@/components/ui/common/ChainMismatchBanner'
 import { ChatMessage } from './ChatMessage'
 import { JuryResponseModal } from './JuryResponseModal'
+import { TokenAmount } from '@/components/ui/common/TokenAmount'
 
 export interface ChatMessage {
   id: string
@@ -71,6 +71,8 @@ export default function ChatInterface({
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
 
   const [isAttackPaused, setIsAttackPaused] = useState(false)
+
+  const agentToken = getTokenForCoinType(agent.coin_type)
 
   useEffect(() => {
     const unlock = Number(agent.unlock_timestamp)
@@ -157,7 +159,6 @@ export default function ChatInterface({
     const textarea = textareaRef.current
     if (textarea) {
       textarea.style.height = 'auto'
-      // Cap height at 300px or 40vh, whichever is smaller
       const maxHeight = Math.min(window.innerHeight * 0.4, 300)
       textarea.style.height = `${Math.min(textarea.scrollHeight, maxHeight)}px`
     }
@@ -222,7 +223,6 @@ export default function ChatInterface({
     e.preventDefault()
 
     if (!connectedAddress) {
-      // ConnectModal is Sui-specific; only trigger it when Sui is the active chain
       if (!suiAccount?.address) {
         setIsWalletModalOpen(true)
         return
@@ -248,243 +248,248 @@ export default function ChatInterface({
     setPromptInput('')
   }
 
+  // Dummy online operators count
+  const operatorsOnline = 42
+
   return (
-    <div className="flex h-full flex-1 flex-col justify-between pb-2 text-[var(--color-text-secondary)] sm:pb-6">
+    <div className="flex h-full flex-1 flex-col bg-black">
       <JuryResponseModal
         isOpen={isJuryModalOpen}
         onClose={() => setIsJuryModalOpen(false)}
         response={selectedJuryResponse}
       />
 
-      <div className="px-3 pb-1 pt-1 sm:px-6 sm:py-2">
-        <Tabs value={activeTab} onValueChange={v => setActiveTab(v as 'global' | 'mine')}>
-          <TabsList className="h-auto rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] p-[2px]">
-            <TabsTrigger
-              value="global"
-              className="rounded-md border-b-0 py-1 data-[state=active]:border-b-0 data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:shadow-sm sm:px-4"
-            >
-              Global Chat
-            </TabsTrigger>
-            <TabsTrigger
-              value="mine"
-              className="rounded-md border-b-0 py-1 data-[state=active]:border-b-0 data-[state=active]:bg-[var(--color-bg-surface)] data-[state=active]:shadow-sm sm:px-4"
-            >
-              My Chat
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
+      {/* Terminal-style Tabs */}
+      <div className="flex h-12 shrink-0 items-center border-b border-[var(--color-border-strong)] px-6 lg:px-8">
+        <button
+          onClick={() => setActiveTab('global')}
+          className={clsx(
+            'industrial-header h-12 border-b-2 px-4 text-[11px] tracking-widest transition-colors',
+            activeTab === 'global'
+              ? 'border-white text-white'
+              : 'border-transparent text-[var(--color-text-muted)] hover:text-white'
+          )}
+        >
+          GLOBAL_ATTACKS
+        </button>
+        <button
+          onClick={() => setActiveTab('mine')}
+          className={clsx(
+            'industrial-header h-12 border-b-2 px-4 text-[11px] tracking-widest transition-colors',
+            activeTab === 'mine'
+              ? 'border-white text-white'
+              : 'border-transparent text-[var(--color-text-muted)] hover:text-white'
+          )}
+        >
+          MY_ATTACKS
+        </button>
+        <div className="ml-auto flex items-center">
+          <span className="industrial-header text-[10px] text-[var(--color-text-muted)]">
+            OPERATORS_ONLINE: {operatorsOnline}
+          </span>
+        </div>
       </div>
 
+      {/* Chat Feed */}
       <div
         ref={chatContainerRef}
-        className="ios-scroll min-h-0 flex-1 space-y-2 overflow-y-auto p-2 pt-1 sm:space-y-6 sm:p-6"
+        className="terminal-scrollbar min-h-0 flex-1 space-y-10 overflow-y-auto p-6 lg:p-8"
       >
         {displayedMessages.length === 0 && !eventsLoading && (
-          <div className="py-6 text-center text-[var(--color-text-muted)] sm:py-12">
-            <Image
-              src="/icons/exclamation.png"
-              width={60}
-              height={60}
-              alt="exclamation"
-              className="mx-auto mb-4 opacity-70"
-            />
-            {activeTab === 'mine' ? (
-              <>
-                <p className="text-sm sm:text-base">
-                  {connectedAddress
-                    ? "You haven't attacked yet."
-                    : 'Connect your wallet to see your chats.'}
-                </p>
-                <p className="mt-2 px-4 text-xs opacity-75 sm:text-sm">
-                  {connectedAddress
-                    ? 'Submit a prompt to start your attack!'
-                    : 'Your messages will appear here once connected.'}
-                </p>
-              </>
-            ) : (
-              <>
-                <p className="text-sm sm:text-base">No messages yet. Start attacking the agent!</p>
-                <p className="mt-2 px-4 text-xs opacity-75 sm:text-sm">
-                  Try to break through their defenses with clever prompts.
-                </p>
-              </>
-            )}
+          <div className="py-12 text-center">
+            <span className="industrial-header text-[10px] tracking-[8px] text-[var(--color-text-muted)] opacity-40">
+              AWAITING_INITIAL_PAYLOADS
+            </span>
           </div>
         )}
 
-        <AnimatePresence>
-          {displayedMessages.map((message, index) => {
-            const isWinningUserPrompt =
-              message.type === 'user' && displayedMessages[index + 1]?.isSuccess === true
-            return (
-              <ChatMessage
-                key={message.id}
-                message={message}
-                agent={agent}
-                senderProfile={userProfilesMap?.[message.sender!] || null}
-                isWinningPrompt={isWinningUserPrompt}
-                onShowJury={() => message.juryResponse && handleShowJury(message.juryResponse)}
-              />
-            )
-          })}
+        <div className="mx-auto max-w-4xl space-y-10">
+          <AnimatePresence>
+            {displayedMessages.map((message, index) => {
+              const isWinningUserPrompt =
+                message.type === 'user' && displayedMessages[index + 1]?.isSuccess === true
+              return (
+                <ChatMessage
+                  key={message.id}
+                  message={message}
+                  agent={agent}
+                  senderProfile={userProfilesMap?.[message.sender!] || null}
+                  isWinningPrompt={isWinningUserPrompt}
+                  onShowJury={() => message.juryResponse && handleShowJury(message.juryResponse)}
+                />
+              )
+            })}
 
-          {isSubmitting && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex justify-start"
-            >
-              <div className="flex max-w-[85%] items-start gap-2 sm:max-w-[75%] sm:gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-bg-subtle)] ring-2 ring-[var(--color-border-default)] sm:h-10 sm:w-10">
-                  <Image
-                    src={agent.agent_image || DEFAULT_PROFILE_URL}
-                    width={32}
-                    height={32}
-                    alt="agent"
-                    className="h-full w-full rounded-full object-cover"
-                  />
+            {isSubmitting && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex flex-col gap-3"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-8 w-8 items-center justify-center border border-[var(--color-border-strong)] bg-[var(--color-bg-elevated)]">
+                    <Image
+                      src={agent.agent_image || DEFAULT_PROFILE_URL}
+                      width={32}
+                      height={32}
+                      alt="agent"
+                      className="h-full w-full object-cover grayscale"
+                    />
+                  </div>
+                  <div className="industrial-header text-[10px] text-[var(--color-text-muted)]">
+                    SENTINEL_PROCESSING...
+                  </div>
                 </div>
-                <div className="flex items-center gap-3 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] p-3 sm:p-4">
-                  <Loader2 className="h-4 w-4 animate-spin text-[var(--color-text-secondary)] sm:h-5 sm:w-5" />
-                  <span className="text-xs text-[var(--color-text-secondary)] sm:text-sm">
-                    Agent is analyzing your attack...
+                <div className="border-hairline flex items-center gap-3 bg-[var(--color-bg-elevated)] p-6">
+                  <Loader2 className="h-4 w-4 animate-spin text-[var(--color-text-muted)]" />
+                  <span className="font-mono text-xs uppercase text-[var(--color-text-muted)]">
+                    Analyzing breach attempt...
                   </span>
                 </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Awaiting Status */}
+        {displayedMessages.length > 0 && !isSubmitting && (
+          <div className="border-y border-[var(--color-border-strong)] py-8 text-center">
+            <span className="industrial-header text-[10px] tracking-[8px] text-[var(--color-text-muted)] opacity-40">
+              AWAITING_NEW_PAYLOADS
+            </span>
+          </div>
+        )}
       </div>
 
+      {/* Input Area */}
       {chainMismatch ? (
         <ChainMismatchBanner agentChain={chainMismatch} />
       ) : isAttackPaused ? (
-        <div className="border-t border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] p-4">
-          <div className="w-full text-center">
-            <h3 className="text-base font-semibold text-[var(--color-warning)]">Attacks Paused</h3>
-            <p className="text-xs text-[var(--color-text-secondary)]">
-              The owner&apos;s lock period has expired and they can currently withdraw funds. Attacks
-              will resume once the sentinel is re-funded.
+        <div className="border-t border-[var(--color-border-strong)] bg-black p-6">
+          <div className="mx-auto max-w-4xl text-center">
+            <h3 className="industrial-header text-sm text-accent">ATTACKS_PAUSED</h3>
+            <p className="mt-2 font-mono text-[11px] uppercase text-[var(--color-text-muted)]">
+              The owner&apos;s lock period has expired. Attacks will resume once the sentinel is re-funded.
             </p>
           </div>
         </div>
       ) : isAgentDrained ? (
-        <div className="border-t border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] p-4">
-          <div className="w-full text-center">
-            <h3 className="text-base font-semibold text-[var(--color-danger)]">This Sentinel is Drained</h3>
-            <p className="mb-2 text-xs text-[var(--color-text-muted)]">
-              The sentinel has been successfully defeated.
+        <div className="border-t border-[var(--color-border-strong)] bg-black p-6">
+          <div className="mx-auto max-w-4xl text-center">
+            <h3 className="industrial-header text-sm text-[var(--color-danger)]">SENTINEL_COMPROMISED</h3>
+            <p className="mt-2 font-mono text-[11px] uppercase text-[var(--color-text-muted)]">
+              This sentinel has been successfully defeated.
             </p>
 
             {winnerInfo && (
-              <div className="mx-auto rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] px-3">
-                <div className="flex flex-col items-center justify-center gap-y-2 sm:flex-row sm:gap-y-0 sm:divide-x sm:divide-[var(--color-border-subtle)]">
-                  <div className="flex w-full items-baseline justify-center gap-x-2 px-3 sm:w-auto">
-                    <p className="shrink-0 text-xs font-semibold text-[var(--color-text-secondary)]">Winner:</p>
-
-                    <Link
-                      href={`/u/${winnerInfo.winnerAddress}`}
-                      className="text-right text-sm text-[var(--color-info)] underline"
-                    >
-                      {truncateAddress(winnerInfo.winnerAddress as string)}
-                    </Link>
-                  </div>
-
-                  <div className="flex w-full items-baseline justify-center gap-x-2 px-3 sm:w-auto">
-                    <p className="shrink-0 text-xs font-semibold text-[var(--color-text-secondary)]">Amount:</p>
-                    <p className="text-sm font-semibold text-[var(--color-success)]">{winnerInfo.wonAmount} SUI</p>
-                  </div>
+              <div className="mt-4 inline-flex items-center gap-6 border border-[var(--color-border-strong)] bg-[var(--color-bg-elevated)] px-6 py-3">
+                <div className="text-left">
+                  <span className="industrial-header block text-[9px] text-[var(--color-text-muted)]">WINNER</span>
+                  <Link
+                    href={`/u/${winnerInfo.winnerAddress}`}
+                    className="industrial-header text-[11px] text-accent transition-opacity hover:opacity-70"
+                  >
+                    {truncateAddress(winnerInfo.winnerAddress as string)}
+                  </Link>
+                </div>
+                <div className="text-left">
+                  <span className="industrial-header block text-[9px] text-[var(--color-text-muted)]">AMOUNT_WON</span>
+                  <span className="industrial-header text-[11px] text-[var(--color-success)]">{winnerInfo.wonAmount} SUI</span>
                 </div>
               </div>
             )}
           </div>
         </div>
       ) : (
-        <div className="pb-safe">
-          <form onSubmit={handleSubmit}>
-            {/* Clean chat input container */}
-            <div className="w-full overflow-hidden rounded-2xl border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] transition-colors duration-200 focus-within:border-[var(--color-border-strong)]">
-              <div className="relative">
-                <textarea
-                  ref={textareaRef}
-                  value={promptInput}
-                  onChange={e => {
-                    setPromptInput(e.target.value)
-                    countTokens(e.target.value)
-                  }}
-                  className="min-h-[60px] w-full resize-none border-none bg-transparent p-3 pb-9 pr-12 text-[15px] leading-relaxed text-[var(--color-text-primary)] outline-none placeholder:text-[var(--color-text-muted)] focus:ring-0 sm:min-h-[100px] sm:p-4 sm:pb-10 sm:pr-14 sm:text-base"
-                  disabled={isSubmitting}
-                  placeholder="Craft your attack prompt..."
-                  rows={1}
-                  style={{ overflow: 'hidden' }}
-                  autoComplete="off"
-                  spellCheck="false"
-                  onKeyDown={e => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault()
-                      handleSubmit(e)
-                    }
-                  }}
-                />
-
-                {/* Token count - bottom right corner */}
-                <div
-                  className={clsx(
-                    'absolute bottom-2 right-16 text-[10px] font-medium tracking-wide sm:bottom-3 sm:right-[72px]',
-                    tokenCount > ATTACK_PROMPT_MAX_TOKENS ? 'text-[var(--color-danger)]' : 'text-[var(--color-text-muted)]'
-                  )}
-                >
-                  <span className={clsx({ 'animate-pulse': isTokenCountDebouncing })}>
-                    {tokenCount}/{ATTACK_PROMPT_MAX_TOKENS}
+        <div className="border-t border-[var(--color-border-strong)] bg-black p-6 lg:p-8">
+          <form onSubmit={handleSubmit} className="mx-auto max-w-4xl space-y-4">
+            <div className="border border-[var(--color-border-strong)] bg-black p-1 transition-all focus-within:border-white">
+              <textarea
+                ref={textareaRef}
+                value={promptInput}
+                onChange={e => {
+                  setPromptInput(e.target.value)
+                  countTokens(e.target.value)
+                }}
+                className="terminal-scrollbar min-h-[120px] w-full resize-none border-0 bg-black p-4 font-mono text-sm uppercase text-white placeholder:text-[var(--color-text-muted)]/30 focus:outline-none focus:ring-0"
+                disabled={isSubmitting}
+                placeholder="CONSTRUCT_BREACH_PROTOCOL..."
+                rows={1}
+                style={{ overflow: 'hidden' }}
+                autoComplete="off"
+                spellCheck="false"
+                onKeyDown={e => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault()
+                    handleSubmit(e)
+                  }
+                }}
+              />
+              <div className="flex items-center justify-between border-t border-[var(--color-border-default)] p-3">
+                <div />
+                <div className="flex items-center gap-6">
+                  <span
+                    className={clsx(
+                      'industrial-header tabular-nums text-[10px] tracking-widest',
+                      tokenCount > ATTACK_PROMPT_MAX_TOKENS
+                        ? 'text-[var(--color-danger)]'
+                        : 'text-[var(--color-text-muted)]/40'
+                    )}
+                  >
+                    <span className={clsx({ 'animate-pulse': isTokenCountDebouncing })}>
+                      {tokenCount} / {ATTACK_PROMPT_MAX_TOKENS} TOKEN
+                    </span>
                   </span>
+                  <button
+                    type="submit"
+                    disabled={
+                      isSubmitting ||
+                      promptInput.length === 0 ||
+                      tokenCount > ATTACK_PROMPT_MAX_TOKENS
+                    }
+                    className="button-ghost-terminal flex items-center gap-2 px-6 py-2 disabled:cursor-not-allowed disabled:opacity-30"
+                  >
+                    {isSubmitting ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <>
+                        <span>EXECUTE</span>
+                        <Zap className="h-4 w-4" />
+                      </>
+                    )}
+                  </button>
                 </div>
-
-                {/* Desktop: Circular send button */}
-                <button
-                  type="submit"
-                  disabled={
-                    isSubmitting ||
-                    promptInput.length === 0 ||
-                    tokenCount > ATTACK_PROMPT_MAX_TOKENS
-                  }
-                  className="absolute bottom-3 right-3 hidden h-10 w-10 items-center justify-center rounded-full bg-[var(--color-gold-primary)] text-white transition-colors duration-200 hover:bg-[var(--color-gold-light)] active:scale-95 disabled:cursor-not-allowed disabled:bg-[var(--color-bg-subtle)] disabled:text-[var(--color-text-faint)] sm:flex"
-                >
-                  {isSubmitting ? (
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                  ) : (
-                    <ArrowUp className="h-5 w-5" strokeWidth={2.5} />
-                  )}
-                </button>
-
-                {/* Mobile: Floating send button */}
-                <button
-                  type="submit"
-                  disabled={
-                    isSubmitting ||
-                    promptInput.length === 0 ||
-                    tokenCount > ATTACK_PROMPT_MAX_TOKENS
-                  }
-                  className="absolute bottom-2 right-2 flex h-9 w-9 touch-manipulation items-center justify-center rounded-full bg-[var(--color-gold-primary)] text-white transition-colors duration-200 hover:bg-[var(--color-gold-light)] active:scale-90 disabled:cursor-not-allowed disabled:bg-[var(--color-bg-subtle)] disabled:text-[var(--color-text-faint)] sm:hidden"
-                >
-                  {isSubmitting ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <ArrowUp className="h-[18px] w-[18px]" strokeWidth={2.5} />
-                  )}
-                </button>
               </div>
             </div>
 
             {submitError && (
-              <div className="mt-2 rounded-lg border border-[var(--color-danger)]/30 bg-[var(--color-danger-muted)] p-2 text-xs text-[var(--color-danger)] sm:text-sm">
-                {submitError}
+              <div className="border border-[var(--color-danger)]/30 bg-[var(--color-danger-muted)] p-3">
+                <span className="font-mono text-xs uppercase text-[var(--color-danger)]">{submitError}</span>
               </div>
             )}
+
             {tokenCount > ATTACK_PROMPT_MAX_TOKENS && (
-              <div className="mt-2 rounded-lg border border-[var(--color-danger)]/30 bg-[var(--color-danger-muted)] p-2 text-xs text-[var(--color-danger)] sm:text-sm">
-                Your prompt exceeds the token limit.
+              <div className="border border-[var(--color-danger)]/30 bg-[var(--color-danger-muted)] p-3">
+                <span className="font-mono text-xs uppercase text-[var(--color-danger)]">
+                  TOKEN_LIMIT_EXCEEDED
+                </span>
               </div>
             )}
+
+            {/* Attack Fee Display */}
+            <div className="flex justify-end">
+              <div className="industrial-header flex items-center gap-2 border border-[var(--color-border-default)] px-3 py-2 text-[10px] tracking-widest text-[var(--color-text-muted)]/60">
+                ATTACK_FEE:{' '}
+                <span className="text-white">
+                  <TokenAmount
+                    rawAmount={agent.current_cost_per_message ?? agent.cost_per_message}
+                    token={agentToken}
+                    precision={4}
+                    iconSize={12}
+                  />
+                </span>
+              </div>
+            </div>
           </form>
         </div>
       )}
