@@ -3,7 +3,15 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ChevronLeft, Info, LinkIcon, TrendingUp, User, TrendingDown } from 'lucide-react'
+import {
+  ChevronLeft,
+  TrendingUp,
+  TrendingDown,
+  MessageSquare,
+  Mic,
+  Link as LinkIcon,
+  ExternalLink,
+} from 'lucide-react'
 import { QRCodeSVG } from 'qrcode.react'
 import { toast } from 'sonner'
 import {
@@ -20,7 +28,7 @@ import type { AgentDetailsFull } from '@/hooks/agents/useAgentDetails'
 import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
 import { DefenderProfile } from './DefenderProfile'
 import { formatDuration, cn, buildAgentShareTweetUrl, truncateAddress } from '@/lib/utils'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, Button, Skeleton } from '@/components/ui'
+import { Skeleton } from '@/components/ui'
 import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
 import { SparklineChart } from '../ui/common/SparklineChart'
 import { TokenAmount } from '../ui/common/TokenAmount'
@@ -32,9 +40,13 @@ const SHARE_MISSION = REWARDS_CONSTANTS.DEFAULT_MISSIONS.find(m => m.type === 's
 interface AgentSidebarProps {
   agent: AgentDetailsFull
   onReadMore?: () => void
+  onTextChat?: () => void
+  onVoiceChat?: () => void
 }
 
-export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
+const DUMMY_CREATOR_REWARD = 0.05
+
+export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: AgentSidebarProps) => {
   const [activeSince, setActiveSince] = useState({
     days: 0,
     hours: 0,
@@ -51,19 +63,16 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
 
   const { address: connectedAddress, chain: connectedChain } = useConnectedAddress()
-  // Only claim ownership when the active chain matches the agent's chain — cross-chain
-  // address strings can't collide format-wise, but this is the correct invariant.
   const isOwner =
     connectedChain === agent.chain &&
     connectedAddress?.toLowerCase() === agent.creator?.toLowerCase()
 
   const prizePoolData = agent.prizePoolHistory ?? null
 
-  const creatorLower = agent.creator?.toLowerCase() ?? ''
-  const { data: userProfilesMap, isLoading: isLoadingProfile } = useUserProfiles(
-    creatorLower ? [creatorLower] : []
-  )
-  const defenderProfile = userProfilesMap?.[creatorLower]
+  // const creatorLower = agent.creator?.toLowerCase() ?? ''
+  // const { data: userProfilesMap, isLoading: isLoadingProfile } = useUserProfiles(
+  //   creatorLower ? [creatorLower] : []
+  // )
 
   useEffect(() => {
     const currentUrl = window.location.href
@@ -73,6 +82,7 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
   }, [])
 
   const agentToken = getTokenForCoinType(agent.coin_type)
+  const creatorRewardLabel = `${DUMMY_CREATOR_REWARD.toFixed(2)} ${agentToken.symbol}`
 
   const isDrained = agent.state === 'defeated'
   const winnerAddress = agent.winner?.address ?? null
@@ -162,220 +172,251 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
 
   return (
     <>
-      <div className="mr-2 flex min-h-0 w-full flex-col overflow-x-hidden overflow-y-auto px-3 py-1 text-[var(--color-text-secondary)] md:mr-4 md:h-[calc(100vh-127px)] md:px-4 lg:px-6 lg:py-2">
-        <div>
-          <Link
-            href="/attack"
-            className="flex items-center gap-1 py-2 text-xs text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-primary)] md:py-3 md:text-sm"
-          >
-            <ChevronLeft className="h-4 w-4 md:h-5 md:w-5" /> Back to Sentinels
-          </Link>
-        </div>
-
-        <div className="my-2 w-full rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] px-3 py-2 text-xs sm:text-sm md:my-4 md:rounded-xl md:px-4 md:py-[10px]">
-          <div className="flex items-center gap-2 md:gap-4">
-            <div className="h-8 w-8 shrink-0 grow-0 basis-auto overflow-hidden rounded-full md:h-10 md:w-10">
-              <Image
-                src={agent.agent_image || DEFAULT_PROFILE_URL}
-                width={40}
-                height={40}
-                alt={agent.agent_name}
-                className="h-full w-full rounded-full object-cover"
-              />
-            </div>
-            <div className="flex items-center gap-1">
-              <p className="text-sm font-medium text-[var(--color-text-primary)] md:text-base">{agent.agent_name}</p>
-              {agent.is_featured && (
+      <div className="terminal-scrollbar flex h-[calc(100vh-64px)] w-full flex-col overflow-y-auto bg-black">
+        <div className="space-y-8 p-6 lg:p-8">
+          {/* Agent Profile Card */}
+          <div className="space-y-4">
+            <div className="border-hairline flex items-center gap-4 bg-[var(--color-bg-elevated)] p-4">
+              <div className="h-16 w-16 shrink-0 overflow-hidden border border-[var(--color-border-strong)] grayscale transition-all hover:grayscale-0">
                 <Image
-                  src="/icons/check-mark.svg"
-                  width={16}
-                  height={16}
-                  alt="checkmark"
-                  className="flex-shrink-0 md:h-5 md:w-5"
+                  src={agent.agent_image || DEFAULT_PROFILE_URL}
+                  width={64}
+                  height={64}
+                  alt={agent.agent_name}
+                  className="h-full w-full object-cover"
                 />
-              )}
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h1 className="industrial-header text-lg text-white">{agent.agent_name}</h1>
+                  <Image
+                    src={CHAINS[agent.chain].icon}
+                    width={18}
+                    height={18}
+                    alt={CHAINS[agent.chain].name}
+                  />
+                </div>
+                {agent.is_featured && (
+                  <span className="industrial-header text-accent mt-1 inline-block text-[9px]">
+                    VERIFIED_SENTINEL
+                  </span>
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="flex flex-col gap-3 py-2 md:gap-4 md:py-3 lg:gap-6 lg:py-4">
+          {/* Attack Objective */}
           {agent.attack_goal && (
-            <div className="flex flex-col gap-1.5 rounded-md border border-[var(--color-border-subtle)] p-2 md:gap-2 md:p-3">
-              <h3 className="text-[11px] font-medium uppercase tracking-wide text-[var(--color-text-muted)] md:text-xs">
-                Attack Objective
-              </h3>
-              <p className="text-sm font-medium text-[var(--color-text-secondary)]">{agent.attack_goal}</p>
+            <div className="space-y-2">
+              <div className="industrial-header text-[10px] text-[var(--color-text-muted)]">
+                ATTACK_OBJECTIVE
+              </div>
+              <div className="border-hairline bg-black p-4">
+                <p className="font-mono text-[14px] leading-relaxed text-white">
+                  {agent.attack_goal}
+                </p>
+              </div>
             </div>
           )}
 
-          <div className="flex flex-col gap-1 md:gap-2">
-            <h3 className="text-[11px] font-medium uppercase tracking-wide text-[var(--color-text-muted)] md:text-xs">
-              Chain
-            </h3>
-            <div className="flex items-center gap-1.5">
-              <Image
-                src={CHAINS[agent.chain].icon}
-                width={18}
-                height={18}
-                alt={CHAINS[agent.chain].name}
-                className="flex-shrink-0 rounded-full"
-              />
-              <p className="text-sm font-medium text-[var(--color-text-secondary)]">{CHAINS[agent.chain].name}</p>
+          {/* Active Bounty / Prize Pool */}
+          <div className="space-y-2">
+            <div className="industrial-header text-[10px] text-[var(--color-text-muted)]">
+              {isDrained ? 'TOTAL_BOUNTY_WON' : 'ACTIVE_BOUNTY'}
             </div>
-          </div>
-
-          <div className="flex flex-col gap-1 md:gap-2">
-            <h3 className="text-[11px] font-medium uppercase tracking-wide text-[var(--color-text-muted)] md:text-xs">
-              Sentinel Object Id
-            </h3>
-            <Link
-              href={getExplorerObjectUrl(agent.agent_object_id, agent.chain)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block text-sm text-[var(--color-text-secondary)] hover:underline"
-              title={agent.agent_object_id}
-            >
-              {truncateAddress(agent.agent_object_id)}
-            </Link>
-          </div>
-
-          {(agent.model_provider || agent.model_name) && (
-            <div className="flex justify-between gap-2">
-              {agent.model_provider && (
-                <div className="flex flex-col gap-1 md:gap-2">
-                  <h3 className="text-[11px] font-medium uppercase tracking-wide text-[var(--color-text-muted)] md:text-xs">
-                    LLM Provider
-                  </h3>
-                  <p className="text-sm font-medium capitalize text-[var(--color-text-secondary)]">
-                    {agent.model_provider}
-                  </p>
-                </div>
-              )}
-
-              {agent.model_name && (
-                <div
-                  className={`flex flex-col gap-1 md:gap-2 ${agent.model_provider ? 'items-end text-right' : ''}`}
-                >
-                  <h3 className="text-[11px] font-medium uppercase tracking-wide text-[var(--color-text-muted)] md:text-xs">
-                    Model
-                  </h3>
-                  <p
-                    className="max-w-[120px] truncate text-sm font-medium text-[var(--color-text-secondary)] md:max-w-[150px]"
-                    title={agent.model_name}
-                  >
-                    {agent.model_name}
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-
-          {isDrained ? (
-            <div className="flex flex-col gap-1 md:gap-2">
-              <h3 className="flex items-center gap-1 text-[11px] font-medium uppercase tracking-wide text-[var(--color-text-muted)] md:gap-1.5 md:text-xs">
-                Total Bounty Won
-              </h3>
-              <p className="inline-block text-base font-semibold text-[var(--color-text-primary)] md:text-lg">
-                <TokenAmount
-                  rawAmount={agent.winner?.amount_won || 0}
-                  token={agentToken}
-                  precision={2}
-                  iconSize={20}
+            <div className="border-hairline group relative overflow-hidden bg-black p-6">
+              {/* Background Graph */}
+              <svg
+                className="pointer-events-none absolute inset-0 h-full w-full opacity-10"
+                preserveAspectRatio="none"
+                viewBox="0 0 400 100"
+              >
+                <path
+                  d="M0,80 Q50,75 100,60 T200,50 T300,30 T400,10"
+                  fill="none"
+                  stroke="white"
+                  strokeWidth="2"
                 />
-              </p>
-            </div>
-          ) : (
-            <div className="flex flex-col gap-1 md:gap-2">
-              <div className="flex items-center justify-between">
-                <h3 className="text-[11px] font-medium uppercase tracking-wide text-[var(--color-text-muted)] md:text-xs">
-                  Prize pool
-                </h3>
-                {prizePoolData && prizePoolData.history.length > 0 && (
-                  <div
-                    className={cn(
-                      'flex items-center gap-1 text-[10px] font-medium md:text-xs',
-                      prizePoolData.change7d.percentage >= 0 ? 'text-[var(--color-success)]' : 'text-[var(--color-danger)]'
-                    )}
-                  >
-                    {prizePoolData.change7d.percentage >= 0 ? (
-                      <TrendingUp className="h-2.5 w-2.5 md:h-3 md:w-3" />
-                    ) : (
-                      <TrendingDown className="h-2.5 w-2.5 md:h-3 md:w-3" />
-                    )}
-                    <span>
-                      {prizePoolData.change7d.percentage != null &&
-                      isFinite(prizePoolData.change7d.percentage)
-                        ? `${prizePoolData.change7d.percentage.toFixed(1)}% (7d)`
-                        : 'New'}
-                    </span>
+              </svg>
+
+              <div className="relative z-10">
+                <div className="mb-2 flex items-baseline justify-between">
+                  <div className="industrial-header text-2xl tabular-nums text-white lg:text-3xl">
+                    <TokenAmount
+                      rawAmount={isDrained ? agent.winner?.amount_won || 0 : agent.total_balance}
+                      token={agentToken}
+                      precision={4}
+                      iconSize={24}
+                    />
+                  </div>
+                  {!isDrained && prizePoolData && prizePoolData.history.length > 0 && (
+                    <div
+                      className={cn(
+                        'industrial-header flex items-center gap-1 text-[10px] tracking-widest',
+                        prizePoolData.change7d.percentage >= 0
+                          ? 'text-accent'
+                          : 'text-[var(--color-danger)]'
+                      )}
+                    >
+                      {prizePoolData.change7d.percentage >= 0 ? (
+                        <TrendingUp className="h-3 w-3" />
+                      ) : (
+                        <TrendingDown className="h-3 w-3" />
+                      )}
+                      <span>
+                        {prizePoolData.change7d.percentage != null &&
+                        isFinite(prizePoolData.change7d.percentage)
+                          ? `${prizePoolData.change7d.percentage >= 0 ? '+' : ''}${prizePoolData.change7d.percentage.toFixed(1)}% WEEKLY`
+                          : 'NEW'}
+                      </span>
+                    </div>
+                  )}
+                </div>
+                {!isDrained && (
+                  <div className="mt-3">
+                    <SparklineChart
+                      data={prizePoolData?.history.map(p => p.value) || []}
+                      minValue={0}
+                    />
                   </div>
                 )}
               </div>
-              <div className="flex items-end justify-between gap-2 md:gap-4">
-                <p className="inline-block text-base font-semibold text-[var(--color-text-primary)] md:text-lg">
-                  <TokenAmount
-                    rawAmount={agent.total_balance}
-                    token={agentToken}
-                    precision={2}
-                    iconSize={20}
-                  />
-                </p>
-                <div>
-                  <SparklineChart
-                    data={prizePoolData?.history.map(p => p.value) || []}
-                    minValue={0}
-                  />
-                </div>
-              </div>
-              {prizePoolData && prizePoolData.history.length > 0 && (
-                <Button
-                  onClick={() => setIsChartModalOpen(true)}
-                  className="mt-1.5 w-full border border-[var(--color-border-default)] bg-transparent text-xs font-medium text-[var(--color-text-secondary)] transition-colors duration-200 hover:bg-white/5 hover:text-[var(--color-text-primary)] md:mt-2 md:text-sm"
-                  size="sm"
-                >
-                  See Growth Chart
-                </Button>
-              )}
-              {(!prizePoolData || prizePoolData.history.length === 0) && (
-                <p className="mt-1.5 text-center text-[10px] text-[var(--color-text-muted)] md:mt-2 md:text-xs">
-                  No prize pool history available.
-                </p>
-              )}
             </div>
-          )}
-
-          {isDrained && winnerAddress && (
-            <div className="flex flex-col gap-1 md:gap-2">
-              <h3 className="flex items-center gap-1 text-[11px] font-medium uppercase tracking-wide text-[var(--color-text-muted)] md:gap-1.5 md:text-xs">
-                <User className="h-3 w-3 md:h-4 md:w-4" />
-                Winner
-              </h3>
-              <Link
-                href={`/u/${winnerAddress}`}
-                className="inline-block text-sm text-[var(--color-text-secondary)] hover:underline"
-                title={winnerAddress}
+            {!isDrained && prizePoolData && prizePoolData.history.length > 0 && (
+              <button
+                onClick={() => setIsChartModalOpen(true)}
+                className="industrial-header w-full border border-[var(--color-border-strong)] bg-transparent py-2 text-[10px] tracking-[2px] text-[var(--color-text-muted)] transition-all hover:border-white hover:text-white"
               >
-                {truncateAddress(winnerAddress)}
+                VIEW_GROWTH_CHART
+              </button>
+            )}
+          </div>
+
+          {/* Technical Parameters Grid */}
+          <div className="grid grid-cols-2 gap-px bg-[var(--color-border-strong)]">
+            {agent.model_name && (
+              <div className="bg-black p-4">
+                <span className="industrial-header mb-1 block text-[9px] text-[var(--color-text-muted)]">
+                  MODEL
+                </span>
+                <span className="industrial-header text-[11px] text-white">
+                  {agent.model_name.toUpperCase()}
+                </span>
+              </div>
+            )}
+            {agent.model_provider && (
+              <div className="bg-black p-4">
+                <span className="industrial-header mb-1 block text-[9px] text-[var(--color-text-muted)]">
+                  PROVIDER
+                </span>
+                <span className="industrial-header text-[11px] text-white">
+                  {agent.model_provider.toUpperCase()}
+                </span>
+              </div>
+            )}
+            <div className="bg-black p-4">
+              <span className="industrial-header mb-1 block text-[9px] text-[var(--color-text-muted)]">
+                OWNER
+              </span>
+              <Link
+                href={`/u/${agent.creator}`}
+                className="industrial-header text-accent text-[11px] transition-opacity hover:opacity-70"
+              >
+                {truncateAddress(agent.creator)}
               </Link>
             </div>
-          )}
+            <div className="bg-black p-4">
+              <span className="industrial-header mb-1 block text-[9px] text-[var(--color-text-muted)]">
+                OWNER REWARD
+              </span>
+              <span className="industrial-header text-[11px] text-white">{creatorRewardLabel}</span>
+            </div>
+          </div>
 
-          <div className="flex flex-col gap-1 md:gap-2">
-            <h3 className="text-[11px] font-medium uppercase tracking-wide text-[var(--color-text-muted)] md:text-xs">
-              Message Price
-            </h3>
-            <p className="inline-block text-base font-semibold text-[var(--color-text-primary)] md:text-lg">
+          {/* Sentinel Instructions */}
+          <div className="space-y-2 border-t border-[var(--color-border-strong)] pt-6">
+            <div className="industrial-header text-[10px] text-[var(--color-text-muted)]">
+              SENTINEL_INSTRUCTIONS
+            </div>
+            <div className="border-hairline bg-black p-4">
+              <p
+                ref={instructionsRef}
+                className="line-clamp-4 whitespace-pre-wrap font-mono text-[11px] leading-relaxed text-[var(--color-text-muted)]"
+              >
+                {agent.prompt}
+              </p>
+              {shouldTruncate && onReadMore && (
+                <div className="mt-3">
+                  <button
+                    onClick={onReadMore}
+                    className="industrial-header border-b border-white text-[10px] tracking-widest text-white transition-opacity hover:opacity-70"
+                  >
+                    READ_ALL
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* System Telemetry */}
+          <div className="space-y-3 border-t border-[var(--color-border-strong)] pt-6">
+            <div className="industrial-header text-[10px] text-[var(--color-text-muted)]">
+              SYSTEM_TELEMETRY
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              {!isDrained && (
+                <div>
+                  <span className="industrial-header mb-1 block text-[9px] text-[var(--color-text-muted)]">
+                    ACTIVE_SINCE
+                  </span>
+                  <span className="industrial-header text-[11px] tabular-nums text-white">
+                    {activeSince.days}D {String(activeSince.hours).padStart(2, '0')}H{' '}
+                    {String(activeSince.minutes).padStart(2, '0')}M{' '}
+                    {String(activeSince.seconds).padStart(2, '0')}S
+                  </span>
+                </div>
+              )}
+              <div>
+                <span className="industrial-header mb-1 block text-[9px] text-[var(--color-text-muted)]">
+                  BREAK_ATTEMPTS
+                </span>
+                <span className="industrial-header text-[11px] tabular-nums text-white">
+                  {agent.total_attacks.toLocaleString()}
+                </span>
+              </div>
+              {isDrained && winnerAddress && (
+                <div>
+                  <span className="industrial-header mb-1 block text-[9px] text-[var(--color-text-muted)]">
+                    WINNER
+                  </span>
+                  <Link
+                    href={`/u/${winnerAddress}`}
+                    className="industrial-header text-accent text-[11px] transition-opacity hover:opacity-70"
+                  >
+                    {truncateAddress(winnerAddress)}
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Message Price */}
+          {/* <div className="space-y-2 border-t border-[var(--color-border-strong)] pt-6">
+            <div className="industrial-header text-[10px] text-[var(--color-text-muted)]">
+              ATTACK_FEE
+            </div>
+            <div className="industrial-header text-lg tabular-nums text-white">
               <TokenAmount
                 rawAmount={agent.current_cost_per_message ?? agent.cost_per_message}
                 token={agentToken}
                 precision={4}
                 iconSize={20}
               />
-            </p>
+            </div>
             {agent.current_cost_per_message &&
               agent.current_cost_per_message !== agent.cost_per_message && (
-                <p className="flex items-center gap-1 text-[10px] text-[var(--color-text-muted)] md:text-xs">
-                  <span>Base:</span>{' '}
+                <p className="flex items-center gap-1 font-mono text-[10px] text-[var(--color-text-muted)]">
+                  <span>BASE:</span>{' '}
                   <TokenAmount
                     rawAmount={agent.cost_per_message}
                     token={agentToken}
@@ -384,167 +425,125 @@ export const AgentSidebar = ({ agent, onReadMore }: AgentSidebarProps) => {
                   />
                 </p>
               )}
-          </div>
+          </div> */}
 
-          {!isDrained && (
-            <div className="flex flex-col gap-1 md:gap-2">
-              <div className="flex items-center gap-1">
-                <h3 className="text-[11px] font-medium uppercase tracking-wide text-[var(--color-text-muted)] md:text-xs">
-                  Active Since
-                </h3>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild className="cursor-help">
-                      <Info
-                        width={10}
-                        height={10}
-                        className="text-[var(--color-text-muted)] md:h-3 md:w-3"
-                      />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Format: Days, Hours, Minutes, Seconds</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-              <p className="inline-block text-base font-semibold text-[var(--color-text-primary)] md:text-lg">
-                {activeSince.days}
-                <span className="text-xs text-[var(--color-text-muted)] md:text-sm">
-                  D
-                </span>{' '}
-                {String(activeSince.hours).padStart(2, '0')}
-                <span className="text-xs text-[var(--color-text-muted)] md:text-sm">
-                  H
-                </span>{' '}
-                {String(activeSince.minutes).padStart(2, '0')}
-                <span className="text-xs text-[var(--color-text-muted)] md:text-sm">
-                  M
-                </span>{' '}
-                {String(activeSince.seconds).padStart(2, '0')}
-                <span className="text-xs text-[var(--color-text-muted)] md:text-sm">
-                  S
-                </span>
-              </p>
-            </div>
-          )}
-
+          {/* Withdrawal Lock (Owner Only) */}
           {isOwner && !isDrained && (
-            <div className="flex flex-col gap-1 md:gap-2">
-              <h3 className="text-[11px] font-medium uppercase tracking-wide text-[var(--color-text-muted)] md:text-xs">
-                Withdrawal Lock
-              </h3>
+            <div className="space-y-2 border-t border-[var(--color-border-strong)] pt-6">
+              <div className="industrial-header text-[10px] text-[var(--color-text-muted)]">
+                WITHDRAWAL_LOCK
+              </div>
               {timeRemaining ? (
                 <p
                   className={cn(
-                    'inline-block text-sm font-semibold md:text-base',
-                    timeRemaining === 'Withdrawal Unlocked' ? 'text-[var(--color-success)]' : 'text-[var(--color-warning)]'
+                    'industrial-header text-sm',
+                    timeRemaining === 'Withdrawal Unlocked'
+                      ? 'text-[var(--color-success)]'
+                      : 'text-accent'
                   )}
                 >
-                  {timeRemaining}
+                  {timeRemaining.toUpperCase()}
                 </p>
               ) : (
-                <Skeleton className="h-5 w-32 md:h-7 md:w-40" />
+                <Skeleton className="h-5 w-32" />
               )}
             </div>
           )}
-        </div>
-        <div className="border-t border-[var(--color-border-subtle)]"></div>
 
-        <div className="z-20 mt-2 flex flex-col rounded-xl p-0 text-xs md:mt-4 md:text-sm">
-          <div className="flex flex-col gap-1.5 md:gap-2">
-            <h3 className="text-[11px] font-medium uppercase tracking-wide text-[var(--color-text-muted)] md:text-xs">
-              Instructions
-            </h3>
-            <p
-              ref={instructionsRef}
-              className="line-clamp-4 whitespace-pre-wrap text-[11px] font-medium transition-all duration-300 md:text-xs"
+          {/* Object ID */}
+          <div className="space-y-2 border-t border-[var(--color-border-strong)] pt-6">
+            <div className="industrial-header text-[10px] text-[var(--color-text-muted)]">
+              SENTINEL_OBJECT_ID
+            </div>
+            <Link
+              href={getExplorerObjectUrl(agent.agent_object_id, agent.chain)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center gap-2"
+              title={agent.agent_object_id}
             >
-              {agent.prompt}
-            </p>
+              <span className="industrial-header text-[11px] text-[var(--color-text-secondary)] transition-colors group-hover:text-white">
+                {truncateAddress(agent.agent_object_id)}
+              </span>
+              <ExternalLink className="h-3 w-3 text-[var(--color-text-muted)] transition-colors group-hover:text-white" />
+            </Link>
+          </div>
 
-            {shouldTruncate && onReadMore && (
+          {/* Action Buttons */}
+          <div className="space-y-3 pt-4">
+            <div className="grid grid-cols-2 gap-2">
               <button
-                onClick={onReadMore}
-                className="mt-2 flex w-fit items-center gap-1.5 self-end text-[10px] font-bold uppercase tracking-wide text-[var(--color-text-secondary)] transition-opacity hover:opacity-80 md:mt-3 md:gap-2 md:text-xs"
+                type="button"
+                onClick={onTextChat}
+                className="button-ghost-terminal flex items-center justify-center gap-2 py-3"
               >
-                Read All
+                <MessageSquare className="h-4 w-4" />
+                <span>TEXT</span>
               </button>
-            )}
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-3 py-2 md:gap-4 md:py-3 lg:gap-6 lg:py-4">
-          <div className="border-t border-[var(--color-border-subtle)]"></div>
-          <div className="flex justify-between">
-            <div className="flex flex-col gap-1 md:gap-2">
-              <h3 className="text-[11px] font-medium uppercase tracking-wide text-[var(--color-text-muted)] md:text-xs">
-                Total Participants
-              </h3>
-              <p className="inline-block text-center text-base font-semibold text-[var(--color-text-primary)] md:text-lg">
-                {agent.participants_count}
-              </p>
+              <button
+                type="button"
+                onClick={onVoiceChat}
+                className="button-ghost-terminal flex items-center justify-center gap-2 py-3"
+              >
+                <Mic className="h-4 w-4" />
+                <span>VOICE</span>
+              </button>
             </div>
-            <div className="flex flex-col gap-1 text-center md:gap-2">
-              <h3 className="text-[11px] font-medium uppercase tracking-wide text-[var(--color-text-muted)] md:text-xs">
-                Break Attempts
-              </h3>
-              <p className="inline-block text-base font-semibold text-[var(--color-text-primary)] md:text-lg">
-                {agent.total_attacks}
-              </p>
+            <button
+              onClick={handleCopyLink}
+              className="industrial-header flex w-full items-center justify-center gap-2 border border-[var(--color-border-strong)] py-3 text-[11px] tracking-[2px] text-[var(--color-text-muted)] transition-all hover:border-white hover:text-white"
+            >
+              <LinkIcon className="h-3 w-3" />
+              SHARE_LINK
+            </button>
+          </div>
+
+          {/* Earn Sentinel Tokens */}
+          <div className="space-y-3 border-t border-[var(--color-border-strong)] pt-6">
+            <div className="industrial-header text-[10px] text-[var(--color-text-muted)]">
+              EARN_REWARDS
             </div>
+            <p className="font-mono text-[11px] leading-relaxed text-[var(--color-text-muted)]">
+              Share about Red Sentinel on X and earn Sentinel tokens.
+            </p>
+            <button
+              onClick={() => setIsShareModalOpen(true)}
+              className="button-ghost-terminal w-full py-3"
+            >
+              SHARE_ON_X
+            </button>
           </div>
-        </div>
 
-        <Button
-          onClick={handleCopyLink}
-          className="mt-2 flex w-full items-center gap-1.5 border border-[var(--color-border-default)] bg-transparent text-xs font-medium text-[var(--color-text-secondary)] transition-colors duration-200 hover:bg-white/5 hover:text-[var(--color-text-primary)] md:mt-4 md:gap-2 md:text-sm"
-        >
-          Share {agent.agent_name} Link
-          <LinkIcon className="h-3 w-3 md:h-4 md:w-4" />
-        </Button>
+          {/* Defender Profile */}
+          {/* <DefenderProfile
+            ownerAddress={agent.creator}
+            profile={defenderProfile}
+            isLoading={isLoadingProfile}
+          /> */}
 
-        <div className="mt-3 border-t border-[var(--color-border-subtle)] pt-3 md:mt-4 md:pt-4 lg:mt-6 lg:pt-6">
-          <h3 className="mb-1.5 text-sm font-semibold leading-tight text-[var(--color-text-primary)] md:mb-2">
-            Earn Sentinel Tokens
-          </h3>
-          <p className="mb-2 text-xs leading-relaxed text-[var(--color-text-muted)] md:mb-3">
-            Share about Red Sentinel on X and earn Sentinel tokens as a reward.
-          </p>
-          <button
-            onClick={() => setIsShareModalOpen(true)}
-            className="btn btn-black flex h-[36px] w-full items-center justify-center gap-1.5 text-xs font-medium transition-transform active:scale-[0.98] md:h-[38px] md:gap-2 md:text-sm lg:h-[42px] lg:text-base"
-          >
-            Share on X & Earn Sentinel
-          </button>
-        </div>
-
-        <DefenderProfile
-          ownerAddress={agent.creator}
-          profile={defenderProfile}
-          isLoading={isLoadingProfile}
-        />
-
-        <div className="mt-auto border-t border-[var(--color-border-subtle)] pt-3 md:pt-4 lg:pt-6">
-          <h3 className="mb-2 text-center text-[11px] font-medium leading-relaxed text-[var(--color-text-muted)] md:mb-3 lg:mb-4">
-            Scan this QR Code if you want to try to attack this agent using slush mobile wallet
-          </h3>
-          <div className="flex justify-center rounded-lg border border-[var(--color-border-subtle)] p-2 md:rounded-xl md:p-3 lg:p-4">
-            {deepLinkUrl ? (
-              <QRCodeSVG
-                value={deepLinkUrl}
-                size={96}
-                bgColor="#ffffff00"
-                fgColor="#ffffff"
-                level="L"
-                includeMargin={true}
-                className="h-20 w-20 md:h-24 md:w-24 lg:h-32 lg:w-32"
-              />
-            ) : (
-              <div className="flex h-24 w-24 animate-pulse items-center justify-center rounded-lg bg-[var(--color-bg-subtle)] md:h-28 md:w-28 lg:h-32 lg:w-32">
-                <div className="h-6 w-6 animate-spin rounded-full border-4 border-[var(--color-border-default)] border-t-transparent md:h-8 md:w-8"></div>
-              </div>
-            )}
-          </div>
+          {/* QR Code */}
+          {/* <div className="space-y-3 border-t border-[var(--color-border-strong)] pt-6">
+            <div className="industrial-header text-center text-[9px] leading-relaxed text-[var(--color-text-muted)]">
+              SCAN_QR_FOR_MOBILE_WALLET_ATTACK
+            </div>
+            <div className="flex justify-center border border-[var(--color-border-strong)] p-4">
+              {deepLinkUrl ? (
+                <QRCodeSVG
+                  value={deepLinkUrl}
+                  size={96}
+                  bgColor="#00000000"
+                  fgColor="#ffffff"
+                  level="L"
+                  includeMargin={true}
+                  className="h-24 w-24"
+                />
+              ) : (
+                <div className="flex h-24 w-24 animate-pulse items-center justify-center bg-[var(--color-bg-subtle)]">
+                  <div className="h-6 w-6 animate-spin rounded-full border-2 border-[var(--color-border-strong)] border-t-transparent" />
+                </div>
+              )}
+            </div>
+          </div> */}
         </div>
       </div>
 

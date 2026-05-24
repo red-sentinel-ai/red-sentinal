@@ -1,6 +1,6 @@
 'use client'
 
-import { Info, ArrowLeft } from 'lucide-react'
+import { Info, ChevronLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 interface MobileAgentHeaderProps {
@@ -12,23 +12,25 @@ export const MobileAgentHeader = ({ agentName, onInfoClick }: MobileAgentHeaderP
   const router = useRouter()
 
   return (
-    <div className="flex flex-shrink-0 items-center justify-between border-b border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] px-3 py-2">
+    <div className="flex h-12 flex-shrink-0 items-center justify-between border-b border-[var(--color-border-strong)] bg-black px-4">
       <div className="flex min-w-0 flex-1 items-center gap-2">
         <button
           onClick={() => router.push('/attack')}
-          className="flex-shrink-0 touch-manipulation rounded-full p-2 text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-subtle)] active:bg-[var(--color-border-subtle)]"
+          className="flex-shrink-0 touch-manipulation p-1 text-[var(--color-text-muted)] transition-colors hover:text-white active:text-white"
           aria-label="Go back"
         >
-          <ArrowLeft className="h-5 w-5" />
+          <ChevronLeft className="h-5 w-5" />
         </button>
-        <h1 className="truncate text-sm font-semibold text-[var(--color-text-primary)]">{agentName}</h1>
+        <h1 className="industrial-header truncate text-[11px] tracking-widest text-white">
+          {agentName.toUpperCase().replace(/\s+/g, '_')}
+        </h1>
       </div>
       <button
         onClick={onInfoClick}
-        className="flex-shrink-0 rounded-full bg-[var(--color-bg-subtle)] p-2 text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-border-subtle)]"
+        className="flex-shrink-0 border border-[var(--color-border-strong)] p-2 text-[var(--color-text-muted)] transition-colors hover:border-white hover:text-white"
         aria-label="Show agent information"
       >
-        <Info className="h-5 w-5" />
+        <Info className="h-4 w-4" />
       </button>
     </div>
   )

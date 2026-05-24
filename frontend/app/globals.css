@@ -134,6 +134,84 @@
     line-height: 1.55;
     width: min(100%, 900px);
   }
+
+  /* Industrial terminal typography */
+  .industrial-header {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1.6px;
+    line-height: 1.1;
+  }
+
+  .industrial-label {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 1.2px;
+    font-size: 9px;
+    color: var(--color-text-muted);
+  }
+
+  .industrial-value {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    font-size: 12px;
+    color: var(--color-text-primary);
+  }
+
+  /* Terminal button styles */
+  .button-ghost-terminal {
+    border: 1px solid var(--color-text-primary);
+    background: transparent;
+    color: var(--color-text-primary);
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    font-family: var(--font-mono);
+    transition: all 0.2s ease;
+  }
+
+  .button-ghost-terminal:hover {
+    background: var(--color-text-primary);
+    color: var(--color-bg-deepest);
+  }
+
+  /* Hairline border utility */
+  .border-hairline {
+    border: 1px solid var(--color-border-strong);
+  }
+
+  .border-hairline-light {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Terminal panel background */
+  .terminal-panel {
+    background: var(--color-bg-deepest);
+    border-right: 1px solid var(--color-border-strong);
+  }
+
+  /* Custom scrollbar for terminal panels */
+  .terminal-scrollbar::-webkit-scrollbar {
+    width: 2px;
+  }
+
+  .terminal-scrollbar::-webkit-scrollbar-track {
+    background: var(--color-bg-deepest);
+  }
+
+  .terminal-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--color-border-strong);
+  }
+
+  /* Accent color for important values */
+  .text-accent {
+    color: #ffd597;
+  }
 }
 
 @layer utilities {
