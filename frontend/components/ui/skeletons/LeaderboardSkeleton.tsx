@@ -14,7 +14,7 @@ export const LeaderboardSkeleton = () => {
 
       {new Array(10).fill(1).map((_, index) => (
         <div
-          className="grid min-h-16 min-w-[760px] animate-pulse grid-cols-12 gap-1 border-b border-[var(--color-border-subtle)] bg-black p-5 last:border-b-0"
+          className="grid min-h-16 min-w-[760px] animate-pulse grid-cols-12 gap-1 border-b border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] p-5 last:border-b-0"
           key={`agent-skeleton-${index}`}
         >
           <div className="col-span-5 grid grid-cols-12 items-center md:col-span-3">

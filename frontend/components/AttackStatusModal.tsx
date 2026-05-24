@@ -39,7 +39,7 @@ export const AttackStatusModal = ({
     <Dialog
       open={showResultModal && !!apiResponse}
       onClose={() => setShowResultModal(false)}
-      className="flex max-h-[90dvh] w-[90vw] max-w-[773px] flex-col overflow-hidden rounded-xl border border-white/10 bg-[#1a1919] p-0"
+      className="flex max-h-[90dvh] w-[90vw] max-w-[773px] flex-col overflow-hidden rounded-xl border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-0"
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -61,7 +61,7 @@ export const AttackStatusModal = ({
             <div
               className={cn(
                 'mt-1 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full',
-                success ? 'bg-[#1FAD57]' : 'bg-[#D32F2F]'
+                success ? 'bg-[var(--color-success)]' : 'bg-[var(--color-danger)]'
               )}
             >
               <span className="text-lg font-bold text-white">{success ? '✓' : '!'}</span>
@@ -70,7 +70,7 @@ export const AttackStatusModal = ({
               <h2 className="text-xl font-bold leading-tight text-white">
                 {success ? 'Attack Successful' : 'Attack Failed'}
               </h2>
-              <p className="text-[15px] leading-snug text-[#989898]">
+              <p className="text-[15px] leading-snug text-[var(--color-text-muted)]">
                 {success
                   ? "Your Prompt Successfully breached the sentinel's defenses !"
                   : 'The Sentinel held strong against your attack.'}

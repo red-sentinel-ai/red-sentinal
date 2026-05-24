@@ -19,7 +19,7 @@ export function ChainSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="font-body flex min-h-[34px] items-center gap-2 bg-black px-1 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.1em] text-white transition-opacity hover:opacity-70 md:text-[11px]">
+        <button className="font-body flex min-h-[34px] items-center gap-2 bg-[var(--color-bg-deepest)] px-1 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.1em] text-white transition-opacity hover:opacity-70 md:text-[11px]">
           <Image
             src={active.icon}
             alt={active.name}
@@ -32,7 +32,7 @@ export function ChainSwitcher() {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="w-44 rounded-none border border-[var(--color-border-default)] bg-black p-1.5 shadow-[var(--shadow-elevated)]"
+        className="w-44 rounded-none border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-1.5 shadow-[var(--shadow-elevated)]"
         align="end"
       >
         {SUPPORTED_CHAINS.map(chainId => {

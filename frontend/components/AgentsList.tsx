@@ -63,7 +63,7 @@ export const AgentsList = ({
         {isFetchingAgents ? (
           <LeaderboardSkeleton />
         ) : (
-          <div className="overflow-x-auto overflow-y-hidden border border-[var(--color-border-default)] bg-black">
+          <div className="overflow-x-auto overflow-y-hidden border border-[var(--color-border-default)] bg-[var(--color-bg-base)]">
             <div className="font-body hidden min-w-[980px] border-b border-[var(--color-border-default)] bg-[var(--color-bg-elevated)] px-8 py-5 text-[9px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] md:grid md:gap-4 md:[grid-template-columns:minmax(260px,2.4fr)_minmax(120px,1fr)_minmax(120px,1fr)_minmax(130px,1fr)_minmax(105px,0.85fr)_minmax(150px,1.2fr)_minmax(96px,0.8fr)]">
               <div
                 className="flex cursor-pointer items-center hover:text-[var(--color-text-primary)]"
@@ -116,13 +116,13 @@ export const AgentsList = ({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.15 }}
-                    className="font-body cursor-pointer border-b border-[var(--color-border-subtle)] bg-black p-4 text-sm transition-colors last:border-b-0 hover:bg-white/[0.04] md:px-8 md:py-6"
+                    className="font-body cursor-pointer border-b border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] p-4 text-sm transition-colors last:border-b-0 hover:bg-white/[0.04] md:px-8 md:py-6"
                     onClick={() => router.push(`/attack/${agent.agent_path}`)}
                   >
                     <div className="space-y-3 md:hidden">
                       <div className="flex items-center justify-between">
                         <div className="flex min-w-0 flex-1 items-center gap-2">
-                          <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden border border-[var(--color-border-default)] bg-black">
+                          <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden border border-[var(--color-border-default)] bg-[var(--color-bg-base)]">
                             {agent.agent_image ? (
                               <Image
                                 src={agent.agent_image}
@@ -230,7 +230,7 @@ export const AgentsList = ({
 
                     <div className="hidden min-w-[980px] items-center md:grid md:gap-4 md:[grid-template-columns:minmax(260px,2.4fr)_minmax(120px,1fr)_minmax(120px,1fr)_minmax(130px,1fr)_minmax(105px,0.85fr)_minmax(150px,1.2fr)_minmax(96px,0.8fr)]">
                       <div className="flex min-w-0 items-center gap-3">
-                        <div className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden border border-[var(--color-border-default)] bg-black">
+                        <div className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden border border-[var(--color-border-default)] bg-[var(--color-bg-base)]">
                           {agent.agent_image ? (
                             <Image
                               src={agent.agent_image}

@@ -42,7 +42,7 @@ export function FloatingHelpButton() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-black text-white shadow-lg transition-all hover:bg-gray-800"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-bg-surface)] text-white shadow-lg transition-all hover:bg-[var(--color-bg-elevated)]"
               aria-label="Help and resources"
             >
               <span className="text-lg font-semibold">?</span>
@@ -101,7 +101,7 @@ export function FloatingHelpButton() {
       <Sheet open={isFeedbackOpen} onOpenChange={setIsFeedbackOpen}>
         <SheetContent
           side="right"
-          className="w-full overflow-y-auto bg-[#1a1919] text-white sm:w-[480px]"
+          className="w-full overflow-y-auto bg-[var(--color-bg-surface)] text-white sm:w-[480px]"
         >
           <SheetHeader className="border-b border-white/10 pb-4">
             <SheetTitle className="flex items-center gap-2 text-xl font-semibold text-white">

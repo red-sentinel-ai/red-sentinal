@@ -15,7 +15,7 @@ export const SparklineChart = ({
   width = 100,
   height = 30,
   strokeWidth = 2,
-  strokeColor = '#1FAD57',
+  strokeColor = 'var(--color-success)',
   gradientId = 'sparkline-gradient',
   minValue,
   ...props
@@ -52,8 +52,8 @@ export const SparklineChart = ({
     <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} {...props}>
       <defs>
         <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#1FAD57" stopOpacity={0.5} />
-          <stop offset="100%" stopColor="#1FAD57" />
+          <stop offset="0%" stopColor="var(--color-success)" stopOpacity={0.5} />
+          <stop offset="100%" stopColor="var(--color-success)" />
         </linearGradient>
       </defs>
       <path

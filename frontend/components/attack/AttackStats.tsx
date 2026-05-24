@@ -54,7 +54,7 @@ export function AttackStats() {
     <div className="grid grid-cols-1 overflow-hidden border border-[var(--color-border-default)] bg-[var(--color-border-default)] sm:grid-cols-2 lg:grid-cols-5">
       {isLoading || !data
         ? STAT_PLACEHOLDERS.map(id => (
-            <div key={id} className="relative min-h-[126px] bg-black p-6 md:p-8">
+            <div key={id} className="relative min-h-[126px] bg-[var(--color-bg-base)] p-6 md:p-8">
               <Skeleton className="h-8 w-28 bg-white/10" />
               <Skeleton className="mt-5 h-3 w-32 bg-white/10" />
             </div>
@@ -62,7 +62,7 @@ export function AttackStats() {
         : stats.map(stat => (
             <div
               key={stat.id}
-              className="relative min-h-[126px] bg-black p-6 transition-colors hover:bg-white/[0.03] md:p-8"
+              className="relative min-h-[126px] bg-[var(--color-bg-base)] p-6 transition-colors hover:bg-white/[0.03] md:p-8"
             >
               <p className="font-display text-2xl font-extrabold uppercase tabular-nums tracking-[0.04em] text-white md:text-3xl">
                 {formatValue(stat.value, stat.format, stat.suffix)}

@@ -231,26 +231,26 @@ export const AgentListView = () => {
               </p>
             </div>
             {!isFetchingAllAgents && totalAgents > 0 && (
-              <span className="font-body border border-[var(--color-border-default)] bg-black px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
+              <span className="font-body border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
                 Showing {filteredAgents.length} of {totalAgents}
               </span>
             )}
           </div>
 
-          <div className="flex flex-wrap items-center gap-0 border border-[var(--color-border-default)] bg-black">
+          <div className="flex flex-wrap items-center gap-0 border border-[var(--color-border-default)] bg-[var(--color-bg-base)]">
             <label className="relative min-w-[240px] flex-1">
               <Search className="absolute left-4 top-1/2 size-[18px] -translate-y-1/2 text-[var(--color-text-muted)]" />
               <span className="sr-only">Search agents</span>
               <input
                 value={searchQuery}
                 onChange={event => setSearchQuery(event.target.value)}
-                className="font-body h-12 w-full border-0 border-r border-[var(--color-border-default)] bg-black px-12 text-[10px] font-extrabold uppercase tracking-[0.1em] text-white transition-all placeholder:text-[var(--color-text-faint)] focus:outline-none focus:ring-1 focus:ring-white"
+                className="font-body h-12 w-full border-0 border-r border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-12 text-[10px] font-extrabold uppercase tracking-[0.1em] text-white transition-all placeholder:text-[var(--color-text-faint)] focus:outline-none focus:ring-1 focus:ring-white"
                 placeholder="SEARCH AGENTS..."
                 type="search"
               />
             </label>
 
-            <label className="relative flex h-12 min-w-[170px] items-center border-r border-[var(--color-border-default)] bg-black px-4">
+            <label className="relative flex h-12 min-w-[170px] items-center border-r border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-4">
               <Network className="mr-2 size-[18px] text-[var(--color-text-muted)]" />
               <span className="sr-only">Network</span>
               <select
@@ -276,7 +276,7 @@ export const AgentListView = () => {
               </span>
             </label>
 
-            <label className="relative flex h-12 min-w-[150px] items-center border-r border-[var(--color-border-default)] bg-black px-4">
+            <label className="relative flex h-12 min-w-[150px] items-center border-r border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-4">
               <Coins className="mr-2 size-[18px] text-[var(--color-text-muted)]" />
               <span className="sr-only">Token</span>
               <select
@@ -298,7 +298,7 @@ export const AgentListView = () => {
               </span>
             </label>
 
-            <label className="relative flex h-12 min-w-[180px] items-center bg-black px-4">
+            <label className="relative flex h-12 min-w-[180px] items-center bg-[var(--color-bg-base)] px-4">
               <SlidersHorizontal className="mr-2 size-[18px] text-[var(--color-text-muted)]" />
               <span className="sr-only">Pool filter</span>
               <select
@@ -322,7 +322,7 @@ export const AgentListView = () => {
               Filtered by:
             </span>
             {searchQuery.trim() && (
-              <span className="font-body flex items-center gap-1.5 border border-[var(--color-border-default)] bg-black px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-white">
+              <span className="font-body flex items-center gap-1.5 border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-white">
                 Search: {searchQuery.trim()}
                 <button
                   onClick={() => setSearchQuery('')}
@@ -333,7 +333,7 @@ export const AgentListView = () => {
               </span>
             )}
             {selectedChain && (
-              <span className="font-body flex items-center gap-1.5 border border-[var(--color-border-default)] bg-black px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-white">
+              <span className="font-body flex items-center gap-1.5 border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-white">
                 <Image
                   src={CHAINS[selectedChain].icon}
                   alt={CHAINS[selectedChain].name}
@@ -351,7 +351,7 @@ export const AgentListView = () => {
               </span>
             )}
             {selectedSymbol && selectedToken && (
-              <span className="font-body flex items-center gap-1.5 border border-[var(--color-border-default)] bg-black px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-white">
+              <span className="font-body flex items-center gap-1.5 border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-white">
                 <Image
                   src={selectedToken.icon}
                   alt={selectedToken.symbol}
@@ -386,7 +386,7 @@ export const AgentListView = () => {
               onClick={() => fetchNextPage()}
               disabled={isFetchingNextPage}
               variant="outline"
-              className="font-body min-w-[200px] rounded-full border-white bg-black text-[11px] font-extrabold uppercase tracking-[0.1em] text-white hover:bg-white hover:text-black"
+              className="font-body min-w-[200px] rounded-full border-white bg-[var(--color-bg-base)] text-[11px] font-extrabold uppercase tracking-[0.1em] text-white hover:bg-white hover:text-black"
             >
               {isFetchingNextPage ? (
                 <>
