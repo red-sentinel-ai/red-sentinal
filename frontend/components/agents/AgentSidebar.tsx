@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import {
-  ChevronLeft,
   TrendingUp,
   TrendingDown,
   MessageSquare,
@@ -12,12 +11,10 @@ import {
   Link as LinkIcon,
   ExternalLink,
 } from 'lucide-react'
-import { QRCodeSVG } from 'qrcode.react'
 import { toast } from 'sonner'
 import {
   DEFAULT_PROFILE_URL,
   getTokenForCoinType,
-  SLUSH_BASE_URL,
   WITHDRAWAL_LOCK_MS,
   SUI_SENTINEL_X_USERNAME,
 } from '@/constants'
@@ -25,8 +22,8 @@ import { CHAINS } from '@/constants/chains'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { getExplorerObjectUrl } from '@/lib/explorer'
 import type { AgentDetailsFull } from '@/hooks/agents/useAgentDetails'
-import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
-import { DefenderProfile } from './DefenderProfile'
+// import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
+// import { DefenderProfile } from './DefenderProfile'
 import { formatDuration, cn, buildAgentShareTweetUrl, truncateAddress } from '@/lib/utils'
 import { Skeleton } from '@/components/ui'
 import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
@@ -57,7 +54,6 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
   const [shouldTruncate, setShouldTruncate] = useState(false)
   const instructionsRef = useRef<HTMLParagraphElement>(null)
   const [pageUrl, setPageUrl] = useState('')
-  const [deepLinkUrl, setDeepLinkUrl] = useState('')
   const [timeRemaining, setTimeRemaining] = useState<string | null>(null)
   const [isChartModalOpen, setIsChartModalOpen] = useState(false)
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
@@ -77,8 +73,6 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
   useEffect(() => {
     const currentUrl = window.location.href
     setPageUrl(currentUrl)
-    const encodedUrl = encodeURIComponent(currentUrl)
-    setDeepLinkUrl(SLUSH_BASE_URL + encodedUrl)
   }, [])
 
   const agentToken = getTokenForCoinType(agent.coin_type)

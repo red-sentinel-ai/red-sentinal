@@ -5,7 +5,7 @@ import { useState, useRef, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import clsx from 'clsx'
-import { Loader2, Zap } from 'lucide-react'
+import { Loader2, Zap, Maximize2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ConnectModal, useCurrentAccount } from '@mysten/dapp-kit'
 
@@ -19,6 +19,7 @@ import { useTokenCount } from '@/hooks/useTokenCount'
 import type { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
 import { ChainMismatchBanner } from '@/components/ui/common/ChainMismatchBanner'
+import { useFocusMode } from '@/context/FocusModeContext'
 import { ChatMessage } from './ChatMessage'
 import { JuryResponseModal } from './JuryResponseModal'
 import { TokenAmount } from '@/components/ui/common/TokenAmount'
@@ -69,6 +70,7 @@ export default function ChatInterface({
   const { address: connectedAddress } = useConnectedAddress()
   const suiAccount = useCurrentAccount()
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
+  const { isFocusMode, enableFocusMode } = useFocusMode()
 
   const [isAttackPaused, setIsAttackPaused] = useState(false)
 
@@ -283,10 +285,20 @@ export default function ChatInterface({
         >
           MY_ATTACKS
         </button>
-        <div className="ml-auto flex items-center">
+        <div className="ml-auto flex items-center gap-4">
           <span className="industrial-header text-[10px] text-[var(--color-text-muted)]">
             OPERATORS_ONLINE: {operatorsOnline}
           </span>
+          {!isFocusMode && (
+            <button
+              onClick={enableFocusMode}
+              className="flex items-center gap-1.5 border border-[var(--color-border-strong)] px-2.5 py-1 text-[var(--color-text-muted)] transition-colors hover:border-white hover:text-white"
+              title="Enter focus mode"
+            >
+              <Maximize2 className="h-3 w-3" />
+              <span className="industrial-header text-[9px] tracking-widest">FOCUS</span>
+            </button>
+          )}
         </div>
       </div>
 
@@ -367,16 +379,19 @@ export default function ChatInterface({
       ) : isAttackPaused ? (
         <div className="border-t border-[var(--color-border-strong)] bg-black p-6">
           <div className="mx-auto max-w-4xl text-center">
-            <h3 className="industrial-header text-sm text-accent">ATTACKS_PAUSED</h3>
+            <h3 className="industrial-header text-accent text-sm">ATTACKS_PAUSED</h3>
             <p className="mt-2 font-mono text-[11px] uppercase text-[var(--color-text-muted)]">
-              The owner&apos;s lock period has expired. Attacks will resume once the sentinel is re-funded.
+              The owner&apos;s lock period has expired. Attacks will resume once the sentinel is
+              re-funded.
             </p>
           </div>
         </div>
       ) : isAgentDrained ? (
         <div className="border-t border-[var(--color-border-strong)] bg-black p-6">
           <div className="mx-auto max-w-4xl text-center">
-            <h3 className="industrial-header text-sm text-[var(--color-danger)]">SENTINEL_COMPROMISED</h3>
+            <h3 className="industrial-header text-sm text-[var(--color-danger)]">
+              SENTINEL_COMPROMISED
+            </h3>
             <p className="mt-2 font-mono text-[11px] uppercase text-[var(--color-text-muted)]">
               This sentinel has been successfully defeated.
             </p>
@@ -384,26 +399,32 @@ export default function ChatInterface({
             {winnerInfo && (
               <div className="mt-4 inline-flex items-center gap-6 border border-[var(--color-border-strong)] bg-[var(--color-bg-elevated)] px-6 py-3">
                 <div className="text-left">
-                  <span className="industrial-header block text-[9px] text-[var(--color-text-muted)]">WINNER</span>
+                  <span className="industrial-header block text-[9px] text-[var(--color-text-muted)]">
+                    WINNER
+                  </span>
                   <Link
                     href={`/u/${winnerInfo.winnerAddress}`}
-                    className="industrial-header text-[11px] text-accent transition-opacity hover:opacity-70"
+                    className="industrial-header text-accent text-[11px] transition-opacity hover:opacity-70"
                   >
                     {truncateAddress(winnerInfo.winnerAddress as string)}
                   </Link>
                 </div>
                 <div className="text-left">
-                  <span className="industrial-header block text-[9px] text-[var(--color-text-muted)]">AMOUNT_WON</span>
-                  <span className="industrial-header text-[11px] text-[var(--color-success)]">{winnerInfo.wonAmount} SUI</span>
+                  <span className="industrial-header block text-[9px] text-[var(--color-text-muted)]">
+                    AMOUNT_WON
+                  </span>
+                  <span className="industrial-header text-[11px] text-[var(--color-success)]">
+                    {winnerInfo.wonAmount} SUI
+                  </span>
                 </div>
               </div>
             )}
           </div>
         </div>
       ) : (
-        <div className="border-t border-[var(--color-border-strong)] bg-black p-6 lg:p-8">
-          <form onSubmit={handleSubmit} className="mx-auto max-w-4xl space-y-4">
-            <div className="border border-[var(--color-border-strong)] bg-black p-1 transition-all focus-within:border-white">
+        <div className="border-t border-[var(--color-border-strong)] bg-black px-4 py-3 lg:px-6 lg:py-4">
+          <form onSubmit={handleSubmit} className="mx-auto max-w-4xl space-y-2">
+            <div className="border border-[var(--color-border-strong)] bg-black transition-all focus-within:border-white">
               <textarea
                 ref={textareaRef}
                 value={promptInput}
@@ -411,9 +432,9 @@ export default function ChatInterface({
                   setPromptInput(e.target.value)
                   countTokens(e.target.value)
                 }}
-                className="terminal-scrollbar min-h-[120px] w-full resize-none border-0 bg-black p-4 font-mono text-sm uppercase text-white placeholder:text-[var(--color-text-muted)]/30 focus:outline-none focus:ring-0"
+                className="terminal-scrollbar placeholder:text-[var(--color-text-muted)]/30 min-h-[56px] w-full resize-none border-0 bg-black px-4 py-3 font-mono text-sm text-white focus:outline-none focus:ring-0"
                 disabled={isSubmitting}
-                placeholder="CONSTRUCT_BREACH_PROTOCOL..."
+                placeholder="Craft your attack prompt here..."
                 rows={1}
                 style={{ overflow: 'hidden' }}
                 autoComplete="off"
@@ -425,19 +446,29 @@ export default function ChatInterface({
                   }
                 }}
               />
-              <div className="flex items-center justify-between border-t border-[var(--color-border-default)] p-3">
-                <div />
-                <div className="flex items-center gap-6">
+              <div className="flex items-center justify-between border-t border-[var(--color-border-default)] px-3 py-2">
+                <div className="industrial-header text-[var(--color-text-muted)]/50 flex items-center gap-2 text-[9px] tracking-widest">
+                  FEE:{' '}
+                  <span className="text-[var(--color-text-muted)]">
+                    <TokenAmount
+                      rawAmount={agent.current_cost_per_message ?? agent.cost_per_message}
+                      token={agentToken}
+                      precision={4}
+                      iconSize={10}
+                    />
+                  </span>
+                </div>
+                <div className="flex items-center gap-4">
                   <span
                     className={clsx(
-                      'industrial-header tabular-nums text-[10px] tracking-widest',
+                      'industrial-header text-[9px] tabular-nums tracking-widest',
                       tokenCount > ATTACK_PROMPT_MAX_TOKENS
                         ? 'text-[var(--color-danger)]'
                         : 'text-[var(--color-text-muted)]/40'
                     )}
                   >
                     <span className={clsx({ 'animate-pulse': isTokenCountDebouncing })}>
-                      {tokenCount} / {ATTACK_PROMPT_MAX_TOKENS} TOKEN
+                      {tokenCount}/{ATTACK_PROMPT_MAX_TOKENS}
                     </span>
                   </span>
                   <button
@@ -447,14 +478,14 @@ export default function ChatInterface({
                       promptInput.length === 0 ||
                       tokenCount > ATTACK_PROMPT_MAX_TOKENS
                     }
-                    className="button-ghost-terminal flex items-center gap-2 px-6 py-2 disabled:cursor-not-allowed disabled:opacity-30"
+                    className="button-ghost-terminal flex items-center gap-2 px-4 py-1.5 text-[11px] disabled:cursor-not-allowed disabled:opacity-30"
                   >
                     {isSubmitting ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
                     ) : (
                       <>
                         <span>EXECUTE</span>
-                        <Zap className="h-4 w-4" />
+                        <Zap className="h-3.5 w-3.5" />
                       </>
                     )}
                   </button>
@@ -463,33 +494,20 @@ export default function ChatInterface({
             </div>
 
             {submitError && (
-              <div className="border border-[var(--color-danger)]/30 bg-[var(--color-danger-muted)] p-3">
-                <span className="font-mono text-xs uppercase text-[var(--color-danger)]">{submitError}</span>
+              <div className="border-[var(--color-danger)]/30 border bg-[var(--color-danger-muted)] px-3 py-2">
+                <span className="font-mono text-[11px] uppercase text-[var(--color-danger)]">
+                  {submitError}
+                </span>
               </div>
             )}
 
             {tokenCount > ATTACK_PROMPT_MAX_TOKENS && (
-              <div className="border border-[var(--color-danger)]/30 bg-[var(--color-danger-muted)] p-3">
-                <span className="font-mono text-xs uppercase text-[var(--color-danger)]">
+              <div className="border-[var(--color-danger)]/30 border bg-[var(--color-danger-muted)] px-3 py-2">
+                <span className="font-mono text-[11px] uppercase text-[var(--color-danger)]">
                   TOKEN_LIMIT_EXCEEDED
                 </span>
               </div>
             )}
-
-            {/* Attack Fee Display */}
-            <div className="flex justify-end">
-              <div className="industrial-header flex items-center gap-2 border border-[var(--color-border-default)] px-3 py-2 text-[10px] tracking-widest text-[var(--color-text-muted)]/60">
-                ATTACK_FEE:{' '}
-                <span className="text-white">
-                  <TokenAmount
-                    rawAmount={agent.current_cost_per_message ?? agent.cost_per_message}
-                    token={agentToken}
-                    precision={4}
-                    iconSize={12}
-                  />
-                </span>
-              </div>
-            </div>
           </form>
         </div>
       )}
