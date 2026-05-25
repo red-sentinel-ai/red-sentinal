@@ -74,11 +74,7 @@ export function SentinelIntroScreen({ agent, onStartAttack }: SentinelIntroScree
               </div>
             )}
           </div>
-          {agent.state === 'active' && (
-            <span className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-[var(--color-bg-base)] bg-[var(--color-success)]">
-              <span className="h-2 w-2 rounded-full bg-white" />
-            </span>
-          )}
+          
         </motion.div>
 
         {/* Identity Section */}

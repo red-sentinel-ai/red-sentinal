@@ -164,11 +164,8 @@ export const FeaturedAgentCard = ({
             </div>
 
             {agent.trending && (
-              <div className="absolute bottom-2 left-2 z-20 flex items-center gap-1 rounded-full border border-amber-400/30 bg-amber-900/20 px-2 py-0.5 text-[10px] font-medium leading-none text-amber-400">
-                <Flame className="size-2.5 sm:size-3" />
-                {agent.trending_window === '24h' || !agent.trending_window
-                  ? 'Trending'
-                  : `Trending ${agent.trending_window}`}
+              <div className="absolute bottom-2 left-2 z-20 flex items-center rounded-full border border-amber-400/30 bg-amber-900/20 p-1 text-amber-400">
+                <Flame className="size-3 sm:size-3.5" />
               </div>
             )}
 
@@ -202,18 +199,6 @@ export const FeaturedAgentCard = ({
                 className="size-4 sm:size-5"
               />
             )}
-          </div>
-          <div className="mb-2 flex items-center justify-center gap-1">
-            <Image
-              src={CHAINS[agent.chain ?? 'sui'].icon}
-              alt={CHAINS[agent.chain ?? 'sui'].name}
-              width={13}
-              height={13}
-              className="rounded-full"
-            />
-            <span className="text-xs text-[var(--color-text-muted)]">
-              {CHAINS[agent.chain ?? 'sui'].name}
-            </span>
           </div>
           <div className="mx-auto flex max-w-[394px] border-t border-[var(--color-border-subtle)]"></div>
         </div>

@@ -67,21 +67,20 @@ export function AppSidebar() {
       <SidebarHeader>
         <div
           className={cn(
-            'flex h-12 items-center gap-2',
-            collapsed ? 'justify-center' : 'justify-between'
+            'flex h-12 items-center',
+            collapsed ? 'justify-center' : 'justify-between gap-2'
           )}
         >
           {collapsed ? (
             <Link href="/" aria-label="Red Sentinel home" className="flex items-center justify-center">
-              <div className="flex size-8 items-center justify-center rounded-lg bg-[var(--color-bg-elevated)] ring-1 ring-[var(--color-border-subtle)]">
+              <div className="flex size-8 items-center justify-center rounded-lg pl-2">
                 <Image
-                  src="/icons/logo-sm.svg"
+                  src="/icons/pink-logo.png"
                   alt="Red Sentinel"
-                  width={22}
-                  height={22}
+                  width={24}
+                  height={24}
                   quality={100}
-                  className="brightness-200"
-                  style={{ objectFit: 'contain' }}
+                  className="object-contain"
                 />
               </div>
             </Link>
@@ -98,7 +97,8 @@ export function AppSidebar() {
             </Link>
           )}
 
-          <button
+        
+           <button
             type="button"
             onClick={toggleSidebar}
             aria-label={collapsed ? 'Open sidebar' : 'Close sidebar'}
@@ -108,6 +108,7 @@ export function AppSidebar() {
               className={cn('h-4 w-4 transition-transform duration-200', collapsed && 'rotate-180')}
             />
           </button>
+      
         </div>
       </SidebarHeader>
 
