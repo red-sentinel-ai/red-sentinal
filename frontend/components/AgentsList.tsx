@@ -134,11 +134,8 @@ export const AgentsList = ({
                             />
                           )}
                           {agent.trending && (
-                            <span className="inline-flex shrink-0 items-center gap-0.5 rounded-full border border-amber-400/30 bg-amber-900/20 px-1.5 py-0.5 text-[10px] font-medium leading-none text-amber-400">
-                              <Flame className="h-2.5 w-2.5 shrink-0" />
-                              {agent.trending_window === '24h' || !agent.trending_window
-                                ? 'Trending'
-                                : `Trending ${agent.trending_window}`}
+                            <span className="inline-flex shrink-0 items-center rounded-full border border-amber-400/30 bg-amber-900/20 p-1 text-amber-400">
+                              <Flame className="h-3 w-3 shrink-0" />
                             </span>
                           )}
                         </div>

@@ -71,7 +71,21 @@ export function AppSidebar() {
             collapsed ? 'justify-center' : 'justify-between'
           )}
         >
-          {!collapsed && (
+          {collapsed ? (
+            <Link href="/" aria-label="Red Sentinel home" className="flex items-center justify-center">
+              <div className="flex size-8 items-center justify-center rounded-lg bg-[var(--color-bg-elevated)] ring-1 ring-[var(--color-border-subtle)]">
+                <Image
+                  src="/icons/logo-sm.svg"
+                  alt="Red Sentinel"
+                  width={22}
+                  height={22}
+                  quality={100}
+                  className="brightness-200"
+                  style={{ objectFit: 'contain' }}
+                />
+              </div>
+            </Link>
+          ) : (
             <Link href="/" aria-label="Red Sentinel home" className="flex items-center px-1">
               <Image
                 src={LOGO_SRC}

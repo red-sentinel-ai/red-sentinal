@@ -100,8 +100,11 @@ function ProfileContent() {
       <div className="relative bg-[var(--color-bg-base)]">
         <div className="min-h-screen relative mx-auto max-w-[1440px] pb-12">
           <div
-            className="mb-6 flex min-h-[300px] w-full flex-col items-start gap-4 bg-cover bg-bottom bg-no-repeat px-4 pb-8 pt-4 sm:min-h-[376px] sm:pb-20 md:flex-row md:items-end md:px-12"
-            style={{ backgroundImage: 'url("/img/footer-bg.png")' }}
+            className="mb-6 flex min-h-[300px] w-full min-w-0 flex-col items-start gap-4 rounded-[0.625rem] px-4 pb-8 pt-4 sm:min-h-[376px] sm:pb-20 md:flex-row md:items-end md:px-12"
+            style={{
+              backgroundColor: '#1a1919',
+              boxShadow: '0 0 0 1px rgba(255,255,255,0.08)',
+            }}
           >
             <div
               className="group relative h-20 w-20 flex-shrink-0 cursor-pointer overflow-hidden rounded-full border-2 border-[var(--color-border-subtle)] md:h-44 md:w-44"

@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { Flame, Star } from 'lucide-react'
+import { Flame } from 'lucide-react'
 
 import { AgentDetails } from '@/hooks/agents/useAllAgents'
 import { getTokenForCoinType } from '@/constants'
@@ -46,12 +46,18 @@ export function SentinelMiniCard({
             className={cn(
               'absolute left-2 top-2 inline-flex items-center rounded-full p-1',
               variant === 'featured'
-                ? 'bg-[var(--color-gold-primary)] text-[var(--color-text-on-gold)]'
+                ? 'bg-blue-500/20 ring-1 ring-blue-400/40'
                 : 'border border-amber-400/30 bg-amber-900/20 text-amber-400'
             )}
           >
             {variant === 'featured' ? (
-              <Star className="h-3 w-3 fill-current" />
+              <Image
+                src="/icons/check-mark.svg"
+                alt="Featured"
+                width={14}
+                height={14}
+                className="size-3.5"
+              />
             ) : (
               <Flame className="h-3 w-3" />
             )}
@@ -62,8 +68,8 @@ export function SentinelMiniCard({
           <Image
             src={chain.icon}
             alt={chain.name}
-            width={14}
-            height={14}
+            width={18}
+            height={18}
             className="shrink-0 rounded-full"
           />
         </span>

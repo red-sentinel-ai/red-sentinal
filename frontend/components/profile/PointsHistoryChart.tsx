@@ -91,8 +91,14 @@ export const PointsHistoryChart = ({ history }: PointsHistoryChartProps) => {
       : 0
 
   return (
-    <div className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-6 shadow-[var(--shadow-card)]">
-      <div className="mb-6 flex items-center justify-between">
+    <div
+      className="flex min-w-0 flex-col rounded-[0.625rem] pb-1 text-white"
+      style={{
+        backgroundColor: '#1a1919',
+        boxShadow: '0 0 0 1px rgba(255,255,255,0.08)',
+      }}
+    >
+      <div className="flex items-center justify-between px-5 pt-5">
         <div>
           <h3 className="text-lg font-semibold text-[var(--color-text-primary)]">Tokens Growth</h3>
           <p className="text-sm text-[var(--color-text-muted)]">Your SENTINEL tokens over time</p>
@@ -107,7 +113,7 @@ export const PointsHistoryChart = ({ history }: PointsHistoryChartProps) => {
         )}
       </div>
 
-      <div className="h-[280px] w-full">
+      <div className="h-[280px] w-full px-2">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
             <defs>
@@ -136,7 +142,7 @@ export const PointsHistoryChart = ({ history }: PointsHistoryChartProps) => {
                 if (active && payload && payload.length) {
                   const data = payload[0].payload as ChartDataPoint
                   return (
-                    <div className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-3 shadow-lg">
+                    <div className="rounded-lg border border-white/10 bg-[#1a1919] p-3 shadow-lg">
                       <p className="mb-1 text-sm font-medium text-[var(--color-text-primary)]">{label}</p>
                       <p className="text-sm text-[var(--color-text-secondary)]">
                         Total:{' '}
