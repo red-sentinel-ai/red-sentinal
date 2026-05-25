@@ -22,8 +22,6 @@ import { CHAINS } from '@/constants/chains'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { getExplorerObjectUrl } from '@/lib/explorer'
 import type { AgentDetailsFull } from '@/hooks/agents/useAgentDetails'
-// import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
-// import { DefenderProfile } from './DefenderProfile'
 import { formatDuration, cn, buildAgentShareTweetUrl, truncateAddress } from '@/lib/utils'
 import { Skeleton } from '@/components/ui'
 import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
@@ -65,10 +63,7 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
 
   const prizePoolData = agent.prizePoolHistory ?? null
 
-  // const creatorLower = agent.creator?.toLowerCase() ?? ''
-  // const { data: userProfilesMap, isLoading: isLoadingProfile } = useUserProfiles(
-  //   creatorLower ? [creatorLower] : []
-  // )
+  const defenderProfile = agent.defender_profile ?? null
 
   useEffect(() => {
     const currentUrl = window.location.href
@@ -313,10 +308,10 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
                 OWNER
               </span>
               <Link
-                href={`/u/${agent.creator}`}
+                href={`/u/${defenderProfile?.username ?? agent.creator}`}
                 className="industrial-header text-accent text-[11px] transition-opacity hover:opacity-70"
               >
-                {truncateAddress(agent.creator)}
+                {defenderProfile?.username ?? (agent.creator ? truncateAddress(agent.creator) : '—')}
               </Link>
             </div>
             <div className="bg-[var(--color-bg-base)] p-4">
