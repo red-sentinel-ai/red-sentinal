@@ -339,7 +339,7 @@ export const AgentListView = () => {
                   alt={CHAINS[selectedChain].name}
                   width={14}
                   height={14}
-                  className="rounded-full brightness-200 grayscale"
+                  className="rounded-full brightness-200"
                 />
                 {CHAINS[selectedChain].name}
                 <button

@@ -22,7 +22,7 @@ export function SpinPassPromo({ description, buttonVariant = 'primary' }: SpinPa
   }, [])
 
   return (
-    <div className="relative flex flex-col items-center bg-gradient-to-b from-[var(--color-bg-surface)] to-[var(--color-gold-muted)]/30 px-6 pb-8 pt-6 text-center">
+    <div className="to-[var(--color-gold-muted)]/30 relative flex flex-col items-center bg-gradient-to-b from-[var(--color-bg-surface)] px-6 pb-8 pt-6 text-center">
       {showConfetti && (
         <div className="pointer-events-none fixed inset-0 z-50">
           <Confetti
@@ -51,12 +51,14 @@ export function SpinPassPromo({ description, buttonVariant = 'primary' }: SpinPa
           />
         </div>
 
-        <h3 className="mb-3 text-2xl font-bold text-[var(--color-text-primary)]">Free Spin Pass Received!</h3>
+        <h3 className="mb-3 text-2xl font-bold text-[var(--color-text-primary)]">
+          Free Spin Pass Received!
+        </h3>
 
         <p className="mb-6 text-base text-[var(--color-text-secondary)]">
           {description}
           <br />
-          Use your pass to WIN SENTINEL tokens from your profile rewards tab.
+          Use your pass to WIN SENTINEL loyalty points from your profile rewards tab.
         </p>
 
         <div className="mb-6 rounded-xl border-2 border-dashed border-[#F632F3] bg-gradient-to-br from-purple-50/50 to-pink-50/50 p-4">
@@ -77,7 +79,9 @@ export function SpinPassPromo({ description, buttonVariant = 'primary' }: SpinPa
           Go to Profile → Spin Now
         </Link>
 
-        <p className="mt-4 text-xs text-[var(--color-text-muted)]">Passes are automatically available in your profile</p>
+        <p className="mt-4 text-xs text-[var(--color-text-muted)]">
+          Passes are automatically available in your profile
+        </p>
       </motion.div>
     </div>
   )

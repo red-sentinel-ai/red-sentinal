@@ -128,7 +128,7 @@ export const AgentsList = ({
                                 src={agent.agent_image}
                                 alt={`${agent.agent_name ?? 'Sentinel'} profile`}
                                 fill
-                                className="object-cover grayscale"
+                                className="object-cover"
                                 sizes="40px"
                               />
                             ) : (
@@ -146,7 +146,7 @@ export const AgentsList = ({
                               alt={chainData.name}
                               width={13}
                               height={13}
-                              className="shrink-0 rounded-full brightness-200 grayscale"
+                              className="shrink-0 rounded-full brightness-200"
                             />
                           </div>
                           {agent.is_featured && (
@@ -236,7 +236,7 @@ export const AgentsList = ({
                               src={agent.agent_image}
                               alt={`${agent.agent_name ?? 'Sentinel'} profile`}
                               fill
-                              className="object-cover grayscale"
+                              className="object-cover"
                               sizes="40px"
                             />
                           ) : (

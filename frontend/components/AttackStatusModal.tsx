@@ -137,9 +137,9 @@ export const AttackStatusModal = ({
             </div>
           </div>
 
-          <div className="border-t border-white/10">
+          {/* <div className="border-t border-white/10">
             <SpinPassPromo description="You've received a free spin pass for your attack!" />
-          </div>
+          </div> */}
         </div>
       </motion.div>
     </Dialog>
