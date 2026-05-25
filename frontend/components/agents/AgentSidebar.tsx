@@ -309,6 +309,8 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
               </span>
               <Link
                 href={`/u/${defenderProfile?.username ?? agent.creator}`}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="industrial-header text-accent text-[11px] transition-opacity hover:opacity-70"
               >
                 {defenderProfile?.username ?? (agent.creator ? truncateAddress(agent.creator) : '—')}
