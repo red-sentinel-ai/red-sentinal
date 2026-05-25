@@ -339,7 +339,7 @@ export default function ChatInterface({
                       width={32}
                       height={32}
                       alt="agent"
-                      className="h-full w-full object-cover grayscale"
+                      className="h-full w-full object-cover"
                     />
                   </div>
                   <div className="industrial-header text-[10px] text-[var(--color-text-muted)]">

@@ -171,7 +171,7 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
           {/* Agent Profile Card */}
           <div className="space-y-4">
             <div className="border-hairline flex items-center gap-4 bg-[var(--color-bg-elevated)] p-4">
-              <div className="h-16 w-16 shrink-0 overflow-hidden border border-[var(--color-border-strong)] grayscale transition-all hover:grayscale-0">
+              <div className="h-16 w-16 shrink-0 overflow-hidden border border-[var(--color-border-strong)] transition-all">
                 <Image
                   src={agent.agent_image || DEFAULT_PROFILE_URL}
                   width={64}

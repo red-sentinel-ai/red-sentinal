@@ -35,7 +35,7 @@ export function SentinelMiniCard({ agent, variant }: { agent: AgentDetails; vari
             {agent.agent_name?.charAt(0).toUpperCase() ?? '?'}
           </div>
         )}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[var(--color-bg-deepest)]/80 via-transparent to-transparent" />
+        <div className="from-[var(--color-bg-deepest)]/80 pointer-events-none absolute inset-0 bg-gradient-to-t via-transparent to-transparent" />
         {variant && (
           <span className="font-body absolute left-4 top-4 inline-flex items-center gap-1 bg-white px-3 py-1 text-[9px] font-extrabold uppercase leading-none tracking-[0.1em] text-black">
             {variant === 'featured' ? (
@@ -58,7 +58,7 @@ export function SentinelMiniCard({ agent, variant }: { agent: AgentDetails; vari
             alt={chain.name}
             width={16}
             height={16}
-            className="mt-0.5 shrink-0 rounded-full brightness-200 grayscale"
+            className="mt-0.5 shrink-0 rounded-full brightness-200"
           />
         </div>
 
