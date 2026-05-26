@@ -9,7 +9,6 @@ import { ConsumePromptApiResponse } from '@/types'
 import { useActiveChain } from '@/context/ActiveChainContext'
 import { getExplorerTxUrl } from '@/lib/explorer'
 import { cn } from '@/lib/utils'
-import { SpinPassPromo } from '@/components/rewards/SpinPassPromo'
 
 type AttackStatusModalProps = {
   apiResponse: ConsumePromptApiResponse

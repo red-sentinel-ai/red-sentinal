@@ -15,38 +15,6 @@ export interface SyndicateContractInfo {
   isLoading: boolean
 }
 
-export function useSyndicateContractInfo(syndicateAddress: `0x${string}` | undefined) {
-  const enabled = !!syndicateAddress
-
-  const contracts = [
-    { address: syndicateAddress!, abi: SYNDICATE_ABI, functionName: 'owner' },
-    { address: syndicateAddress!, abi: SYNDICATE_ABI, functionName: 'agentId' },
-    { address: syndicateAddress!, abi: SYNDICATE_ABI, functionName: 'whitelistEnabled' },
-    { address: syndicateAddress!, abi: SYNDICATE_ABI, functionName: 'token' },
-    { address: syndicateAddress!, abi: SYNDICATE_ABI, functionName: 'totalShares' },
-    { address: syndicateAddress!, abi: SYNDICATE_ABI, functionName: 'idlePrincipal' },
-    { address: syndicateAddress!, abi: SYNDICATE_ABI, functionName: 'totalManagedAssets' },
-  ] as const
-
-  const { data, isLoading } = useReadContracts({
-    contracts,
-    query: { enabled },
-  })
-
-  if (!enabled || !data) return { owner: undefined, agentId: undefined, whitelistEnabled: undefined, tokenAddress: undefined, totalShares: undefined, idlePrincipal: undefined, totalManagedAssets: undefined, isLoading }
-
-  return {
-    owner: data[0].result as `0x${string}` | undefined,
-    agentId: data[1].result as string | undefined,
-    whitelistEnabled: data[2].result as boolean | undefined,
-    tokenAddress: data[3].result as `0x${string}` | undefined,
-    totalShares: data[4].result as bigint | undefined,
-    idlePrincipal: data[5].result as bigint | undefined,
-    totalManagedAssets: data[6].result as bigint | undefined,
-    isLoading,
-  }
-}
-
 export function useSyndicateMemberInfo(
   syndicateAddress: `0x${string}` | undefined,
   memberAddress: `0x${string}` | undefined
