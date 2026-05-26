@@ -26,7 +26,6 @@ import { SUI_SENTINEL_API_URL } from '@/constants'
 import { APP_NETWORK } from '@/constants/shared'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
-  useSyndicateContractInfo,
   useSyndicateMemberInfo,
   useSyndicateWithdrawalUnlock,
 } from '@/hooks/syndicate/useSyndicateInfo'
@@ -50,45 +49,31 @@ interface BackendSyndicate {
   token_symbol: string
   whitelist_enabled: boolean
   agent_id: string | null
+  agent_path: string | null
+  // Decimal128 strings (wei). Render with formatUnits + tokenDecimals.
+  total_funds: string
+  total_shares: string
+  total_deposits_count: number
+  total_redemptions_count: number
+  agent_initial_fund: string
+  agent_total_funded: string
+  agent_total_withdrawn: string
+  creator_fees_claimed_total: string
+  contributor_fees_claimed_total: string
+  members: string[]
+  members_count: number
   network: string
   created_at: string
+  updated_at: string
 }
 
 interface SyndicatePageClientProps {
   address: `0x${string}`
 }
 
-// Dummy members data
-const DUMMY_MEMBERS = [
-  {
-    address: '0x1234567890abcdef1234567890abcdef12345678',
-    name: 'COMMANDER_7X',
-    role: 'SYNDICATE_OWNER',
-    equityShare: 24.5,
-    avatar: '/placeholder-avatar-1.png',
-  },
-  {
-    address: '0x2345678901abcdef2345678901abcdef23456789',
-    name: 'NOVA_STRAT',
-    role: 'MEMBER',
-    equityShare: 12.25,
-    avatar: '/placeholder-avatar-2.png',
-  },
-  {
-    address: '0x3456789012abcdef3456789012abcdef34567890',
-    name: 'ZERO_SUM',
-    role: 'MEMBER',
-    equityShare: 8.1,
-    avatar: '/placeholder-avatar-3.png',
-  },
-  {
-    address: '0x4567890123abcdef4567890123abcdef45678901',
-    name: 'VOID_RUNNER',
-    role: 'MEMBER',
-    equityShare: 5.5,
-    avatar: '/placeholder-avatar-4.png',
-  },
-]
+function shortAddress(addr: string): string {
+  return `${addr.slice(0, 6)}…${addr.slice(-4)}`
+}
 
 export default function SyndicatePageClient({ address }: SyndicatePageClientProps) {
   const { address: connectedAddress } = useAccount()
@@ -112,17 +97,15 @@ export default function SyndicatePageClient({ address }: SyndicatePageClientProp
 
   const meta = metaData?.syndicate
 
-  // On-chain state
-  const {
-    owner,
-    agentId,
-    whitelistEnabled,
-    tokenAddress,
-    idlePrincipal,
-    totalManagedAssets,
-    isLoading: isContractLoading,
-  } = useSyndicateContractInfo(address)
+  // Syndicate-level state now comes entirely from the backend doc — the
+  // webhook pipeline keeps it in sync with on-chain events, so no RPC needed.
+  const agentId = meta?.agent_id ?? undefined
+  const whitelistEnabled = meta?.whitelist_enabled
+  const tokenAddress = meta?.token_address as `0x${string}` | undefined
+  const isContractLoading = !meta
 
+  // Per-wallet state stays on RPC — it's keyed by the connected wallet
+  // and isn't worth caching server-side.
   const {
     shares,
     pendingFees,
@@ -150,24 +133,39 @@ export default function SyndicatePageClient({ address }: SyndicatePageClientProp
   } = useSyndicateMemberActions(address)
 
   const tokenDecimals = meta ? getDecimalsForSymbol(meta.token_symbol) : 18
-  const isOwner =
-    connectedAddress && owner && connectedAddress.toLowerCase() === owner.toLowerCase()
+  // const isOwner =
+  //   connectedAddress && owner && connectedAddress.toLowerCase() === owner.toLowerCase()
 
-  const formattedTVL =
-    totalManagedAssets !== undefined
-      ? parseFloat(formatUnits(totalManagedAssets, tokenDecimals)).toLocaleString('en-US', {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })
-      : null
+  // Derive headline metrics from the denormalised syndicate doc.
+  // total_funds is net contributor capital (deposits - redemptions).
+  // active_in_sentinel is what's currently deployed into the agent.
+  const formatWei = (wei: string | undefined) => {
+    if (wei == null) return null
+    try {
+      return parseFloat(formatUnits(BigInt(wei), tokenDecimals)).toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })
+    } catch {
+      return null
+    }
+  }
 
-  const formattedIdle =
-    idlePrincipal !== undefined
-      ? parseFloat(formatUnits(idlePrincipal, tokenDecimals)).toLocaleString('en-US', {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })
-      : null
+  const formattedTVL = formatWei(meta?.total_funds)
+
+  // idlePrincipal mirrors the contract math:
+  //   token.balanceOf(syndicate) - reservedFeeBalance
+  //   = (deposits - redemptions) - (agent_funded - agent_withdrawn)
+  //   = total_funds - active_in_sentinel
+  // Fee in/out cancels out: creator fees enter both balance and reserve,
+  // contributor fee claims exit both equally — see SentinelSyndicate.sol.
+  const idlePrincipalWei = meta
+    ? (
+        BigInt(meta.total_funds) -
+        (BigInt(meta.agent_total_funded) - BigInt(meta.agent_total_withdrawn))
+      ).toString()
+    : undefined
+  const formattedIdle = formatWei(idlePrincipalWei)
 
   const formattedPendingFees =
     pendingFees !== undefined
@@ -337,7 +335,7 @@ export default function SyndicatePageClient({ address }: SyndicatePageClientProp
           <div className="pb-1">
             {agentId ? (
               <Link
-                href={`/agent/${agentId}`}
+                href={meta?.agent_path ?? `/agent/${agentId}`}
                 className="button-ghost-terminal inline-flex items-center gap-2 px-6 py-3"
               >
                 View Sentinel
@@ -361,7 +359,7 @@ export default function SyndicatePageClient({ address }: SyndicatePageClientProp
           <MetricCard
             label="Idle Principal"
             value={isContractLoading ? null : `$${formattedIdle ?? '0.00'}`}
-            subtitle="Ready for deployment"
+            subtitle="Not yet in sentinel"
             subtitleClass="text-[var(--color-text-muted)]"
           />
           <MetricCard
@@ -482,7 +480,7 @@ export default function SyndicatePageClient({ address }: SyndicatePageClientProp
               </h3>
             </div>
             <span className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
-              {DUMMY_MEMBERS.length} Operators Active
+              {meta ? `${meta.members_count} Operators Active` : '— Operators Active'}
             </span>
           </div>
 
@@ -492,41 +490,45 @@ export default function SyndicatePageClient({ address }: SyndicatePageClientProp
                 <tr className="text-xs font-normal uppercase tracking-wider text-[var(--color-text-muted)]">
                   <th className="pb-4 font-normal">Operator</th>
                   <th className="pb-4 font-normal">Designation</th>
-                  <th className="pb-4 font-normal">Equity Share</th>
                   <th className="pb-4 text-right font-normal">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-[var(--color-border-default)]/30 divide-y">
-                {DUMMY_MEMBERS.map(member => (
-                  <tr
-                    key={member.address}
-                    className="group transition-colors hover:bg-white/[0.02]"
-                  >
-                    <td className="py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 overflow-hidden bg-[var(--color-bg-elevated)]">
-                          <div className="flex h-full w-full items-center justify-center text-xs font-bold text-[var(--color-text-muted)]">
-                            {member.name.slice(0, 2)}
+                {(meta?.members ?? []).map(memberAddr => {
+                  const isOwner = !!meta && memberAddr.toLowerCase() === meta.owner.toLowerCase()
+                  return (
+                    <tr
+                      key={memberAddr}
+                      className="group transition-colors hover:bg-white/[0.02]"
+                    >
+                      <td className="py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="flex h-10 w-10 items-center justify-center bg-[var(--color-bg-elevated)] text-xs font-bold text-[var(--color-text-muted)]">
+                            {memberAddr.slice(2, 4).toUpperCase()}
                           </div>
+                          <span className="font-mono text-sm tracking-widest text-[var(--color-text-primary)]">
+                            {shortAddress(memberAddr)}
+                          </span>
                         </div>
-                        <span className="text-sm font-bold uppercase tracking-widest text-[var(--color-text-primary)]">
-                          {member.name}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="py-4 text-xs uppercase tracking-wider text-[var(--color-text-muted)]">
-                      {member.role}
-                    </td>
-                    <td className="py-4 text-sm text-[var(--color-text-primary)]">
-                      {member.equityShare.toFixed(2)}%
-                    </td>
-                    <td className="py-4 text-right">
-                      <button className="text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-primary)]">
-                        <MoreVertical className="h-5 w-5" />
-                      </button>
+                      </td>
+                      <td className="py-4 text-xs uppercase tracking-wider text-[var(--color-text-muted)]">
+                        {isOwner ? 'SYNDICATE_OWNER' : 'MEMBER'}
+                      </td>
+                      <td className="py-4 text-right">
+                        <button className="text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-primary)]">
+                          <MoreVertical className="h-5 w-5" />
+                        </button>
+                      </td>
+                    </tr>
+                  )
+                })}
+                {meta && meta.members.length === 0 && (
+                  <tr>
+                    <td colSpan={3} className="py-8 text-center text-xs uppercase tracking-wider text-[var(--color-text-muted)]">
+                      No operators yet
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>

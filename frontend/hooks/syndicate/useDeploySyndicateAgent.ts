@@ -93,11 +93,14 @@ export function useDeploySyndicateAgent({
       setAgentId(data.agent_id)
       setTxHash(registerTx)
 
-      // Update backend syndicate record with agent_id
+      const agentSlug = formData.agentName.toLowerCase().replace(/\s+/g, '_')
+      const agentPath = `/attack/${agentSlug}`
+
+      // Update backend syndicate record with agent_id + agent_path
       await fetch(`${SUI_SENTINEL_API_URL}/syndicates/${syndicateAddress}/agent?network=${APP_NETWORK}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ agent_id: data.agent_id }),
+        body: JSON.stringify({ agent_id: data.agent_id, agent_path: agentPath }),
       })
 
       // Create agent in Supabase
