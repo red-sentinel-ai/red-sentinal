@@ -19,8 +19,6 @@ import { useUserProfileStats } from '@/hooks/profile/useUserProfileStats'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 import { SENTINEL_GIFS, USER_IMAGES } from '@/constants/asset_paths'
-import { useTokenBalance } from '@/hooks/useTokenBalance'
-import { SENTINEL_TOKEN_DECIMALS, SENTINEL_TOKEN_EXPLORER_URL, SUI_CONFIG } from '@/constants'
 
 const PROFILE_TABS = {
   AGENTS: 'agents',
@@ -64,13 +62,9 @@ function ProfileContent() {
   const [isImagePickerOpen, setIsImagePickerOpen] = useState(false)
   const [copied, setCopied] = useState(false)
 
-  const { address: connectedAddress, chain: activeChain } = useConnectedAddress()
+  const { address: connectedAddress } = useConnectedAddress()
   const { data: profile, isLoading: isLoadingProfile } = useUserProfile()
   const { data: userStats, isLoading: isLoadingStats } = useUserProfileStats()
-  const { formattedBalance: sentinelBalance } = useTokenBalance(
-    SUI_CONFIG.SENTINEL_COIN_TYPE,
-    SENTINEL_TOKEN_DECIMALS
-  )
 
   const { mutate: updateAvatar, isPending: isUpdatingAvatar } = useUpdateAvatar({
     onSuccess: () => setIsImagePickerOpen(false),
@@ -120,11 +114,9 @@ function ProfileContent() {
     )
   }
 
-  const isSolana = activeChain === 'solana'
-
   if (isLoadingProfile) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg-base)]">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--color-bg-base)]">
         <Loader2 className="h-10 w-10 animate-spin text-[var(--color-gold-primary)]" />
       </div>
     )
@@ -133,9 +125,9 @@ function ProfileContent() {
   return (
     <>
       <div className="relative bg-[var(--color-bg-base)]">
-        <div className="min-h-screen relative mx-auto max-w-[1400px] px-4 pt-24 pb-12 md:px-12">
+        <div className="relative mx-auto min-h-screen max-w-[1400px] px-4 pb-12 pt-24 md:px-12">
           {/* Header Section */}
-          <section className="flex flex-col md:flex-row items-start gap-6 md:gap-10 mb-8 py-6">
+          <section className="mb-8 flex flex-col items-start gap-6 py-6 md:flex-row md:gap-10">
             {/* Square Avatar */}
             <div className="relative shrink-0">
               <div
@@ -143,7 +135,7 @@ function ProfileContent() {
                 onClick={() => setIsImagePickerOpen(true)}
               >
                 {isUpdatingAvatar ? (
-                  <div className="flex h-full w-full items-center justify-center bg-[var(--color-bg-surface)]/70">
+                  <div className="bg-[var(--color-bg-surface)]/70 flex h-full w-full items-center justify-center">
                     <Loader2 className="h-8 w-8 animate-spin text-[var(--color-text-primary)]" />
                   </div>
                 ) : profile?.avatar_url ? (
@@ -151,29 +143,29 @@ function ProfileContent() {
                     src={profile.avatar_url}
                     alt="User Avatar"
                     fill
-                    className="object-cover grayscale brightness-90 transition-all duration-700 group-hover:grayscale-0"
+                    className="object-cover brightness-90 transition-all duration-700"
                   />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center bg-[var(--color-bg-subtle)]">
                     <User className="h-12 w-12 text-[var(--color-text-muted)]" />
                   </div>
                 )}
-                <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-text-primary)]/40 opacity-0 transition-opacity group-hover:opacity-100">
+                <div className="bg-[var(--color-text-primary)]/40 absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
                   <Camera className="h-8 w-8 text-[var(--color-bg-surface)]" />
                 </div>
               </div>
             </div>
 
             {/* Profile Info */}
-            <div className="flex-1 flex flex-col gap-4">
+            <div className="flex flex-1 flex-col gap-4">
               {/* Name and Actions Row */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 w-full">
+              <div className="flex w-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex flex-wrap items-center gap-3">
-                  <h1 className="font-mono text-3xl md:text-4xl font-bold uppercase tracking-wide leading-none text-[var(--color-text-primary)]">
+                  <h1 className="font-mono text-3xl font-bold uppercase leading-none tracking-wide text-[var(--color-text-primary)] md:text-4xl">
                     {profile?.display_name || profile?.username || 'Operator'}
                   </h1>
                   {profile?.rewards_tier && (
-                    <div className="border border-[var(--color-border-default)] px-3 py-1 bg-[var(--color-bg-surface)]">
+                    <div className="border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-3 py-1">
                       <span className="text-[9px] font-bold uppercase tracking-[2px] text-[var(--color-text-secondary)]">
                         {profile.rewards_tier}
                       </span>
@@ -208,7 +200,7 @@ function ProfileContent() {
                     </span>
                     <button
                       onClick={handleCopyAddress}
-                      className="text-[var(--color-text-muted)] opacity-40 hover:opacity-100 transition-opacity"
+                      className="text-[var(--color-text-muted)] opacity-40 transition-opacity hover:opacity-100"
                     >
                       {copied ? (
                         <Check className="h-3 w-3 text-[var(--color-success)]" />
@@ -218,62 +210,38 @@ function ProfileContent() {
                     </button>
                   </div>
                 </div>
-
-                {/* Token Balance */}
-                {!isSolana && (
-                  <div className="flex flex-col gap-0.5">
-                    <span className="industrial-label">Sentinel Balance</span>
-                    <Link
-                      href={SENTINEL_TOKEN_EXPLORER_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-                    >
-                      <Image
-                        src="/icons/dollar_coin.png"
-                        width={16}
-                        height={16}
-                        alt="coin"
-                        className="flex-shrink-0"
-                      />
-                      <span className="text-xs font-bold tracking-wide text-[var(--color-text-primary)]">
-                        {sentinelBalance}
-                      </span>
-                    </Link>
-                  </div>
-                )}
               </div>
             </div>
           </section>
 
           {/* Core Stats Bar */}
-          <section className="grid grid-cols-1 md:grid-cols-3 gap-0 mb-10 border border-[var(--color-border-strong)] divide-y md:divide-y-0 md:divide-x divide-[var(--color-border-strong)]">
-            <div className="p-6 md:p-8 flex flex-col gap-1">
+          <section className="mb-10 grid grid-cols-1 gap-0 divide-y divide-[var(--color-border-strong)] border border-[var(--color-border-strong)] md:grid-cols-3 md:divide-x md:divide-y-0">
+            <div className="flex flex-col gap-1 p-6 md:p-8">
               <span className="industrial-label">Total Bounty Extracted</span>
               {isLoadingStats ? (
                 <div className="h-9 w-24 animate-pulse bg-[var(--color-border-subtle)]" />
               ) : (
-                <span className="font-mono text-3xl md:text-4xl font-bold tracking-wide text-[var(--color-text-primary)]">
+                <span className="font-mono text-3xl font-bold tracking-wide text-[var(--color-text-primary)] md:text-4xl">
                   {formatCurrency(userStats?.totalBountyWonUsd ?? 0)}
                 </span>
               )}
             </div>
-            <div className="p-6 md:p-8 flex flex-col gap-1">
+            <div className="flex flex-col gap-1 p-6 md:p-8">
               <span className="industrial-label">Total Break Attempts</span>
               {isLoadingStats ? (
                 <div className="h-9 w-24 animate-pulse bg-[var(--color-border-subtle)]" />
               ) : (
-                <span className="font-mono text-3xl md:text-4xl font-bold tracking-wide text-[var(--color-text-primary)]">
+                <span className="font-mono text-3xl font-bold tracking-wide text-[var(--color-text-primary)] md:text-4xl">
                   {formatNumber(userStats?.totalAttacks ?? 0)}
                 </span>
               )}
             </div>
-            <div className="p-6 md:p-8 flex flex-col gap-1">
+            <div className="flex flex-col gap-1 p-6 md:p-8">
               <span className="industrial-label">Defenses Logged</span>
               {isLoadingStats ? (
                 <div className="h-9 w-24 animate-pulse bg-[var(--color-border-subtle)]" />
               ) : (
-                <span className="font-mono text-3xl md:text-4xl font-bold tracking-wide text-[var(--color-text-primary)]">
+                <span className="font-mono text-3xl font-bold tracking-wide text-[var(--color-text-primary)] md:text-4xl">
                   {formatNumber(userStats?.totalAttacksSurvived ?? 0)}
                 </span>
               )}
@@ -285,11 +253,11 @@ function ProfileContent() {
 
           {/* Tabs */}
           <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-            <nav className="flex items-center gap-6 md:gap-10 border-b border-[var(--color-border-subtle)] mb-8 overflow-x-auto scrollbar-hide">
-              <TabsList className="flex gap-0 bg-transparent p-0 h-auto">
+            <nav className="scrollbar-hide mb-8 flex items-center gap-6 overflow-x-auto border-b border-[var(--color-border-subtle)] md:gap-10">
+              <TabsList className="flex h-auto gap-0 bg-transparent p-0">
                 <TabsTrigger
                   value={PROFILE_TABS.AGENTS}
-                  className="flex items-center gap-2 pb-4 px-2 text-[11px] font-bold uppercase tracking-[2px] whitespace-nowrap rounded-none border-b-2 border-transparent text-[var(--color-text-muted)] transition-colors data-[state=active]:border-[var(--color-text-primary)] data-[state=active]:text-[var(--color-text-primary)] data-[state=active]:bg-transparent hover:text-[var(--color-text-secondary)]"
+                  className="flex items-center gap-2 whitespace-nowrap rounded-none border-b-2 border-transparent px-2 pb-4 text-[11px] font-bold uppercase tracking-[2px] text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-secondary)] data-[state=active]:border-[var(--color-text-primary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)]"
                 >
                   <Folder className="h-4 w-4" />
                   Sentinels
@@ -297,7 +265,7 @@ function ProfileContent() {
 
                 <TabsTrigger
                   value={PROFILE_TABS.ACTIVITY}
-                  className="flex items-center gap-2 pb-4 px-2 text-[11px] font-bold uppercase tracking-[2px] whitespace-nowrap rounded-none border-b-2 border-transparent text-[var(--color-text-muted)] transition-colors data-[state=active]:border-[var(--color-text-primary)] data-[state=active]:text-[var(--color-text-primary)] data-[state=active]:bg-transparent hover:text-[var(--color-text-secondary)]"
+                  className="flex items-center gap-2 whitespace-nowrap rounded-none border-b-2 border-transparent px-2 pb-4 text-[11px] font-bold uppercase tracking-[2px] text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-secondary)] data-[state=active]:border-[var(--color-text-primary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)]"
                 >
                   <Activity className="h-4 w-4" />
                   Activity
@@ -305,7 +273,7 @@ function ProfileContent() {
 
                 <TabsTrigger
                   value={PROFILE_TABS.STATS}
-                  className="flex items-center gap-2 pb-4 px-2 text-[11px] font-bold uppercase tracking-[2px] whitespace-nowrap rounded-none border-b-2 border-transparent text-[var(--color-text-muted)] transition-colors data-[state=active]:border-[var(--color-text-primary)] data-[state=active]:text-[var(--color-text-primary)] data-[state=active]:bg-transparent hover:text-[var(--color-text-secondary)]"
+                  className="flex items-center gap-2 whitespace-nowrap rounded-none border-b-2 border-transparent px-2 pb-4 text-[11px] font-bold uppercase tracking-[2px] text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-secondary)] data-[state=active]:border-[var(--color-text-primary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)]"
                 >
                   <BarChart3 className="h-4 w-4" />
                   Stats
@@ -313,7 +281,7 @@ function ProfileContent() {
 
                 <TabsTrigger
                   value={PROFILE_TABS.REWARDS}
-                  className="flex items-center gap-2 pb-4 px-2 text-[11px] font-bold uppercase tracking-[2px] whitespace-nowrap rounded-none border-b-2 border-transparent text-[var(--color-text-muted)] transition-colors data-[state=active]:border-[var(--color-text-primary)] data-[state=active]:text-[var(--color-text-primary)] data-[state=active]:bg-transparent hover:text-[var(--color-text-secondary)]"
+                  className="flex items-center gap-2 whitespace-nowrap rounded-none border-b-2 border-transparent px-2 pb-4 text-[11px] font-bold uppercase tracking-[2px] text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-secondary)] data-[state=active]:border-[var(--color-text-primary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)]"
                 >
                   <Gift className="h-4 w-4" />
                   My Rewards
@@ -368,7 +336,7 @@ export default function ProfilePage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg-base)]">
+        <div className="flex min-h-screen items-center justify-center bg-[var(--color-bg-base)]">
           <Loader2 className="h-10 w-10 animate-spin text-[var(--color-gold-primary)]" />
         </div>
       }
