@@ -4,7 +4,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
-  FileText,
   Gift,
   HelpCircle,
   Terminal,
@@ -15,7 +14,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 
-import { APP_NETWORK } from '@/constants'
+import { APP_NETWORK, SUI_SENTINEL_SUPPORT_EMAIL } from '@/constants'
 import { cn } from '@/lib/utils'
 import {
   Sidebar,
@@ -110,19 +109,19 @@ export function AppSidebar() {
       <SidebarFooter className="mt-auto border-t border-[var(--color-border-default)] p-8">
         <div className="space-y-4">
           <Link
-            href="mailto:support@redsentinel.ai"
+            href={`mailto:${SUI_SENTINEL_SUPPORT_EMAIL}`}
             className="font-body flex items-center gap-3 text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] transition-colors hover:text-white"
           >
             <HelpCircle className="size-3.5" />
             Support
           </Link>
-          <Link
+          {/* <Link
             href="#"
             className="font-body flex items-center gap-3 text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] transition-colors hover:text-white"
           >
             <FileText className="size-3.5" />
             Logs
-          </Link>
+          </Link> */}
         </div>
       </SidebarFooter>
     </Sidebar>

@@ -1393,9 +1393,9 @@ export function NewLeaderboard() {
 
 function EmptyState({ message }: { message: string }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-xl border border-gray-200 bg-gray-50 py-16 text-center">
-      <Search className="mb-4 h-10 w-10 text-gray-300" />
-      <p className="text-sm font-medium text-gray-500">{message}</p>
+    <div className="flex flex-col items-center justify-center rounded-xl border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] py-16 text-center">
+      <Search className="mb-4 h-10 w-10 text-[var(--color-text-faint)]" />
+      <p className="text-sm font-medium text-[var(--color-text-muted)]">{message}</p>
     </div>
   )
 }
