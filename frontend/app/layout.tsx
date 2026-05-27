@@ -2,7 +2,8 @@ import type { Metadata, Viewport } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import NextTopLoader from 'nextjs-toploader'
 import { Toaster } from 'sonner'
-import { Inter, JetBrains_Mono, Space_Grotesk } from 'next/font/google'
+import localFont from 'next/font/local'
+import { JetBrains_Mono, Space_Grotesk } from 'next/font/google'
 
 import './globals.css'
 import '@rainbow-me/rainbowkit/styles.css'
@@ -10,11 +11,10 @@ import { Providers } from './providers'
 import { FloatingHelpButton } from '@/components/FloatingHelpButton'
 import { SUI_SENTINEL_APP_URL, SUI_SENTINEL_X_USERNAME, SUI_SENTINEL_GITHUB_URL } from '@/constants'
 
-const inter = Inter({
-  subsets: ['latin'],
+const inter = localFont({
+  src: '../public/fonts/InterVariable.woff2',
   variable: '--font-inter',
   display: 'swap',
-  weight: ['300', '400', '500', '600', '700'],
 })
 
 const jetbrainsMono = JetBrains_Mono({

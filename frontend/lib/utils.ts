@@ -102,6 +102,18 @@ export const removeHexPrefix = (hex: string) => {
   return hex.replace(/^0x/i, '')
 }
 
+/**
+ * Detect which chain an address belongs to based on its format.
+ *  - BNB/EVM  → 0x + exactly 40 hex chars (20 bytes)
+ *  - Sui      → 0x + 62–64 hex chars (31–32 bytes)
+ *  - Solana   → no 0x prefix (base58)
+ */
+export function detectChainFromAddress(address: string): 'sui' | 'solana' | 'bnb' {
+  if (/^0x[0-9a-fA-F]{40}$/.test(address)) return 'bnb'
+  if (/^0x[0-9a-fA-F]{62,64}$/.test(address)) return 'sui'
+  return 'solana'
+}
+
 export const addHexPrefix = (hex: string) => {
   return `0x${removeHexPrefix(hex)}`
 }
