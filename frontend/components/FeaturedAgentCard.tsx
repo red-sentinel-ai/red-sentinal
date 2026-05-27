@@ -209,7 +209,7 @@ export const FeaturedAgentCard = ({
               alt={CHAINS[agent.chain ?? 'sui'].name}
               width={13}
               height={13}
-              className="rounded-full"
+              className={`rounded-full ${CHAINS[agent.chain ?? 'sui'].iconFilterClass}`}
             />
             <span className="text-xs text-[var(--color-text-muted)]">
               {CHAINS[agent.chain ?? 'sui'].name}

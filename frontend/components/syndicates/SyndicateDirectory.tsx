@@ -83,7 +83,7 @@ export function SyndicateDirectory() {
           </div>
           <Link
             href="/defend?mode=syndicate"
-            className="rounded bg-[var(--color-gold-primary)] px-6 py-2 text-sm font-semibold uppercase tracking-wider text-white transition-opacity hover:opacity-90"
+            className="rounded bg-[var(--color-gold-primary)] px-6 py-2 text-sm font-semibold uppercase tracking-wider text-[var(--color-text-on-gold)] transition-opacity hover:opacity-90"
           >
             Create Syndicate
           </Link>

@@ -186,6 +186,7 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
                     width={18}
                     height={18}
                     alt={CHAINS[agent.chain].name}
+                    className={`rounded-full ${CHAINS[agent.chain].iconFilterClass}`}
                   />
                 </div>
                 {agent.is_featured && (

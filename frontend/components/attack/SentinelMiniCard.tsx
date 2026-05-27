@@ -58,7 +58,7 @@ export function SentinelMiniCard({ agent, variant }: { agent: AgentDetails; vari
             alt={chain.name}
             width={16}
             height={16}
-            className="mt-0.5 shrink-0 rounded-full brightness-200"
+            className={`mt-0.5 shrink-0 rounded-full ${chain.iconFilterClass}`}
           />
         </div>
 
