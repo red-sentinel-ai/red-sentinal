@@ -288,6 +288,13 @@ export const SYNDICATE_ABI = [
     inputs: [],
     outputs: [{ type: 'address' }],
   },
+  {
+    type: 'function',
+    name: 'sentinel',
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [{ type: 'address' }],
+  },
 ] as const
 
 export const SYNDICATE_BYTECODE =

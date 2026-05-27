@@ -78,6 +78,11 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
   const agentToken = getTokenForCoinType(agent.coin_type)
   const creatorRewardLabel = `${DUMMY_CREATOR_REWARD.toFixed(2)} ${agentToken.symbol}`
 
+  const isSyndicate = !!agent.syndicate
+  const ownerHref = agent.syndicate
+    ? (agent.syndicate.syndicate_path ?? `/syndicate/${agent.syndicate.contract_address}`)
+    : `/u/${agent.creator}`
+
   const isDrained = agent.state === 'defeated'
   const winnerAddress = agent.winner?.address ?? null
 
@@ -312,12 +317,19 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
               <span className="industrial-header mb-1 block text-[9px] text-[var(--color-text-muted)]">
                 OWNER
               </span>
-              <Link
-                href={`/u/${agent.creator}`}
-                className="industrial-header text-accent text-[11px] transition-opacity hover:opacity-70"
-              >
-                {truncateAddress(agent.creator)}
-              </Link>
+              <div className="flex items-center gap-2">
+                <Link
+                  href={ownerHref}
+                  className="industrial-header text-accent text-[11px] transition-opacity hover:opacity-70"
+                >
+                  {truncateAddress(agent.creator)}
+                </Link>
+                {isSyndicate && (
+                  <span className="industrial-header border border-[var(--color-gold-primary)] px-1.5 py-0.5 text-[9px] tracking-widest text-[var(--color-gold-primary)]">
+                    SYNDICATE
+                  </span>
+                )}
+              </div>
             </div>
             <div className="bg-[var(--color-bg-base)] p-4">
               <span className="industrial-header mb-1 block text-[9px] text-[var(--color-text-muted)]">

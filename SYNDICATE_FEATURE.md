@@ -145,8 +145,8 @@ Every field on `syndicates_{network}`, who writes it, and what UI consumes it.
 | UI label | Formula | Notes |
 |----------|---------|-------|
 | Total Managed Assets | `total_funds` | Net contributor capital — deposits minus redemptions |
-| Idle Principal | `total_funds − (agent_total_funded − agent_total_withdrawn)` | Mirrors the contract's `idlePrincipal` exactly (fee in/out cancels) |
-| Active in Sentinel | `agent_total_funded − agent_total_withdrawn` | What's currently deployed to the agent |
+| Idle Principal | `total_funds − (agent_initial_fund + agent_total_funded − agent_total_withdrawn)` | Mirrors the contract's `idlePrincipal` exactly. `agent_initial_fund` must be subtracted because `registerAgent` transfers it from the vault straight to the sentinel and does NOT emit `AgentFundedThroughSyndicate` (so it isn't in `agent_total_funded`) |
+| Active in Sentinel | `agent_initial_fund + agent_total_funded − agent_total_withdrawn` | What's currently deployed to the agent |
 
 ---
 
@@ -418,7 +418,7 @@ When registering a sentinel through a syndicate, the TEE receives `syndicateAddr
 ### Share-based accounting
 
 - `total_funds` (doc) = net contributor capital (deposits − redemptions)
-- `idlePrincipal` (derived) = `total_funds − (agent_total_funded − agent_total_withdrawn)`, matching the contract's `idlePrincipal()` exactly
+- `idlePrincipal` (derived) = `total_funds − (agent_initial_fund + agent_total_funded − agent_total_withdrawn)`, matching the contract's `idlePrincipal()` exactly
 - A member can only redeem up to their share of `idlePrincipal` (can't pull from the sentinel pool)
 - `pendingFees` accumulate via `feePerShare` (1e27 precision) — claimable at any time
 

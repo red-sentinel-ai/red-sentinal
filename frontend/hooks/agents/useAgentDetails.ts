@@ -40,6 +40,11 @@ export interface AgentDetailsFull {
   coin_type?: string
   current_cost_per_message?: string
   chain?: SupportedChain
+  syndicate?: {
+    contract_address: string
+    name: string
+    syndicate_path: string | null
+  } | null
 }
 
 export const AGENT_DETAILS_FULL_QUERY_KEY = 'agentDetailsFull'

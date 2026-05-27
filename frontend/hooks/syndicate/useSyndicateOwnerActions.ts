@@ -2,10 +2,10 @@
 
 import { useState } from 'react'
 import { useAccount, useWriteContract } from 'wagmi'
-import { waitForTransactionReceipt } from '@wagmi/core'
+import { simulateContract, waitForTransactionReceipt } from '@wagmi/core'
 import { parseUnits } from 'viem'
 import { wagmiConfig } from '@/lib/wagmi'
-import { SYNDICATE_ABI, ERC20_ABI } from '@/lib/evm/abi'
+import { SYNDICATE_ABI } from '@/lib/evm/abi'
 
 export function useSyndicateOwnerActions(syndicateAddress: `0x${string}`) {
   const { address: walletAddress, chain } = useAccount()
@@ -31,26 +31,33 @@ export function useSyndicateOwnerActions(syndicateAddress: `0x${string}`) {
     }
   }
 
-  const fundAgent = (tokenAddress: `0x${string}`, amount: string, decimals: number) =>
+  // Funds the sentinel FROM the syndicate's idle balance. The syndicate
+  // contract already holds the tokens — no ERC20.approve from the user is
+  // needed (it's the syndicate that approves the Sentinel, not the caller).
+  // We simulate first so any contract revert surfaces with its real reason
+  // instead of degrading to a "gas limit too high" RPC rejection.
+  // `tokenAddress` is kept in the signature for caller compatibility but unused.
+  const fundAgent = (_tokenAddress: `0x${string}`, amount: string, decimals: number) =>
     exec('fundAgent', async () => {
-      const amountRaw = parseUnits(amount, decimals)
-
-      const approveTx = await writeContractAsync({
-        ...txArgs,
-        address: tokenAddress,
-        abi: ERC20_ABI,
-        functionName: 'approve',
-        args: [syndicateAddress, amountRaw],
-      })
-      await waitForTransactionReceipt(wagmiConfig, { hash: approveTx })
-
-      return writeContractAsync({
+      const call = {
         ...txArgs,
         address: syndicateAddress,
         abi: SYNDICATE_ABI,
-        functionName: 'fundAgent',
-        args: [amountRaw],
-      })
+        functionName: 'fundAgent' as const,
+        args: [parseUnits(amount, decimals)] as const,
+      }
+      try {
+        await simulateContract(wagmiConfig, call)
+      } catch (err: any) {
+        const reason =
+          err?.cause?.shortMessage ??
+          err?.shortMessage ??
+          err?.metaMessages?.join(' • ') ??
+          err?.message ??
+          'Simulation failed'
+        throw new Error(`fundAgent would revert: ${reason}`)
+      }
+      return writeContractAsync(call)
     })
 
   const withdrawFromSentinel = (amount: string, decimals: number) =>
