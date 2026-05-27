@@ -15,12 +15,18 @@ interface DeployedInfo {
   tokenAddress: `0x${string}`
   tokenSymbol: string
   tokenDecimals: number
+  syndicateName: string
+}
+
+function slugify(name: string) {
+  return name.toLowerCase().trim().replace(/\s+/g, '_')
 }
 
 export function SyndicateLaunchFlow() {
   const [step, setStep] = useState(1)
   const [deployedInfo, setDeployedInfo] = useState<DeployedInfo | null>(null)
   const [launchedAgentId, setLaunchedAgentId] = useState<string | null>(null)
+  const [launchedAgentName, setLaunchedAgentName] = useState<string | null>(null)
   const [launchedTxHash, setLaunchedTxHash] = useState<string | null>(null)
 
   const handleStep1Complete = (result: DeployedInfo) => {
@@ -32,8 +38,9 @@ export function SyndicateLaunchFlow() {
     setStep(3)
   }
 
-  const handleStep3Complete = (agentId: string, txHash: string) => {
+  const handleStep3Complete = (agentId: string, txHash: string, agentName: string) => {
     setLaunchedAgentId(agentId)
+    setLaunchedAgentName(agentName)
     setLaunchedTxHash(txHash)
     setStep(4)
   }
@@ -50,6 +57,11 @@ export function SyndicateLaunchFlow() {
     : null
 
   if (step === 4 && deployedInfo && launchedAgentId) {
+    const syndicatePath = `/syndicate/${slugify(deployedInfo.syndicateName)}`
+    const agentPath = launchedAgentName
+      ? `/attack/${slugify(launchedAgentName)}`
+      : `/agent/${launchedAgentId}`
+
     return (
       <div className="flex flex-col items-center gap-6 py-10">
         <CheckCircle className="h-16 w-16 text-[var(--color-gold-primary)]" />
@@ -66,7 +78,7 @@ export function SyndicateLaunchFlow() {
           <div className="flex items-center justify-between">
             <span className="text-[var(--color-text-muted)]">Syndicate</span>
             <Link
-              href={`/syndicate/${deployedInfo.contractAddress}`}
+              href={syndicatePath}
               className="font-mono text-xs text-[var(--color-gold-primary)] hover:underline"
             >
               {deployedInfo.contractAddress.slice(0, 10)}...{deployedInfo.contractAddress.slice(-8)}
@@ -95,16 +107,16 @@ export function SyndicateLaunchFlow() {
 
         <div className="flex w-full gap-3">
           <Link
-            href={`/syndicate/${deployedInfo.contractAddress}`}
+            href={syndicatePath}
             className="flex h-10 flex-1 items-center justify-center rounded-lg bg-[var(--color-gold-primary)] text-sm font-medium text-[var(--color-text-on-gold)] hover:bg-[var(--color-gold-light)]"
           >
             Manage Syndicate
           </Link>
           <Link
-            href="/attack"
+            href={agentPath}
             className="flex h-10 flex-1 items-center justify-center rounded-lg border border-[var(--color-border-default)] text-sm font-medium text-[var(--color-text-secondary)] hover:border-[var(--color-gold-primary)]"
           >
-            View All Sentinels
+            View Sentinel
           </Link>
         </div>
       </div>

@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { Loader2 } from 'lucide-react'
+import Link from 'next/link'
+import { Loader2, ExternalLink } from 'lucide-react'
 import { toast } from 'sonner'
 import { SENTINEL_IMAGES } from '@/constants/asset_paths'
 import { SYSTEM_PROMPT_MAX_TOKENS } from '@/constants'
@@ -18,7 +19,7 @@ import type { SupportedToken } from '@/constants/shared'
 interface SyndicateStep3Props {
   syndicateAddress: `0x${string}`
   selectedToken: SupportedToken
-  onComplete: (agentId: string, txHash: string) => void
+  onComplete: (agentId: string, txHash: string, agentName: string) => void
 }
 
 export function SyndicateStep3({ syndicateAddress, selectedToken, onComplete }: SyndicateStep3Props) {
@@ -87,7 +88,7 @@ export function SyndicateStep3({ syndicateAddress, selectedToken, onComplete }: 
 
       const result = await deploy()
       toast.success('Sentinel launched!')
-      onComplete(result.agentId, result.txHash)
+      onComplete(result.agentId, result.txHash, formData.agentName)
     } catch (err: any) {
       toast.error(err.message || 'Failed to launch sentinel')
     }
@@ -95,6 +96,22 @@ export function SyndicateStep3({ syndicateAddress, selectedToken, onComplete }: 
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+      {/* Syndicate context */}
+      <div className="flex items-center justify-between rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] px-3 py-2 text-xs">
+        <span className="uppercase tracking-wider text-[var(--color-text-muted)]">
+          Launching for
+        </span>
+        <Link
+          href={`/syndicate/${syndicateAddress}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1 font-mono text-[var(--color-gold-primary)] hover:underline"
+        >
+          {syndicateAddress.slice(0, 10)}…{syndicateAddress.slice(-8)}
+          <ExternalLink className="h-3 w-3" />
+        </Link>
+      </div>
+
       {/* Agent Image */}
       <div className="flex items-center gap-4">
         <div
