@@ -16,14 +16,18 @@ import {
   Award,
   Terminal,
   User,
-  MoreVertical,
   Globe,
   Share2,
   Loader2,
 } from 'lucide-react'
+import {
+  SyndicateMembersTable,
+  type SyndicateMemberDetail,
+} from '@/components/syndicate/SyndicateMembersTable'
 import { toast } from 'sonner'
 import { SUI_SENTINEL_API_URL } from '@/constants'
 import { APP_NETWORK } from '@/constants/shared'
+import { formatTokenAmount } from '@/lib/utils'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   useSyndicateMemberInfo,
@@ -63,6 +67,7 @@ interface BackendSyndicate {
   contributor_fees_claimed_total: string
   members: string[]
   members_count: number
+  members_detailed?: SyndicateMemberDetail[]
   network: string
   created_at: string
   updated_at: string
@@ -71,10 +76,6 @@ interface BackendSyndicate {
 interface SyndicatePageClientProps {
   /** Either a contract address (0x…) or a syndicate slug. The backend resolves both. */
   identifier: string
-}
-
-function shortAddress(addr: string): string {
-  return `${addr.slice(0, 6)}…${addr.slice(-4)}`
 }
 
 export default function SyndicatePageClient({ identifier }: SyndicatePageClientProps) {
@@ -150,19 +151,7 @@ export default function SyndicatePageClient({ identifier }: SyndicatePageClientP
   // Derive headline metrics from the denormalised syndicate doc.
   // total_funds is net contributor capital (deposits - redemptions).
   // active_in_sentinel is what's currently deployed into the agent.
-  const formatWei = (wei: string | undefined) => {
-    if (wei == null) return null
-    try {
-      return parseFloat(formatUnits(BigInt(wei), tokenDecimals)).toLocaleString('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })
-    } catch {
-      return null
-    }
-  }
-
-  const formattedTVL = formatWei(meta?.total_funds)
+  const formattedTVL = meta ? formatTokenAmount(meta.total_funds, tokenDecimals) : null
 
   // idlePrincipal mirrors the contract math:
   //   token.balanceOf(syndicate) - reservedFeeBalance
@@ -181,17 +170,15 @@ export default function SyndicatePageClient({ identifier }: SyndicatePageClientP
           BigInt(meta.agent_total_withdrawn))
       ).toString()
     : undefined
-  const formattedIdle = formatWei(idlePrincipalWei)
+  const formattedIdle = idlePrincipalWei
+    ? formatTokenAmount(idlePrincipalWei, tokenDecimals)
+    : null
 
   const formattedPendingFees =
-    pendingFees !== undefined
-      ? parseFloat(formatUnits(pendingFees, tokenDecimals)).toLocaleString('en-US', {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })
-      : null
+    pendingFees !== undefined ? formatTokenAmount(pendingFees, tokenDecimals) : null
 
-  const formattedShares = shares !== undefined ? formatUnits(shares, tokenDecimals) : null
+  const formattedShares =
+    shares !== undefined ? formatUnits(shares, tokenDecimals) : null
 
   const refresh = () => refetchMeta()
 
@@ -498,68 +485,16 @@ export default function SyndicatePageClient({ identifier }: SyndicatePageClientP
         </section>
 
         {/* Section 4: Members List */}
-        <section className="space-y-6">
-          <div className="flex items-center justify-between border-b border-[var(--color-border-strong)] pb-4">
-            <div className="flex items-center gap-3">
-              <Users className="h-5 w-5 text-[var(--color-text-primary)]" />
-              <h3 className="text-sm font-bold uppercase tracking-widest text-[var(--color-text-primary)]">
-                Syndicate Members
-              </h3>
-            </div>
-            <span className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
-              {meta ? `${meta.members_count} Operators Active` : '— Operators Active'}
-            </span>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="text-xs font-normal uppercase tracking-wider text-[var(--color-text-muted)]">
-                  <th className="pb-4 font-normal">Operator</th>
-                  <th className="pb-4 font-normal">Designation</th>
-                  <th className="pb-4 text-right font-normal">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-[var(--color-border-default)]/30 divide-y">
-                {(meta?.members ?? []).map(memberAddr => {
-                  const isOwner = !!meta && memberAddr.toLowerCase() === meta.owner.toLowerCase()
-                  return (
-                    <tr
-                      key={memberAddr}
-                      className="group transition-colors hover:bg-white/[0.02]"
-                    >
-                      <td className="py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="flex h-10 w-10 items-center justify-center bg-[var(--color-bg-elevated)] text-xs font-bold text-[var(--color-text-muted)]">
-                            {memberAddr.slice(2, 4).toUpperCase()}
-                          </div>
-                          <span className="font-mono text-sm tracking-widest text-[var(--color-text-primary)]">
-                            {shortAddress(memberAddr)}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="py-4 text-xs uppercase tracking-wider text-[var(--color-text-muted)]">
-                        {isOwner ? 'SYNDICATE_OWNER' : 'MEMBER'}
-                      </td>
-                      <td className="py-4 text-right">
-                        <button className="text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-primary)]">
-                          <MoreVertical className="h-5 w-5" />
-                        </button>
-                      </td>
-                    </tr>
-                  )
-                })}
-                {meta && meta.members.length === 0 && (
-                  <tr>
-                    <td colSpan={3} className="py-8 text-center text-xs uppercase tracking-wider text-[var(--color-text-muted)]">
-                      No operators yet
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </section>
+        {meta && (
+          <SyndicateMembersTable
+            members={
+              meta.members_detailed ??
+              meta.members.map(addr => buildFallbackMember(addr, meta.owner))
+            }
+            tokenSymbol={meta.token_symbol}
+            tokenDecimals={tokenDecimals}
+          />
+        )}
       </div>
 
       {/* Modals */}
@@ -899,6 +834,31 @@ function MemberActionCard({
 function getDecimalsForSymbol(symbol: string): number {
   const map: Record<string, number> = { USDC: 18, USDT: 18, WBNB: 18, BNB: 18 }
   return map[symbol] ?? 18
+}
+
+function buildFallbackMember(address: string, owner: string): SyndicateMemberDetail {
+  const isOwner = address.toLowerCase() === owner.toLowerCase()
+  return {
+    address: address.toLowerCase(),
+    is_owner: isOwner,
+    designation: isOwner ? 'SYNDICATE_OWNER' : 'MEMBER',
+    shares: '0',
+    deposited: '0',
+    redeemed: '0',
+    net_deposited: '0',
+    fees_claimed: '0',
+    deposits_count: 0,
+    redemptions_count: 0,
+    equity_share: 0,
+    first_deposit_at: null,
+    last_activity_at: null,
+    username: null,
+    avatar_url: null,
+    twitter_username: null,
+    twitter_avatar: null,
+    discord_username: null,
+    discord_avatar: null,
+  }
 }
 
 function parseAddresses(input: string): `0x${string}`[] {
