@@ -48,7 +48,7 @@ export function SyndicateCard({ syndicate, isUserSyndicate }: SyndicateCardProps
           />
         </div>
         {isUserSyndicate && (
-          <span className="rounded-sm bg-[var(--color-gold-primary)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white">
+          <span className="rounded-sm bg-[var(--color-gold-primary)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--color-text-on-gold)]">
             Your Syndicate
           </span>
         )}

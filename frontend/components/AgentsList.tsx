@@ -146,7 +146,7 @@ export const AgentsList = ({
                               alt={chainData.name}
                               width={13}
                               height={13}
-                              className="shrink-0 rounded-full brightness-200"
+                              className={`shrink-0 rounded-full ${chainData.iconFilterClass}`}
                             />
                           </div>
                           {agent.is_featured && (
@@ -259,7 +259,7 @@ export const AgentsList = ({
                               alt={chainData.name}
                               width={14}
                               height={14}
-                              className="shrink-0 rounded-full brightness-200 grayscale"
+                              className={`shrink-0 rounded-full grayscale ${chainData.iconFilterClass}`}
                             />
                             {agent.is_featured && (
                               <Image

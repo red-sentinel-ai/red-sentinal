@@ -98,6 +98,31 @@ export const truncateAddress = (addr: string) => {
   return addr.slice(0, 6) + '...' + addr.slice(-6)
 }
 
+/**
+ * Format a uint256 wei string (or bigint) to a locale-formatted human number
+ * with thousands separators. Returns '0.00' on any parse failure so callers
+ * can render the result unconditionally.
+ */
+export const formatTokenAmount = (
+  wei: string | bigint | undefined | null,
+  decimals: number,
+  fractionDigits = 2
+): string => {
+  if (wei == null) return '0.00'
+  try {
+    const value = typeof wei === 'bigint' ? wei : BigInt(wei)
+    const divisor = BigInt(10) ** BigInt(decimals)
+    const whole = value / divisor
+    const remainder = value % divisor
+    const paddedRemainder = remainder.toString().padStart(decimals, '0')
+    const fractionPart = paddedRemainder.slice(0, fractionDigits).padEnd(fractionDigits, '0')
+    const wholeFormatted = whole.toLocaleString('en-US')
+    return fractionDigits > 0 ? `${wholeFormatted}.${fractionPart}` : wholeFormatted
+  } catch {
+    return '0.00'
+  }
+}
+
 export const removeHexPrefix = (hex: string) => {
   return hex.replace(/^0x/i, '')
 }
