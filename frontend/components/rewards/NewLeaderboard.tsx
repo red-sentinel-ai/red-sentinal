@@ -1190,7 +1190,7 @@ export function NewLeaderboard() {
                     className={cn(
                       'rounded-full border px-3 py-1.5 text-xs font-medium transition-colors',
                       defenderTierFilter === ''
-                        ? 'border-[var(--color-gold-primary)] bg-[var(--color-gold-primary)] text-white'
+                        ? 'border-[var(--color-gold-primary)] bg-[var(--color-gold-primary)] text-[var(--color-text-on-gold)]'
                         : 'border-[var(--color-border-default)] bg-transparent text-[var(--color-text-muted)] hover:border-[var(--color-border-strong)] hover:text-[var(--color-text-primary)]'
                     )}
                   >
@@ -1297,7 +1297,7 @@ export function NewLeaderboard() {
                     className={cn(
                       'rounded-full border px-3 py-1.5 text-xs font-medium transition-colors',
                       attackerTierFilter === ''
-                        ? 'border-[var(--color-gold-primary)] bg-[var(--color-gold-primary)] text-white'
+                        ? 'border-[var(--color-gold-primary)] bg-[var(--color-gold-primary)] text-[var(--color-text-on-gold)]'
                         : 'border-[var(--color-border-default)] bg-transparent text-[var(--color-text-muted)] hover:border-[var(--color-border-strong)] hover:text-[var(--color-text-primary)]'
                     )}
                   >

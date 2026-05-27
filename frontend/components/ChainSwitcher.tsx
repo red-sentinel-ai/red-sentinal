@@ -25,7 +25,7 @@ export function ChainSwitcher() {
             alt={active.name}
             width={20}
             height={20}
-            className="rounded-full brightness-200"
+            className={cn('rounded-full', active.iconFilterClass)}
           />
           <span className="hidden sm:inline">{active.name}</span>
           <ChevronDown className="h-3.5 w-3.5" />
@@ -52,7 +52,7 @@ export function ChainSwitcher() {
                 alt={chain.name}
                 width={20}
                 height={20}
-                className="rounded-full brightness-200"
+                className={cn('rounded-full', chain.iconFilterClass)}
               />
               <span className="flex-1 font-bold text-[var(--color-text-primary)]">
                 {chain.name}
