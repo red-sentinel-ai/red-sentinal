@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Dialog } from '@/components/Dialog'
 import { X, Loader2, User, Mail, MessageSquare, BookOpen } from 'lucide-react'
-import { useCurrentAccount } from '@mysten/dapp-kit'
+import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { useRequestFeatureAgent } from '@/hooks/agents/useRequestFeatureAgent'
 import Image from 'next/image'
 import { SUI_SENTINEL_DOCS_URL } from '@/constants'
@@ -30,8 +30,7 @@ export const FeatureAgentModal = ({ open, onClose, agentId }: FeatureAgentModalP
   })
   const [error, setError] = useState('')
   const [showSuccessState, setShowSuccessState] = useState(false)
-  const account = useCurrentAccount()
-  const address = account?.address
+  const { address } = useConnectedAddress()
 
   const {
     data: hasRequested,
