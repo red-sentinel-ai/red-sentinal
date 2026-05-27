@@ -6,12 +6,20 @@ import { toast } from 'sonner'
 import { useAccount } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { EVM_SUPPORTED_TOKENS } from '@/constants/evm'
+import { SUI_SENTINEL_API_URL } from '@/constants'
+import { APP_NETWORK } from '@/constants/shared'
 import { TokenSelectDropdown } from '@/components/defend/TokenSelectDropdown'
 import { useDeploySyndicate } from '@/hooks/syndicate/useDeploySyndicate'
 import type { SupportedToken } from '@/constants/shared'
 
 interface SyndicateStep1Props {
-  onComplete: (result: { contractAddress: `0x${string}`; tokenAddress: `0x${string}`; tokenSymbol: string; tokenDecimals: number }) => void
+  onComplete: (result: {
+    contractAddress: `0x${string}`
+    tokenAddress: `0x${string}`
+    tokenSymbol: string
+    tokenDecimals: number
+    syndicateName: string
+  }) => void
 }
 
 export function SyndicateStep1({ onComplete }: SyndicateStep1Props) {
@@ -40,6 +48,18 @@ export function SyndicateStep1({ onComplete }: SyndicateStep1Props) {
     if (!validate()) return
 
     try {
+      // Reject duplicates before any wallet prompt — saves the user gas.
+      const checkRes = await fetch(
+        `${SUI_SENTINEL_API_URL}/syndicates/check-name?name=${encodeURIComponent(name.trim())}&network=${APP_NETWORK}`
+      )
+      if (checkRes.ok) {
+        const { exists } = (await checkRes.json()) as { exists: boolean }
+        if (exists) {
+          setErrors({ name: 'A syndicate with this name already exists' })
+          return
+        }
+      }
+
       const result = await deploy({
         name: name.trim(),
         description: description.trim(),
@@ -53,6 +73,7 @@ export function SyndicateStep1({ onComplete }: SyndicateStep1Props) {
         tokenAddress: selectedToken.coinType as `0x${string}`,
         tokenSymbol: selectedToken.symbol,
         tokenDecimals: selectedToken.decimals,
+        syndicateName: name.trim(),
       })
     } catch (err: any) {
       toast.error(err.message || 'Failed to create syndicate')

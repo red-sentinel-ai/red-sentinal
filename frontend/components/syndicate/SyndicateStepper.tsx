@@ -10,7 +10,7 @@ interface Step {
 
 const STEPS: Step[] = [
   { label: 'Create Syndicate', sublabel: 'Name & settings' },
-  { label: 'Deposit Funds', sublabel: 'Initial contribution' },
+  { label: 'Fund Syndicate', sublabel: 'Initial contribution' },
   { label: 'Launch Sentinel', sublabel: 'Deploy your AI' },
 ]
 

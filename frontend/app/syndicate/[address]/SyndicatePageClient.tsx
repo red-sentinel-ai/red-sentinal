@@ -43,6 +43,7 @@ interface BackendSyndicate {
   contract_address: string
   owner: string
   name: string
+  syndicate_path: string | null
   description: string
   social_link: string | null
   token_address: string
@@ -68,14 +69,15 @@ interface BackendSyndicate {
 }
 
 interface SyndicatePageClientProps {
-  address: `0x${string}`
+  /** Either a contract address (0x…) or a syndicate slug. The backend resolves both. */
+  identifier: string
 }
 
 function shortAddress(addr: string): string {
   return `${addr.slice(0, 6)}…${addr.slice(-4)}`
 }
 
-export default function SyndicatePageClient({ address }: SyndicatePageClientProps) {
+export default function SyndicatePageClient({ identifier }: SyndicatePageClientProps) {
   const { address: connectedAddress } = useAccount()
 
   // Modal states
@@ -83,12 +85,14 @@ export default function SyndicatePageClient({ address }: SyndicatePageClientProp
   const [inputValue, setInputValue] = useState('')
   const [whitelistInput, setWhitelistInput] = useState('')
 
-  // Off-chain metadata
+  // Off-chain metadata — backend GET /syndicates/:identifier accepts either
+  // a contract address or a slug. We then use the doc's contract_address for
+  // anything that needs a real EVM address (RPC reads, owner action hooks).
   const { data: metaData, refetch: refetchMeta } = useQuery<{ syndicate: BackendSyndicate }>({
-    queryKey: ['syndicate-meta', address],
+    queryKey: ['syndicate-meta', identifier],
     queryFn: async () => {
       const res = await fetch(
-        `${SUI_SENTINEL_API_URL}/syndicates/${address}?network=${APP_NETWORK}`
+        `${SUI_SENTINEL_API_URL}/syndicates/${identifier}?network=${APP_NETWORK}`
       )
       if (!res.ok) throw new Error('Syndicate not found')
       return res.json()
@@ -96,6 +100,8 @@ export default function SyndicatePageClient({ address }: SyndicatePageClientProp
   })
 
   const meta = metaData?.syndicate
+  // Only set once meta resolves — RPC hooks must not run with a slug.
+  const address = meta?.contract_address as `0x${string}` | undefined
 
   // Syndicate-level state now comes entirely from the backend doc — the
   // webhook pipeline keeps it in sync with on-chain events, so no RPC needed.
@@ -115,6 +121,11 @@ export default function SyndicatePageClient({ address }: SyndicatePageClientProp
 
   const { isLocked } = useSyndicateWithdrawalUnlock(agentId)
 
+  // Action hooks just store the address until an action fires. Buttons are
+  // disabled until meta resolves so the placeholder is never actually used.
+  const ZERO_ADDR = '0x0000000000000000000000000000000000000000' as `0x${string}`
+  const safeAddress: `0x${string}` = address ?? ZERO_ADDR
+
   // Actions
   const {
     fundAgent,
@@ -122,7 +133,7 @@ export default function SyndicatePageClient({ address }: SyndicatePageClientProp
     setWhitelistEnabled: toggleWhitelist,
     whitelistAddresses,
     loading: ownerLoading,
-  } = useSyndicateOwnerActions(address)
+  } = useSyndicateOwnerActions(safeAddress)
 
   const {
     deposit,
@@ -130,7 +141,7 @@ export default function SyndicatePageClient({ address }: SyndicatePageClientProp
     claimFeesForSyndicate,
     claimFeesForSelf,
     loading: memberLoading,
-  } = useSyndicateMemberActions(address)
+  } = useSyndicateMemberActions(safeAddress)
 
   const tokenDecimals = meta ? getDecimalsForSymbol(meta.token_symbol) : 18
   // const isOwner =
@@ -155,14 +166,19 @@ export default function SyndicatePageClient({ address }: SyndicatePageClientProp
 
   // idlePrincipal mirrors the contract math:
   //   token.balanceOf(syndicate) - reservedFeeBalance
-  //   = (deposits - redemptions) - (agent_funded - agent_withdrawn)
-  //   = total_funds - active_in_sentinel
-  // Fee in/out cancels out: creator fees enter both balance and reserve,
-  // contributor fee claims exit both equally — see SentinelSyndicate.sol.
+  //   = deposits - redemptions - initialFund - agent_funded + agent_withdrawn
+  //   = total_funds - (agent_initial_fund + agent_total_funded - agent_total_withdrawn)
+  // The registerAgent path moves `initialFund` straight from the vault to the
+  // sentinel via safeTransferFrom — it's NOT counted in agent_total_funded
+  // (that only tracks AgentFundedThroughSyndicate events), so it must be
+  // deducted separately. Fee in/out cancels: creator fees enter both balance
+  // and reserve, contributor claims exit equally — see SentinelSyndicate.sol.
   const idlePrincipalWei = meta
     ? (
         BigInt(meta.total_funds) -
-        (BigInt(meta.agent_total_funded) - BigInt(meta.agent_total_withdrawn))
+        (BigInt(meta.agent_initial_fund) +
+          BigInt(meta.agent_total_funded) -
+          BigInt(meta.agent_total_withdrawn))
       ).toString()
     : undefined
   const formattedIdle = formatWei(idlePrincipalWei)
@@ -189,6 +205,17 @@ export default function SyndicatePageClient({ address }: SyndicatePageClientProp
   const handleFundAgent = async () => {
     if (!inputValue || !tokenAddress) return
     try {
+      // Funds come from the syndicate's idle balance, not the caller's wallet.
+      // Pre-check so the user gets a readable error instead of an on-chain
+      // InsufficientLiquidity revert (which surfaces as a gas-cap error).
+      const amountWei = BigInt(Math.floor(parseFloat(inputValue) * 10 ** tokenDecimals))
+      const idleWei = idlePrincipalWei ? BigInt(idlePrincipalWei) : 0n
+      if (amountWei > idleWei) {
+        toast.error(
+          `Insufficient idle funds in the syndicate. Available: ${formattedIdle ?? '0.00'} ${meta?.token_symbol ?? ''}`
+        )
+        return
+      }
       await fundAgent(tokenAddress, inputValue, tokenDecimals)
       toast.success('Sentinel funded successfully')
       closeModal()
@@ -542,7 +569,11 @@ export default function SyndicatePageClient({ address }: SyndicatePageClientProp
           <DialogHeader>
             <DialogTitle>Add Funds to Sentinel</DialogTitle>
             <DialogDescription>
-              Transfer funds from syndicate idle balance to the active sentinel.
+              Deploys idle syndicate capital into the active sentinel. Does not pull from your
+              wallet, only funds already deposited into the syndicate are available.
+              <span className="mt-1 block text-[var(--color-text-primary)]">
+                Idle available: {formattedIdle ?? '0.00'} {meta?.token_symbol ?? ''}
+              </span>
             </DialogDescription>
           </DialogHeader>
           <div className="mt-4 space-y-4">
