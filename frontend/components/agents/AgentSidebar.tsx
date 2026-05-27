@@ -63,8 +63,6 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
 
   const prizePoolData = agent.prizePoolHistory ?? null
 
-  const defenderProfile = agent.defender_profile ?? null
-
   useEffect(() => {
     const currentUrl = window.location.href
     setPageUrl(currentUrl)
