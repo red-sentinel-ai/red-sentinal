@@ -222,7 +222,7 @@ function ProfileContent() {
                 <div className="h-9 w-24 animate-pulse bg-[var(--color-border-subtle)]" />
               ) : (
                 <span className="font-mono text-3xl font-bold tracking-wide text-[var(--color-text-primary)] md:text-4xl">
-                  {formatCurrency(userStats?.totalBountyWonUsd ?? 0)}
+                  {formatCurrency(userStats?.totalBountyUsd ?? 0)}
                 </span>
               )}
             </div>

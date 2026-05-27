@@ -4,80 +4,38 @@ import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 
 export interface UserProfileStats {
   // Attacker stats
-  totalBountyWonUsd: number
+  totalBountyUsd: number
   totalAttacks: number
   successfulBreaches: number
   attackerTier: string | null
+  attackerRank: number | null
+  breachRatePct: number
+  largestBountyUsd: number
+  sentinelTokensEarnedAttacker: number
   // Defender stats
   totalAttacksSurvived: number
   activeSentinels: number
   totalSentinels: number
   defenderTier: string | null
-}
-
-interface ApiAttackerEntry {
-  wallet: string
-  totalBountyUsd: number
-  successfulBreaches: number
-  totalAttacks: number
-  attackerTier: string
-}
-
-interface ApiDefenderEntry {
-  wallet: string
-  totalAttacksSurvived: number
-  activeSentinels: number
-  totalSentinels: number
-  defenderTier: string
-}
-
-interface AttackersResponse {
-  attackers: ApiAttackerEntry[]
-}
-
-interface DefendersResponse {
-  defenders: ApiDefenderEntry[]
+  defenderRank: number | null
+  compositeScore: number
+  tvlUsd: number
+  totalFeesEarnedUsd: number
+  sentinelTokensEarnedDefender: number
 }
 
 async function fetchUserStats(walletAddress: string): Promise<UserProfileStats> {
-  // Fetch attacker stats
-  const attackerUrl = new URL(`${SUI_SENTINEL_API_URL}/leaderboard/v2/${APP_NETWORK}/attackers`)
-  attackerUrl.searchParams.set('search', walletAddress)
-  attackerUrl.searchParams.set('limit', '1')
-
-  // Fetch defender stats
-  const defenderUrl = new URL(`${SUI_SENTINEL_API_URL}/leaderboard/v2/${APP_NETWORK}/defenders`)
-  defenderUrl.searchParams.set('search', walletAddress)
-  defenderUrl.searchParams.set('limit', '1')
-
-  const [attackerRes, defenderRes] = await Promise.all([
-    fetch(attackerUrl.toString()),
-    fetch(defenderUrl.toString()),
-  ])
-
-  const attackerData: AttackersResponse = attackerRes.ok ? await attackerRes.json() : { attackers: [] }
-  const defenderData: DefendersResponse = defenderRes.ok ? await defenderRes.json() : { defenders: [] }
-
-  const attacker = attackerData.attackers?.[0]
-  const defender = defenderData.defenders?.[0]
-
-  return {
-    totalBountyWonUsd: attacker?.totalBountyUsd ?? 0,
-    totalAttacks: attacker?.totalAttacks ?? 0,
-    successfulBreaches: attacker?.successfulBreaches ?? 0,
-    attackerTier: attacker?.attackerTier ?? null,
-    totalAttacksSurvived: defender?.totalAttacksSurvived ?? 0,
-    activeSentinels: defender?.activeSentinels ?? 0,
-    totalSentinels: defender?.totalSentinels ?? 0,
-    defenderTier: defender?.defenderTier ?? null,
-  }
+  const url = `${SUI_SENTINEL_API_URL}/leaderboard/v2/${APP_NETWORK}/user-stats/${walletAddress}`
+  const res = await fetch(url)
+  if (!res.ok) throw new Error(`Failed to fetch user stats: ${res.status}`)
+  return res.json()
 }
 
 export function useUserProfileStats() {
   const { address } = useConnectedAddress()
 
   return useQuery<UserProfileStats>({
-    queryKey: ['user-profile-stats', address],
+    queryKey: ['user-profile-stats', address, APP_NETWORK],
     queryFn: () => fetchUserStats(address!),
     enabled: !!address,
     staleTime: 60_000,
