@@ -47,7 +47,7 @@ export function WalletDropdown({
             height={18}
             src="/icons/wallet.png"
             alt="wallet icon"
-            className="h-[18px] w-[18px] grayscale group-hover:invert"
+            className="h-[18px] w-[18px] group-hover:invert"
           />
           <span className="font-body text-[11px] font-extrabold uppercase tracking-[0.08em]">
             {address}

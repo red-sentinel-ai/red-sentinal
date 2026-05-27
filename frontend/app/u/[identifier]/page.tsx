@@ -2,11 +2,12 @@ import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { User, Folder } from 'lucide-react'
-import { truncateAddress } from '@/lib/utils'
+import { truncateAddress, detectChainFromAddress } from '@/lib/utils'
+import { getExplorerAddressUrl } from '@/lib/explorer'
 import { supabaseServiceClient } from '@/db/config/server'
 import { FeaturedAgentCard } from '@/components/FeaturedAgentCard'
 import { type AgentDetails } from '@/hooks/agents/useAllAgents'
-import { APP_NETWORK, EXPLORER_BASE_URL, SUI_SENTINEL_API_URL } from '@/constants'
+import { APP_NETWORK, SUI_SENTINEL_API_URL } from '@/constants'
 
 // Here we didn't used the useAgentsByOwner because it's a server components and good for SEO, if we want to use useAgentsByOwner hook, we will need to convert it to client component
 async function fetchAgentsByCreator(walletAddress: string): Promise<AgentDetails[]> {
@@ -126,7 +127,7 @@ export default async function PublicProfilePage({
                 <div className="mt-3 flex flex-col items-start gap-1 sm:flex-row sm:items-center">
                   <p className="text-sm font-medium text-[var(--color-text-secondary)]">Wallet Address:</p>
                   <Link
-                    href={`${EXPLORER_BASE_URL}/address/${user.wallet_addresses[0]}`}
+                    href={getExplorerAddressUrl(user.wallet_addresses[0], detectChainFromAddress(user.wallet_addresses[0]))}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="font-mono text-sm text-[var(--color-info)] hover:underline"
@@ -143,7 +144,7 @@ export default async function PublicProfilePage({
           <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold">
             <Folder className="h-6 w-6 text-[var(--color-gold-primary)]" />
             <span>
-              {user.display_name}&apos;s Sentinels ({agents.length})
+              {(user.display_name || user.username)}&apos;s Sentinels ({agents.length})
             </span>
           </h2>
           {agents.length > 0 ? (

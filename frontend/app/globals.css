@@ -13,9 +13,9 @@
   --color-bg-subtle: #2a2828;
 
   --color-text-primary: #ffffff;
-  --color-text-secondary: #bcbbbb;
-  --color-text-muted: #8f8e8e;
-  --color-text-faint: #636161;
+  --color-text-secondary: #d0cfcf;
+  --color-text-muted: #a8a7a7;
+  --color-text-faint: #757373;
 
   --color-gold-primary: #ffffff;
   --color-gold-light: #ffffff;
@@ -149,7 +149,7 @@
     text-transform: uppercase;
     font-weight: 500;
     letter-spacing: 1.2px;
-    font-size: 9px;
+    font-size: 11px;
     color: var(--color-text-muted);
   }
 
@@ -904,11 +904,11 @@ body::-webkit-scrollbar-thumb:hover {
 
 .ssb-label {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: clamp(0.35rem, 0.5vw, 0.45rem);
+  font-size: clamp(0.5rem, 0.6vw, 0.625rem);
   font-weight: 500;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--color-text-faint);
+  color: var(--color-text-muted);
   white-space: nowrap;
 }
 

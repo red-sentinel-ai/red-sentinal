@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 
 export default async function SyndicatePage({ params }: { params: Promise<{ address: string }> }) {
   const { address } = await params
-  return <SyndicatePageClient address={address as `0x${string}`} />
+  return <SyndicatePageClient identifier={address} />
 }
