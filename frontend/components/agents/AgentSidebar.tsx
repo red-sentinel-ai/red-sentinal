@@ -22,8 +22,6 @@ import { CHAINS } from '@/constants/chains'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { getExplorerObjectUrl } from '@/lib/explorer'
 import type { AgentDetailsFull } from '@/hooks/agents/useAgentDetails'
-// import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
-// import { DefenderProfile } from './DefenderProfile'
 import { formatDuration, cn, buildAgentShareTweetUrl, truncateAddress } from '@/lib/utils'
 import { Skeleton } from '@/components/ui'
 import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
@@ -64,11 +62,6 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
     connectedAddress?.toLowerCase() === agent.creator?.toLowerCase()
 
   const prizePoolData = agent.prizePoolHistory ?? null
-
-  // const creatorLower = agent.creator?.toLowerCase() ?? ''
-  // const { data: userProfilesMap, isLoading: isLoadingProfile } = useUserProfiles(
-  //   creatorLower ? [creatorLower] : []
-  // )
 
   useEffect(() => {
     const currentUrl = window.location.href
