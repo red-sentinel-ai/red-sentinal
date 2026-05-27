@@ -10,6 +10,7 @@ import { useFeaturedAgents } from '@/hooks/agents/useFeaturedAgents'
 import { useTrendingAgents } from '@/hooks/agents/useTrendingAgents'
 import { useAgentCoinTypes } from '@/hooks/agents/useAgentCoinTypes'
 import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 import { TEXT_COPIES } from '@/constants/text_copies'
 import { type SupportedChain, CHAINS, SUPPORTED_CHAINS } from '@/constants/chains'
 import { getTokenForCoinType } from '@/constants'
@@ -152,7 +153,7 @@ export const AgentListView = () => {
                     alt=""
                     width={14}
                     height={14}
-                    className={`rounded-full ${active ? 'brightness-0' : 'brightness-200'}`}
+                    className={cn('rounded-full', active ? 'brightness-0' : chain.iconFilterClass)}
                   />
                   {chain.name}
                 </button>
@@ -339,7 +340,7 @@ export const AgentListView = () => {
                   alt={CHAINS[selectedChain].name}
                   width={14}
                   height={14}
-                  className="rounded-full brightness-200"
+                  className={cn('rounded-full', CHAINS[selectedChain].iconFilterClass)}
                 />
                 {CHAINS[selectedChain].name}
                 <button

@@ -73,7 +73,7 @@ export function ChainFilterDropdown({ selectedChain, onSelect }: ChainFilterDrop
               alt={CHAINS[chainId].name}
               width={16}
               height={16}
-              className="rounded-full"
+              className={`rounded-full ${CHAINS[chainId].iconFilterClass}`}
             />
             {CHAINS[chainId].name}
           </DropdownMenuItem>

@@ -17,6 +17,7 @@ export const SUI_SENTINEL_X_USERNAME = 'redsentinel_ai'
 export const SUI_SENTINEL_GITHUB_URL = 'https://github.com/sui-sentinel/contracts'
 export const SUI_SENTINEL_TELEGRAM_URL = 'https://t.me/suisentinel'
 export const SUI_SENTINEL_AUDIT_REPORT_URL = '/pdfs/audit_final.pdf'
+export const SUI_SENTINEL_SUPPORT_EMAIL = 'support@cyphronixsoftware.xyz'
 export const SUI_SENTINEL_AMBASSADOR_URL = 'https://www.redsentinel.xyz/ambassador'
 export const SUI_SENTINEL_CHECKOUT_URL =
   'https://twitter.com/intent/tweet?text=Check+out+%40redsentinel_ai+on+Sui+%F0%9F%9B%A1%EF%B8%8F&hashtags=RedSentinel'

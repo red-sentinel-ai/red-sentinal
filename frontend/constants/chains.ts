@@ -11,6 +11,7 @@ export type ChainConfig = {
   nativeToken: string
   active: boolean
   rounded?: boolean
+  iconFilterClass: string
 }
 
 export const CHAINS = {
@@ -22,6 +23,7 @@ export const CHAINS = {
     active: true,
     nativeToken: 'SUI',
     rounded: false,
+    iconFilterClass: 'brightness-200',
   },
   solana: {
     id: 'solana' as const,
@@ -31,6 +33,7 @@ export const CHAINS = {
     active: true,
     nativeToken: 'SOL',
     rounded: false,
+    iconFilterClass: 'brightness-200',
   },
   bnb: {
     id: 'bnb' as const,
@@ -40,5 +43,6 @@ export const CHAINS = {
     active: true,
     nativeToken: 'BNB',
     rounded: true,
+    iconFilterClass: '',
   },
 } satisfies Record<SupportedChain, ChainConfig>
