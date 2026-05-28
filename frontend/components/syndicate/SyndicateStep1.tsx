@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Loader2, Users } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAccount } from 'wagmi'
@@ -33,6 +33,14 @@ export function SyndicateStep1({ onComplete }: SyndicateStep1Props) {
   const [isPermissioned, setIsPermissioned] = useState(false)
   const [selectedToken, setSelectedToken] = useState<SupportedToken>(EVM_SUPPORTED_TOKENS[0])
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const nameInputRef = useRef<HTMLInputElement>(null)
+
+  const focusNameField = () => {
+    const el = nameInputRef.current
+    if (!el) return
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    setTimeout(() => el.focus({ preventScroll: true }), 400)
+  }
 
   const validate = () => {
     const e: Record<string, string> = {}
@@ -55,7 +63,10 @@ export function SyndicateStep1({ onComplete }: SyndicateStep1Props) {
       if (checkRes.ok) {
         const { exists } = (await checkRes.json()) as { exists: boolean }
         if (exists) {
-          setErrors({ name: 'A syndicate with this name already exists' })
+          const message = 'A syndicate with this name already exists'
+          setErrors({ name: message })
+          toast.error(message)
+          focusNameField()
           return
         }
       }
@@ -106,6 +117,7 @@ export function SyndicateStep1({ onComplete }: SyndicateStep1Props) {
           Syndicate Name <span className="text-[var(--color-danger)]">*</span>
         </label>
         <input
+          ref={nameInputRef}
           type="text"
           value={name}
           onChange={e => setName(e.target.value)}

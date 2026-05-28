@@ -39,7 +39,7 @@ export function WalletDropdown({
   }
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <button className="group flex min-h-[34px] items-center gap-2 rounded-full border border-white bg-[var(--color-bg-deepest)] px-3 py-1.5 text-white transition-colors hover:bg-white hover:text-black">
           <Image
@@ -56,7 +56,7 @@ export function WalletDropdown({
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="w-60 rounded-none border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-1.5 text-[var(--color-text-secondary)] shadow-[var(--shadow-elevated)]"
+        className="z-[110] w-60 rounded-none border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-1.5 text-[var(--color-text-secondary)] shadow-[var(--shadow-elevated)]"
         align="end"
       >
         <DropdownMenuLabel className="px-2 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-muted)]">

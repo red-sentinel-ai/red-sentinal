@@ -83,6 +83,11 @@ export function SyndicateStep3({ syndicateAddress, selectedToken, onComplete }: 
       const checkData = await checkRes.json()
       if (checkData.exists) {
         toast.error('A sentinel with this name already exists')
+        const nameInput = document.querySelector<HTMLInputElement>('input[name="agentName"]')
+        if (nameInput) {
+          nameInput.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          setTimeout(() => nameInput.focus({ preventScroll: true }), 400)
+        }
         return
       }
 
