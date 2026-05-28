@@ -230,10 +230,17 @@ export default function DefendPageClient() {
       validateForm(customProvider.isValidated)
     )
     if (result?.nameExists) {
+      const message = 'This Sentinel name is already taken. Please choose another.'
       setErrors(prev => ({
         ...prev,
-        agentName: 'This Sentinel name is already taken. Please choose another.',
+        agentName: message,
       }))
+      toast.error(message)
+      const nameInput = document.querySelector<HTMLInputElement>('input[name="agentName"]')
+      if (nameInput) {
+        nameInput.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        setTimeout(() => nameInput.focus({ preventScroll: true }), 400)
+      }
     }
   }
 

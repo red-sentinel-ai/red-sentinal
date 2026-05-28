@@ -17,7 +17,7 @@ export function ChainSwitcher() {
   const active = CHAINS[activeChain]
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <button className="font-body flex min-h-[34px] items-center gap-2 bg-[var(--color-bg-deepest)] px-1 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.1em] text-white transition-opacity hover:opacity-70 md:text-[11px]">
           <Image
