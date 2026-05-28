@@ -40,7 +40,7 @@ export function SyndicateStep3({ syndicateAddress, selectedToken, onComplete }: 
   const { countTokens: countAttackGoalTokens } = useTokenCount()
   const { countTokens: countJuryPromptTokens } = useTokenCount()
 
-  const { formData, errors, handleChange, validateForm, setFormData } = useDefendForm({
+  const { formData, errors, handleChange, validateForm, setFormData, setErrors } = useDefendForm({
     selectedToken,
     tokenCount,
     countTokens,
@@ -82,7 +82,9 @@ export function SyndicateStep3({ syndicateAddress, selectedToken, onComplete }: 
       )
       const checkData = await checkRes.json()
       if (checkData.exists) {
-        toast.error('A sentinel with this name already exists')
+        const message = 'This Sentinel name is already taken. Please choose another.'
+        setErrors(prev => ({ ...prev, agentName: message }))
+        toast.error(message)
         const nameInput = document.querySelector<HTMLInputElement>('input[name="agentName"]')
         if (nameInput) {
           nameInput.scrollIntoView({ behavior: 'smooth', block: 'center' })
