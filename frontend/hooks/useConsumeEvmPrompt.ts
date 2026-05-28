@@ -1,10 +1,10 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { useWriteContract, usePublicClient, useAccount } from 'wagmi'
+import { useWriteContract, usePublicClient, useAccount, useChainId } from 'wagmi'
 import {  decodeEventLog } from 'viem'
 import { toast } from 'sonner'
-import { BNB_CONFIG } from '@/constants/evm'
+import { getEvmConfig } from '@/constants/evm'
 import { ethers } from "ethers";
 import { SENTINEL_ABI, ERC20_ABI } from '@/lib/evm/abi'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
@@ -48,6 +48,8 @@ export function useConsumeEvmPrompt({
 }: UseConsumeEvmPromptOptions = {}) {
   const { address: walletAddress } = useEVMWallet()
   const { chain: currentChain } = useAccount()
+  const chainId = useChainId()
+  const evmCfg = getEvmConfig(chainId)
   const { writeContractAsync } = useWriteContract()
   const publicClient = usePublicClient()
 
@@ -75,7 +77,7 @@ export function useConsumeEvmPrompt({
         // Fetch effective cost from contract (accounts for attack count multiplier)
         if (!publicClient) throw new Error('No public client available')
         const latestEffectiveCost = await publicClient.readContract({
-          address: BNB_CONFIG.contractAddress,
+          address: evmCfg.contractAddress,
           abi: SENTINEL_ABI,
           functionName: 'getEffectiveCost',
           args: [agentDetails.agent_id],
@@ -90,7 +92,7 @@ export function useConsumeEvmPrompt({
           address: tokenAddress,
           abi: ERC20_ABI,
           functionName: 'approve',
-          args: [BNB_CONFIG.contractAddress, paymentAmount],
+          args: [evmCfg.contractAddress, paymentAmount],
         })
         // Wait for BSC block (~3s)
         await new Promise(r => setTimeout(r, 3000))
@@ -99,7 +101,7 @@ export function useConsumeEvmPrompt({
         if (showToasts) toast.info('Processing payment...')
         const attackTxHash = await writeContractAsync({
           ...txArgs,
-          address: BNB_CONFIG.contractAddress,
+          address: evmCfg.contractAddress,
           abi: SENTINEL_ABI,
           functionName: 'requestAttack',
           args: [agentDetails.agent_id, paymentAmount],
@@ -151,6 +153,7 @@ export function useConsumeEvmPrompt({
             message,
             attack_id: Number(attackId),
             attacker: walletAddress,
+            chainId,
           }),
         })
 
@@ -188,7 +191,7 @@ export function useConsumeEvmPrompt({
         if (showToasts) toast.info('Finalizing transaction...')
         const consumeTxHash = await writeContractAsync({
           ...txArgs,
-          address: BNB_CONFIG.contractAddress,
+          address: evmCfg.contractAddress,
           abi: SENTINEL_ABI,
           functionName: 'consumePrompt',
           args: [

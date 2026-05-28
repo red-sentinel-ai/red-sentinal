@@ -1,8 +1,8 @@
 'use client'
 
-import { useReadContract, useReadContracts } from 'wagmi'
+import { useReadContract, useReadContracts, useChainId } from 'wagmi'
 import { SYNDICATE_ABI, SENTINEL_ABI } from '@/lib/evm/abi'
-import { BNB_CONFIG } from '@/constants/evm'
+import { getEvmConfig } from '@/constants/evm'
 
 export interface SyndicateContractInfo {
   owner: `0x${string}` | undefined
@@ -42,9 +42,10 @@ export function useSyndicateMemberInfo(
 
 export function useSyndicateWithdrawalUnlock(agentId: string | undefined) {
   const enabled = !!agentId
+  const evmCfg = getEvmConfig(useChainId())
 
   const { data, isLoading } = useReadContract({
-    address: BNB_CONFIG.contractAddress,
+    address: evmCfg.contractAddress,
     abi: SENTINEL_ABI,
     functionName: 'getWithdrawalUnlockTimestamp' as any,
     args: enabled ? [agentId] : undefined,

@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import { CheckCircle, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
-import { BNB_CONFIG } from '@/constants/evm'
+import { useChainId } from 'wagmi'
+import { getEvmConfig } from '@/constants/evm'
 import { SyndicateStepper } from './SyndicateStepper'
 import { SyndicateStep1 } from './SyndicateStep1'
 import { SyndicateStep2 } from './SyndicateStep2'
@@ -23,6 +24,7 @@ function slugify(name: string) {
 }
 
 export function SyndicateLaunchFlow() {
+  const evmCfg = getEvmConfig(useChainId())
   const [step, setStep] = useState(1)
   const [deployedInfo, setDeployedInfo] = useState<DeployedInfo | null>(null)
   const [launchedAgentId, setLaunchedAgentId] = useState<string | null>(null)
@@ -94,7 +96,7 @@ export function SyndicateLaunchFlow() {
             <div className="flex items-center justify-between">
               <span className="text-[var(--color-text-muted)]">Transaction</span>
               <a
-                href={`${BNB_CONFIG.explorerUrl}/tx/${launchedTxHash}`}
+                href={`${evmCfg.explorerUrl}/tx/${launchedTxHash}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1 text-xs text-[var(--color-gold-primary)] hover:underline"

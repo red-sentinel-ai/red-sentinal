@@ -1,11 +1,11 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { useWriteContract, useAccount } from 'wagmi'
+import { useWriteContract, useAccount, useChainId } from 'wagmi'
 import { waitForTransactionReceipt } from '@wagmi/core'
 import { toast } from 'sonner'
 import { wagmiConfig } from '@/lib/wagmi'
-import { BNB_CONFIG } from '@/constants/evm'
+import { getEvmConfig } from '@/constants/evm'
 import { SENTINEL_ABI, ERC20_ABI } from '@/lib/evm/abi'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
 
@@ -27,6 +27,8 @@ export const useFundAgentEVM = (options: UseFundAgentEVMOptions = {}) => {
   const { onSuccess, onError, showToasts = true } = options
   const { address: walletAddress } = useEVMWallet()
   const { chain: currentChain } = useAccount()
+  const chainId = useChainId()
+  const evmCfg = getEvmConfig(chainId)
   const { writeContractAsync } = useWriteContract()
 
   const [isLoading, setIsLoading] = useState(false)
@@ -54,7 +56,7 @@ export const useFundAgentEVM = (options: UseFundAgentEVMOptions = {}) => {
           address: tokenAddress as `0x${string}`,
           abi: ERC20_ABI,
           functionName: 'approve',
-          args: [BNB_CONFIG.contractAddress, amountRaw],
+          args: [evmCfg.contractAddress, amountRaw],
         })
 
         await waitForTransactionReceipt(wagmiConfig, { hash: approveTxHash })
@@ -62,7 +64,7 @@ export const useFundAgentEVM = (options: UseFundAgentEVMOptions = {}) => {
         if (showToasts) toast.info('Adding funds...')
         const txHash = await writeContractAsync({
           ...txArgs,
-          address: BNB_CONFIG.contractAddress,
+          address: evmCfg.contractAddress,
           abi: SENTINEL_ABI,
           functionName: 'fundAgent',
           args: [agentId, amountRaw],

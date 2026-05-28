@@ -13,10 +13,12 @@ export const registerAgentUtil = async (
   customProviderDetails?: {
     apiBaseUrl: string
     apiKey: string
-  }
+  },
+  chainId?: number
 ) => {
   const body: Record<string, any> = {
     chain,
+    chainId,
     system_prompt: systemPrompt,
     cost_per_message: feePerMessage,
     creator: creatorAddress,
