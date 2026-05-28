@@ -128,6 +128,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
       consumePrompt = solanaConsumePrompt
       break
     case 'bnb':
+    case 'bot':
       consumePrompt = evmConsumePrompt as typeof suiConsumePrompt
       break
   }
@@ -164,6 +165,9 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
           break
         case 'bnb':
           chainName = 'BNB Chain'
+          break
+        case 'bot':
+          chainName = 'BOT Chain'
           break
       }
       setSubmitError(`Switch to ${chainName} to attack this sentinel`)
