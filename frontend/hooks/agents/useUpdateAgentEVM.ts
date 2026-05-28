@@ -1,10 +1,10 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { useWriteContract, useAccount } from 'wagmi'
+import { useWriteContract, useAccount, useChainId } from 'wagmi'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
-import { BNB_CONFIG } from '@/constants/evm'
+import { getEvmConfig } from '@/constants/evm'
 import { SENTINEL_ABI } from '@/lib/evm/abi'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
 import { AGENT_DETAILS_FULL_QUERY_KEY } from './useAgentDetails'
@@ -12,6 +12,7 @@ import { AGENT_DETAILS_FULL_QUERY_KEY } from './useAgentDetails'
 export const useUpdateAgentEVM = () => {
   const { address: walletAddress } = useEVMWallet()
   const { chain: currentChain } = useAccount()
+  const evmCfg = getEvmConfig(useChainId())
   const { writeContractAsync } = useWriteContract()
   const queryClient = useQueryClient()
   const [isLoading, setIsLoading] = useState(false)
@@ -28,7 +29,7 @@ export const useUpdateAgentEVM = () => {
         await writeContractAsync({
           account: walletAddress,
           chain: currentChain ?? null,
-          address: BNB_CONFIG.contractAddress,
+          address: evmCfg.contractAddress,
           abi: SENTINEL_ABI,
           functionName: 'updateAgentCost',
           args: [agentId, newCostRaw],

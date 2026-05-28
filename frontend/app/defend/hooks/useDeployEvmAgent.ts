@@ -1,10 +1,10 @@
 'use client'
 
-import { useWriteContract, useAccount } from 'wagmi'
+import { useWriteContract, useAccount, useChainId } from 'wagmi'
 import { waitForTransactionReceipt } from '@wagmi/core'
 import { parseUnits } from 'viem'
 import { wagmiConfig } from '@/lib/wagmi'
-import { BNB_CONFIG } from '@/constants/evm'
+import { getEvmConfig } from '@/constants/evm'
 import { SENTINEL_ABI, ERC20_ABI } from '@/lib/evm/abi'
 import { buildEvmSignature, bytesToHex32 } from '@/lib/evm/signature'
 import type { SupportedToken } from '@/constants'
@@ -20,6 +20,8 @@ export function useDeployEvmAgent({
   selectedEvmToken,
 }: UseDeployEvmAgentOptions): ChainDeployHook {
   const { address: walletAddress, chain: currentChain } = useAccount()
+  const chainId = useChainId()
+  const evmCfg = getEvmConfig(chainId)
   const { writeContractAsync } = useWriteContract()
 
   const executeTransaction = async (
@@ -44,14 +46,14 @@ export function useDeployEvmAgent({
       address: tokenAddress,
       abi: ERC20_ABI,
       functionName: 'approve',
-      args: [BNB_CONFIG.contractAddress, initialFundRaw],
+      args: [evmCfg.contractAddress, initialFundRaw],
     })
 
     await waitForTransactionReceipt(wagmiConfig, { hash: approveTxHash })
 
     const registerTxHash = await writeContractAsync({
       ...txArgs,
-      address: BNB_CONFIG.contractAddress,
+      address: evmCfg.contractAddress,
       abi: SENTINEL_ABI,
       functionName: 'registerAgent',
       args: [

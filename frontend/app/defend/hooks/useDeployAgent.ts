@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { parseUnits } from 'viem'
 import { toast } from 'sonner'
 import posthog from 'posthog-js'
+import { useChainId } from 'wagmi'
 import { useActiveChain } from '@/context/ActiveChainContext'
 import { useAgentObjectNames } from '@/hooks/useAgentObjectNames'
 import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
@@ -32,6 +33,7 @@ export function useDeployAgent({
   selectedImage,
 }: UseDeployAgentOptions) {
   const { activeChain } = useActiveChain()
+  const evmChainId = useChainId()
   const { addAgentObjectIdWithName } = useAgentObjectNames()
   const { mutate: createAgent } = useCreateAgent()
 
@@ -47,13 +49,13 @@ export function useDeployAgent({
 
   const getWalletAddress = (): string | null => {
     if (activeChain === 'solana') return solanaDeploy.walletAddress
-    if (activeChain === 'bnb') return evmDeploy.walletAddress
+    if (activeChain === 'bnb' || activeChain === 'bot') return evmDeploy.walletAddress
     return suiDeploy.walletAddress
   }
 
   const getActiveTokenDecimals = (): number => {
     if (activeChain === 'solana') return selectedSolanaToken.decimals
-    if (activeChain === 'bnb') return selectedEvmToken.decimals
+    if (activeChain === 'bnb' || activeChain === 'bot') return selectedEvmToken.decimals
     return selectedToken.decimals
   }
 
@@ -132,7 +134,7 @@ export function useDeployAgent({
 
       // 2. Register with TEE (chain-aware)
       const decimals = getActiveTokenDecimals()
-      const feePerMessage = activeChain === 'bnb'
+      const feePerMessage = activeChain === 'bnb' || activeChain === 'bot'
         ? Number(parseUnits(formData.feePerMessage, decimals))
         : parseFloat(formData.feePerMessage) * Math.pow(10, decimals)
       const isCustom = formData.llmProvider === 'custom'
@@ -147,7 +149,8 @@ export function useDeployAgent({
         formData.attackGoal,
         formData.juryPrompt,
         activeChain,
-        isCustom ? { apiBaseUrl: formData.customEndpointUrl, apiKey: formData.customApiKey } : undefined
+        isCustom ? { apiBaseUrl: formData.customEndpointUrl, apiKey: formData.customApiKey } : undefined,
+        activeChain === 'bnb' || activeChain === 'bot' ? evmChainId : undefined
       )
 
       // 3. Execute chain-specific transaction
@@ -155,7 +158,7 @@ export function useDeployAgent({
 
       if (activeChain === 'solana') {
         result = await solanaDeploy.executeTransaction(teeResponse)
-      } else if (activeChain === 'bnb') {
+      } else if (activeChain === 'bnb' || activeChain === 'bot') {
         result = await evmDeploy.executeTransaction(teeResponse)
       } else {
         result = await suiDeploy.executeTransaction(teeResponse)
