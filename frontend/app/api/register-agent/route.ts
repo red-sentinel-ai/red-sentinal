@@ -1,14 +1,18 @@
 import { APP_NETWORK, LOCAL_API_PATH } from '@/constants'
 import { SOLANA_TEE_API_PATH, SOLANA_TEE_NETWORK } from '@/constants/solana'
-import { EVM_TEE_API_PATH, EVM_TEE_NETWORK } from '@/constants/evm'
+import { EVM_TEE_API_PATH, EVM_TEE_NETWORK, resolveEvmTeeNetwork } from '@/constants/evm'
 import { NextRequest, NextResponse } from 'next/server'
 
-function getTeeUrl(chain: string): string {
+function getTeeUrl(chain: string, chainId?: number): string {
   switch (chain) {
     case 'solana':
       return `${SOLANA_TEE_API_PATH}/${SOLANA_TEE_NETWORK}/register-agent`
     case 'bnb':
-      return `${EVM_TEE_API_PATH}/${EVM_TEE_NETWORK}/register-agent`
+    case 'bot':
+    case 'evm': {
+      const teeNetwork = chainId ? resolveEvmTeeNetwork(chainId) : EVM_TEE_NETWORK
+      return `${EVM_TEE_API_PATH}/${teeNetwork}/register-agent`
+    }
     case 'sui':
     default:
       return `${LOCAL_API_PATH}/${APP_NETWORK}/register-agent`
@@ -18,9 +22,9 @@ function getTeeUrl(chain: string): string {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { chain, ...payload } = body
+    const { chain, chainId, ...payload } = body
 
-    const teeUrl = getTeeUrl(chain)
+    const teeUrl = getTeeUrl(chain, chainId)
 
     const response = await fetch(teeUrl, {
       method: 'POST',
