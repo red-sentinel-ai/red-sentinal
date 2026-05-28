@@ -1,10 +1,10 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { useWriteContract, useAccount } from 'wagmi'
+import { useWriteContract, useAccount, useChainId } from 'wagmi'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
-import { BNB_CONFIG } from '@/constants/evm'
+import { getEvmConfig } from '@/constants/evm'
 import { SENTINEL_ABI } from '@/lib/evm/abi'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
 import { AGENT_DETAILS_FULL_QUERY_KEY } from './useAgentDetails'
@@ -26,6 +26,7 @@ export const useWithdrawAgentEVM = (options: UseWithdrawAgentEVMOptions = {}) =>
   const { onSuccess, onError, showToasts = true } = options
   const { address: walletAddress } = useEVMWallet()
   const { chain: currentChain } = useAccount()
+  const evmCfg = getEvmConfig(useChainId())
   const { writeContractAsync } = useWriteContract()
   const queryClient = useQueryClient()
 
@@ -50,7 +51,7 @@ export const useWithdrawAgentEVM = (options: UseWithdrawAgentEVMOptions = {}) =>
         const txHash = await writeContractAsync({
           account: walletAddress,
           chain: currentChain ?? null,
-          address: BNB_CONFIG.contractAddress,
+          address: evmCfg.contractAddress,
           abi: SENTINEL_ABI,
           functionName: 'withdrawFromAgent',
           args: [agentId, amountRaw],

@@ -1,11 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { useAccount, useWalletClient } from 'wagmi'
+import { useAccount, useWalletClient, useChainId } from 'wagmi'
 import { waitForTransactionReceipt } from '@wagmi/core'
 import { wagmiConfig } from '@/lib/wagmi'
 import { SYNDICATE_ABI, SYNDICATE_BYTECODE } from '@/lib/evm/abi'
-import { BNB_CONFIG } from '@/constants/evm'
+import { getEvmConfig } from '@/constants/evm'
 import { SUI_SENTINEL_API_URL } from '@/constants'
 import { APP_NETWORK } from '@/constants/shared'
 
@@ -25,6 +25,7 @@ export interface DeployedSyndicate {
 
 export function useDeploySyndicate() {
   const { address: walletAddress, chain } = useAccount()
+  const evmCfg = getEvmConfig(useChainId())
   const { data: walletClient } = useWalletClient()
   const [isDeploying, setIsDeploying] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -40,7 +41,7 @@ export function useDeploySyndicate() {
         abi: SYNDICATE_ABI,
         bytecode: SYNDICATE_BYTECODE,
         args: [
-          BNB_CONFIG.contractAddress,
+          evmCfg.contractAddress,
           params.tokenAddress,
           walletAddress,
           params.whitelistEnabled,

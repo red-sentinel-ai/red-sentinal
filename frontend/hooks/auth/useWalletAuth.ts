@@ -77,7 +77,7 @@ export function useWalletAuth(): UseWalletAuthReturn {
       }
     }
 
-    if (activeChain === 'bnb') {
+    if (activeChain === 'bnb' || activeChain === 'bot') {
       if (!evmAddress) return null
       return {
         chainType: 'evm',
