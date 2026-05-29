@@ -7,11 +7,11 @@ import Image from 'next/image'
 import clsx from 'clsx'
 import { Loader2, Zap, Maximize2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ConnectModal, useCurrentAccount } from '@mysten/dapp-kit'
+import { ConnectModal } from '@mysten/dapp-kit'
 
 import { ATTACK_PROMPT_MAX_TOKENS, DEFAULT_PROFILE_URL, getTokenForCoinType } from '@/constants'
 import type { SupportedChain } from '@/constants/chains'
-import { truncateAddress } from '@/lib/utils'
+import { formatBalance, truncateAddress } from '@/lib/utils'
 import type { ConsumePromptApiResponse } from '@/types'
 import type { ChatEvent } from '@/hooks/agents/useAgentChatHistory'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
@@ -63,12 +63,11 @@ export default function ChatInterface({
   chainMismatch,
 }: ChatInterfaceProps) {
   const [promptInput, setPromptInput] = useState('')
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
+  const [pendingRound, setPendingRound] = useState<ChatMessage[] | null>(null)
   const [activeTab, setActiveTab] = useState<'global' | 'mine'>('global')
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const { address: connectedAddress } = useConnectedAddress()
-  const suiAccount = useCurrentAccount()
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
   const { isFocusMode, enableFocusMode } = useFocusMode()
 
@@ -77,26 +76,57 @@ export default function ChatInterface({
   const agentToken = getTokenForCoinType(agent.coin_type)
 
   useEffect(() => {
-    const unlock = Number(agent.unlock_timestamp)
-
-    if (!unlock || unlock === 0) {
-      setIsAttackPaused(false)
-      return
-    }
-
-    const check = () => {
-      const locked = Date.now() < unlock
-      setIsAttackPaused(!locked)
-      return locked
-    }
-
-    if (check()) {
-      const interval = setInterval(() => {
-        if (!check()) clearInterval(interval)
-      }, 60000)
-      return () => clearInterval(interval)
-    }
+    setIsAttackPaused(Number(agent.unlock_timestamp) < Date.now())
   }, [agent.unlock_timestamp])
+
+  // Source of truth: the indexed on-chain chat history.
+  const serverMessages = useMemo<ChatMessage[]>(() => {
+    const msgs: ChatMessage[] = []
+    for (const event of chatEvents) {
+      if (event.type !== 'prompt') continue
+      msgs.push({
+        id: `user-${event.id}`,
+        type: 'user',
+        content: event.content,
+        timestamp: event.timestamp,
+        sender: event.sender,
+        amountSent: event.amount_sent
+          ? formatBalance(BigInt(event.amount_sent), 9, 2)
+          : undefined,
+      })
+      msgs.push({
+        id: `agent-${event.id}`,
+        type: 'agent',
+        content: event.agent_response,
+        timestamp: event.timestamp,
+        isSuccess: event.success,
+        score: event.score,
+        txDigest: event.tx_digest,
+        juryResponse: event.jury_response ?? undefined,
+      })
+    }
+    return msgs
+  }, [chatEvents])
+
+  // Render the server history plus any in-flight optimistic round, dropping the
+  // optimistic round once the indexer has caught up with it (matched by
+  // sender + content so concurrent attacks in the global feed can't clear it early).
+  const chatMessages = useMemo<ChatMessage[]>(() => {
+    if (!pendingRound) return serverMessages
+    const optimisticUser = pendingRound[0]
+    const indexed = serverMessages.some(
+      m =>
+        m.type === 'user' &&
+        m.sender === optimisticUser.sender &&
+        m.content === optimisticUser.content
+    )
+    return indexed ? serverMessages : [...serverMessages, ...pendingRound]
+  }, [serverMessages, pendingRound])
+
+  // Once the server round is in, discard the now-stale optimistic copy.
+  useEffect(() => {
+    if (pendingRound && chatMessages === serverMessages) setPendingRound(null)
+  }, [chatMessages, serverMessages, pendingRound])
 
   const [isJuryModalOpen, setIsJuryModalOpen] = useState(false)
   const [selectedJuryResponse, setSelectedJuryResponse] = useState('')
@@ -171,35 +201,6 @@ export default function ChatInterface({
   }, [promptInput])
 
   useEffect(() => {
-    const initialMessages: ChatMessage[] = []
-    for (const event of chatEvents) {
-      if (event.type === 'prompt') {
-        initialMessages.push({
-          id: `user-${event.id}`,
-          type: 'user',
-          content: event.content,
-          timestamp: event.timestamp,
-          sender: event.sender,
-          amountSent: event.amount_sent
-            ? (Number(event.amount_sent) / 1_000_000_000).toFixed(2)
-            : undefined,
-        })
-        initialMessages.push({
-          id: `agent-${event.id}`,
-          type: 'agent',
-          content: event.agent_response,
-          timestamp: event.timestamp,
-          isSuccess: event.success,
-          score: event.score,
-          txDigest: event.tx_digest,
-          juryResponse: event.jury_response ?? undefined,
-        })
-      }
-    }
-    setChatMessages(initialMessages)
-  }, [chatEvents])
-
-  useEffect(() => {
     if (apiResponse) {
       const newAgentMessage: ChatMessage = {
         id: `agent-new-${Date.now()}`,
@@ -210,7 +211,7 @@ export default function ChatInterface({
         score: apiResponse.response.data.score,
         juryResponse: apiResponse.response.data.jury_response,
       }
-      setChatMessages(prevMessages => [...prevMessages, newAgentMessage])
+      setPendingRound(prev => (prev ? [...prev, newAgentMessage] : [newAgentMessage]))
       refetchAgent()
     }
   }, [apiResponse, refetchAgent])
@@ -225,10 +226,8 @@ export default function ChatInterface({
     e.preventDefault()
 
     if (!connectedAddress) {
-      if (!suiAccount?.address) {
         setIsWalletModalOpen(true)
         return
-      }
     }
 
     if (tokenCount > ATTACK_PROMPT_MAX_TOKENS) {
@@ -245,7 +244,7 @@ export default function ChatInterface({
       sender: connectedAddress,
     }
 
-    setChatMessages(prevMessages => [...prevMessages, newUserMessage])
+    setPendingRound([newUserMessage])
     await onSendMessage(promptInput)
     setPromptInput('')
   }
