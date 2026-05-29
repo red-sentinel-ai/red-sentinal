@@ -19,6 +19,7 @@ import type { BackendSyndicate, SyndicateModalId } from '@/types/Syndicate'
 import {
   buildFallbackMember,
   getDecimalsForSymbol,
+  getMaxRedeemableSharesWei,
   parseAddresses,
 } from '@/lib/syndicate-utils'
 import { SyndicateHero } from '@/components/syndicate/SyndicateHero'
@@ -123,6 +124,19 @@ export default function SyndicatePageClient({ identifier }: Props) {
   const formattedShares =
     shares !== undefined ? formatUnits(shares, tokenDecimals) : null
 
+  // Shares redeem only against idle syndicate funds, not capital locked in the
+  // sentinel — see getMaxRedeemableSharesWei. total_funds === totalManagedAssets.
+  const maxRedeemableSharesWei = getMaxRedeemableSharesWei({
+    shares,
+    totalShares: meta ? BigInt(meta.total_shares) : undefined,
+    totalManagedAssets: meta ? BigInt(meta.total_funds) : undefined,
+    idlePrincipal: idlePrincipalWei !== undefined ? BigInt(idlePrincipalWei) : undefined,
+  })
+  const formattedMaxRedeemable =
+    maxRedeemableSharesWei !== undefined
+      ? formatUnits(maxRedeemableSharesWei, tokenDecimals)
+      : null
+
   const refresh = () => refetchMeta()
   const openModal = (id: SyndicateModalId) => setActiveModal(id)
 
@@ -198,6 +212,14 @@ export default function SyndicatePageClient({ identifier }: Props) {
   async function handleRedeem() {
     if (!inputValue) return
     const sharesBigInt = BigInt(Math.floor(parseFloat(inputValue) * 10 ** tokenDecimals))
+    // Pre-check liquidity so the user gets a readable error instead of an on-chain
+    // InsufficientLiquidity revert when funds are locked in the sentinel.
+    if (maxRedeemableSharesWei !== undefined && sharesBigInt > maxRedeemableSharesWei) {
+      toast.error(
+        `You can redeem up to ${parseFloat(formattedMaxRedeemable ?? '0').toFixed(4)} shares right now — the rest of the value is locked in the sentinel.`
+      )
+      return
+    }
     await runAction(() => redeem(sharesBigInt), 'Redemption successful')
   }
 
@@ -315,6 +337,8 @@ export default function SyndicatePageClient({ identifier }: Props) {
         setInputValue={setInputValue}
         tokenSymbol={tokenSymbol}
         formattedShares={formattedShares}
+        formattedMaxRedeemable={formattedMaxRedeemable}
+        formattedIdle={formattedIdle}
         loading={memberLoading === 'redeem'}
         onSubmit={handleRedeem}
       />
