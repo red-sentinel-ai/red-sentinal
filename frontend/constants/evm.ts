@@ -71,14 +71,14 @@ export const BNB_TOKEN: SupportedToken = {
 export const BNB_TESTNET_CONFIG = {
   chainId: 97,
   rpcUrl: process.env.NEXT_PUBLIC_BNB_TESTNET_RPC_URL ?? 'https://data-seed-prebsc-1-s1.bnbchain.org:8545',
-  contractAddress: '0x2346caecCcE1dFbca22fD8974Af77CFA42F7238D' as `0x${string}`,
+  contractAddress: '0x41730fab3F81Dd50Fbab78150C52Cc5fFFCEeB42' as `0x${string}`,
   explorerUrl: 'https://testnet.bscscan.com',
 }
 
 export const BNB_MAINNET_CONFIG = {
   chainId: 56,
   rpcUrl: process.env.NEXT_PUBLIC_BNB_MAINNET_RPC_URL ?? 'https://bsc-dataseed.binance.org/',
-  contractAddress: '0xAE3B5C52Aee124F0C9466B8d57f1eED17ccebF6d' as `0x${string}`,
+  contractAddress: '0x41730fab3F81Dd50Fbab78150C52Cc5fFFCEeB42' as `0x${string}`,
   explorerUrl: 'https://bscscan.com',
 }
 
