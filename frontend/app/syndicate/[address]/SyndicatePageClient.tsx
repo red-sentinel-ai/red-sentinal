@@ -9,10 +9,7 @@ import { Wallet } from 'lucide-react'
 import { SUI_SENTINEL_API_URL } from '@/constants'
 import { APP_NETWORK } from '@/constants/shared'
 import { formatTokenAmount } from '@/lib/utils'
-import {
-  useSyndicateMemberInfo,
-  useSyndicateWithdrawalUnlock,
-} from '@/hooks/syndicate/useSyndicateInfo'
+import { useSyndicatePendingFees } from '@/hooks/syndicate/useSyndicateInfo'
 import { useSyndicateOwnerActions } from '@/hooks/syndicate/useSyndicateOwnerActions'
 import { useSyndicateMemberActions } from '@/hooks/syndicate/useSyndicateMemberActions'
 import type { BackendSyndicate, SyndicateModalId } from '@/types/Syndicate'
@@ -76,14 +73,20 @@ export default function SyndicatePageClient({ identifier }: Props) {
   const tokenSymbol = meta?.token_symbol ?? 'TOKEN'
   const tokenDecimals = meta ? getDecimalsForSymbol(meta.token_symbol) : 18
 
-  // Per-wallet state stays on RPC — keyed by connected wallet, not server-cached.
-  const {
-    shares,
-    pendingFees,
-    isWhitelisted,
-    isLoading: isMemberLoading,
-  } = useSyndicateMemberInfo(address, connectedAddress)
-  const { isLocked } = useSyndicateWithdrawalUnlock(agentId)
+  const { pendingFees } = useSyndicatePendingFees(address, connectedAddress)
+
+  const connectedLower = connectedAddress?.toLowerCase()
+  const myMember = connectedLower
+    ? meta?.members_detailed?.find(m => m.address === connectedLower)
+    : undefined
+  const shares = myMember ? BigInt(myMember.shares) : undefined
+  const isWhitelisted = connectedLower ? meta?.members?.includes(connectedLower) : undefined
+  const isMemberLoading = !meta
+
+  const unlockTimestamp = meta?.agent_unlock_timestamp
+    ? Number(meta.agent_unlock_timestamp)
+    : null
+  const isLocked = unlockTimestamp !== null && Date.now() < unlockTimestamp
 
   // Buttons stay disabled until meta resolves; the placeholder is never used.
   const safeAddress: `0x${string}` = address ?? ZERO_ADDR
@@ -172,6 +175,10 @@ export default function SyndicatePageClient({ identifier }: Props) {
 
   async function handleWithdraw() {
     if (!inputValue) return
+    if (isLocked) {
+      toast.error('Withdrawal is locked for 14 days after the sentinel was last funded')
+      return
+    }
     await runAction(
       () => withdrawFromSentinel(inputValue, tokenDecimals),
       'Withdrawn to syndicate'
@@ -303,6 +310,7 @@ export default function SyndicatePageClient({ identifier }: Props) {
         inputValue={inputValue}
         setInputValue={setInputValue}
         tokenSymbol={tokenSymbol}
+        unlockTimestamp={unlockTimestamp}
         loading={ownerLoading === 'withdraw'}
         onSubmit={handleWithdraw}
       />

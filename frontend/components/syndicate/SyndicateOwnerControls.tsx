@@ -37,10 +37,10 @@ export function SyndicateOwnerControls({
         />
         <SyndicateControlItem
           title="Withdraw Funds from Sentinel"
-          subtitle="Move liquidity to Idle Funds"
+          subtitle={isLocked ? 'Locked · 14-day window after funding' : 'Move liquidity to Idle Funds'}
           icon={<ArrowLeft className="h-5 w-5" />}
           onClick={() => openModal('withdrawSentinel')}
-          disabled={!agentId || isLocked}
+          disabled={!agentId}
         />
         <SyndicateControlItem
           title="Whitelist Operators"

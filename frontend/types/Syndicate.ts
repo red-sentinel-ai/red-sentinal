@@ -40,6 +40,8 @@ export interface BackendSyndicate {
   agent_initial_fund: string
   agent_total_funded: string
   agent_total_withdrawn: string
+  agent_last_funded_timestamp?: string | null
+  agent_unlock_timestamp?: string | null
   creator_fees_claimed_total: string
   contributor_fees_claimed_total: string
   members: string[]
