@@ -25,7 +25,6 @@ import type { AgentDetailsFull } from '@/hooks/agents/useAgentDetails'
 import { formatDuration, cn, buildAgentShareTweetUrl, truncateAddress } from '@/lib/utils'
 import { Skeleton } from '@/components/ui'
 import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
-import { SparklineChart } from '../ui/common/SparklineChart'
 import { TokenAmount } from '../ui/common/TokenAmount'
 import { SocialMissionModal } from '@/components/rewards/SocialMissionModal'
 import { REWARDS_CONSTANTS } from '@/constants/rewards'
@@ -265,14 +264,6 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
                     </div>
                   )}
                 </div>
-                {!isDrained && (
-                  <div className="mt-3">
-                    <SparklineChart
-                      data={prizePoolData?.history.map(p => p.value) || []}
-                      minValue={0}
-                    />
-                  </div>
-                )}
               </div>
             </div>
             {!isDrained && prizePoolData && prizePoolData.history.length > 0 && (
@@ -311,7 +302,7 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
               <span className="industrial-header mb-1 block text-[9px] text-[var(--color-text-muted)]">
                 OWNER
               </span>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-col items-start gap-1.5">
                 <Link
                   href={ownerHref}
                   className="industrial-header text-accent text-[11px] transition-opacity hover:opacity-70"
@@ -319,7 +310,7 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
                   {truncateAddress(agent.creator)}
                 </Link>
                 {isSyndicate && (
-                  <span className="industrial-header border border-[var(--color-gold-primary)] px-1.5 py-0.5 text-[9px] tracking-widest text-[var(--color-gold-primary)]">
+                  <span className="industrial-header inline-block border border-[var(--color-gold-primary)] px-1.5 py-0.5 text-[9px] tracking-widest text-[var(--color-gold-primary)]">
                     SYNDICATE
                   </span>
                 )}
