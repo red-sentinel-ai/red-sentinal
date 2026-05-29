@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { Mail, Check, Loader2 } from 'lucide-react'
 import { useUserProfile } from '@/hooks/profile/useUserProfile'
 import { useSocialStatus } from '@/hooks/profile/useSocialStatus'
@@ -294,6 +295,32 @@ export function ProfileSocialConnections() {
 
           <p className="text-[9px] text-[var(--color-text-faint)]">
             Get notified when someone attacks your Sentinel
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-3 p-5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Image
+                src="/icons/discord.svg"
+                alt="Discord"
+                width={16}
+                height={16}
+                className="h-4 w-4 opacity-50"
+              />
+              <span className="industrial-label">Discord</span>
+            </div>
+          </div>
+
+          <button
+            disabled
+            className="button-ghost-terminal w-full cursor-not-allowed py-2 text-[10px] opacity-50"
+          >
+            Coming Soon
+          </button>
+
+          <p className="text-[9px] text-[var(--color-text-faint)]">
+            Link your Discord for community perks
           </p>
         </div>
       </div>
