@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Loader2, ExternalLink } from 'lucide-react'
 import { toast } from 'sonner'
+import { parseUnits } from 'viem'
 import { SENTINEL_IMAGES } from '@/constants/asset_paths'
 import { SYSTEM_PROMPT_MAX_TOKENS } from '@/constants'
 import { FormInput } from '@/app/defend/components/FormInput'
@@ -19,10 +20,16 @@ import type { SupportedToken } from '@/constants/shared'
 interface SyndicateStep3Props {
   syndicateAddress: `0x${string}`
   selectedToken: SupportedToken
+  availableBalance: string
   onComplete: (agentId: string, txHash: string, agentName: string) => void
 }
 
-export function SyndicateStep3({ syndicateAddress, selectedToken, onComplete }: SyndicateStep3Props) {
+export function SyndicateStep3({
+  syndicateAddress,
+  selectedToken,
+  availableBalance,
+  onComplete,
+}: SyndicateStep3Props) {
   const [agentImage, setAgentImage] = useState<File | null>(null)
   const [imagePickerOpen, setImagePickerOpen] = useState(false)
   const [selectedImage, setSelectedImage] = useState<{
@@ -67,12 +74,42 @@ export function SyndicateStep3({ syndicateAddress, selectedToken, onComplete }: 
     agentImage,
   })
 
+  // The initial bounty pool is drawn from the syndicate's idle balance (the
+  // capital deposited in step 2) — NOT from the launcher's wallet. registerAgent
+  // reverts with InsufficientLiquidity if initialFund > idlePrincipal(). The
+  // syndicate was just funded with exactly `availableBalance` and holds no agent
+  // or fees yet, so that deposit IS the idle balance — no on-chain read needed.
+  const decimals = selectedToken.decimals
+  const availableWei = (() => {
+    try {
+      return availableBalance ? parseUnits(availableBalance, decimals) : 0n
+    } catch {
+      return 0n
+    }
+  })()
+
+  let bountyWei = 0n
+  try {
+    bountyWei = formData.initialBalance ? parseUnits(formData.initialBalance, decimals) : 0n
+  } catch {
+    bountyWei = 0n
+  }
+  const insufficientBounty = bountyWei > availableWei
+  const bountyError = insufficientBounty
+    ? `Exceeds available syndicate balance (${availableBalance || '0.00'} ${selectedToken.symbol})`
+    : undefined
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!validateForm(customProvider.isValidated)) {
       if (formData.llmProvider === 'custom' && !customProvider.isValidated) {
         toast.error('Please validate your custom provider connection before deploying')
       }
+      return
+    }
+
+    if (insufficientBounty) {
+      toast.error('Bounty pool exceeds the available syndicate balance')
       return
     }
 
@@ -269,17 +306,38 @@ export function SyndicateStep3({ syndicateAddress, selectedToken, onComplete }: 
 
       {/* Fee & Bounty */}
       <div className="grid grid-cols-2 gap-4">
-        <FormInput
-          label={`Bounty Pool (${selectedToken.symbol})`}
-          subLabel={`Min ${selectedToken.minimumAmount} ${selectedToken.symbol}`}
-          name="initialBalance"
-          value={formData.initialBalance}
-          onChange={handleChangeWithProviderReset}
-          error={errors.initialBalance}
-          type="number"
-          placeholder="0.00"
-          step="any"
-        />
+        <div className="flex flex-col gap-1.5">
+          <FormInput
+            label={`Bounty Pool (${selectedToken.symbol})`}
+            subLabel={`Drawn from syndicate balance · Min ${selectedToken.minimumAmount} ${selectedToken.symbol}`}
+            name="initialBalance"
+            value={formData.initialBalance}
+            onChange={handleChangeWithProviderReset}
+            error={errors.initialBalance || bountyError}
+            type="number"
+            placeholder="0.00"
+            step="any"
+          />
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-[var(--color-text-muted)]">
+              Available:{' '}
+              <span className="font-medium text-[var(--color-text-primary)]">
+                {availableBalance || '0.00'} {selectedToken.symbol}
+              </span>
+            </span>
+            {availableWei > 0n && (
+              <button
+                type="button"
+                onClick={() =>
+                  setFormData(prev => ({ ...prev, initialBalance: availableBalance }))
+                }
+                className="font-medium text-[var(--color-gold-primary)] hover:text-[var(--color-gold-light)]"
+              >
+                MAX
+              </button>
+            )}
+          </div>
+        </div>
         <FormInput
           label={`Fee Per Message (${selectedToken.symbol})`}
           subLabel="Earned per interaction"
@@ -297,7 +355,7 @@ export function SyndicateStep3({ syndicateAddress, selectedToken, onComplete }: 
 
       <button
         type="submit"
-        disabled={isLoading || tokenCount > SYSTEM_PROMPT_MAX_TOKENS || (formData.llmProvider === 'custom' && !customProvider.isValidated)}
+        disabled={isLoading || insufficientBounty || tokenCount > SYSTEM_PROMPT_MAX_TOKENS || (formData.llmProvider === 'custom' && !customProvider.isValidated)}
         className="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-gold-primary)] text-sm font-medium text-[var(--color-text-on-gold)] shadow-[var(--shadow-card)] transition-all hover:bg-[var(--color-gold-light)] disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isLoading ? (

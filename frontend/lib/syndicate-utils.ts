@@ -1,5 +1,25 @@
 import type { SyndicateMemberDetail } from '@/types/Syndicate'
 
+export function getMaxRedeemableSharesWei(args: {
+  shares: bigint | undefined
+  totalShares: bigint | undefined
+  totalManagedAssets: bigint | undefined
+  idlePrincipal: bigint | undefined
+}): bigint | undefined {
+  const { shares, totalShares, totalManagedAssets, idlePrincipal } = args
+  if (
+    shares === undefined ||
+    totalShares === undefined ||
+    totalManagedAssets === undefined ||
+    idlePrincipal === undefined
+  ) {
+    return undefined
+  }
+  if (totalShares === 0n || totalManagedAssets <= 0n) return 0n
+  const maxByLiquidity = (idlePrincipal * totalShares) / totalManagedAssets
+  return shares < maxByLiquidity ? shares : maxByLiquidity
+}
+
 export function getDecimalsForSymbol(symbol: string): number {
   const map: Record<string, number> = { USDC: 18, USDT: 18, WBNB: 18, BNB: 18 }
   return map[symbol] ?? 18

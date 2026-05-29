@@ -12,7 +12,7 @@ interface SyndicateStep2Props {
   tokenAddress: `0x${string}`
   tokenSymbol: string
   tokenDecimals: number
-  onComplete: () => void
+  onComplete: (depositedAmount: string) => void
 }
 
 export function SyndicateStep2({
@@ -36,7 +36,7 @@ export function SyndicateStep2({
     try {
       await deposit(syndicateAddress, tokenAddress, amount, tokenDecimals)
       toast.success('Deposit successful')
-      onComplete()
+      onComplete(amount)
     } catch (err: any) {
       toast.error(err.message || 'Deposit failed')
     }

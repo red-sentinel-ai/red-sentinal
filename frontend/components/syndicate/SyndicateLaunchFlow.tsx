@@ -27,6 +27,7 @@ export function SyndicateLaunchFlow() {
   const evmCfg = getEvmConfig(useChainId())
   const [step, setStep] = useState(1)
   const [deployedInfo, setDeployedInfo] = useState<DeployedInfo | null>(null)
+  const [depositedAmount, setDepositedAmount] = useState('')
   const [launchedAgentId, setLaunchedAgentId] = useState<string | null>(null)
   const [launchedAgentName, setLaunchedAgentName] = useState<string | null>(null)
   const [launchedTxHash, setLaunchedTxHash] = useState<string | null>(null)
@@ -36,7 +37,8 @@ export function SyndicateLaunchFlow() {
     setStep(2)
   }
 
-  const handleStep2Complete = () => {
+  const handleStep2Complete = (amount: string) => {
+    setDepositedAmount(amount)
     setStep(3)
   }
 
@@ -144,6 +146,7 @@ export function SyndicateLaunchFlow() {
           <SyndicateStep3
             syndicateAddress={deployedInfo.contractAddress}
             selectedToken={selectedToken}
+            availableBalance={depositedAmount}
             onComplete={handleStep3Complete}
           />
         )}
