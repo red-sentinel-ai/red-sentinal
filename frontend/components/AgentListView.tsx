@@ -20,6 +20,8 @@ import { SentinelRowSkeleton } from '@/components/attack/SentinelRowSkeleton'
 
 const BIG_BOUNTY_THRESHOLD_MIST = BigInt(20_000_000_000) // 20 SUI
 
+const MAX_TRENDING_SENTINELS = 8
+
 type BountyTab = 'all' | 'big_bounties'
 
 // A sentinel is browsable in a row when it's active and not in a withdrawal
@@ -61,6 +63,7 @@ export const AgentListView = () => {
   const trendingForRow = (trendingAgents || [])
     .filter(isBrowsable)
     .filter(a => !featuredIds.has(a.agent_id))
+    .slice(0, MAX_TRENDING_SENTINELS)
 
   const filteredAgents = (() => {
     let base =
