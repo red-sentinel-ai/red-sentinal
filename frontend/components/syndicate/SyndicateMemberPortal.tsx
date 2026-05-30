@@ -7,6 +7,9 @@ interface Props {
   pendingFees: bigint | undefined
   canDeposit: boolean
   agentId: string | undefined
+  tokenSymbol: string
+  unclaimedCreatorFees: string | null
+  hasUnclaimedCreatorFees: boolean
   openModal: (id: SyndicateModalId) => void
 }
 
@@ -15,6 +18,9 @@ export function SyndicateMemberPortal({
   pendingFees,
   canDeposit,
   agentId,
+  tokenSymbol,
+  unclaimedCreatorFees,
+  hasUnclaimedCreatorFees,
   openModal,
 }: Props) {
   const isActive = shares !== undefined && shares > 0n
@@ -40,26 +46,35 @@ export function SyndicateMemberPortal({
         <SyndicateMemberActionCard
           title="Deposit Principal"
           icon={<Wallet className="h-6 w-6" />}
+          description="Add funds to the pool and mint shares."
           onClick={() => openModal('deposit')}
           disabled={!canDeposit}
         />
         <SyndicateMemberActionCard
           title="Redeem Shares"
           icon={<LogOut className="h-6 w-6" />}
+          description="Burn shares for idle syndicate funds."
           onClick={() => openModal('redeem')}
           disabled={!shares || shares === 0n}
         />
         <SyndicateMemberActionCard
-          title="Claim Personal Fees"
-          icon={<Coins className="h-6 w-6" />}
-          onClick={() => openModal('claimFees')}
-          disabled={!pendingFees || pendingFees === 0n}
-        />
-        <SyndicateMemberActionCard
           title="Creator Rewards"
           icon={<Award className="h-6 w-6" />}
+          description="Pull the sentinel's earned fees into the pool, then they show up as your pending fees."
+          badge={
+            hasUnclaimedCreatorFees && unclaimedCreatorFees
+              ? `${unclaimedCreatorFees} ${tokenSymbol}`
+              : undefined
+          }
           onClick={() => openModal('creatorRewards')}
-          disabled={!agentId}
+          disabled={!agentId || !hasUnclaimedCreatorFees}
+        />
+        <SyndicateMemberActionCard
+          title="Claim Personal Fees"
+          icon={<Coins className="h-6 w-6" />}
+          description="Withdraw your distributed share of pulled fees."
+          onClick={() => openModal('claimFees')}
+          disabled={!pendingFees || pendingFees === 0n}
         />
       </div>
     </div>
