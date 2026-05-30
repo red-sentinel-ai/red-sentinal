@@ -73,7 +73,10 @@ export default function SyndicatePageClient({ identifier }: Props) {
   const tokenSymbol = meta?.token_symbol ?? 'TOKEN'
   const tokenDecimals = meta ? getDecimalsForSymbol(meta.token_symbol) : 18
 
-  const { pendingFees } = useSyndicatePendingFees(address, connectedAddress)
+  const { pendingFees, refetch: refetchPendingFees } = useSyndicatePendingFees(
+    address,
+    connectedAddress
+  )
 
   const connectedLower = connectedAddress?.toLowerCase()
   const myMember = connectedLower
@@ -127,6 +130,16 @@ export default function SyndicatePageClient({ identifier }: Props) {
   const formattedShares =
     shares !== undefined ? formatUnits(shares, tokenDecimals) : null
 
+  const unclaimedCreatorFeesWei = meta?.agent_unclaimed_creator_fees
+    ? BigInt(meta.agent_unclaimed_creator_fees)
+    : undefined
+  const formattedUnclaimedCreatorFees =
+    unclaimedCreatorFeesWei !== undefined
+      ? formatTokenAmount(unclaimedCreatorFeesWei.toString(), tokenDecimals)
+      : null
+  const hasUnclaimedCreatorFees =
+    unclaimedCreatorFeesWei !== undefined && unclaimedCreatorFeesWei > 0n
+
   // Shares redeem only against idle syndicate funds, not capital locked in the
   // sentinel — see getMaxRedeemableSharesWei. total_funds === totalManagedAssets.
   const maxRedeemableSharesWei = getMaxRedeemableSharesWei({
@@ -140,7 +153,10 @@ export default function SyndicatePageClient({ identifier }: Props) {
       ? formatUnits(maxRedeemableSharesWei, tokenDecimals)
       : null
 
-  const refresh = () => refetchMeta()
+  const refresh = () => {
+    refetchMeta()
+    refetchPendingFees()
+  }
   const openModal = (id: SyndicateModalId) => setActiveModal(id)
 
   // Handlers — all share the same try/catch/toast/refresh shape.
@@ -273,6 +289,9 @@ export default function SyndicatePageClient({ identifier }: Props) {
               pendingFees={pendingFees}
               canDeposit={canDeposit}
               agentId={agentId}
+              tokenSymbol={tokenSymbol}
+              unclaimedCreatorFees={formattedUnclaimedCreatorFees}
+              hasUnclaimedCreatorFees={hasUnclaimedCreatorFees}
               openModal={openModal}
             />
           ) : (
@@ -362,6 +381,8 @@ export default function SyndicatePageClient({ identifier }: Props) {
         open={activeModal === 'creatorRewards'}
         onClose={closeModal}
         loading={memberLoading === 'claimForSyndicate'}
+        tokenSymbol={tokenSymbol}
+        unclaimedCreatorFees={formattedUnclaimedCreatorFees}
         onSubmit={handleClaimCreatorRewards}
       />
     </div>

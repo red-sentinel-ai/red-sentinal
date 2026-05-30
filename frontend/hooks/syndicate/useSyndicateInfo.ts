@@ -17,7 +17,7 @@ export function useSyndicatePendingFees(
 ) {
   const enabled = !!syndicateAddress && !!memberAddress
 
-  const { data, isLoading } = useReadContract({
+  const { data, isLoading, refetch } = useReadContract({
     address: syndicateAddress,
     abi: SYNDICATE_ABI,
     functionName: 'pendingFees',
@@ -28,5 +28,6 @@ export function useSyndicatePendingFees(
   return {
     pendingFees: enabled ? (data as bigint | undefined) : undefined,
     isLoading,
+    refetch,
   }
 }
