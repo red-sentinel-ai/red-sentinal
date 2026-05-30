@@ -24,7 +24,10 @@ import { AttackStatusModal } from '@/components/AttackStatusModal'
 import ChatInterface from '@/components/agents/ChatInterface'
 import { AgentSidebar } from '@/components/agents/AgentSidebar'
 import { AgentReadMoreModal } from '@/components/agents/AgentReadMoreModal'
+import { ChatRoom } from '@/components/agents/ChatRoom'
 import { MobileAgentHeader } from './MobileAgentHeader'
+
+type ViewMode = 'attack' | 'chat'
 
 export default function AgentChallengePage({ slug }: { slug: string }) {
   const queryClient = useQueryClient()
@@ -140,16 +143,21 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   const [showResultModal, setShowResultModal] = useState(false)
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [viewMode, setViewMode] = useState<ViewMode>('attack')
   const isMobile = useMediaQuery('(max-width: 768px)')
 
   const handleTextChatClick = useCallback(() => {
     setIsSidebarOpen(false)
-    toast.info('Text chat selected')
+    setViewMode('chat')
   }, [])
 
   const handleVoiceChatClick = useCallback(() => {
     setIsSidebarOpen(false)
     toast.info('Voice chat handler placeholder')
+  }, [])
+
+  const handleBackToAttack = useCallback(() => {
+    setViewMode('attack')
   }, [])
 
   const handleSendMessage = async (prompt: string) => {
@@ -242,17 +250,21 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
         {/* Full width chat */}
         <div className="min-h-0 flex-1 overflow-hidden">
-          <ChatInterface
-            agent={agent}
-            chatEvents={chat?.messages ?? []}
-            eventsLoading={chatLoading}
-            apiResponse={apiResponse}
-            onSendMessage={handleSendMessage}
-            isSubmitting={isSubmitting}
-            submitError={submitError}
-            refetchAgent={refetch}
-            chainMismatch={chainMismatch}
-          />
+          {viewMode === 'chat' ? (
+            <ChatRoom agent={agent} onBack={handleBackToAttack} />
+          ) : (
+            <ChatInterface
+              agent={agent}
+              chatEvents={chat?.messages ?? []}
+              eventsLoading={chatLoading}
+              apiResponse={apiResponse}
+              onSendMessage={handleSendMessage}
+              isSubmitting={isSubmitting}
+              submitError={submitError}
+              refetchAgent={refetch}
+              chainMismatch={chainMismatch}
+            />
+          )}
         </div>
 
         {/* Sidebar drawer for focus mode */}
@@ -317,17 +329,21 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
           <ResizableHandle withHandle={true} className="bg-[var(--color-border-strong)]" />
           <ResizablePanel defaultSize={72}>
             <div className="relative h-full w-full">
-              <ChatInterface
-                agent={agent}
-                chatEvents={chat?.messages ?? []}
-                eventsLoading={chatLoading}
-                apiResponse={apiResponse}
-                onSendMessage={handleSendMessage}
-                isSubmitting={isSubmitting}
-                submitError={submitError}
-                refetchAgent={refetch}
-                chainMismatch={chainMismatch}
-              />
+              {viewMode === 'chat' ? (
+                <ChatRoom agent={agent} onBack={handleBackToAttack} />
+              ) : (
+                <ChatInterface
+                  agent={agent}
+                  chatEvents={chat?.messages ?? []}
+                  eventsLoading={chatLoading}
+                  apiResponse={apiResponse}
+                  onSendMessage={handleSendMessage}
+                  isSubmitting={isSubmitting}
+                  submitError={submitError}
+                  refetchAgent={refetch}
+                  chainMismatch={chainMismatch}
+                />
+              )}
               <AgentReadMoreModal
                 isOpen={isReadMoreOpen}
                 prompt={agent.prompt}
@@ -352,20 +368,26 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
   return (
     <div className="ios-scroll flex h-[calc(100dvh-64px)] flex-col bg-black">
-      <MobileAgentHeader agentName={agent.agent_name} onInfoClick={() => setIsSidebarOpen(true)} />
+      {viewMode !== 'chat' && (
+        <MobileAgentHeader agentName={agent.agent_name} onInfoClick={() => setIsSidebarOpen(true)} />
+      )}
 
       <div className="min-h-0 flex-1 overflow-hidden">
-        <ChatInterface
-          agent={agent}
-          chatEvents={chat?.messages ?? []}
-          eventsLoading={chatLoading}
-          apiResponse={apiResponse}
-          onSendMessage={handleSendMessage}
-          isSubmitting={isSubmitting}
-          submitError={submitError}
-          refetchAgent={refetch}
-          chainMismatch={chainMismatch}
-        />
+        {viewMode === 'chat' ? (
+          <ChatRoom agent={agent} onBack={handleBackToAttack} />
+        ) : (
+          <ChatInterface
+            agent={agent}
+            chatEvents={chat?.messages ?? []}
+            eventsLoading={chatLoading}
+            apiResponse={apiResponse}
+            onSendMessage={handleSendMessage}
+            isSubmitting={isSubmitting}
+            submitError={submitError}
+            refetchAgent={refetch}
+            chainMismatch={chainMismatch}
+          />
+        )}
       </div>
 
       <AnimatePresence>
