@@ -14,6 +14,9 @@ export interface SyndicateListItem {
   token_symbol: string
   whitelist_enabled: boolean
   agent_id: string | null
+  total_funds: string
+  members_count: number
+  status: 'active' | 'inactive' | null
   network: string
   created_at: string
 }
