@@ -3,8 +3,9 @@ import { Skeleton } from '@/components/ui/skeleton'
 export function SyndicateCardSkeleton() {
   return (
     <div className="flex flex-col overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-6">
-      <div className="mb-6 flex items-start justify-between">
-        <Skeleton className="h-14 w-14 rounded-lg" />
+      <div className="mb-6 flex items-center justify-between">
+        <Skeleton className="h-6 w-20 rounded-full" />
+        <Skeleton className="h-8 w-8 rounded-full" />
       </div>
       <Skeleton className="mb-2 h-7 w-40" />
       <Skeleton className="mb-1 h-5 w-full" />

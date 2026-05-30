@@ -39,11 +39,14 @@ function ChatMessageBubble({
   isOwnMessage,
 }: {
   message: ChatMessage
-  senderProfile: { display_name?: string; avatar_url?: string } | null
+  senderProfile: { username?: string; avatar_url?: string | null } | null
   isOwnMessage: boolean
 }) {
   const roleConfig = ROLE_CONFIG[message.sender_role]
   const RoleIcon = roleConfig.icon
+
+  const profileLink = `/u/${senderProfile?.username || message.sender_address}`
+  const displayName = senderProfile?.username || truncateAddress(message.sender_address)
 
   return (
     <motion.div
@@ -53,7 +56,7 @@ function ChatMessageBubble({
     >
       {/* Avatar */}
       <Link
-        href={`/u/${message.sender_address}`}
+        href={profileLink}
         className="group flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden border border-[var(--color-border-strong)] bg-[var(--color-bg-elevated)] transition-all hover:border-white"
       >
         <Image
@@ -72,10 +75,10 @@ function ChatMessageBubble({
           className={clsx('flex items-center gap-2', isOwnMessage && 'flex-row-reverse')}
         >
           <Link
-            href={`/u/${message.sender_address}`}
+            href={profileLink}
             className="industrial-header text-[10px] text-[var(--color-text-secondary)] transition-opacity hover:opacity-70"
           >
-            {senderProfile?.display_name || truncateAddress(message.sender_address)}
+            {displayName}
           </Link>
           <div className={clsx('flex items-center gap-1', roleConfig.color)}>
             <RoleIcon className="h-3 w-3" />
@@ -264,7 +267,7 @@ export function ChatRoom({ agent, onBack }: ChatRoomProps) {
             <ChatMessageBubble
               key={message.id}
               message={message}
-              senderProfile={userProfilesMap?.[message.sender_address] || null}
+              senderProfile={userProfilesMap?.[message.sender_address?.toLowerCase()] || null}
               isOwnMessage={message.sender_address === connectedAddress}
             />
           ))}

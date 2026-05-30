@@ -1,13 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getAddress, isAddress } from 'viem'
 import { supabaseServiceClient } from '@/db/config/server'
-
-const toChecksumIfEvm = (addr: string) => {
-  try {
-    if (isAddress(addr)) return getAddress(addr)
-  } catch {}
-  return addr
-}
 
 type UserWithWallets = {
   username: string
@@ -26,10 +18,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const normalizedAddresses = walletAddresses.map((a: string) => {
-      const lower = a.toLowerCase()
-      return toChecksumIfEvm(lower)
-    })
+    // Wallet addresses are stored lowercase in ss_wallet_connections (for every
+    // chain, incl. EVM), so always query in lowercase form.
+    const normalizedAddresses = walletAddresses.map((a: string) => a.toLowerCase())
 
     // Query wallet connections with user data
     const { data: walletConnections, error } = await supabaseServiceClient

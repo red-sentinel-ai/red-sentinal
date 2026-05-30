@@ -318,7 +318,7 @@ export default function ChatInterface({
                   key={message.id}
                   message={message}
                   agent={agent}
-                  senderProfile={userProfilesMap?.[message.sender!] || null}
+                  senderProfile={userProfilesMap?.[message.sender?.toLowerCase()] || null}
                   isWinningPrompt={isWinningUserPrompt}
                   onShowJury={() => message.juryResponse && handleShowJury(message.juryResponse)}
                 />
