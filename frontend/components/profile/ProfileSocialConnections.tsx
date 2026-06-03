@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { Mail, Check, Loader2 } from 'lucide-react'
 import { useUserProfile } from '@/hooks/profile/useUserProfile'
 import { useSocialStatus } from '@/hooks/profile/useSocialStatus'
-import { useSendEmailVerification } from '@/hooks/profile/useSendEmailVerification'
+import { useEmailOtpVerification } from '@/hooks/profile/useEmailOtpVerification'
 import { useTelegramVerification } from '@/hooks/profile/useTelegramVerification'
 import { useDisconnectProvider } from '@/hooks/rewards/useDisconnectProvider'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
@@ -24,22 +24,25 @@ const TELEGRAM_BOT_USERNAME = 'suisentinel_bot'
 
 export function ProfileSocialConnections() {
   const { address } = useConnectedAddress()
-  const { user } = useAuth()
+  const { user, refreshProfile } = useAuth()
   const { data: profile } = useUserProfile()
   const { data: socialStatus, refetch: refetchSocialStatus } = useSocialStatus(address || undefined)
   const { mutate: disconnect } = useDisconnectProvider()
 
-  const [showEmailForm, setShowEmailForm] = useState(false)
   const [disconnectingPlatform, setDisconnectingPlatform] = useState<string | null>(null)
   const {
-    emailInput,
-    setEmailInput,
-    isSending,
-    linkSent,
-    sentToEmail,
-    sendVerificationLink,
-    reset,
-  } = useSendEmailVerification(address)
+    email: emailValue,
+    setEmail: setEmailValue,
+    code: emailCode,
+    setCode: setEmailCode,
+    state: emailState,
+    errorMessage: emailError,
+    start: startEmailVerification,
+    sendCode: sendEmailCode,
+    verifyCode: verifyEmailCode,
+    changeEmail: changeEmailAddress,
+    cancel: cancelEmailVerification,
+  } = useEmailOtpVerification(user?.id)
 
   const {
     code: telegramCode,
@@ -69,6 +72,16 @@ export function ProfileSocialConnections() {
   const handleTelegramVerify = async () => {
     const success = await verifyTelegramCode()
     if (success) {
+      refetchSocialStatus()
+    }
+  }
+
+  const handleEmailVerify = async () => {
+    const success = await verifyEmailCode()
+    if (success) {
+      // refreshProfile repopulates user.social_connections / email so the
+      // connected view renders the address; refetchSocialStatus flips hasEmail.
+      await refreshProfile()
       refetchSocialStatus()
     }
   }
@@ -131,66 +144,85 @@ export function ProfileSocialConnections() {
                 )}
               </button>
             </div>
-          ) : showEmailForm ? (
+          ) : emailState === 'code_input' || emailState === 'verifying' ? (
+            <div className="space-y-3">
+              <p className="text-[10px] text-[var(--color-text-secondary)]">
+                Enter the 4-digit code sent to{' '}
+                <span className="font-medium text-[var(--color-text-primary)]">{emailValue}</span>
+              </p>
+              <input
+                type="text"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                placeholder="Enter 4-digit code"
+                value={emailCode}
+                onChange={e => setEmailCode(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') handleEmailVerify()
+                }}
+                maxLength={4}
+                className="h-9 w-full border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-3 text-center text-sm tracking-[0.5em] text-[var(--color-text-primary)] placeholder:tracking-normal placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-text-primary)] focus:outline-none"
+              />
+              {emailError && <p className="text-[10px] text-[var(--color-danger)]">{emailError}</p>}
+              <div className="flex gap-2">
+                <button
+                  onClick={handleEmailVerify}
+                  disabled={emailState === 'verifying' || emailCode.length !== 4}
+                  className="button-ghost-terminal flex-1 px-3 py-2 text-[10px] disabled:opacity-50"
+                >
+                  {emailState === 'verifying' ? (
+                    <Loader2 className="mx-auto h-3 w-3 animate-spin" />
+                  ) : (
+                    'Verify'
+                  )}
+                </button>
+                <button
+                  onClick={changeEmailAddress}
+                  disabled={emailState === 'verifying'}
+                  className="px-3 py-2 text-[10px] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] disabled:opacity-50"
+                >
+                  Change
+                </button>
+              </div>
+            </div>
+          ) : emailState === 'email_input' || emailState === 'sending' ? (
             <div className="space-y-2">
-              {linkSent ? (
-                <div className="border border-[var(--color-success-muted)] bg-[var(--color-success-muted)] p-2">
-                  <div className="flex items-center gap-1 text-[var(--color-success)]">
-                    <Check className="h-3 w-3" />
-                    <span className="text-[10px] font-bold uppercase tracking-wider">
-                      Check inbox
-                    </span>
-                  </div>
-                  <p className="mt-1 text-[10px] text-[var(--color-success)]">
-                    Sent to {sentToEmail}
-                  </p>
-                  <button
-                    onClick={reset}
-                    className="mt-1 text-[9px] text-[var(--color-success)] underline hover:no-underline"
-                  >
-                    Try different email
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <input
-                    type="email"
-                    placeholder="your@email.com"
-                    value={emailInput}
-                    onChange={e => setEmailInput(e.target.value)}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter') sendVerificationLink()
-                    }}
-                    className="h-9 w-full border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-text-primary)] focus:outline-none"
-                  />
-                  <div className="flex gap-2">
-                    <button
-                      onClick={sendVerificationLink}
-                      disabled={isSending || !emailInput.trim()}
-                      className="button-ghost-terminal flex-1 px-3 py-2 text-[10px] disabled:opacity-50"
-                    >
-                      {isSending ? (
-                        <Loader2 className="mx-auto h-3 w-3 animate-spin" />
-                      ) : (
-                        'Send Link'
-                      )}
-                    </button>
-                    <button
-                      onClick={() => {
-                        setShowEmailForm(false)
-                        reset()
-                      }}
-                      className="px-3 py-2 text-[10px] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </>
-              )}
+              <input
+                type="email"
+                inputMode="email"
+                autoComplete="email"
+                placeholder="your@email.com"
+                value={emailValue}
+                onChange={e => setEmailValue(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') sendEmailCode()
+                }}
+                className="h-9 w-full border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-text-primary)] focus:outline-none"
+              />
+              {emailError && <p className="text-[10px] text-[var(--color-danger)]">{emailError}</p>}
+              <div className="flex gap-2">
+                <button
+                  onClick={() => sendEmailCode()}
+                  disabled={emailState === 'sending' || !emailValue.trim()}
+                  className="button-ghost-terminal flex-1 px-3 py-2 text-[10px] disabled:opacity-50"
+                >
+                  {emailState === 'sending' ? (
+                    <Loader2 className="mx-auto h-3 w-3 animate-spin" />
+                  ) : (
+                    'Send Code'
+                  )}
+                </button>
+                <button
+                  onClick={cancelEmailVerification}
+                  className="px-3 py-2 text-[10px] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           ) : (
             <button
-              onClick={() => setShowEmailForm(true)}
+              onClick={startEmailVerification}
               className="button-ghost-terminal w-full py-2 text-[10px]"
             >
               Connect Email
