@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { toast } from 'sonner'
-import { SUI_SENTINEL_API_URL } from '@/constants'
+import { verifyTelegram as verifyTelegramApi, AuthApiError } from '@/lib/auth-api'
 
 type TelegramVerificationState = 'idle' | 'input' | 'verifying' | 'success' | 'error'
 
@@ -32,30 +32,16 @@ export function useTelegramVerification(userId: string | undefined) {
     setErrorMessage('')
 
     try {
-      const res = await fetch(`${SUI_SENTINEL_API_URL}/auth/telegram/verify`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-id': userId,
-        },
-        body: JSON.stringify({ code: code.trim() }),
-      })
-
-      if (res.ok) {
-        setState('success')
-        toast.success('Telegram connected successfully!')
-        return true
-      } else {
-        const data = await res.json()
-        setState('error')
-        const msg = data.message || data.error || 'Verification failed'
-        setErrorMessage(msg)
-        toast.error(msg)
-        return false
-      }
-    } catch {
+      await verifyTelegramApi(userId, { code: code.trim() })
+      setState('success')
+      toast.success('Telegram connected successfully!')
+      return true
+    } catch (error) {
       setState('error')
-      const msg = 'Something went wrong. Please try again.'
+      const msg =
+        error instanceof AuthApiError
+          ? error.message
+          : 'Something went wrong. Please try again.'
       setErrorMessage(msg)
       toast.error(msg)
       return false

@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback, useRef, type ReactNode } from 'react'
 import type { UserProfile, ChainType, WalletConnection } from '@/lib/auth-api'
 import {
   getNonce,
@@ -67,6 +67,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isAuthenticated: false,
   })
 
+  // Track if we've done the initial profile refresh
+  const hasRefreshedRef = useRef(false)
+
   // Hydrate from localStorage on mount
   useEffect(() => {
     try {
@@ -85,6 +88,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setState(prev => ({ ...prev, isLoading: false }))
     }
   }, [])
+
+  // Fetch fresh profile data after hydration from localStorage
+  useEffect(() => {
+    // Only run once, after hydration, if we have a user
+    if (hasRefreshedRef.current || state.isLoading || !state.user) {
+      return
+    }
+
+    hasRefreshedRef.current = true
+
+    // Background refresh - fetch fresh data from server
+    getProfile(state.user.id)
+      .then(({ user }) => {
+        setState({
+          user,
+          isLoading: false,
+          isAuthenticated: true,
+        })
+      })
+      .catch(error => {
+        // If user was deleted (404), log them out
+        if (error instanceof AuthApiError && error.statusCode === 404) {
+          setState({
+            user: null,
+            isLoading: false,
+            isAuthenticated: false,
+          })
+          localStorage.removeItem(AUTH_USER_STORAGE_KEY)
+        }
+        // For other errors, silently keep the cached data
+      })
+  }, [state.isLoading, state.user])
 
   // Persist user to localStorage when it changes
   useEffect(() => {

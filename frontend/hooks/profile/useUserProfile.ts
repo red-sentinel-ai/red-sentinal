@@ -17,13 +17,13 @@ export function useUserProfile() {
 
   // Map the AuthContext UserProfile shape to the Supabase ss_users shape
   // that the rest of the app expects. Both have the same core fields.
+  // Note: email is now accessed via social_connections (platform='email')
   const data = user
     ? ({
         id: user.id,
         username: user.username,
         display_name: user.display_name,
         avatar_url: user.avatar_url,
-        email: user.email,
         total_points: user.total_points,
         lifetime_points: user.lifetime_points,
         rewards_tier: user.rewards_tier,

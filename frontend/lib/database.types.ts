@@ -14,6 +14,68 @@ export type Database = {
   }
   sentinel: {
     Tables: {
+      chat_messages: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          room_id: string | null
+          sender_address: string
+          sender_role: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          room_id?: string | null
+          sender_address: string
+          sender_role?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          room_id?: string | null
+          sender_address?: string
+          sender_role?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_messages_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "chat_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_rooms: {
+        Row: {
+          agent_id: string
+          chain: string | null
+          created_at: string | null
+          id: string
+          network: string | null
+          owner_address: string | null
+        }
+        Insert: {
+          agent_id: string
+          chain?: string | null
+          created_at?: string | null
+          id?: string
+          network?: string | null
+          owner_address?: string | null
+        }
+        Update: {
+          agent_id?: string
+          chain?: string | null
+          created_at?: string | null
+          id?: string
+          network?: string | null
+          owner_address?: string | null
+        }
+        Relationships: []
+      }
       ss_agents: {
         Row: {
           agent_id: number
@@ -413,13 +475,6 @@ export type Database = {
             foreignKeyName: "ss_rewards_activity_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "ss_user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ss_rewards_activity_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
             referencedRelation: "ss_users"
             referencedColumns: ["id"]
           },
@@ -465,13 +520,6 @@ export type Database = {
             foreignKeyName: "ss_social_connections_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "ss_user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ss_social_connections_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
             referencedRelation: "ss_users"
             referencedColumns: ["id"]
           },
@@ -482,7 +530,6 @@ export type Database = {
           avatar_url: string | null
           created_at: string | null
           display_name: string | null
-          email: string | null
           email_notifications: boolean | null
           id: string
           lifetime_points: number | null
@@ -496,7 +543,6 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string | null
           display_name?: string | null
-          email?: string | null
           email_notifications?: boolean | null
           id?: string
           lifetime_points?: number | null
@@ -510,7 +556,6 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string | null
           display_name?: string | null
-          email?: string | null
           email_notifications?: boolean | null
           id?: string
           lifetime_points?: number | null
@@ -521,6 +566,60 @@ export type Database = {
           username?: string
         }
         Relationships: []
+      }
+      ss_verification_codes: {
+        Row: {
+          attempts: number | null
+          code: string
+          created_at: string | null
+          expires_at: string
+          id: string
+          target: string
+          target_username: string | null
+          type: string
+          used_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          attempts?: number | null
+          code: string
+          created_at?: string | null
+          expires_at: string
+          id?: string
+          target: string
+          target_username?: string | null
+          type: string
+          used_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          attempts?: number | null
+          code?: string
+          created_at?: string | null
+          expires_at?: string
+          id?: string
+          target?: string
+          target_username?: string | null
+          type?: string
+          used_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ss_verification_codes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "ss_rewards_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "ss_verification_codes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "ss_users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       ss_wallet_connections: {
         Row: {
@@ -562,13 +661,6 @@ export type Database = {
             foreignKeyName: "ss_wallet_connections_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "ss_user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ss_wallet_connections_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
             referencedRelation: "ss_users"
             referencedColumns: ["id"]
           },
@@ -592,54 +684,6 @@ export type Database = {
           user_id: string | null
           username: string | null
           wallet_addresses: string[] | null
-        }
-        Relationships: []
-      }
-      ss_user_profiles: {
-        Row: {
-          avatar_url: string | null
-          created_at: string | null
-          display_name: string | null
-          email: string | null
-          email_notifications: boolean | null
-          id: string | null
-          lifetime_points: number | null
-          rewards_tier: string | null
-          social_connections: Json | null
-          total_points: number | null
-          updated_at: string | null
-          username: string | null
-          wallets: Json | null
-        }
-        Insert: {
-          avatar_url?: string | null
-          created_at?: string | null
-          display_name?: string | null
-          email?: string | null
-          email_notifications?: boolean | null
-          id?: string | null
-          lifetime_points?: number | null
-          rewards_tier?: string | null
-          social_connections?: never
-          total_points?: number | null
-          updated_at?: string | null
-          username?: string | null
-          wallets?: never
-        }
-        Update: {
-          avatar_url?: string | null
-          created_at?: string | null
-          display_name?: string | null
-          email?: string | null
-          email_notifications?: boolean | null
-          id?: string | null
-          lifetime_points?: number | null
-          rewards_tier?: string | null
-          social_connections?: never
-          total_points?: number | null
-          updated_at?: string | null
-          username?: string | null
-          wallets?: never
         }
         Relationships: []
       }

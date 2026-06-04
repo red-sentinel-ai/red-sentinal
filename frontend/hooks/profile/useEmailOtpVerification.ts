@@ -2,7 +2,11 @@
 
 import { useState, useCallback } from 'react'
 import { toast } from 'sonner'
-import { SUI_SENTINEL_API_URL } from '@/constants'
+import {
+  sendEmailCode as sendEmailCodeApi,
+  verifyEmail as verifyEmailApi,
+  AuthApiError,
+} from '@/lib/auth-api'
 
 type EmailVerificationState =
   | 'idle'
@@ -43,31 +47,17 @@ export function useEmailOtpVerification(userId: string | undefined) {
     setErrorMessage('')
 
     try {
-      const res = await fetch(`${SUI_SENTINEL_API_URL}/auth/email/send-code`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-id': userId,
-        },
-        body: JSON.stringify({ email: trimmed }),
-      })
-
-      if (res.ok) {
-        setEmail(trimmed)
-        setCode('')
-        setState('code_input')
-        toast.success(`Code sent to ${trimmed}`)
-        return true
-      }
-
-      const data = await res.json().catch(() => ({}))
-      const msg = data.message || data.error || 'Failed to send code'
-      setState('email_input')
-      setErrorMessage(msg)
-      toast.error(msg)
-      return false
-    } catch {
-      const msg = 'Something went wrong. Please try again.'
+      await sendEmailCodeApi(userId, { email: trimmed })
+      setEmail(trimmed)
+      setCode('')
+      setState('code_input')
+      toast.success(`Code sent to ${trimmed}`)
+      return true
+    } catch (error) {
+      const msg =
+        error instanceof AuthApiError
+          ? error.message
+          : 'Something went wrong. Please try again.'
       setState('email_input')
       setErrorMessage(msg)
       toast.error(msg)
@@ -90,29 +80,15 @@ export function useEmailOtpVerification(userId: string | undefined) {
     setErrorMessage('')
 
     try {
-      const res = await fetch(`${SUI_SENTINEL_API_URL}/auth/email/verify`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-id': userId,
-        },
-        body: JSON.stringify({ email: email.trim(), code: code.trim() }),
-      })
-
-      if (res.ok) {
-        setState('success')
-        toast.success('Email connected successfully!')
-        return true
-      }
-
-      const data = await res.json().catch(() => ({}))
-      const msg = data.message || data.error || 'Verification failed'
-      setState('code_input')
-      setErrorMessage(msg)
-      toast.error(msg)
-      return false
-    } catch {
-      const msg = 'Something went wrong. Please try again.'
+      await verifyEmailApi(userId, { email: email.trim(), code: code.trim() })
+      setState('success')
+      toast.success('Email connected successfully!')
+      return true
+    } catch (error) {
+      const msg =
+        error instanceof AuthApiError
+          ? error.message
+          : 'Something went wrong. Please try again.'
       setState('code_input')
       setErrorMessage(msg)
       toast.error(msg)

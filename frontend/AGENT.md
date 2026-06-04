@@ -14,7 +14,7 @@ As a user, you can interact with Red Sentinel platform by either launching a sen
 - Bun (package manager)
 - Tailwind CSS + shadcn/ui components
 - Supabase (PostgreSQL database)
-- NextAuth.js (Twitter & Discord OAuth)
+- Custom wallet-based auth via backend API
 - React Query (@tanstack/react-query)
 - @mysten/dapp-kit (Sui wallet)
 
@@ -48,9 +48,7 @@ Required environment variables:
 | `SUPABASE_URL` | Supabase project URL |
 | `SUPABASE_ANON_KEY` | Supabase anonymous key |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (server-side only) |
-| `NEXTAUTH_URL` | `http://localhost:3000` for dev |
-| `NEXTAUTH_SECRET` | Generate with `openssl rand -base64 32` |
-| `DISCORD_CLIENT_ID` / `DISCORD_CLIENT_SECRET` | Discord OAuth app credentials |
+| `NEXT_PUBLIC_SUI_SENTINEL_API_URL` | Backend API URL |
 | `NEXT_PUBLIC_APP_NETWORK` | `mainnet` or `testnet` |
 | `NEXT_PUBLIC_POSTHOG_KEY` | PostHog analytics key |
 
@@ -77,7 +75,7 @@ bun run generate:types:prod
 ```
 Frontend (Next.js) → Supabase (Database) → TEE Backend API → Blockchain
                                     ↘
-                                   NextAuth (OAuth)
+                                   Auth API (wallet signature-based)
 ```
 
 **Key Concepts:**
@@ -131,7 +129,7 @@ Defined in `constants/index.ts` under `PROVIDER_MODELS`:
 app/
 ├── api/                    # API routes (Supabase queries + backend proxy)
 │   ├── agents/             # Agent CRUD operations
-│   ├── auth/               # NextAuth OAuth endpoints
+│   ├── auth/               # Auth helper endpoints (disconnect-provider)
 │   └── rewards/            # Missions and leaderboard
 ├── attack/                 # Attack mode pages
 ├── defend/                 # Defend mode pages
@@ -155,7 +153,7 @@ hooks/
 
 lib/
 ├── database.types.ts       # Supabase generated types (run generate:types:prod)
-├── auth.ts                 # NextAuth configuration (Twitter/Discord)
+├── auth-api.ts             # Backend auth API client (wallet-based auth)
 ├── sui-utils.ts            # Sui blockchain utilities
 └── utils.ts                # General utilities (cn, formatting)
 
@@ -170,10 +168,11 @@ constants/
 
 1. **`/constants/index.ts`** - All package IDs, URLs, tokens, and configuration
 2. **`/lib/database.types.ts`** - Supabase schema (auto-generated)
-3. **`/app/providers.tsx`** - Provider hierarchy (PostHog → Session → Query → EVM → Sui → Solana → ActiveChain → Auth)
-4. **`/lib/auth.ts`** - NextAuth OAuth setup
-5. **`/hooks/agents/`** - Agent business logic hooks
-6. **`/types.ts`** - Core type definitions
+3. **`/app/providers.tsx`** - Provider hierarchy (PostHog → Query → EVM → Sui → Solana → ActiveChain → Auth)
+4. **`/lib/auth-api.ts`** - Backend auth API client (wallet signature-based)
+5. **`/context/AuthContext.tsx`** - Auth state management
+6. **`/hooks/agents/`** - Agent business logic hooks
+7. **`/types.ts`** - Core type definitions
 
 ## Development Patterns
 
