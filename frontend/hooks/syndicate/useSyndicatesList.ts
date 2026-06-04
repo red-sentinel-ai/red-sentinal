@@ -32,7 +32,9 @@ export function useSyndicatesList(owner?: string) {
     queryFn: async () => {
       const params = new URLSearchParams({ network: APP_NETWORK, limit: '50' })
       if (owner) params.set('owner', owner)
-      const res = await fetch(`${SUI_SENTINEL_API_URL}/syndicates?${params}`)
+      const res = await fetch(`${SUI_SENTINEL_API_URL}/syndicates?${params}`, {
+        credentials: 'include',
+      })
       if (!res.ok) throw new Error('Failed to fetch syndicates')
       return res.json()
     },

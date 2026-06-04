@@ -18,7 +18,7 @@ export function useRewardsLeaderboard(limit = 20, search = '') {
       url.searchParams.set('offset', String(pageParam))
       if (search) url.searchParams.set('search', search)
 
-      const response = await fetch(url.toString())
+      const response = await fetch(url.toString(), { credentials: 'include' })
       if (!response.ok) {
         throw new Error('Failed to fetch leaderboard')
       }

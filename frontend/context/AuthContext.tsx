@@ -1,6 +1,14 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect, useCallback, useRef, type ReactNode } from 'react'
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  type ReactNode,
+} from 'react'
 import type { UserProfile, ChainType, WalletConnection } from '@/lib/auth-api'
 import {
   getNonce,
@@ -8,6 +16,7 @@ import {
   addWallet as addWalletApi,
   removeWallet as removeWalletApi,
   getProfile,
+  checkSession,
   AuthApiError,
 } from '@/lib/auth-api'
 
@@ -70,23 +79,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Track if we've done the initial profile refresh
   const hasRefreshedRef = useRef(false)
 
-  // Hydrate from localStorage on mount
+  // Hydrate from localStorage and check session cookie on mount
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(AUTH_USER_STORAGE_KEY)
-      if (stored) {
-        const user = JSON.parse(stored) as UserProfile
-        setState({
-          user,
-          isLoading: false,
-          isAuthenticated: true,
-        })
-      } else {
+    const initializeAuth = async () => {
+      try {
+        // First try to restore from localStorage for immediate UI
+        const stored = localStorage.getItem(AUTH_USER_STORAGE_KEY)
+        if (stored) {
+          const user = JSON.parse(stored) as UserProfile
+          setState({
+            user,
+            isLoading: false,
+            isAuthenticated: true,
+          })
+          return
+        }
+
+        // If no localStorage, check if user has active session via cookie
+        try {
+          const sessionData = await checkSession()
+          if (sessionData.authenticated && sessionData.user) {
+            setState({
+              user: sessionData.user,
+              isLoading: false,
+              isAuthenticated: true,
+            })
+            return
+          }
+        } catch {
+          // Session check failed, continue as unauthenticated
+        }
+
+        setState(prev => ({ ...prev, isLoading: false }))
+      } catch {
         setState(prev => ({ ...prev, isLoading: false }))
       }
-    } catch {
-      setState(prev => ({ ...prev, isLoading: false }))
     }
+
+    initializeAuth()
   }, [])
 
   // Fetch fresh profile data after hydration from localStorage
@@ -276,7 +306,5 @@ export function useIsWalletLinked(walletAddress: string | undefined): boolean {
 
   if (!user || !walletAddress) return false
 
-  return user.wallets.some(
-    w => w.wallet_address.toLowerCase() === walletAddress.toLowerCase()
-  )
+  return user.wallets.some(w => w.wallet_address.toLowerCase() === walletAddress.toLowerCase())
 }

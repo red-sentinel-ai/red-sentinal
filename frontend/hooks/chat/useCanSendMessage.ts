@@ -13,7 +13,8 @@ export function useCanSendMessage(agentId?: string, senderAddress?: string) {
       })
 
       const res = await fetch(
-        `${SUI_SENTINEL_API_URL}/chat/${APP_NETWORK}/${agentId}/can-send?${params}`
+        `${SUI_SENTINEL_API_URL}/chat/${APP_NETWORK}/${agentId}/can-send?${params}`,
+        { credentials: 'include' }
       )
 
       if (!res.ok) {
