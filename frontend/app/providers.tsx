@@ -4,7 +4,6 @@ import '@mysten/dapp-kit/dist/index.css'
 import React, { useState, useEffect } from 'react'
 import posthog from 'posthog-js'
 import { PostHogProvider as PHProvider } from 'posthog-js/react'
-import { SessionProvider } from 'next-auth/react'
 import { SuiClientProvider, WalletProvider, lightTheme } from '@mysten/dapp-kit'
 import { getFullnodeUrl } from '@mysten/sui/client'
 import { AppShell } from '@/components/layout/AppShell'
@@ -46,9 +45,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <PHProvider client={posthog}>
-      <SessionProvider>
-        <QueryClientProvider client={queryClient}>
-          <EVMWalletProvider>
+      <QueryClientProvider client={queryClient}>
+        <EVMWalletProvider>
           <SuiClientProvider networks={networks} defaultNetwork={APP_NETWORK}>
             <WalletProvider autoConnect theme={lightTheme}>
               <SolanaWalletProvider>
@@ -61,9 +59,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
               </SolanaWalletProvider>
             </WalletProvider>
           </SuiClientProvider>
-          </EVMWalletProvider>
-        </QueryClientProvider>
-      </SessionProvider>
+        </EVMWalletProvider>
+      </QueryClientProvider>
     </PHProvider>
   )
 }

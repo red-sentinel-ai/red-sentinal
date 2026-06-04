@@ -1,6 +1,5 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { SOCIAL_STATUS_QUERY_KEY } from '../profile/useSocialStatus'
 
 type DisconnectArgs = {
   provider: string
@@ -8,8 +7,6 @@ type DisconnectArgs = {
 }
 
 export const useDisconnectProvider = () => {
-  const queryClient = useQueryClient()
-
   return useMutation({
     mutationFn: async ({ provider, walletAddress }: DisconnectArgs) => {
       const res = await fetch('/api/auth/disconnect-provider', {
@@ -27,7 +24,6 @@ export const useDisconnectProvider = () => {
     },
     onSuccess: (_, { provider }) => {
       toast.success(`${provider} disconnected`)
-      queryClient.invalidateQueries({ queryKey: [SOCIAL_STATUS_QUERY_KEY] })
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any, { provider }) => {

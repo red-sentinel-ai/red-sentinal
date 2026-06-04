@@ -3,8 +3,6 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { Mail, Check, Loader2 } from 'lucide-react'
-import { useUserProfile } from '@/hooks/profile/useUserProfile'
-import { useSocialStatus } from '@/hooks/profile/useSocialStatus'
 import { useEmailOtpVerification } from '@/hooks/profile/useEmailOtpVerification'
 import { useTelegramVerification } from '@/hooks/profile/useTelegramVerification'
 import { useDisconnectProvider } from '@/hooks/rewards/useDisconnectProvider'
@@ -25,8 +23,6 @@ const TELEGRAM_BOT_USERNAME = 'suisentinel_bot'
 export function ProfileSocialConnections() {
   const { address } = useConnectedAddress()
   const { user, refreshProfile } = useAuth()
-  const { data: profile } = useUserProfile()
-  const { data: socialStatus, refetch: refetchSocialStatus } = useSocialStatus(address || undefined)
   const { mutate: disconnect } = useDisconnectProvider()
 
   const [disconnectingPlatform, setDisconnectingPlatform] = useState<string | null>(null)
@@ -53,36 +49,31 @@ export function ProfileSocialConnections() {
     cancel: cancelTelegramVerification,
   } = useTelegramVerification(user?.id)
 
-  // Check connections - use socialStatus for boolean checks, profile for actual email value
-  const hasEmail = socialStatus?.isEmailConnected || false
-  const hasTelegram = socialStatus?.isTelegramConnected || false
-
-  // Get email from social connections or direct user field
+  // Get email from social connections (email is no longer a top-level user field)
   const emailConnection = user?.social_connections?.find(
     conn => conn.platform.toLowerCase() === 'email'
   )
-  const connectedEmail = emailConnection?.platform_username || user?.email || profile?.email
+  const hasEmail = !!emailConnection
+  const connectedEmail = emailConnection?.platform_username
 
   // Get telegram username from social connections
   const telegramConnection = user?.social_connections?.find(
     conn => conn.platform.toLowerCase() === 'telegram'
   )
+  const hasTelegram = !!telegramConnection
   const telegramUsername = telegramConnection?.platform_username
 
   const handleTelegramVerify = async () => {
     const success = await verifyTelegramCode()
     if (success) {
-      refetchSocialStatus()
+      await refreshProfile()
     }
   }
 
   const handleEmailVerify = async () => {
     const success = await verifyEmailCode()
     if (success) {
-      // refreshProfile repopulates user.social_connections / email so the
-      // connected view renders the address; refetchSocialStatus flips hasEmail.
       await refreshProfile()
-      refetchSocialStatus()
     }
   }
 
@@ -92,9 +83,9 @@ export function ProfileSocialConnections() {
     disconnect(
       { provider: platform, walletAddress: address },
       {
-        onSettled: () => {
+        onSettled: async () => {
           setDisconnectingPlatform(null)
-          refetchSocialStatus()
+          await refreshProfile()
         },
       }
     )

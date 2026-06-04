@@ -25,7 +25,6 @@ export type UserProfile = {
   username: string | null
   display_name: string | null
   avatar_url: string | null
-  email: string | null
   total_points: number
   lifetime_points: number
   rewards_tier: string
@@ -69,6 +68,45 @@ export type AddWalletResponse = {
 export type LookupResponse = {
   exists: boolean
   user_id: string | null
+}
+
+// Email verification types
+export type SendEmailCodeRequest = {
+  email: string
+}
+
+export type SendEmailCodeResponse = {
+  success: boolean
+  expires_in: number
+}
+
+export type EmailVerifyRequest = {
+  email: string
+  code: string
+}
+
+export type EmailVerifyResponse = {
+  status: 'email_connected'
+  user: UserProfile
+}
+
+// Telegram verification types
+export type TelegramVerifyRequest = {
+  code: string
+}
+
+export type TelegramVerifyResponse = {
+  status: 'telegram_connected'
+  user: UserProfile
+}
+
+// Remove wallet/social types
+export type RemoveWalletResponse = {
+  status: 'wallet_removed'
+}
+
+export type RemoveSocialResponse = {
+  status: 'social_removed'
 }
 
 const AUTH_BASE_URL = `${SUI_SENTINEL_API_URL}/auth`
@@ -143,7 +181,7 @@ export async function addWallet(
 /**
  * Remove a wallet from the user's account
  */
-export async function removeWallet(userId: string, walletId: string): Promise<{ status: string }> {
+export async function removeWallet(userId: string, walletId: string): Promise<RemoveWalletResponse> {
   const response = await fetch(`${AUTH_BASE_URL}/wallet/${walletId}`, {
     method: 'DELETE',
     headers: {
@@ -151,7 +189,7 @@ export async function removeWallet(userId: string, walletId: string): Promise<{ 
     },
   })
 
-  return handleResponse<{ status: string }>(response)
+  return handleResponse<RemoveWalletResponse>(response)
 }
 
 /**
@@ -190,6 +228,80 @@ export async function lookupWallet(
   })
 
   return handleResponse<LookupResponse>(response)
+}
+
+/**
+ * Send a 4-digit verification code to email
+ */
+export async function sendEmailCode(
+  userId: string,
+  request: SendEmailCodeRequest
+): Promise<SendEmailCodeResponse> {
+  const response = await fetch(`${AUTH_BASE_URL}/email/send-code`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-user-id': userId,
+    },
+    body: JSON.stringify(request),
+  })
+
+  return handleResponse<SendEmailCodeResponse>(response)
+}
+
+/**
+ * Verify email code and connect email to user account
+ */
+export async function verifyEmail(
+  userId: string,
+  request: EmailVerifyRequest
+): Promise<EmailVerifyResponse> {
+  const response = await fetch(`${AUTH_BASE_URL}/email/verify`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-user-id': userId,
+    },
+    body: JSON.stringify(request),
+  })
+
+  return handleResponse<EmailVerifyResponse>(response)
+}
+
+/**
+ * Verify telegram code and connect telegram to user account
+ */
+export async function verifyTelegram(
+  userId: string,
+  request: TelegramVerifyRequest
+): Promise<TelegramVerifyResponse> {
+  const response = await fetch(`${AUTH_BASE_URL}/telegram/verify`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-user-id': userId,
+    },
+    body: JSON.stringify(request),
+  })
+
+  return handleResponse<TelegramVerifyResponse>(response)
+}
+
+/**
+ * Remove a social connection from user account
+ */
+export async function removeSocial(
+  userId: string,
+  connectionId: string
+): Promise<RemoveSocialResponse> {
+  const response = await fetch(`${AUTH_BASE_URL}/social/${connectionId}`, {
+    method: 'DELETE',
+    headers: {
+      'x-user-id': userId,
+    },
+  })
+
+  return handleResponse<RemoveSocialResponse>(response)
 }
 
 export { AuthApiError }
