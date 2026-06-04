@@ -58,7 +58,8 @@ export default function SyndicatePageClient({ identifier }: Props) {
     queryKey: ['syndicate-meta', identifier],
     queryFn: async () => {
       const res = await fetch(
-        `${SUI_SENTINEL_API_URL}/syndicates/${identifier}?network=${APP_NETWORK}`
+        `${SUI_SENTINEL_API_URL}/syndicates/${identifier}?network=${APP_NETWORK}`,
+        { credentials: 'include' }
       )
       if (!res.ok) throw new Error('Syndicate not found')
       return res.json()

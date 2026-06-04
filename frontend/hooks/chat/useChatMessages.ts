@@ -24,7 +24,8 @@ export function useChatMessages(
       })
 
       const res = await fetch(
-        `${SUI_SENTINEL_API_URL}/chat/${APP_NETWORK}/${agentId}/messages?${params}`
+        `${SUI_SENTINEL_API_URL}/chat/${APP_NETWORK}/${agentId}/messages?${params}`,
+        { credentials: 'include' }
       )
 
       if (!res.ok) {

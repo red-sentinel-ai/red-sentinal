@@ -58,7 +58,8 @@ export function SyndicateStep1({ onComplete }: SyndicateStep1Props) {
     try {
       // Reject duplicates before any wallet prompt — saves the user gas.
       const checkRes = await fetch(
-        `${SUI_SENTINEL_API_URL}/syndicates/check-name?name=${encodeURIComponent(name.trim())}&network=${APP_NETWORK}`
+        `${SUI_SENTINEL_API_URL}/syndicates/check-name?name=${encodeURIComponent(name.trim())}&network=${APP_NETWORK}`,
+        { credentials: 'include' }
       )
       if (checkRes.ok) {
         const { exists } = (await checkRes.json()) as { exists: boolean }

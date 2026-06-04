@@ -35,6 +35,7 @@ export const useClaimReward = () => {
 
       const response = await fetch(url, {
         method: 'GET',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },

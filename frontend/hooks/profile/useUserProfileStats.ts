@@ -26,7 +26,7 @@ export interface UserProfileStats {
 
 async function fetchUserStats(walletAddress: string): Promise<UserProfileStats> {
   const url = `${SUI_SENTINEL_API_URL}/leaderboard/v2/${APP_NETWORK}/user-stats/${walletAddress}`
-  const res = await fetch(url)
+  const res = await fetch(url, { credentials: 'include' })
   if (!res.ok) throw new Error(`Failed to fetch user stats: ${res.status}`)
   return res.json()
 }

@@ -19,6 +19,7 @@ export const useUserBoosters = (walletAddress: string | undefined) => {
 
       const response = await fetch(url, {
         method: 'GET',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -45,6 +46,7 @@ export const useSpinBooster = () => {
 
       const response = await fetch(url, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -81,6 +83,7 @@ export const useSpinHistory = (
 
       const response = await fetch(url, {
         method: 'GET',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },

@@ -72,6 +72,7 @@ export function useDeploySyndicate() {
       // Save metadata to backend
       await fetch(`${SUI_SENTINEL_API_URL}/syndicates/create`, {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contract_address: receipt.contractAddress,

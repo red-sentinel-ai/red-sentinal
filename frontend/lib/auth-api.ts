@@ -55,7 +55,7 @@ export type WalletConnectRequest = {
 }
 
 export type WalletConnectResponse = {
-  status: 'logged_in' | 'created' | 'wallet_added'
+  status: 'logged_in' | 'created' | 'wallet_added' | 'wallet_linked'
   is_new_user: boolean
   user: UserProfile
 }
@@ -138,6 +138,7 @@ async function handleResponse<T>(response: Response): Promise<T> {
 export async function getNonce(request: GetNonceRequest): Promise<GetNonceResponse> {
   const response = await fetch(`${AUTH_BASE_URL}/nonce`, {
     method: 'POST',
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(request),
   })
@@ -152,6 +153,7 @@ export async function getNonce(request: GetNonceRequest): Promise<GetNonceRespon
 export async function walletConnect(request: WalletConnectRequest): Promise<WalletConnectResponse> {
   const response = await fetch(`${AUTH_BASE_URL}/wallet-connect`, {
     method: 'POST',
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(request),
   })
@@ -168,6 +170,7 @@ export async function addWallet(
 ): Promise<AddWalletResponse> {
   const response = await fetch(`${AUTH_BASE_URL}/wallet`, {
     method: 'POST',
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
       'x-user-id': userId,
@@ -184,6 +187,7 @@ export async function addWallet(
 export async function removeWallet(userId: string, walletId: string): Promise<RemoveWalletResponse> {
   const response = await fetch(`${AUTH_BASE_URL}/wallet/${walletId}`, {
     method: 'DELETE',
+    credentials: 'include',
     headers: {
       'x-user-id': userId,
     },
@@ -198,6 +202,7 @@ export async function removeWallet(userId: string, walletId: string): Promise<Re
 export async function getProfile(userId: string): Promise<{ user: UserProfile }> {
   const response = await fetch(`${AUTH_BASE_URL}/profile`, {
     method: 'GET',
+    credentials: 'include',
     headers: {
       'x-user-id': userId,
     },
@@ -225,6 +230,7 @@ export async function lookupWallet(
 
   const response = await fetch(`${AUTH_BASE_URL}/lookup?${params}`, {
     method: 'GET',
+    credentials: 'include',
   })
 
   return handleResponse<LookupResponse>(response)
@@ -239,6 +245,7 @@ export async function sendEmailCode(
 ): Promise<SendEmailCodeResponse> {
   const response = await fetch(`${AUTH_BASE_URL}/email/send-code`, {
     method: 'POST',
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
       'x-user-id': userId,
@@ -258,6 +265,7 @@ export async function verifyEmail(
 ): Promise<EmailVerifyResponse> {
   const response = await fetch(`${AUTH_BASE_URL}/email/verify`, {
     method: 'POST',
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
       'x-user-id': userId,
@@ -277,6 +285,7 @@ export async function verifyTelegram(
 ): Promise<TelegramVerifyResponse> {
   const response = await fetch(`${AUTH_BASE_URL}/telegram/verify`, {
     method: 'POST',
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
       'x-user-id': userId,
@@ -296,12 +305,40 @@ export async function removeSocial(
 ): Promise<RemoveSocialResponse> {
   const response = await fetch(`${AUTH_BASE_URL}/social/${connectionId}`, {
     method: 'DELETE',
+    credentials: 'include',
     headers: {
       'x-user-id': userId,
     },
   })
 
   return handleResponse<RemoveSocialResponse>(response)
+}
+
+/**
+ * Check if user has an active session via cookie
+ */
+export type SessionResponse = {
+  authenticated: boolean
+  user: UserProfile | null
+}
+
+export async function checkSession(): Promise<SessionResponse> {
+  const response = await fetch(`${AUTH_BASE_URL}/session`, {
+    method: 'GET',
+    credentials: 'include',
+  })
+
+  return handleResponse<SessionResponse>(response)
+}
+
+/**
+ * Logout and clear session cookie
+ */
+export async function logout(): Promise<void> {
+  await fetch(`${AUTH_BASE_URL}/logout`, {
+    method: 'POST',
+    credentials: 'include',
+  })
 }
 
 export { AuthApiError }

@@ -6,15 +6,18 @@ import { SUPPORTED_CHAINS, ACTIVE_CHAIN_STORAGE_KEY, type SupportedChain } from 
 type ActiveChainContextValue = {
   activeChain: SupportedChain
   setActiveChain: (chain: SupportedChain) => void
+  isHydrated: boolean
 }
 
 const ActiveChainContext = createContext<ActiveChainContextValue>({
-  activeChain: 'sui',
+  activeChain: 'solana',
   setActiveChain: () => {},
+  isHydrated: false,
 })
 
 export function ActiveChainProvider({ children }: { children: React.ReactNode }) {
   const [activeChain, setActiveChainState] = useState<SupportedChain>('solana')
+  const [isHydrated, setIsHydrated] = useState(false)
 
   // Hydrate from localStorage after mount to avoid SSR mismatch
   useEffect(() => {
@@ -22,6 +25,7 @@ export function ActiveChainProvider({ children }: { children: React.ReactNode })
     if (stored && SUPPORTED_CHAINS.includes(stored)) {
       setActiveChainState(stored)
     }
+    setIsHydrated(true)
   }, [])
 
   const setActiveChain = (chain: SupportedChain) => {
@@ -30,7 +34,7 @@ export function ActiveChainProvider({ children }: { children: React.ReactNode })
   }
 
   return (
-    <ActiveChainContext.Provider value={{ activeChain, setActiveChain }}>
+    <ActiveChainContext.Provider value={{ activeChain, setActiveChain, isHydrated }}>
       {children}
     </ActiveChainContext.Provider>
   )

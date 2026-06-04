@@ -38,7 +38,8 @@ export function useAgentChatHistory(agentId?: string) {
     queryKey: [AGENT_CHAT_QUERY_KEY, agentId, APP_NETWORK],
     queryFn: async () => {
       const res = await fetch(
-        `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}/${agentId}/chat`
+        `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}/${agentId}/chat`,
+        { credentials: 'include' }
       )
       if (!res.ok) throw new Error('Failed to fetch chat history')
       return res.json()
