@@ -41,13 +41,25 @@ export interface PracticeAttackResponse {
   confidence: number
 }
 
-export interface PracticeAttackVerdict {
-  success: boolean
-  score: number
-  confidence: number
-  juryResponse: string
+/** One attempt in the public feed (GET /practice/{network}/{id}/attacks). */
+export interface PracticeAttackFeedItem {
+  type: 'prompt'
+  id: string
+  session_id: string | null
+  sender: string | null
+  content: string
+  agent_response: string
+  jury_response: string | null
+  score: number | null
+  success: boolean | null
+  confidence: number | null
+  turn: number | null
+  timestamp: string | null
 }
 
-export type PracticeAttackMessage =
-  | { role: 'user'; content: string }
-  | { role: 'assistant'; content: string; verdict: PracticeAttackVerdict }
+export interface PracticeAttacksFeedResponse {
+  messages: PracticeAttackFeedItem[]
+  total: number
+  limit: number
+  offset: number
+}
