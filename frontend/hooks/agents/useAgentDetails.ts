@@ -60,7 +60,8 @@ export function useAgentDetails(slug?: string) {
         normalizedSlug = slug!
       }
       const res = await fetch(
-        `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}/details?agent_path=${encodeURIComponent(normalizedSlug)}`
+        `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}/details?agent_path=${encodeURIComponent(normalizedSlug)}`,
+        { credentials: 'include' }
       )
       if (!res.ok) {
         const err = await res.json().catch(() => ({}))

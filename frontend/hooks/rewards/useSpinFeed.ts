@@ -19,7 +19,8 @@ export const useSpinFeed = (limit: number = 50) => {
     queryKey: ['spin-feed', limit],
     queryFn: async () => {
       const response = await fetch(
-        `${SUI_SENTINEL_API_URL}/boosters/${APP_NETWORK}/feed?limit=${limit}`
+        `${SUI_SENTINEL_API_URL}/boosters/${APP_NETWORK}/feed?limit=${limit}`,
+        { credentials: 'include' }
       )
 
       if (!response.ok) {

@@ -5,7 +5,9 @@ export const useAgentCoinTypes = () => {
   return useQuery<SupportedToken[]>({
     queryKey: ['agentCoinTypes', APP_NETWORK],
     queryFn: async () => {
-      const res = await fetch(`${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}/available-coin-types`)
+      const res = await fetch(`${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}/available-coin-types`, {
+        credentials: 'include',
+      })
       if (!res.ok) throw new Error('Failed to fetch available coin types')
       const data = await res.json()
       const seen = new Set<string>()

@@ -23,7 +23,9 @@ export function usePlatformStats(network = APP_NETWORK) {
   return useQuery<PlatformStatsResponse>({
     queryKey: ['platform-stats', network],
     queryFn: async () => {
-      const res = await fetch(`${SUI_SENTINEL_API_URL}/stats/${network}`)
+      const res = await fetch(`${SUI_SENTINEL_API_URL}/stats/${network}`, {
+        credentials: 'include',
+      })
       if (!res.ok) throw new Error('Failed to fetch platform stats')
       return res.json()
     },

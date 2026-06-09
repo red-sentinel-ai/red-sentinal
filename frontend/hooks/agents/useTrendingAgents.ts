@@ -22,7 +22,9 @@ export const useTrendingAgents = (skipChainFilter?: boolean) => {
         params.append('chain', chainFilter)
       }
 
-      const res = await fetch(`${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}?${params.toString()}`)
+      const res = await fetch(`${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}?${params.toString()}`, {
+        credentials: 'include',
+      })
       if (!res.ok) {
         throw new Error('Failed to fetch trending agents')
       }

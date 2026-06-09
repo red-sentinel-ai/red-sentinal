@@ -14,6 +14,7 @@ interface Props {
   inputValue: string
   setInputValue: (v: string) => void
   tokenSymbol: string
+  walletBalance: string | null
   loading: boolean
   onSubmit: () => void
 }
@@ -24,6 +25,7 @@ export function DepositModal({
   inputValue,
   setInputValue,
   tokenSymbol,
+  walletBalance,
   loading,
   onSubmit,
 }: Props) {
@@ -34,6 +36,9 @@ export function DepositModal({
           <DialogTitle>Deposit Principal</DialogTitle>
           <DialogDescription>
             Deposit {tokenSymbol} to receive syndicate shares.
+            <span className="mt-1 block text-[var(--color-text-primary)]">
+              Wallet balance: {walletBalance ?? '0'} {tokenSymbol}
+            </span>
           </DialogDescription>
         </DialogHeader>
         <div className="mt-4 space-y-4">
