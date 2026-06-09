@@ -65,7 +65,7 @@ export function useAttackersLeaderboard(limit = 25, search = '', tier = '') {
       if (search) url.searchParams.set('search', search)
       if (tier) url.searchParams.set('tier', tier)
 
-      const response = await fetch(url.toString())
+      const response = await fetch(url.toString(), { credentials: 'include' })
       if (!response.ok) throw new Error('Failed to fetch attackers leaderboard')
       return response.json()
     },

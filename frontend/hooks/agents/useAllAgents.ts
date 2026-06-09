@@ -100,7 +100,8 @@ export const useAllAgents = (
       }
 
       const res = await fetch(
-        `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}?${params.toString()}`
+        `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}?${params.toString()}`,
+        { credentials: 'include' }
       )
 
       if (!res.ok) {

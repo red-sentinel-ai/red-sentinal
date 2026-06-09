@@ -6,6 +6,7 @@ declare global {
       SUPABASE_SERVICE_ROLE_KEY: string
       NODE_ENV: 'development' | 'production'
       SUPABASE_PROJECT_REF: string
+      RED_TEAM_API_AUTH: string
     }
   }
 }

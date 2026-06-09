@@ -13,7 +13,7 @@ export const useRecipientRewards = (
 
       const url = `${SUI_SENTINEL_API_URL}/rewards/${network}/${recipient}?page=1&limit=50`
 
-      const response = await fetch(url)
+      const response = await fetch(url, { credentials: 'include' })
 
       if (!response.ok) {
         throw new Error('Failed to fetch rewards history')

@@ -12,6 +12,7 @@ import { formatTokenAmount } from '@/lib/utils'
 import { useSyndicatePendingFees } from '@/hooks/syndicate/useSyndicateInfo'
 import { useSyndicateOwnerActions } from '@/hooks/syndicate/useSyndicateOwnerActions'
 import { useSyndicateMemberActions } from '@/hooks/syndicate/useSyndicateMemberActions'
+import { useEVMBalance } from '@/hooks/useEVMBalance'
 import type { BackendSyndicate, SyndicateModalId } from '@/types/Syndicate'
 import {
   buildFallbackMember,
@@ -58,7 +59,8 @@ export default function SyndicatePageClient({ identifier }: Props) {
     queryKey: ['syndicate-meta', identifier],
     queryFn: async () => {
       const res = await fetch(
-        `${SUI_SENTINEL_API_URL}/syndicates/${identifier}?network=${APP_NETWORK}`
+        `${SUI_SENTINEL_API_URL}/syndicates/${identifier}?network=${APP_NETWORK}`,
+        { credentials: 'include' }
       )
       if (!res.ok) throw new Error('Syndicate not found')
       return res.json()
@@ -107,6 +109,12 @@ export default function SyndicatePageClient({ identifier }: Props) {
     claimFeesForSelf,
     loading: memberLoading,
   } = useSyndicateMemberActions(safeAddress)
+
+  const { balance: walletTokenBalance } = useEVMBalance(tokenAddress)
+  const formattedWalletBalance =
+    walletTokenBalance !== null
+      ? walletTokenBalance.toLocaleString(undefined, { maximumFractionDigits: 4 })
+      : null
 
   // Derived display values.
   const formattedTVL = meta ? formatTokenAmount(meta.total_funds, tokenDecimals) : null
@@ -226,6 +234,17 @@ export default function SyndicatePageClient({ identifier }: Props) {
 
   async function handleDeposit() {
     if (!inputValue || !tokenAddress) return
+    const amount = parseFloat(inputValue)
+    if (!Number.isFinite(amount) || amount <= 0) {
+      toast.error('Enter a valid amount')
+      return
+    }
+    if (walletTokenBalance !== null && amount > walletTokenBalance) {
+      toast.error(
+        `Insufficient ${tokenSymbol} balance. You have ${formattedWalletBalance ?? '0'} ${tokenSymbol}`
+      )
+      return
+    }
     await runAction(
       () => deposit(tokenAddress, inputValue, tokenDecimals),
       'Deposit successful'
@@ -354,6 +373,7 @@ export default function SyndicatePageClient({ identifier }: Props) {
         inputValue={inputValue}
         setInputValue={setInputValue}
         tokenSymbol={tokenSymbol}
+        walletBalance={formattedWalletBalance}
         loading={memberLoading === 'deposit'}
         onSubmit={handleDeposit}
       />

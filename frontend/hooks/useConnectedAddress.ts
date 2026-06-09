@@ -10,6 +10,7 @@ export type ConnectedAddress = {
   address: string | undefined
   chain: SupportedChain
   isConnected: boolean
+  isHydrated: boolean
 }
 
 /**
@@ -18,7 +19,7 @@ export type ConnectedAddress = {
  * only see their own data.
  */
 export function useConnectedAddress(): ConnectedAddress {
-  const { activeChain } = useActiveChain()
+  const { activeChain, isHydrated } = useActiveChain()
   const suiAccount = useCurrentAccount()
   const { publicKey } = useSolanaWallet()
   const { address: evmAddress } = useEVMWallet()
@@ -36,5 +37,6 @@ export function useConnectedAddress(): ConnectedAddress {
     address,
     chain: activeChain,
     isConnected: !!address,
+    isHydrated,
   }
 }

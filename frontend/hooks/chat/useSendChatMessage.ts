@@ -18,6 +18,7 @@ export function useSendChatMessage() {
         `${SUI_SENTINEL_API_URL}/chat/${APP_NETWORK}/${agentId}/messages`,
         {
           method: 'POST',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
           },

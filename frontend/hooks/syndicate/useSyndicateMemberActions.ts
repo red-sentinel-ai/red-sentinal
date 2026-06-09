@@ -95,6 +95,7 @@ export function useSyndicateMemberActions(syndicateAddress: `0x${string}`) {
     try {
       const res = await fetch(`${SUI_SENTINEL_API_URL}/syndicates/join-request`, {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           syndicate_address: syndicateAddress,

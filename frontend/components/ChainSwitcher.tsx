@@ -13,8 +13,22 @@ import { useActiveChain } from '@/context/ActiveChainContext'
 import { cn } from '@/lib/utils'
 
 export function ChainSwitcher() {
-  const { activeChain, setActiveChain } = useActiveChain()
+  const { activeChain, setActiveChain, isHydrated } = useActiveChain()
   const active = CHAINS[activeChain]
+
+  // Show a disabled button while hydrating to prevent flash of wrong chain
+  if (!isHydrated) {
+    return (
+      <button
+        disabled
+        className="font-body flex min-h-[34px] items-center gap-2 bg-[var(--color-bg-deepest)] px-1 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.1em] text-white opacity-50 md:text-[11px]"
+      >
+        <div className="h-5 w-5 rounded-full bg-white/20" />
+        <span className="hidden sm:inline">Loading...</span>
+        <ChevronDown className="h-3.5 w-3.5" />
+      </button>
+    )
+  }
 
   return (
     <DropdownMenu modal={false}>
