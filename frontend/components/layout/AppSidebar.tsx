@@ -9,6 +9,7 @@ import {
   Terminal,
   Network,
   PlusSquare,
+  Swords,
   Trophy,
   User,
   type LucideIcon,
@@ -44,6 +45,7 @@ const NAV_ITEMS: NavItem[] = [
   { title: 'Syndicates', href: '/syndicates', icon: Network },
   { title: 'Leaderboard', href: '/leaderboard', icon: Trophy },
   { title: 'Rewards', href: '/rewards', icon: Gift },
+  { title: 'Practice', href: '/practice', icon: Swords },
   { title: 'Profile', href: '/profile', icon: User },
 ]
 

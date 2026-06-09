@@ -1,4 +1,5 @@
 import { RED_TEAM_API_URL } from '@/constants'
+import { redteamAuthHeader } from '@/lib/redteam'
 import { NextResponse } from 'next/server'
 
 export async function POST(req: Request) {
@@ -14,7 +15,7 @@ export async function POST(req: Request) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer suihero@345',
+        Authorization: redteamAuthHeader(),
       },
       body: JSON.stringify({
         public_instructions,
