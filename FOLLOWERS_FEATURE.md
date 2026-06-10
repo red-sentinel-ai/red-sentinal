@@ -4,7 +4,15 @@ A Twitter-style social graph for Sui Sentinel: every profile shows a **follower 
 **following count**, each clickable to reveal an enriched list of users, plus a **Follow / Unfollow**
 button on other people's public profiles.
 
-> Status: **planned, not yet implemented.** This document is the implementation spec.
+> Status: **implemented** (Jun 2026).
+>
+> As-built deviations from the original spec:
+> - Public GET endpoints take `:identifier` that accepts **either a user id (uuid) or a
+>   username** (resolved internally), not username-only. The frontend passes the uuid it
+>   already holds.
+> - `useFollowers` and `useFollowing` live in a single file `hooks/social/useFollowers.ts`.
+> - An extra `components/profile/FollowListPanel.tsx` holds the per-tab infinite list so the
+>   modal stays lean and hooks only mount when the dialog is open.
 
 ---
 
