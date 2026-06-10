@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { Inbox } from '@novu/nextjs'
 import { dark } from '@novu/react/themes'
 
-import { NOVU_APP_IDENTIFIER } from '@/constants'
+import { NOVU_APP_IDENTIFIER, NOVU_BACKEND_URL, NOVU_WEBSOCKET_HOSTNAME } from '@/constants'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 
 // Match the Aave-style dark UI: dark surfaces, white primary, hairline borders.
@@ -47,6 +47,8 @@ export function NovuInbox() {
     <Inbox
       applicationIdentifier={NOVU_APP_IDENTIFIER}
       subscriber={address}
+      backendUrl={NOVU_BACKEND_URL}
+      socketUrl={NOVU_WEBSOCKET_HOSTNAME}
       appearance={appearance}
       onNotificationClick={(notification) => {
         if (notification?.redirect?.url) {
