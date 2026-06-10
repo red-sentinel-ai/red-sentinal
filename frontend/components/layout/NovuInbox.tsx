@@ -5,7 +5,7 @@ import { Inbox } from '@novu/nextjs'
 import { dark } from '@novu/react/themes'
 
 import { NOVU_APP_IDENTIFIER, NOVU_BACKEND_URL, NOVU_WEBSOCKET_HOSTNAME } from '@/constants'
-import { useConnectedAddress } from '@/hooks/useConnectedAddress'
+import { useAuth } from '@/context/AuthContext'
 
 // Match the Aave-style dark UI: dark surfaces, white primary, hairline borders.
 const appearance = {
@@ -38,15 +38,16 @@ const appearance = {
 
 export function NovuInbox() {
   const router = useRouter()
-  const { address, isConnected } = useConnectedAddress()
+  const { user, isAuthenticated } = useAuth()
 
-  // Without a subscriber (wallet) and an app identifier there is nothing to show.
-  if (!isConnected || !address || !NOVU_APP_IDENTIFIER) return null
+  // Subscriber is the profile id (one profile spans wallets, email, telegram).
+  // Nothing to show until the user is authenticated and we have an identifier.
+  if (!isAuthenticated || !user?.id || !NOVU_APP_IDENTIFIER) return null
 
   return (
     <Inbox
       applicationIdentifier={NOVU_APP_IDENTIFIER}
-      subscriber={address}
+      subscriber={user.id}
       backendUrl={NOVU_BACKEND_URL}
       socketUrl={NOVU_WEBSOCKET_HOSTNAME}
       appearance={appearance}
