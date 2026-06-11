@@ -3,6 +3,7 @@
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { ChainSwitcher } from '@/components/ChainSwitcher'
 import { ConnectButton } from '@/components/ConnectButton'
+import { NovuInbox } from '@/components/layout/NovuInbox'
 
 export function AppTopbar() {
   return (
@@ -13,6 +14,7 @@ export function AppTopbar() {
       />
       <div className="ml-auto flex items-center gap-3 md:gap-8">
         <ChainSwitcher />
+        <NovuInbox />
         <ConnectButton />
       </div>
     </header>
