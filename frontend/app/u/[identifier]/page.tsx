@@ -6,6 +6,8 @@ import { truncateAddress, detectChainFromAddress } from '@/lib/utils'
 import { getExplorerAddressUrl } from '@/lib/explorer'
 import { supabaseServiceClient } from '@/db/config/server'
 import { FeaturedAgentCard } from '@/components/FeaturedAgentCard'
+import { FollowButton } from '@/components/profile/FollowButton'
+import { FollowStats } from '@/components/profile/FollowStats'
 import { type AgentDetails } from '@/hooks/agents/useAllAgents'
 import { APP_NETWORK, SUI_SENTINEL_API_URL } from '@/constants'
 
@@ -119,12 +121,20 @@ export default async function PublicProfilePage({
               )}
             </div>
             <div className="flex-1">
-              <h1 className="text-3xl font-bold sm:text-4xl">
-                {user.display_name || user.username}
-              </h1>
-              <p className="mt-1 text-[var(--color-text-muted)]">@{user.username}</p>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h1 className="text-3xl font-bold sm:text-4xl">
+                    {user.display_name || user.username}
+                  </h1>
+                  <p className="mt-1 text-[var(--color-text-muted)]">@{user.username}</p>
+                </div>
+                <FollowButton targetUserId={user.id} />
+              </div>
+              <div className="mt-4">
+                <FollowStats identifier={user.id} />
+              </div>
               {user.wallet_addresses?.[0] && (
-                <div className="mt-3 flex flex-col items-start gap-1 sm:flex-row sm:items-center">
+                <div className="mt-4 flex flex-col items-start gap-1 sm:flex-row sm:items-center">
                   <p className="text-sm font-medium text-[var(--color-text-secondary)]">Wallet Address:</p>
                   <Link
                     href={getExplorerAddressUrl(user.wallet_addresses[0], detectChainFromAddress(user.wallet_addresses[0]))}
