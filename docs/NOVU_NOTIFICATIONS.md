@@ -81,7 +81,8 @@
 | File | Role |
 |---|---|
 | `services/novu.ts` | The whole server-side Novu surface. Exports `isNovuConfigured`, `isTelegramConfigured`, `connectTelegram`, `triggerWorkflow`. Uses the `@novu/api` SDK. |
-| `routes/auth/index.ts` | The trigger site. `WELCOME_WORKFLOW_ID = 'welcome'`. On **`POST /auth/email/verify`** and **`POST /auth/telegram/verify`**, fires the `welcome` workflow (fire-and-forget). |
+| `routes/auth/index.ts` | A trigger site. `WELCOME_WORKFLOW_ID = 'welcome'`. On **`POST /auth/email/verify`** and **`POST /auth/telegram/verify`**, fires the `welcome` workflow (fire-and-forget). |
+| `routes/social/index.js` | A trigger site. `NEW_FOLLOWER_WORKFLOW_ID = 'new-follower'`. On a **new** `POST /social/follow`, fires the `new-follower` workflow to the followed user (fire-and-forget). Imports `services/novu.ts` with the literal `.ts` extension (the `.js`-file convention here). |
 | `plugins/env.js` | Registers `NOVU_API_URL`, `NOVU_SECRET_KEY`, `NOVU_TELEGRAM_INTEGRATION_ID`. |
 | dependency | `@novu/api` (version-matched to the server, 3.17.x). |
 
@@ -165,6 +166,35 @@ payload: { channel: "email" | "telegram", name: "<display name / username>" }
 So the **only** variables available in the workflow templates are:
 `{{payload.name}}`, `{{payload.channel}}`, `{{subscriber.firstName}}`, `{{subscriber.email}}`.
 Use `{{payload.name}}` for greetings (always populated; falls back to `"Operator"`).
+
+---
+
+## 5b. Flow C — "new follower" notification
+
+When a user follows another user, the **followed** user is notified.
+
+1. `POST /social/follow` (`backend-service/api/routes/social/index.js`) upserts the
+   follow edge. The upsert uses `.select('id')`, which returns a row **only on a new
+   follow** (an idempotent re-follow returns nothing) — so we never re-notify.
+2. On a new follow, **fire-and-forget** `notifyNewFollower(...)` looks up the
+   follower's profile and triggers:
+   ```ts
+   triggerWorkflow('new-follower', followingId /* the followed user */, {
+     payload: { followerName, followerUsername, followerAvatar, profileUrl }
+   })
+   ```
+   - Subscriber = the **followed** user's profile id (`following_id`).
+   - No email/telegram is attached here — the followed user already has whatever
+     channels they connected via their own welcome flow; the `new-follower` workflow
+     just needs an **in-app step** (and optionally email/chat if they want those).
+
+**Payload contract** (`new-follower`):
+```jsonc
+payload: { followerName, followerUsername, followerAvatar, profileUrl }
+```
+Template variables: `{{payload.followerName}}`, `{{payload.followerUsername}}`,
+`{{payload.followerAvatar}}`, `{{payload.profileUrl}}` (e.g. `/u/<username>`, good as
+the in-app notification's redirect URL).
 
 ---
 
@@ -292,7 +322,8 @@ sui-sentinel/frontend/
 
 backend-service/api/
   services/novu.ts                       # @novu/api client + connectTelegram + triggerWorkflow
-  routes/auth/index.ts                   # WELCOME_WORKFLOW_ID; triggers on email/telegram verify
+  routes/auth/index.ts                   # WELCOME_WORKFLOW_ID; triggers welcome on email/telegram verify
+  routes/social/index.js                 # NEW_FOLLOWER_WORKFLOW_ID; triggers new-follower on POST /social/follow
   plugins/env.js                         # NOVU_API_URL, NOVU_SECRET_KEY, NOVU_TELEGRAM_INTEGRATION_ID
 
 backend-service/bot/
