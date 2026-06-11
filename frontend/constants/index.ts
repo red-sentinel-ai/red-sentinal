@@ -6,6 +6,10 @@ export const supabaseUrl = process.env.SUPABASE_URL || ''
 export const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || ''
 export const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 
+export const NOVU_APP_IDENTIFIER = process.env.NEXT_PUBLIC_NOVU_APPLICATION_IDENTIFIER || ''
+export const NOVU_BACKEND_URL = "https://notifications.redsentinel.xyz/api" 
+export const NOVU_WEBSOCKET_HOSTNAME = "wss://notifications.redsentinel.xyz"
+
 export const SYSTEM_PROMPT_MAX_TOKENS = 600
 export const ATTACK_PROMPT_MAX_TOKENS = 600
 
@@ -669,7 +673,6 @@ export const TELEGRAM_NOTIFICATION_API =
 export const SUI_SENTINEL_ALERTS_TELEGRAM_GROUP_ID =
   process.env.SUI_SENTINEL_ALERTS_TELEGRAM_GROUP_ID
 export const ADMIN_API_TOKEN = process.env.ADMIN_API_TOKEN
-export const SS_ADMIN_TOKEN = process.env.SS_ADMIN_TOKEN
 
 export const WITHDRAWAL_LOCK_MS = 1_209_600_000 // 14 days in milliseconds
 
