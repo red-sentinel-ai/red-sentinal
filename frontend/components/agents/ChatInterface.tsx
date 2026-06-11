@@ -147,17 +147,21 @@ export default function ChatInterface({
 
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false)
 
-  const isAgentDrained = chatMessages.some(
-    message => message.type === 'agent' && message.isSuccess === true
+  const breachIndex = useMemo(
+    () => chatMessages.findIndex(msg => msg.type === 'agent' && msg.isSuccess === true),
+    [chatMessages]
+  )
+
+  const isAgentDrained = breachIndex >= 0
+
+  const orderedMessages = useMemo(
+    () => (breachIndex >= 0 ? chatMessages.slice(0, breachIndex + 1) : chatMessages),
+    [chatMessages, breachIndex]
   )
 
   const winnerInfo = useMemo(() => {
-    const winningAgentMessageIndex = chatMessages.findIndex(
-      msg => msg.type === 'agent' && msg.isSuccess === true
-    )
-
-    if (winningAgentMessageIndex > 0) {
-      const correspondingUserMessage = chatMessages[winningAgentMessageIndex - 1]
+    if (breachIndex > 0) {
+      const correspondingUserMessage = chatMessages[breachIndex - 1]
 
       if (correspondingUserMessage?.type === 'user') {
         return {
@@ -168,24 +172,24 @@ export default function ChatInterface({
     }
 
     return null
-  }, [chatMessages])
+  }, [chatMessages, breachIndex])
 
   const displayedMessages = useMemo(() => {
-    if (activeTab === 'global') return chatMessages
+    if (activeTab === 'global') return orderedMessages
     if (!connectedAddress) return []
     const filtered: ChatMessage[] = []
-    for (let i = 0; i < chatMessages.length; i++) {
-      const msg = chatMessages[i]
+    for (let i = 0; i < orderedMessages.length; i++) {
+      const msg = orderedMessages[i]
       if (msg.type === 'user' && msg.sender === connectedAddress) {
         filtered.push(msg)
-        if (chatMessages[i + 1]?.type === 'agent') {
-          filtered.push(chatMessages[i + 1])
+        if (orderedMessages[i + 1]?.type === 'agent') {
+          filtered.push(orderedMessages[i + 1])
           i++
         }
       }
     }
     return filtered
-  }, [chatMessages, activeTab, connectedAddress])
+  }, [orderedMessages, activeTab, connectedAddress])
 
   const adjustTextareaHeight = () => {
     const textarea = textareaRef.current
