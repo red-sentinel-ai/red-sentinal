@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { User, Folder, Activity, Loader2, Camera, Gift, BarChart3, Copy, Check } from 'lucide-react'
+import { Folder, Activity, Loader2, Camera, Gift, BarChart3, Copy, Check } from 'lucide-react'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { UserActivity } from '@/components/profile/UserActivity'
@@ -20,6 +20,7 @@ import { useUserProfileStats } from '@/hooks/profile/useUserProfileStats'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 import { SENTINEL_GIFS, USER_IMAGES } from '@/constants/asset_paths'
+import { DEFAULT_PROFILE_URL } from '@/constants'
 
 const PROFILE_TABS = {
   AGENTS: 'agents',
@@ -139,17 +140,13 @@ function ProfileContent() {
                   <div className="bg-[var(--color-bg-surface)]/70 flex h-full w-full items-center justify-center">
                     <Loader2 className="h-8 w-8 animate-spin text-[var(--color-text-primary)]" />
                   </div>
-                ) : profile?.avatar_url ? (
+                ) : (
                   <Image
-                    src={profile.avatar_url}
+                    src={profile?.avatar_url || DEFAULT_PROFILE_URL}
                     alt="User Avatar"
                     fill
                     className="object-cover brightness-90 transition-all duration-700"
                   />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-[var(--color-bg-subtle)]">
-                    <User className="h-12 w-12 text-[var(--color-text-muted)]" />
-                  </div>
                 )}
                 <div className="bg-[var(--color-text-primary)]/40 absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
                   <Camera className="h-8 w-8 text-[var(--color-bg-surface)]" />

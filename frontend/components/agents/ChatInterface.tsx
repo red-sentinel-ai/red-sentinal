@@ -357,7 +357,7 @@ export default function ChatInterface({
         </div>
 
         {/* Awaiting Status */}
-        {displayedMessages.length > 0 && !isSubmitting && (
+        {displayedMessages.length > 0 && !isSubmitting && !isAgentDrained && (
           <div className="border-y border-[var(--color-border-strong)] py-8 text-center">
             <span className="industrial-header text-[10px] tracking-[8px] text-[var(--color-text-muted)] opacity-40">
               AWAITING_NEW_PAYLOADS
@@ -369,7 +369,7 @@ export default function ChatInterface({
       {/* Input Area */}
       {chainMismatch ? (
         <ChainMismatchBanner agentChain={chainMismatch} />
-      ) : isAttackPaused ? (
+      ) : isAttackPaused && !isAgentDrained ? (
         <div className="border-t border-[var(--color-border-strong)] bg-[var(--color-bg-base)] p-6">
           <div className="mx-auto max-w-4xl text-center">
             <h3 className="industrial-header text-accent text-sm">ATTACKS_PAUSED</h3>
