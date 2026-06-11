@@ -109,7 +109,33 @@ export type RemoveSocialResponse = {
   status: 'social_removed'
 }
 
+// Followers / following types
+export type FollowCounts = {
+  followers: number
+  following: number
+  viewer_is_following: boolean
+}
+
+export type FollowListUser = {
+  user_id: string
+  username: string | null
+  display_name: string | null
+  avatar_url: string | null
+  wallet_addresses: string[]
+  twitter_username: string | null
+  twitter_avatar: string | null
+  is_following: boolean
+}
+
+export type FollowListResponse = {
+  users: FollowListUser[]
+  total: number
+  limit: number
+  offset: number
+}
+
 const AUTH_BASE_URL = `${SUI_SENTINEL_API_URL}/auth`
+const SOCIAL_BASE_URL = `${SUI_SENTINEL_API_URL}/social`
 
 class AuthApiError extends Error {
   constructor(
@@ -339,6 +365,93 @@ export async function logout(): Promise<void> {
     method: 'POST',
     credentials: 'include',
   })
+}
+
+/**
+ * Follow another user. `userId` is the authenticated actor (sent as x-user-id).
+ */
+export async function followUser(userId: string, followingId: string): Promise<void> {
+  const response = await fetch(`${SOCIAL_BASE_URL}/follow`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-user-id': userId,
+    },
+    body: JSON.stringify({ following_id: followingId }),
+  })
+
+  await handleResponse<{ status: string }>(response)
+}
+
+/**
+ * Unfollow a user.
+ */
+export async function unfollowUser(userId: string, followingId: string): Promise<void> {
+  const response = await fetch(`${SOCIAL_BASE_URL}/follow/${followingId}`, {
+    method: 'DELETE',
+    credentials: 'include',
+    headers: {
+      'x-user-id': userId,
+    },
+  })
+
+  await handleResponse<{ status: string }>(response)
+}
+
+/**
+ * Follower / following counts for a user, plus whether the viewer follows them.
+ * `identifier` is a user id (uuid) or username.
+ */
+export async function getFollowCounts(
+  identifier: string,
+  viewerId?: string
+): Promise<FollowCounts> {
+  const url = new URL(`${SOCIAL_BASE_URL}/${identifier}/counts`)
+  if (viewerId) url.searchParams.set('viewerId', viewerId)
+
+  const response = await fetch(url.toString(), { credentials: 'include' })
+  return handleResponse<FollowCounts>(response)
+}
+
+type FollowListParams = {
+  limit?: number
+  offset?: number
+  viewerId?: string
+}
+
+async function fetchFollowList(
+  identifier: string,
+  direction: 'followers' | 'following',
+  { limit = 20, offset = 0, viewerId }: FollowListParams
+): Promise<FollowListResponse> {
+  const url = new URL(`${SOCIAL_BASE_URL}/${identifier}/${direction}`)
+  url.searchParams.set('limit', String(limit))
+  url.searchParams.set('offset', String(offset))
+  if (viewerId) url.searchParams.set('viewerId', viewerId)
+
+  const response = await fetch(url.toString(), { credentials: 'include' })
+  return handleResponse<FollowListResponse>(response)
+}
+
+/**
+ * List the users who follow `identifier`.
+ */
+export async function getFollowers(
+  identifier: string,
+  params: FollowListParams = {}
+): Promise<FollowListResponse> {
+  return fetchFollowList(identifier, 'followers', params)
+}
+
+/**
+ * List the users `identifier` is following.
+ */
+export async function getFollowing(
+  identifier: string,
+  params: FollowListParams = {}
+): Promise<FollowListResponse> {
+  return fetchFollowList(identifier, 'following', params)
 }
 
 export { AuthApiError }
