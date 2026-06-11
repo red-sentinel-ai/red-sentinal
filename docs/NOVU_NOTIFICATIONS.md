@@ -80,7 +80,7 @@
 ### Backend (`backend-service/api`)
 | File | Role |
 |---|---|
-| `services/novu.ts` | The whole server-side Novu surface. Exports `isNovuConfigured`, `isTelegramConfigured`, `connectTelegram`, `triggerWorkflow`. Uses the `@novu/api` SDK. |
+| `services/novu.ts` | The whole server-side Novu surface. Exports `isNovuConfigured`, `isTelegramConfigured`, `connectTelegram`, `disconnectTelegram`, `triggerWorkflow`. Uses the `@novu/api` SDK. |
 | `routes/auth/index.ts` | A trigger site. `WELCOME_WORKFLOW_ID = 'welcome'`. On **`POST /auth/email/verify`** and **`POST /auth/telegram/verify`**, fires the `welcome` workflow (fire-and-forget). |
 | `routes/social/index.js` | A trigger site. `NEW_FOLLOWER_WORKFLOW_ID = 'new-follower'`. On a **new** `POST /social/follow`, fires the `new-follower` workflow to the followed user (fire-and-forget). Imports `services/novu.ts` with the literal `.ts` extension (the `.js`-file convention here). |
 | `plugins/env.js` | Registers `NOVU_API_URL`, `NOVU_SECRET_KEY`, `NOVU_TELEGRAM_INTEGRATION_ID`. |
@@ -270,7 +270,8 @@ the in-app notification's redirect URL).
 | Triggered but **no Telegram message** | The `welcome` workflow has **no chat step**, or `NOVU_TELEGRAM_INTEGRATION_ID` is unset/wrong, or the bot token in Novu isn't the bot the user started. |
 | The connect/verify route **hangs for a long time** | Notifications must be **fire-and-forget**. If someone re-`await`s them in the request path, a slow/failing Novu call (or SDK retries) blocks the response. The client is configured with `timeoutMs: 10000` + `retryConfig: { strategy: 'none' }` to fail fast. |
 | **Duplicate** Telegram messages | The subscriber has multiple `telegram_chat` channel endpoints (a chat step fans out to all of them) — e.g. an old `tg-<chatId>` endpoint sitting next to the new `tg-<subscriberId>` one. `connectTelegram` self-heals by deleting all existing Telegram endpoints for the subscriber before creating one, so reconnecting Telegram collapses it back to a single endpoint. To fix without reconnecting, delete the extras in the dashboard (Subscribers → endpoints). |
-| **No message on a 2nd/re-linked profile** (worked on the first) | The same Telegram account was linked to profile A, then re-linked to profile B. The endpoint identifier was keyed on the chatId (`tg-<chatId>`), shared across profiles → B's create 409'd and was swallowed → B had no endpoint. Fixed by keying the identifier on the subscriber (`tg-<subscriberId>`) so each profile gets its own endpoint. A leftover endpoint on A's subscriber is harmless (A isn't triggered for Telegram while disconnected) and is cleaned the next time A reconnects (self-heal). |
+| **No message on a 2nd/re-linked profile** (worked on the first) | The same Telegram account was linked to profile A, then re-linked to profile B. The endpoint identifier was keyed on the chatId (`tg-<chatId>`), shared across profiles → B's create 409'd and was swallowed → B had no endpoint. Fixed by keying the identifier on the subscriber (`tg-<subscriberId>`) so each profile gets its own endpoint, and by removing the endpoint on disconnect (`disconnectTelegram`). |
+| **Same chat gets notifications for *multiple* of your profiles** | Each profile you linked this Telegram to has its own `telegram_chat` endpoint with the same chatId. Disconnecting used to leave those endpoints behind, so every such profile kept delivering to your chat. `disconnectTelegram` now removes the endpoint on disconnect. To clear endpoints left over from *before* this fix, delete them on each old profile's subscriber in the dashboard (Subscribers → endpoints), or reconnect+disconnect Telegram on each. |
 | In-app bell never updates | Workflow has no **in-app step**, or app identifier is from the wrong env, or the user isn't authenticated (Inbox renders `null`). |
 | Backend logs `welcome_telegram_notify_failed` / `welcome_email_notify_failed` | The fire-and-forget `.catch` logged the real error — read it; usually integration id or missing destination. |
 
@@ -297,9 +298,13 @@ the in-app notification's redirect URL).
   chat step fans out to *every* endpoint on a subscriber, `connectTelegram` also
   deletes all existing Telegram endpoints for the subscriber before creating one
   (delete-then-create-one) — this guarantees exactly one delivery and cleans up
-  any leftovers from older schemes. Note: Telegram **disconnect** does not yet
-  remove the Novu endpoint (it only deletes the `ss_social_connections` row); the
-  orphan is harmless and is cleaned on the next reconnect of that profile.
+  any leftovers from older schemes.
+- **Telegram disconnect removes the Novu endpoint.** When a profile disconnects
+  Telegram (`DELETE /auth/social/:id` with `platform='telegram'`), the handler calls
+  `disconnectTelegram(userId)` to delete that subscriber's Telegram endpoint. Without
+  this, the endpoint lingers and the profile keeps receiving chat notifications (e.g.
+  `new-follower`) even after "disconnecting" — and if the same chat was linked to
+  several profiles over time, every one of them would deliver to that chat.
 - **Fire-and-forget triggers.** Notification delivery must never block or fail a
   user action (connecting a channel). All triggers are `void … .catch(log)`.
 - **Fail-fast client.** `timeoutMs: 10000` + `retryConfig: { strategy: 'none' }`
