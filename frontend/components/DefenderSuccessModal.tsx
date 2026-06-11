@@ -3,7 +3,6 @@ import { truncateAddress } from '@/lib/utils'
 import { motion } from 'framer-motion'
 import { CheckCircle, X } from 'lucide-react'
 import Link from 'next/link'
-import { SpinPassPromo } from '@/components/rewards/SpinPassPromo'
 
 interface SuccessModalProps {
   open: boolean
@@ -72,10 +71,6 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
               View Sentinel
             </button>
           </Link>
-        </div>
-
-        <div className="mt-2 border-t border-[var(--color-border-subtle)]">
-          <SpinPassPromo description="You've received a free spin pass for deploying your Sentinel!" buttonVariant="secondary" />
         </div>
       </motion.div>
     </div>
