@@ -13,6 +13,7 @@ import { UserStats } from '@/components/profile/UserStats'
 import { BoosterRewards } from '@/components/rewards/BoosterRewards'
 import { ConnectPrompt } from '@/components/ConnectPrompt'
 import { EditProfileModal } from '@/components/profile/EditProfileModal'
+import { FollowStats } from '@/components/profile/FollowStats'
 import { ProfileSocialConnections } from '@/components/profile/ProfileSocialConnections'
 import { useUserProfile, useUpdateAvatar } from '@/hooks/profile/useUserProfile'
 import { useUserProfileStats } from '@/hooks/profile/useUserProfileStats'
@@ -210,6 +211,8 @@ function ProfileContent() {
                     </button>
                   </div>
                 </div>
+
+                {profile?.id && <FollowStats identifier={profile.id} />}
               </div>
             </div>
           </section>
