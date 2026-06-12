@@ -19,7 +19,7 @@ import { useUserProfileStats } from '@/hooks/profile/useUserProfileStats'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 import { SENTINEL_GIFS, USER_IMAGES } from '@/constants/asset_paths'
-import { DEFAULT_PROFILE_URL } from '@/constants'
+import { generateAvatarUrl } from '@/lib/utils'
 
 const PROFILE_TABS = {
   AGENTS: 'agents',
@@ -141,7 +141,7 @@ function ProfileContent() {
                   </div>
                 ) : (
                   <Image
-                    src={profile?.avatar_url || DEFAULT_PROFILE_URL}
+                    src={profile?.avatar_url || generateAvatarUrl(connectedAddress)}
                     alt="User Avatar"
                     fill
                     className="object-cover brightness-90 transition-all duration-700"

@@ -9,7 +9,8 @@ import { FeaturedAgentCard } from '@/components/FeaturedAgentCard'
 import { FollowButton } from '@/components/profile/FollowButton'
 import { FollowStats } from '@/components/profile/FollowStats'
 import { type AgentDetails } from '@/hooks/agents/useAllAgents'
-import { APP_NETWORK, DEFAULT_PROFILE_URL, SUI_SENTINEL_API_URL } from '@/constants'
+import { APP_NETWORK, SUI_SENTINEL_API_URL } from '@/constants'
+import { generateAvatarUrl } from '@/lib/utils'
 
 // Here we didn't used the useAgentsByOwner because it's a server components and good for SEO, if we want to use useAgentsByOwner hook, we will need to convert it to client component
 async function fetchAgentsByCreator(walletAddress: string): Promise<AgentDetails[]> {
@@ -113,7 +114,7 @@ export default async function PublicProfilePage({
           <div className="mb-6 flex flex-col items-start gap-6 sm:flex-row sm:items-center">
             <div className="relative h-28 w-28 flex-shrink-0 overflow-hidden rounded-full border-2 border-[var(--color-border-subtle)]">
               <Image
-                src={user.avatar_url || DEFAULT_PROFILE_URL}
+                src={user.avatar_url || generateAvatarUrl(user.wallet_addresses?.[0] || user.id)}
                 alt="User Avatar"
                 fill
                 className="object-cover"

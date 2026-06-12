@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ConnectModal } from '@mysten/dapp-kit'
 import { toast } from 'sonner'
 
-import { DEFAULT_PROFILE_URL } from '@/constants'
+import { generateAvatarUrl } from '@/lib/utils'
 import { truncateAddress } from '@/lib/utils'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
@@ -60,7 +60,7 @@ function ChatMessageBubble({
         className="group flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden border border-[var(--color-border-strong)] bg-[var(--color-bg-elevated)] transition-all hover:border-white"
       >
         <Image
-          src={senderProfile?.avatar_url || DEFAULT_PROFILE_URL}
+          src={senderProfile?.avatar_url || generateAvatarUrl(message.sender_address)}
           width={32}
           height={32}
           alt="user"

@@ -8,7 +8,7 @@ import { motion } from 'framer-motion'
 import clsx from 'clsx'
 import { formatDistanceToNow } from 'date-fns'
 import { Trophy, ExternalLink, Scale } from 'lucide-react'
-import { DEFAULT_PROFILE_URL } from '@/constants'
+import { generateAvatarUrl } from '@/lib/utils'
 import { getExplorerTxUrl } from '@/lib/explorer'
 import { truncateAddress } from '@/lib/utils'
 import type { AgentDetails } from '@/hooks/agents/useAllAgents'
@@ -121,7 +121,7 @@ export const ChatMessage = ({
       <div className="flex items-center gap-3">
         <div className="flex h-8 w-8 items-center justify-center border border-[var(--color-border-strong)] bg-[var(--color-bg-elevated)]">
           <Image
-            src={agent.agent_image || DEFAULT_PROFILE_URL}
+            src={agent.agent_image || generateAvatarUrl(agent.agent_id)}
             width={32}
             height={32}
             alt={agent.agent_name}
