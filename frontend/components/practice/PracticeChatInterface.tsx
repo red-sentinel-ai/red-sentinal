@@ -277,7 +277,7 @@ export function PracticeChatInterface({
                 <div className="flex items-center gap-3">
                   <div className="flex h-8 w-8 items-center justify-center border border-[var(--color-border-strong)] bg-[var(--color-bg-elevated)]">
                     <Image
-                      src={generateAvatarUrl(sentinel.sentinel_id)}
+                      src={generateAvatarUrl(sentinel.sentinel_id.toString())}
                       width={32}
                       height={32}
                       alt="sentinel"
