@@ -72,7 +72,13 @@ export const AgentsList = ({
                 <span>ID / Agent Name</span>
                 <SortIcon field="agent_id" />
               </div>
-              <div className="flex items-center">Status</div>
+              <div
+                className="flex cursor-pointer items-center hover:text-[var(--color-text-primary)]"
+                onClick={() => onSort('state')}
+              >
+                <span>Status</span>
+                <SortIcon field="state" />
+              </div>
               <div className="flex items-center">Network</div>
               <div
                 className="flex cursor-pointer items-center hover:text-[var(--color-text-primary)]"

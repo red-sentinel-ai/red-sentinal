@@ -1,6 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
@@ -12,7 +13,7 @@ import { getTokenForCoinType } from '@/constants'
 import { CHAINS } from '@/constants/chains'
 import { AgentDropdown } from './agents/AgentCardDropdown'
 import { useWithdrawAgentModal } from '@/hooks/agents/useWithdrawAgentModal'
-import { formatDuration } from '@/lib/utils'
+import { formatDuration, truncateAddress } from '@/lib/utils'
 import { PrizePoolChangeDisplay } from './agents/PrizePoolChangeDisplay'
 import { ClaimFeesModal } from './agents/ClaimFeesModal'
 import { TokenAmount } from './ui/common/TokenAmount'
@@ -68,6 +69,11 @@ export const FeaturedAgentCard = ({
   const isAttackPaused = !isWithdrawalLocked && Number(agent.unlock_timestamp) > 0
   const earnings = Number(agent.accumulated_fees || 0) / tokenDivisor
   const hasEarnings = earnings > 0
+
+  // Once defeated, the bounty is paid out to the attacker — no funds remain to manage,
+  // so we suppress every owner action and surface who claimed the bounty instead.
+  const isDefeated = agent.state === 'defeated'
+  const defeaterAddress = agent.winner?.address || null
 
   useEffect(() => {
     if (hasNoBalance) {
@@ -184,6 +190,7 @@ export const FeaturedAgentCard = ({
               createdAt={agent.timestampMs}
               coinType={agent.coin_type}
               chain={agent.chain}
+              isDefeated={isDefeated}
             />
           </div>
         </div>
@@ -219,18 +226,27 @@ export const FeaturedAgentCard = ({
         </div>
 
         <div className="mb-2 space-y-1 text-xs font-medium">
-          <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
-            <span className="text-[var(--color-text-secondary)]">Prize Pool:</span>
-            <div className="flex items-center justify-end">
-              <span className="mr-1 sm:mr-2"><TokenAmount rawAmount={agent.total_balance} token={token} precision={4} /></span>
-              <PrizePoolChangeDisplay prizePoolHistory={agent.prizePoolHistory} variant="card" />
+          {isDefeated ? (
+            <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
+              <span className="text-[var(--color-text-secondary)]">Total Bounty Won:</span>
+              <div className="flex items-center justify-end font-semibold text-[var(--color-danger)]">
+                <TokenAmount rawAmount={agent.winner?.amount_won ?? 0} token={token} precision={4} />
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
+              <span className="text-[var(--color-text-secondary)]">Prize Pool:</span>
+              <div className="flex items-center justify-end">
+                <span className="mr-1 sm:mr-2"><TokenAmount rawAmount={agent.total_balance} token={token} precision={4} /></span>
+                <PrizePoolChangeDisplay prizePoolHistory={agent.prizePoolHistory} variant="card" />
+              </div>
+            </div>
+          )}
           <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
             <span className="text-[var(--color-text-secondary)]">Message Cost:</span>
             <span className="text-right"><TokenAmount rawAmount={agent.cost_per_message} token={token} precision={4} /></span>
           </div>
-          {fromProfile && isOwner && (
+          {!isDefeated && fromProfile && isOwner && (
             <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
               <span className="text-[var(--color-text-secondary)]">Your Earnings:</span>
               <span className={`text-right ${hasEarnings ? 'font-semibold text-[var(--color-success)]' : ''}`}>
@@ -240,7 +256,25 @@ export const FeaturedAgentCard = ({
           )}
         </div>
 
-        {fromProfile && timeRemaining && (
+        {isDefeated && (
+          <div className="mb-2 text-center text-[11px] font-bold text-[var(--color-text-primary)]">
+            Sentinel Defeated
+            {defeaterAddress ? (
+              <>
+                {' by '}
+                <Link
+                  href={`/u/${defeaterAddress}`}
+                  onClick={e => e.stopPropagation()}
+                  className="text-accent underline transition-opacity hover:opacity-70"
+                >
+                  {truncateAddress(defeaterAddress)}
+                </Link>
+              </>
+            ) : null}
+          </div>
+        )}
+
+        {!isDefeated && fromProfile && timeRemaining && (
           <div className="mb-2 text-center text-[10px]">
             {isWithdrawalLocked ? (
               <span className="font-medium text-[var(--color-warning)]">{timeRemaining}</span>
@@ -249,7 +283,7 @@ export const FeaturedAgentCard = ({
             )}
           </div>
         )}
-        {fromProfile && isOwner && isAttackPaused && (
+        {!isDefeated && fromProfile && isOwner && isAttackPaused && (
           <div className="mb-2 rounded-md border border-yellow-500/20 bg-yellow-500/10 px-2 py-1 text-center text-[10px] text-yellow-400">
             Attacks are paused, add funds to resume
           </div>
@@ -263,9 +297,9 @@ export const FeaturedAgentCard = ({
             }}
             className="btn btn-black h-8 w-full text-xs"
           >
-            {fromProfile ? 'Manage Sentinel' : ctaHeading}
+            {isDefeated ? 'View Sentinel' : fromProfile ? 'Manage Sentinel' : ctaHeading}
           </button>
-          {fromProfile && (
+          {!isDefeated && fromProfile && (
             <div className="flex gap-1.5 sm:gap-2">
               <button
                 onClick={() => {
@@ -307,7 +341,7 @@ export const FeaturedAgentCard = ({
               </button>
             </div>
           )}
-          {fromProfile && isOwner && (
+          {!isDefeated && fromProfile && isOwner && (
             <button
               onClick={e => {
                 e.stopPropagation()
