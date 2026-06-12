@@ -4,12 +4,11 @@ import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Folder, Activity, Loader2, Camera, Gift, BarChart3, Copy, Check } from 'lucide-react'
+import { Folder, Activity, Loader2, Camera, Gift, Copy, Check } from 'lucide-react'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { UserActivity } from '@/components/profile/UserActivity'
 import { UserAgents } from '@/components/profile/UserAgents'
-import { UserStats } from '@/components/profile/UserStats'
 import { BoosterRewards } from '@/components/rewards/BoosterRewards'
 import { ConnectPrompt } from '@/components/ConnectPrompt'
 import { EditProfileModal } from '@/components/profile/EditProfileModal'
@@ -270,15 +269,6 @@ function ProfileContent() {
                   <Activity className="h-4 w-4" />
                   Activity
                 </TabsTrigger>
-
-                <TabsTrigger
-                  value={PROFILE_TABS.STATS}
-                  className="flex items-center gap-2 whitespace-nowrap rounded-none border-b-2 border-transparent px-2 pb-4 text-[11px] font-bold uppercase tracking-[2px] text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-secondary)] data-[state=active]:border-[var(--color-text-primary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)]"
-                >
-                  <BarChart3 className="h-4 w-4" />
-                  Stats
-                </TabsTrigger>
-
                 <TabsTrigger
                   value={PROFILE_TABS.REWARDS}
                   className="flex items-center gap-2 whitespace-nowrap rounded-none border-b-2 border-transparent px-2 pb-4 text-[11px] font-bold uppercase tracking-[2px] text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-secondary)] data-[state=active]:border-[var(--color-text-primary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)]"
@@ -297,13 +287,6 @@ function ProfileContent() {
               <TabsContent value={PROFILE_TABS.ACTIVITY}>
                 <UserActivity />
               </TabsContent>
-
-              <TabsContent value={PROFILE_TABS.STATS}>
-                <div className="max-w-5xl">
-                  <UserStats />
-                </div>
-              </TabsContent>
-
               <TabsContent value={PROFILE_TABS.REWARDS}>
                 <BoosterRewards />
               </TabsContent>
