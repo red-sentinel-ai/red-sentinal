@@ -30,8 +30,7 @@ export function SyndicateDirectory() {
               SYNDICATE DIRECTORY
             </h1>
             <p className="max-w-2xl text-base leading-6 text-[var(--color-text-secondary)]">
-              Connect with high-performance security collectives. Pool resources, share threat
-              intelligence, and deploy elite Sentinels across the decentralized frontier.
+              Groups of defenders collaboratively securing AI agents and earning attack fees
             </p>
           </div>
           <div className="flex items-center gap-4">
