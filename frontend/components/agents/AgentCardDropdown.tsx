@@ -28,6 +28,7 @@ interface AgentDropdownProps {
   createdAt?: string
   coinType?: string
   chain?: SupportedChain
+  isDefeated?: boolean
 }
 
 export const AgentDropdown = ({
@@ -41,6 +42,7 @@ export const AgentDropdown = ({
   createdAt,
   coinType,
   chain = 'sui',
+  isDefeated = false,
 }: AgentDropdownProps) => {
   const [isPromptModalOpen, setIsPromptModalOpen] = useState(false)
   const [isCostModalOpen, setIsCostModalOpen] = useState(false)
@@ -64,8 +66,8 @@ export const AgentDropdown = ({
     setIsCostModalOpen(true)
   }
 
-  const hasOwnerItems = isOwner && chain !== 'bnb'
-  const hasItems = !isFeatured || hasOwnerItems
+  const hasOwnerItems = isOwner && chain !== 'bnb' && !isDefeated
+  const hasItems = !isDefeated && (!isFeatured || hasOwnerItems)
 
   return (
     <>

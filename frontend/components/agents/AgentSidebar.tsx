@@ -27,6 +27,8 @@ import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
 import { TokenAmount } from '../ui/common/TokenAmount'
 import { SocialMissionModal } from '@/components/rewards/SocialMissionModal'
 import { REWARDS_CONSTANTS } from '@/constants/rewards'
+import { SentinelFollowButton } from '@/components/agents/SentinelFollowButton'
+import { APP_NETWORK } from '@/constants'
 
 const SHARE_MISSION = REWARDS_CONSTANTS.DEFAULT_MISSIONS.find(m => m.type === 'share_with_hashtag')!
 
@@ -194,6 +196,12 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
                 )}
               </div>
             </div>
+
+            <SentinelFollowButton
+              agentId={String(agent.agent_id)}
+              chain={agent.chain}
+              network={APP_NETWORK}
+            />
           </div>
 
           {/* Attack Objective */}
