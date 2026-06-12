@@ -259,7 +259,7 @@ export const AgentsList = ({
                               alt={chainData.name}
                               width={14}
                               height={14}
-                              className={`shrink-0 rounded-full grayscale ${chainData.iconFilterClass}`}
+                              className={`shrink-0 rounded-full ${chainData.iconFilterClass}`}
                             />
                             {agent.is_featured && (
                               <Image
