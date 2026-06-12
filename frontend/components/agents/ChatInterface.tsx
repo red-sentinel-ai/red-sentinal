@@ -9,7 +9,8 @@ import { Loader2, Zap, Maximize2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ConnectModal } from '@mysten/dapp-kit'
 
-import { ATTACK_PROMPT_MAX_TOKENS, DEFAULT_PROFILE_URL, getTokenForCoinType } from '@/constants'
+import { ATTACK_PROMPT_MAX_TOKENS, getTokenForCoinType } from '@/constants'
+import { generateAvatarUrl } from '@/lib/utils'
 import type { SupportedChain } from '@/constants/chains'
 import { formatBalance, truncateAddress } from '@/lib/utils'
 import type { ConsumePromptApiResponse } from '@/types'
@@ -338,7 +339,7 @@ export default function ChatInterface({
                 <div className="flex items-center gap-3">
                   <div className="flex h-8 w-8 items-center justify-center border border-[var(--color-border-strong)] bg-[var(--color-bg-elevated)]">
                     <Image
-                      src={agent.agent_image || DEFAULT_PROFILE_URL}
+                      src={agent.agent_image || generateAvatarUrl(agent.agent_id)}
                       width={32}
                       height={32}
                       alt="agent"
