@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import { cn, formatTokenAmount } from '@/lib/utils'
 import { getDecimalsForSymbol } from '@/lib/syndicate-utils'
 import { type SyndicateListItem } from '@/hooks/syndicate/useSyndicatesList'
@@ -16,9 +16,8 @@ interface SyndicateCardProps {
 export function SyndicateCard({ syndicate, isUserSyndicate }: SyndicateCardProps) {
   const address = syndicate.contract_address as `0x${string}`
 
-  const sentinelLabel = syndicate.agent_id
-    ? `${syndicate.agent_id.slice(0, 6)}...${syndicate.agent_id.slice(-4)}`
-    : 'None'
+  const sentinelHref = syndicate.agent_path
+  const sentinelName = syndicate.agent_name || 'Unnamed Sentinel'
 
   const decimals = getDecimalsForSymbol(syndicate.token_symbol)
   const totalManagedAsset = `${formatTokenAmount(syndicate.total_funds, decimals)} ${syndicate.token_symbol}`
@@ -71,19 +70,20 @@ export function SyndicateCard({ syndicate, isUserSyndicate }: SyndicateCardProps
         </div>
       </div>
 
-      <div className="mb-6 mt-6 flex items-center justify-between text-[var(--color-text-secondary)]">
+      <div className="mb-6 mt-6 flex items-center justify-between gap-2 text-[var(--color-text-secondary)]">
         <span className="text-[10px] font-semibold uppercase tracking-wider">Primary Sentinel</span>
-        <span
-          className={cn(
-            'font-mono text-sm',
-            isUserSyndicate
-              ? 'text-[var(--color-gold-primary)]'
-              : 'text-[var(--color-text-primary)]',
-            !syndicate.agent_id && 'text-[var(--color-text-muted)]'
-          )}
-        >
-          {sentinelLabel}
-        </span>
+        {sentinelHref ? (
+          <Link
+            href={sentinelHref}
+            className="inline-flex max-w-[60%] items-center gap-1 truncate text-sm font-medium text-[var(--color-gold-primary)] transition-colors hover:text-[var(--color-gold-light)] hover:underline"
+            title={sentinelName}
+          >
+            <span className="truncate">{sentinelName}</span>
+            <ArrowUpRight className="h-3.5 w-3.5 shrink-0" />
+          </Link>
+        ) : (
+          <span className="text-sm text-[var(--color-text-muted)]">None</span>
+        )}
       </div>
 
       {isUserSyndicate ? (
