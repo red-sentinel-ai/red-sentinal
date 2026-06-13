@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 
 import { APP_NETWORK, SUI_SENTINEL_SUPPORT_EMAIL } from '@/constants'
+import { ARBITRUM_ONLY } from '@/constants/shared'
 import { cn } from '@/lib/utils'
 import {
   Sidebar,
@@ -42,7 +43,10 @@ type NavItem = {
 const NAV_ITEMS: NavItem[] = [
   { title: 'Home', href: '/attack', icon: Terminal },
   { title: 'Create', href: '/defend', icon: PlusSquare },
-  { title: 'Syndicates', href: '/syndicates', icon: Network },
+  // Syndicates are hidden in Arbitrum-only mode (sentinel flow only).
+  ...(ARBITRUM_ONLY
+    ? []
+    : [{ title: 'Syndicates', href: '/syndicates', icon: Network }]),
   { title: 'Leaderboard', href: '/leaderboard', icon: Trophy },
   { title: 'Rewards', href: '/rewards', icon: Gift },
   { title: 'Practice Arena', href: '/practice', icon: Swords },
