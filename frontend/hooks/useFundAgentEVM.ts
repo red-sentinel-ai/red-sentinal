@@ -1,11 +1,12 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { useWriteContract, useAccount, useChainId } from 'wagmi'
+import { useWriteContract, usePublicClient, useAccount, useChainId } from 'wagmi'
 import { waitForTransactionReceipt } from '@wagmi/core'
 import { toast } from 'sonner'
 import { wagmiConfig } from '@/lib/wagmi'
 import { getEvmConfig } from '@/constants/evm'
+import { getEvmFeeOverrides } from '@/lib/evm/fees'
 import { SENTINEL_ABI, ERC20_ABI } from '@/lib/evm/abi'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
 
@@ -29,6 +30,7 @@ export const useFundAgentEVM = (options: UseFundAgentEVMOptions = {}) => {
   const { chain: currentChain } = useAccount()
   const chainId = useChainId()
   const evmCfg = getEvmConfig(chainId)
+  const publicClient = usePublicClient()
   const { writeContractAsync } = useWriteContract()
 
   const [isLoading, setIsLoading] = useState(false)
@@ -53,6 +55,7 @@ export const useFundAgentEVM = (options: UseFundAgentEVMOptions = {}) => {
         if (showToasts) toast.info('Approving token...')
         const approveTxHash = await writeContractAsync({
           ...txArgs,
+          ...(await getEvmFeeOverrides(chainId, publicClient)),
           address: tokenAddress as `0x${string}`,
           abi: ERC20_ABI,
           functionName: 'approve',
@@ -64,6 +67,7 @@ export const useFundAgentEVM = (options: UseFundAgentEVMOptions = {}) => {
         if (showToasts) toast.info('Adding funds...')
         const txHash = await writeContractAsync({
           ...txArgs,
+          ...(await getEvmFeeOverrides(chainId, publicClient)),
           address: evmCfg.contractAddress,
           abi: SENTINEL_ABI,
           functionName: 'fundAgent',
@@ -84,7 +88,7 @@ export const useFundAgentEVM = (options: UseFundAgentEVMOptions = {}) => {
         setIsLoading(false)
       }
     },
-    [walletAddress, currentChain, writeContractAsync, onSuccess, onError, showToasts]
+    [walletAddress, currentChain, chainId, publicClient, writeContractAsync, onSuccess, onError, showToasts]
   )
 
   return { fundAgent, isLoading, error, isConnected: !!walletAddress }

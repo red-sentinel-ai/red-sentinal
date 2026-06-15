@@ -4,7 +4,7 @@ import { useUpdateAgentSolana } from '@/hooks/agents/useUpdateAgentSolana'
 import { SYSTEM_PROMPT_MAX_TOKENS } from '@/constants'
 import { useTokenCount } from '@/hooks/useTokenCount'
 import { AgentUpdateDialog } from './AgentUpdateDialog'
-import type { SupportedChain } from '@/constants/chains'
+import { isEvmChain, type SupportedChain } from '@/constants/chains'
 
 interface UpdatePromptModalProps {
   open: boolean
@@ -31,7 +31,7 @@ export const UpdatePromptModal = ({
   const { tokenCount, countTokens } = useTokenCount()
 
   const isSolana = chain === 'solana'
-  const isEvm = chain === 'bnb'
+  const isEvm = isEvmChain(chain)
   const isLoading = isSolana ? isSolanaLoading : isSuiLoading
 
   const handleUpdate = () => {
