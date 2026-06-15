@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
 import { SUI_SENTINEL_API_URL, APP_NETWORK } from '@/constants'
-import { ARBITRUM_ONLY } from '@/constants/shared'
 import { useActiveChain } from '@/context/ActiveChainContext'
 import { AgentDetails } from './useAllAgents'
 
@@ -8,7 +7,7 @@ export const FEATURED_AGENTS_QUERY_KEY = 'featuredAgents'
 
 export const useFeaturedAgents = (skipChainFilter?: boolean) => {
   const { activeChain } = useActiveChain()
-  const chainFilter = ARBITRUM_ONLY ? 'arb' : skipChainFilter ? undefined : activeChain
+  const chainFilter = skipChainFilter ? undefined : activeChain
 
   return useQuery<AgentDetails[], Error>({
     queryKey: [FEATURED_AGENTS_QUERY_KEY, chainFilter ?? 'all'],

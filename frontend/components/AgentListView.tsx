@@ -15,7 +15,6 @@ import { TEXT_COPIES } from '@/constants/text_copies'
 import { type SupportedChain, CHAINS, SUPPORTED_CHAINS } from '@/constants/chains'
 import { getTokenForCoinType } from '@/constants'
 import { AttackStats } from '@/components/attack/AttackStats'
-import { ARBITRUM_ONLY } from '@/constants/shared'
 import { SentinelMarquee } from '@/components/attack/SentinelMarquee'
 import { SentinelRowSkeleton } from '@/components/attack/SentinelRowSkeleton'
 
@@ -168,11 +167,9 @@ export const AgentListView = () => {
       </section>
 
       {/* Stats are hidden in Arbitrum-only mode. */}
-      {!ARBITRUM_ONLY && (
-        <div className="mb-16 md:mb-20">
-          <AttackStats />
-        </div>
-      )}
+      <div className="mb-16 md:mb-20">
+        <AttackStats />
+      </div>
 
       {(isFetchingFeatured || featuredForRow.length > 0) && (
         <section className="mb-16 md:mb-20">

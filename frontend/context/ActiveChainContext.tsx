@@ -2,12 +2,11 @@
 
 import { createContext, useContext, useState, useEffect } from 'react'
 import { SUPPORTED_CHAINS, ACTIVE_CHAIN_STORAGE_KEY, type SupportedChain } from '@/constants/chains'
-import { ARBITRUM_ONLY } from '@/constants/shared'
 
 // In Arbitrum-only mode lock the default to 'arb'; otherwise keep the historical
 // 'solana' default. The stored-chain check below also rejects any value that
 // isn't in SUPPORTED_CHAINS, so a leftover 'solana' in localStorage can't leak in.
-const DEFAULT_CHAIN: SupportedChain = ARBITRUM_ONLY ? 'arb' : 'solana'
+const DEFAULT_CHAIN: SupportedChain = SUPPORTED_CHAINS.includes('solana') ? 'solana' : 'arb'
 
 type ActiveChainContextValue = {
   activeChain: SupportedChain

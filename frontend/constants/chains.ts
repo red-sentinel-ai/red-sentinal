@@ -1,5 +1,3 @@
-import { ARBITRUM_ONLY } from '@/constants/shared'
-
 // Every chain the codebase knows about — drives the SupportedChain type.
 export const ALL_CHAINS = ['sui', 'solana', 'bnb', 'bot', 'arb'] as const
 export type SupportedChain = (typeof ALL_CHAINS)[number]
@@ -8,9 +6,7 @@ export type SupportedChain = (typeof ALL_CHAINS)[number]
 // just Arbitrum (for a chain-specific deployment); otherwise the full set.
 // Note: 'arb' is intentionally absent from the default list — it's surfaced only
 // when ARBITRUM_ONLY is enabled.
-export const SUPPORTED_CHAINS: readonly SupportedChain[] = ARBITRUM_ONLY
-  ? ['arb']
-  : ['sui', 'solana', 'bnb', 'bot']
+export const SUPPORTED_CHAINS: readonly SupportedChain[] = ['sui', 'solana', 'bnb', 'bot', 'arb']
 
 export const EVM_CHAINS: SupportedChain[] = ['bnb', 'bot', 'arb']
 
