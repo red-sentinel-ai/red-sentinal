@@ -1,5 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
-import { SUI_SENTINEL_API_URL, APP_NETWORK, SupportedToken, getTokenForCoinType } from '@/constants'
+import { SUI_SENTINEL_API_URL, APP_NETWORK } from '@/constants'
+import { SupportedToken } from '@/constants/shared'
+import { getTokenForCoinType } from '@/constants/tokens'
 
 export const useAgentCoinTypes = () => {
   return useQuery<SupportedToken[]>({

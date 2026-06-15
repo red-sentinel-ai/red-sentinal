@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { UpdatePromptModal } from './UpdatePromptModal'
 import { UpdateCostModal } from './UpdateCostModal'
-import { getTokenForCoinType } from '@/constants'
+import { getTokenForCoinType } from '@/constants/tokens'
 import { isEvmChain, type SupportedChain } from '@/constants/chains'
 
 const PROMPT_UPDATE_WINDOW_MS = 10_800_000

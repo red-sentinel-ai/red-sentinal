@@ -8,8 +8,8 @@ import { useEVMWallet } from '@/hooks/useEVMWallet'
 import { useEVMBalance } from '@/hooks/useEVMBalance'
 import { WalletDropdown } from '@/components/WalletDropdown'
 import { truncateAddress } from '@/lib/utils'
-import { getEvmChainKey, getEvmNativeSymbol } from '@/constants/evm'
-import { getEvmChainIdForActive } from '@/constants/chains'
+import { getEvmChainKey, getEvmChainIdForActive } from '@/constants/chains'
+import { getNativeToken } from '@/constants/tokens'
 import { APP_NETWORK } from '@/constants/shared'
 import { useActiveChain } from '@/context/ActiveChainContext'
 
@@ -37,7 +37,7 @@ export function EVMConnectButton() {
       posthog.identify(address)
       posthog.capture('wallet_connected', {
         address,
-        chain: `evm:${getEvmChainKey(chainId)}:${chainId}`,
+        chain: `evm:${getEvmChainKey(chainId) ?? 'unknown'}:${chainId}`,
       })
     } else {
       posthog.reset()
@@ -52,7 +52,7 @@ export function EVMConnectButton() {
     )
   }
 
-  const nativeSymbol = getEvmNativeSymbol(chainId)
+  const nativeSymbol = getNativeToken(activeChain).symbol
 
   return (
     <WalletDropdown

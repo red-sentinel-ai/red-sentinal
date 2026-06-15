@@ -158,15 +158,19 @@ lib/
 └── utils.ts                # General utilities (cn, formatting)
 
 constants/
-├── index.ts                # All constants (package IDs, URLs, config)
-├── shared.ts               # Shared types to avoid circular deps
-├── solana.ts               # Solana-specific constants
-└── evm.ts                  # EVM-specific constants
+├── index.ts                # App-level constants, Sui contract config, URLs
+├── shared.ts               # Shared types and APP_NETWORK
+├── chains.ts               # Chain registry, family helpers, EVM chain IDs
+├── tokens.ts               # All supported tokens and chain-aware token helpers
+├── solana.ts               # Solana runtime config (RPC, program ID, mints)
+└── evm.ts                  # EVM runtime config (contracts, RPCs, TEE network)
 ```
 
 ## Key Files to Understand First
 
-1. **`/constants/index.ts`** - All package IDs, URLs, tokens, and configuration
+1. **`/constants/index.ts`** - App-level constants and Sui contract config
+   - **`/constants/chains.ts`** - Chain registry (`CHAINS`), chain family helpers, and EVM chainId mapping
+   - **`/constants/tokens.ts`** - All supported tokens and chain-aware helpers (`getSupportedTokens`, `getNativeToken`, `getTokenForCoinType`)
 2. **`/lib/database.types.ts`** - Supabase schema (auto-generated)
 3. **`/app/providers.tsx`** - Provider hierarchy (PostHog → Query → EVM → Sui → Solana → ActiveChain → Auth)
 4. **`/lib/auth-api.ts`** - Backend auth API client (wallet signature-based)
@@ -236,12 +240,20 @@ constants/
 **Key Constants:**
 - `WITHDRAWAL_LOCK_MS`: 14 days (1,209,600,000 ms)
 - `MIST_PER_SUI`: 1,000,000,000 (SUI has 9 decimals)
-- Token minimum amounts vary by token (see `SUPPORTED_TOKENS`)
+- Token lists and minimum amounts live in `/constants/tokens.ts`:
+  - `getSupportedTokens(chain)` returns the token list for any `SupportedChain`
+  - `getNativeToken(chain)` returns the native gas token for a chain
+  - `getTokenForCoinType(coinType, chainHint?)` resolves a token identifier with an optional chain-scoped fallback
 
 **Sui Contract Configs:**
 - Mainnet: `SUI_MAINNET_CONFIG`
 - Testnet: `SUI_TESTNET_CONFIG`
 - Legacy (single-token): `SUI_MAINNET_LEGACY_CONFIG` / `SUI_TESTNET_LEGACY_CONFIG`
+
+**Chain Registry:**
+- `/constants/chains.ts` defines `CHAINS` with a `family` discriminator (`sui` | `solana` | `evm`)
+- Use `isEvmChain(chain)`, `isSolanaChain(chain)`, and `getChainFamily(chain)` instead of inline string checks
+- EVM chain IDs are centralized in `EVM_CHAIN_IDS` with helpers `getEvmChainIdForActive` and `getEvmChainKey`
 
 ## Database Schema (Supabase)
 
@@ -349,7 +361,7 @@ Note: `getCoins()` is still appropriate inside transaction-building hooks (e.g. 
 ### Adding a New Feature Checklist
 
 1. [ ] Create types in `/types.ts` or relevant type file
-2. [ ] Add any new constants to `/constants/index.ts`
+2. [ ] Add chain-related constants to `/constants/chains.ts` and token constants to `/constants/tokens.ts`; keep app-level constants in `/constants/index.ts`
 3. [ ] Create hook in appropriate `/hooks/` subdirectory
 4. [ ] Create component(s) in appropriate `/components/` subdirectory
 5. [ ] Add API route if needed in `/app/api/`
