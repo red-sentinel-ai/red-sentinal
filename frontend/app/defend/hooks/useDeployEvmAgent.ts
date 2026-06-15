@@ -1,10 +1,11 @@
 'use client'
 
-import { useWriteContract, useAccount, useChainId } from 'wagmi'
+import { useWriteContract, usePublicClient, useAccount, useChainId } from 'wagmi'
 import { waitForTransactionReceipt } from '@wagmi/core'
 import { parseUnits } from 'viem'
 import { wagmiConfig } from '@/lib/wagmi'
 import { getEvmConfig } from '@/constants/evm'
+import { getEvmFeeOverrides } from '@/lib/evm/fees'
 import { SENTINEL_ABI, ERC20_ABI } from '@/lib/evm/abi'
 import { buildEvmSignature, bytesToHex32 } from '@/lib/evm/signature'
 import type { SupportedToken } from '@/constants'
@@ -22,6 +23,7 @@ export function useDeployEvmAgent({
   const { address: walletAddress, chain: currentChain } = useAccount()
   const chainId = useChainId()
   const evmCfg = getEvmConfig(chainId)
+  const publicClient = usePublicClient()
   const { writeContractAsync } = useWriteContract()
 
   const executeTransaction = async (
@@ -41,8 +43,11 @@ export function useDeployEvmAgent({
 
     const txArgs = { account: walletAddress, chain: currentChain ?? null }
 
+    // Compute explicit fees fresh before each tx — Arbitrum's base fee drifts,
+    // and MetaMask's own estimate lands too low (see lib/evm/fees.ts).
     const approveTxHash = await writeContractAsync({
       ...txArgs,
+      ...(await getEvmFeeOverrides(chainId, publicClient)),
       address: tokenAddress,
       abi: ERC20_ABI,
       functionName: 'approve',
@@ -53,6 +58,7 @@ export function useDeployEvmAgent({
 
     const registerTxHash = await writeContractAsync({
       ...txArgs,
+      ...(await getEvmFeeOverrides(chainId, publicClient)),
       address: evmCfg.contractAddress,
       abi: SENTINEL_ABI,
       functionName: 'registerAgent',

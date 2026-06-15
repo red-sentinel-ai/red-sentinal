@@ -18,7 +18,7 @@ import { useAgentChatHistory, AGENT_CHAT_QUERY_KEY } from '@/hooks/agents/useAge
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useActiveChain } from '@/context/ActiveChainContext'
 import { useFocusMode } from '@/context/FocusModeContext'
-import type { SupportedChain } from '@/constants/chains'
+import { CHAINS, type SupportedChain } from '@/constants/chains'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
 import ChatInterface from '@/components/agents/ChatInterface'
@@ -132,6 +132,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
       break
     case 'bnb':
     case 'bot':
+    case 'arb':
       consumePrompt = evmConsumePrompt as typeof suiConsumePrompt
       break
   }
@@ -166,18 +167,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
       return
     }
     if (chainMismatch) {
-      let chainName = 'Sui'
-      switch (chainMismatch) {
-        case 'solana':
-          chainName = 'Solana'
-          break
-        case 'bnb':
-          chainName = 'BNB Chain'
-          break
-        case 'bot':
-          chainName = 'BOT Chain'
-          break
-      }
+      const chainName = CHAINS[chainMismatch]?.name ?? 'Sui'
       setSubmitError(`Switch to ${chainName} to attack this sentinel`)
       return
     }

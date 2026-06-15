@@ -1,5 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { SUI_SENTINEL_API_URL, APP_NETWORK } from '@/constants'
+import { ARBITRUM_ONLY } from '@/constants/shared'
 import { useActiveChain } from '@/context/ActiveChainContext'
 import type { SupportedChain } from '@/constants/chains'
 
@@ -76,8 +77,11 @@ export const useAllAgents = (
   explicitChainFilter?: SupportedChain
 ) => {
   const { activeChain } = useActiveChain()
-  const chainFilter =
-    explicitChainFilter !== undefined
+  // Arbitrum-only mode hard-locks every agent query to 'arb' so no other
+  // chain's sentinels can ever surface, regardless of skip/explicit filters.
+  const chainFilter = ARBITRUM_ONLY
+    ? 'arb'
+    : explicitChainFilter !== undefined
       ? explicitChainFilter
       : skipChainFilter
         ? undefined

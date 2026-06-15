@@ -4,6 +4,7 @@ import { SidebarTrigger } from '@/components/ui/sidebar'
 import { ChainSwitcher } from '@/components/ChainSwitcher'
 import { ConnectButton } from '@/components/ConnectButton'
 import { NovuInbox } from '@/components/layout/NovuInbox'
+import { ARBITRUM_ONLY } from '@/constants/shared'
 
 export function AppTopbar() {
   return (
@@ -13,7 +14,8 @@ export function AppTopbar() {
         aria-label="Open navigation"
       />
       <div className="ml-auto flex items-center gap-3 md:gap-8">
-        <ChainSwitcher />
+        {/* Arbitrum-only mode locks the app to one chain, so the switcher is hidden. */}
+        {!ARBITRUM_ONLY && <ChainSwitcher />}
         <NovuInbox />
         <ConnectButton />
       </div>
