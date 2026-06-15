@@ -3,7 +3,7 @@ import { useUpdateAgent } from '@/hooks/agents/useUpdateAgent'
 import { useUpdateAgentSolana } from '@/hooks/agents/useUpdateAgentSolana'
 import { useUpdateAgentEVM } from '@/hooks/agents/useUpdateAgentEVM'
 import { AgentUpdateDialog } from './AgentUpdateDialog'
-import { getTokenForCoinType } from '@/constants'
+import { getTokenForCoinType } from '@/constants/tokens'
 import { isEvmChain, type SupportedChain } from '@/constants/chains'
 
 interface UpdateCostModalProps {

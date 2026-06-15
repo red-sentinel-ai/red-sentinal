@@ -10,14 +10,16 @@ import { ConnectButton, useCurrentAccount } from '@mysten/dapp-kit'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'
 import {
   SESSION_KEYS,
-  SUPPORTED_TOKENS,
   SUI_SENTINEL_DOCS_URL,
   SYSTEM_PROMPT_MAX_TOKENS,
-  type SupportedToken,
 } from '@/constants'
-import { SOLANA_SUPPORTED_TOKENS } from '@/constants/solana'
-import { EVM_SUPPORTED_TOKENS, BOT_CHAIN_SUPPORTED_TOKENS, ARB_SUPPORTED_TOKENS } from '@/constants/evm'
+import type { SupportedToken } from '@/constants/shared'
 import { isEvmChain } from '@/constants/chains'
+import {
+  SUPPORTED_TOKENS,
+  SOLANA_SUPPORTED_TOKENS,
+  getSupportedTokens,
+} from '@/constants/tokens'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
 import { useEVMBalance } from '@/hooks/useEVMBalance'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
@@ -91,18 +93,13 @@ export default function DefendPageClient() {
     useSolanaTokenBalance(selectedSolanaToken.coinType, selectedSolanaToken.decimals)
 
   // EVM token selection — choose the right token list for the active EVM chain
-  const evmTokenList =
-    activeChain === 'bot'
-      ? BOT_CHAIN_SUPPORTED_TOKENS
-      : activeChain === 'arb'
-        ? ARB_SUPPORTED_TOKENS
-        : EVM_SUPPORTED_TOKENS
+  const evmTokenList = getSupportedTokens(activeChain)
   const [selectedEvmToken, setSelectedEvmToken] = useState<SupportedToken>(evmTokenList[0])
 
   // Re-sync the selected token when the user switches EVM chains in the header
   useEffect(() => {
     setSelectedEvmToken(evmTokenList[0])
-  }, [activeChain])
+  }, [activeChain, evmTokenList])
   const { balance: evmBalance, isLoading: isEvmBalanceLoading } = useEVMBalance(
     selectedEvmToken.coinType as `0x${string}`
   )

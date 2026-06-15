@@ -6,7 +6,7 @@ import { useClaimFeesEVM } from '@/hooks/agents/useClaimFeesEVM'
 import { useSolanaWallet } from '@/hooks/useSolanaWallet'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
 import { AgentUpdateDialog } from './AgentUpdateDialog'
-import { getTokenForCoinType } from '@/constants'
+import { getTokenForCoinType } from '@/constants/tokens'
 import { TokenAmount } from '../ui/common/TokenAmount'
 import { isEvmChain, type SupportedChain } from '@/constants/chains'
 

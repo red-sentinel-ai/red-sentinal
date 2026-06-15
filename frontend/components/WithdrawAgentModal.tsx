@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { Loader2, X } from 'lucide-react'
 import { Dialog } from '@/components/Dialog'
-import { getTokenForCoinType } from '@/constants'
+import { getTokenForCoinType } from '@/constants/tokens'
 import { useWithdrawAgent } from '@/hooks/agents/useWithdrawAgent'
 import { useWithdrawAgentSolana } from '@/hooks/agents/useWithdrawAgentSolana'
 import { useWithdrawAgentEVM } from '@/hooks/agents/useWithdrawAgentEVM'

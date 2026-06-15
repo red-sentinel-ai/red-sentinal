@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 
 import { LeaderboardSkeleton } from './ui/skeletons/LeaderboardSkeleton'
 import { AgentDetails, SortField, SortDirection } from '@/hooks/agents/useAllAgents'
-import { getTokenForCoinType } from '@/constants'
+import { getTokenForCoinType } from '@/constants/tokens'
 import { CHAINS } from '@/constants/chains'
 import { TokenAmount } from './ui/common/TokenAmount'
 import Image from 'next/image'
