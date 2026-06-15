@@ -10,8 +10,8 @@ import { useFundAgentSolana } from '@/hooks/useFundAgentSolana'
 import { useFundAgentEVM } from '@/hooks/useFundAgentEVM'
 import { useSolanaWallet } from '@/hooks/useSolanaWallet'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
-import { getTokenForCoinType } from '@/constants'
-import type { SupportedChain } from '@/constants/chains'
+import { getTokenForCoinType } from '@/constants/tokens'
+import { isEvmChain, type SupportedChain } from '@/constants/chains'
 
 export interface FundAgentModalProps {
   open: boolean
@@ -43,9 +43,9 @@ export const FundAgentModal = ({
   const account = useCurrentAccount()
   const { publicKey: solanaPublicKey } = useSolanaWallet()
   const { address: evmAddress } = useEVMWallet()
-  const token = getTokenForCoinType(coinType)
+  const token = getTokenForCoinType(coinType, chain)
   const isSolana = chain === 'solana'
-  const isEvm = chain === 'bnb'
+  const isEvm = isEvmChain(chain)
 
   const { fundAgent: fundAgentSui, isLoading: isSuiLoading } = useFundAgent()
   const { fundAgent: fundAgentSolana, isLoading: isSolanaLoading } = useFundAgentSolana()
@@ -61,7 +61,8 @@ export const FundAgentModal = ({
     const num = parseFloat(amount)
     if (!amount.trim()) { setError('Amount is required'); return false }
     if (isNaN(num) || num <= 0) { setError('Amount must be a positive number'); return false }
-    if (num < 0.001) { setError('Minimum amount is 0.001 SUI'); return false }
+    const minAmount = Math.max(token.minimumAmount, 0.001)
+    if (num < minAmount) { setError(`Minimum amount is ${minAmount} ${token.symbol}`); return false }
     return true
   }
 

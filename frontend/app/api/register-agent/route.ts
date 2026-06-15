@@ -9,6 +9,7 @@ function getTeeUrl(chain: string, chainId?: number): string {
       return `${SOLANA_TEE_API_PATH}/${SOLANA_TEE_NETWORK}/register-agent`
     case 'bnb':
     case 'bot':
+    case 'arb':
     case 'evm': {
       const teeNetwork = chainId ? resolveEvmTeeNetwork(chainId) : EVM_TEE_NETWORK
       return `${EVM_TEE_API_PATH}/${teeNetwork}/register-agent`

@@ -3,7 +3,8 @@ import { Transaction } from '@mysten/sui/transactions'
 import { useSignAndExecuteTransaction, useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 import { toast } from 'sonner'
-import { SUI_CONFIG, SUI_LEGACY_CONFIG, getTokenForCoinType } from '@/constants'
+import { SUI_CONFIG, SUI_LEGACY_CONFIG } from '@/constants'
+import { getTokenForCoinType } from '@/constants/tokens'
 
 export const useUpdateAgent = () => {
   const client = useSuiClient()
