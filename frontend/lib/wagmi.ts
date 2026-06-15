@@ -1,7 +1,7 @@
 import { getDefaultConfig } from '@rainbow-me/rainbowkit'
 import { defineChain } from 'viem'
 import { bsc, bscTestnet, arbitrum, arbitrumSepolia } from 'viem/chains'
-import { APP_NETWORK, ARBITRUM_ONLY } from '@/constants/shared'
+import { APP_NETWORK } from '@/constants/shared'
 
 const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || ''
 
@@ -46,11 +46,8 @@ export const botChainMainnet = defineChain({
 export const wagmiConfig = getDefaultConfig({
   appName: 'Sui Sentinel',
   projectId,
-  chains: ARBITRUM_ONLY
-    ? APP_NETWORK === 'testnet'
-      ? [arbitrumSepolia, arbitrum]
-      : [arbitrum, arbitrumSepolia]
-    : APP_NETWORK === 'testnet'
+  chains:
+    APP_NETWORK === 'testnet'
       ? [bscTestnet, botChainTestnet, arbitrumSepolia, bsc, botChainMainnet, arbitrum]
       : [bsc, botChainMainnet, arbitrum, bscTestnet, botChainTestnet, arbitrumSepolia],
   ssr: true,
