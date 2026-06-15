@@ -12,7 +12,7 @@ import {
 import { UpdatePromptModal } from './UpdatePromptModal'
 import { UpdateCostModal } from './UpdateCostModal'
 import { getTokenForCoinType } from '@/constants'
-import type { SupportedChain } from '@/constants/chains'
+import { isEvmChain, type SupportedChain } from '@/constants/chains'
 
 const PROMPT_UPDATE_WINDOW_MS = 10_800_000
 
@@ -66,7 +66,7 @@ export const AgentDropdown = ({
     setIsCostModalOpen(true)
   }
 
-  const hasOwnerItems = isOwner && chain !== 'bnb' && !isDefeated
+  const hasOwnerItems = isOwner && !isEvmChain(chain) && !isDefeated
   const hasItems = !isDefeated && (!isFeatured || hasOwnerItems)
 
   return (

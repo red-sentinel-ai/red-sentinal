@@ -12,3 +12,10 @@ export type SupportedToken = {
 
 export const APP_NETWORK: 'mainnet' | 'testnet' =
   process.env.NEXT_PUBLIC_APP_NETWORK === 'testnet' ? 'testnet' : 'mainnet'
+
+// Arbitrum-only mode (e.g. for a chain-specific submission/deployment). When set,
+// the app locks to Arbitrum: the chain switcher is hidden, the active chain is
+// forced to 'arb', and only Arbitrum sentinels are shown/launchable. Off by
+// default, leaving the full multi-chain experience intact.
+export const ARBITRUM_ONLY: boolean =
+  process.env.NEXT_PUBLIC_ARBITRUM_ONLY === 'true'

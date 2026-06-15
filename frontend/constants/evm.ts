@@ -7,13 +7,16 @@ export const EVM_TEE_API_PATH = 'https://tee-evm.suisentinel.xyz'
 // current APP_NETWORK.
 export const EVM_TEE_NETWORK = APP_NETWORK === 'testnet' ? 'bsc-testnet' : 'bsc-mainnet'
 
-export type EvmChainKey = 'bnb' | 'bot'
+export type EvmChainKey = 'bnb' | 'bot' | 'arb'
 
 export function getEvmChainKey(chainId: number | undefined): EvmChainKey {
   switch (chainId) {
     case 968:
     case 677:
       return 'bot'
+    case 421614:
+    case 42161:
+      return 'arb'
     case 97:
     case 56:
     default:
@@ -27,6 +30,10 @@ export function resolveEvmTeeNetwork(chainId: number | undefined): string {
       return 'bot-testnet'
     case 677:
       return 'bot-mainnet'
+    case 421614:
+    case 42161:
+      // The EVM TEE + red-team API namespace Arbitrum under 'arbitrum-sepolia'.
+      return 'arbitrum-sepolia'
     case 56:
       return 'bsc-mainnet'
     case 97:
@@ -126,6 +133,52 @@ export const BOT_CHAIN_CONFIG = APP_NETWORK === 'testnet' ? BOT_CHAIN_TESTNET_CO
 
 export const BOT_CHAIN_SUPPORTED_TOKENS: SupportedToken[] = [BOT_CHAIN_USDC_TOKEN]
 
+// ─── Arbitrum ────────────────────────────────────────────────────────────────
+// Testnet = Arbitrum Sepolia (chainId 421614). Native gas token is ETH.
+
+export const ARB_TOKEN: SupportedToken = {
+  symbol: 'ETH',
+  name: 'Ethereum',
+  coinType: '0x0000000000000000000000000000000000000000',
+  decimals: 18,
+  icon: '/chain-logos/arb.svg',
+  minimumAmount: 0,
+}
+
+// Circle USDC on Arbitrum Sepolia (6 decimals).
+export const ARB_SEPOLIA_USDC_ADDRESS = '0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d' as `0x${string}`
+
+export const ARB_USDC_TOKEN: SupportedToken = {
+  symbol: 'USDC',
+  name: 'USD Coin',
+  coinType: ARB_SEPOLIA_USDC_ADDRESS,
+  decimals: 6,
+  icon: '/icons/tokens/usdc.png',
+  minimumAmount: 0.01,
+}
+
+// PLACEHOLDER contractAddress — replace with the deployed Sentinel on Arbitrum
+// Sepolia (or set NEXT_PUBLIC_ARB_TESTNET_CONTRACT_ADDRESS). Zero address until then.
+export const ARB_TESTNET_CONFIG = {
+  chainId: 421614,
+  rpcUrl: process.env.NEXT_PUBLIC_ARB_TESTNET_RPC_URL ?? 'https://sepolia-rollup.arbitrum.io/rpc',
+  contractAddress: (process.env.NEXT_PUBLIC_ARB_TESTNET_CONTRACT_ADDRESS ??
+    '0x68D60E86Ae1DA4c26cc3B1EA680745500451fD2c') as `0x${string}`,
+  explorerUrl: 'https://sepolia.arbiscan.io',
+}
+
+export const ARB_MAINNET_CONFIG = {
+  chainId: 42161,
+  rpcUrl: process.env.NEXT_PUBLIC_ARB_MAINNET_RPC_URL ?? 'https://arb1.arbitrum.io/rpc',
+  contractAddress: (process.env.NEXT_PUBLIC_ARB_MAINNET_CONTRACT_ADDRESS ??
+    '0x0000000000000000000000000000000000000000') as `0x${string}`,
+  explorerUrl: 'https://arbiscan.io',
+}
+
+export const ARB_CONFIG = APP_NETWORK === 'testnet' ? ARB_TESTNET_CONFIG : ARB_MAINNET_CONFIG
+
+export const ARB_SUPPORTED_TOKENS: SupportedToken[] = [ARB_USDC_TOKEN]
+
 // ─── Chain-aware resolver ────────────────────────────────────────────────────
 
 export type EvmConfig = typeof BNB_TESTNET_CONFIG
@@ -141,6 +194,10 @@ export function getEvmConfig(chainId: number | undefined): EvmConfig {
       return BOT_CHAIN_TESTNET_CONFIG
     case 677:
       return BOT_CHAIN_MAINNET_CONFIG
+    case 421614:
+      return ARB_TESTNET_CONFIG
+    case 42161:
+      return ARB_MAINNET_CONFIG
     case 56:
       return BNB_MAINNET_CONFIG
     case 97:
@@ -151,9 +208,23 @@ export function getEvmConfig(chainId: number | undefined): EvmConfig {
 }
 
 export function getEvmSupportedTokens(chainId: number | undefined): SupportedToken[] {
-  return getEvmChainKey(chainId) === 'bot' ? BOT_CHAIN_SUPPORTED_TOKENS : EVM_SUPPORTED_TOKENS
+  switch (getEvmChainKey(chainId)) {
+    case 'bot':
+      return BOT_CHAIN_SUPPORTED_TOKENS
+    case 'arb':
+      return ARB_SUPPORTED_TOKENS
+    default:
+      return EVM_SUPPORTED_TOKENS
+  }
 }
 
 export function getEvmNativeSymbol(chainId: number | undefined): string {
-  return getEvmChainKey(chainId) === 'bot' ? 'BOT' : 'BNB'
+  switch (getEvmChainKey(chainId)) {
+    case 'bot':
+      return 'BOT'
+    case 'arb':
+      return 'ETH'
+    default:
+      return 'BNB'
+  }
 }

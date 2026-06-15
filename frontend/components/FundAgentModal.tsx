@@ -11,7 +11,7 @@ import { useFundAgentEVM } from '@/hooks/useFundAgentEVM'
 import { useSolanaWallet } from '@/hooks/useSolanaWallet'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
 import { getTokenForCoinType } from '@/constants'
-import type { SupportedChain } from '@/constants/chains'
+import { isEvmChain, type SupportedChain } from '@/constants/chains'
 
 export interface FundAgentModalProps {
   open: boolean
@@ -45,7 +45,7 @@ export const FundAgentModal = ({
   const { address: evmAddress } = useEVMWallet()
   const token = getTokenForCoinType(coinType)
   const isSolana = chain === 'solana'
-  const isEvm = chain === 'bnb'
+  const isEvm = isEvmChain(chain)
 
   const { fundAgent: fundAgentSui, isLoading: isSuiLoading } = useFundAgent()
   const { fundAgent: fundAgentSolana, isLoading: isSolanaLoading } = useFundAgentSolana()

@@ -16,7 +16,8 @@ import {
   type SupportedToken,
 } from '@/constants'
 import { SOLANA_SUPPORTED_TOKENS } from '@/constants/solana'
-import { EVM_SUPPORTED_TOKENS, BOT_CHAIN_SUPPORTED_TOKENS } from '@/constants/evm'
+import { EVM_SUPPORTED_TOKENS, BOT_CHAIN_SUPPORTED_TOKENS, ARB_SUPPORTED_TOKENS } from '@/constants/evm'
+import { isEvmChain } from '@/constants/chains'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
 import { useEVMBalance } from '@/hooks/useEVMBalance'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
@@ -56,7 +57,7 @@ export default function DefendPageClient() {
   }, [searchParams])
   const { activeChain } = useActiveChain()
   const isSolana = activeChain === 'solana'
-  const isEvm = activeChain === 'bnb' || activeChain === 'bot'
+  const isEvm = isEvmChain(activeChain)
 
   // Sui wallet
   const account = useCurrentAccount()
@@ -90,7 +91,12 @@ export default function DefendPageClient() {
     useSolanaTokenBalance(selectedSolanaToken.coinType, selectedSolanaToken.decimals)
 
   // EVM token selection — choose the right token list for the active EVM chain
-  const evmTokenList = activeChain === 'bot' ? BOT_CHAIN_SUPPORTED_TOKENS : EVM_SUPPORTED_TOKENS
+  const evmTokenList =
+    activeChain === 'bot'
+      ? BOT_CHAIN_SUPPORTED_TOKENS
+      : activeChain === 'arb'
+        ? ARB_SUPPORTED_TOKENS
+        : EVM_SUPPORTED_TOKENS
   const [selectedEvmToken, setSelectedEvmToken] = useState<SupportedToken>(evmTokenList[0])
 
   // Re-sync the selected token when the user switches EVM chains in the header
