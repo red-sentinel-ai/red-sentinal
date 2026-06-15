@@ -5,6 +5,7 @@ import { useSignPersonalMessage, useCurrentAccount } from '@mysten/dapp-kit'
 import { useSignMessage as useWagmiSignMessage, useAccount as useWagmiAccount, useChainId } from 'wagmi'
 import { useSolanaWallet } from '@/hooks/useSolanaWallet'
 import { useActiveChain } from '@/context/ActiveChainContext'
+import { isEvmChain } from '@/constants/chains'
 import { useAuth } from '@/context/AuthContext'
 import type { ChainType, UserProfile, WalletConnection } from '@/lib/auth-api'
 import { toast } from 'sonner'
@@ -77,7 +78,7 @@ export function useWalletAuth(): UseWalletAuthReturn {
       }
     }
 
-    if (activeChain === 'bnb' || activeChain === 'bot') {
+    if (isEvmChain(activeChain)) {
       if (!evmAddress) return null
       return {
         chainType: 'evm',

@@ -13,6 +13,7 @@ export function AppTopbar() {
         aria-label="Open navigation"
       />
       <div className="ml-auto flex items-center gap-3 md:gap-8">
+        {/* Arbitrum-only mode locks the app to one chain, so the switcher is hidden. */}
         <ChainSwitcher />
         <NovuInbox />
         <ConnectButton />

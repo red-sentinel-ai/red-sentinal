@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from 'react'
 import { Loader2, X } from 'lucide-react'
 import { Dialog } from '@/components/Dialog'
-import { getTokenForCoinType } from '@/constants'
+import { getTokenForCoinType } from '@/constants/tokens'
 import { useWithdrawAgent } from '@/hooks/agents/useWithdrawAgent'
 import { useWithdrawAgentSolana } from '@/hooks/agents/useWithdrawAgentSolana'
 import { useWithdrawAgentEVM } from '@/hooks/agents/useWithdrawAgentEVM'
-import type { SupportedChain } from '@/constants/chains'
+import { isEvmChain, type SupportedChain } from '@/constants/chains'
 
 export interface WithdrawAgentModalProps {
   open: boolean
@@ -34,7 +34,7 @@ export const WithdrawAgentModal = ({
   const token = getTokenForCoinType(coinType)
   const agentBalanceHuman = agentBalanceRaw / Math.pow(10, token.decimals)
   const isSolana = chain === 'solana'
-  const isEvm = chain === 'bnb'
+  const isEvm = isEvmChain(chain)
 
   const { withdrawAgent: withdrawAgentSui, isLoading: isSuiLoading } = useWithdrawAgent()
   const { withdrawAgent: withdrawAgentSolana, isLoading: isSolanaLoading } = useWithdrawAgentSolana()

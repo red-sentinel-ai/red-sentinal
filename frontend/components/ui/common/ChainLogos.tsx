@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
-import { CHAINS } from '@/constants/chains'
+import { CHAINS, SUPPORTED_CHAINS } from '@/constants/chains'
 
 interface ChainLogosProps {
   className?: string
@@ -14,7 +14,7 @@ export function ChainLogos({ className }: ChainLogosProps) {
       <span className="font-mono text-xs uppercase tracking-[0.24em] text-[var(--color-text-muted)]">
         Live on:
       </span>
-      {Object.values(CHAINS).map(chain => (
+      {SUPPORTED_CHAINS.map(chainId => CHAINS[chainId]).map(chain => (
         <span
           key={chain.name}
           className="inline-flex items-center gap-1.5 border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-[var(--color-text-primary)] transition-colors hover:border-[var(--color-gold-primary)]"

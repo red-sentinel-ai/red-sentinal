@@ -6,7 +6,8 @@ import posthog from 'posthog-js'
 import { toast } from 'sonner'
 import { Info, X } from 'lucide-react'
 
-import { APP_NETWORK, getTokenForCoinType } from '@/constants'
+import { APP_NETWORK } from '@/constants'
+import { getTokenForCoinType } from '@/constants/tokens'
 import type { ConsumePromptApiResponse } from '@/types'
 import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from '@/components/ui'
 import { AgentChallengePageSkeleton } from '@/components/ui/skeletons/AgentChallengePageSkeleton'
@@ -18,7 +19,7 @@ import { useAgentChatHistory, AGENT_CHAT_QUERY_KEY } from '@/hooks/agents/useAge
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useActiveChain } from '@/context/ActiveChainContext'
 import { useFocusMode } from '@/context/FocusModeContext'
-import type { SupportedChain } from '@/constants/chains'
+import { CHAINS, type SupportedChain } from '@/constants/chains'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
 import ChatInterface from '@/components/agents/ChatInterface'
@@ -28,12 +29,24 @@ import { ChatRoom } from '@/components/agents/ChatRoom'
 import { MobileAgentHeader } from './MobileAgentHeader'
 
 type ViewMode = 'attack' | 'chat'
-
+/**
+ *
+ * useEffect(() => {}, [])
+ */
 export default function AgentChallengePage({ slug }: { slug: string }) {
   const queryClient = useQueryClient()
   const { activeChain } = useActiveChain()
   const { address: connectedAddress } = useConnectedAddress()
   const { isFocusMode, disableFocusMode } = useFocusMode()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
+  const [apiResponse, setApiResponse] = useState<ConsumePromptApiResponse | null>(null)
+  const [txnHash, setTxnHash] = useState<string | null>(null)
+  const [showResultModal, setShowResultModal] = useState(false)
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [viewMode, setViewMode] = useState<ViewMode>('attack')
+  const isMobile = useMediaQuery('(max-width: 768px)')
 
   const { data: agent, isLoading, error, refetch } = useAgentDetails(slug)
   const {
@@ -122,8 +135,8 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
     },
   })
 
-  const agentChain: SupportedChain = agent?.chain ?? 'sui'
-  const chainMismatch: SupportedChain | null =
+  const agentChain: SupportedChain = agent?.chain
+  const chainToSwitch: SupportedChain | null =
     agent && agentChain !== activeChain ? agentChain : null
   let consumePrompt = suiConsumePrompt
   switch (agentChain) {
@@ -132,19 +145,10 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
       break
     case 'bnb':
     case 'bot':
-      consumePrompt = evmConsumePrompt as typeof suiConsumePrompt
+    case 'arb':
+      consumePrompt = evmConsumePrompt as typeof suiConsumePrompt // we should fix this
       break
   }
-
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitError, setSubmitError] = useState<string | null>(null)
-  const [apiResponse, setApiResponse] = useState<ConsumePromptApiResponse | null>(null)
-  const [txnHash, setTxnHash] = useState<string | null>(null)
-  const [showResultModal, setShowResultModal] = useState(false)
-
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-  const [viewMode, setViewMode] = useState<ViewMode>('attack')
-  const isMobile = useMediaQuery('(max-width: 768px)')
 
   const handleTextChatClick = useCallback(() => {
     setIsSidebarOpen(false)
@@ -165,19 +169,8 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
       setSubmitError('Agent not loaded')
       return
     }
-    if (chainMismatch) {
-      let chainName = 'Sui'
-      switch (chainMismatch) {
-        case 'solana':
-          chainName = 'Solana'
-          break
-        case 'bnb':
-          chainName = 'BNB Chain'
-          break
-        case 'bot':
-          chainName = 'BOT Chain'
-          break
-      }
+    if (chainToSwitch) {
+      const chainName = CHAINS[chainToSwitch]?.name
       setSubmitError(`Switch to ${chainName} to attack this sentinel`)
       return
     }
@@ -262,7 +255,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
               isSubmitting={isSubmitting}
               submitError={submitError}
               refetchAgent={refetch}
-              chainMismatch={chainMismatch}
+              chainMismatch={chainToSwitch}
             />
           )}
         </div>
@@ -299,7 +292,11 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
           )}
         </AnimatePresence>
 
-        <AgentReadMoreModal isOpen={isReadMoreOpen} prompt={agent.prompt} onClose={() => setIsReadMoreOpen(false)} />
+        <AgentReadMoreModal
+          isOpen={isReadMoreOpen}
+          prompt={agent.prompt}
+          onClose={() => setIsReadMoreOpen(false)}
+        />
 
         {apiResponse && txnHash && (
           <AttackStatusModal
@@ -341,7 +338,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
                   isSubmitting={isSubmitting}
                   submitError={submitError}
                   refetchAgent={refetch}
-                  chainMismatch={chainMismatch}
+                  chainMismatch={chainToSwitch}
                 />
               )}
               <AgentReadMoreModal
@@ -369,7 +366,10 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   return (
     <div className="ios-scroll flex h-[calc(100dvh-64px)] flex-col bg-black">
       {viewMode !== 'chat' && (
-        <MobileAgentHeader agentName={agent.agent_name} onInfoClick={() => setIsSidebarOpen(true)} />
+        <MobileAgentHeader
+          agentName={agent.agent_name}
+          onInfoClick={() => setIsSidebarOpen(true)}
+        />
       )}
 
       <div className="min-h-0 flex-1 overflow-hidden">
@@ -385,7 +385,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
             isSubmitting={isSubmitting}
             submitError={submitError}
             refetchAgent={refetch}
-            chainMismatch={chainMismatch}
+            chainMismatch={chainToSwitch}
           />
         )}
       </div>
@@ -421,7 +421,11 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
         )}
       </AnimatePresence>
 
-      <AgentReadMoreModal isOpen={isReadMoreOpen} prompt={agent.prompt} onClose={() => setIsReadMoreOpen(false)} />
+      <AgentReadMoreModal
+        isOpen={isReadMoreOpen}
+        prompt={agent.prompt}
+        onClose={() => setIsReadMoreOpen(false)}
+      />
 
       {apiResponse && txnHash && (
         <AttackStatusModal

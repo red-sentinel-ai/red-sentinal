@@ -42,6 +42,7 @@ type NavItem = {
 const NAV_ITEMS: NavItem[] = [
   { title: 'Home', href: '/attack', icon: Terminal },
   { title: 'Create', href: '/defend', icon: PlusSquare },
+  // Syndicates are hidden in Arbitrum-only mode (sentinel flow only).
   { title: 'Syndicates', href: '/syndicates', icon: Network },
   { title: 'Leaderboard', href: '/leaderboard', icon: Trophy },
   { title: 'Rewards', href: '/rewards', icon: Gift },
