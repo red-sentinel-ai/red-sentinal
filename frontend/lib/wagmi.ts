@@ -40,7 +40,7 @@ export const botChainMainnet = defineChain({
 })
 
 export const wagmiConfig = getDefaultConfig({
-  appName: 'Sui Sentinel',
+  appName: 'Red Sentinel',
   projectId,
   // Preferred chain first; both included so users can switch networks in-wallet
   chains:
