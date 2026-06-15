@@ -5,6 +5,7 @@ import { useWriteContract, usePublicClient, useAccount, useChainId } from 'wagmi
 import {  decodeEventLog } from 'viem'
 import { toast } from 'sonner'
 import { getEvmConfig } from '@/constants/evm'
+import { getEvmFeeOverrides } from '@/lib/evm/fees'
 import { ethers } from "ethers";
 import { SENTINEL_ABI, ERC20_ABI } from '@/lib/evm/abi'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
@@ -89,6 +90,7 @@ export function useConsumeEvmPrompt({
         if (showToasts) toast.info('Approving payment...')
         await writeContractAsync({
           ...txArgs,
+          ...(await getEvmFeeOverrides(chainId, publicClient)),
           address: tokenAddress,
           abi: ERC20_ABI,
           functionName: 'approve',
@@ -101,6 +103,7 @@ export function useConsumeEvmPrompt({
         if (showToasts) toast.info('Processing payment...')
         const attackTxHash = await writeContractAsync({
           ...txArgs,
+          ...(await getEvmFeeOverrides(chainId, publicClient)),
           address: evmCfg.contractAddress,
           abi: SENTINEL_ABI,
           functionName: 'requestAttack',
@@ -191,6 +194,7 @@ export function useConsumeEvmPrompt({
         if (showToasts) toast.info('Finalizing transaction...')
         const consumeTxHash = await writeContractAsync({
           ...txArgs,
+          ...(await getEvmFeeOverrides(chainId, publicClient)),
           address: evmCfg.contractAddress,
           abi: SENTINEL_ABI,
           functionName: 'consumePrompt',
@@ -242,7 +246,7 @@ export function useConsumeEvmPrompt({
         setIsLoading(false)
       }
     },
-    [walletAddress, currentChain, writeContractAsync, publicClient, onError, onComplete, showToasts]
+    [walletAddress, currentChain, chainId, writeContractAsync, publicClient, onError, onComplete, showToasts]
   )
 
   return { consumePrompt, isLoading, error }

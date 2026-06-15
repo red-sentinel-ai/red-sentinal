@@ -4,6 +4,7 @@ import { toast } from 'sonner'
 import posthog from 'posthog-js'
 import { useChainId } from 'wagmi'
 import { useActiveChain } from '@/context/ActiveChainContext'
+import { isEvmChain } from '@/constants/chains'
 import { useAgentObjectNames } from '@/hooks/useAgentObjectNames'
 import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
 import { type SupportedToken } from '@/constants'
@@ -49,13 +50,13 @@ export function useDeployAgent({
 
   const getWalletAddress = (): string | null => {
     if (activeChain === 'solana') return solanaDeploy.walletAddress
-    if (activeChain === 'bnb' || activeChain === 'bot') return evmDeploy.walletAddress
+    if (isEvmChain(activeChain)) return evmDeploy.walletAddress
     return suiDeploy.walletAddress
   }
 
   const getActiveTokenDecimals = (): number => {
     if (activeChain === 'solana') return selectedSolanaToken.decimals
-    if (activeChain === 'bnb' || activeChain === 'bot') return selectedEvmToken.decimals
+    if (isEvmChain(activeChain)) return selectedEvmToken.decimals
     return selectedToken.decimals
   }
 
@@ -134,7 +135,7 @@ export function useDeployAgent({
 
       // 2. Register with TEE (chain-aware)
       const decimals = getActiveTokenDecimals()
-      const feePerMessage = activeChain === 'bnb' || activeChain === 'bot'
+      const feePerMessage = isEvmChain(activeChain)
         ? Number(parseUnits(formData.feePerMessage, decimals))
         : parseFloat(formData.feePerMessage) * Math.pow(10, decimals)
       const isCustom = formData.llmProvider === 'custom'
@@ -150,7 +151,7 @@ export function useDeployAgent({
         formData.juryPrompt,
         activeChain,
         isCustom ? { apiBaseUrl: formData.customEndpointUrl, apiKey: formData.customApiKey } : undefined,
-        activeChain === 'bnb' || activeChain === 'bot' ? evmChainId : undefined
+        isEvmChain(activeChain) ? evmChainId : undefined
       )
 
       // 3. Execute chain-specific transaction
@@ -158,7 +159,7 @@ export function useDeployAgent({
 
       if (activeChain === 'solana') {
         result = await solanaDeploy.executeTransaction(teeResponse)
-      } else if (activeChain === 'bnb' || activeChain === 'bot') {
+      } else if (isEvmChain(activeChain)) {
         result = await evmDeploy.executeTransaction(teeResponse)
       } else {
         result = await suiDeploy.executeTransaction(teeResponse)

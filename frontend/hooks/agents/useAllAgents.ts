@@ -76,8 +76,9 @@ export const useAllAgents = (
   explicitChainFilter?: SupportedChain
 ) => {
   const { activeChain } = useActiveChain()
-  const chainFilter =
-    explicitChainFilter !== undefined
+  // Arbitrum-only mode hard-locks every agent query to 'arb' so no other
+  // chain's sentinels can ever surface, regardless of skip/explicit filters.
+  const chainFilter = explicitChainFilter !== undefined
       ? explicitChainFilter
       : skipChainFilter
         ? undefined

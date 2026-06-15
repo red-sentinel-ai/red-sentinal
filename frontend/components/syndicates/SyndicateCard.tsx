@@ -19,7 +19,7 @@ export function SyndicateCard({ syndicate, isUserSyndicate }: SyndicateCardProps
   const sentinelHref = syndicate.agent_path
   const sentinelName = syndicate.agent_name || 'Unnamed Sentinel'
 
-  const decimals = getDecimalsForSymbol(syndicate.token_symbol)
+  const decimals = getDecimalsForSymbol(syndicate.token_symbol, syndicate.token_address)
   const totalManagedAsset = `${formatTokenAmount(syndicate.total_funds, decimals)} ${syndicate.token_symbol}`
 
   return (
