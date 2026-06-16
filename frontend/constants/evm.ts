@@ -1,7 +1,7 @@
 import { APP_NETWORK } from '@/constants/shared'
 import type { SupportedToken } from '@/constants/shared'
 
-export const EVM_TEE_API_PATH = 'https://tee-evm.suisentinel.xyz'
+export const EVM_TEE_API_PATH = 'https://tee-evm.redsentinel.xyz'
 // Kept for backwards compatibility with hooks that haven't been migrated to
 // resolveEvmTeeNetwork(chainId) yet. Defaults to the BSC network for the
 // current APP_NETWORK.
