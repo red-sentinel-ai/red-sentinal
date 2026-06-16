@@ -274,7 +274,7 @@ sui-sentinel/frontend/lib/evm/abi.ts
 
 ## Backend API Endpoints
 
-Base URL: `https://api.suisentinel.xyz/syndicates`
+Base URL: `https://api.redsentinel.xyz/syndicates`
 
 | Method | Path | What it does |
 |--------|------|-------------|
@@ -424,7 +424,7 @@ When registering a sentinel through a syndicate, the TEE receives `syndicateAddr
 
 ### No Next.js API proxy
 
-All syndicate API calls go **directly** to `https://api.suisentinel.xyz` using `SUI_SENTINEL_API_URL` from `@/constants`. No `/api/syndicates/` Next.js routes.
+All syndicate API calls go **directly** to `https://api.redsentinel.xyz` using `SUI_SENTINEL_API_URL` from `@/constants`. No `/api/syndicates/` Next.js routes.
 
 ---
 

@@ -7,7 +7,7 @@ export const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || ''
 export const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 
 export const NOVU_APP_IDENTIFIER = process.env.NEXT_PUBLIC_NOVU_APPLICATION_IDENTIFIER || ''
-export const NOVU_BACKEND_URL = "https://notifications.redsentinel.xyz/api" 
+export const NOVU_BACKEND_URL = "https://notifications.redsentinel.xyz/api"
 export const NOVU_WEBSOCKET_HOSTNAME = "wss://notifications.redsentinel.xyz"
 
 export const SYSTEM_PROMPT_MAX_TOKENS = 600
@@ -57,7 +57,7 @@ export const TEXT_COPIES = {
 export const LOCAL_API_PATH = 'https://tee.suisentinel.xyz'
 export const RED_TEAM_API_URL = `https://redteam.suisentinel.xyz/`
 export const SUI_SENTINEL_API_URL =
-  process.env.NEXT_PUBLIC_SUI_SENTINEL_API_URL || 'https://api.suisentinel.xyz'
+  process.env.NEXT_PUBLIC_SUI_SENTINEL_API_URL || 'https://api.redsentinel.xyz'
 
 // Re-export shared types and constants (extracted to break circular dependency with solana.ts)
 export { APP_NETWORK, type SupportedToken } from './shared'
@@ -202,7 +202,7 @@ export const SUPPORTED_TOKENS: SupportedToken[] =
   APP_NETWORK === 'mainnet' ? MAINNET_SUPPORTED_TOKENS : TESTNET_SUPPORTED_TOKENS
 
 
-const ALL_SUPPORTED_TOKENS = [...SUPPORTED_TOKENS, ...SOLANA_SUPPORTED_TOKENS, ...EVM_SUPPORTED_TOKENS , BOT_CHAIN_USDC_TOKEN, ARB_USDC_TOKEN ]
+const ALL_SUPPORTED_TOKENS = [...SUPPORTED_TOKENS, ...SOLANA_SUPPORTED_TOKENS, ...EVM_SUPPORTED_TOKENS, BOT_CHAIN_USDC_TOKEN, ARB_USDC_TOKEN]
 
 export function getTokenForCoinType(coinType?: string): SupportedToken {
   if (!coinType) return SUI_TOKEN
