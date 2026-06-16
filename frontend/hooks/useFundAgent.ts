@@ -2,7 +2,8 @@ import { useState, useCallback, useEffect } from 'react'
 import { Transaction } from '@mysten/sui/transactions'
 import { useSignAndExecuteTransaction, useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
-import { SUI_COIN_TYPE, SUI_CONFIG, SUI_LEGACY_CONFIG } from '@/constants'
+import { SUI_CONFIG, SUI_LEGACY_CONFIG } from '@/constants'
+import { SUI_COIN_TYPE } from '@/constants/tokens'
 import { toast } from 'sonner'
 
 

@@ -9,7 +9,9 @@ import { Loader2, Zap, Maximize2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ConnectModal } from '@mysten/dapp-kit'
 
-import { ATTACK_PROMPT_MAX_TOKENS, DEFAULT_PROFILE_URL, getTokenForCoinType } from '@/constants'
+import { ATTACK_PROMPT_MAX_TOKENS } from '@/constants'
+import { getTokenForCoinType } from '@/constants/tokens'
+import { generateAvatarUrl } from '@/lib/utils'
 import type { SupportedChain } from '@/constants/chains'
 import { formatBalance, truncateAddress } from '@/lib/utils'
 import type { ConsumePromptApiResponse } from '@/types'
@@ -147,17 +149,21 @@ export default function ChatInterface({
 
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false)
 
-  const isAgentDrained = chatMessages.some(
-    message => message.type === 'agent' && message.isSuccess === true
+  const breachIndex = useMemo(
+    () => chatMessages.findIndex(msg => msg.type === 'agent' && msg.isSuccess === true),
+    [chatMessages]
+  )
+
+  const isAgentDrained = breachIndex >= 0
+
+  const orderedMessages = useMemo(
+    () => (breachIndex >= 0 ? chatMessages.slice(0, breachIndex + 1) : chatMessages),
+    [chatMessages, breachIndex]
   )
 
   const winnerInfo = useMemo(() => {
-    const winningAgentMessageIndex = chatMessages.findIndex(
-      msg => msg.type === 'agent' && msg.isSuccess === true
-    )
-
-    if (winningAgentMessageIndex > 0) {
-      const correspondingUserMessage = chatMessages[winningAgentMessageIndex - 1]
+    if (breachIndex > 0) {
+      const correspondingUserMessage = chatMessages[breachIndex - 1]
 
       if (correspondingUserMessage?.type === 'user') {
         return {
@@ -168,24 +174,24 @@ export default function ChatInterface({
     }
 
     return null
-  }, [chatMessages])
+  }, [chatMessages, breachIndex])
 
   const displayedMessages = useMemo(() => {
-    if (activeTab === 'global') return chatMessages
+    if (activeTab === 'global') return orderedMessages
     if (!connectedAddress) return []
     const filtered: ChatMessage[] = []
-    for (let i = 0; i < chatMessages.length; i++) {
-      const msg = chatMessages[i]
+    for (let i = 0; i < orderedMessages.length; i++) {
+      const msg = orderedMessages[i]
       if (msg.type === 'user' && msg.sender === connectedAddress) {
         filtered.push(msg)
-        if (chatMessages[i + 1]?.type === 'agent') {
-          filtered.push(chatMessages[i + 1])
+        if (orderedMessages[i + 1]?.type === 'agent') {
+          filtered.push(orderedMessages[i + 1])
           i++
         }
       }
     }
     return filtered
-  }, [chatMessages, activeTab, connectedAddress])
+  }, [orderedMessages, activeTab, connectedAddress])
 
   const adjustTextareaHeight = () => {
     const textarea = textareaRef.current
@@ -334,7 +340,7 @@ export default function ChatInterface({
                 <div className="flex items-center gap-3">
                   <div className="flex h-8 w-8 items-center justify-center border border-[var(--color-border-strong)] bg-[var(--color-bg-elevated)]">
                     <Image
-                      src={agent.agent_image || DEFAULT_PROFILE_URL}
+                      src={agent.agent_image || generateAvatarUrl(agent.agent_id)}
                       width={32}
                       height={32}
                       alt="agent"
@@ -357,7 +363,7 @@ export default function ChatInterface({
         </div>
 
         {/* Awaiting Status */}
-        {displayedMessages.length > 0 && !isSubmitting && (
+        {displayedMessages.length > 0 && !isSubmitting && !isAgentDrained && (
           <div className="border-y border-[var(--color-border-strong)] py-8 text-center">
             <span className="industrial-header text-[10px] tracking-[8px] text-[var(--color-text-muted)] opacity-40">
               AWAITING_NEW_PAYLOADS
@@ -369,7 +375,7 @@ export default function ChatInterface({
       {/* Input Area */}
       {chainMismatch ? (
         <ChainMismatchBanner agentChain={chainMismatch} />
-      ) : isAttackPaused ? (
+      ) : isAttackPaused && !isAgentDrained ? (
         <div className="border-t border-[var(--color-border-strong)] bg-[var(--color-bg-base)] p-6">
           <div className="mx-auto max-w-4xl text-center">
             <h3 className="industrial-header text-accent text-sm">ATTACKS_PAUSED</h3>

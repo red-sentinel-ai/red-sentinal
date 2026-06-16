@@ -18,6 +18,7 @@
     "@mysten/dapp-kit": "^0.16.4",
     "@mysten/sui": "^1.30.0",
     "@mysten/wallet-standard": "^0.15.1",
+    "@novu/nextjs": "^3.17.0",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-navigation-menu": "^1.2.14",
     "@radix-ui/react-slot": "^1.1.2",

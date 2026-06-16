@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 
 import { LeaderboardSkeleton } from './ui/skeletons/LeaderboardSkeleton'
 import { AgentDetails, SortField, SortDirection } from '@/hooks/agents/useAllAgents'
-import { getTokenForCoinType } from '@/constants'
+import { getTokenForCoinType } from '@/constants/tokens'
 import { CHAINS } from '@/constants/chains'
 import { TokenAmount } from './ui/common/TokenAmount'
 import Image from 'next/image'
@@ -72,7 +72,13 @@ export const AgentsList = ({
                 <span>ID / Agent Name</span>
                 <SortIcon field="agent_id" />
               </div>
-              <div className="flex items-center">Status</div>
+              <div
+                className="flex cursor-pointer items-center hover:text-[var(--color-text-primary)]"
+                onClick={() => onSort('state')}
+              >
+                <span>Status</span>
+                <SortIcon field="state" />
+              </div>
               <div className="flex items-center">Network</div>
               <div
                 className="flex cursor-pointer items-center hover:text-[var(--color-text-primary)]"
@@ -259,7 +265,7 @@ export const AgentsList = ({
                               alt={chainData.name}
                               width={14}
                               height={14}
-                              className={`shrink-0 rounded-full grayscale ${chainData.iconFilterClass}`}
+                              className={`shrink-0 rounded-full ${chainData.iconFilterClass}`}
                             />
                             {agent.is_featured && (
                               <Image

@@ -8,7 +8,7 @@ import { Loader2, Zap, Info } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
 
-import { DEFAULT_PROFILE_URL } from '@/constants'
+import { generateAvatarUrl } from '@/lib/utils'
 import type { AgentDetails } from '@/hooks/agents/useAllAgents'
 import type { ChatMessage as ChatMessageType } from '@/components/agents/ChatInterface'
 import { ChatMessage } from '@/components/agents/ChatMessage'
@@ -277,7 +277,7 @@ export function PracticeChatInterface({
                 <div className="flex items-center gap-3">
                   <div className="flex h-8 w-8 items-center justify-center border border-[var(--color-border-strong)] bg-[var(--color-bg-elevated)]">
                     <Image
-                      src={DEFAULT_PROFILE_URL}
+                      src={generateAvatarUrl(sentinel.sentinel_id.toString())}
                       width={32}
                       height={32}
                       alt="sentinel"
