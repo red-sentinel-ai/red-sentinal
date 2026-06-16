@@ -314,7 +314,7 @@ CREATE TABLE ss_rewards_leaderboard (
 ### Example cURL Request
 
 ```bash
-curl -X POST https://api.suisentinel.com/rewards/social-missions/notify \
+curl -X POST https://api.redsentinel.xyz/rewards/social-missions/notify \
   -H "Content-Type: application/json" \
   -H "x-admin-token: your-admin-token-here" \
   -d '{

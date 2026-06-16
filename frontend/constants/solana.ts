@@ -20,7 +20,8 @@ export type SolanaSupportedWallet = (typeof SOLANA_SUPPORTED_WALLETS)[number]
 
 export const NATIVE_SOL_MINT = 'So11111111111111111111111111111111111111112'
 
-export const SOLANA_TEE_API_PATH = 'https://tee-solana.suisentinel.xyz'
+
+export const SOLANA_TEE_API_PATH = 'https://tee-solana.redsentinel.xyz'
 
 export const SOLANA_TEE_NETWORK = APP_NETWORK === 'mainnet' ? 'mainnet' : 'devnet'
 
