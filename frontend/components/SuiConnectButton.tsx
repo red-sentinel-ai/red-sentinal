@@ -8,7 +8,8 @@ import {
   ConnectButton as DappKitConnectButton,
 } from '@mysten/dapp-kit'
 import { formatAddress } from '@mysten/sui/utils'
-import { APP_NETWORK, SUI_TOKEN } from '@/constants'
+import { APP_NETWORK } from '@/constants'
+import { SUI_TOKEN } from '@/constants/tokens'
 import { useTokenBalance } from '@/hooks/useTokenBalance'
 import { WalletDropdown } from '@/components/WalletDropdown'
 

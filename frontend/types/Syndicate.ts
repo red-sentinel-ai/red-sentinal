@@ -32,6 +32,7 @@ export interface BackendSyndicate {
   whitelist_enabled: boolean
   agent_id: string | null
   agent_path: string | null
+  agent_name: string | null
   // Decimal128 strings (wei). Render with formatTokenAmount + tokenDecimals.
   total_funds: string
   total_shares: string

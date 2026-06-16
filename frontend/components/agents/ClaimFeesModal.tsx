@@ -6,9 +6,9 @@ import { useClaimFeesEVM } from '@/hooks/agents/useClaimFeesEVM'
 import { useSolanaWallet } from '@/hooks/useSolanaWallet'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
 import { AgentUpdateDialog } from './AgentUpdateDialog'
-import { getTokenForCoinType } from '@/constants'
+import { getTokenForCoinType } from '@/constants/tokens'
 import { TokenAmount } from '../ui/common/TokenAmount'
-import type { SupportedChain } from '@/constants/chains'
+import { isEvmChain, type SupportedChain } from '@/constants/chains'
 
 interface ClaimFeesModalProps {
   open: boolean
@@ -38,7 +38,7 @@ export const ClaimFeesModal = ({
   const { address: evmAddress } = useEVMWallet()
 
   const isSolana = chain === 'solana'
-  const isEvm = chain === 'bnb'
+  const isEvm = isEvmChain(chain)
   const isLoading = isEvm ? isEvmLoading : isSolana ? isSolanaLoading : isSuiLoading
   const token = getTokenForCoinType(coinType)
   const hasFees = accumulatedFees > 0

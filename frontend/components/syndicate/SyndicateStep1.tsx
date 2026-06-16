@@ -3,9 +3,9 @@
 import { useRef, useState } from 'react'
 import { Loader2, Users } from 'lucide-react'
 import { toast } from 'sonner'
-import { useAccount } from 'wagmi'
+import { useAccount, useChainId } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
-import { EVM_SUPPORTED_TOKENS } from '@/constants/evm'
+import { getEvmSupportedTokens } from '@/constants/evm'
 import { SUI_SENTINEL_API_URL } from '@/constants'
 import { APP_NETWORK } from '@/constants/shared'
 import { TokenSelectDropdown } from '@/components/defend/TokenSelectDropdown'
@@ -24,6 +24,8 @@ interface SyndicateStep1Props {
 
 export function SyndicateStep1({ onComplete }: SyndicateStep1Props) {
   const { address: evmAddress } = useAccount()
+  const chainId = useChainId()
+  const evmTokens = getEvmSupportedTokens(chainId)
   const { openConnectModal } = useConnectModal()
   const { deploy, isDeploying } = useDeploySyndicate()
 
@@ -31,7 +33,7 @@ export function SyndicateStep1({ onComplete }: SyndicateStep1Props) {
   const [description, setDescription] = useState('')
   const [socialLink, setSocialLink] = useState('')
   const [isPermissioned, setIsPermissioned] = useState(false)
-  const [selectedToken, setSelectedToken] = useState<SupportedToken>(EVM_SUPPORTED_TOKENS[0])
+  const [selectedToken, setSelectedToken] = useState<SupportedToken>(evmTokens[0])
   const [errors, setErrors] = useState<Record<string, string>>({})
   const nameInputRef = useRef<HTMLInputElement>(null)
 
@@ -207,7 +209,7 @@ export function SyndicateStep1({ onComplete }: SyndicateStep1Props) {
           </div>
           <div className="flex shrink-0 items-center border-l border-[var(--color-border-subtle)]">
             <TokenSelectDropdown
-              tokens={EVM_SUPPORTED_TOKENS}
+              tokens={evmTokens}
               selected={selectedToken}
               onSelect={setSelectedToken}
             />

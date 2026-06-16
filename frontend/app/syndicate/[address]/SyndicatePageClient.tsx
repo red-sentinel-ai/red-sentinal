@@ -73,7 +73,7 @@ export default function SyndicatePageClient({ identifier }: Props) {
   const agentId = meta?.agent_id ?? undefined
   const whitelistEnabled = meta?.whitelist_enabled
   const tokenSymbol = meta?.token_symbol ?? 'TOKEN'
-  const tokenDecimals = meta ? getDecimalsForSymbol(meta.token_symbol) : 18
+  const tokenDecimals = meta ? getDecimalsForSymbol(meta.token_symbol, meta.token_address) : 18
 
   const { pendingFees, refetch: refetchPendingFees } = useSyndicatePendingFees(
     address,

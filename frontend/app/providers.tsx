@@ -9,6 +9,7 @@ import { getFullnodeUrl } from '@mysten/sui/client'
 import { AppShell } from '@/components/layout/AppShell'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ProfileInitializer } from '@/components/profile/ProfileInitializer'
+import { ConnectSocialPrompt } from '@/components/notifications/ConnectSocialPrompt'
 import { APP_NETWORK } from '@/constants'
 import { SolanaWalletProvider } from '@/app/SolanaWalletProvider'
 import { EVMWalletProvider } from '@/app/EVMWalletProvider'
@@ -54,6 +55,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
                   <AuthProvider>
                     <ProfileInitializer />
                     <AppShell>{children}</AppShell>
+                    <ConnectSocialPrompt />
                   </AuthProvider>
                 </ActiveChainProvider>
               </SolanaWalletProvider>

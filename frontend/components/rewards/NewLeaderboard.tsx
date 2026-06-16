@@ -527,16 +527,8 @@ function DefenderCard({ entry }: { entry: DefenderEntry }) {
                   colorClass: breachRateColor(entry.breachRatePct),
                 },
                 { label: 'Fees Earned', value: formatUsd(entry.totalFeesEarnedUsd) },
-                {
-                  label: '$SENTINEL Earned',
-                  value: entry.sentinelTokensEarned.toLocaleString(),
-                  span: true,
-                },
-              ].map(({ label, value, colorClass, span }) => (
-                <div
-                  key={label}
-                  className={cn('rounded-lg bg-white/5 px-3 py-2', span && 'col-span-2')}
-                >
+              ].map(({ label, value, colorClass }) => (
+                <div key={label} className="rounded-lg bg-white/5 px-3 py-2">
                   <p className="text-[10px] uppercase tracking-wide text-white/40">{label}</p>
                   <p className={cn('text-sm font-semibold text-white', colorClass)}>{value}</p>
                 </div>
@@ -649,7 +641,6 @@ function AttackerCard({ entry }: { entry: AttackerEntry }) {
                   label: 'Attack Streak',
                   value: entry.attackStreakDays > 0 ? `🔥 ${entry.attackStreakDays}d` : '—',
                 },
-                { label: '$SENTINEL Earned', value: entry.sentinelTokensEarned.toLocaleString() },
                 { label: 'Last Active', value: formatTimeAgo(entry.lastActiveTimestamp) },
               ].map(({ label, value, colorClass }) => (
                 <div key={label} className="rounded-lg bg-white/5 px-3 py-2">
@@ -731,12 +722,6 @@ function DefendersTable({ entries }: { entries: DefenderEntry[] }) {
               label="Fees Earned(USD)"
               tooltip="Cumulative fees claimed + pending in USD"
               sortKey="totalFeesEarnedUsd"
-              {...colProps}
-            />
-            <ColHeader
-              label="$SENTINEL Rewards"
-              tooltip="SENTINEL token rewards distributed"
-              sortKey="sentinelTokensEarned"
               {...colProps}
             />
             <ColHeader
@@ -834,9 +819,6 @@ function DefendersTable({ entries }: { entries: DefenderEntry[] }) {
                   <DefenderTierBadge tier={entry.defenderTier} />
                 </td>
                 <td className="px-3 py-3 text-white/70">{formatUsd(entry.totalFeesEarnedUsd)}</td>
-                <td className="px-3 py-3 font-medium text-purple-700">
-                  {entry.sentinelTokensEarned.toLocaleString()}
-                </td>
                 <td className="px-3 py-3">
                   <div className="flex items-center gap-1.5">
                     <span className="font-medium text-white">{formatUsd(entry.tvlUsd)}</span>
@@ -940,12 +922,6 @@ function AttackersTable({ entries }: { entries: AttackerEntry[] }) {
               sortKey="attackStreakDays"
               {...colProps}
             />
-            <ColHeader
-              label="$SENTINEL"
-              tooltip="SENTINEL token rewards distributed for attacking"
-              sortKey="sentinelTokensEarned"
-              {...colProps}
-            />
             <ColHeader label="Last Active" sortKey="lastActiveTimestamp" {...colProps} />
             <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-white/50">
               Actions
@@ -1030,9 +1006,6 @@ function AttackersTable({ entries }: { entries: AttackerEntry[] }) {
                   ) : (
                     <span className="text-gray-400">—</span>
                   )}
-                </td>
-                <td className="px-3 py-3 font-medium text-purple-700">
-                  {entry.sentinelTokensEarned.toLocaleString()}
                 </td>
                 <td className="px-3 py-3 text-gray-500">
                   {formatTimeAgo(entry.lastActiveTimestamp)}
@@ -1225,7 +1198,7 @@ export function NewLeaderboard() {
                   <div className="overflow-x-auto rounded-xl border border-white/10">
                     <table className="w-full min-w-[1380px] border-collapse text-sm">
                       <tbody>
-                        <SkeletonRows cols={13} />
+                        <SkeletonRows cols={12} />
                       </tbody>
                     </table>
                   </div>
@@ -1332,7 +1305,7 @@ export function NewLeaderboard() {
                   <div className="overflow-x-auto rounded-xl border border-white/10">
                     <table className="w-full min-w-[1200px] border-collapse text-sm">
                       <tbody>
-                        <SkeletonRows cols={11} />
+                        <SkeletonRows cols={10} />
                       </tbody>
                     </table>
                   </div>
