@@ -67,7 +67,7 @@ export const SOLANA_MAINNET_SUPPORTED_TOKENS: SupportedToken[] = [
 export const SOLANA_SUPPORTED_TOKENS: SupportedToken[] =
   APP_NETWORK === 'mainnet' ? SOLANA_MAINNET_SUPPORTED_TOKENS : SOLANA_DEVNET_SUPPORTED_TOKENS
 
-export const SOLANA_TEE_API_PATH = 'https://tee-solana.suisentinel.xyz'
+export const SOLANA_TEE_API_PATH = 'https://tee-solana.redsentinel.xyz'
 
 export const SOLANA_TEE_NETWORK = APP_NETWORK === 'mainnet' ? 'mainnet' : 'devnet'
 
