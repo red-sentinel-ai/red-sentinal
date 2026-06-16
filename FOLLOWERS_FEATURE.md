@@ -156,7 +156,7 @@ counts ever become a measured hot path.
 
 All three files live under `backend-service/api/`. Routes are auto-loaded by `@fastify/autoload`
 (`app.js`), so the folder name `routes/social/` becomes the URL prefix `/social`. The full base URL
-in the frontend is `SUI_SENTINEL_API_URL` (prod: `https://api.suisentinel.xyz`).
+in the frontend is `SUI_SENTINEL_API_URL` (prod: `https://api.redsentinel.xyz`).
 
 ### 5.1 `shared/user-auth.js` — the auth gate
 

@@ -12,7 +12,7 @@ export interface ChainDeployHook {
   executeTransaction: (teeResponse: any) => Promise<DeployTransactionResult>
 }
 
-// Sui TEE response shape (from tee.suisentinel.xyz)
+// Sui TEE response shape (from tee.redsentinel.xyz)
 export interface SuiTeeResponse {
   response: {
     timestamp_ms: number
@@ -25,7 +25,7 @@ export interface SuiTeeResponse {
   signature: string
 }
 
-// Solana TEE response shape (from tee-solana.suisentinel.xyz)
+// Solana TEE response shape (from tee-solana.redsentinel.xyz)
 export interface SolanaTeeResponse {
   response: {
     intent: number
@@ -41,7 +41,7 @@ export interface SolanaTeeResponse {
   signature: string // hex-encoded Ed25519 signature (64 bytes)
 }
 
-// EVM TEE response shape (from tee-evm.suisentinel.xyz)
+// EVM TEE response shape (from tee-evm.redsentinel.xyz)
 export interface EvmTeeResponse {
   response: {
     intent: number
