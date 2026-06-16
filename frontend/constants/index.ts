@@ -53,7 +53,7 @@ export const TEXT_COPIES = {
 export const LOCAL_API_PATH = 'https://tee.suisentinel.xyz'
 export const RED_TEAM_API_URL = `https://redteam.suisentinel.xyz/`
 export const SUI_SENTINEL_API_URL =
-  process.env.NEXT_PUBLIC_SUI_SENTINEL_API_URL || 'https://api.suisentinel.xyz'
+  process.env.NEXT_PUBLIC_SUI_SENTINEL_API_URL || 'https://api.redsentinel.xyz'
 
 // Re-export shared types and constants (extracted to break circular dependency with solana.ts)
 export { APP_NETWORK, type SupportedToken } from './shared'
