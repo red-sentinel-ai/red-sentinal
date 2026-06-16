@@ -2,8 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { User, Wallet } from 'lucide-react'
 import { type Tables } from '@/lib/database.types'
-import { DEFAULT_PROFILE_URL } from '@/constants'
-import { truncateAddress } from '@/lib/utils'
+import { truncateAddress, generateAvatarUrl } from '@/lib/utils'
 import { Skeleton } from '@/components/ui/skeleton'
 
 type UserProfile = Pick<Tables<{ schema: 'sentinel' }, 'ss_users'>, 'username' | 'avatar_url'> | null | undefined
@@ -30,7 +29,7 @@ export const DefenderProfile = ({ ownerAddress, profile, isLoading }: DefenderPr
     )
   }
 
-  const avatar = profile?.avatar_url || DEFAULT_PROFILE_URL
+  const avatar = profile?.avatar_url || generateAvatarUrl(ownerAddress)
   const username = profile?.username
   const profileLink = username ? `/u/${username}` : `/u/${ownerAddress}`
 

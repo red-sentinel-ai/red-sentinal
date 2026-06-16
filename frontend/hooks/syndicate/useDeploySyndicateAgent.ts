@@ -120,9 +120,7 @@ export function useDeploySyndicateAgent({
       } else if (selectedImage?.url && !selectedImage.isCustom) {
         payload.append('image_url', selectedImage.url)
       }
-
       createAgent(payload)
-
       return { agentId: data.agent_id, txHash: registerTx }
     } catch (err: any) {
       const msg = err?.shortMessage ?? err?.message ?? 'Failed to launch sentinel'

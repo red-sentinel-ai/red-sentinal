@@ -386,8 +386,11 @@ another user's `/u/<username>`:
 - **Show counts anywhere:** `<FollowStats identifier={userIdOrUsername} />`.
 - **A new user-attributed write endpoint:** copy the `requireUserAuth` + `request.userId` pattern;
   never trust an actor id from the body.
-- **Notifications on follow:** hook into the `POST /social/follow` handler after the upsert (mirror
-  how the indexer fans out Telegram notifications) — out of scope today.
+- **Notifications on follow:** already wired. `POST /social/follow` fires the Novu `new-follower`
+  workflow to the followed user (fire-and-forget, only on a *new* follow — the upsert's `.select('id')`
+  returns a row only when an edge is actually inserted). See `notifyNewFollower` in
+  `routes/social/index.js` and the full notification system in
+  `sui-sentinel/docs/NOVU_NOTIFICATIONS.md` (Flow C). If you change this trigger, update that doc too.
 - **Denormalized counts:** only if profiling shows the live `count` queries are hot. Add
   `followers_count`/`following_count` to `ss_users` and maintain them in the follow/unfollow handlers
   (or a DB trigger). Not needed at current scale.
@@ -421,7 +424,7 @@ another user's `/u/<username>`:
 |---|---|
 | `shared/user-auth.js` | `requireUserAuth` preHandler (x-user-id gate) |
 | `routes/social/schemas.js` | JSON-schema validation for the 5 endpoints |
-| `routes/social/index.js` | the 5 endpoints + enrichment helpers |
+| `routes/social/index.js` | the 5 endpoints + enrichment helpers + `notifyNewFollower` (Novu `new-follower` trigger) |
 
 **Frontend — `sui-sentinel/frontend/`**
 

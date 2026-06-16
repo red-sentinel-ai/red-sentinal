@@ -136,6 +136,7 @@ export type FollowListResponse = {
 
 const AUTH_BASE_URL = `${SUI_SENTINEL_API_URL}/auth`
 const SOCIAL_BASE_URL = `${SUI_SENTINEL_API_URL}/social`
+const AGENTS_BASE_URL = `${SUI_SENTINEL_API_URL}/agents`
 
 class AuthApiError extends Error {
   constructor(
@@ -452,6 +453,60 @@ export async function getFollowing(
   params: FollowListParams = {}
 ): Promise<FollowListResponse> {
   return fetchFollowList(identifier, 'following', params)
+}
+
+// ── Sentinel follow (subscribe to a sentinel's notifications) ─────────────────
+// Following a sentinel subscribes the logged-in profile to its Novu topic. chain +
+// network identify which chain's topic. `userId` is the actor (sent as x-user-id).
+
+function sentinelFollowUrl(agentId: string, chain: string, network: string): string {
+  const url = new URL(`${AGENTS_BASE_URL}/${agentId}/follow`)
+  url.searchParams.set('chain', chain)
+  url.searchParams.set('network', network)
+  return url.toString()
+}
+
+export async function getSentinelFollowState(
+  userId: string,
+  agentId: string,
+  chain: string,
+  network: string
+): Promise<boolean> {
+  const response = await fetch(sentinelFollowUrl(agentId, chain, network), {
+    credentials: 'include',
+    headers: { 'x-user-id': userId },
+  })
+  const data = await handleResponse<{ following: boolean }>(response)
+  return Boolean(data?.following)
+}
+
+export async function followSentinel(
+  userId: string,
+  agentId: string,
+  chain: string,
+  network: string
+): Promise<void> {
+  const response = await fetch(`${AGENTS_BASE_URL}/${agentId}/follow`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json', 'x-user-id': userId },
+    body: JSON.stringify({ chain, network }),
+  })
+  await handleResponse<{ following: boolean }>(response)
+}
+
+export async function unfollowSentinel(
+  userId: string,
+  agentId: string,
+  chain: string,
+  network: string
+): Promise<void> {
+  const response = await fetch(sentinelFollowUrl(agentId, chain, network), {
+    method: 'DELETE',
+    credentials: 'include',
+    headers: { 'x-user-id': userId },
+  })
+  await handleResponse<{ following: boolean }>(response)
 }
 
 export { AuthApiError }

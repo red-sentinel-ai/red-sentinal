@@ -11,8 +11,8 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { UpdatePromptModal } from './UpdatePromptModal'
 import { UpdateCostModal } from './UpdateCostModal'
-import { getTokenForCoinType } from '@/constants'
-import type { SupportedChain } from '@/constants/chains'
+import { getTokenForCoinType } from '@/constants/tokens'
+import { isEvmChain, type SupportedChain } from '@/constants/chains'
 
 const PROMPT_UPDATE_WINDOW_MS = 10_800_000
 
@@ -28,6 +28,7 @@ interface AgentDropdownProps {
   createdAt?: string
   coinType?: string
   chain?: SupportedChain
+  isDefeated?: boolean
 }
 
 export const AgentDropdown = ({
@@ -41,6 +42,7 @@ export const AgentDropdown = ({
   createdAt,
   coinType,
   chain = 'sui',
+  isDefeated = false,
 }: AgentDropdownProps) => {
   const [isPromptModalOpen, setIsPromptModalOpen] = useState(false)
   const [isCostModalOpen, setIsCostModalOpen] = useState(false)
@@ -64,8 +66,8 @@ export const AgentDropdown = ({
     setIsCostModalOpen(true)
   }
 
-  const hasOwnerItems = isOwner && chain !== 'bnb'
-  const hasItems = !isFeatured || hasOwnerItems
+  const hasOwnerItems = isOwner && !isEvmChain(chain) && !isDefeated
+  const hasItems = !isDefeated && (!isFeatured || hasOwnerItems)
 
   return (
     <>

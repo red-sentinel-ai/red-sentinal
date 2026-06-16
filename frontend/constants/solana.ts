@@ -1,5 +1,5 @@
 import { clusterApiUrl } from '@solana/web3.js'
-import { APP_NETWORK, type SupportedToken } from './shared'
+import { APP_NETWORK, SupportedToken } from './shared'
 
 export const SOLANA_CLUSTER = APP_NETWORK === 'mainnet' ? 'mainnet-beta' : 'devnet'
 
@@ -81,4 +81,3 @@ const SOLANA_MAINNET_CONFIG = {
 
 export const SOLANA_CONFIG =
   APP_NETWORK === 'mainnet' ? SOLANA_MAINNET_CONFIG : SOLANA_DEVNET_CONFIG
-

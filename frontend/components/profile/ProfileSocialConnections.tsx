@@ -5,8 +5,7 @@ import Image from 'next/image'
 import { Mail, Check, Loader2 } from 'lucide-react'
 import { useEmailOtpVerification } from '@/hooks/profile/useEmailOtpVerification'
 import { useTelegramVerification } from '@/hooks/profile/useTelegramVerification'
-import { useDisconnectProvider } from '@/hooks/rewards/useDisconnectProvider'
-import { useConnectedAddress } from '@/hooks/useConnectedAddress'
+import { useRemoveSocialConnection } from '@/hooks/profile/useRemoveSocialConnection'
 import { useAuth } from '@/context/AuthContext'
 
 // Telegram icon component
@@ -21,9 +20,8 @@ function TelegramIcon({ className }: { className?: string }) {
 const TELEGRAM_BOT_USERNAME = 'suisentinel_bot'
 
 export function ProfileSocialConnections() {
-  const { address } = useConnectedAddress()
   const { user, refreshProfile } = useAuth()
-  const { mutate: disconnect } = useDisconnectProvider()
+  const { mutate: disconnect } = useRemoveSocialConnection()
 
   const [disconnectingPlatform, setDisconnectingPlatform] = useState<string | null>(null)
   const {
@@ -77,11 +75,11 @@ export function ProfileSocialConnections() {
     }
   }
 
-  const handleDisconnect = (platform: string) => {
-    if (!address) return
+  const handleDisconnect = (platform: string, connectionId?: string) => {
+    if (!user?.id || !connectionId) return
     setDisconnectingPlatform(platform)
     disconnect(
-      { provider: platform, walletAddress: address },
+      { userId: user.id, connectionId, platform },
       {
         onSettled: async () => {
           setDisconnectingPlatform(null)
@@ -124,7 +122,7 @@ export function ProfileSocialConnections() {
                 {connectedEmail}
               </span>
               <button
-                onClick={() => handleDisconnect('email')}
+                onClick={() => handleDisconnect('email', emailConnection?.id)}
                 disabled={disconnectingPlatform === 'email'}
                 className="text-[9px] font-bold uppercase tracking-wider text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-danger)] disabled:opacity-50"
               >
@@ -242,7 +240,7 @@ export function ProfileSocialConnections() {
                 {telegramUsername ? `@${telegramUsername}` : 'Telegram Connected'}
               </span>
               <button
-                onClick={() => handleDisconnect('telegram')}
+                onClick={() => handleDisconnect('telegram', telegramConnection?.id)}
                 disabled={disconnectingPlatform === 'telegram'}
                 className="text-[9px] font-bold uppercase tracking-wider text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-danger)] disabled:opacity-50"
               >

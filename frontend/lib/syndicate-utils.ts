@@ -1,3 +1,4 @@
+import { getTokenForCoinType } from '@/constants/tokens'
 import type { SyndicateMemberDetail } from '@/types/Syndicate'
 
 export function getMaxRedeemableSharesWei(args: {
@@ -20,8 +21,12 @@ export function getMaxRedeemableSharesWei(args: {
   return shares < maxByLiquidity ? shares : maxByLiquidity
 }
 
-export function getDecimalsForSymbol(symbol: string): number {
-  const map: Record<string, number> = { USDC: 18, USDT: 18, WBNB: 18, BNB: 18 }
+export function getDecimalsForSymbol(symbol: string, tokenAddress?: string): number {
+  if (tokenAddress) {
+    const token = getTokenForCoinType(tokenAddress)
+    if (token.symbol === symbol) return token.decimals
+  }
+  const map: Record<string, number> = { USDC: 6, USDT: 6, WBNB: 18, BNB: 18 }
   return map[symbol] ?? 18
 }
 

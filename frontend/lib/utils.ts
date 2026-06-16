@@ -129,11 +129,12 @@ export const removeHexPrefix = (hex: string) => {
 
 /**
  * Detect which chain an address belongs to based on its format.
- *  - BNB/EVM  → 0x + exactly 40 hex chars (20 bytes)
+ *  - EVM      → 0x + exactly 40 hex chars (20 bytes); 'arb' in Arbitrum-only
+ *               mode, otherwise 'bnb' (the default EVM chain)
  *  - Sui      → 0x + 62–64 hex chars (31–32 bytes)
  *  - Solana   → no 0x prefix (base58)
  */
-export function detectChainFromAddress(address: string): 'sui' | 'solana' | 'bnb' {
+export function detectChainFromAddress(address: string): 'sui' | 'solana' | 'bnb' | 'arb' {
   if (/^0x[0-9a-fA-F]{40}$/.test(address)) return 'bnb'
   if (/^0x[0-9a-fA-F]{62,64}$/.test(address)) return 'sui'
   return 'solana'
@@ -252,7 +253,25 @@ export const generateGradientAvatar = (seed: string): string => {
   return `data:image/svg+xml;base64,${base64}`
 }
 
-export const buildAgentShareTweetUrl = (agentName: string, pageUrl: string, xUsername: string): string => {
+export const buildAgentShareTweetUrl = (
+  agentName: string,
+  pageUrl: string,
+  xUsername: string
+): string => {
   const text = `I'm challenging ${agentName} on @${xUsername}! 🛡️\n\nThink you can break this AI agent and win the prize pool?\n\nTry it here: ${pageUrl}`
   return `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&hashtags=RedSentinel,Web3,Sui`
+}
+
+/**
+ * Generate a unique avatar URL using DiceBear API.
+ * Deterministic - same seed always produces the same avatar.
+ * @param seed - Unique identifier (wallet address, user ID, etc.)
+ * @param style - DiceBear style (default: 'shapes')
+ */
+export const generateAvatarUrl = (
+  seed: string,
+  style: 'adventurer' | 'adventurer-neutral' | 'avataaars' | 'lorelei' = 'lorelei'
+): string => {
+  const encodedSeed = encodeURIComponent(seed)
+  return `https://api.dicebear.com/10.x/${style}/svg?seed=${encodedSeed}`
 }

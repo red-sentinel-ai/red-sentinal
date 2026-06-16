@@ -41,9 +41,22 @@ export interface AgentDetails {
   trending?: boolean
   trending_rank?: number | null
   trending_window?: '24h' | '7d' | '30d' | null
+  // Present only when state === 'defeated'
+  winner?: {
+    address: string
+    amount_won: string
+    tx_digest?: string | null
+  } | null
 }
 
-export type SortField = 'total_balance' | 'cost_per_message' | 'total_attacks' | 'agent_id' | 'change7d' | null
+export type SortField =
+  | 'total_balance'
+  | 'cost_per_message'
+  | 'total_attacks'
+  | 'agent_id'
+  | 'change7d'
+  | 'state'
+  | null
 export type SortDirection = 'asc' | 'desc'
 
 export const ALL_AGENTS_QUERY_KEY = 'allAgents'
@@ -63,8 +76,9 @@ export const useAllAgents = (
   explicitChainFilter?: SupportedChain
 ) => {
   const { activeChain } = useActiveChain()
-  const chainFilter =
-    explicitChainFilter !== undefined
+  // Arbitrum-only mode hard-locks every agent query to 'arb' so no other
+  // chain's sentinels can ever surface, regardless of skip/explicit filters.
+  const chainFilter = explicitChainFilter !== undefined
       ? explicitChainFilter
       : skipChainFilter
         ? undefined

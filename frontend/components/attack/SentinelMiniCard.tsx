@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Flame, Star } from 'lucide-react'
 
 import { AgentDetails } from '@/hooks/agents/useAllAgents'
-import { getTokenForCoinType } from '@/constants'
+import { getTokenForCoinType } from '@/constants/tokens'
 import { CHAINS } from '@/constants/chains'
 import { TokenAmount } from '@/components/ui/common/TokenAmount'
 
