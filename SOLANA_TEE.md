@@ -36,7 +36,7 @@ sudo systemctl enable solanatee
 nginx files are located at 
 
 ```
-/etc/nginx/sites-enabled/tee-solana.suisentinel.xyz
+/etc/nginx/sites-enabled/tee-solana.redsentinel.xyz
 ```
 
 ## TEE URL
@@ -45,7 +45,7 @@ Solana TEE URL
 http://3.213.0.115:3013/health_check
 ```
 ```
-https://tee-solana.suisentinel.xyz/health_check
+https://tee-solana.redsentinel.xyz/health_check
 ```
 
 

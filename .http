@@ -81,7 +81,7 @@ content-type: application/json
 
 
 ### Resister Agent -Proudction
-POST https://redteam.suisentinel.xyz/register
+POST https://redteam.redsentinel.xyz/register
 Content-Type: application/json
 Authorization: Bearer suihero@345
 
@@ -96,7 +96,7 @@ Authorization: Bearer suihero@345
 
 
 ### Evaluate
-POST https://redteam.suisentinel.xyz/evaluate/18
+POST https://redteam.redsentinel.xyz/evaluate/18
 Content-Type: application/json
 Authorization: Bearer suihero@345
 
@@ -195,7 +195,7 @@ Authorization: Bearer ya29.c.c0AYnqXlh4hlQjI22slgSARPZrWKGC85MyedTL1QOXVXoGtHudd
 
 ### generate config
 
-POST https://redteam.suisentinel.xyz/generate-config
+POST https://redteam.redsentinel.xyz/generate-config
 Content-Type: application/json
 Authorization: Bearer suihero@345
 
