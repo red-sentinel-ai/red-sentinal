@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { TEXT_COPIES } from '@/constants/text_copies'
 import { type SupportedChain, CHAINS, SUPPORTED_CHAINS } from '@/constants/chains'
-import { getTokenForCoinType } from '@/constants'
+import { getTokenForCoinType } from '@/constants/tokens'
 import { AttackStats } from '@/components/attack/AttackStats'
 import { SentinelMarquee } from '@/components/attack/SentinelMarquee'
 import { SentinelRowSkeleton } from '@/components/attack/SentinelRowSkeleton'
@@ -166,6 +166,7 @@ export const AgentListView = () => {
         </div>
       </section>
 
+      {/* Stats are hidden in Arbitrum-only mode. */}
       <div className="mb-16 md:mb-20">
         <AttackStats />
       </div>

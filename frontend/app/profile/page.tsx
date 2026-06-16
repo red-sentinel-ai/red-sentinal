@@ -4,12 +4,11 @@ import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { User, Folder, Activity, Loader2, Camera, Gift, BarChart3, Copy, Check } from 'lucide-react'
+import { Folder, Activity, Loader2, Camera, Gift, Copy, Check } from 'lucide-react'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { UserActivity } from '@/components/profile/UserActivity'
 import { UserAgents } from '@/components/profile/UserAgents'
-import { UserStats } from '@/components/profile/UserStats'
 import { BoosterRewards } from '@/components/rewards/BoosterRewards'
 import { ConnectPrompt } from '@/components/ConnectPrompt'
 import { EditProfileModal } from '@/components/profile/EditProfileModal'
@@ -20,6 +19,7 @@ import { useUserProfileStats } from '@/hooks/profile/useUserProfileStats'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 import { SENTINEL_GIFS, USER_IMAGES } from '@/constants/asset_paths'
+import { generateAvatarUrl } from '@/lib/utils'
 
 const PROFILE_TABS = {
   AGENTS: 'agents',
@@ -139,17 +139,13 @@ function ProfileContent() {
                   <div className="bg-[var(--color-bg-surface)]/70 flex h-full w-full items-center justify-center">
                     <Loader2 className="h-8 w-8 animate-spin text-[var(--color-text-primary)]" />
                   </div>
-                ) : profile?.avatar_url ? (
+                ) : (
                   <Image
-                    src={profile.avatar_url}
+                    src={profile?.avatar_url || generateAvatarUrl(connectedAddress)}
                     alt="User Avatar"
                     fill
                     className="object-cover brightness-90 transition-all duration-700"
                   />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-[var(--color-bg-subtle)]">
-                    <User className="h-12 w-12 text-[var(--color-text-muted)]" />
-                  </div>
                 )}
                 <div className="bg-[var(--color-text-primary)]/40 absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
                   <Camera className="h-8 w-8 text-[var(--color-bg-surface)]" />
@@ -273,15 +269,6 @@ function ProfileContent() {
                   <Activity className="h-4 w-4" />
                   Activity
                 </TabsTrigger>
-
-                <TabsTrigger
-                  value={PROFILE_TABS.STATS}
-                  className="flex items-center gap-2 whitespace-nowrap rounded-none border-b-2 border-transparent px-2 pb-4 text-[11px] font-bold uppercase tracking-[2px] text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-secondary)] data-[state=active]:border-[var(--color-text-primary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)]"
-                >
-                  <BarChart3 className="h-4 w-4" />
-                  Stats
-                </TabsTrigger>
-
                 <TabsTrigger
                   value={PROFILE_TABS.REWARDS}
                   className="flex items-center gap-2 whitespace-nowrap rounded-none border-b-2 border-transparent px-2 pb-4 text-[11px] font-bold uppercase tracking-[2px] text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-secondary)] data-[state=active]:border-[var(--color-text-primary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)]"
@@ -300,13 +287,6 @@ function ProfileContent() {
               <TabsContent value={PROFILE_TABS.ACTIVITY}>
                 <UserActivity />
               </TabsContent>
-
-              <TabsContent value={PROFILE_TABS.STATS}>
-                <div className="max-w-5xl">
-                  <UserStats />
-                </div>
-              </TabsContent>
-
               <TabsContent value={PROFILE_TABS.REWARDS}>
                 <BoosterRewards />
               </TabsContent>

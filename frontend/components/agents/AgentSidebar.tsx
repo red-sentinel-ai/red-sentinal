@@ -13,21 +13,22 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 import {
-  DEFAULT_PROFILE_URL,
-  getTokenForCoinType,
   WITHDRAWAL_LOCK_MS,
   SUI_SENTINEL_X_USERNAME,
 } from '@/constants'
+import { getTokenForCoinType } from '@/constants/tokens'
 import { CHAINS } from '@/constants/chains'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { getExplorerObjectUrl } from '@/lib/explorer'
 import type { AgentDetailsFull } from '@/hooks/agents/useAgentDetails'
-import { formatDuration, cn, buildAgentShareTweetUrl, truncateAddress } from '@/lib/utils'
+import { formatDuration, cn, buildAgentShareTweetUrl, truncateAddress, generateAvatarUrl } from '@/lib/utils'
 import { Skeleton } from '@/components/ui'
 import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
 import { TokenAmount } from '../ui/common/TokenAmount'
 import { SocialMissionModal } from '@/components/rewards/SocialMissionModal'
 import { REWARDS_CONSTANTS } from '@/constants/rewards'
+import { SentinelFollowButton } from '@/components/agents/SentinelFollowButton'
+import { APP_NETWORK } from '@/constants'
 
 const SHARE_MISSION = REWARDS_CONSTANTS.DEFAULT_MISSIONS.find(m => m.type === 'share_with_hashtag')!
 
@@ -170,7 +171,7 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
             <div className="border-hairline flex items-center gap-4 bg-[var(--color-bg-elevated)] p-4">
               <div className="h-16 w-16 shrink-0 overflow-hidden border border-[var(--color-border-strong)] transition-all">
                 <Image
-                  src={agent.agent_image || DEFAULT_PROFILE_URL}
+                  src={agent.agent_image || generateAvatarUrl(agent.agent_id)}
                   width={64}
                   height={64}
                   alt={agent.agent_name}
@@ -195,6 +196,12 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
                 )}
               </div>
             </div>
+
+            <SentinelFollowButton
+              agentId={String(agent.agent_id)}
+              chain={agent.chain}
+              network={APP_NETWORK}
+            />
           </div>
 
           {/* Attack Objective */}

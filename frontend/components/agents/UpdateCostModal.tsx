@@ -3,8 +3,8 @@ import { useUpdateAgent } from '@/hooks/agents/useUpdateAgent'
 import { useUpdateAgentSolana } from '@/hooks/agents/useUpdateAgentSolana'
 import { useUpdateAgentEVM } from '@/hooks/agents/useUpdateAgentEVM'
 import { AgentUpdateDialog } from './AgentUpdateDialog'
-import { getTokenForCoinType } from '@/constants'
-import type { SupportedChain } from '@/constants/chains'
+import { getTokenForCoinType } from '@/constants/tokens'
+import { isEvmChain, type SupportedChain } from '@/constants/chains'
 
 interface UpdateCostModalProps {
   open: boolean
@@ -34,7 +34,7 @@ export const UpdateCostModal = ({
   const token = getTokenForCoinType(coinType)
 
   const isSolana = chain === 'solana'
-  const isEvm = chain === 'bnb'
+  const isEvm = isEvmChain(chain)
   const isLoading = isEvm ? isEvmLoading : isSolana ? isSolanaLoading : isSuiLoading
 
   const handleUpdate = () => {

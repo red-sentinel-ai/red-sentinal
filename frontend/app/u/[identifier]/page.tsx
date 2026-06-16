@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { User, Folder } from 'lucide-react'
+import { Folder } from 'lucide-react'
 import { truncateAddress, detectChainFromAddress } from '@/lib/utils'
 import { getExplorerAddressUrl } from '@/lib/explorer'
 import { supabaseServiceClient } from '@/db/config/server'
@@ -10,6 +10,7 @@ import { FollowButton } from '@/components/profile/FollowButton'
 import { FollowStats } from '@/components/profile/FollowStats'
 import { type AgentDetails } from '@/hooks/agents/useAllAgents'
 import { APP_NETWORK, SUI_SENTINEL_API_URL } from '@/constants'
+import { generateAvatarUrl } from '@/lib/utils'
 
 // Here we didn't used the useAgentsByOwner because it's a server components and good for SEO, if we want to use useAgentsByOwner hook, we will need to convert it to client component
 async function fetchAgentsByCreator(walletAddress: string): Promise<AgentDetails[]> {
@@ -112,13 +113,12 @@ export default async function PublicProfilePage({
         <div className="mb-12">
           <div className="mb-6 flex flex-col items-start gap-6 sm:flex-row sm:items-center">
             <div className="relative h-28 w-28 flex-shrink-0 overflow-hidden rounded-full border-2 border-[var(--color-border-subtle)]">
-              {user.avatar_url ? (
-                <Image src={user.avatar_url} alt="User Avatar" fill className="object-cover" />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center bg-[var(--color-bg-subtle)]">
-                  <User className="h-14 w-14 text-[var(--color-text-faint)]" />
-                </div>
-              )}
+              <Image
+                src={user.avatar_url || generateAvatarUrl(user.wallet_addresses?.[0] || user.id)}
+                alt="User Avatar"
+                fill
+                className="object-cover"
+              />
             </div>
             <div className="flex-1">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">

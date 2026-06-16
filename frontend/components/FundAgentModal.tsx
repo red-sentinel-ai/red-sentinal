@@ -1,8 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
-import { Loader2, X } from 'lucide-react'
+import { CheckCircle, Loader2, X } from 'lucide-react'
 import posthog from 'posthog-js'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { Dialog } from '@/components/Dialog'
@@ -11,10 +10,8 @@ import { useFundAgentSolana } from '@/hooks/useFundAgentSolana'
 import { useFundAgentEVM } from '@/hooks/useFundAgentEVM'
 import { useSolanaWallet } from '@/hooks/useSolanaWallet'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
-import { getTokenForCoinType } from '@/constants'
-import { getDefenderBoosterTier } from '@/lib/earn-utils'
-import { BoosterPassBadge } from '@/components/BoosterPassBadge'
-import type { SupportedChain } from '@/constants/chains'
+import { getTokenForCoinType } from '@/constants/tokens'
+import { isEvmChain, type SupportedChain } from '@/constants/chains'
 
 export interface FundAgentModalProps {
   open: boolean
@@ -43,13 +40,12 @@ export const FundAgentModal = ({
   const [amount, setAmount] = useState('')
   const [error, setError] = useState('')
   const [funded, setFunded] = useState(false)
-  const [fundedTier, setFundedTier] = useState('')
   const account = useCurrentAccount()
   const { publicKey: solanaPublicKey } = useSolanaWallet()
   const { address: evmAddress } = useEVMWallet()
-  const token = getTokenForCoinType(coinType)
+  const token = getTokenForCoinType(coinType, chain)
   const isSolana = chain === 'solana'
-  const isEvm = chain === 'bnb'
+  const isEvm = isEvmChain(chain)
 
   const { fundAgent: fundAgentSui, isLoading: isSuiLoading } = useFundAgent()
   const { fundAgent: fundAgentSolana, isLoading: isSolanaLoading } = useFundAgentSolana()
@@ -65,7 +61,8 @@ export const FundAgentModal = ({
     const num = parseFloat(amount)
     if (!amount.trim()) { setError('Amount is required'); return false }
     if (isNaN(num) || num <= 0) { setError('Amount must be a positive number'); return false }
-    if (num < 0.001) { setError('Minimum amount is 0.001 SUI'); return false }
+    const minAmount = Math.max(token.minimumAmount, 0.001)
+    if (num < minAmount) { setError(`Minimum amount is ${minAmount} ${token.symbol}`); return false }
     return true
   }
 
@@ -110,8 +107,6 @@ export const FundAgentModal = ({
         chain,
       })
 
-      const tier = getDefenderBoosterTier(parseFloat(amount))
-      setFundedTier(tier)
       setFunded(true)
       onSuccess?.(amount)
       setAmount('')
@@ -126,7 +121,6 @@ export const FundAgentModal = ({
     setAmount('')
     setError('')
     setFunded(false)
-    setFundedTier('')
     onClose()
   }
 
@@ -143,27 +137,18 @@ export const FundAgentModal = ({
           </div>
 
           <div className="flex flex-col items-center gap-3">
-            <Image
-              src="/img/slot_machine_1x.png"
-              alt="Slot machine"
-              width={56}
-              height={74}
-              className="h-14 w-14"
-            />
-            <p className="font-semibold text-[var(--color-text-primary)]">Free Spin Pass Received!</p>
-            <BoosterPassBadge tierKey={fundedTier} mode="received" />
+            <CheckCircle className="h-12 w-12 text-[var(--color-success)]" />
             <p className="text-xs text-[var(--color-text-muted)]">
-              Use it to WIN SENTINEL tokens from your profile rewards tab.
+              Your reward pool has been topped up. Your sentinel is now live on the attack page.
             </p>
           </div>
 
-          <Link
-            href="/profile?tab=rewards"
+          <button
             onClick={handleClose}
             className="inline-block w-full rounded-lg bg-[var(--color-text-primary)] px-5 py-3 text-sm font-semibold text-[var(--color-bg-surface)] transition-transform hover:scale-105"
           >
-            Go to Profile → Spin Now
-          </Link>
+            Done
+          </button>
         </div>
       ) : (
         <div className="space-y-4">
