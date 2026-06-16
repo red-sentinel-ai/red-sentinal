@@ -88,7 +88,7 @@ User on /defend → clicks "Syndicate Mode" tab
         ▼
    ┌──────────────────────────────────────────────────────────┐
    │  Step 3 · Launch Sentinel                                │
-   │  POST https://tee.suisentinel.xyz/register-agent         │
+   │  POST https://tee.redsentinel.xyz/register-agent         │
    │        │  creator = syndicateAddress (not wallet!)        │
    │        │  ← returns agent_id, prompt_hash, signature     │
    │  Syndicate.registerAgent(agent_id, ts, cost, hash,       │
