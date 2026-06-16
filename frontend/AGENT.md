@@ -81,12 +81,12 @@ Frontend (Next.js) → Supabase (Database) → TEE Backend API → Blockchain
 **Key Concepts:**
 - **On-chain data**: Agent deployments, funding, bounties via blockchain
 - **Off-chain data**: User profiles, agents metadata, rewards tracked in Supabase
-- **AI Interactions**: Proxied through TEE backend (`https://tee.suisentinel.xyz`)
+- **AI Interactions**: Proxied through TEE backend (`https://tee.redsentinel.xyz`)
 
 ### Backend API
 
 The frontend proxies AI agent interactions through a Trusted Execution Environment (TEE) backend:
-- **Production URL**: `https://tee.suisentinel.xyz`
+- **Production URL**: `https://tee.redsentinel.xyz`
 - Defined in `constants/index.ts` as `LOCAL_API_PATH`
 - Agent prompts are sent via `POST /api/consume-prompt`
 - Agent registration via `POST /api/register-agent`
@@ -322,7 +322,7 @@ Note: `getCoins()` is still appropriate inside transaction-building hooks (e.g. 
 **"Agent creation fails"**
 - Verify wallet is connected and has sufficient balance (minimum amounts vary by token)
 - Check browser console for specific error messages
-- Ensure the TEE backend is reachable (`https://tee.suisentinel.xyz`)
+- Ensure the TEE backend is reachable (`https://tee.redsentinel.xyz`)
 
 **"OAuth login not working"**
 - Verify `NEXTAUTH_URL` matches your current environment
