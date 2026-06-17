@@ -1,4 +1,22 @@
 import type { SupportedChain } from '@/constants/chains'
+import { providerNeedsApiKey, type DefendFormData } from './hooks/useDefendForm'
+
+export interface ProviderCredentials {
+  apiKey?: string
+  apiBaseUrl?: string
+}
+
+export const resolveProviderCredentials = (
+  formData: DefendFormData
+): ProviderCredentials | undefined => {
+  if (formData.llmProvider === 'custom') {
+    return { apiBaseUrl: formData.customEndpointUrl, apiKey: formData.customApiKey }
+  }
+  if (providerNeedsApiKey(formData.llmProvider)) {
+    return { apiKey: formData.providerApiKey }
+  }
+  return undefined
+}
 
 export const registerAgentUtil = async (
   systemPrompt: string,
@@ -10,10 +28,7 @@ export const registerAgentUtil = async (
   attackGoal: string,
   juryPrompt: string,
   chain: SupportedChain = 'sui',
-  customProviderDetails?: {
-    apiBaseUrl: string
-    apiKey: string
-  },
+  credentials?: ProviderCredentials,
   chainId?: number
 ) => {
   const body: Record<string, any> = {
@@ -29,10 +44,8 @@ export const registerAgentUtil = async (
     jury_prompt: juryPrompt,
   }
 
-  if (modelProvider === 'custom' && customProviderDetails) {
-    body.api_base_url = customProviderDetails.apiBaseUrl
-    body.api_key = customProviderDetails.apiKey
-  }
+  if (credentials?.apiKey) body.api_key = credentials.apiKey
+  if (credentials?.apiBaseUrl) body.api_base_url = credentials.apiBaseUrl
 
   const response = await fetch('/api/register-agent', {
     method: 'POST',

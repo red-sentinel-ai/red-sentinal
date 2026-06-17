@@ -54,9 +54,6 @@ export default function DefendPageClient() {
     searchParams.get('mode') === 'syndicate' ? 'syndicate' : 'individual'
   )
 
-  useEffect(() => {
-    if (searchParams.get('mode') === 'syndicate') setDefendMode('syndicate')
-  }, [searchParams])
   const { activeChain } = useActiveChain()
   const isSolana = activeChain === 'solana'
   const isEvm = isEvmChain(activeChain)
@@ -96,7 +93,11 @@ export default function DefendPageClient() {
   const evmTokenList = getSupportedTokens(activeChain)
   const [selectedEvmToken, setSelectedEvmToken] = useState<SupportedToken>(evmTokenList[0])
 
-  // Re-sync the selected token when the user switches EVM chains in the header
+  useEffect(() => {
+    if (searchParams.get('mode') === 'syndicate') setDefendMode('syndicate')
+  }, [searchParams])
+
+
   useEffect(() => {
     setSelectedEvmToken(evmTokenList[0])
   }, [activeChain, evmTokenList])
