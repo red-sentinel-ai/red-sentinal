@@ -22,6 +22,7 @@ export interface AgentDetailsFull {
   cost_per_message: string
   total_balance: string
   agent_object_id: string
+  deployment_tx_hash: string | null
   is_featured: boolean
   model_name: string | null
   model_provider: string | null
