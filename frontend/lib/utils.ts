@@ -275,3 +275,13 @@ export const generateAvatarUrl = (
   const encodedSeed = encodeURIComponent(seed)
   return `https://api.dicebear.com/10.x/${style}/svg?seed=${encodedSeed}`
 }
+
+export const formatUsd = (value: number): string => {
+  if (value >= 1_000_000) {
+    return `$${(value / 1_000_000).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}M`
+  }
+  if (value >= 1_000) {
+    return `$${(value / 1_000).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}K`
+  }
+  return `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+}

@@ -1,40 +1,17 @@
+import { Suspense } from 'react'
 import { notFound } from 'next/navigation'
-import Image from 'next/image'
-import Link from 'next/link'
-import { Folder } from 'lucide-react'
-import { truncateAddress, detectChainFromAddress } from '@/lib/utils'
-import { getExplorerAddressUrl } from '@/lib/explorer'
+import { Loader2 } from 'lucide-react'
+
 import { supabaseServiceClient } from '@/db/config/server'
-import { FeaturedAgentCard } from '@/components/FeaturedAgentCard'
-import { FollowButton } from '@/components/profile/FollowButton'
-import { FollowStats } from '@/components/profile/FollowStats'
-import { type AgentDetails } from '@/hooks/agents/useAllAgents'
-import { APP_NETWORK, SUI_SENTINEL_API_URL } from '@/constants'
-import { generateAvatarUrl } from '@/lib/utils'
+import { UserProfileView } from '@/components/profile/UserProfileView'
+import type { ProfileViewData } from '@/types/Profile'
 
-// Here we didn't used the useAgentsByOwner because it's a server components and good for SEO, if we want to use useAgentsByOwner hook, we will need to convert it to client component
-async function fetchAgentsByCreator(walletAddress: string): Promise<AgentDetails[]> {
-  const res = await fetch(
-    `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}?creator=${walletAddress}&limit=50&include_prize_pool=true`
-  )
-  if (!res.ok) return []
-
-  const { agents } = await res.json()
-  return agents.map((agent: AgentDetails) => ({
-    ...agent,
-    agent_path: agent.agent_name
-      ? agent.agent_name.toLowerCase().replace(/\s+/g, '_')
-      : agent.agent_object_id,
-  }))
-}
-
-async function getUserProfile(identifier: string) {
+async function resolveProfile(identifier: string): Promise<ProfileViewData | null> {
   const isWalletAddress = identifier.startsWith('0x') && identifier.length > 60
 
   let userId: string | null = null
 
   if (isWalletAddress) {
-    // Find user by wallet address in ss_wallet_connections
     const { data: walletConnection, error: walletError } = await supabaseServiceClient
       .from('ss_wallet_connections')
       .select('user_id')
@@ -47,7 +24,6 @@ async function getUserProfile(identifier: string) {
     }
     userId = walletConnection.user_id
   } else {
-    // Find user by username
     const { data: userByUsername, error: usernameError } = await supabaseServiceClient
       .from('ss_users')
       .select('id')
@@ -61,7 +37,6 @@ async function getUserProfile(identifier: string) {
     userId = userByUsername.id
   }
 
-  // Fetch user data
   const { data: user, error: userError } = await supabaseServiceClient
     .from('ss_users')
     .select('*')
@@ -73,24 +48,19 @@ async function getUserProfile(identifier: string) {
     return null
   }
 
-  // Fetch wallet addresses from ss_wallet_connections
   const { data: walletConnections } = await supabaseServiceClient
     .from('ss_wallet_connections')
     .select('wallet_address')
     .eq('user_id', userId)
 
-  const walletAddresses = walletConnections?.map(w => w.wallet_address) || []
-
-  if (walletAddresses.length === 0) {
-    return { user: { ...user, wallet_addresses: [] }, agents: [] }
+  return {
+    userId: user.id,
+    username: user.username,
+    displayName: user.display_name,
+    avatarUrl: user.avatar_url,
+    rewardsTier: user.rewards_tier,
+    walletAddresses: walletConnections?.map(w => w.wallet_address) ?? [],
   }
-
-  const agentsByWallet = await Promise.all(
-    walletAddresses.map((addr: string) => fetchAgentsByCreator(addr))
-  )
-  const agents = agentsByWallet.flat()
-
-  return { user: { ...user, wallet_addresses: walletAddresses }, agents }
 }
 
 export default async function PublicProfilePage({
@@ -99,77 +69,21 @@ export default async function PublicProfilePage({
   params: Promise<{ identifier: string }>
 }) {
   const { identifier } = await params
-  const profileData = await getUserProfile(identifier)
+  const profile = await resolveProfile(identifier)
 
-  if (!profileData) {
+  if (!profile) {
     notFound()
   }
 
-  const { user, agents } = profileData
-
   return (
-    <div className="min-h-body container mx-auto px-4 pb-12 pt-24 text-[var(--color-text-primary)]">
-      <div className="mx-auto max-w-6xl">
-        <div className="mb-12">
-          <div className="mb-6 flex flex-col items-start gap-6 sm:flex-row sm:items-center">
-            <div className="relative h-28 w-28 flex-shrink-0 overflow-hidden rounded-full border-2 border-[var(--color-border-subtle)]">
-              <Image
-                src={user.avatar_url || generateAvatarUrl(user.wallet_addresses?.[0] || user.id)}
-                alt="User Avatar"
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div className="flex-1">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                <div>
-                  <h1 className="text-3xl font-bold sm:text-4xl">
-                    {user.display_name || user.username}
-                  </h1>
-                  <p className="mt-1 text-[var(--color-text-muted)]">@{user.username}</p>
-                </div>
-                <FollowButton targetUserId={user.id} />
-              </div>
-              <div className="mt-4">
-                <FollowStats identifier={user.id} />
-              </div>
-              {user.wallet_addresses?.[0] && (
-                <div className="mt-4 flex flex-col items-start gap-1 sm:flex-row sm:items-center">
-                  <p className="text-sm font-medium text-[var(--color-text-secondary)]">Wallet Address:</p>
-                  <Link
-                    href={getExplorerAddressUrl(user.wallet_addresses[0], detectChainFromAddress(user.wallet_addresses[0]))}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-mono text-sm text-[var(--color-info)] hover:underline"
-                  >
-                    {truncateAddress(user.wallet_addresses[0])}
-                  </Link>
-                </div>
-              )}
-            </div>
-          </div>
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-[var(--color-bg-base)]">
+          <Loader2 className="h-10 w-10 animate-spin text-[var(--color-gold-primary)]" />
         </div>
-
-        <div>
-          <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold">
-            <Folder className="h-6 w-6 text-[var(--color-gold-primary)]" />
-            <span>
-              {(user.display_name || user.username)}&apos;s Sentinels ({agents.length})
-            </span>
-          </h2>
-          {agents.length > 0 ? (
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {agents.map((agent, index) => (
-                <FeaturedAgentCard key={agent.agent_id} agent={agent} index={index} />
-              ))}
-            </div>
-          ) : (
-            <div className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] py-16 text-center">
-              <p className="text-[var(--color-text-muted)]">This user has not launched any Sentinels yet.</p>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+      }
+    >
+      <UserProfileView profile={profile} />
+    </Suspense>
   )
 }

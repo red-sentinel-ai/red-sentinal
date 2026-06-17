@@ -66,8 +66,9 @@ export const AgentDropdown = ({
     setIsCostModalOpen(true)
   }
 
+  const canRequestFeature = isOwner && !isFeatured && !isDefeated
   const hasOwnerItems = isOwner && !isEvmChain(chain) && !isDefeated
-  const hasItems = !isDefeated && (!isFeatured || hasOwnerItems)
+  const hasItems = canRequestFeature || hasOwnerItems
 
   return (
     <>
@@ -78,7 +79,7 @@ export const AgentDropdown = ({
               <MoreVertical className="h-5 w-5 text-[var(--color-text-secondary)]" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56 border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)]">
-              {!isFeatured && (
+              {canRequestFeature && (
                 <DropdownMenuItem onClick={handleOpenFeatureModal} className="cursor-pointer gap-2">
                   <Star className="h-4 w-4" />
                   Request to Feature
@@ -87,7 +88,7 @@ export const AgentDropdown = ({
 
               {hasOwnerItems && (
                 <>
-                  {!isFeatured && <DropdownMenuSeparator />}
+                  {canRequestFeature && <DropdownMenuSeparator />}
 
                   {chain !== 'solana' && (
                     <DropdownMenuItem
