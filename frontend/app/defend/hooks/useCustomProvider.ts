@@ -25,6 +25,7 @@ export function useCustomProvider(
       ...prev,
       llmProvider: provider,
       llmModel: defaultModel,
+      providerApiKey: '',
       ...(isCustom ? {} : { customEndpointUrl: '', customApiKey: '', customModelName: '' }),
     }))
 
