@@ -60,10 +60,14 @@ export function useConnectSocialPrompt() {
     setOpen(false)
   }
 
+  const dismiss = () => {
+    setOpen(false)
+  }
+
   const enableNotifications = () => {
     snooze()
     setOpen(false)
   }
 
-  return { open, remindLater, enableNotifications }
+  return { open, remindLater, dismiss, enableNotifications }
 }
