@@ -1,8 +1,12 @@
 import { useState } from 'react'
 import { PROVIDER_MODELS, SYSTEM_PROMPT_MAX_TOKENS, type SupportedToken } from '@/constants'
 
-export const DEFAULT_PROVIDER = 'anthropic'
+export const BEDROCK_PROVIDER = 'amazon bedrock'
+export const DEFAULT_PROVIDER = BEDROCK_PROVIDER
 export const DEFAULT_MODEL = PROVIDER_MODELS[DEFAULT_PROVIDER][0]
+
+export const providerNeedsApiKey = (provider: string) =>
+  provider !== 'custom' && provider !== BEDROCK_PROVIDER
 
 export interface DefendFormData {
   agentName: string
@@ -15,6 +19,7 @@ export interface DefendFormData {
   privatePrompt: string
   attackGoal: string
   juryPrompt: string
+  providerApiKey: string
   customEndpointUrl: string
   customApiKey: string
   customModelName: string
@@ -31,6 +36,7 @@ export const INITIAL_FORM_DATA: DefendFormData = {
   privatePrompt: '',
   attackGoal: '',
   juryPrompt: '',
+  providerApiKey: '',
   customEndpointUrl: '',
   customApiKey: '',
   customModelName: '',
@@ -133,6 +139,8 @@ export function useDefendForm({
         // toast is called at the call-site to avoid importing toast here
         return false
       }
+    } else if (providerNeedsApiKey(formData.llmProvider) && !formData.providerApiKey.trim()) {
+      newErrors.providerApiKey = 'API Key is required'
     }
 
     setErrors(newErrors)

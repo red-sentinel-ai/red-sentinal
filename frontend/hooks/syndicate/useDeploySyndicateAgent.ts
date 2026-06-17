@@ -7,7 +7,7 @@ import { parseUnits } from 'viem'
 import { wagmiConfig } from '@/lib/wagmi'
 import { SYNDICATE_ABI } from '@/lib/evm/abi'
 import { buildEvmSignature, bytesToHex32 } from '@/lib/evm/signature'
-import { registerAgentUtil } from '@/app/defend/utils'
+import { registerAgentUtil, resolveProviderCredentials } from '@/app/defend/utils'
 import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
 import { APP_NETWORK } from '@/constants/shared'
 import { SUI_SENTINEL_API_URL } from '@/constants'
@@ -49,6 +49,7 @@ export function useDeploySyndicateAgent({
       const feePerMessage = Number(parseUnits(formData.feePerMessage, decimals))
       const initialFundRaw = parseUnits(formData.initialBalance, decimals)
       const isCustom = formData.llmProvider === 'custom'
+      const credentials = resolveProviderCredentials(formData)
 
       // TEE registration - use syndicate address as creator
       const teeResponse = await registerAgentUtil(
@@ -61,7 +62,7 @@ export function useDeploySyndicateAgent({
         formData.attackGoal,
         formData.juryPrompt,
         'bnb',
-        isCustom ? { apiBaseUrl: formData.customEndpointUrl, apiKey: formData.customApiKey } : undefined
+        credentials
       )
 
       const { response: teeData, signature: sigHex, recovery_id } = teeResponse
