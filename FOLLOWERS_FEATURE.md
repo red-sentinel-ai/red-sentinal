@@ -300,12 +300,20 @@ driven by `hasNextPage`.
 
 ### 6.4 Page wiring
 
-- **`app/u/[identifier]/page.tsx`** (server component): `getUserProfile` already resolves the visited
-  `user`. The header renders `<FollowButton targetUserId={user.id} />` (self-fetch mode) next to the
-  name and `<FollowStats identifier={user.id} />` below it. The button/stats are client islands, so
-  they hydrate and read the viewer from `localStorage`/`useAuth()` on the client.
-- **`app/profile/page.tsx`** (client, your own profile): renders `<FollowStats identifier={profile.id}
-  />` in the meta row. No follow button (it's you).
+Both profile routes now render a **single shared component**, `components/profile/UserProfileView.tsx`,
+which composes the header (`components/profile/ProfileHeader.tsx`). The follow controls live in
+`ProfileHeader`, so there is one wiring site instead of two:
+
+- **`ProfileHeader.tsx`** derives `isOwner` (passed down from `UserProfileView`, which compares the
+  connected wallet against the profile's wallet addresses). It always renders
+  `<FollowStats identifier={profile.userId} />` in the meta row, and renders
+  `<FollowButton targetUserId={profile.userId} />` **only when `!isOwner`** (the button also hides
+  itself for logged-out viewers and self-views, so this is belt-and-suspenders).
+- **`app/u/[identifier]/page.tsx`** (server component): `resolveProfile` resolves the visited user and
+  passes a `ProfileViewData` into `<UserProfileView>`. Because it can be the owner viewing their own
+  public link, ownership is decided client-side — an owner sees Edit/avatar instead of a Follow button.
+- **`app/profile/page.tsx`** (client, your own profile): builds `ProfileViewData` from the connected
+  wallet + auth profile and renders the same `<UserProfileView>`; `isOwner` resolves to `true`.
 
 ---
 
@@ -439,7 +447,9 @@ another user's `/u/<username>`:
 | `components/profile/FollowListModal.tsx` | tabbed Followers/Following dialog |
 | `components/profile/FollowListPanel.tsx` | one tab's infinite list |
 | `components/profile/FollowListRow.tsx` | one user row + follow-back button |
-| `app/u/[identifier]/page.tsx` | public profile — button + stats |
-| `app/profile/page.tsx` | own profile — stats only |
+| `components/profile/UserProfileView.tsx` | shared profile surface (own + public); derives `isOwner` |
+| `components/profile/ProfileHeader.tsx` | header that renders `FollowStats` always + `FollowButton` when not owner |
+| `app/u/[identifier]/page.tsx` | public profile — resolves user, renders `UserProfileView` |
+| `app/profile/page.tsx` | own profile — builds `ProfileViewData` from connected wallet, renders `UserProfileView` |
 
 **Database** — `sentinel.ss_user_follows` (manual migration, §4).
