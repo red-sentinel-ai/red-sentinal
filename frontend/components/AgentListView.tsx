@@ -109,11 +109,7 @@ export const AgentListView = () => {
         return searchable.includes(normalizedSearch)
       })
     }
-    return [...base].sort((a, b) => {
-      if (a.chain === 'solana' && b.chain !== 'solana') return -1
-      if (a.chain !== 'solana' && b.chain === 'solana') return 1
-      return 0
-    })
+    return base
   })()
 
   const bigBountiesCount = allAgents.filter(agent => {
