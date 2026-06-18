@@ -2,7 +2,7 @@
 
 import { ArrowDown, ArrowUp } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { PrizePoolHistory } from '@/hooks/agents/useAllAgents'
+import { type PrizePoolHistory } from '@/hooks/agents/useAllAgents'
 
 interface PrizePoolChangeDisplayProps {
   prizePoolHistory?: PrizePoolHistory | null
