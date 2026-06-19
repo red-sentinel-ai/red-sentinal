@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { truncateAddress, generateAvatarUrl } from '@/lib/utils'
-import { FollowButton } from '@/components/profile/FollowButton'
+import { UserFollowButton } from '@/components/profile/UserFollowButton'
 import type { PlayerEntry } from '@/hooks/players/usePlayerDirectory'
 import { PLAYER_STAT_COLUMNS } from './playerColumns'
 
@@ -59,7 +59,7 @@ export function PlayerRow({ player, onFollowToggle }: PlayerRowProps) {
       ))}
 
       <div className="flex justify-end">
-        <FollowButton
+        <UserFollowButton
           targetUserId={player.user_id}
           seeded
           initialIsFollowing={player.is_following}

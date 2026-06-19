@@ -17,7 +17,7 @@ import { SENTINEL_GIFS, USER_IMAGES } from '@/constants/asset_paths'
 import { useUserProfile, useUpdateAvatar } from '@/hooks/profile/useUserProfile'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 import { EditProfileModal } from './EditProfileModal'
-import { FollowButton } from './FollowButton'
+import { UserFollowButton } from './UserFollowButton'
 import { FollowStats } from './FollowStats'
 import type { ProfileViewData } from '@/types/Profile'
 
@@ -132,7 +132,7 @@ export function ProfileHeader({ profile, isOwner, primaryWallet }: ProfileHeader
                 )}
               </>
             ) : (
-              <FollowButton targetUserId={profile.userId} />
+              <UserFollowButton targetUserId={profile.userId} />
             )}
           </div>
         </div>
