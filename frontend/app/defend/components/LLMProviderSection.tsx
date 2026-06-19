@@ -54,37 +54,6 @@ export function LLMProviderSection({
               selected={formData.llmModel}
               onSelect={onModelChange}
             />
-
-            {providerNeedsApiKey(formData.llmProvider) && (
-              <div>
-                <label className="block text-sm font-medium text-[var(--color-text-secondary)]">API Key</label>
-                <p className="mb-1.5 mt-0.5 text-xs text-[var(--color-text-muted)]">
-                  Your {formData.llmProvider} API key, used to run your Sentinel.
-                </p>
-                <div className="relative">
-                  <input
-                    name="providerApiKey"
-                    type={showApiKey ? 'text' : 'password'}
-                    value={formData.providerApiKey}
-                    onChange={onChange}
-                    className="h-9 w-full rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] px-3 pr-10 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] transition-all focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
-                    placeholder="sk-..."
-                    autoComplete="off"
-                    spellCheck="false"
-                  />
-                  <button
-                    type="button"
-                    onClick={onToggleApiKey}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]"
-                  >
-                    {showApiKey ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                  </button>
-                </div>
-                {errors.providerApiKey && (
-                  <p className="mt-1 text-sm text-[var(--color-danger)]">{errors.providerApiKey}</p>
-                )}
-              </div>
-            )}
           </div>
         ) : (
           <div className="flex min-w-[200px] flex-1 flex-col gap-4">
@@ -195,6 +164,37 @@ export function LLMProviderSection({
           </div>
         )}
       </div>
+
+      {formData.llmProvider !== 'custom' && providerNeedsApiKey(formData.llmProvider) && (
+        <div className="mt-2 w-full">
+          <label className="block text-sm font-medium text-[var(--color-text-secondary)]">API Key</label>
+          <p className="mb-1.5 mt-0.5 text-xs text-[var(--color-text-muted)]">
+            Your {formData.llmProvider} API key, used to run your Sentinel.
+          </p>
+          <div className="relative">
+            <input
+              name="providerApiKey"
+              type={showApiKey ? 'text' : 'password'}
+              value={formData.providerApiKey}
+              onChange={onChange}
+              className="h-9 w-full rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] px-3 pr-10 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] transition-all focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
+              placeholder="sk-..."
+              autoComplete="off"
+              spellCheck="false"
+            />
+            <button
+              type="button"
+              onClick={onToggleApiKey}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]"
+            >
+              {showApiKey ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+            </button>
+          </div>
+          {errors.providerApiKey && (
+            <p className="mt-1 text-sm text-[var(--color-danger)]">{errors.providerApiKey}</p>
+          )}
+        </div>
+      )}
     </div>
   )
 }
