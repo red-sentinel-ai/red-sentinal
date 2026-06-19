@@ -186,6 +186,19 @@
     @apply data-[state=active]:border-[var(--color-text-primary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)];
   }
 
+  .player-directory-grid {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  @media (min-width: 768px) {
+    .player-directory-grid {
+      grid-template-columns: 2.5rem minmax(0, 1.6fr) repeat(5, minmax(0, 1fr)) 7rem;
+      gap: 1rem;
+    }
+  }
+
   /* Hairline border utility */
   .border-hairline {
     border: 1px solid var(--color-border-strong);
