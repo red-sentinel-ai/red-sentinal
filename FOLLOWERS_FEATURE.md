@@ -271,7 +271,7 @@ list you're looking at. Errors surface via a `sonner` toast.
 ### 6.3 `components/profile/` — the UI (one main component per file)
 
 **`FollowButton.tsx`** — the client island. Props:
-`{ targetUserId, seeded?, initialIsFollowing?, size?, className? }`.
+`{ targetUserId, seeded?, initialIsFollowing?, size?, className?, onToggle? }`.
 - Hidden (`return null`) when logged out **or** when `viewerId === targetUserId` (no self-follow).
 - **Two modes** to control where the "am I following?" state comes from:
   - **self-fetch** (default, used in the profile header): calls `useFollowCounts(targetUserId)` and
@@ -282,6 +282,14 @@ list you're looking at. Errors surface via a `sonner` toast.
 - **Optimistic:** clicking sets local `optimistic` state immediately, fires the mutation, and only
   reverts on error. The optimistic value is kept (not cleared on success) so it converges smoothly
   with the invalidated server state — no flicker.
+- **`onToggle?(nowFollowing)`** — optional callback fired with the new follow state on click, and
+  again with the reverted state if the request fails. Lets a list that renders its own
+  (precomputed/denormalised) follower count patch that count optimistically instead of re-fetching.
+  Used by the Player Directory (`components/players/`), whose follower counts come from a cron cache
+  and otherwise wouldn't move until the next refresh — its handler is idempotent (keyed on the row's
+  current `is_following`) so a revert or double-click can't drift the count. The follow/unfollow
+  mutations still don't invalidate the `player-directory` query key, so this callback is how that
+  list stays in sync.
 
 **`FollowStats.tsx`** — the two clickable counts. Props `{ identifier, className? }`. Reads
 `useFollowCounts(identifier)` for the numbers and opens `FollowListModal` on the tab you clicked.

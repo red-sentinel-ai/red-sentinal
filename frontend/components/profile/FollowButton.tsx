@@ -15,6 +15,7 @@ interface FollowButtonProps {
   initialIsFollowing?: boolean
   size?: 'sm' | 'default'
   className?: string
+  onToggle?: (nowFollowing: boolean) => void
 }
 
 /**
@@ -28,6 +29,7 @@ export function FollowButton({
   initialIsFollowing = false,
   size = 'default',
   className,
+  onToggle,
 }: FollowButtonProps) {
   const { user } = useAuth()
   const viewerId = user?.id
@@ -52,11 +54,15 @@ export function FollowButton({
   const handleClick = () => {
     const next = !isFollowing
     setOptimistic(next)
+    onToggle?.(next)
     const mutation = next ? follow : unfollow
     // Keep the optimistic value as the source of truth — it converges with the
     // server (counts are invalidated on success). Only revert if the call fails.
     mutation.mutate(targetUserId, {
-      onError: () => setOptimistic(null),
+      onError: () => {
+        setOptimistic(null)
+        onToggle?.(!next)
+      },
     })
   }
 

@@ -12,6 +12,7 @@ import {
   Swords,
   Trophy,
   User,
+  Users,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -45,6 +46,7 @@ const NAV_ITEMS: NavItem[] = [
   // Syndicates are hidden in Arbitrum-only mode (sentinel flow only).
   { title: 'Syndicates', href: '/syndicates', icon: Network },
   { title: 'Leaderboard', href: '/leaderboard', icon: Trophy },
+  { title: 'Players', href: '/players', icon: Users },
   { title: 'Rewards', href: '/rewards', icon: Gift },
   { title: 'Practice Arena', href: '/practice', icon: Swords },
   { title: 'Profile', href: '/profile', icon: User },
