@@ -1,18 +1,21 @@
 import { useMemo } from 'react'
 import { CheckCircle, XCircle, Trophy, Clock, User, AlertCircle } from 'lucide-react'
 import { useAgentEvents } from '@/hooks/useAgentEvents'
-import { useConnectedAddress } from '@/hooks/useConnectedAddress'
-import { truncateAddress } from '@/lib/utils'
+import { truncateAddress, detectChainFromAddress } from '@/lib/utils'
 import { SUIVISION_TXBLOCK_URL } from '@/constants'
 
-export const UserActivity = () => {
-  const { events, loading } = useAgentEvents()
-  const { address: accountAddress, chain } = useConnectedAddress()
+interface UserActivityProps {
+  address?: string
+  isOwner: boolean
+}
 
-  const isSui = chain === 'sui'
+export const UserActivity = ({ address, isOwner }: UserActivityProps) => {
+  const { events, loading } = useAgentEvents()
+
+  const isSui = !!address && detectChainFromAddress(address) === 'sui'
 
   const userEvents = useMemo(() => {
-    if (!isSui || !accountAddress || !events.promptConsumed || !events.agentDefeated) {
+    if (!isSui || !address || !events.promptConsumed || !events.agentDefeated) {
       return {
         promptConsumed: [],
         agentDefeated: [],
@@ -20,18 +23,18 @@ export const UserActivity = () => {
     }
 
     const filteredPrompts = events.promptConsumed.filter(
-      event => event.parsedJson.sender === accountAddress
+      event => event.parsedJson.sender === address
     )
 
     const filteredDefeated = events.agentDefeated.filter(
-      event => event.parsedJson.winner === accountAddress
+      event => event.parsedJson.winner === address
     )
 
     return {
       promptConsumed: filteredPrompts,
       agentDefeated: filteredDefeated,
     }
-  }, [events.promptConsumed, events.agentDefeated, accountAddress, isSui])
+  }, [events.promptConsumed, events.agentDefeated, address, isSui])
 
   const formatTimestamp = (ms: string) =>
     new Date(parseInt(ms)).toLocaleString(undefined, {
@@ -46,7 +49,7 @@ export const UserActivity = () => {
       {loading ? (
         <div className="py-20 text-center text-[var(--color-text-muted)]">
           <Clock className="mx-auto mb-4 h-10 w-10 animate-spin text-[var(--color-gold-primary)]" />
-          Loading your activity...
+          {isOwner ? 'Loading your activity...' : 'Loading activity...'}
         </div>
       ) : (
         <div className="space-y-8">
@@ -59,7 +62,9 @@ export const UserActivity = () => {
             {agentDefeated.length === 0 ? (
               <div className="py-8 text-center text-[var(--color-text-muted)]">
                 <AlertCircle className="mx-auto mb-4 h-12 w-12 opacity-50" />
-                You haven&apos;t defeated any agents yet.
+                {isOwner
+                  ? "You haven't defeated any agents yet."
+                  : 'No agents defeated yet.'}
               </div>
             ) : (
               <div className="space-y-4">

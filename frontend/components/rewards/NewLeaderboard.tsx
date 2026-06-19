@@ -40,7 +40,7 @@ import {
 } from '@/constants'
 import { useDefendersLeaderboard, mapApiDefender } from '@/hooks/rewards/useDefendersLeaderboard'
 import { useAttackersLeaderboard, mapApiAttacker } from '@/hooks/rewards/useAttackersLeaderboard'
-import { truncateAddress } from '@/lib/utils'
+import { truncateAddress, formatUsd } from '@/lib/utils'
 
 export type DefenderTier = 'Bronze' | 'Silver' | 'Gold' | 'Diamond' | 'Legendary'
 export type AttackerTier = 'Recruit' | 'Hunter' | 'Specialist' | 'Elite' | 'Apex Predator'
@@ -81,12 +81,6 @@ export interface AttackerEntry {
   sentinelTokensEarned: number // Token rewards distributed for attacking
   lastActiveTimestamp: string // ISO timestamp of most recent consume_prompt
   isCurrentUser?: boolean
-}
-
-function formatUsd(n: number) {
-  if (n >= 1_000_000) return `$${(n / 1_000_000).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}M`
-  if (n >= 1_000) return `$${(n / 1_000).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}K`
-  return `$${n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 }
 
 function formatSurvivalTime(hours: number) {
