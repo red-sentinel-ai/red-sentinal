@@ -19,7 +19,6 @@ import { ClaimFeesModal } from './agents/ClaimFeesModal'
 import { TokenAmount } from './ui/common/TokenAmount'
 import { Flame } from 'lucide-react'
 
-
 type FeaturedAgentCardProps = {
   agent: AgentDetails
   index: number
@@ -31,6 +30,7 @@ type FeaturedAgentCardProps = {
   onFeature?: (agentId: string) => void
 }
 
+/**We need to change this card name to simple AgentCard */
 export const FeaturedAgentCard = ({
   agent,
   index,
@@ -44,19 +44,20 @@ export const FeaturedAgentCard = ({
   const fundModal = useFundAgentModal()
   const withdrawModal = useWithdrawAgentModal()
   const featureModal = useFeatureAgentModal()
-  
+
   // Use provided callbacks or fall back to local modal instances
   const openFundModal = onFund || fundModal.openModal
   const openWithdrawModal = onWithdraw || withdrawModal.openModal
   const openFeatureModal = onFeature || featureModal.openModal
-  
+
   const Modal = fundModal.Modal
   const WithdrawModal = withdrawModal.Modal
   const FeatureModal = featureModal.Modal
-  
+
   const router = useRouter()
   const { address: connectedAddress } = useConnectedAddress()
-  const isOwner = !!connectedAddress && connectedAddress.toLowerCase() === agent.creator?.toLowerCase()
+  const isOwner =
+    !!connectedAddress && connectedAddress.toLowerCase() === agent.creator?.toLowerCase()
 
   const [isWithdrawalLocked, setIsWithdrawalLocked] = useState(true)
   const [timeRemaining, setTimeRemaining] = useState('')
@@ -156,7 +157,7 @@ export const FeaturedAgentCard = ({
               className={`absolute left-2 top-2 z-20 flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${
                 agent.state === 'active'
                   ? 'border border-[var(--color-success)] bg-[var(--color-success-muted)] text-[var(--color-success)]'
-                  : 'border border-[var(--color-danger)]/20 bg-[var(--color-danger-muted)] text-[var(--color-danger)]'
+                  : 'border-[var(--color-danger)]/20 border bg-[var(--color-danger-muted)] text-[var(--color-danger)]'
               }`}
             >
               <Image
@@ -225,54 +226,46 @@ export const FeaturedAgentCard = ({
           <div className="mx-auto flex max-w-[394px] border-t border-[var(--color-border-subtle)]"></div>
         </div>
 
-        <div className="mb-2 space-y-1 text-xs font-medium">
+        <div className="mb-2 space-y-1 text-xs font-medium tabular-nums">
           {isDefeated ? (
             <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
               <span className="text-[var(--color-text-secondary)]">Total Bounty Won:</span>
               <div className="flex items-center justify-end font-semibold text-[var(--color-danger)]">
-                <TokenAmount rawAmount={agent.winner?.amount_won ?? 0} token={token} precision={4} />
+                <TokenAmount
+                  rawAmount={agent.winner?.amount_won ?? 0}
+                  token={token}
+                  precision={4}
+                />
               </div>
             </div>
           ) : (
             <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
               <span className="text-[var(--color-text-secondary)]">Prize Pool:</span>
               <div className="flex items-center justify-end">
-                <span className="mr-1 sm:mr-2"><TokenAmount rawAmount={agent.total_balance} token={token} precision={4} /></span>
+                <span className="mr-1 sm:mr-2">
+                  <TokenAmount rawAmount={agent.total_balance} token={token} precision={4} />
+                </span>
                 <PrizePoolChangeDisplay prizePoolHistory={agent.prizePoolHistory} variant="card" />
               </div>
             </div>
           )}
           <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
             <span className="text-[var(--color-text-secondary)]">Message Cost:</span>
-            <span className="text-right"><TokenAmount rawAmount={agent.cost_per_message} token={token} precision={4} /></span>
+            <span className="text-right">
+              <TokenAmount rawAmount={agent.cost_per_message} token={token} precision={4} />
+            </span>
           </div>
           {!isDefeated && fromProfile && isOwner && (
             <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
               <span className="text-[var(--color-text-secondary)]">Your Earnings:</span>
-              <span className={`text-right ${hasEarnings ? 'font-semibold text-[var(--color-success)]' : ''}`}>
+              <span
+                className={`text-right ${hasEarnings ? 'font-semibold text-[var(--color-success)]' : ''}`}
+              >
                 <TokenAmount rawAmount={agent.accumulated_fees || 0} token={token} precision={4} />
               </span>
             </div>
           )}
         </div>
-
-        {isDefeated && (
-          <div className="mb-2 text-center text-[11px] font-bold text-[var(--color-text-primary)]">
-            Sentinel Defeated
-            {defeaterAddress ? (
-              <>
-                {' by '}
-                <Link
-                  href={`/u/${defeaterAddress}`}
-                  onClick={e => e.stopPropagation()}
-                  className="text-accent underline transition-opacity hover:opacity-70"
-                >
-                  {truncateAddress(defeaterAddress)}
-                </Link>
-              </>
-            ) : null}
-          </div>
-        )}
 
         {!isDefeated && fromProfile && isOwner && timeRemaining && (
           <div className="mb-2 text-center text-[10px]">
@@ -295,10 +288,30 @@ export const FeaturedAgentCard = ({
               e.stopPropagation()
               handleAttack()
             }}
-            className="btn btn-black h-8 w-full text-xs"
+            className={`btn btn-black h-8 w-full text-xs ${isDefeated ? 'mt-2' : ''}`}
           >
             {isDefeated ? 'View Sentinel' : fromProfile && isOwner ? 'Manage Sentinel' : ctaHeading}
           </button>
+          {isDefeated && (
+            <div className="border-[var(--color-danger)]/20 flex items-center justify-between gap-3 rounded-md border bg-[var(--color-danger-muted)] px-2.5 py-1.5 text-xs sm:text-sm">
+              <span className="shrink-0 font-semibold text-[var(--color-text-primary)]">
+                Defeated By
+              </span>
+              {defeaterAddress ? (
+                <Link
+                  href={`/u/${defeaterAddress}`}
+                  onClick={e => e.stopPropagation()}
+                  className="text-accent min-w-0 truncate font-mono font-semibold underline underline-offset-2 transition-opacity hover:opacity-70 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--color-gold-primary)]"
+                >
+                  {truncateAddress(defeaterAddress)}
+                </Link>
+              ) : (
+                <span className="min-w-0 truncate font-mono font-semibold text-[var(--color-text-muted)]">
+                  Unknown
+                </span>
+              )}
+            </div>
+          )}
           {!isDefeated && fromProfile && isOwner && (
             <div className="flex gap-1.5 sm:gap-2">
               <button
@@ -353,9 +366,17 @@ export const FeaturedAgentCard = ({
             >
               {hasEarnings ? (
                 <span className="inline-flex items-center gap-1">
-                  Claim <TokenAmount rawAmount={agent.accumulated_fees || 0} token={token} precision={2} iconSize={12} />
+                  Claim{' '}
+                  <TokenAmount
+                    rawAmount={agent.accumulated_fees || 0}
+                    token={token}
+                    precision={2}
+                    iconSize={12}
+                  />
                 </span>
-              ) : 'No Earnings Yet'}
+              ) : (
+                'No Earnings Yet'
+              )}
             </button>
           )}
         </div>
@@ -377,4 +398,3 @@ export const FeaturedAgentCard = ({
     </motion.div>
   )
 }
-
