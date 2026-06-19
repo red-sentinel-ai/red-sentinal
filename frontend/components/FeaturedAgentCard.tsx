@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
-import { AgentDetails } from '@/hooks/agents/useAllAgents'
+import { type AgentDetails } from '@/hooks/agents/useAllAgents'
 import { useFundAgentModal } from '@/hooks/useFundAgentModal'
 import { useFeatureAgentModal } from '@/hooks/useFeatureAgentModal'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
@@ -274,7 +274,7 @@ export const FeaturedAgentCard = ({
           </div>
         )}
 
-        {!isDefeated && fromProfile && timeRemaining && (
+        {!isDefeated && fromProfile && isOwner && timeRemaining && (
           <div className="mb-2 text-center text-[10px]">
             {isWithdrawalLocked ? (
               <span className="font-medium text-[var(--color-warning)]">{timeRemaining}</span>
@@ -297,9 +297,9 @@ export const FeaturedAgentCard = ({
             }}
             className="btn btn-black h-8 w-full text-xs"
           >
-            {isDefeated ? 'View Sentinel' : fromProfile ? 'Manage Sentinel' : ctaHeading}
+            {isDefeated ? 'View Sentinel' : fromProfile && isOwner ? 'Manage Sentinel' : ctaHeading}
           </button>
-          {!isDefeated && fromProfile && (
+          {!isDefeated && fromProfile && isOwner && (
             <div className="flex gap-1.5 sm:gap-2">
               <button
                 onClick={() => {

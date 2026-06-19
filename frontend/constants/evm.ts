@@ -1,6 +1,6 @@
 import { APP_NETWORK } from './shared'
 import type { SupportedToken } from './shared'
-import { getEvmChainKey, type EvmChainKey } from './chains'
+import { getEvmChainKey} from './chains'
 import { getSupportedTokens } from './tokens'
 
 export const EVM_TEE_API_PATH = 'https://tee-evm.redsentinel.xyz'

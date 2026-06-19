@@ -8,7 +8,7 @@ import { isEvmChain } from '@/constants/chains'
 import { useAgentObjectNames } from '@/hooks/useAgentObjectNames'
 import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
 import { type SupportedToken } from '@/constants'
-import { registerAgentUtil } from '../utils'
+import { registerAgentUtil, resolveProviderCredentials } from '../utils'
 import { useDeploySuiAgent } from './useDeploySuiAgent'
 import { useDeploySolanaAgent } from './useDeploySolanaAgent'
 import { useDeployEvmAgent } from './useDeployEvmAgent'
@@ -139,6 +139,7 @@ export function useDeployAgent({
         ? Number(parseUnits(formData.feePerMessage, decimals))
         : parseFloat(formData.feePerMessage) * Math.pow(10, decimals)
       const isCustom = formData.llmProvider === 'custom'
+      const credentials = resolveProviderCredentials(formData)
 
       const teeResponse = await registerAgentUtil(
         formData.systemPrompt,
@@ -150,7 +151,7 @@ export function useDeployAgent({
         formData.attackGoal,
         formData.juryPrompt,
         activeChain,
-        isCustom ? { apiBaseUrl: formData.customEndpointUrl, apiKey: formData.customApiKey } : undefined,
+        credentials,
         isEvmChain(activeChain) ? evmChainId : undefined
       )
 
