@@ -7,7 +7,7 @@ import { useAuth } from '@/context/AuthContext'
 import { useFollowCounts } from '@/hooks/social/useFollowCounts'
 import { useFollowMutation, useUnfollowMutation } from '@/hooks/social/useFollowMutation'
 
-interface FollowButtonProps {
+interface UserFollowButtonProps {
   /** The user being followed (ss_users.id). */
   targetUserId: string
   /** Seed the follow state instead of fetching it (used in list rows). */
@@ -19,18 +19,19 @@ interface FollowButtonProps {
 }
 
 /**
- * Follow / Unfollow toggle. Hidden when logged out or viewing your own profile.
- * In the profile header it self-fetches the viewer relationship; inside lists it
- * is `seeded` with the row's `is_following` to avoid one request per row.
+ * Follow / Unfollow toggle for following another *user*. Hidden when logged out
+ * or viewing your own profile. In the profile header it self-fetches the viewer
+ * relationship; inside lists it is `seeded` with the row's `is_following` to
+ * avoid one request per row. (For following a sentinel, see `SentinelFollowButton`.)
  */
-export function FollowButton({
+export function UserFollowButton({
   targetUserId,
   seeded = false,
   initialIsFollowing = false,
   size = 'default',
   className,
   onToggle,
-}: FollowButtonProps) {
+}: UserFollowButtonProps) {
   const { user } = useAuth()
   const viewerId = user?.id
   const canInteract = Boolean(viewerId) && viewerId !== targetUserId

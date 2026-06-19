@@ -270,7 +270,7 @@ list you're looking at. Errors surface via a `sonner` toast.
 
 ### 6.3 `components/profile/` — the UI (one main component per file)
 
-**`FollowButton.tsx`** — the client island. Props:
+**`UserFollowButton.tsx`** — the client island. Props:
 `{ targetUserId, seeded?, initialIsFollowing?, size?, className?, onToggle? }`.
 - Hidden (`return null`) when logged out **or** when `viewerId === targetUserId` (no self-follow).
 - **Two modes** to control where the "am I following?" state comes from:
@@ -304,7 +304,7 @@ identifier), so only the visible tab fetches. Renders loading / empty / list + a
 driven by `hasNextPage`.
 
 **`FollowListRow.tsx`** — one row: avatar + display name/@username linking to `/u/<username>`
-(falls back to the wallet address), plus a **seeded** `FollowButton` for follow-back.
+(falls back to the wallet address), plus a **seeded** `UserFollowButton` for follow-back.
 
 ### 6.4 Page wiring
 
@@ -315,7 +315,7 @@ which composes the header (`components/profile/ProfileHeader.tsx`). The follow c
 - **`ProfileHeader.tsx`** derives `isOwner` (passed down from `UserProfileView`, which compares the
   connected wallet against the profile's wallet addresses). It always renders
   `<FollowStats identifier={profile.userId} />` in the meta row, and renders
-  `<FollowButton targetUserId={profile.userId} />` **only when `!isOwner`** (the button also hides
+  `<UserFollowButton targetUserId={profile.userId} />` **only when `!isOwner`** (the button also hides
   itself for logged-out viewers and self-views, so this is belt-and-suspenders).
 - **`app/u/[identifier]/page.tsx`** (server component): `resolveProfile` resolves the visited user and
   passes a `ProfileViewData` into `<UserProfileView>`. Because it can be the owner viewing their own
@@ -329,7 +329,7 @@ which composes the header (`components/profile/ProfileHeader.tsx`). The follow c
 
 Walking the full path makes the layering concrete:
 
-1. **Click.** On `/u/alice`, you (logged in as Bob) click **Follow**. `FollowButton` is in
+1. **Click.** On `/u/alice`, you (logged in as Bob) click **Follow**. `UserFollowButton` is in
    self-fetch mode; `useFollowCounts('alice-id')` already told it `viewer_is_following: false`.
 2. **Optimistic UI.** The button sets `optimistic = true` → instantly renders **Following**.
 3. **Mutation.** `useFollowMutation().mutate('alice-id')` calls
@@ -397,7 +397,7 @@ another user's `/u/<username>`:
 ## 9. How to extend it
 
 - **A Follow button somewhere new** (leaderboard row, agent card, etc.): drop in
-  `<FollowButton targetUserId={…} />`. If you already know the relationship (e.g. the row payload has
+  `<UserFollowButton targetUserId={…} />`. If you already know the relationship (e.g. the row payload has
   it), pass `seeded initialIsFollowing={…}` to skip the per-instance counts fetch.
 - **Show counts anywhere:** `<FollowStats identifier={userIdOrUsername} />`.
 - **A new user-attributed write endpoint:** copy the `requireUserAuth` + `request.userId` pattern;
@@ -425,7 +425,7 @@ another user's `/u/<username>`:
   follow/unfollow require auth.
 - **`additionalProperties: true`** on the list-user response schema is load-bearing — without it
   Fastify strips the enriched fields.
-- **Seeded vs self-fetch `FollowButton`** exists purely to avoid N counts requests inside a list.
+- **Seeded vs self-fetch `UserFollowButton`** exists purely to avoid N counts requests inside a list.
   Keep list rows seeded.
 - **Optimistic value is sticky** (only reverts on error) to avoid a flicker between "success" and the
   invalidation refetch landing.
@@ -450,13 +450,13 @@ another user's `/u/<username>`:
 | `hooks/social/useFollowCounts.ts` | counts query |
 | `hooks/social/useFollowers.ts` | followers + following infinite queries |
 | `hooks/social/useFollowMutation.ts` | follow + unfollow mutations |
-| `components/profile/FollowButton.tsx` | follow/unfollow toggle (client island) |
+| `components/profile/UserFollowButton.tsx` | follow/unfollow toggle (client island) |
 | `components/profile/FollowStats.tsx` | clickable counts → opens modal |
 | `components/profile/FollowListModal.tsx` | tabbed Followers/Following dialog |
 | `components/profile/FollowListPanel.tsx` | one tab's infinite list |
 | `components/profile/FollowListRow.tsx` | one user row + follow-back button |
 | `components/profile/UserProfileView.tsx` | shared profile surface (own + public); derives `isOwner` |
-| `components/profile/ProfileHeader.tsx` | header that renders `FollowStats` always + `FollowButton` when not owner |
+| `components/profile/ProfileHeader.tsx` | header that renders `FollowStats` always + `UserFollowButton` when not owner |
 | `app/u/[identifier]/page.tsx` | public profile — resolves user, renders `UserProfileView` |
 | `app/profile/page.tsx` | own profile — builds `ProfileViewData` from connected wallet, renders `UserProfileView` |
 
