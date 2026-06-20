@@ -4,46 +4,10 @@ import type { Tables } from '@/lib/database.types'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { useAuth } from '@/context/AuthContext'
 
-type UserProfile = Tables<{ schema: 'sentinel' }, 'ss_users'>
-
-export const USER_PROFILE_QUERY_KEY = 'userProfile'
-
-// Returns the authenticated user's profile from AuthContext.
-// Profile creation/login now happens entirely through the backend
-// /auth/wallet-connect flow (signature-verified), not get-or-create.
-export function useUserProfile() {
-  const { user, isLoading } = useAuth()
-  const { address: walletAddress, chain } = useConnectedAddress()
-
-  // Map the AuthContext UserProfile shape to the Supabase ss_users shape
-  // that the rest of the app expects. Both have the same core fields.
-  // Note: email is now accessed via social_connections (platform='email')
-  const data = user
-    ? ({
-        id: user.id,
-        username: user.username,
-        display_name: user.display_name,
-        avatar_url: user.avatar_url,
-        total_points: user.total_points,
-        lifetime_points: user.lifetime_points,
-        rewards_tier: user.rewards_tier,
-        email_notifications: user.email_notifications,
-        created_at: user.created_at,
-      } as unknown as UserProfile)
-    : null
-
-  return {
-    data,
-    isLoading,
-    // Expose query-compatible shape so callers don't need to change
-    error: null,
-    walletAddress,
-    chain,
-  }
-}
+type UpdatedProfile = Tables<{ schema: 'sentinel' }, 'ss_users'>
 
 interface UseUpdateProfileOptions {
-  onSuccess?: (data: UserProfile) => void
+  onSuccess?: (data: UpdatedProfile) => void
   onError?: (error: Error) => void
 }
 
@@ -97,7 +61,7 @@ export function useUpdateAvatar(options: UseUpdateProfileOptions = {}) {
         const errorData = await response.json()
         throw new Error(errorData.error || 'Failed to update avatar')
       }
-      return (await response.json()).data as UserProfile
+      return (await response.json()).data as UpdatedProfile
     },
     onSuccess: async updatedProfile => {
       toast.success('Profile picture updated!')
