@@ -14,7 +14,8 @@ import {
 } from '@/lib/utils'
 import { getExplorerAddressUrl } from '@/lib/explorer'
 import { SENTINEL_GIFS, USER_IMAGES } from '@/constants/asset_paths'
-import { useUserProfile, useUpdateAvatar } from '@/hooks/profile/useUserProfile'
+import { useAuth } from '@/context/AuthContext'
+import { useUpdateAvatar } from '@/hooks/profile/useProfileMutations'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 import { EditProfileModal } from './EditProfileModal'
 import { UserFollowButton } from './UserFollowButton'
@@ -35,9 +36,9 @@ export function ProfileHeader({ profile, isOwner, primaryWallet }: ProfileHeader
   const [copied, setCopied] = useState(false)
 
   // The connected user's full profile — only used (and only correct) when the
-  // viewer owns this profile, so EditProfileModal gets the editable ss_users row
-  // and the avatar reflects edits live without waiting on the prop to refetch.
-  const { data: authProfile } = useUserProfile()
+  // viewer owns this profile, so EditProfileModal gets the editable record and
+  // the avatar reflects edits live without waiting on the prop to refetch.
+  const { user: authProfile } = useAuth()
   const { mutate: updateAvatar, isPending: isUpdatingAvatar } = useUpdateAvatar({
     onSuccess: () => setIsImagePickerOpen(false),
   })

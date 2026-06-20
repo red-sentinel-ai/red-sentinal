@@ -89,7 +89,6 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
 
       const caps = [...parseObjects(newObjects, false), ...parseObjects(legacyObjects, true)]
       setAgentCaps(caps)
-      console.log('Fetched AgentCaps:', caps)
     } catch (error) {
       console.error('Error fetching AgentCaps:', error)
     }

@@ -1,8 +1,8 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { Loader2, ArrowDownToLine } from 'lucide-react'
-import { useUpdateProfile } from '@/hooks/profile/useUserProfile'
-import type { Tables } from '@/lib/database.types'
+import { useUpdateProfile } from '@/hooks/profile/useProfileMutations'
+import type { UserProfile } from '@/lib/auth-api'
 
 type SelectedImage = {
   previewUrl: string
@@ -13,7 +13,7 @@ type SelectedImage = {
 
 interface ProfileEditFormProps {
   onSuccess?: () => void
-  profile: Tables<{ schema: 'sentinel' }, 'ss_users'> | null
+  profile: UserProfile | null
   selectedImage: SelectedImage | null
 }
 
