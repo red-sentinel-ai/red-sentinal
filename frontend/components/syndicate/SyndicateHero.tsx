@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Globe, Share2 } from 'lucide-react'
+import { Globe, Lock, Share2, Unlock } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { BackendSyndicate } from '@/types/Syndicate'
 
@@ -9,6 +9,15 @@ interface Props {
 
 export function SyndicateHero({ meta }: Props) {
   const agentId = meta?.agent_id
+  const isPermissioned = meta?.whitelist_enabled ?? false
+
+  const handleRequestPermission = () => {
+    // TODO: send in-app notification, telegram, email to syndicate owner,
+    // then prompt user to connect telegram/email if not connected.
+    // eslint-disable-next-line no-console
+    console.log('Request permission clicked for', meta?.contract_address)
+  }
+
   return (
     <section className="mb-20 flex flex-col justify-between gap-6 md:flex-row md:items-end">
       <div className="space-y-4">
@@ -43,6 +52,43 @@ export function SyndicateHero({ meta }: Props) {
                 <Share2 className="h-4 w-4" />
                 <span className="text-xs font-medium uppercase tracking-widest">Share</span>
               </button>
+            </div>
+
+            <div className="flex flex-col gap-2 pt-1">
+              <div className="flex items-center gap-2 text-sm font-medium text-[var(--color-text-secondary)]">
+                {isPermissioned ? (
+                  <Lock className="h-4 w-4 text-[var(--color-gold-primary)]" />
+                ) : (
+                  <Unlock className="h-4 w-4 text-emerald-400" />
+                )}
+                <span>
+                  {isPermissioned ? (
+                    <>
+                      This syndicate is{' '}
+                      <span className="font-bold text-[var(--color-text-primary)]">
+                        permissioned
+                      </span>
+                      . You need syndicate owner permission to join this syndicate.
+                    </>
+                  ) : (
+                    <>
+                      This syndicate is{' '}
+                      <span className="font-bold text-[var(--color-text-primary)]">
+                        public
+                      </span>
+                      . Anybody can join this syndicate.
+                    </>
+                  )}
+                </span>
+              </div>
+              {isPermissioned && (
+                <button
+                  onClick={handleRequestPermission}
+                  className="w-fit text-xs font-semibold uppercase tracking-wider text-[var(--color-gold-primary)] underline-offset-4 transition-colors hover:text-[var(--color-gold-light)] hover:underline"
+                >
+                  Request Permission
+                </button>
+              )}
             </div>
           </>
         )}

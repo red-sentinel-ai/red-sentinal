@@ -54,7 +54,6 @@ export type SortField =
   | 'cost_per_message'
   | 'total_attacks'
   | 'agent_id'
-  | 'change7d'
   | 'state'
   | null
 export type SortDirection = 'asc' | 'desc'
@@ -89,11 +88,10 @@ export const useAllAgents = (
     queryFn: async ({ pageParam }) => {
       const offset = pageParam as number
 
-      // Build query params
+      // Build query params.
       const params = new URLSearchParams({
         limit: String(AGENTS_LIMIT),
         offset: String(offset),
-        include_prize_pool: 'true',
         min_balance: '1',
       })
 
@@ -101,11 +99,8 @@ export const useAllAgents = (
         params.append('chain', chainFilter)
       }
 
-      // Add sort params if provided
       if (sortField) {
-        // Map frontend sort field names to API field names
-        const apiSortField = sortField === 'change7d' ? 'prize_pool_change_7d' : sortField
-        params.append('sortBy', apiSortField)
+        params.append('sortBy', sortField)
         params.append('sortDirection', sortDirection)
       }
 
@@ -130,10 +125,11 @@ export const useAllAgents = (
           : agent.agent_object_id,
       }))
 
+      const total = data.total ?? agents.length
       return {
         agents,
-        total: data.total || agents.length,
-        hasMore: agents.length === AGENTS_LIMIT,
+        total,
+        hasMore: offset + agents.length < total,
       }
     },
     initialPageParam: 0,

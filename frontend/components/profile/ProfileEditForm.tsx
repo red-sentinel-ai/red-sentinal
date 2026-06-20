@@ -1,7 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { useDebounce } from 'use-debounce'
-import { CheckCircle, XCircle, Loader2, ArrowDownToLine } from 'lucide-react'
+import { Loader2, ArrowDownToLine } from 'lucide-react'
 import { useUpdateProfile } from '@/hooks/profile/useUserProfile'
 import type { Tables } from '@/lib/database.types'
 
@@ -24,44 +23,20 @@ export function ProfileEditForm({ onSuccess, profile, selectedImage }: ProfileEd
       onSuccess?.()
     },
   })
-  const [username, setUsername] = useState('')
   const [displayName, setDisplayName] = useState('')
-  const [debouncedUsername] = useDebounce(username, 500)
-
-  const [isChecking, setIsChecking] = useState(false)
-  const [isAvailable, setIsAvailable] = useState<boolean | null>(null)
 
   useEffect(() => {
     if (profile) {
-      setUsername(profile.username || '')
       setDisplayName(profile.display_name || '')
     }
   }, [profile])
 
-  useEffect(() => {
-    const checkUsername = async () => {
-      if (!debouncedUsername || debouncedUsername === profile?.username) {
-        setIsAvailable(null)
-        return
-      }
-      setIsChecking(true)
-      const res = await fetch(
-        `/api/profile/check-username?name=${debouncedUsername}&userId=${profile?.id}`
-      )
-      const data = await res.json()
-      setIsAvailable(!data.exists)
-      setIsChecking(false)
-    }
-    checkUsername()
-  }, [debouncedUsername, profile?.username, profile?.id])
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (isAvailable === false || isUpdating || isChecking) return
+    if (isUpdating || !displayName.trim()) return
 
     const formData = new FormData()
-    formData.append('displayName', displayName)
-    formData.append('username', username)
+    formData.append('displayName', displayName.trim())
 
     if (selectedImage) {
       if (selectedImage.isCustom && selectedImage.file) {
@@ -88,27 +63,21 @@ export function ProfileEditForm({ onSuccess, profile, selectedImage }: ProfileEd
 
       <div>
         <label className="mb-1.5 block text-xs font-medium text-[var(--color-text-secondary)]">Username</label>
-        <div className="relative">
-          <input
-            type="text"
-            value={username}
-            onChange={e => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
-            className="w-full rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] px-3 py-2 pr-10 text-sm text-[var(--color-text-primary)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
-          />
-          <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-            {isChecking && <Loader2 className="h-4 w-4 animate-spin text-[var(--color-text-muted)]" />}
-            {isAvailable === true && <CheckCircle className="h-4 w-4 text-[var(--color-success)]" />}
-            {isAvailable === false && <XCircle className="h-4 w-4 text-[var(--color-danger)]" />}
-          </div>
-        </div>
+        <input
+          type="text"
+          value={profile?.username ? `@${profile.username}` : ''}
+          readOnly
+          disabled
+          className="w-full cursor-not-allowed rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] px-3 py-2 text-sm text-[var(--color-text-muted)]"
+        />
         <p className="mt-1 text-xs text-[var(--color-text-muted)]">
-          Lowercase letters, numbers, and underscores only.
+          Your username is permanent and can&apos;t be changed.
         </p>
       </div>
 
       <button
         type="submit"
-        disabled={isUpdating || isChecking || isAvailable === false}
+        disabled={isUpdating || !displayName.trim()}
         className="btn btn-black h-8 w-full text-xs"
       >
         {isUpdating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ArrowDownToLine className="h-3.5 w-3.5" />}

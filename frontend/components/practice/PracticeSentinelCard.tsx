@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { Gauge, Target } from 'lucide-react'
+import { Cpu,Target } from 'lucide-react'
 
 import { generateAvatarUrl } from '@/lib/utils'
 import type { PracticeSentinel } from '@/types/practice'
@@ -35,11 +35,18 @@ export function PracticeSentinelCard({ sentinel }: { sentinel: PracticeSentinel 
           <h3 className="font-display min-w-0 flex-1 truncate text-lg font-extrabold uppercase tracking-[0.04em] text-white">
             {name}
           </h3>
-          <span className="font-body mt-1 inline-flex shrink-0 items-center gap-1 text-[9px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
+          {/* <span className="font-body mt-1 inline-flex shrink-0 items-center gap-1 text-[9px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
             <Gauge className="h-3 w-3" />
             Lvl {sentinel.difficulty_level}
-          </span>
+          </span> */}
         </div>
+
+        {sentinel.model_name && (
+          <div className="mb-4 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--color-text-muted)]">
+            <Cpu className="h-3 w-3" />
+            <span className="truncate">{sentinel.model_name}</span>
+          </div>
+        )}
 
         <div className="mb-8 min-w-0">
           <p className="font-body mb-1 flex items-center gap-1 text-[8px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
