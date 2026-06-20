@@ -35,10 +35,10 @@ export function UserProfileView({ profile }: UserProfileViewProps) {
   const isOwner = useMemo(() => {
     if (!connectedAddress) return false
     const connected = connectedAddress.toLowerCase()
-    return profile.walletAddresses.some(addr => addr.toLowerCase() === connected)
-  }, [connectedAddress, profile.walletAddresses])
+    return profile.wallets.some(wallet => wallet.address.toLowerCase() === connected)
+  }, [connectedAddress, profile.wallets])
 
-  const primaryWallet = profile.walletAddresses[0]
+  const primaryWallet = profile.wallets[0]?.address
 
   const [activeTab, setActiveTab] = useState<ProfileTabValue>(PROFILE_TABS.AGENTS)
 

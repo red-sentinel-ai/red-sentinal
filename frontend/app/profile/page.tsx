@@ -6,7 +6,7 @@ import { Loader2 } from 'lucide-react'
 import { ConnectPrompt } from '@/components/ConnectPrompt'
 import { UserProfileView } from '@/components/profile/UserProfileView'
 import type { ProfileViewData } from '@/types/Profile'
-import { useUserProfile } from '@/hooks/profile/useUserProfile'
+import { useAuth } from '@/context/AuthContext'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 
 function FullScreenLoader() {
@@ -19,7 +19,7 @@ function FullScreenLoader() {
 
 function OwnProfile() {
   const { address: connectedAddress } = useConnectedAddress()
-  const { data: profile, isLoading } = useUserProfile()
+  const { user, isLoading } = useAuth()
 
   if (!connectedAddress) {
     return (
@@ -31,17 +31,22 @@ function OwnProfile() {
     )
   }
 
-  if (isLoading || !profile) {
+  if (isLoading || !user) {
     return <FullScreenLoader />
   }
 
   const profileData: ProfileViewData = {
-    userId: profile.id,
-    username: profile.username,
-    displayName: profile.display_name,
-    avatarUrl: profile.avatar_url,
-    rewardsTier: profile.rewards_tier,
-    walletAddresses: [connectedAddress],
+    userId: user.id,
+    username: user.username ?? '',
+    displayName: user.display_name,
+    avatarUrl: user.avatar_url,
+    rewardsTier: user.rewards_tier,
+    wallets: user.wallets.map(wallet => ({
+      address: wallet.wallet_address,
+      chainType: wallet.chain_type,
+      chainId: wallet.chain_id,
+      isPrimary: wallet.is_primary,
+    })),
   }
 
   return <UserProfileView profile={profileData} />

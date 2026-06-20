@@ -4,7 +4,7 @@ import { Loader2 } from 'lucide-react'
 
 import { supabaseServiceClient } from '@/db/config/server'
 import { UserProfileView } from '@/components/profile/UserProfileView'
-import type { ProfileViewData } from '@/types/Profile'
+import type { ConnectedWallet, ProfileViewData } from '@/types/Profile'
 
 async function resolveProfile(identifier: string): Promise<ProfileViewData | null> {
   const isWalletAddress = identifier.startsWith('0x') && identifier.length > 60
@@ -50,8 +50,10 @@ async function resolveProfile(identifier: string): Promise<ProfileViewData | nul
 
   const { data: walletConnections } = await supabaseServiceClient
     .from('ss_wallet_connections')
-    .select('wallet_address')
+    .select('wallet_address, chain_type, chain_id, is_primary')
     .eq('user_id', userId)
+    .order('is_primary', { ascending: false })
+    .order('connected_at', { ascending: true })
 
   return {
     userId: user.id,
@@ -59,7 +61,13 @@ async function resolveProfile(identifier: string): Promise<ProfileViewData | nul
     displayName: user.display_name,
     avatarUrl: user.avatar_url,
     rewardsTier: user.rewards_tier,
-    walletAddresses: walletConnections?.map(w => w.wallet_address) ?? [],
+    wallets:
+      walletConnections?.map(connection => ({
+        address: connection.wallet_address,
+        chainType: connection.chain_type as ConnectedWallet['chainType'],
+        chainId: connection.chain_id,
+        isPrimary: connection.is_primary ?? false,
+      })) ?? [],
   }
 }
 

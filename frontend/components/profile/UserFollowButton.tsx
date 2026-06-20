@@ -7,7 +7,7 @@ import { useAuth } from '@/context/AuthContext'
 import { useFollowCounts } from '@/hooks/social/useFollowCounts'
 import { useFollowMutation, useUnfollowMutation } from '@/hooks/social/useFollowMutation'
 
-interface FollowButtonProps {
+interface UserFollowButtonProps {
   /** The user being followed (ss_users.id). */
   targetUserId: string
   /** Seed the follow state instead of fetching it (used in list rows). */
@@ -15,20 +15,23 @@ interface FollowButtonProps {
   initialIsFollowing?: boolean
   size?: 'sm' | 'default'
   className?: string
+  onToggle?: (nowFollowing: boolean) => void
 }
 
 /**
- * Follow / Unfollow toggle. Hidden when logged out or viewing your own profile.
- * In the profile header it self-fetches the viewer relationship; inside lists it
- * is `seeded` with the row's `is_following` to avoid one request per row.
+ * Follow / Unfollow toggle for following another *user*. Hidden when logged out
+ * or viewing your own profile. In the profile header it self-fetches the viewer
+ * relationship; inside lists it is `seeded` with the row's `is_following` to
+ * avoid one request per row. (For following a sentinel, see `SentinelFollowButton`.)
  */
-export function FollowButton({
+export function UserFollowButton({
   targetUserId,
   seeded = false,
   initialIsFollowing = false,
   size = 'default',
   className,
-}: FollowButtonProps) {
+  onToggle,
+}: UserFollowButtonProps) {
   const { user } = useAuth()
   const viewerId = user?.id
   const canInteract = Boolean(viewerId) && viewerId !== targetUserId
@@ -52,11 +55,15 @@ export function FollowButton({
   const handleClick = () => {
     const next = !isFollowing
     setOptimistic(next)
+    onToggle?.(next)
     const mutation = next ? follow : unfollow
     // Keep the optimistic value as the source of truth — it converges with the
     // server (counts are invalidated on success). Only revert if the call fails.
     mutation.mutate(targetUserId, {
-      onError: () => setOptimistic(null),
+      onError: () => {
+        setOptimistic(null)
+        onToggle?.(!next)
+      },
     })
   }
 

@@ -17,8 +17,9 @@ import { SENTINEL_GIFS, USER_IMAGES } from '@/constants/asset_paths'
 import { useUserProfile, useUpdateAvatar } from '@/hooks/profile/useUserProfile'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 import { EditProfileModal } from './EditProfileModal'
-import { FollowButton } from './FollowButton'
+import { UserFollowButton } from './UserFollowButton'
 import { FollowStats } from './FollowStats'
+import { ConnectedWalletsDropdown } from './ConnectedWalletsDropdown'
 import type { ProfileViewData } from '@/types/Profile'
 
 interface ProfileHeaderProps {
@@ -101,16 +102,23 @@ export function ProfileHeader({ profile, isOwner, primaryWallet }: ProfileHeader
       <div className="flex flex-1 flex-col gap-4">
         {/* Name and Actions Row */}
         <div className="flex w-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex flex-wrap items-center gap-3">
-            <h1 className="font-mono text-3xl font-bold uppercase leading-none tracking-wide text-[var(--color-text-primary)] md:text-4xl">
-              {displayName}
-            </h1>
-            {profile.rewardsTier && (
-              <div className="border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-3 py-1">
-                <span className="text-[9px] font-bold uppercase tracking-[2px] text-[var(--color-text-secondary)]">
-                  {profile.rewardsTier}
-                </span>
-              </div>
+          <div className="flex flex-col gap-1.5">
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="font-mono text-3xl font-bold uppercase leading-none tracking-wide text-[var(--color-text-primary)] md:text-4xl">
+                {displayName}
+              </h1>
+              {profile.rewardsTier && (
+                <div className="border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-3 py-1">
+                  <span className="text-[9px] font-bold uppercase tracking-[2px] text-[var(--color-text-secondary)]">
+                    {profile.rewardsTier}
+                  </span>
+                </div>
+              )}
+            </div>
+            {profile.username && (
+              <span className="font-mono text-sm text-[var(--color-text-muted)]">
+                @{profile.username}
+              </span>
             )}
           </div>
 
@@ -132,52 +140,56 @@ export function ProfileHeader({ profile, isOwner, primaryWallet }: ProfileHeader
                 )}
               </>
             ) : (
-              <FollowButton targetUserId={profile.userId} />
+              <UserFollowButton targetUserId={profile.userId} />
             )}
           </div>
         </div>
 
         {/* Meta Info Row */}
-        <div className="flex flex-wrap items-center gap-6 md:gap-10">
-          {primaryWallet && (
-            <div className="flex flex-col gap-0.5">
-              <span className="industrial-label">Wallet Address</span>
-              <div className="flex items-center gap-2">
-                {isOwner ? (
-                  <>
-                    <span className="text-xs font-bold tracking-wide text-[var(--color-text-primary)]">
-                      {truncateAddress(primaryWallet)}
-                    </span>
-                    <button
-                      onClick={handleCopyAddress}
-                      className="text-[var(--color-text-muted)] opacity-40 transition-opacity hover:opacity-100"
-                      aria-label="Copy wallet address"
-                    >
-                      {copied ? (
-                        <Check className="h-3 w-3 text-[var(--color-success)]" />
-                      ) : (
-                        <Copy className="h-3 w-3" />
+        <div className="flex flex-wrap items-center justify-between gap-6 md:gap-10">
+          <div className="flex flex-wrap items-center gap-6 md:gap-10">
+            {primaryWallet && (
+              <div className="flex flex-col gap-0.5">
+                <span className="industrial-label">Wallet Address</span>
+                <div className="flex items-center gap-2">
+                  {isOwner ? (
+                    <>
+                      <span className="text-xs font-bold tracking-wide text-[var(--color-text-primary)]">
+                        {truncateAddress(primaryWallet)}
+                      </span>
+                      <button
+                        onClick={handleCopyAddress}
+                        className="text-[var(--color-text-muted)] opacity-40 transition-opacity hover:opacity-100"
+                        aria-label="Copy wallet address"
+                      >
+                        {copied ? (
+                          <Check className="h-3 w-3 text-[var(--color-success)]" />
+                        ) : (
+                          <Copy className="h-3 w-3" />
+                        )}
+                      </button>
+                    </>
+                  ) : (
+                    <Link
+                      href={getExplorerAddressUrl(
+                        primaryWallet,
+                        detectChainFromAddress(primaryWallet)
                       )}
-                    </button>
-                  </>
-                ) : (
-                  <Link
-                    href={getExplorerAddressUrl(
-                      primaryWallet,
-                      detectChainFromAddress(primaryWallet)
-                    )}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-mono text-xs font-bold tracking-wide text-[var(--color-info)] hover:underline"
-                  >
-                    {truncateAddress(primaryWallet)}
-                  </Link>
-                )}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-mono text-xs font-bold tracking-wide text-[var(--color-info)] hover:underline"
+                    >
+                      {truncateAddress(primaryWallet)}
+                    </Link>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          <FollowStats identifier={profile.userId} />
+            <FollowStats identifier={profile.userId} />
+          </div>
+
+          <ConnectedWalletsDropdown wallets={profile.wallets} />
         </div>
       </div>
 
