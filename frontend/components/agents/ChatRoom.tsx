@@ -18,9 +18,12 @@ import {
   useSendChatMessage,
   useCanSendMessage,
   useChatSubscription,
+  useMentionAutocomplete,
 } from '@/hooks/chat'
 import type { AgentDetailsFull } from '@/hooks/agents/useAgentDetails'
 import type { ChatMessage, ChatSenderRole } from '@/types/chat'
+import { ChatMessageContent } from './ChatMessageContent'
+import { MentionSuggestionsDropdown } from './MentionSuggestionsDropdown'
 
 interface ChatRoomProps {
   agent: AgentDetailsFull
@@ -96,7 +99,7 @@ function ChatMessageBubble({
           )}
         >
           <p className="whitespace-pre-wrap font-mono text-[12px] leading-relaxed text-white">
-            {message.content}
+            <ChatMessageContent content={message.content} />
           </p>
         </div>
 
@@ -119,6 +122,12 @@ export function ChatRoom({ agent, onBack }: ChatRoomProps) {
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false)
 
   const { address: connectedAddress } = useConnectedAddress()
+
+  const mentionAutocomplete = useMentionAutocomplete({
+    value: messageInput,
+    onChange: setMessageInput,
+    textareaRef,
+  })
 
   // Fetch chat messages
   const {
@@ -307,11 +316,24 @@ export function ChatRoom({ agent, onBack }: ChatRoomProps) {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-2">
-          <div className="border border-[var(--color-border-strong)] bg-[var(--color-bg-base)] transition-all focus-within:border-white">
+          <div className="relative border border-[var(--color-border-strong)] bg-[var(--color-bg-base)] transition-all focus-within:border-white">
+            <MentionSuggestionsDropdown
+              isOpen={mentionAutocomplete.isOpen}
+              isLoading={mentionAutocomplete.isLoading}
+              suggestions={mentionAutocomplete.suggestions}
+              highlightedIndex={mentionAutocomplete.highlightedIndex}
+              onSelect={mentionAutocomplete.selectSuggestion}
+              onHighlight={mentionAutocomplete.setHighlightedIndex}
+            />
             <textarea
               ref={textareaRef}
               value={messageInput}
-              onChange={e => setMessageInput(e.target.value)}
+              onChange={e => {
+                setMessageInput(e.target.value)
+                mentionAutocomplete.syncMentionFromTextarea(e.target)
+              }}
+              onSelect={e => mentionAutocomplete.syncMentionFromTextarea(e.currentTarget)}
+              onBlur={mentionAutocomplete.closeSuggestions}
               className="terminal-scrollbar placeholder:text-[var(--color-text-muted)]/30 min-h-[44px] w-full resize-none border-0 bg-[var(--color-bg-base)] px-4 py-2.5 font-mono text-sm text-white focus:outline-none focus:ring-0"
               disabled={isSending || !canSend}
               placeholder={
@@ -319,13 +341,14 @@ export function ChatRoom({ agent, onBack }: ChatRoomProps) {
                   ? 'Connect wallet to chat...'
                   : !canSend
                     ? 'You need permission to send messages...'
-                    : 'Type your message...'
+                    : 'Type your message... use @ to mention'
               }
               rows={1}
               style={{ overflow: 'hidden' }}
               autoComplete="off"
               spellCheck="false"
               onKeyDown={e => {
+                if (mentionAutocomplete.handleKeyDown(e)) return
                 if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault()
                   handleSubmit(e)
