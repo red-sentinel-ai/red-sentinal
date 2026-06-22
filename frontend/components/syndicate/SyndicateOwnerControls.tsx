@@ -6,6 +6,7 @@ interface Props {
   agentId: string | undefined
   whitelistEnabled: boolean | undefined
   isLocked: boolean | undefined
+  isOwner: boolean
   openModal: (id: SyndicateModalId) => void
 }
 
@@ -13,8 +14,13 @@ export function SyndicateOwnerControls({
   agentId,
   whitelistEnabled,
   isLocked,
+  isOwner,
   openModal,
 }: Props) {
+  const addFundsTooltip = isOwner
+    ? undefined
+    : 'Only the syndicate owner can add funds to the sentinel bounty pool. Message them in the syndicate chat room to ask.'
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
@@ -33,7 +39,8 @@ export function SyndicateOwnerControls({
           subtitle="Syndicate Idle -> Sentinel Active"
           icon={<ArrowRight className="h-5 w-5" />}
           onClick={() => openModal('fundSentinel')}
-          disabled={!agentId}
+          disabled={!agentId || !isOwner}
+          tooltip={addFundsTooltip}
         />
         <SyndicateControlItem
           title="Withdraw Funds from Sentinel"
