@@ -43,12 +43,13 @@ export function PlayerDirectory() {
     isFetchingNextPage,
   } = usePlayerDirectory(viewerId, search)
 
+  const total = data?.pages[0]?.total ?? 0
+  const currentPlayer = data?.pages[0]?.currentPlayer
+
   const players = useMemo(
     () => data?.pages.flatMap(page => page.players) ?? [],
     [data]
   )
-  const total = data?.pages[0]?.total ?? 0
-  const currentPlayer = data?.pages[0]?.currentPlayer
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-8 md:px-6">
@@ -113,7 +114,6 @@ export function PlayerDirectory() {
               key={player.user_id}
               player={player}
               onFollowToggle={handleFollowToggle}
-              isCurrentUser={player.user_id === currentPlayer?.user_id}
             />
           ))
         )}
