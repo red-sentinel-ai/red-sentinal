@@ -1,5 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { SUI_SENTINEL_API_URL, APP_NETWORK } from '@/constants'
+import type { AttackerTier, DefenderTier } from '@/components/rewards/tierConfig'
 
 export interface PlayerEntry {
   rank: number
@@ -8,6 +9,8 @@ export interface PlayerEntry {
   display_name: string | null
   avatar_url: string | null
   wallet_address: string | null
+  attackerTier: AttackerTier
+  defenderTier: DefenderTier
   totalAttacks: number
   totalBountyUsd: number
   sentinelsLaunched: number
@@ -21,6 +24,7 @@ export interface PlayerDirectoryResponse {
   total: number
   limit: number
   offset: number
+  currentPlayer?: PlayerEntry
 }
 
 export const PLAYER_DIRECTORY_QUERY_KEY = 'player-directory'

@@ -194,7 +194,7 @@
   }
   @media (min-width: 768px) {
     .player-directory-grid {
-      grid-template-columns: 2.5rem minmax(0, 1.6fr) repeat(5, minmax(0, 1fr)) 7rem;
+      grid-template-columns: 2.5rem minmax(0, 2fr) minmax(0, 1.2fr) repeat(5, minmax(0, 1fr)) 7rem;
       gap: 1rem;
     }
   }

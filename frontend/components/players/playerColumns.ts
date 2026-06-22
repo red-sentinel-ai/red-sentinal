@@ -9,7 +9,7 @@ export interface PlayerStatColumn {
 }
 
 export const PLAYER_STAT_COLUMNS: PlayerStatColumn[] = [
-  { key: 'attacks', label: 'Attacks', value: p => formatNumber(p.totalAttacks) },
+  { key: 'attacks', label: 'All Attacks', value: p => formatNumber(p.totalAttacks) },
   { key: 'bounty', label: 'Bounty Won', value: p => formatUsd(p.totalBountyUsd) },
   { key: 'sentinels', label: 'Sentinels', value: p => formatNumber(p.sentinelsLaunched) },
   { key: 'followers', label: 'Followers', value: p => formatNumber(p.followers) },

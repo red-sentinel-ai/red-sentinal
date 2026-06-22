@@ -48,9 +48,10 @@ export function PlayerDirectory() {
     [data]
   )
   const total = data?.pages[0]?.total ?? 0
+  const currentPlayer = data?.pages[0]?.currentPlayer
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 py-8 md:px-6">
+    <div className="mx-auto w-full max-w-6xl px-4 py-8 md:px-6">
       <header className="mb-6">
         <h1 className="page-heading">Player Directory</h1>
         <p className="page-subheading mt-2">
@@ -73,6 +74,7 @@ export function PlayerDirectory() {
         <div className="player-directory-grid border-b border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] px-4 py-3">
           <span />
           <span className="industrial-label">Player</span>
+          <span className="industrial-label hidden md:block">Tier</span>
           {PLAYER_STAT_COLUMNS.map(col => (
             <span key={col.key} className="industrial-label hidden md:block">
               {col.label}
@@ -80,6 +82,14 @@ export function PlayerDirectory() {
           ))}
           <span />
         </div>
+
+        {currentPlayer && (
+          <PlayerRow
+            player={currentPlayer}
+            isCurrentUser
+            onFollowToggle={handleFollowToggle}
+          />
+        )}
 
         {isLoading ? (
           <div className="flex items-center justify-center gap-2 py-16 text-[var(--color-text-muted)]">
@@ -103,6 +113,7 @@ export function PlayerDirectory() {
               key={player.user_id}
               player={player}
               onFollowToggle={handleFollowToggle}
+              isCurrentUser={player.user_id === currentPlayer?.user_id}
             />
           ))
         )}
