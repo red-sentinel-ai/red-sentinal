@@ -21,6 +21,8 @@
   --color-gold-light: #ffffff;
   --color-gold-dark: #757575;
   --color-gold-muted: rgba(255, 255, 255, 0.08);
+  --color-accent: #ffd597;
+  --color-accent-muted: rgba(255, 213, 151, 0.12);
   --color-accent-fg: #000000;
   --color-text-on-gold: #000000;
 
@@ -229,7 +231,7 @@
 
   /* Accent color for important values */
   .text-accent {
-    color: #ffd597;
+    color: var(--color-accent);
   }
 }
 
