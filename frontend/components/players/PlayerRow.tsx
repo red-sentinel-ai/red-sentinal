@@ -46,14 +46,16 @@ export function PlayerRow({ player, onFollowToggle, isCurrentUser = false }: Pla
           <Image src={avatarUrl} alt={primaryName} fill className="object-cover" />
         </div>
         <div className="min-w-0">
-          <p className="truncate text-sm font-bold text-[var(--color-text-primary)]">
-            {primaryName}
+          <div className="flex items-center gap-1.5">
+            <p className="min-w-0 truncate text-sm font-bold text-[var(--color-text-primary)]">
+              {primaryName}
+            </p>
             {isCurrentUser && (
-              <span className="ml-1.5 text-xs font-bold text-[var(--color-text-muted)]">
+              <span className="flex-shrink-0 text-xs font-bold text-[var(--color-text-muted)]">
                 (you)
               </span>
             )}
-          </p>
+          </div>
           {player.username && (
             <p className="truncate text-xs text-[var(--color-text-muted)]">
               @{player.username}
