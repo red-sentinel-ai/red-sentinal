@@ -41,9 +41,12 @@ import {
 import { useDefendersLeaderboard, mapApiDefender } from '@/hooks/rewards/useDefendersLeaderboard'
 import { useAttackersLeaderboard, mapApiAttacker } from '@/hooks/rewards/useAttackersLeaderboard'
 import { truncateAddress, formatUsd } from '@/lib/utils'
+import { DefenderTierBadge } from './DefenderTierBadge'
+import { AttackerTierBadge } from './AttackerTierBadge'
+import { DEFENDER_TIER_CONFIG, ATTACKER_TIER_CONFIG } from './tierConfig'
+import type { DefenderTier, AttackerTier } from './tierConfig'
 
-export type DefenderTier = 'Bronze' | 'Silver' | 'Gold' | 'Diamond' | 'Legendary'
-export type AttackerTier = 'Recruit' | 'Hunter' | 'Specialist' | 'Elite' | 'Apex Predator'
+export type { DefenderTier, AttackerTier }
 export type SortDir = 'asc' | 'desc'
 
 export interface DefenderEntry {
@@ -106,125 +109,7 @@ function breachRateColor(pct: number) {
   return 'text-red-400'
 }
 
-// ─── Tier Config ─────────────────────────────────────────────────────────────
-
-const DEFENDER_TIER_CONFIG: Record<
-  DefenderTier,
-  { bg: string; text: string; border: string; dot: string; label: string }
-> = {
-  Bronze: {
-    bg: 'bg-amber-900/20',
-    text: 'text-amber-400',
-    border: 'border-amber-500/30',
-    dot: 'bg-amber-500',
-    label: 'Bronze',
-  },
-  Silver: {
-    bg: 'bg-slate-700/30',
-    text: 'text-slate-300',
-    border: 'border-slate-500/30',
-    dot: 'bg-slate-400',
-    label: 'Silver',
-  },
-  Gold: {
-    bg: 'bg-yellow-900/20',
-    text: 'text-yellow-400',
-    border: 'border-yellow-500/30',
-    dot: 'bg-yellow-500',
-    label: 'Gold',
-  },
-  Diamond: {
-    bg: 'bg-cyan-900/20',
-    text: 'text-cyan-400',
-    border: 'border-cyan-500/30',
-    dot: 'bg-cyan-500',
-    label: 'Diamond',
-  },
-  Legendary: {
-    bg: 'bg-purple-900/20',
-    text: 'text-purple-400',
-    border: 'border-purple-500/30',
-    dot: 'bg-purple-500',
-    label: 'Legendary',
-  },
-}
-
-const ATTACKER_TIER_CONFIG: Record<
-  AttackerTier,
-  { bg: string; text: string; border: string; dot: string; label: string }
-> = {
-  Recruit: {
-    bg: 'bg-white/10',
-    text: 'text-white/60',
-    border: 'border-white/15',
-    dot: 'bg-white/40',
-    label: 'Recruit',
-  },
-  Hunter: {
-    bg: 'bg-green-900/20',
-    text: 'text-green-400',
-    border: 'border-green-500/30',
-    dot: 'bg-green-500',
-    label: 'Hunter',
-  },
-  Specialist: {
-    bg: 'bg-blue-900/20',
-    text: 'text-blue-400',
-    border: 'border-blue-500/30',
-    dot: 'bg-blue-500',
-    label: 'Specialist',
-  },
-  Elite: {
-    bg: 'bg-orange-900/20',
-    text: 'text-orange-400',
-    border: 'border-orange-500/30',
-    dot: 'bg-orange-500',
-    label: 'Elite',
-  },
-  'Apex Predator': {
-    bg: 'bg-red-900/20',
-    text: 'text-red-400',
-    border: 'border-red-500/30',
-    dot: 'bg-red-500',
-    label: 'Apex Predator',
-  },
-}
-
 // ─── Sub-components ───────────────────────────────────────────────────────────
-
-function DefenderTierBadge({ tier }: { tier: DefenderTier }) {
-  const cfg = DEFENDER_TIER_CONFIG[tier]
-  return (
-    <span
-      className={cn(
-        'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold',
-        cfg.bg,
-        cfg.text,
-        cfg.border
-      )}
-    >
-      <span className={cn('h-1.5 w-1.5 rounded-full', cfg.dot)} />
-      {cfg.label}
-    </span>
-  )
-}
-
-function AttackerTierBadge({ tier }: { tier: AttackerTier }) {
-  const cfg = ATTACKER_TIER_CONFIG[tier]
-  return (
-    <span
-      className={cn(
-        'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold',
-        cfg.bg,
-        cfg.text,
-        cfg.border
-      )}
-    >
-      <span className={cn('h-1.5 w-1.5 rounded-full', cfg.dot)} />
-      {cfg.label}
-    </span>
-  )
-}
 
 function RankCell({ rank }: { rank: number }) {
   if (rank === 1)

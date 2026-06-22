@@ -2,18 +2,22 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { Shield, Sword } from 'lucide-react'
 
-import { truncateAddress, generateAvatarUrl } from '@/lib/utils'
+import { cn, truncateAddress, generateAvatarUrl } from '@/lib/utils'
 import { UserFollowButton } from '@/components/profile/UserFollowButton'
+import { AttackerTierBadge } from '@/components/rewards/AttackerTierBadge'
+import { DefenderTierBadge } from '@/components/rewards/DefenderTierBadge'
 import type { PlayerEntry } from '@/hooks/players/usePlayerDirectory'
 import { PLAYER_STAT_COLUMNS } from './playerColumns'
 
 interface PlayerRowProps {
   player: PlayerEntry
   onFollowToggle: (userId: string, nowFollowing: boolean) => void
+  isCurrentUser?: boolean
 }
 
-export function PlayerRow({ player, onFollowToggle }: PlayerRowProps) {
+export function PlayerRow({ player, onFollowToggle, isCurrentUser = false }: PlayerRowProps) {
   const fallbackWallet = player.wallet_address || ''
   const handle = player.username || fallbackWallet
   const primaryName =
@@ -25,7 +29,14 @@ export function PlayerRow({ player, onFollowToggle }: PlayerRowProps) {
   const profileHref = handle ? `/u/${handle}` : '#'
 
   return (
-    <div className="player-directory-grid border-b border-[var(--color-border-subtle)] px-4 py-3 transition-colors hover:bg-[var(--color-bg-elevated)]">
+    <div
+      className={cn(
+        'player-directory-grid border-b border-[var(--color-border-subtle)] px-4 py-3 transition-colors',
+        isCurrentUser
+          ? 'border-l-2 border-l-[var(--color-text-primary)] bg-[var(--color-bg-elevated)]'
+          : 'hover:bg-[var(--color-bg-elevated)]'
+      )}
+    >
       <span className="text-xs font-bold text-[var(--color-text-muted)] tabular-nums">
         {player.rank}
       </span>
@@ -37,6 +48,11 @@ export function PlayerRow({ player, onFollowToggle }: PlayerRowProps) {
         <div className="min-w-0">
           <p className="truncate text-sm font-bold text-[var(--color-text-primary)]">
             {primaryName}
+            {isCurrentUser && (
+              <span className="ml-1.5 text-xs font-bold text-[var(--color-text-muted)]">
+                (you)
+              </span>
+            )}
           </p>
           {player.username && (
             <p className="truncate text-xs text-[var(--color-text-muted)]">
@@ -44,10 +60,25 @@ export function PlayerRow({ player, onFollowToggle }: PlayerRowProps) {
             </p>
           )}
           <p className="mt-1 truncate text-[11px] text-[var(--color-text-muted)] md:hidden">
-            {PLAYER_STAT_COLUMNS.map(col => `${col.value(player)} ${col.label}`).join(' · ')}
+            {[
+              `ATK ${player.attackerTier}`,
+              `DEF ${player.defenderTier}`,
+              ...PLAYER_STAT_COLUMNS.map(col => `${col.value(player)} ${col.label}`),
+            ].join(' · ')}
           </p>
         </div>
       </Link>
+
+      <div className="hidden flex-col items-start gap-1 md:flex">
+        <span className="flex items-center gap-1.5" title="Attacker tier">
+          <Sword className="h-3 w-3 flex-shrink-0 text-[var(--color-text-muted)]" />
+          <AttackerTierBadge tier={player.attackerTier} />
+        </span>
+        <span className="flex items-center gap-1.5" title="Defender tier">
+          <Shield className="h-3 w-3 flex-shrink-0 text-[var(--color-text-muted)]" />
+          <DefenderTierBadge tier={player.defenderTier} />
+        </span>
+      </div>
 
       {PLAYER_STAT_COLUMNS.map(col => (
         <span
