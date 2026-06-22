@@ -7,13 +7,32 @@ import { parseUnits } from 'viem'
 import { wagmiConfig } from '@/lib/wagmi'
 import { SYNDICATE_ABI } from '@/lib/evm/abi'
 
-export function useSyndicateOwnerActions(syndicateAddress: `0x${string}`) {
+const OWNABLE_UNAUTHORIZED_SIGNATURE = '0x118cdaa7'
+
+function formatRevertReason(reason: string): string {
+  if (
+    reason.includes(OWNABLE_UNAUTHORIZED_SIGNATURE) ||
+    reason.toLowerCase().includes('ownableunauthorizedaccount')
+  ) {
+    return 'Only the syndicate owner can perform this action.'
+  }
+  return reason
+}
+
+export function useSyndicateOwnerActions(
+  syndicateAddress: `0x${string}`,
+  ownerAddress?: string
+) {
   const { address: walletAddress, chain } = useAccount()
   const { writeContractAsync } = useWriteContract()
   const [loading, setLoading] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   const txArgs = { account: walletAddress!, chain: chain ?? null }
+  const isOwner =
+    !!walletAddress &&
+    !!ownerAddress &&
+    walletAddress.toLowerCase() === ownerAddress.toLowerCase()
 
   const exec = async (key: string, fn: () => Promise<`0x${string}`>) => {
     setLoading(key)
@@ -39,6 +58,11 @@ export function useSyndicateOwnerActions(syndicateAddress: `0x${string}`) {
   // `tokenAddress` is kept in the signature for caller compatibility but unused.
   const fundAgent = (_tokenAddress: `0x${string}`, amount: string, decimals: number) =>
     exec('fundAgent', async () => {
+      if (!isOwner) {
+        throw new Error(
+          'Only the syndicate owner can add funds to the sentinel bounty pool.'
+        )
+      }
       const call = {
         ...txArgs,
         address: syndicateAddress,
@@ -55,7 +79,7 @@ export function useSyndicateOwnerActions(syndicateAddress: `0x${string}`) {
           err?.metaMessages?.join(' • ') ??
           err?.message ??
           'Simulation failed'
-        throw new Error(`fundAgent would revert: ${reason}`)
+        throw new Error(`fundAgent would revert: ${formatRevertReason(reason)}`)
       }
       return writeContractAsync(call)
     })

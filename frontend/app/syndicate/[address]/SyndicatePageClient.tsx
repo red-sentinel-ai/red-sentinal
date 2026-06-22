@@ -81,6 +81,7 @@ export default function SyndicatePageClient({ identifier }: Props) {
   )
 
   const connectedLower = connectedAddress?.toLowerCase()
+  const isOwner = !!connectedLower && connectedLower === meta?.owner
   const myMember = connectedLower
     ? meta?.members_detailed?.find(m => m.address === connectedLower)
     : undefined
@@ -101,7 +102,7 @@ export default function SyndicatePageClient({ identifier }: Props) {
     setWhitelistEnabled: toggleWhitelist,
     whitelistAddresses,
     loading: ownerLoading,
-  } = useSyndicateOwnerActions(safeAddress)
+  } = useSyndicateOwnerActions(safeAddress, meta?.owner)
   const {
     deposit,
     redeem,
@@ -181,6 +182,12 @@ export default function SyndicatePageClient({ identifier }: Props) {
 
   async function handleFundAgent() {
     if (!inputValue || !tokenAddress) return
+    if (!isOwner) {
+      toast.error(
+        'Only the syndicate owner can add funds to the sentinel bounty pool.'
+      )
+      return
+    }
     // Pre-check idle balance so the user gets a readable error instead of an
     // on-chain InsufficientLiquidity revert (surfaces as a gas-cap error).
     const amountWei = BigInt(Math.floor(parseFloat(inputValue) * 10 ** tokenDecimals))
@@ -191,10 +198,26 @@ export default function SyndicatePageClient({ identifier }: Props) {
       )
       return
     }
-    await runAction(
-      () => fundAgent(tokenAddress, inputValue, tokenDecimals),
-      'Sentinel funded successfully'
-    )
+    try {
+      await fundAgent(tokenAddress, inputValue, tokenDecimals)
+      toast.success('Sentinel funded successfully')
+      closeModal()
+      refresh()
+    } catch (e: unknown) {
+      const raw = e instanceof Error ? e.message : ''
+      const short = (e as any)?.shortMessage ?? raw
+      if (
+        raw.includes('0x118cdaa7') ||
+        short.includes('0x118cdaa7') ||
+        raw.toLowerCase().includes('ownableunauthorizedaccount')
+      ) {
+        toast.error(
+          'Only the syndicate owner can add funds to the sentinel bounty pool.'
+        )
+      } else {
+        toast.error(short || 'Failed to fund sentinel')
+      }
+    }
   }
 
   async function handleWithdraw() {
@@ -300,6 +323,7 @@ export default function SyndicatePageClient({ identifier }: Props) {
             agentId={agentId}
             whitelistEnabled={whitelistEnabled}
             isLocked={isLocked}
+            isOwner={isOwner}
             openModal={openModal}
           />
           {connectedAddress ? (
