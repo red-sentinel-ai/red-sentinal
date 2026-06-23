@@ -7,28 +7,33 @@ import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { type AgentDetails } from '@/hooks/agents/useAllAgents'
 import { useFundAgentModal } from '@/hooks/useFundAgentModal'
-import { useFeatureAgentModal } from '@/hooks/useFeatureAgentModal'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { getTokenForCoinType } from '@/constants/tokens'
-import { CHAINS } from '@/constants/chains'
+import { CHAINS, type SupportedChain } from '@/constants/chains'
 import { AgentDropdown } from './agents/AgentCardDropdown'
 import { useWithdrawAgentModal } from '@/hooks/agents/useWithdrawAgentModal'
 import { formatDuration, truncateAddress } from '@/lib/utils'
 import { PrizePoolChangeDisplay } from './agents/PrizePoolChangeDisplay'
-import { ClaimFeesModal } from './agents/ClaimFeesModal'
 import { TokenAmount } from './ui/common/TokenAmount'
 import { Flame } from 'lucide-react'
 
+export type ClaimFeesTarget = {
+  agentId: string
+  agentObjectId: string
+  accumulatedFees: number
+  coinType?: string
+  chain?: SupportedChain
+}
 
 type FeaturedAgentCardProps = {
   agent: AgentDetails
   index: number
   ctaHeading?: string
   fromProfile?: boolean
-  // Optional modal callbacks - when provided, component won't create its own modal instances
-  onFund?: ReturnType<typeof useFundAgentModal>['openModal']
-  onWithdraw?: ReturnType<typeof useWithdrawAgentModal>['openModal']
-  onFeature?: (agentId: string) => void
+  onFund: ReturnType<typeof useFundAgentModal>['openModal']
+  onWithdraw: ReturnType<typeof useWithdrawAgentModal>['openModal']
+  onFeature: (agentId: string) => void
+  onClaimFees: (target: ClaimFeesTarget) => void
 }
 
 export const FeaturedAgentCard = ({
@@ -39,28 +44,14 @@ export const FeaturedAgentCard = ({
   onFund,
   onWithdraw,
   onFeature,
+  onClaimFees,
 }: FeaturedAgentCardProps) => {
-  // Only create modal instances if callbacks not provided (for backward compatibility)
-  const fundModal = useFundAgentModal()
-  const withdrawModal = useWithdrawAgentModal()
-  const featureModal = useFeatureAgentModal()
-  
-  // Use provided callbacks or fall back to local modal instances
-  const openFundModal = onFund || fundModal.openModal
-  const openWithdrawModal = onWithdraw || withdrawModal.openModal
-  const openFeatureModal = onFeature || featureModal.openModal
-  
-  const Modal = fundModal.Modal
-  const WithdrawModal = withdrawModal.Modal
-  const FeatureModal = featureModal.Modal
-  
   const router = useRouter()
   const { address: connectedAddress } = useConnectedAddress()
   const isOwner = !!connectedAddress && connectedAddress.toLowerCase() === agent.creator?.toLowerCase()
 
   const [isWithdrawalLocked, setIsWithdrawalLocked] = useState(true)
   const [timeRemaining, setTimeRemaining] = useState('')
-  const [isClaimFeesModalOpen, setIsClaimFeesModalOpen] = useState(false)
 
   const token = getTokenForCoinType(agent.coin_type)
   const tokenDivisor = Math.pow(10, token.decimals)
@@ -185,7 +176,7 @@ export const FeaturedAgentCard = ({
               agentObjectId={agent.agent_object_id}
               currentPrompt={agent.prompt}
               currentCost={Number(agent.cost_per_message)}
-              openFeatureModal={openFeatureModal}
+              openFeatureModal={onFeature}
               accumulatedFees={agent.accumulated_fees}
               createdAt={agent.timestampMs}
               coinType={agent.coin_type}
@@ -302,9 +293,8 @@ export const FeaturedAgentCard = ({
           {!isDefeated && fromProfile && isOwner && (
             <div className="flex gap-1.5 sm:gap-2">
               <button
-                onClick={() => {
-                  const token = getTokenForCoinType(agent.coin_type)
-                  openFundModal({
+                onClick={() =>
+                  onFund({
                     agentObjectId: agent.agent_object_id,
                     agentId: agent.agent_id,
                     coinType: token.coinType,
@@ -312,14 +302,14 @@ export const FeaturedAgentCard = ({
                     tokenDecimals: token.decimals,
                     chain: agent.chain,
                   })
-                }}
+                }
                 className="btn btn-black w-1/2 px-2 py-1.5 text-[10px]"
               >
                 Add Funds
               </button>
               <button
                 onClick={() =>
-                  openWithdrawModal({
+                  onWithdraw({
                     agentObjectId: agent.agent_object_id,
                     agentId: agent.agent_id,
                     agentBalanceRaw: Number(agent.total_balance),
@@ -345,7 +335,13 @@ export const FeaturedAgentCard = ({
             <button
               onClick={e => {
                 e.stopPropagation()
-                setIsClaimFeesModalOpen(true)
+                onClaimFees({
+                  agentId: agent.agent_id,
+                  agentObjectId: agent.agent_object_id,
+                  accumulatedFees: agent.accumulated_fees,
+                  coinType: agent.coin_type,
+                  chain: agent.chain,
+                })
               }}
               disabled={!hasEarnings}
               className="btn btn-outline w-full px-2 py-1.5 text-[10px] disabled:opacity-50"
@@ -359,20 +355,6 @@ export const FeaturedAgentCard = ({
             </button>
           )}
         </div>
-
-        {/* Only render modals if using local instances (callbacks not provided) */}
-        {!onFund && <Modal onSuccess={() => console.log('Funded successfully!')} />}
-        {!onWithdraw && <WithdrawModal onSuccess={() => console.log('Withdrew successfully!')} />}
-        {!onFeature && <FeatureModal />}
-        <ClaimFeesModal
-          open={isClaimFeesModalOpen}
-          onClose={() => setIsClaimFeesModalOpen(false)}
-          agentId={agent.agent_id}
-          agentObjectId={agent.agent_object_id}
-          accumulatedFees={agent.accumulated_fees}
-          coinType={agent.coin_type}
-          chain={agent.chain}
-        />
       </div>
     </motion.div>
   )

@@ -47,7 +47,9 @@ export const FundAgentModal = ({
   const isSolana = chain === 'solana'
   const isEvm = isEvmChain(chain)
 
-  const { fundAgent: fundAgentSui, isLoading: isSuiLoading } = useFundAgent()
+  const { fundAgent: fundAgentSui, isLoading: isSuiLoading } = useFundAgent({
+    enabled: open && !isEvm && !isSolana,
+  })
   const { fundAgent: fundAgentSolana, isLoading: isSolanaLoading } = useFundAgentSolana()
   const { fundAgent: fundAgentEvm, isLoading: isEvmLoading } = useFundAgentEVM()
   const isLoading = isEvm ? isEvmLoading : isSolana ? isSolanaLoading : isSuiLoading

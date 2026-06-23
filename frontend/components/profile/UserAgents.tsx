@@ -1,11 +1,16 @@
 'use client'
 
 import Link from 'next/link'
+import { useState } from 'react'
 import { Shield, Plus } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAgentsByOwner } from '@/hooks/agents/useOwnerAgents'
+import { useFundAgentModal } from '@/hooks/useFundAgentModal'
+import { useWithdrawAgentModal } from '@/hooks/agents/useWithdrawAgentModal'
+import { useFeatureAgentModal } from '@/hooks/useFeatureAgentModal'
 import { FeaturedAgentsSkeleton } from '../ui/skeletons/FeaturedAgentsSkeleton'
-import { FeaturedAgentCard } from '../FeaturedAgentCard'
+import { FeaturedAgentCard, type ClaimFeesTarget } from '../FeaturedAgentCard'
+import { ClaimFeesModal } from '../agents/ClaimFeesModal'
 
 interface UserAgentsProps {
   address?: string
@@ -14,6 +19,10 @@ interface UserAgentsProps {
 
 export const UserAgents = ({ address, isOwner }: UserAgentsProps) => {
   const { data: userAgents, isPending: isFetchingAgents } = useAgentsByOwner(address)
+  const { openModal: openFundModal, Modal: FundModal } = useFundAgentModal()
+  const { openModal: openWithdrawModal, Modal: WithdrawModal } = useWithdrawAgentModal()
+  const { openModal: openFeatureModal, Modal: FeatureModal } = useFeatureAgentModal()
+  const [claimFeesTarget, setClaimFeesTarget] = useState<ClaimFeesTarget | null>(null)
 
   if (isFetchingAgents) {
     return <FeaturedAgentsSkeleton />
@@ -41,10 +50,27 @@ export const UserAgents = ({ address, isOwner }: UserAgentsProps) => {
                 agent={agent}
                 index={index}
                 fromProfile={true}
+                onFund={openFundModal}
+                onWithdraw={openWithdrawModal}
+                onFeature={openFeatureModal}
+                onClaimFees={setClaimFeesTarget}
               />
             ))}
           </motion.div>
         </AnimatePresence>
+
+        <FundModal />
+        <WithdrawModal />
+        <FeatureModal />
+        <ClaimFeesModal
+          open={!!claimFeesTarget}
+          onClose={() => setClaimFeesTarget(null)}
+          agentId={claimFeesTarget?.agentId ?? ''}
+          agentObjectId={claimFeesTarget?.agentObjectId ?? ''}
+          accumulatedFees={claimFeesTarget?.accumulatedFees ?? 0}
+          coinType={claimFeesTarget?.coinType}
+          chain={claimFeesTarget?.chain}
+        />
       </div>
     )
   }
