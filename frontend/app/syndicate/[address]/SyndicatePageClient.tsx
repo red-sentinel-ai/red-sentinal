@@ -1,23 +1,22 @@
 'use client'
 
 import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
 import { formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import { toast } from 'sonner'
 import { Wallet } from 'lucide-react'
-import { SUI_SENTINEL_API_URL } from '@/constants'
-import { APP_NETWORK } from '@/constants/shared'
 import { formatTokenAmount } from '@/lib/utils'
+import { useSyndicate } from '@/hooks/syndicate/useSyndicate'
 import { useSyndicatePendingFees } from '@/hooks/syndicate/useSyndicateInfo'
 import { useSyndicateOwnerActions } from '@/hooks/syndicate/useSyndicateOwnerActions'
 import { useSyndicateMemberActions } from '@/hooks/syndicate/useSyndicateMemberActions'
 import { useEVMBalance } from '@/hooks/useEVMBalance'
-import type { BackendSyndicate, SyndicateModalId } from '@/types/Syndicate'
+import type { SyndicateModalId } from '@/types/Syndicate'
 import {
   buildFallbackMember,
   getDecimalsForSymbol,
   getMaxRedeemableSharesWei,
+  getSyndicateIdlePrincipalWei,
   parseAddresses,
 } from '@/lib/syndicate-utils'
 import { SyndicateHero } from '@/components/syndicate/SyndicateHero'
@@ -55,17 +54,7 @@ export default function SyndicatePageClient({ identifier }: Props) {
   }
 
   // Backend doc — GET /syndicates/:identifier accepts contract address OR slug.
-  const { data: metaData, refetch: refetchMeta } = useQuery<{ syndicate: BackendSyndicate }>({
-    queryKey: ['syndicate-meta', identifier],
-    queryFn: async () => {
-      const res = await fetch(
-        `${SUI_SENTINEL_API_URL}/syndicates/${identifier}?network=${APP_NETWORK}`,
-        { credentials: 'include' }
-      )
-      if (!res.ok) throw new Error('Syndicate not found')
-      return res.json()
-    },
-  })
+  const { data: metaData, refetch: refetchMeta } = useSyndicate(identifier)
 
   const meta = metaData?.syndicate
   const address = meta?.contract_address as `0x${string}` | undefined
@@ -119,18 +108,7 @@ export default function SyndicatePageClient({ identifier }: Props) {
 
   // Derived display values.
   const formattedTVL = meta ? formatTokenAmount(meta.total_funds, tokenDecimals) : null
-  // idlePrincipal mirrors the contract:
-  //   total_funds - (agent_initial_fund + agent_total_funded - agent_total_withdrawn)
-  // initialFund is moved straight to the sentinel via safeTransferFrom and is NOT
-  // counted in agent_total_funded — see SentinelSyndicate.sol.
-  const idlePrincipalWei = meta
-    ? (
-        BigInt(meta.total_funds) -
-        (BigInt(meta.agent_initial_fund) +
-          BigInt(meta.agent_total_funded) -
-          BigInt(meta.agent_total_withdrawn))
-      ).toString()
-    : undefined
+  const idlePrincipalWei = meta ? getSyndicateIdlePrincipalWei(meta).toString() : undefined
   const formattedIdle = idlePrincipalWei
     ? formatTokenAmount(idlePrincipalWei, tokenDecimals)
     : null

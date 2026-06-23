@@ -1,5 +1,14 @@
 import { getTokenForCoinType } from '@/constants/tokens'
-import type { SyndicateMemberDetail } from '@/types/Syndicate'
+import type { BackendSyndicate, SyndicateMemberDetail } from '@/types/Syndicate'
+
+export function getSyndicateIdlePrincipalWei(meta: BackendSyndicate): bigint {
+  return (
+    BigInt(meta.total_funds) -
+    (BigInt(meta.agent_initial_fund) +
+      BigInt(meta.agent_total_funded) -
+      BigInt(meta.agent_total_withdrawn))
+  )
+}
 
 export function getMaxRedeemableSharesWei(args: {
   shares: bigint | undefined
