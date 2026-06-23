@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Camera, Copy, Check, Loader2 } from 'lucide-react'
+import { Camera, Copy, Check, Loader2, Shield, Sword } from 'lucide-react'
 
 import {
   cn,
@@ -17,6 +17,10 @@ import { SENTINEL_GIFS, USER_IMAGES } from '@/constants/asset_paths'
 import { useAuth } from '@/context/AuthContext'
 import { useUpdateAvatar } from '@/hooks/profile/useProfileMutations'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
+import { AttackerTierBadge } from '@/components/rewards/AttackerTierBadge'
+import { DefenderTierBadge } from '@/components/rewards/DefenderTierBadge'
+import type { AttackerTier, DefenderTier } from '@/components/rewards/tierConfig'
+import { useUserProfileStats } from '@/hooks/profile/useUserProfileStats'
 import { EditProfileModal } from './EditProfileModal'
 import { UserFollowButton } from './UserFollowButton'
 import { FollowStats } from './FollowStats'
@@ -42,6 +46,10 @@ export function ProfileHeader({ profile, isOwner, primaryWallet }: ProfileHeader
   const { mutate: updateAvatar, isPending: isUpdatingAvatar } = useUpdateAvatar({
     onSuccess: () => setIsImagePickerOpen(false),
   })
+
+  const { data: onChainStats } = useUserProfileStats(primaryWallet)
+  const attackerTier = (onChainStats?.attackerTier ?? 'Recruit') as AttackerTier
+  const defenderTier = (onChainStats?.defenderTier ?? 'Bronze') as DefenderTier
 
   const liveOwnerAvatar = isOwner ? authProfile?.avatar_url : null
   const generatedAvatar = generateAvatarUrl(primaryWallet || profile.userId)
@@ -108,10 +116,15 @@ export function ProfileHeader({ profile, isOwner, primaryWallet }: ProfileHeader
               <h1 className="font-mono text-3xl font-bold uppercase leading-none tracking-wide text-[var(--color-text-primary)] md:text-4xl">
                 {displayName}
               </h1>
-              {profile.rewardsTier && (
-                <div className="border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-3 py-1">
-                  <span className="text-[9px] font-bold uppercase tracking-[2px] text-[var(--color-text-secondary)]">
-                    {profile.rewardsTier}
+              {primaryWallet && (
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="flex items-center gap-1.5" title="Attacker tier">
+                    <Sword className="h-3.5 w-3.5 text-[var(--color-text-muted)]" />
+                    <AttackerTierBadge tier={attackerTier} />
+                  </span>
+                  <span className="flex items-center gap-1.5" title="Defender tier">
+                    <Shield className="h-3.5 w-3.5 text-[var(--color-text-muted)]" />
+                    <DefenderTierBadge tier={defenderTier} />
                   </span>
                 </div>
               )}
