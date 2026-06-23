@@ -9,6 +9,12 @@ interface UseSyndicateChatMessagesOptions {
   offset?: number
 }
 
+/**
+ * Read a syndicate's private chat history. Reads are membership-gated on the
+ * backend by the connected wallet, so `senderAddress` is required and the chat
+ * is polled (rather than subscribed to over Supabase realtime) to keep message
+ * content private.
+ */
 export function useSyndicateChatMessages(
   syndicateAddress?: string,
   senderAddress?: string,

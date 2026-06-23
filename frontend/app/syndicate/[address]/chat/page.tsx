@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import SyndicateChatPageClient from './SyndicateChatPageClient'
 
 export const metadata: Metadata = {
-  title: 'Syndicate Chat | Sui Sentinel',
+  title: 'Syndicate Chat | Red Sentinel',
 }
 
 export default async function SyndicateChatPage({

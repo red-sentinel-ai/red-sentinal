@@ -30,12 +30,9 @@ export function SyndicateChatRoom({ syndicateAddress, onBack }: SyndicateChatRoo
 
   const { data: chatData, isLoading } = useSyndicateChatMessages(
     syndicateAddress,
-    connectedAddress || undefined
+    connectedAddress
   )
-  const { data: accessData } = useCanAccessSyndicateChat(
-    syndicateAddress,
-    connectedAddress || undefined
-  )
+  const { data: accessData } = useCanAccessSyndicateChat(syndicateAddress, connectedAddress)
   const { mutateAsync: sendMessage, isPending: isSending } = useSendSyndicateChatMessage()
 
   const handleSend = async (content: string) => {

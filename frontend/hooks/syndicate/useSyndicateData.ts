@@ -5,7 +5,7 @@ import { SUI_SENTINEL_API_URL } from '@/constants'
 import { APP_NETWORK } from '@/constants/shared'
 import type { BackendSyndicate } from '@/types/Syndicate'
 
-export function useSyndicate(identifier?: string) {
+export function useSyndicateData(identifier?: string) {
   return useQuery<{ syndicate: BackendSyndicate }>({
     queryKey: ['syndicate-meta', identifier],
     queryFn: async () => {
