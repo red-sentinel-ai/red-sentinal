@@ -11,6 +11,7 @@ interface UseFundAgentOptions {
   onSuccess?: (result: any) => void
   onError?: (error: Error) => void
   showToasts?: boolean
+  enabled?: boolean
 }
 
 interface FundAgentParams {
@@ -29,7 +30,7 @@ interface AgentCap {
 }
 
 export const useFundAgent = (options: UseFundAgentOptions = {}) => {
-  const { onSuccess, onError, showToasts = true } = options
+  const { onSuccess, onError, showToasts = true, enabled = true } = options
   const client = useSuiClient()
 
   const [isLoading, setIsLoading] = useState(false)
@@ -94,10 +95,10 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
     }
   }, [account?.address, client])
 
-  // Fetch AgentCaps when account changes
   useEffect(() => {
+    if (!enabled) return
     fetchAgentCaps()
-  }, [fetchAgentCaps])
+  }, [enabled, fetchAgentCaps])
 
   const fundAgent = useCallback(
     async ({

@@ -36,7 +36,9 @@ export const WithdrawAgentModal = ({
   const isSolana = chain === 'solana'
   const isEvm = isEvmChain(chain)
 
-  const { withdrawAgent: withdrawAgentSui, isLoading: isSuiLoading } = useWithdrawAgent()
+  const { withdrawAgent: withdrawAgentSui, isLoading: isSuiLoading } = useWithdrawAgent({
+    enabled: open && !isEvm && !isSolana,
+  })
   const { withdrawAgent: withdrawAgentSolana, isLoading: isSolanaLoading } = useWithdrawAgentSolana()
   const { withdrawAgent: withdrawAgentEvm, isLoading: isEvmLoading } = useWithdrawAgentEVM()
   const isLoading = isEvm ? isEvmLoading : isSolana ? isSolanaLoading : isSuiLoading
