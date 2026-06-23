@@ -60,7 +60,6 @@ async function resolveProfile(identifier: string): Promise<ProfileViewData | nul
     username: user.username,
     displayName: user.display_name,
     avatarUrl: user.avatar_url,
-    rewardsTier: user.rewards_tier,
     wallets:
       walletConnections?.map(connection => ({
         address: connection.wallet_address,

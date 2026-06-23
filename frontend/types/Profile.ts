@@ -12,6 +12,5 @@ export interface ProfileViewData {
   username: string
   displayName: string | null
   avatarUrl: string | null
-  rewardsTier: string | null
   wallets: ConnectedWallet[]
 }

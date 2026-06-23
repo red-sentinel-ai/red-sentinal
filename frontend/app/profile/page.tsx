@@ -40,7 +40,6 @@ function OwnProfile() {
     username: user.username ?? '',
     displayName: user.display_name,
     avatarUrl: user.avatar_url,
-    rewardsTier: user.rewards_tier,
     wallets: user.wallets.map(wallet => ({
       address: wallet.wallet_address,
       chainType: wallet.chain_type,
