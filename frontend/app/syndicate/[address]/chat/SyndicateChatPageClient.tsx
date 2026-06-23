@@ -6,8 +6,12 @@ import { useAccount } from 'wagmi'
 import { Loader2, Lock, Wallet } from 'lucide-react'
 
 import { formatTokenAmount } from '@/lib/utils'
-import { getDecimalsForSymbol, getSyndicateIdlePrincipalWei } from '@/lib/syndicate-utils'
-import { useSyndicate } from '@/hooks/syndicate/useSyndicate'
+import {
+  getDecimalsForSymbol,
+  getSyndicateBasePath,
+  getSyndicateIdlePrincipalWei,
+} from '@/lib/syndicate-utils'
+import { useSyndicateData } from '@/hooks/syndicate/useSyndicateData'
 import { useSyndicatePendingFees } from '@/hooks/syndicate/useSyndicateInfo'
 import { useCanAccessSyndicateChat } from '@/hooks/syndicate-chat'
 import { SyndicateChatSidebar } from '@/components/syndicate/SyndicateChatSidebar'
@@ -29,23 +33,24 @@ export default function SyndicateChatPageClient({ identifier }: Props) {
   const router = useRouter()
   const { address: connectedAddress } = useAccount()
 
-  const { data: metaData, isLoading: isMetaLoading, isError } = useSyndicate(identifier)
-  const meta = metaData?.syndicate
+  const { data: syndicateData, isLoading: isSyndicateLoading, isError } =
+    useSyndicateData(identifier)
+  const syndicate = syndicateData?.syndicate
 
-  const syndicateAddress = meta?.contract_address as `0x${string}` | undefined
-  const tokenSymbol = meta?.token_symbol ?? 'TOKEN'
-  const tokenDecimals = meta ? getDecimalsForSymbol(meta.token_symbol, meta.token_address) : 18
+  const syndicateAddress = syndicate?.contract_address as `0x${string}` | undefined
+  const tokenSymbol = syndicate?.token_symbol ?? 'TOKEN'
+  const tokenDecimals = syndicate
+    ? getDecimalsForSymbol(syndicate.token_symbol, syndicate.token_address)
+    : 18
 
-  const { data: accessData, isLoading: isAccessLoading } = useCanAccessSyndicateChat(
-    syndicateAddress,
-    connectedAddress
-  )
+  const { data: accessData, isLoading: isAccessLoading } =
+    useCanAccessSyndicateChat(syndicateAddress, connectedAddress)
   const { pendingFees } = useSyndicatePendingFees(syndicateAddress, connectedAddress)
 
   const goToSyndicate = () =>
-    router.push(meta ? `/syndicate/${meta.contract_address}` : '/syndicates')
+    router.push(syndicate ? getSyndicateBasePath(syndicate) : '/syndicates')
 
-  if (isMetaLoading) {
+  if (isSyndicateLoading) {
     return (
       <ChatPageNotice>
         <Loader2 className="h-8 w-8 animate-spin text-[var(--color-text-muted)]" />
@@ -53,7 +58,7 @@ export default function SyndicateChatPageClient({ identifier }: Props) {
     )
   }
 
-  if (isError || !meta || !syndicateAddress) {
+  if (isError || !syndicate || !syndicateAddress) {
     return (
       <ChatPageNotice>
         <p className="text-sm text-[var(--color-text-muted)]">Syndicate not found.</p>
@@ -87,18 +92,18 @@ export default function SyndicateChatPageClient({ identifier }: Props) {
         <p className="text-sm text-[var(--color-text-muted)]">
           This chat is private to syndicate members. Join the syndicate to participate.
         </p>
-        <button
-          onClick={goToSyndicate}
-          className="button-ghost-terminal mt-2 px-6 py-3"
-        >
+        <button onClick={goToSyndicate} className="button-ghost-terminal mt-2 px-6 py-3">
           View Syndicate
         </button>
       </ChatPageNotice>
     )
   }
 
-  const formattedTVL = formatTokenAmount(meta.total_funds, tokenDecimals)
-  const formattedIdle = formatTokenAmount(getSyndicateIdlePrincipalWei(meta).toString(), tokenDecimals)
+  const formattedTVL = formatTokenAmount(syndicate.total_funds, tokenDecimals)
+  const formattedIdle = formatTokenAmount(
+    getSyndicateIdlePrincipalWei(syndicate).toString(),
+    tokenDecimals
+  )
   const formattedPendingFees =
     pendingFees !== undefined ? formatTokenAmount(pendingFees.toString(), tokenDecimals) : null
 
@@ -106,7 +111,7 @@ export default function SyndicateChatPageClient({ identifier }: Props) {
     <div className="flex h-[calc(100vh-64px)] bg-[var(--color-bg-base)]">
       <aside className="hidden w-[360px] shrink-0 border-r border-[var(--color-border-strong)] lg:block">
         <SyndicateChatSidebar
-          meta={meta}
+          syndicate={syndicate}
           tokenSymbol={tokenSymbol}
           formattedTVL={formattedTVL}
           formattedIdle={formattedIdle}

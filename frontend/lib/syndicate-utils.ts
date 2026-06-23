@@ -10,6 +10,12 @@ export function getSyndicateIdlePrincipalWei(meta: BackendSyndicate): bigint {
   )
 }
 
+export function getSyndicateBasePath(
+  syndicate: Pick<BackendSyndicate, 'syndicate_path' | 'contract_address'>
+): string {
+  return syndicate.syndicate_path ?? `/syndicate/${syndicate.contract_address}`
+}
+
 export function getMaxRedeemableSharesWei(args: {
   shares: bigint | undefined
   totalShares: bigint | undefined

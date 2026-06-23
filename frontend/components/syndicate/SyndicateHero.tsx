@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Globe, Lock, MessageSquare, Mic, Share2, Unlock } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
+import { getSyndicateBasePath } from '@/lib/syndicate-utils'
 import type { BackendSyndicate } from '@/types/Syndicate'
 
 interface Props {
@@ -50,7 +51,7 @@ export function SyndicateHero({ meta }: Props) {
           {/* Chat / Voice */}
           <div className="flex flex-wrap gap-2">
             <Link
-              href={`/syndicate/${meta.contract_address}/chat`}
+              href={`${getSyndicateBasePath(meta)}/chat`}
               className="button-ghost-terminal inline-flex items-center justify-center gap-2 px-6 py-3"
             >
               <MessageSquare className="h-4 w-4" />

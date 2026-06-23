@@ -33,7 +33,6 @@ export interface BackendSyndicate {
   agent_id: string | null
   agent_path: string | null
   agent_name: string | null
-  agent_image: string | null
   // Decimal128 strings (wei). Render with formatTokenAmount + tokenDecimals.
   total_funds: string
   total_shares: string

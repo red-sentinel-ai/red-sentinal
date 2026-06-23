@@ -6,7 +6,7 @@ import { useAccount } from 'wagmi'
 import { toast } from 'sonner'
 import { Wallet } from 'lucide-react'
 import { formatTokenAmount } from '@/lib/utils'
-import { useSyndicate } from '@/hooks/syndicate/useSyndicate'
+import { useSyndicateData } from '@/hooks/syndicate/useSyndicateData'
 import { useSyndicatePendingFees } from '@/hooks/syndicate/useSyndicateInfo'
 import { useSyndicateOwnerActions } from '@/hooks/syndicate/useSyndicateOwnerActions'
 import { useSyndicateMemberActions } from '@/hooks/syndicate/useSyndicateMemberActions'
@@ -54,7 +54,7 @@ export default function SyndicatePageClient({ identifier }: Props) {
   }
 
   // Backend doc — GET /syndicates/:identifier accepts contract address OR slug.
-  const { data: metaData, refetch: refetchMeta } = useSyndicate(identifier)
+  const { data: metaData, refetch: refetchMeta } = useSyndicateData(identifier)
 
   const meta = metaData?.syndicate
   const address = meta?.contract_address as `0x${string}` | undefined

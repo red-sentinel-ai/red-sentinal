@@ -4,6 +4,7 @@ import type { SyndicateChatAccessResponse } from '@/types/syndicate-chat'
 
 export const SYNDICATE_CHAT_ACCESS_QUERY_KEY = 'syndicateChatAccess'
 
+/** Whether the connected wallet may read/post in a syndicate's private chat. */
 export function useCanAccessSyndicateChat(
   syndicateAddress?: string,
   senderAddress?: string
