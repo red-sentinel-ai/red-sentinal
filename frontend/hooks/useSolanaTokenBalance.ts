@@ -18,7 +18,7 @@ interface SolanaTokenBalanceResult {
 /**
  * Fetches the balance of a Solana token for the connected wallet.
  * Accepts `coinType` (which on Solana is the SPL mint address) and decimals,
- * matching the same signature pattern as useTokenBalance for Sui.
+ * matching the same signature pattern as useSuiTokenBalance for Sui.
  */
 export function useSolanaTokenBalance(
   coinType: string,

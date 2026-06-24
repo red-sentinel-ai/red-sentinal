@@ -77,7 +77,7 @@ interface ConsumePromptParams {
   message: string
 }
 
-export const useConsumeSolanaPrompt = (options: UseConsumeSolanaPromptOptions = {}) => {
+export const useConsumePromptSolana = (options: UseConsumeSolanaPromptOptions = {}) => {
   const { onError, onApiSuccess, onComplete, showToasts = true } = options
 
   const [isLoading, setIsLoading] = useState(false)

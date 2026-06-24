@@ -12,7 +12,7 @@ interface TokenBalanceResult {
   isLoading: boolean
 }
 
-export function useTokenBalance(coinType: string, decimals: number = 9): TokenBalanceResult {
+export function useSuiTokenBalance(coinType: string, decimals: number = 9): TokenBalanceResult {
   const account = useCurrentAccount()
   const client = useSuiClient()
   const [rawBalance, setRawBalance] = useState(0)

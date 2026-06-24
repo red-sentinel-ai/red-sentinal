@@ -5,7 +5,7 @@ import { CheckCircle, Loader2, X } from 'lucide-react'
 import posthog from 'posthog-js'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { Dialog } from '@/components/Dialog'
-import { useFundAgent } from '@/hooks/useFundAgent'
+import { useFundAgentSui } from '@/hooks/useFundAgentSui'
 import { useFundAgentSolana } from '@/hooks/useFundAgentSolana'
 import { useFundAgentEVM } from '@/hooks/useFundAgentEVM'
 import { useSolanaWallet } from '@/hooks/useSolanaWallet'
@@ -47,7 +47,7 @@ export const FundAgentModal = ({
   const isSolana = chain === 'solana'
   const isEvm = isEvmChain(chain)
 
-  const { fundAgent: fundAgentSui, isLoading: isSuiLoading } = useFundAgent({
+  const { fundAgent: fundAgentSui, isLoading: isSuiLoading } = useFundAgentSui({
     enabled: open && !isEvm && !isSolana,
   })
   const { fundAgent: fundAgentSolana, isLoading: isSolanaLoading } = useFundAgentSolana()

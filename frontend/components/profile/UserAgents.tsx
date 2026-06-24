@@ -9,7 +9,7 @@ import { useFundAgentModal } from '@/hooks/useFundAgentModal'
 import { useWithdrawAgentModal } from '@/hooks/agents/useWithdrawAgentModal'
 import { useFeatureAgentModal } from '@/hooks/useFeatureAgentModal'
 import { FeaturedAgentsSkeleton } from '../ui/skeletons/FeaturedAgentsSkeleton'
-import { FeaturedAgentCard, type ClaimFeesTarget } from '../FeaturedAgentCard'
+import { ProfileSentinelCard, type ClaimFeesTarget } from './ProfileSentinelCard'
 import { ClaimFeesModal } from '../agents/ClaimFeesModal'
 
 interface UserAgentsProps {
@@ -45,7 +45,7 @@ export const UserAgents = ({ address, isOwner }: UserAgentsProps) => {
             transition={{ duration: 0.3 }}
           >
             {userAgents.map((agent, index) => (
-              <FeaturedAgentCard
+              <ProfileSentinelCard
                 key={agent.agent_id}
                 agent={agent}
                 index={index}

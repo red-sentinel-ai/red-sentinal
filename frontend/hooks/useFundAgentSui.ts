@@ -29,7 +29,7 @@ interface AgentCap {
   isLegacy: boolean
 }
 
-export const useFundAgent = (options: UseFundAgentOptions = {}) => {
+export const useFundAgentSui = (options: UseFundAgentOptions = {}) => {
   const { onSuccess, onError, showToasts = true, enabled = true } = options
   const client = useSuiClient()
 

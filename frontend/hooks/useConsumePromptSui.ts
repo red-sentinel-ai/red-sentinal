@@ -36,7 +36,7 @@ interface AttackTicket {
   nonce: string
 }
 
-export const useConsumePrompt = (options: UseConsumePromptOptions = {}) => {
+export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
   const client = useSuiClient()
   const {
     onSuccess,
