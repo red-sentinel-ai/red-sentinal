@@ -10,11 +10,11 @@ import { useFundAgentModal } from '@/hooks/useFundAgentModal'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { getTokenForCoinType } from '@/constants/tokens'
 import { CHAINS, type SupportedChain } from '@/constants/chains'
-import { AgentDropdown } from './agents/AgentCardDropdown'
+import { AgentDropdown } from '../agents/AgentCardDropdown'
 import { useWithdrawAgentModal } from '@/hooks/agents/useWithdrawAgentModal'
 import { formatDuration, truncateAddress } from '@/lib/utils'
-import { PrizePoolChangeDisplay } from './agents/PrizePoolChangeDisplay'
-import { TokenAmount } from './ui/common/TokenAmount'
+import { PrizePoolChangeDisplay } from '../agents/PrizePoolChangeDisplay'
+import { TokenAmount } from '../ui/common/TokenAmount'
 import { Flame } from 'lucide-react'
 
 export type ClaimFeesTarget = {
@@ -25,7 +25,7 @@ export type ClaimFeesTarget = {
   chain?: SupportedChain
 }
 
-type FeaturedAgentCardProps = {
+type ProfileSentinelCardProps = {
   agent: AgentDetails
   index: number
   ctaHeading?: string
@@ -36,7 +36,7 @@ type FeaturedAgentCardProps = {
   onClaimFees: (target: ClaimFeesTarget) => void
 }
 
-export const FeaturedAgentCard = ({
+export const ProfileSentinelCard = ({
   agent,
   index,
   ctaHeading = 'Challenge Sentinel',
@@ -45,7 +45,7 @@ export const FeaturedAgentCard = ({
   onWithdraw,
   onFeature,
   onClaimFees,
-}: FeaturedAgentCardProps) => {
+}: ProfileSentinelCardProps) => {
   const router = useRouter()
   const { address: connectedAddress } = useConnectedAddress()
   const isOwner = !!connectedAddress && connectedAddress.toLowerCase() === agent.creator?.toLowerCase()

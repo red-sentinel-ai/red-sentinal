@@ -36,7 +36,7 @@ function extractCoinTypeFromObjectType(objectType: string): string {
   return match ? match[1] : SUI_COIN_TYPE
 }
 
-export const useWithdrawAgent = (options: UseWithdrawAgentOptions = {}) => {
+export const useWithdrawAgentSui = (options: UseWithdrawAgentOptions = {}) => {
   const { onSuccess, onError, showToasts = true, enabled = true } = options
   const client = useSuiClient()
   const queryClient = useQueryClient()
