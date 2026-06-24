@@ -1,23 +1,17 @@
 import Link from 'next/link'
-import { Globe, Lock, MessageSquare, Mic, Share2, Unlock } from 'lucide-react'
+import { Globe, Lock, MessageSquare, Mic, Share2, Unlock, UserPlus } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getSyndicateBasePath } from '@/lib/syndicate-utils'
 import type { BackendSyndicate } from '@/types/Syndicate'
 
 interface Props {
   meta: BackendSyndicate | undefined
+  onRequestPermission?: () => void
 }
 
-export function SyndicateHero({ meta }: Props) {
+export function SyndicateHero({ meta, onRequestPermission }: Props) {
   const agentId = meta?.agent_id
   const isPermissioned = meta?.whitelist_enabled ?? false
-
-  const handleRequestPermission = () => {
-    // TODO: send in-app notification, telegram, email to syndicate owner,
-    // then prompt user to connect telegram/email if not connected.
-    // eslint-disable-next-line no-console
-    console.log('Request permission clicked for', meta?.contract_address)
-  }
 
   return (
     <section className="mb-20 space-y-6">
@@ -118,11 +112,12 @@ export function SyndicateHero({ meta }: Props) {
                 )}
               </span>
             </div>
-            {isPermissioned && (
+            {isPermissioned && onRequestPermission && (
               <button
-                onClick={handleRequestPermission}
-                className="w-fit text-xs font-semibold uppercase tracking-wider text-[var(--color-gold-primary)] underline-offset-4 transition-colors hover:text-[var(--color-gold-light)] hover:underline"
+                onClick={onRequestPermission}
+                className="inline-flex w-fit items-center gap-2 border border-[var(--color-gold-primary)] px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-[var(--color-gold-primary)] transition-colors hover:bg-[var(--color-gold-primary)] hover:text-[var(--color-bg-deepest)]"
               >
+                <UserPlus className="h-4 w-4" />
                 Request Permission
               </button>
             )}
