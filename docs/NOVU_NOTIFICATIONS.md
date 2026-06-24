@@ -80,9 +80,10 @@
 ### Backend (`backend-service/api`)
 | File | Role |
 |---|---|
-| `services/novu.ts` | The whole server-side Novu surface. Exports `isNovuConfigured`, `isTelegramConfigured`, `connectTelegram`, `disconnectTelegram`, `triggerWorkflow`. Uses the `@novu/api` SDK. |
+| `services/novu.ts` | The whole server-side Novu surface. Exports `isNovuConfigured`, `isTelegramConfigured`, `connectTelegram`, `disconnectTelegram`, `triggerWorkflow`, and **`WORKFLOW_IDS`** (the canonical map of every workflow id — reference these instead of hard-coding strings). Uses the `@novu/api` SDK. The indexer mirrors this map in `backend-service/functions/shared/novu.ts`; keep the two in sync. |
 | `routes/auth/index.ts` | A trigger site. `WELCOME_WORKFLOW_ID = 'welcome'`. On **`POST /auth/email/verify`** and **`POST /auth/telegram/verify`**, fires the `welcome` workflow (fire-and-forget). |
 | `routes/social/index.js` | A trigger site. `NEW_FOLLOWER_WORKFLOW_ID = 'new-follower'`. On a **new** `POST /social/follow`, fires the `new-follower` workflow to the followed user (fire-and-forget). Imports `services/novu.ts` with the literal `.ts` extension (the `.js`-file convention here). |
+| `routes/syndicates/index.js` | A trigger site. `SYNDICATE_JOIN_REQUEST_WORKFLOW_ID = 'syndicate-join-request'`. On `POST /syndicates/join-request` (after persisting the pending request), fires the `syndicate-join-request` workflow to the **syndicate owner** (fire-and-forget). `resolveWalletProfile` maps the owner/requester wallets → profile (id, display fields, email). |
 | `plugins/env.js` | Registers `NOVU_API_URL`, `NOVU_SECRET_KEY`, `NOVU_TELEGRAM_INTEGRATION_ID`. |
 | dependency | `@novu/api` (version-matched to the server, 3.17.x). |
 
@@ -198,6 +199,51 @@ the in-app notification's redirect URL).
 
 ---
 
+## 5c. Flow D — "syndicate join request" notification
+
+When a user asks to join a **permissioned** syndicate, the syndicate **owner** is
+notified across all three channels (in-app + email + Telegram).
+
+1. On the syndicate page, the redesigned **Request Permission** button
+   (`components/syndicate/SyndicateHero.tsx`, shown only to a connected non-owner,
+   non-member wallet) opens `JoinRequestModal` with an optional 280-char message.
+2. Submitting calls `useSyndicateMemberActions.requestToJoin(message)` →
+   `POST /syndicates/join-request`. That route **persists** a `pending` row in
+   `syndicate_join_requests_{network}` and **dedups**: a second request while one
+   is still pending returns `409` (this is the per-user+syndicate throttle — no
+   extra throttle state needed).
+3. On a successful insert, **fire-and-forget** `notifyJoinRequest(...)` resolves
+   the owner's wallet → profile id (+ email) and the requester's wallet → display
+   fields, then triggers:
+   ```ts
+   triggerWorkflow('syndicate-join-request', ownerProfileId, {
+     email: ownerEmail,        // inline-upserts the owner's email channel
+     firstName: ownerName,     // greeting fallback 'Operator'
+     payload: { requesterName, requesterUsername, requesterAvatar,
+                requesterWallet, syndicateName, syndicateUrl, message }
+   })
+   ```
+   - Subscriber = the **owner's** profile id. Telegram/email arrive only if the
+     owner connected those channels (their own `welcome` flow attaches them).
+   - Silently no-ops when the owner has no Red Sentinel profile to address.
+   - `syndicateUrl` is an **absolute** URL built with `buildAppUrl(network, path)`
+     from `api/config.ts` (mainnet → `app.redsentinel.xyz`, testnet →
+     `staging-app.redsentinel.xyz`) so the email link is clickable.
+
+**Payload contract** (`syndicate-join-request`):
+```jsonc
+to:      { subscriberId: ownerProfileId, email?, firstName? }
+payload: { requesterName, requesterUsername, requesterAvatar,
+           requesterWallet, syndicateName, syndicateUrl, message }
+```
+Template variables: `{{payload.requesterName}}`, `{{payload.requesterUsername}}`,
+`{{payload.requesterAvatar}}`, `{{payload.requesterWallet}}`,
+`{{payload.syndicateName}}`, `{{payload.syndicateUrl}}` (absolute URL to the
+syndicate page, good as the in-app redirect and the email CTA), `{{payload.message}}`,
+plus `{{subscriber.firstName}}`.
+
+---
+
 ## 6. Environment variables
 
 ### Frontend (`sui-sentinel/frontend/.env.local`)
@@ -239,11 +285,14 @@ the in-app notification's redirect URL).
 
 1. **Author the workflow in the Novu dashboard** (steps, templates, payload schema).
    Note its identifier.
-2. **Trigger it from the backend** wherever the event fires:
+2. **Add its id to `WORKFLOW_IDS`** in `api/services/novu.ts` (and the mirror in
+   `functions/shared/novu.ts` if the indexer triggers it). Never hard-code the
+   workflow-id string at the call site.
+3. **Trigger it from the backend** wherever the event fires:
    ```ts
-   import { isNovuConfigured, triggerWorkflow } from '../../services/novu.js'
+   import { isNovuConfigured, triggerWorkflow, WORKFLOW_IDS } from '../../services/novu.js'
    if (isNovuConfigured()) {
-     void triggerWorkflow('<workflow-id>', subscriberId, {
+     void triggerWorkflow(WORKFLOW_IDS.myNewWorkflow, subscriberId, {
        email, firstName, payload: { /* matches the workflow's variables */ }
      }).catch(err => fastify.log.error({ action: '<x>_notify_failed', err }))
    }
@@ -252,9 +301,9 @@ the in-app notification's redirect URL).
      or fail the underlying user action.
    - If it needs Telegram, ensure the subscriber has a chat endpoint
      (`connectTelegram` runs on telegram connect already).
-3. For on-chain events, the trigger would live in the indexer
+4. For on-chain events, the trigger would live in the indexer
    (`backend-service/functions`) and map wallet → profile id first.
-4. **Update this doc.**
+5. **Update this doc.**
 
 ---
 
@@ -329,6 +378,7 @@ backend-service/api/
   services/novu.ts                       # @novu/api client + connectTelegram + triggerWorkflow
   routes/auth/index.ts                   # WELCOME_WORKFLOW_ID; triggers welcome on email/telegram verify
   routes/social/index.js                 # NEW_FOLLOWER_WORKFLOW_ID; triggers new-follower on POST /social/follow
+  routes/syndicates/index.js             # SYNDICATE_JOIN_REQUEST_WORKFLOW_ID; triggers syndicate-join-request on POST /syndicates/join-request
   plugins/env.js                         # NOVU_API_URL, NOVU_SECRET_KEY, NOVU_TELEGRAM_INTEGRATION_ID
 
 backend-service/bot/

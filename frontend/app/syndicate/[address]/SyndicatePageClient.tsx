@@ -32,6 +32,7 @@ import { DepositModal } from '@/components/syndicate/modals/DepositModal'
 import { RedeemModal } from '@/components/syndicate/modals/RedeemModal'
 import { ClaimPersonalFeesModal } from '@/components/syndicate/modals/ClaimPersonalFeesModal'
 import { CreatorRewardsModal } from '@/components/syndicate/modals/CreatorRewardsModal'
+import { JoinRequestModal } from '@/components/syndicate/modals/JoinRequestModal'
 
 interface Props {
   /** Either a contract address (0x…) or a syndicate slug. The backend resolves both. */
@@ -46,11 +47,13 @@ export default function SyndicatePageClient({ identifier }: Props) {
   const [activeModal, setActiveModal] = useState<SyndicateModalId | null>(null)
   const [inputValue, setInputValue] = useState('')
   const [whitelistInput, setWhitelistInput] = useState('')
+  const [joinMessage, setJoinMessage] = useState('')
 
   const closeModal = () => {
     setActiveModal(null)
     setInputValue('')
     setWhitelistInput('')
+    setJoinMessage('')
   }
 
   // Backend doc — GET /syndicates/:identifier accepts contract address OR slug.
@@ -97,8 +100,11 @@ export default function SyndicatePageClient({ identifier }: Props) {
     redeem,
     claimFeesForSyndicate,
     claimFeesForSelf,
+    requestToJoin,
     loading: memberLoading,
   } = useSyndicateMemberActions(safeAddress)
+
+  const canRequestToJoin = !!connectedLower && !isOwner && isWhitelisted === false
 
   const { balance: walletTokenBalance } = useEVMBalance(tokenAddress)
   const formattedWalletBalance =
@@ -157,6 +163,12 @@ export default function SyndicatePageClient({ identifier }: Props) {
       toast.error(e instanceof Error ? e.message : 'Action failed')
     }
   }
+
+  const handleRequestToJoin = () =>
+    runAction(
+      () => requestToJoin(joinMessage),
+      'Join request sent to the syndicate owner'
+    )
 
   async function handleFundAgent() {
     if (!inputValue || !tokenAddress) return
@@ -286,7 +298,12 @@ export default function SyndicatePageClient({ identifier }: Props) {
   return (
     <div className="min-h-screen bg-[var(--color-bg-base)] pb-20">
       <div className="mx-auto max-w-6xl px-6 pt-12 lg:px-12">
-        <SyndicateHero meta={meta} />
+        <SyndicateHero
+          meta={meta}
+          onRequestPermission={
+            canRequestToJoin ? () => openModal('joinRequest') : undefined
+          }
+        />
 
         <SyndicateMetricsGrid
           isContractLoading={!meta}
@@ -407,6 +424,15 @@ export default function SyndicatePageClient({ identifier }: Props) {
         tokenSymbol={tokenSymbol}
         unclaimedCreatorFees={formattedUnclaimedCreatorFees}
         onSubmit={handleClaimCreatorRewards}
+      />
+      <JoinRequestModal
+        open={activeModal === 'joinRequest'}
+        onClose={closeModal}
+        syndicateName={meta?.name ?? ''}
+        message={joinMessage}
+        setMessage={setJoinMessage}
+        loading={memberLoading === 'joinRequest'}
+        onSubmit={handleRequestToJoin}
       />
     </div>
   )
