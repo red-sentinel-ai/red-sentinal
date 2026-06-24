@@ -34,6 +34,14 @@ export function useSyndicateOwnerActions(
     !!ownerAddress &&
     walletAddress.toLowerCase() === ownerAddress.toLowerCase()
 
+  // Mirrors the on-chain `onlyOwner` modifier so a non-owner gets a readable
+  // error before signing instead of an OwnableUnauthorizedAccount revert.
+  const ensureOwner = () => {
+    if (!isOwner) {
+      throw new Error('Only the syndicate owner can perform this action.')
+    }
+  }
+
   const exec = async (key: string, fn: () => Promise<`0x${string}`>) => {
     setLoading(key)
     setError(null)
@@ -85,37 +93,40 @@ export function useSyndicateOwnerActions(
     })
 
   const withdrawFromSentinel = (amount: string, decimals: number) =>
-    exec('withdraw', () =>
-      writeContractAsync({
+    exec('withdraw', () => {
+      ensureOwner()
+      return writeContractAsync({
         ...txArgs,
         address: syndicateAddress,
         abi: SYNDICATE_ABI,
         functionName: 'withdrawFromSentinel',
         args: [parseUnits(amount, decimals)],
       })
-    )
+    })
 
   const setWhitelistEnabled = (enabled: boolean) =>
-    exec('whitelist', () =>
-      writeContractAsync({
+    exec('whitelist', () => {
+      ensureOwner()
+      return writeContractAsync({
         ...txArgs,
         address: syndicateAddress,
         abi: SYNDICATE_ABI,
         functionName: 'setWhitelistEnabled',
         args: [enabled],
       })
-    )
+    })
 
   const whitelistAddresses = (addresses: `0x${string}`[], isWhitelisted: boolean) =>
-    exec('whitelistAddrs', () =>
-      writeContractAsync({
+    exec('whitelistAddrs', () => {
+      ensureOwner()
+      return writeContractAsync({
         ...txArgs,
         address: syndicateAddress,
         abi: SYNDICATE_ABI,
         functionName: 'setContributorsWhitelisted',
         args: [addresses, isWhitelisted],
       })
-    )
+    })
 
   return {
     fundAgent,
