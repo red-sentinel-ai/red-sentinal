@@ -7,6 +7,7 @@ interface Props {
   whitelistEnabled: boolean | undefined
   isLocked: boolean | undefined
   isOwner: boolean
+  isMember: boolean
   openModal: (id: SyndicateModalId) => void
 }
 
@@ -15,11 +16,12 @@ export function SyndicateOwnerControls({
   whitelistEnabled,
   isLocked,
   isOwner,
+  isMember,
   openModal,
 }: Props) {
-  const addFundsTooltip = isOwner
-    ? undefined
-    : 'Only the syndicate owner can add funds to the sentinel bounty pool. Message them in the syndicate chat room to ask.'
+  const chatHint = isMember ? ' Message them in the syndicate chat room to ask.' : ''
+  const ownerOnlyTooltip = (action: string) =>
+    isOwner ? undefined : `Only the syndicate owner can ${action}.${chatHint}`
 
   return (
     <div className="space-y-6">
@@ -40,26 +42,31 @@ export function SyndicateOwnerControls({
           icon={<ArrowRight className="h-5 w-5" />}
           onClick={() => openModal('fundSentinel')}
           disabled={!agentId || !isOwner}
-          tooltip={addFundsTooltip}
+          tooltip={ownerOnlyTooltip('add funds to the sentinel bounty pool')}
         />
         <SyndicateControlItem
           title="Withdraw Funds from Sentinel"
           subtitle={isLocked ? 'Locked · 14-day window after funding' : 'Move liquidity to Idle Funds'}
           icon={<ArrowLeft className="h-5 w-5" />}
           onClick={() => openModal('withdrawSentinel')}
-          disabled={!agentId}
+          disabled={!agentId || !isOwner}
+          tooltip={ownerOnlyTooltip('withdraw funds from the sentinel back to the syndicate')}
         />
         <SyndicateControlItem
           title="Whitelist Operators"
           subtitle="Manage member permissions"
           icon={<Users className="h-5 w-5" />}
           onClick={() => openModal('whitelist')}
+          disabled={!isOwner}
+          tooltip={ownerOnlyTooltip('manage the operator whitelist')}
         />
         <SyndicateControlItem
           title="Change Syndicate Visibility"
           subtitle={`Current: ${whitelistEnabled ? 'PERMISSIONED' : 'PUBLIC'}`}
           icon={<Eye className="h-5 w-5" />}
           onClick={() => openModal('visibility')}
+          disabled={!isOwner}
+          tooltip={ownerOnlyTooltip("change the syndicate's visibility")}
         />
       </div>
     </div>

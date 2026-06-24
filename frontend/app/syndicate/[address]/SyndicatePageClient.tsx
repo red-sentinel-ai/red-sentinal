@@ -302,6 +302,7 @@ export default function SyndicatePageClient({ identifier }: Props) {
             whitelistEnabled={whitelistEnabled}
             isLocked={isLocked}
             isOwner={isOwner}
+            isMember={!!isWhitelisted}
             openModal={openModal}
           />
           {connectedAddress ? (
