@@ -61,7 +61,7 @@ export const AgentListView = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useAllAgents(sortField, sortDirection, undefined, selectedChain ?? null)
+  } = useAllAgents({ sortField, sortDirection, chain: selectedChain })
 
   const { data: featuredAgents, isPending: isFetchingFeatured } = useFeaturedAgents(true)
   const { data: trendingAgents, isPending: isFetchingTrending } = useTrendingAgents(true)

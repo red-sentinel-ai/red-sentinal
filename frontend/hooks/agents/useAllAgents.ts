@@ -1,6 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { SUI_SENTINEL_API_URL, APP_NETWORK } from '@/constants'
-import { useActiveChain } from '@/context/ActiveChainContext'
 import { deriveAgentPath } from '@/lib/utils'
 import type { Agent, SortField, SortDirection } from '@/types/agents'
 import type { SupportedChain } from '@/constants/chains'
@@ -8,24 +7,27 @@ import type { SupportedChain } from '@/constants/chains'
 export const ALL_AGENTS_QUERY_KEY = 'allAgents'
 export const AGENTS_LIMIT = 20
 
-interface AgentsResponse {
+interface AgentsPage {
   agents: Agent[]
   total: number
   hasMore: boolean
 }
 
-// chainOverride: undefined = use active chain, null = show all chains, SupportedChain = specific chain
-export const useAllAgents = (
-  sortField: SortField = 'total_balance',
-  sortDirection: SortDirection = 'desc',
-  coinTypeFilter?: string,
-  chainOverride?: SupportedChain | null
-) => {
-  const { activeChain } = useActiveChain()
-  const chainFilter = chainOverride === undefined ? activeChain : chainOverride ?? undefined
+export interface UseAllAgentsOptions {
+  sortField?: SortField
+  sortDirection?: SortDirection
+  coinTypeFilter?: string
+  chain?: SupportedChain
+}
 
-  return useInfiniteQuery<AgentsResponse, Error>({
-    queryKey: [ALL_AGENTS_QUERY_KEY, sortField, sortDirection, coinTypeFilter, chainFilter ?? 'all'],
+export const useAllAgents = ({
+  sortField = 'total_balance',
+  sortDirection = 'desc',
+  coinTypeFilter,
+  chain,
+}: UseAllAgentsOptions = {}) => {
+  return useInfiniteQuery<AgentsPage, Error>({
+    queryKey: [ALL_AGENTS_QUERY_KEY, sortField, sortDirection, coinTypeFilter, chain ?? 'all'],
     queryFn: async ({ pageParam }) => {
       const offset = pageParam as number
 
@@ -35,7 +37,7 @@ export const useAllAgents = (
         min_balance: '1',
       })
 
-      if (chainFilter) params.append('chain', chainFilter)
+      if (chain) params.append('chain', chain)
       if (sortField) {
         params.append('sortBy', sortField)
         params.append('sortDirection', sortDirection)
