@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
-import { type AgentDetails } from '@/types/agents'
+import { type Agent } from '@/types/agents'
 import { useFundAgentModal } from '@/hooks/useFundAgentModal'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { getTokenForCoinType } from '@/constants/tokens'
@@ -26,7 +26,7 @@ export type ClaimFeesTarget = {
 }
 
 type ProfileSentinelCardProps = {
-  agent: AgentDetails
+  agent: Agent
   index: number
   ctaHeading?: string
   fromProfile?: boolean

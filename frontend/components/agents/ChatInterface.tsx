@@ -18,7 +18,7 @@ import type { ConsumePromptApiResponse } from '@/types'
 import type { ChatEvent } from '@/hooks/agents/useAgentChatHistory'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { useTokenCount } from '@/hooks/useTokenCount'
-import type { AgentDetails } from '@/types/agents'
+import type { Agent } from '@/types/agents'
 import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
 import { ChainMismatchBanner } from '@/components/ui/common/ChainMismatchBanner'
 import { useFocusMode } from '@/context/FocusModeContext'
@@ -42,7 +42,7 @@ export interface ChatMessage {
 }
 
 interface ChatInterfaceProps {
-  agent: AgentDetails
+  agent: Agent
   chatEvents: ChatEvent[]
   eventsLoading?: boolean
   apiResponse: ConsumePromptApiResponse | null

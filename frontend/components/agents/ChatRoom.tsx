@@ -12,12 +12,12 @@ import {
   useCanSendMessage,
   useChatSubscription,
 } from '@/hooks/chat'
-import type { AgentDetailsFull } from '@/types/agents'
+import type { Agent } from '@/types/agents'
 import type { ChatRoleStyleMap } from '@/components/chat/types'
 import { ChatRoomView } from '@/components/chat/ChatRoomView'
 
 interface ChatRoomProps {
-  agent: AgentDetailsFull
+  agent: Agent
   onBack: () => void
 }
 

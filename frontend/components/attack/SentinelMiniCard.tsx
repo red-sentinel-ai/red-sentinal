@@ -4,14 +4,14 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Flame, Star } from 'lucide-react'
 
-import { type AgentDetails } from '@/types/agents'
+import { type Agent } from '@/types/agents'
 import { getTokenForCoinType } from '@/constants/tokens'
 import { CHAINS } from '@/constants/chains'
 import { TokenAmount } from '@/components/ui/common/TokenAmount'
 
 type Variant = 'featured' | 'trending'
 
-export function SentinelMiniCard({ agent, variant }: { agent: AgentDetails; variant?: Variant }) {
+export function SentinelMiniCard({ agent, variant }: { agent: Agent; variant?: Variant }) {
   const token = getTokenForCoinType(agent.coin_type)
   const chain = CHAINS[agent.chain ?? 'sui']
   const label = variant === 'trending' ? 'Trending' : 'Featured'

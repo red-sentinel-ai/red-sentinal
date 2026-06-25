@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
 
 import { generateAvatarUrl } from '@/lib/utils'
-import type { AgentDetails } from '@/types/agents'
+import type { Agent } from '@/types/agents'
 import type { ChatMessage as ChatMessageType } from '@/components/agents/ChatInterface'
 import { ChatMessage } from '@/components/agents/ChatMessage'
 import { JuryResponseModal } from '@/components/agents/JuryResponseModal'
@@ -55,7 +55,7 @@ export function PracticeChatInterface({
         agent_name: sentinel.name || `Sentinel ${sentinel.sentinel_id}`,
         agent_image: null,
         chain: 'sui',
-      }) as unknown as AgentDetails,
+      }) as unknown as Agent,
     [sentinel]
   )
 

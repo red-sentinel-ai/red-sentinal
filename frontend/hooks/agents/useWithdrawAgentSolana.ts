@@ -11,7 +11,7 @@ import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
 import { useSolanaWallet, useSolanaConnection } from '@/hooks/useSolanaWallet'
 import { buildWithdrawFromAgentInstruction } from '@/lib/solana/program'
-import { AGENT_DETAILS_FULL_QUERY_KEY } from './useAgentDetails'
+import { AGENT_QUERY_KEY } from './useAgentDetails'
 
 interface UseWithdrawAgentSolanaOptions {
   onSuccess?: (signature: string) => void
@@ -96,7 +96,7 @@ export const useWithdrawAgentSolana = (options: UseWithdrawAgentSolanaOptions = 
         if (showToasts) toast.success(`Successfully withdrew ${amount} ${symbol}`)
 
         queryClient.invalidateQueries({ queryKey: ['agents-by-owner', publicKey.toBase58()] })
-        queryClient.invalidateQueries({ queryKey: [AGENT_DETAILS_FULL_QUERY_KEY] })
+        queryClient.invalidateQueries({ queryKey: [AGENT_QUERY_KEY] })
 
         onSuccess?.(signature)
         return signature

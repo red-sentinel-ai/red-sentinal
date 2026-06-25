@@ -14,7 +14,7 @@ export interface AgentWinner {
   tx_digest?: string | null
 }
 
-export interface AgentDetails {
+export interface Agent {
   agent_id: string
   agent_name: string | null
   prompt: string
@@ -28,54 +28,27 @@ export interface AgentDetails {
   model_provider: string | null
   state: 'active' | 'defeated'
   total_attacks: number
-  prizePoolHistory?: PrizePoolHistory | null
-  sender?: string
-  timestampMs?: string
   // Derived client-side
   agent_path: string
-  // On-chain fields (only available on single agent pages)
-  last_funded_timestamp?: string
-  unlock_timestamp?: string
+  prizePoolHistory?: PrizePoolHistory | null
+  sender?: string
+  timestampMs?: string | null
+  last_funded_timestamp?: string | null
+  unlock_timestamp?: string | null
   accumulated_fees?: number
   coin_type?: string
   current_cost_per_message?: string
   chain?: SupportedChain
-  // Trending (top 10, best available window: 24h → 7d → 30d)
+  winner?: AgentWinner | null
+  // Trending fields (top 10 agents only)
   trending?: boolean
   trending_rank?: number | null
   trending_window?: '24h' | '7d' | '30d' | null
-  // Present only when state === 'defeated'
-  winner?: AgentWinner | null
-}
-
-export interface AgentDetailsFull {
-  agent_id: string
-  agent_name: string | null
-  agent_image: string | null
-  prompt: string
-  creator: string
-  cost_per_message: string
-  total_balance: string
-  agent_object_id: string
-  deployment_tx_hash: string | null
-  is_featured: boolean
-  model_name: string | null
-  model_provider: string | null
-  state: 'active' | 'defeated'
-  total_attacks: number
-  participants_count: number
-  agent_path: string
-  last_funded_timestamp: string | null
-  unlock_timestamp: string | null
-  accumulated_fees?: number
-  timestampMs: string | null
-  winner: AgentWinner | null
-  attack_goal: string | null
-  defender_profile: { username: string | null; avatar_url: string | null } | null
-  prizePoolHistory: PrizePoolHistory | null
-  coin_type?: string
-  current_cost_per_message?: string
-  chain?: SupportedChain
+  // Fields only populated by the /details endpoint (single agent page)
+  deployment_tx_hash?: string | null
+  participants_count?: number
+  attack_goal?: string | null
+  defender_profile?: { username: string | null; avatar_url: string | null } | null
   syndicate?: {
     contract_address: string
     name: string

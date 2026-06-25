@@ -14,7 +14,7 @@ import { AgentChallengePageSkeleton } from '@/components/ui/skeletons/AgentChall
 import { useConsumePromptSui } from '@/hooks/useConsumePromptSui'
 import { useConsumePromptSolana } from '@/hooks/useConsumePromptSolana'
 import { useConsumePromptEVM } from '@/hooks/useConsumePromptEVM'
-import { useAgentDetails, AGENT_DETAILS_FULL_QUERY_KEY } from '@/hooks/agents/useAgentDetails'
+import { useAgent, AGENT_QUERY_KEY } from '@/hooks/agents/useAgentDetails'
 import { useAgentChatHistory, AGENT_CHAT_QUERY_KEY } from '@/hooks/agents/useAgentChatHistory'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useActiveChain } from '@/context/ActiveChainContext'
@@ -48,7 +48,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   const [viewMode, setViewMode] = useState<ViewMode>('attack')
   const isMobile = useMediaQuery('(max-width: 768px)')
 
-  const { data: agent, isLoading, error, refetch } = useAgentDetails(slug)
+  const { data: agent, isLoading, error, refetch } = useAgent(slug)
   const {
     data: chat,
     isLoading: chatLoading,
@@ -67,7 +67,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
         refetch()
         refetchChat()
         queryClient.invalidateQueries({
-          queryKey: [AGENT_DETAILS_FULL_QUERY_KEY, slug, APP_NETWORK],
+          queryKey: [AGENT_QUERY_KEY, slug, APP_NETWORK],
         })
         queryClient.invalidateQueries({
           queryKey: [AGENT_CHAT_QUERY_KEY, agent?.agent_id, APP_NETWORK],
