@@ -129,3 +129,35 @@ export function getEvmChainKey(chainId: number | undefined): EvmChainKey | null 
   const map = EVM_CHAIN_IDS[APP_NETWORK]
   return (Object.keys(map) as EvmChainKey[]).find(k => map[k] === chainId) ?? null
 }
+
+const EVM_CHAIN_ID_TO_KEY: Record<string, EvmChainKey> = Object.fromEntries(
+  (['testnet', 'mainnet'] as const).flatMap(network =>
+    (Object.keys(EVM_CHAIN_IDS[network]) as EvmChainKey[]).map(key => [
+      String(EVM_CHAIN_IDS[network][key]),
+      key,
+    ])
+  )
+)
+
+export type WalletChainDisplay = { name: string; logo: string; rounded: boolean }
+
+const GENERIC_EVM_CHAIN: WalletChainDisplay = {
+  name: 'EVM',
+  logo: '/chain-logos/eth.webp',
+  rounded: false,
+}
+
+function toChainDisplay(chain: ChainConfig): WalletChainDisplay {
+  return { name: chain.name, logo: chain.logo, rounded: !!chain.rounded }
+}
+
+export function resolveWalletChain(
+  chainType: ChainFamily,
+  chainId?: string | null
+): WalletChainDisplay {
+  if (chainType === 'sui') return toChainDisplay(CHAINS.sui)
+  if (chainType === 'solana') return toChainDisplay(CHAINS.solana)
+
+  const evmKey = chainId ? EVM_CHAIN_ID_TO_KEY[chainId] : undefined
+  return evmKey ? toChainDisplay(CHAINS[evmKey]) : GENERIC_EVM_CHAIN
+}

@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { truncateAddress, generateAvatarUrl } from '@/lib/utils'
 import type { FollowListUser } from '@/lib/auth-api'
-import { FollowButton } from './FollowButton'
+import { UserFollowButton } from './UserFollowButton'
 
 interface FollowListRowProps {
   user: FollowListUser
@@ -38,7 +38,7 @@ export function FollowListRow({ user, onNavigate }: FollowListRowProps) {
         </div>
       </Link>
 
-      <FollowButton
+      <UserFollowButton
         targetUserId={user.user_id}
         seeded
         initialIsFollowing={user.is_following}

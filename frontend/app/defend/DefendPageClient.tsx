@@ -35,7 +35,7 @@ import { SuccessModal } from '@/components/DefenderSuccessModal'
 import { formatCompact, TokenAmount } from '@/components/ui/common/TokenAmount'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
-import { useTokenBalance } from '@/hooks/useTokenBalance'
+import { useSuiTokenBalance } from '@/hooks/useSuiTokenBalance'
 import { Skeleton } from '@/components/ui/skeleton'
 
 import { FormInput } from './components/FormInput'
@@ -77,7 +77,7 @@ export default function DefendPageClient() {
 
   // Sui token selection
   const [selectedToken, setSelectedToken] = useState<SupportedToken>(SUPPORTED_TOKENS[0])
-  const { rawBalance: selectedTokenRawBalance, isLoading: isTokenBalanceLoading } = useTokenBalance(
+  const { rawBalance: selectedTokenRawBalance, isLoading: isTokenBalanceLoading } = useSuiTokenBalance(
     selectedToken.coinType,
     selectedToken.decimals
   )

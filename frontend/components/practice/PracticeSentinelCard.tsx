@@ -1,12 +1,15 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { Cpu,Target } from 'lucide-react'
 
+import { generateAvatarUrl } from '@/lib/utils'
 import type { PracticeSentinel } from '@/types/practice'
 
 export function PracticeSentinelCard({ sentinel }: { sentinel: PracticeSentinel }) {
   const name = sentinel.name || `Sentinel ${sentinel.sentinel_id}`
+  const avatarUrl = generateAvatarUrl(sentinel.sentinel_id.toString(), 'sentinel')
 
   return (
     <Link
@@ -14,9 +17,14 @@ export function PracticeSentinelCard({ sentinel }: { sentinel: PracticeSentinel 
       className="group flex h-full min-w-0 flex-col overflow-hidden border border-[var(--color-border-default)] bg-[var(--color-bg-base)] transition-colors hover:border-white/45"
     >
       <div className="relative flex h-32 w-full items-center justify-center overflow-hidden bg-[var(--color-bg-subtle)]">
-        <span className="font-display text-5xl font-extrabold uppercase tracking-[0.08em] text-[var(--color-text-muted)]">
-          {name.charAt(0).toUpperCase()}
-        </span>
+        <Image
+          src={avatarUrl}
+          alt={name}
+          width={128}
+          height={128}
+          className="h-24 w-24 object-cover"
+          unoptimized
+        />
         <span className="font-body absolute left-4 top-4 inline-flex items-center bg-white px-3 py-1 text-[9px] font-extrabold uppercase leading-none tracking-[0.1em] text-black">
           {sentinel.sentinel_type}
         </span>

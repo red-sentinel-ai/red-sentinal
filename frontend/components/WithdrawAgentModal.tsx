@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { Loader2, X } from 'lucide-react'
 import { Dialog } from '@/components/Dialog'
 import { getTokenForCoinType } from '@/constants/tokens'
-import { useWithdrawAgent } from '@/hooks/agents/useWithdrawAgent'
+import { useWithdrawAgentSui } from '@/hooks/agents/useWithdrawAgentSui'
 import { useWithdrawAgentSolana } from '@/hooks/agents/useWithdrawAgentSolana'
 import { useWithdrawAgentEVM } from '@/hooks/agents/useWithdrawAgentEVM'
 import { isEvmChain, type SupportedChain } from '@/constants/chains'
@@ -36,7 +36,9 @@ export const WithdrawAgentModal = ({
   const isSolana = chain === 'solana'
   const isEvm = isEvmChain(chain)
 
-  const { withdrawAgent: withdrawAgentSui, isLoading: isSuiLoading } = useWithdrawAgent()
+  const { withdrawAgent: withdrawAgentSui, isLoading: isSuiLoading } = useWithdrawAgentSui({
+    enabled: open && !isEvm && !isSolana,
+  })
   const { withdrawAgent: withdrawAgentSolana, isLoading: isSolanaLoading } = useWithdrawAgentSolana()
   const { withdrawAgent: withdrawAgentEvm, isLoading: isEvmLoading } = useWithdrawAgentEVM()
   const isLoading = isEvm ? isEvmLoading : isSolana ? isSolanaLoading : isSuiLoading

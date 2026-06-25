@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useCurrentAccount } from '@mysten/dapp-kit'
-import { useUpdateAgent } from '@/hooks/agents/useUpdateAgent'
+import { useUpdateAgentSui } from '@/hooks/agents/useUpdateAgentSui'
 import { useClaimFeesSolana } from '@/hooks/agents/useClaimFeesSolana'
 import { useClaimFeesEVM } from '@/hooks/agents/useClaimFeesEVM'
 import { useSolanaWallet } from '@/hooks/useSolanaWallet'
@@ -29,7 +29,7 @@ export const ClaimFeesModal = ({
   coinType,
   chain = 'sui',
 }: ClaimFeesModalProps) => {
-  const { claimFees: claimFeesSui, isLoading: isSuiLoading } = useUpdateAgent()
+  const { claimFees: claimFeesSui, isLoading: isSuiLoading } = useUpdateAgentSui()
   const { claimFees: claimFeesSolana, isLoading: isSolanaLoading } = useClaimFeesSolana()
   const { claimFees: claimFeesEvm, isLoading: isEvmLoading } = useClaimFeesEVM()
   const queryClient = useQueryClient()

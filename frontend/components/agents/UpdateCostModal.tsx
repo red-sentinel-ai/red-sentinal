@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useUpdateAgent } from '@/hooks/agents/useUpdateAgent'
+import { useUpdateAgentSui } from '@/hooks/agents/useUpdateAgentSui'
 import { useUpdateAgentSolana } from '@/hooks/agents/useUpdateAgentSolana'
 import { useUpdateAgentEVM } from '@/hooks/agents/useUpdateAgentEVM'
 import { AgentUpdateDialog } from './AgentUpdateDialog'
@@ -28,7 +28,7 @@ export const UpdateCostModal = ({
   const initialCost = currentCost ? currentCost : 0
 
   const [cost, setCost] = useState(initialCost.toString())
-  const { updateCost: updateCostSui, isLoading: isSuiLoading } = useUpdateAgent()
+  const { updateCost: updateCostSui, isLoading: isSuiLoading } = useUpdateAgentSui()
   const { updateCost: updateCostSolana, isLoading: isSolanaLoading } = useUpdateAgentSolana()
   const { updateCost: updateCostEvm, isLoading: isEvmLoading } = useUpdateAgentEVM()
   const token = getTokenForCoinType(coinType)

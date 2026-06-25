@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useUpdateAgent } from '@/hooks/agents/useUpdateAgent'
+import { useUpdateAgentSui } from '@/hooks/agents/useUpdateAgentSui'
 import { useUpdateAgentSolana } from '@/hooks/agents/useUpdateAgentSolana'
 import { SYSTEM_PROMPT_MAX_TOKENS } from '@/constants'
 import { useTokenCount } from '@/hooks/useTokenCount'
@@ -26,7 +26,7 @@ export const UpdatePromptModal = ({
   chain = 'sui',
 }: UpdatePromptModalProps) => {
   const [prompt, setPrompt] = useState(currentPrompt)
-  const { updatePrompt: updatePromptSui, isLoading: isSuiLoading } = useUpdateAgent()
+  const { updatePrompt: updatePromptSui, isLoading: isSuiLoading } = useUpdateAgentSui()
   const { updatePrompt: updatePromptSolana, isLoading: isSolanaLoading } = useUpdateAgentSolana()
   const { tokenCount, countTokens } = useTokenCount()
 
