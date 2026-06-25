@@ -270,7 +270,7 @@ export const ProfileSentinelCard = ({
             }}
             className={cn(
               'btn btn-black w-full text-xs',
-              isDefeated && fromProfile && isOwner ? 'mt-5' : 'h-8'
+              isDefeated && fromProfile && isOwner ? 'mt-[46px]' : 'h-8'
             )}
           >
             {fromProfile && isOwner ? 'Manage Sentinel' : isDefeated ? 'View Sentinel' : ctaHeading}
