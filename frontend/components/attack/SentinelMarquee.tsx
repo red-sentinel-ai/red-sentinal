@@ -1,4 +1,4 @@
-import { type AgentDetails } from '@/hooks/agents/useAllAgents'
+import { type AgentDetails } from '@/types/agents'
 import { cn } from '@/lib/utils'
 import { SentinelMiniCard } from './SentinelMiniCard'
 

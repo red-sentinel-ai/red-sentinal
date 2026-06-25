@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { SUI_SENTINEL_API_URL } from '@/constants'
 import { APP_NETWORK } from '@/constants/shared'
-import type { BackendSyndicate } from '@/types/Syndicate'
+import type { BackendSyndicate } from '@/types/syndicate'
 
 export function useSyndicateData(identifier?: string) {
   return useQuery<{ syndicate: BackendSyndicate }>({

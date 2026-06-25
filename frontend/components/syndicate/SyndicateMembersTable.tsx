@@ -1,7 +1,7 @@
 'use client'
 
 import { Users } from 'lucide-react'
-import type { SyndicateMemberDetail } from '@/types/Syndicate'
+import type { SyndicateMemberDetail } from '@/types/syndicate'
 import { SyndicateMemberRow } from './SyndicateMemberRow'
 
 interface Props {

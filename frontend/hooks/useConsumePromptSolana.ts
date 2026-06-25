@@ -11,7 +11,7 @@ import { NATIVE_SOL_MINT } from '@/constants/solana'
 import { getTokenForCoinType } from '@/constants/tokens'
 import { toast } from 'sonner'
 import { type ConsumePromptApiResponse } from '@/types'
-import { type AgentDetails } from './agents/useAllAgents'
+import { type AgentDetails } from '@/types/agents'
 import {
   buildRequestAttackInstruction,
   buildConsumePromptInstruction,

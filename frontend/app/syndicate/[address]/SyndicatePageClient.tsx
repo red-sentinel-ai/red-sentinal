@@ -11,7 +11,7 @@ import { useSyndicatePendingFees } from '@/hooks/syndicate/useSyndicateInfo'
 import { useSyndicateOwnerActions } from '@/hooks/syndicate/useSyndicateOwnerActions'
 import { useSyndicateMemberActions } from '@/hooks/syndicate/useSyndicateMemberActions'
 import { useEVMBalance } from '@/hooks/useEVMBalance'
-import type { SyndicateModalId } from '@/types/Syndicate'
+import type { SyndicateModalId } from '@/types/syndicate'
 import {
   buildFallbackMember,
   getDecimalsForSymbol,
