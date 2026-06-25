@@ -1,5 +1,5 @@
 import { getTokenForCoinType } from '@/constants/tokens'
-import type { BackendSyndicate, SyndicateMemberDetail } from '@/types/Syndicate'
+import type { BackendSyndicate, SyndicateMemberDetail } from '@/types/syndicate'
 
 export function getSyndicateIdlePrincipalWei(meta: BackendSyndicate): bigint {
   return (

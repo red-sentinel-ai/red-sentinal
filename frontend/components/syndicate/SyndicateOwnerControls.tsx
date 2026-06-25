@@ -1,6 +1,6 @@
 import { ArrowRight, ArrowLeft, Users, Eye, Terminal } from 'lucide-react'
 import { SyndicateControlItem } from './SyndicateControlItem'
-import type { SyndicateModalId } from '@/types/Syndicate'
+import type { SyndicateModalId } from '@/types/syndicate'
 
 interface Props {
   agentId: string | undefined

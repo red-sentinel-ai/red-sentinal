@@ -6,7 +6,8 @@ import { ArrowRight, Coins, Loader2, Network, Search, SlidersHorizontal, X } fro
 
 import { AgentsList } from './AgentsList'
 import { FilterSelect, type FilterSelectOption } from '@/components/attack/FilterSelect'
-import { useAllAgents, SortField, SortDirection } from '@/hooks/agents/useAllAgents'
+import { useAllAgents } from '@/hooks/agents/useAllAgents'
+import type { SortField, SortDirection } from '@/types/agents'
 import { useFeaturedAgents } from '@/hooks/agents/useFeaturedAgents'
 import { useTrendingAgents } from '@/hooks/agents/useTrendingAgents'
 import { useAgentCoinTypes } from '@/hooks/agents/useAgentCoinTypes'

@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Globe, Lock, MessageSquare, Mic, Share2, Unlock, UserPlus } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getSyndicateBasePath } from '@/lib/syndicate-utils'
-import type { BackendSyndicate } from '@/types/Syndicate'
+import type { BackendSyndicate } from '@/types/syndicate'
 
 interface Props {
   meta: BackendSyndicate | undefined

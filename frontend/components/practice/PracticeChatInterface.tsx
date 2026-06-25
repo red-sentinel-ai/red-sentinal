@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
 
 import { generateAvatarUrl } from '@/lib/utils'
-import type { AgentDetails } from '@/hooks/agents/useAllAgents'
+import type { AgentDetails } from '@/types/agents'
 import type { ChatMessage as ChatMessageType } from '@/components/agents/ChatInterface'
 import { ChatMessage } from '@/components/agents/ChatMessage'
 import { JuryResponseModal } from '@/components/agents/JuryResponseModal'

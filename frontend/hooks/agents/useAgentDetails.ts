@@ -1,48 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { SUI_SENTINEL_API_URL, APP_NETWORK } from '@/constants'
-import type { SupportedChain } from '@/constants/chains'
-import type { PrizePoolHistory } from './useAllAgents'
-
-export interface AgentWinner {
-  address: string
-  amount_won: string
-  tx_digest?: string | null
-}
-
-export interface AgentDetailsFull {
-  agent_id: string
-  agent_name: string | null
-  agent_image: string | null
-  prompt: string
-  creator: string
-  cost_per_message: string
-  total_balance: string
-  agent_object_id: string
-  deployment_tx_hash: string | null
-  is_featured: boolean
-  model_name: string | null
-  model_provider: string | null
-  state: 'active' | 'defeated'
-  total_attacks: number
-  participants_count: number
-  agent_path: string
-  last_funded_timestamp: string | null
-  unlock_timestamp: string | null
-  accumulated_fees?: number
-  timestampMs: string | null
-  winner: AgentWinner | null
-  attack_goal: string | null
-  defender_profile: { username: string | null; avatar_url: string | null } | null
-  prizePoolHistory: PrizePoolHistory | null
-  coin_type?: string
-  current_cost_per_message?: string
-  chain?: SupportedChain
-  syndicate?: {
-    contract_address: string
-    name: string
-    syndicate_path: string | null
-  } | null
-}
+import type { AgentDetailsFull } from '@/types/agents'
 
 export const AGENT_DETAILS_FULL_QUERY_KEY = 'agentDetailsFull'
 

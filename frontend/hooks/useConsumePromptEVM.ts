@@ -10,7 +10,7 @@ import { ethers } from "ethers";
 import { SENTINEL_ABI, ERC20_ABI } from '@/lib/evm/abi'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
 import type { ConsumePromptApiResponse } from '@/types'
-import type { AgentDetails } from './agents/useAllAgents'
+import type { AgentDetails } from '@/types/agents'
 
 interface EvmConsumePromptResponse {
   response: {

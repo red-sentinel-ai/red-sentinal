@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { Lock, Unlock } from 'lucide-react'
 
 import { getSyndicateBasePath } from '@/lib/syndicate-utils'
-import type { BackendSyndicate } from '@/types/Syndicate'
+import type { BackendSyndicate } from '@/types/syndicate'
 
 interface SyndicateChatSidebarProps {
   syndicate: BackendSyndicate

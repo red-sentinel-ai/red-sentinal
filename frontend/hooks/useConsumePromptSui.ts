@@ -6,7 +6,7 @@ import { SUI_COIN_TYPE, getTokenForCoinType } from '@/constants/tokens'
 import { toast } from 'sonner'
 import { ConsumePromptApiResponse } from '@/types'
 import { hexToVector } from '@/lib/utils'
-import { type AgentDetails } from './agents/useAllAgents'
+import { type AgentDetails } from '@/types/agents'
 import { SuiTransactionBlockResponse, SuiObjectResponse } from '@mysten/sui/client'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 
@@ -448,6 +448,3 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
     isConnected: !!account?.address,
   }
 }
-
-// Export types for convenience
-export type { ConsumePromptParams, UseConsumePromptOptions, AgentDetails }

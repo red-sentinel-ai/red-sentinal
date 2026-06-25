@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { SUI_SENTINEL_API_URL, APP_NETWORK } from '@/constants'
 import { deriveAgentPath } from '@/lib/utils'
-import { AgentDetails } from './useAllAgents'
+import type { AgentDetails } from '@/types/agents'
 
 export const useAgentsByOwner = (ownerAddress: string | undefined) => {
   return useQuery<AgentDetails[]>({
