@@ -11,9 +11,9 @@ import { getTokenForCoinType } from '@/constants/tokens'
 import type { ConsumePromptApiResponse } from '@/types'
 import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from '@/components/ui'
 import { AgentChallengePageSkeleton } from '@/components/ui/skeletons/AgentChallengePageSkeleton'
-import { useConsumePrompt } from '@/hooks/useConsumePrompt'
-import { useConsumeSolanaPrompt } from '@/hooks/useConsumeSolanaPrompt'
-import { useConsumeEvmPrompt } from '@/hooks/useConsumeEvmPrompt'
+import { useConsumePromptSui } from '@/hooks/useConsumePromptSui'
+import { useConsumePromptSolana } from '@/hooks/useConsumePromptSolana'
+import { useConsumePromptEVM } from '@/hooks/useConsumePromptEVM'
 import { useAgentDetails, AGENT_DETAILS_FULL_QUERY_KEY } from '@/hooks/agents/useAgentDetails'
 import { useAgentChatHistory, AGENT_CHAT_QUERY_KEY } from '@/hooks/agents/useAgentChatHistory'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
@@ -105,7 +105,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
     [connectedAddress, agent, slug, refetch, refetchChat, queryClient, activeChain]
   )
 
-  const { consumePrompt: suiConsumePrompt } = useConsumePrompt({
+  const { consumePrompt: suiConsumePrompt } = useConsumePromptSui({
     showToasts: true,
     onError: err => {
       setSubmitError(err.message || 'Something went wrong')
@@ -115,7 +115,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
     },
   })
 
-  const { consumePrompt: solanaConsumePrompt } = useConsumeSolanaPrompt({
+  const { consumePrompt: solanaConsumePrompt } = useConsumePromptSolana({
     showToasts: true,
     onError: err => {
       setSubmitError(err.message || 'Something went wrong')
@@ -125,7 +125,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
     },
   })
 
-  const { consumePrompt: evmConsumePrompt } = useConsumeEvmPrompt({
+  const { consumePrompt: evmConsumePrompt } = useConsumePromptEVM({
     showToasts: true,
     onError: err => {
       setSubmitError(err.message || 'Something went wrong')

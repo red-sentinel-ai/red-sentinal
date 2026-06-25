@@ -42,7 +42,7 @@ interface ConsumeEvmPromptParams {
   message: string
 }
 
-export function useConsumeEvmPrompt({
+export function useConsumePromptEVM({
   onError,
   onComplete,
   showToasts = true,

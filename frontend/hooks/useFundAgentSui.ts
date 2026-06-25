@@ -11,6 +11,7 @@ interface UseFundAgentOptions {
   onSuccess?: (result: any) => void
   onError?: (error: Error) => void
   showToasts?: boolean
+  enabled?: boolean
 }
 
 interface FundAgentParams {
@@ -28,8 +29,8 @@ interface AgentCap {
   isLegacy: boolean
 }
 
-export const useFundAgent = (options: UseFundAgentOptions = {}) => {
-  const { onSuccess, onError, showToasts = true } = options
+export const useFundAgentSui = (options: UseFundAgentOptions = {}) => {
+  const { onSuccess, onError, showToasts = true, enabled = true } = options
   const client = useSuiClient()
 
   const [isLoading, setIsLoading] = useState(false)
@@ -89,16 +90,15 @@ export const useFundAgent = (options: UseFundAgentOptions = {}) => {
 
       const caps = [...parseObjects(newObjects, false), ...parseObjects(legacyObjects, true)]
       setAgentCaps(caps)
-      console.log('Fetched AgentCaps:', caps)
     } catch (error) {
       console.error('Error fetching AgentCaps:', error)
     }
   }, [account?.address, client])
 
-  // Fetch AgentCaps when account changes
   useEffect(() => {
+    if (!enabled) return
     fetchAgentCaps()
-  }, [fetchAgentCaps])
+  }, [enabled, fetchAgentCaps])
 
   const fundAgent = useCallback(
     async ({

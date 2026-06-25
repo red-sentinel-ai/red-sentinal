@@ -7,31 +7,36 @@ import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { type AgentDetails } from '@/hooks/agents/useAllAgents'
 import { useFundAgentModal } from '@/hooks/useFundAgentModal'
-import { useFeatureAgentModal } from '@/hooks/useFeatureAgentModal'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { getTokenForCoinType } from '@/constants/tokens'
-import { CHAINS } from '@/constants/chains'
-import { AgentDropdown } from './agents/AgentCardDropdown'
+import { CHAINS, type SupportedChain } from '@/constants/chains'
+import { AgentDropdown } from '../agents/AgentCardDropdown'
 import { useWithdrawAgentModal } from '@/hooks/agents/useWithdrawAgentModal'
-import { formatDuration, truncateAddress } from '@/lib/utils'
-import { PrizePoolChangeDisplay } from './agents/PrizePoolChangeDisplay'
-import { ClaimFeesModal } from './agents/ClaimFeesModal'
-import { TokenAmount } from './ui/common/TokenAmount'
+import { cn, formatDuration, truncateAddress } from '@/lib/utils'
+import { PrizePoolChangeDisplay } from '../agents/PrizePoolChangeDisplay'
+import { TokenAmount } from '../ui/common/TokenAmount'
 import { Flame } from 'lucide-react'
 
-type FeaturedAgentCardProps = {
+export type ClaimFeesTarget = {
+  agentId: string
+  agentObjectId: string
+  accumulatedFees: number
+  coinType?: string
+  chain?: SupportedChain
+}
+
+type ProfileSentinelCardProps = {
   agent: AgentDetails
   index: number
   ctaHeading?: string
   fromProfile?: boolean
-  // Optional modal callbacks - when provided, component won't create its own modal instances
-  onFund?: ReturnType<typeof useFundAgentModal>['openModal']
-  onWithdraw?: ReturnType<typeof useWithdrawAgentModal>['openModal']
-  onFeature?: (agentId: string) => void
+  onFund: ReturnType<typeof useFundAgentModal>['openModal']
+  onWithdraw: ReturnType<typeof useWithdrawAgentModal>['openModal']
+  onFeature: (agentId: string) => void
+  onClaimFees: (target: ClaimFeesTarget) => void
 }
 
-/**We need to change this card name to simple AgentCard */
-export const FeaturedAgentCard = ({
+export const ProfileSentinelCard = ({
   agent,
   index,
   ctaHeading = 'Challenge Sentinel',
@@ -39,29 +44,14 @@ export const FeaturedAgentCard = ({
   onFund,
   onWithdraw,
   onFeature,
-}: FeaturedAgentCardProps) => {
-  // Only create modal instances if callbacks not provided (for backward compatibility)
-  const fundModal = useFundAgentModal()
-  const withdrawModal = useWithdrawAgentModal()
-  const featureModal = useFeatureAgentModal()
-
-  // Use provided callbacks or fall back to local modal instances
-  const openFundModal = onFund || fundModal.openModal
-  const openWithdrawModal = onWithdraw || withdrawModal.openModal
-  const openFeatureModal = onFeature || featureModal.openModal
-
-  const Modal = fundModal.Modal
-  const WithdrawModal = withdrawModal.Modal
-  const FeatureModal = featureModal.Modal
-
+  onClaimFees,
+}: ProfileSentinelCardProps) => {
   const router = useRouter()
   const { address: connectedAddress } = useConnectedAddress()
-  const isOwner =
-    !!connectedAddress && connectedAddress.toLowerCase() === agent.creator?.toLowerCase()
+  const isOwner = !!connectedAddress && connectedAddress.toLowerCase() === agent.creator?.toLowerCase()
 
   const [isWithdrawalLocked, setIsWithdrawalLocked] = useState(true)
   const [timeRemaining, setTimeRemaining] = useState('')
-  const [isClaimFeesModalOpen, setIsClaimFeesModalOpen] = useState(false)
 
   const token = getTokenForCoinType(agent.coin_type)
   const tokenDivisor = Math.pow(10, token.decimals)
@@ -157,7 +147,7 @@ export const FeaturedAgentCard = ({
               className={`absolute left-2 top-2 z-20 flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${
                 agent.state === 'active'
                   ? 'border border-[var(--color-success)] bg-[var(--color-success-muted)] text-[var(--color-success)]'
-                  : 'border-[var(--color-danger)]/20 border bg-[var(--color-danger-muted)] text-[var(--color-danger)]'
+                  : 'border border-[var(--color-danger)]/20 bg-[var(--color-danger-muted)] text-[var(--color-danger)]'
               }`}
             >
               <Image
@@ -186,7 +176,7 @@ export const FeaturedAgentCard = ({
               agentObjectId={agent.agent_object_id}
               currentPrompt={agent.prompt}
               currentCost={Number(agent.cost_per_message)}
-              openFeatureModal={openFeatureModal}
+              openFeatureModal={onFeature}
               accumulatedFees={agent.accumulated_fees}
               createdAt={agent.timestampMs}
               coinType={agent.coin_type}
@@ -231,36 +221,26 @@ export const FeaturedAgentCard = ({
             <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
               <span className="text-[var(--color-text-secondary)]">Total Bounty Won:</span>
               <div className="flex items-center justify-end font-semibold text-[var(--color-danger)]">
-                <TokenAmount
-                  rawAmount={agent.winner?.amount_won ?? 0}
-                  token={token}
-                  precision={4}
-                />
+                <TokenAmount rawAmount={agent.winner?.amount_won ?? 0} token={token} precision={4} />
               </div>
             </div>
           ) : (
             <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
               <span className="text-[var(--color-text-secondary)]">Prize Pool:</span>
               <div className="flex items-center justify-end">
-                <span className="mr-1 sm:mr-2">
-                  <TokenAmount rawAmount={agent.total_balance} token={token} precision={4} />
-                </span>
+                <span className="mr-1 sm:mr-2"><TokenAmount rawAmount={agent.total_balance} token={token} precision={4} /></span>
                 <PrizePoolChangeDisplay prizePoolHistory={agent.prizePoolHistory} variant="card" />
               </div>
             </div>
           )}
           <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
             <span className="text-[var(--color-text-secondary)]">Message Cost:</span>
-            <span className="text-right">
-              <TokenAmount rawAmount={agent.cost_per_message} token={token} precision={4} />
-            </span>
+            <span className="text-right"><TokenAmount rawAmount={agent.cost_per_message} token={token} precision={4} /></span>
           </div>
           {!isDefeated && fromProfile && isOwner && (
             <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
               <span className="text-[var(--color-text-secondary)]">Your Earnings:</span>
-              <span
-                className={`text-right ${hasEarnings ? 'font-semibold text-[var(--color-success)]' : ''}`}
-              >
+              <span className={`text-right ${hasEarnings ? 'font-semibold text-[var(--color-success)]' : ''}`}>
                 <TokenAmount rawAmount={agent.accumulated_fees || 0} token={token} precision={4} />
               </span>
             </div>
@@ -288,7 +268,10 @@ export const FeaturedAgentCard = ({
               e.stopPropagation()
               handleAttack()
             }}
-            className={`btn btn-black w-full text-xs ${isDefeated && fromProfile && isOwner ? 'mt-5' : 'h-8'}`}
+            className={cn(
+              'btn btn-black w-full text-xs',
+              isDefeated && fromProfile && isOwner ? 'mt-5' : 'h-8'
+            )}
           >
             {fromProfile && isOwner ? 'Manage Sentinel' : isDefeated ? 'View Sentinel' : ctaHeading}
           </button>
@@ -296,7 +279,7 @@ export const FeaturedAgentCard = ({
           {fromProfile && isOwner && (
             <>
               {isDefeated ? (
-                <div className="flex items-center justify-between gap-3 text-xs sm:text-sm mt-5">
+                <div className="mt-5 flex items-center justify-between gap-3 text-xs sm:text-sm">
                   <span className="shrink-0 font-semibold text-[var(--color-danger)]">
                     Defeated by
                   </span>
@@ -318,9 +301,8 @@ export const FeaturedAgentCard = ({
                 <>
                   <div className="flex gap-1.5 sm:gap-2">
                     <button
-                      onClick={() => {
-                        const token = getTokenForCoinType(agent.coin_type)
-                        openFundModal({
+                      onClick={() =>
+                        onFund({
                           agentObjectId: agent.agent_object_id,
                           agentId: agent.agent_id,
                           coinType: token.coinType,
@@ -328,14 +310,14 @@ export const FeaturedAgentCard = ({
                           tokenDecimals: token.decimals,
                           chain: agent.chain,
                         })
-                      }}
+                      }
                       className="btn btn-black w-1/2 px-2 py-1.5 text-[10px]"
                     >
                       Add Funds
                     </button>
                     <button
                       onClick={() =>
-                        openWithdrawModal({
+                        onWithdraw({
                           agentObjectId: agent.agent_object_id,
                           agentId: agent.agent_id,
                           agentBalanceRaw: Number(agent.total_balance),
@@ -359,7 +341,13 @@ export const FeaturedAgentCard = ({
                   <button
                     onClick={e => {
                       e.stopPropagation()
-                      setIsClaimFeesModalOpen(true)
+                      onClaimFees({
+                        agentId: agent.agent_id,
+                        agentObjectId: agent.agent_object_id,
+                        accumulatedFees: agent.accumulated_fees,
+                        coinType: agent.coin_type,
+                        chain: agent.chain,
+                      })
                     }}
                     disabled={!hasEarnings}
                     className="btn btn-outline w-full px-2 py-1.5 text-[10px] disabled:opacity-50"
@@ -384,20 +372,6 @@ export const FeaturedAgentCard = ({
             </>
           )}
         </div>
-
-        {/* Only render modals if using local instances (callbacks not provided) */}
-        {!onFund && <Modal onSuccess={() => console.log('Funded successfully!')} />}
-        {!onWithdraw && <WithdrawModal onSuccess={() => console.log('Withdrew successfully!')} />}
-        {!onFeature && <FeatureModal />}
-        <ClaimFeesModal
-          open={isClaimFeesModalOpen}
-          onClose={() => setIsClaimFeesModalOpen(false)}
-          agentId={agent.agent_id}
-          agentObjectId={agent.agent_object_id}
-          accumulatedFees={agent.accumulated_fees}
-          coinType={agent.coin_type}
-          chain={agent.chain}
-        />
       </div>
     </motion.div>
   )

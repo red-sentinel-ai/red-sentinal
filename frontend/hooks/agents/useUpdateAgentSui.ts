@@ -6,7 +6,7 @@ import { toast } from 'sonner'
 import { SUI_CONFIG, SUI_LEGACY_CONFIG } from '@/constants'
 import { getTokenForCoinType } from '@/constants/tokens'
 
-export const useUpdateAgent = () => {
+export const useUpdateAgentSui = () => {
   const client = useSuiClient()
   const account = useCurrentAccount()
   const [isLoading, setIsLoading] = useState(false)

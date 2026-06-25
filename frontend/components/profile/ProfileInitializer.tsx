@@ -4,7 +4,6 @@ import { useEffect, useRef } from 'react'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { useAuth, useIsWalletLinked } from '@/context/AuthContext'
 import { useWalletAuth } from '@/hooks/auth/useWalletAuth'
-import { useUserProfile } from '@/hooks/profile/useUserProfile'
 
 /**
  * A client component that handles authentication when a wallet connects.
@@ -13,14 +12,8 @@ import { useUserProfile } from '@/hooks/profile/useUserProfile'
  * 1. When wallet connects, check if it's linked to the current user
  * 2. If not authenticated or wallet not linked, prompt for signature
  * 3. On successful signature, user is authenticated
- *
- * Also maintains backward compatibility by calling useUserProfile
- * for the legacy profile system.
  */
 export function ProfileInitializer() {
-  // Legacy profile hook - maintains backward compatibility
-  useUserProfile()
-
   const { address, isConnected, chain } = useConnectedAddress()
   const { isAuthenticated, isLoading: authLoading } = useAuth()
   const { authenticate, isAuthenticating } = useWalletAuth()

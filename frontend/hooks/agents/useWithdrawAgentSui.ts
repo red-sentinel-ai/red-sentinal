@@ -12,6 +12,7 @@ interface UseWithdrawAgentOptions {
   onSuccess?: (result: any) => void
   onError?: (error: Error) => void
   showToasts?: boolean
+  enabled?: boolean
 }
 
 interface AgentCap {
@@ -35,8 +36,8 @@ function extractCoinTypeFromObjectType(objectType: string): string {
   return match ? match[1] : SUI_COIN_TYPE
 }
 
-export const useWithdrawAgent = (options: UseWithdrawAgentOptions = {}) => {
-  const { onSuccess, onError, showToasts = true } = options
+export const useWithdrawAgentSui = (options: UseWithdrawAgentOptions = {}) => {
+  const { onSuccess, onError, showToasts = true, enabled = true } = options
   const client = useSuiClient()
   const queryClient = useQueryClient()
 
@@ -58,10 +59,10 @@ export const useWithdrawAgent = (options: UseWithdrawAgentOptions = {}) => {
       }),
   })
 
-  const fetchAgentCaps = useCallback(async () => {
+  const fetchAgentCaps = useCallback(async (): Promise<AgentCap[]> => {
     if (!account?.address) {
       setAgentCaps([])
-      return
+      return []
     }
 
     try {
@@ -98,15 +99,19 @@ export const useWithdrawAgent = (options: UseWithdrawAgentOptions = {}) => {
           })
           .filter(cap => cap.id && cap.agentId)
 
-      setAgentCaps([...parseObjects(newObjects, false), ...parseObjects(legacyObjects, true)])
+      const caps = [...parseObjects(newObjects, false), ...parseObjects(legacyObjects, true)]
+      setAgentCaps(caps)
+      return caps
     } catch (error) {
       console.error('Error fetching AgentCaps:', error)
+      return []
     }
   }, [account?.address, client])
 
   useEffect(() => {
+    if (!enabled) return
     fetchAgentCaps()
-  }, [fetchAgentCaps])
+  }, [enabled, fetchAgentCaps])
 
   const withdrawAgent = useCallback(
     async ({ agentObjectId, agentId, amount }: WithdrawAgentParams) => {
@@ -124,7 +129,11 @@ export const useWithdrawAgent = (options: UseWithdrawAgentOptions = {}) => {
         return
       }
 
-      const agentCap = agentCaps.find(cap => cap.agentId.toString() === agentId.toString())
+      let agentCap = agentCaps.find(cap => cap.agentId.toString() === agentId.toString())
+      if (!agentCap) {
+        const freshCaps = await fetchAgentCaps()
+        agentCap = freshCaps.find(cap => cap.agentId.toString() === agentId.toString())
+      }
       if (!agentCap) {
         const errorMsg = `You don't own the AgentCap for this agent. Only the agent creator can withdraw.`
         setError(errorMsg)
@@ -224,6 +233,7 @@ export const useWithdrawAgent = (options: UseWithdrawAgentOptions = {}) => {
     [
       account?.address,
       agentCaps,
+      fetchAgentCaps,
       signAndExecuteTransaction,
       onSuccess,
       onError,
