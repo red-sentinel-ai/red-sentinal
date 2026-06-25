@@ -12,7 +12,7 @@ import { getTokenForCoinType } from '@/constants/tokens'
 import { CHAINS, type SupportedChain } from '@/constants/chains'
 import { AgentDropdown } from '../agents/AgentCardDropdown'
 import { useWithdrawAgentModal } from '@/hooks/agents/useWithdrawAgentModal'
-import { formatDuration, truncateAddress } from '@/lib/utils'
+import { cn, formatDuration, truncateAddress } from '@/lib/utils'
 import { PrizePoolChangeDisplay } from '../agents/PrizePoolChangeDisplay'
 import { TokenAmount } from '../ui/common/TokenAmount'
 import { Flame } from 'lucide-react'
@@ -216,7 +216,7 @@ export const ProfileSentinelCard = ({
           <div className="mx-auto flex max-w-[394px] border-t border-[var(--color-border-subtle)]"></div>
         </div>
 
-        <div className="mb-2 space-y-1 text-xs font-medium">
+        <div className="mb-2 space-y-1 text-xs font-medium tabular-nums">
           {isDefeated ? (
             <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
               <span className="text-[var(--color-text-secondary)]">Total Bounty Won:</span>
@@ -247,24 +247,6 @@ export const ProfileSentinelCard = ({
           )}
         </div>
 
-        {isDefeated && (
-          <div className="mb-2 text-center text-[11px] font-bold text-[var(--color-text-primary)]">
-            Sentinel Defeated
-            {defeaterAddress ? (
-              <>
-                {' by '}
-                <Link
-                  href={`/u/${defeaterAddress}`}
-                  onClick={e => e.stopPropagation()}
-                  className="text-accent underline transition-opacity hover:opacity-70"
-                >
-                  {truncateAddress(defeaterAddress)}
-                </Link>
-              </>
-            ) : null}
-          </div>
-        )}
-
         {!isDefeated && fromProfile && isOwner && timeRemaining && (
           <div className="mb-2 text-center text-[10px]">
             {isWithdrawalLocked ? (
@@ -286,77 +268,111 @@ export const ProfileSentinelCard = ({
               e.stopPropagation()
               handleAttack()
             }}
-            className="btn btn-black h-8 w-full text-xs"
+            className={cn(
+              'btn btn-black w-full text-xs',
+              isDefeated && fromProfile && isOwner ? 'mt-[46px]' : 'h-8'
+            )}
           >
-            {isDefeated ? 'View Sentinel' : fromProfile && isOwner ? 'Manage Sentinel' : ctaHeading}
+            {fromProfile && isOwner ? 'Manage Sentinel' : isDefeated ? 'View Sentinel' : ctaHeading}
           </button>
-          {!isDefeated && fromProfile && isOwner && (
-            <div className="flex gap-1.5 sm:gap-2">
-              <button
-                onClick={() =>
-                  onFund({
-                    agentObjectId: agent.agent_object_id,
-                    agentId: agent.agent_id,
-                    coinType: token.coinType,
-                    tokenSymbol: token.symbol,
-                    tokenDecimals: token.decimals,
-                    chain: agent.chain,
-                  })
-                }
-                className="btn btn-black w-1/2 px-2 py-1.5 text-[10px]"
-              >
-                Add Funds
-              </button>
-              <button
-                onClick={() =>
-                  onWithdraw({
-                    agentObjectId: agent.agent_object_id,
-                    agentId: agent.agent_id,
-                    agentBalanceRaw: Number(agent.total_balance),
-                    coinType: agent.coin_type,
-                    chain: agent.chain,
-                  })
-                }
-                className="btn btn-outline w-1/2 px-2 py-1.5 text-[10px]"
-                disabled={isWithdrawalLocked || Number(agent.total_balance) === 0}
-                title={
-                  isWithdrawalLocked
-                    ? timeRemaining
-                    : Number(agent.total_balance) === 0
-                      ? 'No funds available'
-                      : 'Withdraw your funds'
-                }
-              >
-                Withdraw
-              </button>
-            </div>
-          )}
-          {!isDefeated && fromProfile && isOwner && (
-            <button
-              onClick={e => {
-                e.stopPropagation()
-                onClaimFees({
-                  agentId: agent.agent_id,
-                  agentObjectId: agent.agent_object_id,
-                  accumulatedFees: agent.accumulated_fees,
-                  coinType: agent.coin_type,
-                  chain: agent.chain,
-                })
-              }}
-              disabled={!hasEarnings}
-              className="btn btn-outline w-full px-2 py-1.5 text-[10px] disabled:opacity-50"
-              title={hasEarnings ? 'Collect your earned fees' : 'No earnings to claim yet'}
-            >
-              {hasEarnings ? (
-                <span className="inline-flex items-center gap-1">
-                  Claim <TokenAmount rawAmount={agent.accumulated_fees || 0} token={token} precision={2} iconSize={12} />
-                </span>
-              ) : 'No Earnings Yet'}
-            </button>
+
+          {fromProfile && isOwner && (
+            <>
+              {isDefeated ? (
+                <div className="mt-5 flex items-center justify-between gap-3 text-xs sm:text-sm">
+                  <span className="shrink-0 font-semibold text-[var(--color-danger)]">
+                    Defeated by
+                  </span>
+                  {defeaterAddress ? (
+                    <Link
+                      href={`/u/${defeaterAddress}`}
+                      onClick={e => e.stopPropagation()}
+                      className="text-accent min-w-0 truncate font-mono font-semibold underline underline-offset-2 transition-opacity hover:opacity-70 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--color-gold-primary)]"
+                    >
+                      {truncateAddress(defeaterAddress)}
+                    </Link>
+                  ) : (
+                    <span className="min-w-0 truncate font-mono font-semibold text-[var(--color-text-muted)]">
+                      Unknown
+                    </span>
+                  )}
+                </div>
+              ) : (
+                <>
+                  <div className="flex gap-1.5 sm:gap-2">
+                    <button
+                      onClick={() =>
+                        onFund({
+                          agentObjectId: agent.agent_object_id,
+                          agentId: agent.agent_id,
+                          coinType: token.coinType,
+                          tokenSymbol: token.symbol,
+                          tokenDecimals: token.decimals,
+                          chain: agent.chain,
+                        })
+                      }
+                      className="btn btn-black w-1/2 px-2 py-1.5 text-[10px]"
+                    >
+                      Add Funds
+                    </button>
+                    <button
+                      onClick={() =>
+                        onWithdraw({
+                          agentObjectId: agent.agent_object_id,
+                          agentId: agent.agent_id,
+                          agentBalanceRaw: Number(agent.total_balance),
+                          coinType: agent.coin_type,
+                          chain: agent.chain,
+                        })
+                      }
+                      className="btn btn-outline w-1/2 px-2 py-1.5 text-[10px]"
+                      disabled={isWithdrawalLocked || Number(agent.total_balance) === 0}
+                      title={
+                        isWithdrawalLocked
+                          ? timeRemaining
+                          : Number(agent.total_balance) === 0
+                            ? 'No funds available'
+                            : 'Withdraw your funds'
+                      }
+                    >
+                      Withdraw
+                    </button>
+                  </div>
+                  <button
+                    onClick={e => {
+                      e.stopPropagation()
+                      onClaimFees({
+                        agentId: agent.agent_id,
+                        agentObjectId: agent.agent_object_id,
+                        accumulatedFees: agent.accumulated_fees,
+                        coinType: agent.coin_type,
+                        chain: agent.chain,
+                      })
+                    }}
+                    disabled={!hasEarnings}
+                    className="btn btn-outline w-full px-2 py-1.5 text-[10px] disabled:opacity-50"
+                    title={hasEarnings ? 'Collect your earned fees' : 'No earnings to claim yet'}
+                  >
+                    {hasEarnings ? (
+                      <span className="inline-flex items-center gap-1">
+                        Claim{' '}
+                        <TokenAmount
+                          rawAmount={agent.accumulated_fees || 0}
+                          token={token}
+                          precision={2}
+                          iconSize={12}
+                        />
+                      </span>
+                    ) : (
+                      'No Earnings Yet'
+                    )}
+                  </button>
+                </>
+              )}
+            </>
           )}
         </div>
       </div>
     </motion.div>
   )
 }
-
