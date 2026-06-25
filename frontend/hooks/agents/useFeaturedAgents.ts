@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { SUI_SENTINEL_API_URL, APP_NETWORK } from '@/constants'
 import { useActiveChain } from '@/context/ActiveChainContext'
-import { deriveAgentPath } from '@/lib/utils'
 import type { Agent } from '@/types/agents'
 
 export const FEATURED_AGENTS_QUERY_KEY = 'featuredAgents'
@@ -28,10 +27,7 @@ export const useFeaturedAgents = (showAllChains?: boolean) => {
       if (!res.ok) throw new Error('Failed to fetch featured agents')
 
       const { agents } = await res.json()
-      return agents.map((agent: Agent) => ({
-        ...agent,
-        agent_path: deriveAgentPath(agent),
-      }))
+      return agents as Agent[]
     },
     staleTime: 5 * 60 * 1000,
   })

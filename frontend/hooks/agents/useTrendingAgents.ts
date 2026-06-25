@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { SUI_SENTINEL_API_URL, APP_NETWORK } from '@/constants'
 import { useActiveChain } from '@/context/ActiveChainContext'
-import { deriveAgentPath } from '@/lib/utils'
 import type { Agent } from '@/types/agents'
 
 export const TRENDING_AGENTS_QUERY_KEY = 'trendingAgents'
@@ -28,12 +27,7 @@ export const useTrendingAgents = (showAllChains?: boolean) => {
       if (!res.ok) throw new Error('Failed to fetch trending agents')
 
       const { agents } = await res.json()
-      return (agents as Agent[])
-        .sort((a, b) => (a.trending_rank ?? 999) - (b.trending_rank ?? 999))
-        .map(agent => ({
-          ...agent,
-          agent_path: deriveAgentPath(agent),
-        }))
+      return (agents as Agent[]).sort((a, b) => (a.trending_rank ?? 999) - (b.trending_rank ?? 999))
     },
     staleTime: 5 * 60 * 1000,
   })
