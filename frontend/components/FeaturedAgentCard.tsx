@@ -288,96 +288,100 @@ export const FeaturedAgentCard = ({
               e.stopPropagation()
               handleAttack()
             }}
-            className={`btn btn-black h-8 w-full text-xs ${isDefeated ? 'mt-2' : ''}`}
+            className={`btn btn-black w-full text-xs ${isDefeated && fromProfile && isOwner ? 'mt-5' : 'h-8'}`}
           >
-            {isDefeated ? 'View Sentinel' : fromProfile && isOwner ? 'Manage Sentinel' : ctaHeading}
+            {fromProfile && isOwner ? 'Manage Sentinel' : isDefeated ? 'View Sentinel' : ctaHeading}
           </button>
-          {isDefeated && (
-            <div className="border-[var(--color-danger)]/20 flex items-center justify-between gap-3 rounded-md border bg-[var(--color-danger-muted)] px-2.5 py-1.5 text-xs sm:text-sm">
-              <span className="shrink-0 font-semibold text-[var(--color-text-primary)]">
-                Defeated By
-              </span>
-              {defeaterAddress ? (
-                <Link
-                  href={`/u/${defeaterAddress}`}
-                  onClick={e => e.stopPropagation()}
-                  className="text-accent min-w-0 truncate font-mono font-semibold underline underline-offset-2 transition-opacity hover:opacity-70 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--color-gold-primary)]"
-                >
-                  {truncateAddress(defeaterAddress)}
-                </Link>
+
+          {fromProfile && isOwner && (
+            <>
+              {isDefeated ? (
+                <div className="flex items-center justify-between gap-3 text-xs sm:text-sm mt-5">
+                  <span className="shrink-0 font-semibold text-[var(--color-danger)]">
+                    Defeated by
+                  </span>
+                  {defeaterAddress ? (
+                    <Link
+                      href={`/u/${defeaterAddress}`}
+                      onClick={e => e.stopPropagation()}
+                      className="text-accent min-w-0 truncate font-mono font-semibold underline underline-offset-2 transition-opacity hover:opacity-70 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--color-gold-primary)]"
+                    >
+                      {truncateAddress(defeaterAddress)}
+                    </Link>
+                  ) : (
+                    <span className="min-w-0 truncate font-mono font-semibold text-[var(--color-text-muted)]">
+                      Unknown
+                    </span>
+                  )}
+                </div>
               ) : (
-                <span className="min-w-0 truncate font-mono font-semibold text-[var(--color-text-muted)]">
-                  Unknown
-                </span>
+                <>
+                  <div className="flex gap-1.5 sm:gap-2">
+                    <button
+                      onClick={() => {
+                        const token = getTokenForCoinType(agent.coin_type)
+                        openFundModal({
+                          agentObjectId: agent.agent_object_id,
+                          agentId: agent.agent_id,
+                          coinType: token.coinType,
+                          tokenSymbol: token.symbol,
+                          tokenDecimals: token.decimals,
+                          chain: agent.chain,
+                        })
+                      }}
+                      className="btn btn-black w-1/2 px-2 py-1.5 text-[10px]"
+                    >
+                      Add Funds
+                    </button>
+                    <button
+                      onClick={() =>
+                        openWithdrawModal({
+                          agentObjectId: agent.agent_object_id,
+                          agentId: agent.agent_id,
+                          agentBalanceRaw: Number(agent.total_balance),
+                          coinType: agent.coin_type,
+                          chain: agent.chain,
+                        })
+                      }
+                      className="btn btn-outline w-1/2 px-2 py-1.5 text-[10px]"
+                      disabled={isWithdrawalLocked || Number(agent.total_balance) === 0}
+                      title={
+                        isWithdrawalLocked
+                          ? timeRemaining
+                          : Number(agent.total_balance) === 0
+                            ? 'No funds available'
+                            : 'Withdraw your funds'
+                      }
+                    >
+                      Withdraw
+                    </button>
+                  </div>
+                  <button
+                    onClick={e => {
+                      e.stopPropagation()
+                      setIsClaimFeesModalOpen(true)
+                    }}
+                    disabled={!hasEarnings}
+                    className="btn btn-outline w-full px-2 py-1.5 text-[10px] disabled:opacity-50"
+                    title={hasEarnings ? 'Collect your earned fees' : 'No earnings to claim yet'}
+                  >
+                    {hasEarnings ? (
+                      <span className="inline-flex items-center gap-1">
+                        Claim{' '}
+                        <TokenAmount
+                          rawAmount={agent.accumulated_fees || 0}
+                          token={token}
+                          precision={2}
+                          iconSize={12}
+                        />
+                      </span>
+                    ) : (
+                      'No Earnings Yet'
+                    )}
+                  </button>
+                </>
               )}
-            </div>
-          )}
-          {!isDefeated && fromProfile && isOwner && (
-            <div className="flex gap-1.5 sm:gap-2">
-              <button
-                onClick={() => {
-                  const token = getTokenForCoinType(agent.coin_type)
-                  openFundModal({
-                    agentObjectId: agent.agent_object_id,
-                    agentId: agent.agent_id,
-                    coinType: token.coinType,
-                    tokenSymbol: token.symbol,
-                    tokenDecimals: token.decimals,
-                    chain: agent.chain,
-                  })
-                }}
-                className="btn btn-black w-1/2 px-2 py-1.5 text-[10px]"
-              >
-                Add Funds
-              </button>
-              <button
-                onClick={() =>
-                  openWithdrawModal({
-                    agentObjectId: agent.agent_object_id,
-                    agentId: agent.agent_id,
-                    agentBalanceRaw: Number(agent.total_balance),
-                    coinType: agent.coin_type,
-                    chain: agent.chain,
-                  })
-                }
-                className="btn btn-outline w-1/2 px-2 py-1.5 text-[10px]"
-                disabled={isWithdrawalLocked || Number(agent.total_balance) === 0}
-                title={
-                  isWithdrawalLocked
-                    ? timeRemaining
-                    : Number(agent.total_balance) === 0
-                      ? 'No funds available'
-                      : 'Withdraw your funds'
-                }
-              >
-                Withdraw
-              </button>
-            </div>
-          )}
-          {!isDefeated && fromProfile && isOwner && (
-            <button
-              onClick={e => {
-                e.stopPropagation()
-                setIsClaimFeesModalOpen(true)
-              }}
-              disabled={!hasEarnings}
-              className="btn btn-outline w-full px-2 py-1.5 text-[10px] disabled:opacity-50"
-              title={hasEarnings ? 'Collect your earned fees' : 'No earnings to claim yet'}
-            >
-              {hasEarnings ? (
-                <span className="inline-flex items-center gap-1">
-                  Claim{' '}
-                  <TokenAmount
-                    rawAmount={agent.accumulated_fees || 0}
-                    token={token}
-                    precision={2}
-                    iconSize={12}
-                  />
-                </span>
-              ) : (
-                'No Earnings Yet'
-              )}
-            </button>
+            </>
           )}
         </div>
 
