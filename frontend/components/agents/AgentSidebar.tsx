@@ -20,7 +20,7 @@ import { getTokenForCoinType } from '@/constants/tokens'
 import { CHAINS, isEvmChain } from '@/constants/chains'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { getExplorerObjectUrl, getExplorerTxUrl } from '@/lib/explorer'
-import type { AgentDetailsFull } from '@/types/agents'
+import type { Agent } from '@/types/agents'
 import { formatDuration, cn, buildAgentShareTweetUrl, truncateAddress, generateAvatarUrl } from '@/lib/utils'
 import { Skeleton } from '@/components/ui'
 import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
@@ -33,7 +33,7 @@ import { APP_NETWORK } from '@/constants'
 const SHARE_MISSION = REWARDS_CONSTANTS.DEFAULT_MISSIONS.find(m => m.type === 'share_with_hashtag')!
 
 interface AgentSidebarProps {
-  agent: AgentDetailsFull
+  agent: Agent
   onReadMore?: () => void
   onTextChat?: () => void
   onVoiceChat?: () => void
@@ -47,7 +47,7 @@ interface SentinelReference {
   href: string
 }
 
-function getSentinelReference(agent: AgentDetailsFull): SentinelReference | null {
+function getSentinelReference(agent: Agent): SentinelReference | null {
   if (isEvmChain(agent.chain)) {
     if (!agent.deployment_tx_hash) return null
     return {

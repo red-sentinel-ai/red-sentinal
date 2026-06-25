@@ -6,7 +6,7 @@ import { SUI_CONFIG, SUI_LEGACY_CONFIG } from '@/constants'
 import { SUI_COIN_TYPE, getTokenForCoinType } from '@/constants/tokens'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
-import { AGENT_DETAILS_FULL_QUERY_KEY } from './useAgentDetails'
+import { AGENT_QUERY_KEY } from './useAgentDetails'
 
 interface UseWithdrawAgentOptions {
   onSuccess?: (result: any) => void
@@ -191,7 +191,7 @@ export const useWithdrawAgentSui = (options: UseWithdrawAgentOptions = {}) => {
                   queryKey: ['agents-by-owner', account?.address],
                 })
                 queryClient.invalidateQueries({
-                  queryKey: [AGENT_DETAILS_FULL_QUERY_KEY],
+                  queryKey: [AGENT_QUERY_KEY],
                 })
 
                 onSuccess?.(result)

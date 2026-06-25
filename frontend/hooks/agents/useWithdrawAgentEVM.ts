@@ -7,7 +7,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { getEvmConfig } from '@/constants/evm'
 import { SENTINEL_ABI } from '@/lib/evm/abi'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
-import { AGENT_DETAILS_FULL_QUERY_KEY } from './useAgentDetails'
+import { AGENT_QUERY_KEY } from './useAgentDetails'
 
 interface UseWithdrawAgentEVMOptions {
   onSuccess?: (txHash: string) => void
@@ -59,7 +59,7 @@ export const useWithdrawAgentEVM = (options: UseWithdrawAgentEVMOptions = {}) =>
 
         if (showToasts) toast.success(`Successfully withdrew ${amount} ${symbol}`)
         queryClient.invalidateQueries({ queryKey: ['agents-by-owner', walletAddress] })
-        queryClient.invalidateQueries({ queryKey: [AGENT_DETAILS_FULL_QUERY_KEY] })
+        queryClient.invalidateQueries({ queryKey: [AGENT_QUERY_KEY] })
 
         onSuccess?.(txHash)
         return txHash

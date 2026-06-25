@@ -6,7 +6,7 @@ import { SUI_COIN_TYPE, getTokenForCoinType } from '@/constants/tokens'
 import { toast } from 'sonner'
 import { ConsumePromptApiResponse } from '@/types'
 import { hexToVector } from '@/lib/utils'
-import { type AgentDetails } from '@/types/agents'
+import { type Agent } from '@/types/agents'
 import { SuiTransactionBlockResponse, SuiObjectResponse } from '@mysten/sui/client'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 
@@ -27,7 +27,7 @@ interface UseConsumePromptOptions {
 }
 
 interface ConsumePromptParams {
-  agentDetails: AgentDetails
+  agentDetails: Agent
   message: string
 }
 
@@ -66,7 +66,7 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
   })
 
   // Step 2: Request an Attack Ticket
-  const requestAttackTicket = async (agentDetails: AgentDetails): Promise<AttackTicket> => {
+  const requestAttackTicket = async (agentDetails: Agent): Promise<AttackTicket> => {
     if (!account?.address) {
       throw new Error('Wallet not connected')
     }
@@ -280,7 +280,7 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
   // Step 4: Execute consume prompt transaction
   const executeConsumePrompt = async (
     agentObjectId: string,
-    agentDetails: AgentDetails,
+    agentDetails: Agent,
     apiResponse: ConsumePromptApiResponse,
     prompt: string,
     attackObjectId: string

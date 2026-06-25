@@ -10,7 +10,7 @@ import {
   buildUpdateAgentPromptHashInstruction,
 } from '@/lib/solana/program'
 import { sha256 } from '@/lib/solana/utils'
-import { AGENT_DETAILS_FULL_QUERY_KEY } from './useAgentDetails'
+import { AGENT_QUERY_KEY } from './useAgentDetails'
 
 export const useUpdateAgentSolana = () => {
   const { publicKey, sendTransaction } = useSolanaWallet()
@@ -53,7 +53,7 @@ export const useUpdateAgentSolana = () => {
 
         toast.success(successMessage)
         queryClient.invalidateQueries({ queryKey: ['agents-by-owner', publicKey.toBase58()] })
-        queryClient.invalidateQueries({ queryKey: [AGENT_DETAILS_FULL_QUERY_KEY] })
+        queryClient.invalidateQueries({ queryKey: [AGENT_QUERY_KEY] })
         onSuccess?.()
       } catch (error: any) {
         console.error('Solana update error:', error)

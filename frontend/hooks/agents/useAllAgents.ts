@@ -2,14 +2,14 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { SUI_SENTINEL_API_URL, APP_NETWORK } from '@/constants'
 import { useActiveChain } from '@/context/ActiveChainContext'
 import { deriveAgentPath } from '@/lib/utils'
-import type { AgentDetails, SortField, SortDirection } from '@/types/agents'
+import type { Agent, SortField, SortDirection } from '@/types/agents'
 import type { SupportedChain } from '@/constants/chains'
 
 export const ALL_AGENTS_QUERY_KEY = 'allAgents'
 export const AGENTS_LIMIT = 20
 
 interface AgentsResponse {
-  agents: AgentDetails[]
+  agents: Agent[]
   total: number
   hasMore: boolean
 }
@@ -49,7 +49,7 @@ export const useAllAgents = (
       if (!res.ok) throw new Error('Failed to fetch agents')
 
       const data = await res.json()
-      const agents = data.agents.map((agent: AgentDetails) => ({
+      const agents = data.agents.map((agent: Agent) => ({
         ...agent,
         agent_path: deriveAgentPath(agent),
       }))

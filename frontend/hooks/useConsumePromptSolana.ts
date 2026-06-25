@@ -11,7 +11,7 @@ import { NATIVE_SOL_MINT } from '@/constants/solana'
 import { getTokenForCoinType } from '@/constants/tokens'
 import { toast } from 'sonner'
 import { type ConsumePromptApiResponse } from '@/types'
-import { type AgentDetails } from '@/types/agents'
+import { type Agent } from '@/types/agents'
 import {
   buildRequestAttackInstruction,
   buildConsumePromptInstruction,
@@ -73,7 +73,7 @@ function toConsumePromptApiResponse(solana: SolanaConsumePromptResponse): Consum
 }
 
 interface ConsumePromptParams {
-  agentDetails: AgentDetails
+  agentDetails: Agent
   message: string
 }
 
@@ -89,7 +89,7 @@ export const useConsumePromptSolana = (options: UseConsumeSolanaPromptOptions = 
   const { connection } = useSolanaConnection()
 
   // Step 1: Request attack on-chain — creates Attack PDA, pays fees
-  const requestAttack = async (agentDetails: AgentDetails): Promise<{ attackPda: string; nonce: bigint }> => {
+  const requestAttack = async (agentDetails: Agent): Promise<{ attackPda: string; nonce: bigint }> => {
     if (!publicKey) throw new Error('Solana wallet not connected')
 
     const agentId = agentDetails.agent_id
@@ -224,7 +224,7 @@ export const useConsumePromptSolana = (options: UseConsumeSolanaPromptOptions = 
 
   // Step 3: Execute consume_prompt on-chain with Ed25519 verification
   const executeConsumePrompt = async (
-    agentDetails: AgentDetails,
+    agentDetails: Agent,
     apiResponse: SolanaConsumePromptResponse,
     nonce: bigint
   ): Promise<string> => {

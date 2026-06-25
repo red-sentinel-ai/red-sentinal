@@ -11,7 +11,7 @@ import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
 import { useSolanaWallet, useSolanaConnection } from '@/hooks/useSolanaWallet'
 import { buildClaimFeesInstruction } from '@/lib/solana/program'
-import { AGENT_DETAILS_FULL_QUERY_KEY } from './useAgentDetails'
+import { AGENT_QUERY_KEY } from './useAgentDetails'
 
 interface UseClaimFeesSolanaOptions {
   onSuccess?: (signature: string) => void
@@ -83,7 +83,7 @@ export const useClaimFeesSolana = (options: UseClaimFeesSolanaOptions = {}) => {
 
         if (showToasts) toast.success('Fees claimed successfully!')
         queryClient.invalidateQueries({ queryKey: ['agents-by-owner', publicKey.toBase58()] })
-        queryClient.invalidateQueries({ queryKey: [AGENT_DETAILS_FULL_QUERY_KEY] })
+        queryClient.invalidateQueries({ queryKey: [AGENT_QUERY_KEY] })
 
         onSuccess?.(signature)
         return signature
