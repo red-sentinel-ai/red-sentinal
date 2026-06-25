@@ -277,6 +277,9 @@ export const generateAvatarUrl = (
   return `https://api.dicebear.com/10.x/${style}/svg?seed=${encodedSeed}`
 }
 
+export const deriveAgentPath = (agent: { agent_name: string | null; agent_object_id: string }): string =>
+  agent.agent_name ? agent.agent_name.toLowerCase().replace(/\s+/g, '_') : agent.agent_object_id
+
 export const formatUsd = (value: number): string => {
   if (value >= 1_000_000) {
     return `$${(value / 1_000_000).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}M`

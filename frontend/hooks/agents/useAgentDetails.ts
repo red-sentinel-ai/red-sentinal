@@ -1,11 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { SUI_SENTINEL_API_URL, APP_NETWORK } from '@/constants'
 import type { SupportedChain } from '@/constants/chains'
-
-export interface PrizePoolHistory {
-  history: { time: string; value: number }[]
-  change7d: { percentage: number | null; absolute: number }
-}
+import type { PrizePoolHistory } from './useAllAgents'
 
 export interface AgentWinner {
   address: string
