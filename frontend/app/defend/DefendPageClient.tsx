@@ -38,6 +38,12 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { useSuiTokenBalance } from '@/hooks/useSuiTokenBalance'
 import { Skeleton } from '@/components/ui/skeleton'
 
+import { SentinelTypeToggle } from '@/components/defend/agentic/SentinelTypeToggle'
+import { EnvironmentTemplatePicker } from '@/components/defend/agentic/EnvironmentTemplatePicker'
+import { EnvironmentSeedEditor } from '@/components/defend/agentic/EnvironmentSeedEditor'
+import { EnabledToolsChecklist } from '@/components/defend/agentic/EnabledToolsChecklist'
+import { useEnvironmentTemplate } from './hooks/useEnvironmentTemplates'
+import type { SentinelType } from './agentic-types'
 import { FormInput } from './components/FormInput'
 import { LLMProviderSection } from './components/LLMProviderSection'
 import { useDefendForm } from './hooks/useDefendForm'
@@ -66,6 +72,22 @@ export default function DefendPageClient() {
   // EVM wallet
   const { address: evmAddress } = useEVMWallet()
   const { openConnectModal: openEvmConnectModal } = useConnectModal()
+
+  const [sentinelType, setSentinelType] = useState<SentinelType>('basic')
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null)
+  // The seeded `initial_environment` (namespace-keyed) for the agentic sandbox.
+  const [agenticEnvironment, setAgenticEnvironment] = useState<Record<string, unknown>>({})
+  const [enabledToolIds, setEnabledToolIds] = useState<string[]>([])
+  const { data: templateDetail } = useEnvironmentTemplate(selectedTemplateId)
+
+  const handleSelectTemplate = (templateId: string) => {
+    setSelectedTemplateId(templateId)
+    setAgenticEnvironment({})
+  }
+
+  useEffect(() => {
+    if (templateDetail) setEnabledToolIds(templateDetail.tools.map(tool => tool.tool_id))
+  }, [templateDetail?.template_id])
 
   const [agentImage, setAgentImage] = useState<File | null>(null)
   const [imagePickerOpen, setImagePickerOpen] = useState(false)
@@ -361,6 +383,31 @@ export default function DefendPageClient() {
             error={errors.agentName}
             placeholder="e.g. Atlas Guard, Void Watcher, Nova Sentinel"
           />
+
+          <SentinelTypeToggle value={sentinelType} onChange={setSentinelType} />
+
+          {sentinelType === 'agentic' && (
+            <>
+              <EnvironmentTemplatePicker
+                selectedTemplateId={selectedTemplateId}
+                onSelect={handleSelectTemplate}
+              />
+              {templateDetail && (
+                <>
+                  <EnvironmentSeedEditor
+                    templateDetail={templateDetail}
+                    value={agenticEnvironment}
+                    onChange={setAgenticEnvironment}
+                  />
+                  <EnabledToolsChecklist
+                    tools={templateDetail.tools}
+                    enabledToolIds={enabledToolIds}
+                    onChange={setEnabledToolIds}
+                  />
+                </>
+              )}
+            </>
+          )}
 
           <LLMProviderSection
             formData={formData}
