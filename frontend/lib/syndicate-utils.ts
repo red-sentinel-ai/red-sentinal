@@ -56,10 +56,7 @@ export function parseAddresses(input: string): `0x${string}`[] {
  * Synthesize a member row when the backend response predates `members_detailed`.
  * All numeric fields stay 0 — the table renders gracefully without per-member data.
  */
-export function buildFallbackMember(
-  address: string,
-  owner: string
-): SyndicateMemberDetail {
+export function buildFallbackMember(address: string, owner: string): SyndicateMemberDetail {
   const isOwner = address.toLowerCase() === owner.toLowerCase()
   return {
     address: address.toLowerCase(),

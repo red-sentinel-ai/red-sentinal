@@ -5,7 +5,6 @@ import posthog from 'posthog-js'
 import { useChainId } from 'wagmi'
 import { useActiveChain } from '@/context/ActiveChainContext'
 import { isEvmChain } from '@/constants/chains'
-import { useAgentObjectNames } from '@/hooks/useAgentObjectNames'
 import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
 import { type SupportedToken } from '@/constants'
 import { registerAgentUtil, resolveProviderCredentials } from '../utils'
@@ -35,7 +34,6 @@ export function useDeployAgent({
 }: UseDeployAgentOptions) {
   const { activeChain } = useActiveChain()
   const evmChainId = useChainId()
-  const { addAgentObjectIdWithName } = useAgentObjectNames()
   const { mutate: createAgent } = useCreateAgent()
 
   // All chain-specific deploy hooks must be called unconditionally (hook rules)
@@ -67,7 +65,6 @@ export function useDeployAgent({
     agentId: string,
     ownerAddress: string
   ) => {
-    addAgentObjectIdWithName(`${objectId} ${agentName}`)
     setTransactionDigest(digest)
     setShowSuccessModal(true)
 
@@ -168,7 +165,13 @@ export function useDeployAgent({
 
       // 4. Handle off-chain success (Supabase storage)
       const agentId = teeResponse.response?.data?.agent_id
-      handleOffChainSuccess(result.objectId, result.digest, formData.agentName, agentId, walletAddress)
+      handleOffChainSuccess(
+        result.objectId,
+        result.digest,
+        formData.agentName,
+        agentId,
+        walletAddress
+      )
     } catch (error) {
       console.error('Deployment error:', error)
       toast.error(error instanceof Error ? error.message : 'Deployment failed')
