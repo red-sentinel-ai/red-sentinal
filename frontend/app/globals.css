@@ -1035,3 +1035,17 @@ body::-webkit-scrollbar-thumb:hover {
   display: none;
 }
 /* ─────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --nv-color-foreground: #d0cfcf;
+}
+
+.nv-bellContainer,
+.nv-bellIcon {
+  color: var(--color-text-secondary) !important;
+}
+
+.nv-bellContainer {
+  --bell-gradient-start: var(--color-text-secondary) !important;
+  --bell-gradient-end: var(--color-text-secondary) !important;
+}
