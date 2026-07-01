@@ -11,6 +11,8 @@ import { useSyndicatePendingFees } from '@/hooks/syndicate/useSyndicateInfo'
 import { useSyndicateOwnerActions } from '@/hooks/syndicate/useSyndicateOwnerActions'
 import { useSyndicateMemberActions } from '@/hooks/syndicate/useSyndicateMemberActions'
 import { useEVMBalance } from '@/hooks/useEVMBalance'
+import { useCanAccessSyndicateChat } from '@/hooks/syndicate-chat'
+import { useSyndicateVoiceToken } from '@/hooks/voice'
 import type { SyndicateModalId } from '@/types/syndicate'
 import {
   buildFallbackMember,
@@ -33,6 +35,9 @@ import { RedeemModal } from '@/components/syndicate/modals/RedeemModal'
 import { ClaimPersonalFeesModal } from '@/components/syndicate/modals/ClaimPersonalFeesModal'
 import { CreatorRewardsModal } from '@/components/syndicate/modals/CreatorRewardsModal'
 import { JoinRequestModal } from '@/components/syndicate/modals/JoinRequestModal'
+import { VoiceRoomModal } from '@/components/voice/VoiceRoomModal'
+
+const VOICE_PERMISSION_HINT = 'Only syndicate members can join this voice room.'
 
 interface Props {
   /** Either a contract address (0x…) or a syndicate slug. The backend resolves both. */
@@ -45,6 +50,7 @@ export default function SyndicatePageClient({ identifier }: Props) {
   const { address: connectedAddress } = useAccount()
 
   const [activeModal, setActiveModal] = useState<SyndicateModalId | null>(null)
+  const [isVoiceRoomOpen, setIsVoiceRoomOpen] = useState(false)
   const [inputValue, setInputValue] = useState('')
   const [whitelistInput, setWhitelistInput] = useState('')
   const [joinMessage, setJoinMessage] = useState('')
@@ -105,6 +111,14 @@ export default function SyndicatePageClient({ identifier }: Props) {
   } = useSyndicateMemberActions(safeAddress)
 
   const canRequestToJoin = !!connectedLower && !isOwner && isWhitelisted === false
+
+  const { data: voiceAccess } = useCanAccessSyndicateChat(address, connectedAddress)
+  const canJoinVoice = !!voiceAccess?.can_access
+  const voiceToken = useSyndicateVoiceToken(
+    address,
+    connectedAddress,
+    isVoiceRoomOpen && canJoinVoice
+  )
 
   const { balance: walletTokenBalance } = useEVMBalance(tokenAddress)
   const formattedWalletBalance =
@@ -303,6 +317,7 @@ export default function SyndicatePageClient({ identifier }: Props) {
           onRequestPermission={
             canRequestToJoin ? () => openModal('joinRequest') : undefined
           }
+          onOpenVoice={() => setIsVoiceRoomOpen(true)}
         />
 
         <SyndicateMetricsGrid
@@ -433,6 +448,17 @@ export default function SyndicatePageClient({ identifier }: Props) {
         setMessage={setJoinMessage}
         loading={memberLoading === 'joinRequest'}
         onSubmit={handleRequestToJoin}
+      />
+      <VoiceRoomModal
+        open={isVoiceRoomOpen}
+        onClose={() => setIsVoiceRoomOpen(false)}
+        title={meta?.name ?? 'Syndicate'}
+        authToken={voiceToken.data?.auth_token}
+        isTokenLoading={voiceToken.isLoading}
+        isTokenError={voiceToken.isError}
+        canJoin={canJoinVoice}
+        permissionHint={VOICE_PERMISSION_HINT}
+        connectedAddress={connectedAddress}
       />
     </div>
   )
