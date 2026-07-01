@@ -387,26 +387,37 @@ export default function DefendPageClient() {
           <SentinelTypeToggle value={sentinelType} onChange={setSentinelType} />
 
           {sentinelType === 'agentic' && (
-            <>
-              <EnvironmentTemplatePicker
-                selectedTemplateId={selectedTemplateId}
-                onSelect={handleSelectTemplate}
-              />
-              {templateDetail && (
-                <>
-                  <EnvironmentSeedEditor
-                    templateDetail={templateDetail}
-                    value={agenticEnvironment}
-                    onChange={setAgenticEnvironment}
-                  />
-                  <EnabledToolsChecklist
-                    tools={templateDetail.tools}
-                    enabledToolIds={enabledToolIds}
-                    onChange={setEnabledToolIds}
-                  />
-                </>
-              )}
-            </>
+            <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
+              {/* Left: environment list (fixed) */}
+              <div className="lg:w-72 lg:shrink-0">
+                <EnvironmentTemplatePicker
+                  selectedTemplateId={selectedTemplateId}
+                  onSelect={handleSelectTemplate}
+                />
+              </div>
+
+              {/* Right: selected environment's configuration panel */}
+              <div className="min-w-0 flex-1">
+                {templateDetail ? (
+                  <div className="flex flex-col gap-6">
+                    <EnvironmentSeedEditor
+                      templateDetail={templateDetail}
+                      value={agenticEnvironment}
+                      onChange={setAgenticEnvironment}
+                    />
+                    <EnabledToolsChecklist
+                      tools={templateDetail.tools}
+                      enabledToolIds={enabledToolIds}
+                      onChange={setEnabledToolIds}
+                    />
+                  </div>
+                ) : (
+                  <div className="flex h-full min-h-[160px] items-center justify-center rounded-lg border border-dashed border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-6 text-center text-sm text-[var(--color-text-muted)]">
+                    Select an environment to configure its settings.
+                  </div>
+                )}
+              </div>
+            </div>
           )}
 
           <LLMProviderSection
