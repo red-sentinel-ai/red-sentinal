@@ -19,25 +19,13 @@ import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
 import { VoiceParticipantTile } from './VoiceParticipantTile'
 import { VoiceControls } from './VoiceControls'
 import { VoiceErrorNotice } from './VoiceErrorNotice'
+import { describeVoiceError } from '@/lib/voice-utils'
 
 interface VoiceRoomSessionProps {
   authToken: string
   userName: string
   title: string
   onLeave: () => void
-}
-
-function describeJoinError(error: unknown): string {
-  const name = (error as { name?: string })?.name
-  const code = (error as { code?: number })?.code
-
-  if (code === 3002 || name === 'DeviceNotAvailable') {
-    return 'No microphone found. Connect a mic (and close other apps using it), then try again.'
-  }
-  if (name === 'NotAllowedError' || code === 3001) {
-    return 'Microphone access is blocked. Allow it in your browser settings, then try again.'
-  }
-  return error instanceof Error ? error.message : 'Failed to join the voice room'
 }
 
 export function VoiceRoomSession({ authToken, userName, title, onLeave }: VoiceRoomSessionProps) {
@@ -48,7 +36,7 @@ export function VoiceRoomSession({ authToken, userName, title, onLeave }: VoiceR
   const dominantSpeaker = useHMSStore(selectDominantSpeaker)
 
   const isConnecting = roomState === HMSRoomState.Connecting
-  const [joinError, setJoinError] = useState<string>()
+  const [voiceError, setVoiceError] = useState<string>()
 
   const { allDevices } = useDevices()
   const microphoneCount = allDevices.audioInput?.length ?? 0
@@ -58,10 +46,9 @@ export function VoiceRoomSession({ authToken, userName, title, onLeave }: VoiceR
   const errorNotification = useHMSNotifications(HMSNotificationTypes.ERROR)
   useEffect(() => {
     if (errorNotification?.data) {
-      setJoinError(describeJoinError(errorNotification.data))
+      setVoiceError(describeVoiceError(errorNotification.data))
     }
   }, [errorNotification])
-
 
   useEffect(() => {
     const hadNoMicrophone = previousMicrophoneCount.current === 0
@@ -72,7 +59,7 @@ export function VoiceRoomSession({ authToken, userName, title, onLeave }: VoiceR
   }, [microphoneCount, hmsActions])
 
   useEffect(() => {
-    if (isAudioEnabled) setJoinError(undefined)
+    if (isAudioEnabled) setVoiceError(undefined)
   }, [isAudioEnabled])
 
   useEffect(() => {
@@ -89,7 +76,7 @@ export function VoiceRoomSession({ authToken, userName, title, onLeave }: VoiceR
   const { data: profilesMap } = useUserProfiles(peerAddresses)
 
   const handleJoin = async () => {
-    setJoinError(undefined)
+    setVoiceError(undefined)
     try {
       await hmsActions.join({
         authToken,
@@ -97,7 +84,7 @@ export function VoiceRoomSession({ authToken, userName, title, onLeave }: VoiceR
         settings: { isAudioMuted: false, isVideoMuted: true },
       })
     } catch (error) {
-      setJoinError(describeJoinError(error))
+      setVoiceError(describeVoiceError(error))
     }
   }
 
@@ -137,9 +124,9 @@ export function VoiceRoomSession({ authToken, userName, title, onLeave }: VoiceR
           )}
         </button>
 
-        {joinError && (
+        {voiceError && (
           <div className="w-full max-w-xs text-left">
-            <VoiceErrorNotice message={joinError} />
+            <VoiceErrorNotice message={voiceError} />
           </div>
         )}
       </div>
@@ -163,9 +150,9 @@ export function VoiceRoomSession({ authToken, userName, title, onLeave }: VoiceR
         </div>
       </div>
 
-      {joinError && (
+      {voiceError && (
         <div className="shrink-0 px-4 pt-3">
-          <VoiceErrorNotice message={joinError} />
+          <VoiceErrorNotice message={voiceError} />
         </div>
       )}
 
