@@ -43,7 +43,7 @@ export function EnvironmentTemplatePicker({
       )}
 
       {templates && (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="flex flex-col gap-1.5">
           {templates.map(template => {
             const isSelected = selectedTemplateId === template.template_id
             return (
@@ -52,31 +52,33 @@ export function EnvironmentTemplatePicker({
                 type="button"
                 onClick={() => onSelect(template.template_id)}
                 className={cn(
-                  'flex flex-col gap-2 rounded-lg border p-4 text-left transition-all',
+                  'group flex items-start gap-3 rounded-lg border px-3 py-2.5 text-left transition-all',
                   isSelected
                     ? 'border-[var(--color-gold-primary)] bg-[var(--color-gold-primary)]/10'
                     : 'border-[var(--color-border-default)] bg-[var(--color-bg-surface)] hover:border-[var(--color-border-strong)]'
                 )}
               >
-                <div className="flex items-start justify-between gap-2">
-                  <p className="text-sm font-medium text-[var(--color-text-primary)]">
+                <div className="min-w-0 flex-1">
+                  <p
+                    className={cn(
+                      'truncate text-sm font-medium',
+                      isSelected
+                        ? 'text-[var(--color-text-primary)]'
+                        : 'text-[var(--color-text-secondary)] group-hover:text-[var(--color-text-primary)]'
+                    )}
+                  >
                     {template.name}
                   </p>
-                  {isSelected && (
-                    <Check className="h-4 w-4 shrink-0 text-[var(--color-gold-primary)]" />
-                  )}
+                  <p className="mt-0.5 line-clamp-2 text-xs leading-snug text-[var(--color-text-muted)]">
+                    {template.description}
+                  </p>
+                  <span className="mt-1 block text-[10px] font-medium uppercase tracking-wide text-[var(--color-text-faint)]">
+                    {template.tools.length} tool{template.tools.length === 1 ? '' : 's'}
+                  </span>
                 </div>
-                <p className="text-xs text-[var(--color-text-muted)]">{template.description}</p>
-                <div className="mt-1 flex flex-wrap gap-1.5">
-                  {template.tools.map(toolId => (
-                    <span
-                      key={toolId}
-                      className="rounded-full border border-[var(--color-border-subtle)] px-2 py-0.5 text-[10px] font-medium text-[var(--color-text-muted)]"
-                    >
-                      {toolId}
-                    </span>
-                  ))}
-                </div>
+                {isSelected && (
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-gold-primary)]" />
+                )}
               </button>
             )
           })}
