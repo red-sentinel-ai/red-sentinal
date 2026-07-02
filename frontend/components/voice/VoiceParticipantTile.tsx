@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import Link from 'next/link'
 import { Mic, MicOff } from 'lucide-react'
 import { selectIsPeerAudioEnabled, useHMSStore, type HMSPeer } from '@100mslive/react-sdk'
 import { cn, truncateAddress, generateAvatarUrl } from '@/lib/utils'
@@ -35,7 +36,14 @@ export function VoiceParticipantTile({
 
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <span className="truncate font-mono text-xs text-white">{displayName}</span>
+          <Link
+            href={`/u/${username}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="truncate font-mono text-xs text-white transition-colors hover:text-[var(--color-gold-primary)] hover:underline"
+          >
+            {displayName}
+          </Link>
           {peer.isLocal && (
             <span className="industrial-header text-[8px] tracking-widest text-[var(--color-text-muted)]">
               YOU
