@@ -7,7 +7,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { getEvmConfig } from '@/constants/evm'
 import { SENTINEL_ABI } from '@/lib/evm/abi'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
-import { AGENT_DETAILS_FULL_QUERY_KEY } from './useAgentDetails'
+import { AGENT_QUERY_KEY } from './useAgentDetails'
 
 export const useUpdateAgentEVM = () => {
   const { address: walletAddress } = useEVMWallet()
@@ -37,7 +37,7 @@ export const useUpdateAgentEVM = () => {
 
         toast.success('Agent attack fee updated successfully!')
         queryClient.invalidateQueries({ queryKey: ['agents-by-owner', walletAddress] })
-        queryClient.invalidateQueries({ queryKey: [AGENT_DETAILS_FULL_QUERY_KEY] })
+        queryClient.invalidateQueries({ queryKey: [AGENT_QUERY_KEY] })
         onSuccess?.()
       } catch (err: any) {
         toast.error(err?.message ?? 'Failed to update agent')

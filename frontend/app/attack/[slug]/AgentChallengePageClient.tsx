@@ -3,7 +3,6 @@ import { useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useQueryClient } from '@tanstack/react-query'
 import posthog from 'posthog-js'
-import { toast } from 'sonner'
 import { Info, X } from 'lucide-react'
 
 import { APP_NETWORK } from '@/constants'
@@ -11,11 +10,13 @@ import { getTokenForCoinType } from '@/constants/tokens'
 import type { ConsumePromptApiResponse } from '@/types'
 import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from '@/components/ui'
 import { AgentChallengePageSkeleton } from '@/components/ui/skeletons/AgentChallengePageSkeleton'
-import { useConsumePrompt } from '@/hooks/useConsumePrompt'
-import { useConsumeSolanaPrompt } from '@/hooks/useConsumeSolanaPrompt'
-import { useConsumeEvmPrompt } from '@/hooks/useConsumeEvmPrompt'
-import { useAgentDetails, AGENT_DETAILS_FULL_QUERY_KEY } from '@/hooks/agents/useAgentDetails'
+import { useConsumePromptSui } from '@/hooks/useConsumePromptSui'
+import { useConsumePromptSolana } from '@/hooks/useConsumePromptSolana'
+import { useConsumePromptEVM } from '@/hooks/useConsumePromptEVM'
+import { useAgent, AGENT_QUERY_KEY } from '@/hooks/agents/useAgentDetails'
 import { useAgentChatHistory, AGENT_CHAT_QUERY_KEY } from '@/hooks/agents/useAgentChatHistory'
+import { useCanSendMessage } from '@/hooks/chat'
+import { useAgentVoiceToken } from '@/hooks/voice'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useActiveChain } from '@/context/ActiveChainContext'
 import { useFocusMode } from '@/context/FocusModeContext'
@@ -26,9 +27,13 @@ import ChatInterface from '@/components/agents/ChatInterface'
 import { AgentSidebar } from '@/components/agents/AgentSidebar'
 import { AgentReadMoreModal } from '@/components/agents/AgentReadMoreModal'
 import { ChatRoom } from '@/components/agents/ChatRoom'
+import { VoiceRoomModal } from '@/components/voice/VoiceRoomModal'
 import { MobileAgentHeader } from './MobileAgentHeader'
 
 type ViewMode = 'attack' | 'chat'
+
+const VOICE_PERMISSION_HINT =
+  'You must be the agent owner, have made at least one attack, or be a syndicate member to join the voice room.'
 /**
  *
  * useEffect(() => {}, [])
@@ -48,7 +53,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   const [viewMode, setViewMode] = useState<ViewMode>('attack')
   const isMobile = useMediaQuery('(max-width: 768px)')
 
-  const { data: agent, isLoading, error, refetch } = useAgentDetails(slug)
+  const { data: agent, isLoading, error, refetch } = useAgent(slug)
   const {
     data: chat,
     isLoading: chatLoading,
@@ -56,6 +61,15 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   } = useAgentChatHistory(agent?.agent_id)
 
   const [isReadMoreOpen, setIsReadMoreOpen] = useState(false)
+  const [isVoiceRoomOpen, setIsVoiceRoomOpen] = useState(false)
+
+  const { data: canSendData } = useCanSendMessage(agent?.agent_id, connectedAddress || undefined)
+  const canJoinVoice = !!canSendData?.can_send
+  const voiceToken = useAgentVoiceToken(
+    agent?.agent_id,
+    connectedAddress || undefined,
+    isVoiceRoomOpen && canJoinVoice
+  )
 
   const handleAttackComplete = useCallback(
     (apiResponse: ConsumePromptApiResponse, txDigest: string) => {
@@ -67,7 +81,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
         refetch()
         refetchChat()
         queryClient.invalidateQueries({
-          queryKey: [AGENT_DETAILS_FULL_QUERY_KEY, slug, APP_NETWORK],
+          queryKey: [AGENT_QUERY_KEY, slug, APP_NETWORK],
         })
         queryClient.invalidateQueries({
           queryKey: [AGENT_CHAT_QUERY_KEY, agent?.agent_id, APP_NETWORK],
@@ -105,7 +119,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
     [connectedAddress, agent, slug, refetch, refetchChat, queryClient, activeChain]
   )
 
-  const { consumePrompt: suiConsumePrompt } = useConsumePrompt({
+  const { consumePrompt: suiConsumePrompt } = useConsumePromptSui({
     showToasts: true,
     onError: err => {
       setSubmitError(err.message || 'Something went wrong')
@@ -115,7 +129,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
     },
   })
 
-  const { consumePrompt: solanaConsumePrompt } = useConsumeSolanaPrompt({
+  const { consumePrompt: solanaConsumePrompt } = useConsumePromptSolana({
     showToasts: true,
     onError: err => {
       setSubmitError(err.message || 'Something went wrong')
@@ -125,7 +139,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
     },
   })
 
-  const { consumePrompt: evmConsumePrompt } = useConsumeEvmPrompt({
+  const { consumePrompt: evmConsumePrompt } = useConsumePromptEVM({
     showToasts: true,
     onError: err => {
       setSubmitError(err.message || 'Something went wrong')
@@ -157,7 +171,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
   const handleVoiceChatClick = useCallback(() => {
     setIsSidebarOpen(false)
-    toast.info('Voice chat handler placeholder')
+    setIsVoiceRoomOpen(true)
   }, [])
 
   const handleBackToAttack = useCallback(() => {
@@ -213,6 +227,21 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
       </div>
     )
   }
+
+  // Rendered in every layout branch below — the sentinel's community voice room.
+  const voiceRoomModal = (
+    <VoiceRoomModal
+      open={isVoiceRoomOpen}
+      onClose={() => setIsVoiceRoomOpen(false)}
+      title={agent.agent_name}
+      authToken={voiceToken.data?.auth_token}
+      isTokenLoading={voiceToken.isLoading}
+      isTokenError={voiceToken.isError}
+      canJoin={canJoinVoice}
+      permissionHint={VOICE_PERMISSION_HINT}
+      connectedAddress={connectedAddress || undefined}
+    />
+  )
 
   // Focus mode - full screen chat
   if (isFocusMode) {
@@ -307,6 +336,8 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
             txnHash={txnHash}
           />
         )}
+
+        {voiceRoomModal}
       </div>
     )
   }
@@ -359,6 +390,8 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
             txnHash={txnHash}
           />
         )}
+
+        {voiceRoomModal}
       </div>
     )
   }
@@ -436,6 +469,8 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
           txnHash={txnHash}
         />
       )}
+
+      {voiceRoomModal}
     </div>
   )
 }

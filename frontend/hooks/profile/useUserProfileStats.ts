@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
 import { SUI_SENTINEL_API_URL, APP_NETWORK } from '@/constants'
-import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 
 export interface UserProfileStats {
   // Attacker stats
@@ -31,13 +30,11 @@ async function fetchUserStats(walletAddress: string): Promise<UserProfileStats> 
   return res.json()
 }
 
-export function useUserProfileStats() {
-  const { address } = useConnectedAddress()
-
+export function useUserProfileStats(walletAddress?: string) {
   return useQuery<UserProfileStats>({
-    queryKey: ['user-profile-stats', address, APP_NETWORK],
-    queryFn: () => fetchUserStats(address!),
-    enabled: !!address,
+    queryKey: ['user-profile-stats', walletAddress, APP_NETWORK],
+    queryFn: () => fetchUserStats(walletAddress!),
+    enabled: !!walletAddress,
     staleTime: 60_000,
     refetchInterval: 60_000,
   })

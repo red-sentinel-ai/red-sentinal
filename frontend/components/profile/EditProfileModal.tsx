@@ -6,7 +6,7 @@ import Image from 'next/image'
 import { Dialog } from '@/components/Dialog'
 import { ProfileEditForm } from './ProfileEditForm'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
-import type { Tables } from '@/lib/database.types'
+import type { UserProfile } from '@/lib/auth-api'
 import { SENTINEL_GIFS, USER_IMAGES } from '@/constants/asset_paths'
 
 type SelectedImage = {
@@ -19,7 +19,7 @@ type SelectedImage = {
 interface EditProfileModalProps {
   open: boolean
   onClose: () => void
-  profile: Tables<{ schema: 'sentinel' }, 'ss_users'> | null
+  profile: UserProfile | null
 }
 
 export function EditProfileModal({ open, onClose, profile }: EditProfileModalProps) {

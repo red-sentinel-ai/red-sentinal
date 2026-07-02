@@ -35,7 +35,7 @@ import { SuccessModal } from '@/components/DefenderSuccessModal'
 import { formatCompact, TokenAmount } from '@/components/ui/common/TokenAmount'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
-import { useTokenBalance } from '@/hooks/useTokenBalance'
+import { useSuiTokenBalance } from '@/hooks/useSuiTokenBalance'
 import { Skeleton } from '@/components/ui/skeleton'
 
 import { FormInput } from './components/FormInput'
@@ -54,9 +54,6 @@ export default function DefendPageClient() {
     searchParams.get('mode') === 'syndicate' ? 'syndicate' : 'individual'
   )
 
-  useEffect(() => {
-    if (searchParams.get('mode') === 'syndicate') setDefendMode('syndicate')
-  }, [searchParams])
   const { activeChain } = useActiveChain()
   const isSolana = activeChain === 'solana'
   const isEvm = isEvmChain(activeChain)
@@ -80,7 +77,7 @@ export default function DefendPageClient() {
 
   // Sui token selection
   const [selectedToken, setSelectedToken] = useState<SupportedToken>(SUPPORTED_TOKENS[0])
-  const { rawBalance: selectedTokenRawBalance, isLoading: isTokenBalanceLoading } = useTokenBalance(
+  const { rawBalance: selectedTokenRawBalance, isLoading: isTokenBalanceLoading } = useSuiTokenBalance(
     selectedToken.coinType,
     selectedToken.decimals
   )
@@ -96,7 +93,11 @@ export default function DefendPageClient() {
   const evmTokenList = getSupportedTokens(activeChain)
   const [selectedEvmToken, setSelectedEvmToken] = useState<SupportedToken>(evmTokenList[0])
 
-  // Re-sync the selected token when the user switches EVM chains in the header
+  useEffect(() => {
+    if (searchParams.get('mode') === 'syndicate') setDefendMode('syndicate')
+  }, [searchParams])
+
+
   useEffect(() => {
     setSelectedEvmToken(evmTokenList[0])
   }, [activeChain, evmTokenList])
