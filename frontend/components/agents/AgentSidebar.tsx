@@ -17,10 +17,10 @@ import {
   SUI_SENTINEL_X_USERNAME,
 } from '@/constants'
 import { getTokenForCoinType } from '@/constants/tokens'
-import { CHAINS } from '@/constants/chains'
+import { CHAINS, isEvmChain } from '@/constants/chains'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
-import { getExplorerObjectUrl } from '@/lib/explorer'
-import type { AgentDetailsFull } from '@/hooks/agents/useAgentDetails'
+import { getExplorerObjectUrl, getExplorerTxUrl } from '@/lib/explorer'
+import type { Agent } from '@/types/agents'
 import { formatDuration, cn, buildAgentShareTweetUrl, truncateAddress, generateAvatarUrl } from '@/lib/utils'
 import { Skeleton } from '@/components/ui'
 import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
@@ -33,13 +33,36 @@ import { APP_NETWORK } from '@/constants'
 const SHARE_MISSION = REWARDS_CONSTANTS.DEFAULT_MISSIONS.find(m => m.type === 'share_with_hashtag')!
 
 interface AgentSidebarProps {
-  agent: AgentDetailsFull
+  agent: Agent
   onReadMore?: () => void
   onTextChat?: () => void
   onVoiceChat?: () => void
 }
 
 const DUMMY_CREATOR_REWARD = 0.05
+
+interface SentinelReference {
+  label: string
+  value: string
+  href: string
+}
+
+function getSentinelReference(agent: Agent): SentinelReference | null {
+  if (isEvmChain(agent.chain)) {
+    if (!agent.deployment_tx_hash) return null
+    return {
+      label: 'DEPLOYMENT_TX',
+      value: agent.deployment_tx_hash,
+      href: getExplorerTxUrl(agent.deployment_tx_hash, agent.chain),
+    }
+  }
+
+  return {
+    label: 'SENTINEL_OBJECT_ID',
+    value: agent.agent_object_id,
+    href: getExplorerObjectUrl(agent.agent_object_id, agent.chain),
+  }
+}
 
 export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: AgentSidebarProps) => {
   const [activeSince, setActiveSince] = useState({
@@ -75,6 +98,8 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
   const ownerHref = agent.syndicate
     ? (agent.syndicate.syndicate_path ?? `/syndicate/${agent.syndicate.contract_address}`)
     : `/u/${agent.creator}`
+
+  const sentinelReference = getSentinelReference(agent)
 
   const isDrained = agent.state === 'defeated'
   const winnerAddress = agent.winner?.address ?? null
@@ -448,24 +473,26 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
             </div>
           )}
 
-          {/* Object ID */}
-          <div className="space-y-2 border-t border-[var(--color-border-strong)] pt-6">
-            <div className="industrial-header text-[10px] text-[var(--color-text-muted)]">
-              SENTINEL_OBJECT_ID
+          {/* On-chain reference: sentinel object/account id (Sui/Solana) or deployment tx (EVM) */}
+          {sentinelReference && (
+            <div className="space-y-2 border-t border-[var(--color-border-strong)] pt-6">
+              <div className="industrial-header text-[10px] text-[var(--color-text-muted)]">
+                {sentinelReference.label}
+              </div>
+              <Link
+                href={sentinelReference.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center gap-2"
+                title={sentinelReference.value}
+              >
+                <span className="industrial-header text-[11px] text-[var(--color-text-secondary)] transition-colors group-hover:text-white">
+                  {truncateAddress(sentinelReference.value)}
+                </span>
+                <ExternalLink className="h-3 w-3 text-[var(--color-text-muted)] transition-colors group-hover:text-white" />
+              </Link>
             </div>
-            <Link
-              href={getExplorerObjectUrl(agent.agent_object_id, agent.chain)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex items-center gap-2"
-              title={agent.agent_object_id}
-            >
-              <span className="industrial-header text-[11px] text-[var(--color-text-secondary)] transition-colors group-hover:text-white">
-                {truncateAddress(agent.agent_object_id)}
-              </span>
-              <ExternalLink className="h-3 w-3 text-[var(--color-text-muted)] transition-colors group-hover:text-white" />
-            </Link>
-          </div>
+          )}
 
           {/* Action Buttons */}
           <div className="space-y-3 pt-4">

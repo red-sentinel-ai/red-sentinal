@@ -19,8 +19,20 @@ export interface SendMessageRequest {
   sender_address: string
 }
 
+export interface MentionUser {
+  id: string
+  username: string
+  display_name: string | null
+  avatar_url: string | null
+}
+
+export interface MentionSuggestionsResponse {
+  users: MentionUser[]
+}
+
 export interface SendMessageResponse {
   message: ChatMessage
+  mentions: MentionUser[]
 }
 
 export interface CanSendResponse {

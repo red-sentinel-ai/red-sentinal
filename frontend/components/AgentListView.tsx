@@ -1,11 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import Image from 'next/image'
 import { ArrowRight, Coins, Loader2, Network, Search, SlidersHorizontal, X } from 'lucide-react'
 
 import { AgentsList } from './AgentsList'
-import { useAllAgents, SortField, SortDirection } from '@/hooks/agents/useAllAgents'
+import { FilterSelect, type FilterSelectOption } from '@/components/attack/FilterSelect'
+import { useAllAgents } from '@/hooks/agents/useAllAgents'
+import type { SortField, SortDirection } from '@/types/agents'
 import { useFeaturedAgents } from '@/hooks/agents/useFeaturedAgents'
 import { useTrendingAgents } from '@/hooks/agents/useTrendingAgents'
 import { useAgentCoinTypes } from '@/hooks/agents/useAgentCoinTypes'
@@ -23,6 +25,18 @@ const BIG_BOUNTY_THRESHOLD_MIST = BigInt(20_000_000_000) // 20 SUI
 const MAX_TRENDING_SENTINELS = 8
 
 type BountyTab = 'all' | 'big_bounties'
+
+const ALL_FILTER_VALUE = 'all'
+
+const NETWORK_FILTER_OPTIONS: FilterSelectOption[] = [
+  { value: ALL_FILTER_VALUE, label: 'All Networks' },
+  ...SUPPORTED_CHAINS.map(chainId => ({
+    value: chainId,
+    label: CHAINS[chainId].name,
+    iconSrc: CHAINS[chainId].icon,
+    iconClassName: CHAINS[chainId].iconFilterClass,
+  })),
+]
 
 // A sentinel is browsable in a row when it's active and not in a withdrawal
 // (attack-paused) window.
@@ -47,7 +61,7 @@ export const AgentListView = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useAllAgents(sortField, sortDirection, undefined, true, selectedChain)
+  } = useAllAgents({ sortField, sortDirection, chain: selectedChain })
 
   const { data: featuredAgents, isPending: isFetchingFeatured } = useFeaturedAgents(true)
   const { data: trendingAgents, isPending: isFetchingTrending } = useTrendingAgents(true)
@@ -96,11 +110,7 @@ export const AgentListView = () => {
         return searchable.includes(normalizedSearch)
       })
     }
-    return [...base].sort((a, b) => {
-      if (a.chain === 'solana' && b.chain !== 'solana') return -1
-      if (a.chain !== 'solana' && b.chain === 'solana') return 1
-      return 0
-    })
+    return base
   })()
 
   const bigBountiesCount = allAgents.filter(agent => {
@@ -121,6 +131,26 @@ export const AgentListView = () => {
   }
 
   const selectedToken = availableTokens.find(t => t.symbol === selectedSymbol)
+
+  const tokenOptions = useMemo<FilterSelectOption[]>(
+    () => [
+      { value: ALL_FILTER_VALUE, label: 'All Tokens' },
+      ...availableTokens.map(token => ({
+        value: token.symbol,
+        label: token.symbol,
+        iconSrc: token.icon,
+      })),
+    ],
+    [availableTokens]
+  )
+
+  const poolOptions = useMemo<FilterSelectOption[]>(
+    () => [
+      { value: ALL_FILTER_VALUE, label: 'All Sentinels' },
+      { value: 'big_bounties', label: `Big Bounties (${bigBountiesCount})` },
+    ],
+    [bigBountiesCount]
+  )
 
   return (
     <div className="px-4 py-8 md:px-12 md:py-12">
@@ -255,69 +285,36 @@ export const AgentListView = () => {
               />
             </label>
 
-            <label className="relative flex h-12 min-w-[170px] items-center border-r border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-4">
-              <Network className="mr-2 size-[18px] text-[var(--color-text-muted)]" />
-              <span className="sr-only">Network</span>
-              <select
-                value={selectedChain ?? 'all'}
-                onChange={event =>
-                  setSelectedChain(
-                    event.target.value === 'all'
-                      ? undefined
-                      : (event.target.value as SupportedChain)
-                  )
-                }
-                className="font-body flex-1 cursor-pointer appearance-none border-none bg-transparent p-0 pr-5 text-[10px] font-extrabold uppercase tracking-[0.1em] text-white focus:outline-none focus:ring-0"
-              >
-                <option value="all">All Networks</option>
-                {SUPPORTED_CHAINS.map(chainId => (
-                  <option key={chainId} value={chainId}>
-                    {CHAINS[chainId].name}
-                  </option>
-                ))}
-              </select>
-              <span className="pointer-events-none absolute right-3 text-[var(--color-text-muted)]">
-                v
-              </span>
-            </label>
+            <FilterSelect
+              icon={Network}
+              label="Network"
+              options={NETWORK_FILTER_OPTIONS}
+              value={selectedChain ?? ALL_FILTER_VALUE}
+              onValueChange={value =>
+                setSelectedChain(value === ALL_FILTER_VALUE ? undefined : (value as SupportedChain))
+              }
+              className="min-w-[170px] border-r border-[var(--color-border-default)]"
+            />
 
-            <label className="relative flex h-12 min-w-[150px] items-center border-r border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-4">
-              <Coins className="mr-2 size-[18px] text-[var(--color-text-muted)]" />
-              <span className="sr-only">Token</span>
-              <select
-                value={selectedSymbol ?? 'all'}
-                onChange={event =>
-                  setSelectedSymbol(event.target.value === 'all' ? undefined : event.target.value)
-                }
-                className="font-body flex-1 cursor-pointer appearance-none border-none bg-transparent p-0 pr-5 text-[10px] font-extrabold uppercase tracking-[0.1em] text-white focus:outline-none focus:ring-0"
-              >
-                <option value="all">All Tokens</option>
-                {availableTokens.map(token => (
-                  <option key={token.symbol} value={token.symbol}>
-                    {token.symbol}
-                  </option>
-                ))}
-              </select>
-              <span className="pointer-events-none absolute right-3 text-[var(--color-text-muted)]">
-                v
-              </span>
-            </label>
+            <FilterSelect
+              icon={Coins}
+              label="Token"
+              options={tokenOptions}
+              value={selectedSymbol ?? ALL_FILTER_VALUE}
+              onValueChange={value =>
+                setSelectedSymbol(value === ALL_FILTER_VALUE ? undefined : value)
+              }
+              className="min-w-[150px] border-r border-[var(--color-border-default)]"
+            />
 
-            <label className="relative flex h-12 min-w-[180px] items-center bg-[var(--color-bg-base)] px-4">
-              <SlidersHorizontal className="mr-2 size-[18px] text-[var(--color-text-muted)]" />
-              <span className="sr-only">Pool filter</span>
-              <select
-                value={activeTab}
-                onChange={event => setActiveTab(event.target.value as BountyTab)}
-                className="font-body flex-1 cursor-pointer appearance-none border-none bg-transparent p-0 pr-5 text-[10px] font-extrabold uppercase tracking-[0.1em] text-white focus:outline-none focus:ring-0"
-              >
-                <option value="all">All Sentinels</option>
-                <option value="big_bounties">Big Bounties ({bigBountiesCount})</option>
-              </select>
-              <span className="pointer-events-none absolute right-3 text-[var(--color-text-muted)]">
-                v
-              </span>
-            </label>
+            <FilterSelect
+              icon={SlidersHorizontal}
+              label="Pool filter"
+              options={poolOptions}
+              value={activeTab}
+              onValueChange={value => setActiveTab(value as BountyTab)}
+              className="min-w-[180px]"
+            />
           </div>
         </div>
 

@@ -63,3 +63,4 @@ export type SyndicateModalId =
   | 'redeem'
   | 'claimFees'
   | 'creatorRewards'
+  | 'joinRequest'

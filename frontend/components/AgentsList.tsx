@@ -4,7 +4,7 @@ import { ArrowDown, ArrowUp } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 
 import { LeaderboardSkeleton } from './ui/skeletons/LeaderboardSkeleton'
-import { AgentDetails, SortField, SortDirection } from '@/hooks/agents/useAllAgents'
+import type { Agent, SortField, SortDirection } from '@/types/agents'
 import { getTokenForCoinType } from '@/constants/tokens'
 import { CHAINS } from '@/constants/chains'
 import { TokenAmount } from './ui/common/TokenAmount'
@@ -17,7 +17,7 @@ export enum TabType {
 }
 
 interface AgentsListProps {
-  agents: AgentDetails[]
+  agents: Agent[]
   isFetchingAgents: boolean
   sortField: SortField
   sortDirection: SortDirection

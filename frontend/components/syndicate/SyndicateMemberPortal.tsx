@@ -1,6 +1,6 @@
 import { Wallet, LogOut, Coins, Award, User } from 'lucide-react'
 import { SyndicateMemberActionCard } from './SyndicateMemberActionCard'
-import type { SyndicateModalId } from '@/types/Syndicate'
+import type { SyndicateModalId } from '@/types/syndicate'
 
 interface Props {
   shares: bigint | undefined
