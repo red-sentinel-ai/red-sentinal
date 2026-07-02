@@ -10,13 +10,11 @@ export async function PUT(request: NextRequest) {
   try {
     const formData = await request.formData()
     const walletAddress = (formData.get('walletAddress') as string)?.toLowerCase()
-    const username = formData.get('username') as string
     const displayName = formData.get('displayName') as string
-    const emailNotifications = formData.get('emailNotifications') === 'true'
     const imageFile = formData.get('imageFile') as File | null
     const imageUrl = formData.get('imageUrl') as string | null
 
-    if (!walletAddress || !username || !displayName) {
+    if (!walletAddress || !displayName) {
       return NextResponse.json({ error: 'Missing required text fields' }, { status: 400 })
     }
 
@@ -32,17 +30,6 @@ export async function PUT(request: NextRequest) {
     }
 
     const user = { id: walletConnection.user_id }
-
-    const { data: existingUsername } = await supabaseServiceClient
-      .from('ss_users')
-      .select('id')
-      .eq('username', username)
-      .neq('id', user.id)
-      .single()
-
-    if (existingUsername) {
-      return NextResponse.json({ error: 'Username is already taken' }, { status: 409 })
-    }
 
     let newAvatarUrl: string | undefined = undefined
 
@@ -60,11 +47,14 @@ export async function PUT(request: NextRequest) {
       newAvatarUrl = imageUrl
     }
 
+    // Username is generated once at signup and is permanent — never updated here.
     const updateData: SsUsersUpdate = {
-      username: username,
       display_name: displayName,
-      email_notifications: emailNotifications,
       rewards_updated_at: new Date().toISOString(),
+    }
+
+    if (formData.has('emailNotifications')) {
+      updateData.email_notifications = formData.get('emailNotifications') === 'true'
     }
 
     if (newAvatarUrl !== undefined) {

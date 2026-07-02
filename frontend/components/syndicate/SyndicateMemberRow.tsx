@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Twitter } from 'lucide-react'
 import { truncateAddress, formatTokenAmount } from '@/lib/utils'
-import type { SyndicateMemberDetail } from '@/types/Syndicate'
+import type { SyndicateMemberDetail } from '@/types/syndicate'
 import { SyndicateMemberActionsMenu } from './SyndicateMemberActionsMenu'
 
 interface Props {

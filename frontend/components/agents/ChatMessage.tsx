@@ -11,7 +11,7 @@ import { Trophy, ExternalLink, Scale } from 'lucide-react'
 import { generateAvatarUrl } from '@/lib/utils'
 import { getExplorerTxUrl } from '@/lib/explorer'
 import { truncateAddress } from '@/lib/utils'
-import type { AgentDetails } from '@/hooks/agents/useAllAgents'
+import type { Agent } from '@/types/agents'
 import { type ChatMessage as ChatMessageType } from './ChatInterface'
 import type { Tables } from '@/lib/database.types'
 
@@ -22,7 +22,7 @@ type UserProfile = Pick<
 
 type ChatMessageProps = {
   message: ChatMessageType
-  agent: AgentDetails
+  agent: Agent
   senderProfile: UserProfile
   isWinningPrompt?: boolean
   onShowJury?: () => void

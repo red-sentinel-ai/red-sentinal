@@ -21,6 +21,8 @@
   --color-gold-light: #ffffff;
   --color-gold-dark: #757575;
   --color-gold-muted: rgba(255, 255, 255, 0.08);
+  --color-accent: #ffd597;
+  --color-accent-muted: rgba(255, 213, 151, 0.12);
   --color-accent-fg: #000000;
   --color-text-on-gold: #000000;
 
@@ -180,6 +182,25 @@
     color: var(--color-bg-deepest);
   }
 
+  .profile-tab-trigger {
+    @apply flex items-center gap-2 whitespace-nowrap rounded-none border-b-2 border-transparent px-2 pb-4 text-[11px] font-bold uppercase tracking-[2px] text-[var(--color-text-muted)] transition-colors;
+    @apply hover:text-[var(--color-text-secondary)];
+    @apply data-[state=active]:border-[var(--color-text-primary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)];
+  }
+
+  .player-directory-grid {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  @media (min-width: 768px) {
+    .player-directory-grid {
+      grid-template-columns: 2.5rem minmax(0, 2fr) minmax(0, 1.2fr) repeat(5, minmax(0, 1fr)) 7rem;
+      gap: 1rem;
+    }
+  }
+
   /* Hairline border utility */
   .border-hairline {
     border: 1px solid var(--color-border-strong);
@@ -210,7 +231,7 @@
 
   /* Accent color for important values */
   .text-accent {
-    color: #ffd597;
+    color: var(--color-accent);
   }
 }
 
@@ -1014,3 +1035,17 @@ body::-webkit-scrollbar-thumb:hover {
   display: none;
 }
 /* ─────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --nv-color-foreground: #d0cfcf;
+}
+
+.nv-bellContainer,
+.nv-bellIcon {
+  color: var(--color-text-secondary) !important;
+}
+
+.nv-bellContainer {
+  --bell-gradient-start: var(--color-text-secondary) !important;
+  --bell-gradient-end: var(--color-text-secondary) !important;
+}

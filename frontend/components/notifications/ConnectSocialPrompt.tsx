@@ -5,7 +5,7 @@ import { BellRing, X } from 'lucide-react'
 import { useConnectSocialPrompt } from '@/hooks/useConnectSocialPrompt'
 
 export function ConnectSocialPrompt() {
-  const { open, remindLater, enableNotifications } = useConnectSocialPrompt()
+  const { open, remindLater, dismiss, enableNotifications } = useConnectSocialPrompt()
 
   if (!open) return null
 
@@ -14,7 +14,7 @@ export function ConnectSocialPrompt() {
       <div className="pointer-events-auto relative w-full max-w-md border border-[var(--color-border-strong)] bg-[var(--color-bg-surface)] p-4 shadow-[0_4px_24px_rgba(0,0,0,0.5)] duration-300 animate-in fade-in slide-in-from-top-4">
         <button
           type="button"
-          onClick={remindLater}
+          onClick={dismiss}
           aria-label="Dismiss"
           className="absolute right-3 top-3 text-[var(--color-text-muted)] opacity-70 transition-opacity hover:opacity-100"
         >

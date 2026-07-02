@@ -1,139 +1,60 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { SUI_SENTINEL_API_URL, APP_NETWORK } from '@/constants'
-import { useActiveChain } from '@/context/ActiveChainContext'
+import type { Agent, SortField, SortDirection } from '@/types/agents'
 import type { SupportedChain } from '@/constants/chains'
-
-export interface PrizePoolHistory {
-  history: { time: string; value: number }[]
-  change7d: {
-    percentage: number | null
-    absolute: number
-  }
-}
-
-export interface AgentDetails {
-  agent_id: string
-  agent_name: string | null
-  prompt: string
-  agent_image: string | null
-  creator: string
-  cost_per_message: string
-  total_balance: string
-  agent_object_id: string
-  is_featured: boolean
-  model_name: string | null
-  model_provider: string | null
-  state: 'active' | 'defeated'
-  total_attacks: number
-  prizePoolHistory?: PrizePoolHistory | null
-  sender?: string
-  timestampMs?: string
-  // Derived
-  agent_path: string
-  // On-chain fields (only available on single agent pages)
-  last_funded_timestamp?: string
-  unlock_timestamp?: string
-  accumulated_fees?: number
-  coin_type?: string
-  current_cost_per_message?: string
-  chain?: SupportedChain
-  // Trending (top 10, best available window: 24h → 7d → 30d)
-  trending?: boolean
-  trending_rank?: number | null
-  trending_window?: '24h' | '7d' | '30d' | null
-  // Present only when state === 'defeated'
-  winner?: {
-    address: string
-    amount_won: string
-    tx_digest?: string | null
-  } | null
-}
-
-export type SortField =
-  | 'total_balance'
-  | 'cost_per_message'
-  | 'total_attacks'
-  | 'agent_id'
-  | 'change7d'
-  | 'state'
-  | null
-export type SortDirection = 'asc' | 'desc'
 
 export const ALL_AGENTS_QUERY_KEY = 'allAgents'
 export const AGENTS_LIMIT = 20
 
-interface AgentsResponse {
-  agents: AgentDetails[]
+interface AgentsPage {
+  agents: Agent[]
   total: number
   hasMore: boolean
 }
 
-export const useAllAgents = (
-  sortField: SortField = 'total_balance',
-  sortDirection: SortDirection = 'desc',
-  coinTypeFilter?: string,
-  skipChainFilter?: boolean,
-  explicitChainFilter?: SupportedChain
-) => {
-  const { activeChain } = useActiveChain()
-  // Arbitrum-only mode hard-locks every agent query to 'arb' so no other
-  // chain's sentinels can ever surface, regardless of skip/explicit filters.
-  const chainFilter = explicitChainFilter !== undefined
-      ? explicitChainFilter
-      : skipChainFilter
-        ? undefined
-        : activeChain
+export interface UseAllAgentsOptions {
+  sortField?: SortField
+  sortDirection?: SortDirection
+  coinTypeFilter?: string
+  chain?: SupportedChain
+}
 
-  return useInfiniteQuery<AgentsResponse, Error>({
-    queryKey: [ALL_AGENTS_QUERY_KEY, sortField, sortDirection, coinTypeFilter, chainFilter ?? 'all'],
+export const useAllAgents = ({
+  sortField = 'total_balance',
+  sortDirection = 'desc',
+  coinTypeFilter,
+  chain,
+}: UseAllAgentsOptions = {}) => {
+  return useInfiniteQuery<AgentsPage, Error>({
+    queryKey: [ALL_AGENTS_QUERY_KEY, sortField, sortDirection, coinTypeFilter, chain ?? 'all'],
     queryFn: async ({ pageParam }) => {
       const offset = pageParam as number
 
-      // Build query params
       const params = new URLSearchParams({
         limit: String(AGENTS_LIMIT),
         offset: String(offset),
-        include_prize_pool: 'true',
         min_balance: '1',
       })
 
-      if (chainFilter) {
-        params.append('chain', chainFilter)
-      }
-
-      // Add sort params if provided
+      if (chain) params.append('chain', chain)
       if (sortField) {
-        // Map frontend sort field names to API field names
-        const apiSortField = sortField === 'change7d' ? 'prize_pool_change_7d' : sortField
-        params.append('sortBy', apiSortField)
+        params.append('sortBy', sortField)
         params.append('sortDirection', sortDirection)
       }
-
-      if (coinTypeFilter) {
-        params.append('coin_type', coinTypeFilter)
-      }
+      if (coinTypeFilter) params.append('coin_type', coinTypeFilter)
 
       const res = await fetch(
         `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}?${params.toString()}`,
         { credentials: 'include' }
       )
-
-      if (!res.ok) {
-        throw new Error('Failed to fetch agents')
-      }
+      if (!res.ok) throw new Error('Failed to fetch agents')
 
       const data = await res.json()
-      const agents = data.agents.map((agent: AgentDetails) => ({
-        ...agent,
-        agent_path: agent.agent_name
-          ? agent.agent_name.toLowerCase().replace(/\s+/g, '_')
-          : agent.agent_object_id,
-      }))
-
+      const total = data.total ?? data.agents.length
       return {
-        agents,
-        total: data.total || agents.length,
-        hasMore: agents.length === AGENTS_LIMIT,
+        agents: data.agents as Agent[],
+        total,
+        hasMore: offset + data.agents.length < total,
       }
     },
     initialPageParam: 0,

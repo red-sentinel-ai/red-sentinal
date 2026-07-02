@@ -13,12 +13,12 @@ import { ATTACK_PROMPT_MAX_TOKENS } from '@/constants'
 import { getTokenForCoinType } from '@/constants/tokens'
 import { generateAvatarUrl } from '@/lib/utils'
 import type { SupportedChain } from '@/constants/chains'
-import { formatBalance, truncateAddress } from '@/lib/utils'
+import { truncateAddress } from '@/lib/utils'
 import type { ConsumePromptApiResponse } from '@/types'
 import type { ChatEvent } from '@/hooks/agents/useAgentChatHistory'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { useTokenCount } from '@/hooks/useTokenCount'
-import type { AgentDetails } from '@/hooks/agents/useAllAgents'
+import type { Agent } from '@/types/agents'
 import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
 import { ChainMismatchBanner } from '@/components/ui/common/ChainMismatchBanner'
 import { useFocusMode } from '@/context/FocusModeContext'
@@ -42,7 +42,7 @@ export interface ChatMessage {
 }
 
 interface ChatInterfaceProps {
-  agent: AgentDetails
+  agent: Agent
   chatEvents: ChatEvent[]
   eventsLoading?: boolean
   apiResponse: ConsumePromptApiResponse | null
@@ -92,9 +92,7 @@ export default function ChatInterface({
         content: event.content,
         timestamp: event.timestamp,
         sender: event.sender,
-        amountSent: event.amount_sent
-          ? formatBalance(BigInt(event.amount_sent), 9, 2)
-          : undefined,
+        amountSent: event.amount_sent ?? undefined,
       })
       msgs.push({
         id: `agent-${event.id}`,
@@ -412,9 +410,15 @@ export default function ChatInterface({
                   <span className="industrial-header block text-[9px] text-[var(--color-text-muted)]">
                     AMOUNT_WON
                   </span>
-                  <span className="industrial-header text-[11px] text-[var(--color-success)]">
-                    {winnerInfo.wonAmount} SUI
-                  </span>
+                  {winnerInfo.wonAmount && (
+                    <TokenAmount
+                      rawAmount={winnerInfo.wonAmount}
+                      token={agentToken}
+                      precision={4}
+                      iconSize={12}
+                      className="industrial-header text-[11px] text-[var(--color-success)]"
+                    />
+                  )}
                 </div>
               </div>
             )}

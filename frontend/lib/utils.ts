@@ -265,13 +265,24 @@ export const buildAgentShareTweetUrl = (
 /**
  * Generate a unique avatar URL using DiceBear API.
  * Deterministic - same seed always produces the same avatar.
- * @param seed - Unique identifier (wallet address, user ID, etc.)
- * @param style - DiceBear style (default: 'shapes')
+ * @param seed - Unique identifier (wallet address, user ID, sentinel ID, etc.)
+ * @param type - 'sentinel' or 'user' - controls the avatar style
  */
 export const generateAvatarUrl = (
   seed: string,
-  style: 'adventurer' | 'adventurer-neutral' | 'avataaars' | 'lorelei' = 'lorelei'
+  type: 'sentinel' | 'user' = 'user'
 ): string => {
+  const style = type === 'sentinel' ? 'lorelei' : 'lorelei'
   const encodedSeed = encodeURIComponent(seed)
   return `https://api.dicebear.com/10.x/${style}/svg?seed=${encodedSeed}`
+}
+
+export const formatUsd = (value: number): string => {
+  if (value >= 1_000_000) {
+    return `$${(value / 1_000_000).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}M`
+  }
+  if (value >= 1_000) {
+    return `$${(value / 1_000).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}K`
+  }
+  return `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 }

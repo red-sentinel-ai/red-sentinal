@@ -1,4 +1,4 @@
-import { AgentDetails } from '@/hooks/agents/useAllAgents'
+import { type Agent } from '@/types/agents'
 import { cn } from '@/lib/utils'
 import { SentinelMiniCard } from './SentinelMiniCard'
 
@@ -8,7 +8,7 @@ export function SentinelMarquee({
   agents,
   variant,
 }: {
-  agents: AgentDetails[]
+  agents: Agent[]
   variant?: Variant
 }) {
   if (agents.length === 0) return null

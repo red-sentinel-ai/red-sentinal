@@ -10,13 +10,13 @@ import {
 import { formatAddress } from '@mysten/sui/utils'
 import { APP_NETWORK } from '@/constants'
 import { SUI_TOKEN } from '@/constants/tokens'
-import { useTokenBalance } from '@/hooks/useTokenBalance'
+import { useSuiTokenBalance } from '@/hooks/useSuiTokenBalance'
 import { WalletDropdown } from '@/components/WalletDropdown'
 
 export function SuiConnectButton() {
   const account = useCurrentAccount()
   const { mutate: disconnect } = useDisconnectWallet()
-  const { balance, isLoading: isLoadingBalance } = useTokenBalance(
+  const { balance, isLoading: isLoadingBalance } = useSuiTokenBalance(
     SUI_TOKEN.coinType,
     SUI_TOKEN.decimals
   )

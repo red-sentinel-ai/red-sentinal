@@ -1,23 +1,24 @@
 'use client'
 
 import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
 import { formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import { toast } from 'sonner'
 import { Wallet } from 'lucide-react'
-import { SUI_SENTINEL_API_URL } from '@/constants'
-import { APP_NETWORK } from '@/constants/shared'
 import { formatTokenAmount } from '@/lib/utils'
+import { useSyndicateData } from '@/hooks/syndicate/useSyndicateData'
 import { useSyndicatePendingFees } from '@/hooks/syndicate/useSyndicateInfo'
 import { useSyndicateOwnerActions } from '@/hooks/syndicate/useSyndicateOwnerActions'
 import { useSyndicateMemberActions } from '@/hooks/syndicate/useSyndicateMemberActions'
 import { useEVMBalance } from '@/hooks/useEVMBalance'
-import type { BackendSyndicate, SyndicateModalId } from '@/types/Syndicate'
+import { useCanAccessSyndicateChat } from '@/hooks/syndicate-chat'
+import { useSyndicateVoiceToken } from '@/hooks/voice'
+import type { SyndicateModalId } from '@/types/syndicate'
 import {
   buildFallbackMember,
   getDecimalsForSymbol,
   getMaxRedeemableSharesWei,
+  getSyndicateIdlePrincipalWei,
   parseAddresses,
 } from '@/lib/syndicate-utils'
 import { SyndicateHero } from '@/components/syndicate/SyndicateHero'
@@ -33,6 +34,10 @@ import { DepositModal } from '@/components/syndicate/modals/DepositModal'
 import { RedeemModal } from '@/components/syndicate/modals/RedeemModal'
 import { ClaimPersonalFeesModal } from '@/components/syndicate/modals/ClaimPersonalFeesModal'
 import { CreatorRewardsModal } from '@/components/syndicate/modals/CreatorRewardsModal'
+import { JoinRequestModal } from '@/components/syndicate/modals/JoinRequestModal'
+import { VoiceRoomModal } from '@/components/voice/VoiceRoomModal'
+
+const VOICE_PERMISSION_HINT = 'Only syndicate members can join this voice room.'
 
 interface Props {
   /** Either a contract address (0x…) or a syndicate slug. The backend resolves both. */
@@ -45,27 +50,20 @@ export default function SyndicatePageClient({ identifier }: Props) {
   const { address: connectedAddress } = useAccount()
 
   const [activeModal, setActiveModal] = useState<SyndicateModalId | null>(null)
+  const [isVoiceRoomOpen, setIsVoiceRoomOpen] = useState(false)
   const [inputValue, setInputValue] = useState('')
   const [whitelistInput, setWhitelistInput] = useState('')
+  const [joinMessage, setJoinMessage] = useState('')
 
   const closeModal = () => {
     setActiveModal(null)
     setInputValue('')
     setWhitelistInput('')
+    setJoinMessage('')
   }
 
   // Backend doc — GET /syndicates/:identifier accepts contract address OR slug.
-  const { data: metaData, refetch: refetchMeta } = useQuery<{ syndicate: BackendSyndicate }>({
-    queryKey: ['syndicate-meta', identifier],
-    queryFn: async () => {
-      const res = await fetch(
-        `${SUI_SENTINEL_API_URL}/syndicates/${identifier}?network=${APP_NETWORK}`,
-        { credentials: 'include' }
-      )
-      if (!res.ok) throw new Error('Syndicate not found')
-      return res.json()
-    },
-  })
+  const { data: metaData, refetch: refetchMeta } = useSyndicateData(identifier)
 
   const meta = metaData?.syndicate
   const address = meta?.contract_address as `0x${string}` | undefined
@@ -81,6 +79,7 @@ export default function SyndicatePageClient({ identifier }: Props) {
   )
 
   const connectedLower = connectedAddress?.toLowerCase()
+  const isOwner = !!connectedLower && connectedLower === meta?.owner
   const myMember = connectedLower
     ? meta?.members_detailed?.find(m => m.address === connectedLower)
     : undefined
@@ -101,14 +100,25 @@ export default function SyndicatePageClient({ identifier }: Props) {
     setWhitelistEnabled: toggleWhitelist,
     whitelistAddresses,
     loading: ownerLoading,
-  } = useSyndicateOwnerActions(safeAddress)
+  } = useSyndicateOwnerActions(safeAddress, meta?.owner)
   const {
     deposit,
     redeem,
     claimFeesForSyndicate,
     claimFeesForSelf,
+    requestToJoin,
     loading: memberLoading,
   } = useSyndicateMemberActions(safeAddress)
+
+  const canRequestToJoin = !!connectedLower && !isOwner && isWhitelisted === false
+
+  const { data: voiceAccess } = useCanAccessSyndicateChat(address, connectedAddress)
+  const canJoinVoice = !!voiceAccess?.can_access
+  const voiceToken = useSyndicateVoiceToken(
+    address,
+    connectedAddress,
+    isVoiceRoomOpen && canJoinVoice
+  )
 
   const { balance: walletTokenBalance } = useEVMBalance(tokenAddress)
   const formattedWalletBalance =
@@ -118,18 +128,7 @@ export default function SyndicatePageClient({ identifier }: Props) {
 
   // Derived display values.
   const formattedTVL = meta ? formatTokenAmount(meta.total_funds, tokenDecimals) : null
-  // idlePrincipal mirrors the contract:
-  //   total_funds - (agent_initial_fund + agent_total_funded - agent_total_withdrawn)
-  // initialFund is moved straight to the sentinel via safeTransferFrom and is NOT
-  // counted in agent_total_funded — see SentinelSyndicate.sol.
-  const idlePrincipalWei = meta
-    ? (
-        BigInt(meta.total_funds) -
-        (BigInt(meta.agent_initial_fund) +
-          BigInt(meta.agent_total_funded) -
-          BigInt(meta.agent_total_withdrawn))
-      ).toString()
-    : undefined
+  const idlePrincipalWei = meta ? getSyndicateIdlePrincipalWei(meta).toString() : undefined
   const formattedIdle = idlePrincipalWei
     ? formatTokenAmount(idlePrincipalWei, tokenDecimals)
     : null
@@ -179,8 +178,20 @@ export default function SyndicatePageClient({ identifier }: Props) {
     }
   }
 
+  const handleRequestToJoin = () =>
+    runAction(
+      () => requestToJoin(joinMessage),
+      'Join request sent to the syndicate owner'
+    )
+
   async function handleFundAgent() {
     if (!inputValue || !tokenAddress) return
+    if (!isOwner) {
+      toast.error(
+        'Only the syndicate owner can add funds to the sentinel bounty pool.'
+      )
+      return
+    }
     // Pre-check idle balance so the user gets a readable error instead of an
     // on-chain InsufficientLiquidity revert (surfaces as a gas-cap error).
     const amountWei = BigInt(Math.floor(parseFloat(inputValue) * 10 ** tokenDecimals))
@@ -191,10 +202,26 @@ export default function SyndicatePageClient({ identifier }: Props) {
       )
       return
     }
-    await runAction(
-      () => fundAgent(tokenAddress, inputValue, tokenDecimals),
-      'Sentinel funded successfully'
-    )
+    try {
+      await fundAgent(tokenAddress, inputValue, tokenDecimals)
+      toast.success('Sentinel funded successfully')
+      closeModal()
+      refresh()
+    } catch (e: unknown) {
+      const raw = e instanceof Error ? e.message : ''
+      const short = (e as any)?.shortMessage ?? raw
+      if (
+        raw.includes('0x118cdaa7') ||
+        short.includes('0x118cdaa7') ||
+        raw.toLowerCase().includes('ownableunauthorizedaccount')
+      ) {
+        toast.error(
+          'Only the syndicate owner can add funds to the sentinel bounty pool.'
+        )
+      } else {
+        toast.error(short || 'Failed to fund sentinel')
+      }
+    }
   }
 
   async function handleWithdraw() {
@@ -285,7 +312,13 @@ export default function SyndicatePageClient({ identifier }: Props) {
   return (
     <div className="min-h-screen bg-[var(--color-bg-base)] pb-20">
       <div className="mx-auto max-w-6xl px-6 pt-12 lg:px-12">
-        <SyndicateHero meta={meta} />
+        <SyndicateHero
+          meta={meta}
+          onRequestPermission={
+            canRequestToJoin ? () => openModal('joinRequest') : undefined
+          }
+          onOpenVoice={() => setIsVoiceRoomOpen(true)}
+        />
 
         <SyndicateMetricsGrid
           isContractLoading={!meta}
@@ -300,6 +333,8 @@ export default function SyndicatePageClient({ identifier }: Props) {
             agentId={agentId}
             whitelistEnabled={whitelistEnabled}
             isLocked={isLocked}
+            isOwner={isOwner}
+            isMember={!!isWhitelisted}
             openModal={openModal}
           />
           {connectedAddress ? (
@@ -404,6 +439,26 @@ export default function SyndicatePageClient({ identifier }: Props) {
         tokenSymbol={tokenSymbol}
         unclaimedCreatorFees={formattedUnclaimedCreatorFees}
         onSubmit={handleClaimCreatorRewards}
+      />
+      <JoinRequestModal
+        open={activeModal === 'joinRequest'}
+        onClose={closeModal}
+        syndicateName={meta?.name ?? ''}
+        message={joinMessage}
+        setMessage={setJoinMessage}
+        loading={memberLoading === 'joinRequest'}
+        onSubmit={handleRequestToJoin}
+      />
+      <VoiceRoomModal
+        open={isVoiceRoomOpen}
+        onClose={() => setIsVoiceRoomOpen(false)}
+        title={meta?.name ?? 'Syndicate'}
+        authToken={voiceToken.data?.auth_token}
+        isTokenLoading={voiceToken.isLoading}
+        isTokenError={voiceToken.isError}
+        canJoin={canJoinVoice}
+        permissionHint={VOICE_PERMISSION_HINT}
+        connectedAddress={connectedAddress}
       />
     </div>
   )
