@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Loader2, Mic, Radio } from 'lucide-react'
+import { Loader2, Mic, Radio, Wifi } from 'lucide-react'
 import {
   HMSNotificationTypes,
   HMSRoomState,
@@ -19,7 +19,7 @@ import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
 import { VoiceParticipantTile } from './VoiceParticipantTile'
 import { VoiceControls } from './VoiceControls'
 import { VoiceErrorNotice } from './VoiceErrorNotice'
-import { describeVoiceError } from '@/lib/voice-utils'
+import { describeVoiceError, isMicrophoneError } from '@/lib/voice-utils'
 
 interface VoiceRoomSessionProps {
   authToken: string
@@ -36,6 +36,7 @@ export function VoiceRoomSession({ authToken, userName, title, onLeave }: VoiceR
   const dominantSpeaker = useHMSStore(selectDominantSpeaker)
 
   const isConnecting = roomState === HMSRoomState.Connecting
+  const isReconnecting = roomState === HMSRoomState.Reconnecting
   const [voiceError, setVoiceError] = useState<string>()
 
   const { allDevices } = useDevices()
@@ -45,8 +46,10 @@ export function VoiceRoomSession({ authToken, userName, title, onLeave }: VoiceR
 
   const errorNotification = useHMSNotifications(HMSNotificationTypes.ERROR)
   useEffect(() => {
-    if (errorNotification?.data) {
-      setVoiceError(describeVoiceError(errorNotification.data))
+    const error = errorNotification?.data
+    if (!error) return
+    if (isMicrophoneError(error) || error.isTerminal) {
+      setVoiceError(describeVoiceError(error))
     }
   }, [errorNotification])
 
@@ -135,15 +138,24 @@ export function VoiceRoomSession({ authToken, userName, title, onLeave }: VoiceR
 
   return (
     <div className="flex flex-1 flex-col">
-      <div className="flex h-11 shrink-0 items-center justify-between border-b border-[var(--color-border-strong)] px-4">
+      <div className="flex h-11 shrink-0 items-center justify-between gap-3 border-b border-[var(--color-border-strong)] pl-4 pr-12">
         <span className="industrial-header truncate text-[11px] tracking-widest text-white">
           {title}
         </span>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5">
-            <Radio className="h-3 w-3 animate-pulse text-[var(--color-success)]" />
-            <span className="industrial-header text-[9px] text-[var(--color-success)]">LIVE</span>
-          </div>
+        <div className="flex shrink-0 items-center gap-3">
+          {isReconnecting ? (
+            <div className="flex items-center gap-1.5">
+              <Wifi className="h-3 w-3 animate-pulse text-[var(--color-warning)]" />
+              <span className="industrial-header text-[9px] text-[var(--color-warning)]">
+                RECONNECTING
+              </span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1.5">
+              <Radio className="h-3 w-3 animate-pulse text-[var(--color-success)]" />
+              <span className="industrial-header text-[9px] text-[var(--color-success)]">LIVE</span>
+            </div>
+          )}
           <span className="industrial-header text-[9px] text-[var(--color-text-muted)]">
             {peers.length} IN ROOM
           </span>
