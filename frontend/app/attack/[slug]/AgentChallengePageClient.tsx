@@ -1,5 +1,5 @@
 'use client'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useQueryClient } from '@tanstack/react-query'
 import posthog from 'posthog-js'
@@ -23,14 +23,12 @@ import { useFocusMode } from '@/context/FocusModeContext'
 import { CHAINS, type SupportedChain } from '@/constants/chains'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
-import ChatInterface from '@/components/agents/ChatInterface'
+import { AttackWorkspace, type ViewMode } from '@/components/agents/AttackWorkspace'
 import { AgentSidebar } from '@/components/agents/AgentSidebar'
 import { AgentReadMoreModal } from '@/components/agents/AgentReadMoreModal'
-import { ChatRoom } from '@/components/agents/ChatRoom'
 import { VoiceRoomModal } from '@/components/voice/VoiceRoomModal'
+import type { ChallengeMode } from '@/components/agents/ChallengeModeToggle'
 import { MobileAgentHeader } from './MobileAgentHeader'
-
-type ViewMode = 'attack' | 'chat'
 
 const VOICE_PERMISSION_HINT =
   'You must be the agent owner, have made at least one attack, or be a syndicate member to join the voice room.'
@@ -41,7 +39,7 @@ const VOICE_PERMISSION_HINT =
 export default function AgentChallengePage({ slug }: { slug: string }) {
   const queryClient = useQueryClient()
   const { activeChain } = useActiveChain()
-  const { address: connectedAddress } = useConnectedAddress()
+  const { address: connectedAddress, isHydrated } = useConnectedAddress()
   const { isFocusMode, disableFocusMode } = useFocusMode()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -51,9 +49,17 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('attack')
+  const [challengeMode, setChallengeMode] = useState<ChallengeMode>('attack')
   const isMobile = useMediaQuery('(max-width: 768px)')
 
   const { data: agent, isLoading, error, refetch } = useAgent(slug)
+
+  const didInitChallengeMode = useRef(false)
+  useEffect(() => {
+    if (didInitChallengeMode.current || !agent || !isHydrated) return
+    didInitChallengeMode.current = true
+    if (!connectedAddress) setChallengeMode('casual')
+  }, [agent, isHydrated, connectedAddress])
   const {
     data: chat,
     isLoading: chatLoading,
@@ -243,6 +249,24 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
     />
   )
 
+  const attackWorkspace = (
+    <AttackWorkspace
+      agent={agent}
+      viewMode={viewMode}
+      onBackToAttack={handleBackToAttack}
+      challengeMode={challengeMode}
+      onChangeChallengeMode={setChallengeMode}
+      chatEvents={chat?.messages ?? []}
+      eventsLoading={chatLoading}
+      apiResponse={apiResponse}
+      onSendMessage={handleSendMessage}
+      isSubmitting={isSubmitting}
+      submitError={submitError}
+      refetchAgent={refetch}
+      chainMismatch={chainToSwitch}
+    />
+  )
+
   // Focus mode - full screen chat
   if (isFocusMode) {
     return (
@@ -271,23 +295,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
         </div>
 
         {/* Full width chat */}
-        <div className="min-h-0 flex-1 overflow-hidden">
-          {viewMode === 'chat' ? (
-            <ChatRoom agent={agent} onBack={handleBackToAttack} />
-          ) : (
-            <ChatInterface
-              agent={agent}
-              chatEvents={chat?.messages ?? []}
-              eventsLoading={chatLoading}
-              apiResponse={apiResponse}
-              onSendMessage={handleSendMessage}
-              isSubmitting={isSubmitting}
-              submitError={submitError}
-              refetchAgent={refetch}
-              chainMismatch={chainToSwitch}
-            />
-          )}
-        </div>
+        <div className="min-h-0 flex-1 overflow-hidden">{attackWorkspace}</div>
 
         {/* Sidebar drawer for focus mode */}
         <AnimatePresence>
@@ -357,21 +365,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
           <ResizableHandle withHandle={true} className="bg-[var(--color-border-strong)]" />
           <ResizablePanel defaultSize={72}>
             <div className="relative h-full w-full">
-              {viewMode === 'chat' ? (
-                <ChatRoom agent={agent} onBack={handleBackToAttack} />
-              ) : (
-                <ChatInterface
-                  agent={agent}
-                  chatEvents={chat?.messages ?? []}
-                  eventsLoading={chatLoading}
-                  apiResponse={apiResponse}
-                  onSendMessage={handleSendMessage}
-                  isSubmitting={isSubmitting}
-                  submitError={submitError}
-                  refetchAgent={refetch}
-                  chainMismatch={chainToSwitch}
-                />
-              )}
+              {attackWorkspace}
               <AgentReadMoreModal
                 isOpen={isReadMoreOpen}
                 prompt={agent.prompt}
@@ -405,23 +399,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
         />
       )}
 
-      <div className="min-h-0 flex-1 overflow-hidden">
-        {viewMode === 'chat' ? (
-          <ChatRoom agent={agent} onBack={handleBackToAttack} />
-        ) : (
-          <ChatInterface
-            agent={agent}
-            chatEvents={chat?.messages ?? []}
-            eventsLoading={chatLoading}
-            apiResponse={apiResponse}
-            onSendMessage={handleSendMessage}
-            isSubmitting={isSubmitting}
-            submitError={submitError}
-            refetchAgent={refetch}
-            chainMismatch={chainToSwitch}
-          />
-        )}
-      </div>
+      <div className="min-h-0 flex-1 overflow-hidden">{attackWorkspace}</div>
 
       <AnimatePresence>
         {isSidebarOpen && (

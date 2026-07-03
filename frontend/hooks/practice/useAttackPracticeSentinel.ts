@@ -7,11 +7,12 @@ interface AttackArgs {
   attackerAddress: string
   userPrompt: string
   sessionId?: string | null
+  network?: string
 }
 
 export function useAttackPracticeSentinel() {
   return useMutation<PracticeAttackResponse, Error, AttackArgs>({
-    mutationFn: async ({ sentinelId, attackerAddress, userPrompt, sessionId }) => {
+    mutationFn: async ({ sentinelId, attackerAddress, userPrompt, sessionId, network }) => {
       const res = await fetch(`/api/practice-sentinels/${sentinelId}/attack`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -19,6 +20,7 @@ export function useAttackPracticeSentinel() {
           attacker_address: attackerAddress,
           user_prompt: userPrompt,
           session_id: sessionId ?? undefined,
+          network,
         }),
       })
 
