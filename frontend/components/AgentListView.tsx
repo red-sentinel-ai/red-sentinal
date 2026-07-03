@@ -2,7 +2,16 @@
 
 import { useMemo, useState } from 'react'
 import Image from 'next/image'
-import { ArrowRight, Coins, Loader2, Network, Search, SlidersHorizontal, X } from 'lucide-react'
+import {
+  ArrowRight,
+  Coins,
+  Loader2,
+  Network,
+  Search,
+  Shield,
+  SlidersHorizontal,
+  X,
+} from 'lucide-react'
 
 import { AgentsList } from './AgentsList'
 import { FilterSelect, type FilterSelectOption } from '@/components/attack/FilterSelect'
@@ -16,6 +25,12 @@ import { cn } from '@/lib/utils'
 import { TEXT_COPIES } from '@/constants/text_copies'
 import { type SupportedChain, CHAINS, SUPPORTED_CHAINS } from '@/constants/chains'
 import { getTokenForCoinType } from '@/constants/tokens'
+import {
+  isSentinelAttackable,
+  SENTINEL_STATUS_FILTER_OPTIONS,
+  SENTINEL_STATUS_META,
+  type SentinelStatusFilter,
+} from '@/lib/sentinel-status'
 import { AttackStats } from '@/components/attack/AttackStats'
 import { SentinelMarquee } from '@/components/attack/SentinelMarquee'
 import { SentinelRowSkeleton } from '@/components/attack/SentinelRowSkeleton'
@@ -38,21 +53,13 @@ const NETWORK_FILTER_OPTIONS: FilterSelectOption[] = [
   })),
 ]
 
-// A sentinel is browsable in a row when it's active and not in a withdrawal
-// (attack-paused) window.
-function isBrowsable(agent: { state: string; unlock_timestamp?: string | number }) {
-  if (agent.state === 'defeated') return false
-  const unlockTs = Number(agent.unlock_timestamp)
-  const isAttackPaused = unlockTs > 0 && unlockTs <= Date.now()
-  return !isAttackPaused
-}
-
 export const AgentListView = () => {
   const [activeTab, setActiveTab] = useState<BountyTab>('all')
   const [sortField, setSortField] = useState<SortField>('total_balance')
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
   const [selectedSymbol, setSelectedSymbol] = useState<string | undefined>(undefined)
   const [selectedChain, setSelectedChain] = useState<SupportedChain | undefined>(undefined)
+  const [selectedStatus, setSelectedStatus] = useState<SentinelStatusFilter>('all')
   const [searchQuery, setSearchQuery] = useState('')
 
   const {
@@ -61,7 +68,7 @@ export const AgentListView = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useAllAgents({ sortField, sortDirection, chain: selectedChain })
+  } = useAllAgents({ sortField, sortDirection, chain: selectedChain, status: selectedStatus })
 
   const { data: featuredAgents, isPending: isFetchingFeatured } = useFeaturedAgents(true)
   const { data: trendingAgents, isPending: isFetchingTrending } = useTrendingAgents(true)
@@ -71,11 +78,11 @@ export const AgentListView = () => {
   const allAgents = allAgentsData?.pages.flatMap(page => page.agents) || []
   const totalAgents = allAgentsData?.pages[0]?.total ?? 0
 
-  const featuredForRow = (featuredAgents || []).filter(isBrowsable)
+  const featuredForRow = (featuredAgents || []).filter(isSentinelAttackable)
   const featuredIds = new Set(featuredForRow.map(a => a.agent_id))
 
   const trendingForRow = (trendingAgents || [])
-    .filter(isBrowsable)
+    .filter(isSentinelAttackable)
     .filter(a => !featuredIds.has(a.agent_id))
     .slice(0, MAX_TRENDING_SENTINELS)
 
@@ -297,6 +304,15 @@ export const AgentListView = () => {
             />
 
             <FilterSelect
+              icon={Shield}
+              label="Status"
+              options={SENTINEL_STATUS_FILTER_OPTIONS}
+              value={selectedStatus}
+              onValueChange={value => setSelectedStatus(value as SentinelStatusFilter)}
+              className="min-w-[150px] border-r border-[var(--color-border-default)]"
+            />
+
+            <FilterSelect
               icon={Coins}
               label="Token"
               options={tokenOptions}
@@ -318,7 +334,10 @@ export const AgentListView = () => {
           </div>
         </div>
 
-        {(selectedSymbol || selectedChain || searchQuery.trim()) && (
+        {(selectedSymbol ||
+          selectedChain ||
+          selectedStatus !== 'all' ||
+          searchQuery.trim()) && (
           <div className="mb-3 flex flex-wrap items-center gap-2">
             <span className="font-body text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-muted)]">
               Filtered by:
@@ -364,6 +383,17 @@ export const AgentListView = () => {
                 {selectedToken.symbol}
                 <button
                   onClick={() => setSelectedSymbol(undefined)}
+                  className="ml-0.5 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </span>
+            )}
+            {selectedStatus !== 'all' && (
+              <span className="font-body flex items-center gap-1.5 border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-white">
+                {SENTINEL_STATUS_META[selectedStatus].label}
+                <button
+                  onClick={() => setSelectedStatus('all')}
                   className="ml-0.5 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
                 >
                   <X className="h-3 w-3" />

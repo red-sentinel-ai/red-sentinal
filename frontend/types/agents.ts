@@ -61,7 +61,6 @@ export type SortField =
   | 'cost_per_message'
   | 'total_attacks'
   | 'agent_id'
-  | 'state'
   | null
 
 export type SortDirection = 'asc' | 'desc'
