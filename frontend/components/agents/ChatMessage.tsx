@@ -26,6 +26,7 @@ type ChatMessageProps = {
   senderProfile: UserProfile
   isWinningPrompt?: boolean
   onShowJury?: () => void
+  hideSuccessBanner?: boolean
 }
 
 export const ChatMessage = ({
@@ -34,6 +35,7 @@ export const ChatMessage = ({
   senderProfile,
   isWinningPrompt,
   onShowJury,
+  hideSuccessBanner,
 }: ChatMessageProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const [shouldTruncate, setShouldTruncate] = useState(false)
@@ -47,9 +49,9 @@ export const ChatMessage = ({
     }
   }, [message.content])
 
+  const username = senderProfile?.username
   const displayName =
-    senderProfile?.username || (message.sender ? truncateAddress(message.sender) : 'OPERATOR')
-  const profileLink = `/u/${senderProfile?.username || message.sender}`
+    username || (message.sender ? truncateAddress(message.sender) : 'OPERATOR')
 
   const timestamp = formatDistanceToNow(new Date(Number.parseInt(message.timestamp)))
 
@@ -65,9 +67,13 @@ export const ChatMessage = ({
       >
         {/* Header with username and timestamp */}
         <div className="industrial-header flex items-center gap-2 text-[10px] text-[var(--color-text-muted)]">
-          <Link href={profileLink} className="transition-colors hover:text-white">
-            @{displayName.toUpperCase()}
-          </Link>
+          {username ? (
+            <Link href={`/u/${username}`} className="transition-colors hover:text-white">
+              @{displayName.toUpperCase()}
+            </Link>
+          ) : (
+            <span>@{displayName.toUpperCase()}</span>
+          )}
           <span>//</span>
           <span>{timestamp.toUpperCase()} AGO</span>
           {isWinningPrompt && (
@@ -208,7 +214,7 @@ export const ChatMessage = ({
       </div>
 
       {/* Success Banner */}
-      {message.isSuccess && (
+      {message.isSuccess && !hideSuccessBanner && (
         <div className="border-[var(--color-success)]/30 border bg-[var(--color-success-muted)] p-4">
           <div className="industrial-header text-center text-sm text-[var(--color-success)]">
             SENTINEL_BREACHED // FUNDS_EXTRACTED

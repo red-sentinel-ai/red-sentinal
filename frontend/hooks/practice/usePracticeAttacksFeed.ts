@@ -6,16 +6,25 @@ import type { PracticeAttacksFeedResponse } from '@/types/practice'
 
 export const PRACTICE_ATTACKS_FEED_QUERY_KEY = 'practiceAttacksFeed'
 
-/** Public feed of all attempts against a practice sentinel (polls every 10s). */
-export function usePracticeAttacksFeed(id?: number | string) {
+interface UsePracticeAttacksFeedOptions {
+  network?: string
+  excludeOnchain?: boolean
+}
+
+export function usePracticeAttacksFeed(
+  id?: number | string,
+  { network = PRACTICE_NETWORK, excludeOnchain = false }: UsePracticeAttacksFeedOptions = {}
+) {
   return useQuery<PracticeAttacksFeedResponse>({
-    queryKey: [PRACTICE_ATTACKS_FEED_QUERY_KEY, id],
+    queryKey: [PRACTICE_ATTACKS_FEED_QUERY_KEY, network, id, excludeOnchain],
     enabled: id !== undefined && id !== '',
     staleTime: 5_000,
     refetchInterval: 10_000,
     queryFn: async () => {
       const res = await fetch(
-        `${SUI_SENTINEL_API_URL}/practice/${PRACTICE_NETWORK}/${id}/attacks?limit=100`
+        `${SUI_SENTINEL_API_URL}/practice/${network}/${id}/attacks?limit=100${
+          excludeOnchain ? '&exclude_onchain=true' : ''
+        }`
       )
       if (!res.ok) {
         throw new Error('Failed to load attack feed')
