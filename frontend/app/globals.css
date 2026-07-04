@@ -188,6 +188,14 @@
     @apply data-[state=active]:border-[var(--color-text-primary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)];
   }
 
+  .sentinel-action-attack {
+    @apply border-white bg-transparent text-white hover:bg-white hover:text-black;
+  }
+
+  .sentinel-action-view {
+    @apply border-[var(--color-border-default)] text-[var(--color-text-secondary)] hover:border-white hover:text-white;
+  }
+
   .player-directory-grid {
     display: grid;
     grid-template-columns: 2rem minmax(0, 1fr) auto;

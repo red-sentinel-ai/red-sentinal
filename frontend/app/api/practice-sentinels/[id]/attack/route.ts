@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 
+import { RED_TEAM_API_URL } from '@/constants'
 import { REDTEAM_BASE, redteamAuthHeader } from '@/lib/redteam'
 
 export async function POST(
@@ -9,7 +10,7 @@ export async function POST(
   try {
     const { id } = await params
     const body = await req.json()
-    const { attacker_address, user_prompt, session_id } = body
+    const { attacker_address, user_prompt, session_id, network } = body
 
     if (!attacker_address || !user_prompt) {
       return NextResponse.json(
@@ -18,7 +19,9 @@ export async function POST(
       )
     }
 
-    const response = await fetch(`${REDTEAM_BASE}/attack/${id}`, {
+    const base = network ? `${RED_TEAM_API_URL}${network}` : REDTEAM_BASE
+
+    const response = await fetch(`${base}/attack/${id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

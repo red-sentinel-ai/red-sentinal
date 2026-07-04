@@ -8,6 +8,8 @@ import type { Agent, SortField, SortDirection } from '@/types/agents'
 import { getTokenForCoinType } from '@/constants/tokens'
 import { CHAINS } from '@/constants/chains'
 import { TokenAmount } from './ui/common/TokenAmount'
+import { cn } from '@/lib/utils'
+import { getSentinelStatus, SENTINEL_STATUS_META } from '@/lib/sentinel-status'
 import Image from 'next/image'
 
 export enum TabType {
@@ -72,13 +74,7 @@ export const AgentsList = ({
                 <span>ID / Agent Name</span>
                 <SortIcon field="agent_id" />
               </div>
-              <div
-                className="flex cursor-pointer items-center hover:text-[var(--color-text-primary)]"
-                onClick={() => onSort('state')}
-              >
-                <span>Status</span>
-                <SortIcon field="state" />
-              </div>
+              <div className="flex items-center">Status</div>
               <div className="flex items-center">Network</div>
               <div
                 className="flex cursor-pointer items-center hover:text-[var(--color-text-primary)]"
@@ -113,7 +109,8 @@ export const AgentsList = ({
               {agents.map((agent, idx) => {
                 const agentToken = getTokenForCoinType(agent.coin_type)
                 const chainData = CHAINS[agent.chain as keyof typeof CHAINS] ?? CHAINS.sui
-                const isActive = agent.state === 'active'
+                const status = getSentinelStatus(agent)
+                const statusMeta = SENTINEL_STATUS_META[status]
 
                 return (
                   <motion.div
@@ -168,16 +165,14 @@ export const AgentsList = ({
                         <button
                           onClick={event => {
                             event.stopPropagation()
-                            if (isActive) router.push(`/attack/${agent.agent_path}`)
+                            router.push(`/attack/${agent.agent_path}`)
                           }}
-                          disabled={!isActive}
-                          className={`font-body rounded-full border px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.1em] transition-colors ${
-                            isActive
-                              ? 'border-white text-white hover:bg-white hover:text-black'
-                              : 'cursor-not-allowed border-[var(--color-border-default)] text-[var(--color-text-faint)]'
-                          }`}
+                          className={cn(
+                            'font-body rounded-full border px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.1em] transition-colors',
+                            statusMeta.actionClassName
+                          )}
                         >
-                          {isActive ? 'Attack' : 'Locked'}
+                          {statusMeta.actionLabel}
                         </button>
                       </div>
                       <p className="font-body pl-10 text-[9px] uppercase tracking-[0.08em] text-[var(--color-text-faint)]">
@@ -219,16 +214,15 @@ export const AgentsList = ({
                         <div>
                           <p className="text-xs uppercase text-[var(--color-text-muted)]">Status</p>
                           <div
-                            className={`flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider ${
-                              isActive ? 'text-white' : 'text-[var(--color-danger)]'
-                            }`}
+                            className={cn(
+                              'flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider',
+                              statusMeta.accentClassName
+                            )}
                           >
                             <span
-                              className={`h-1.5 w-1.5 rounded-full ${
-                                isActive ? 'animate-pulse bg-white' : 'bg-[var(--color-danger)]'
-                              }`}
+                              className={cn('h-1.5 w-1.5 rounded-full', statusMeta.dotClassName)}
                             />
-                            {isActive ? 'Active Breaches' : 'Offline'}
+                            {statusMeta.dotLabel}
                           </div>
                         </div>
                       </div>
@@ -283,13 +277,12 @@ export const AgentsList = ({
                         </div>
                       </div>
                       <div
-                        className={`inline-flex w-fit items-center border px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-[0.1em] ${
-                          isActive
-                            ? 'border-white/40 text-white'
-                            : 'border-white/20 text-[var(--color-text-muted)]'
-                        }`}
+                        className={cn(
+                          'inline-flex w-fit items-center border px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-[0.1em]',
+                          statusMeta.badgeClassName
+                        )}
                       >
-                        {isActive ? 'Active' : 'Locked'}
+                        {statusMeta.label}
                       </div>
                       <div className="font-body text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
                         {chainData.name}
@@ -317,16 +310,14 @@ export const AgentsList = ({
                         <button
                           onClick={event => {
                             event.stopPropagation()
-                            if (isActive) router.push(`/attack/${agent.agent_path}`)
+                            router.push(`/attack/${agent.agent_path}`)
                           }}
-                          disabled={!isActive}
-                          className={`font-body inline-flex items-center gap-1 rounded-full border px-6 py-2 text-[10px] font-extrabold uppercase tracking-[0.1em] transition-colors ${
-                            isActive
-                              ? 'border-white bg-transparent text-white hover:bg-white hover:text-black'
-                              : 'cursor-not-allowed border-[var(--color-border-default)] text-[var(--color-text-faint)]'
-                          }`}
+                          className={cn(
+                            'font-body inline-flex items-center gap-1 rounded-full border px-6 py-2 text-[10px] font-extrabold uppercase tracking-[0.1em] transition-colors',
+                            statusMeta.actionClassName
+                          )}
                         >
-                          {isActive ? 'Attack' : 'Locked'}
+                          {statusMeta.actionLabel}
                         </button>
                       </div>
                     </div>

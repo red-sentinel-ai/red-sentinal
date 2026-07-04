@@ -1,6 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { SUI_SENTINEL_API_URL, APP_NETWORK } from '@/constants'
 import type { Agent, SortField, SortDirection } from '@/types/agents'
+import type { SentinelStatusFilter } from '@/lib/sentinel-status'
 import type { SupportedChain } from '@/constants/chains'
 
 export const ALL_AGENTS_QUERY_KEY = 'allAgents'
@@ -17,6 +18,7 @@ export interface UseAllAgentsOptions {
   sortDirection?: SortDirection
   coinTypeFilter?: string
   chain?: SupportedChain
+  status?: SentinelStatusFilter
 }
 
 export const useAllAgents = ({
@@ -24,9 +26,17 @@ export const useAllAgents = ({
   sortDirection = 'desc',
   coinTypeFilter,
   chain,
+  status = 'all',
 }: UseAllAgentsOptions = {}) => {
   return useInfiniteQuery<AgentsPage, Error>({
-    queryKey: [ALL_AGENTS_QUERY_KEY, sortField, sortDirection, coinTypeFilter, chain ?? 'all'],
+    queryKey: [
+      ALL_AGENTS_QUERY_KEY,
+      sortField,
+      sortDirection,
+      coinTypeFilter,
+      chain ?? 'all',
+      status,
+    ],
     queryFn: async ({ pageParam }) => {
       const offset = pageParam as number
 
@@ -42,6 +52,7 @@ export const useAllAgents = ({
         params.append('sortDirection', sortDirection)
       }
       if (coinTypeFilter) params.append('coin_type', coinTypeFilter)
+      if (status !== 'all') params.append('status', status)
 
       const res = await fetch(
         `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}?${params.toString()}`,
