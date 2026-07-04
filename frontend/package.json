@@ -12,6 +12,7 @@
     "generate:types:prod": "export $(cat .env.production | xargs) && bunx supabase gen types typescript --project-id ${SUPABASE_PROJECT_REF} --schema sentinel > lib/database.types.ts"
   },
   "dependencies": {
+    "@100mslive/react-sdk": "^0.12.4",
     "@aws-sdk/client-ses": "^3.1019.0",
     "@coral-xyz/anchor": "^0.32.1",
     "@mysten/bcs": "^1.6.1",
