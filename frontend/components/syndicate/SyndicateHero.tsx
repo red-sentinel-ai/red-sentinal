@@ -7,9 +7,10 @@ import type { BackendSyndicate } from '@/types/syndicate'
 interface Props {
   meta: BackendSyndicate | undefined
   onRequestPermission?: () => void
+  onOpenVoice?: () => void
 }
 
-export function SyndicateHero({ meta, onRequestPermission }: Props) {
+export function SyndicateHero({ meta, onRequestPermission, onOpenVoice }: Props) {
   const agentId = meta?.agent_id
   const isPermissioned = meta?.whitelist_enabled ?? false
 
@@ -51,20 +52,14 @@ export function SyndicateHero({ meta, onRequestPermission }: Props) {
               <MessageSquare className="h-4 w-4" />
               <span>Private Chat Room</span>
             </Link>
-            <div className="group relative">
-              <button
-                type="button"
-                disabled
-                title="Coming soon"
-                className="button-ghost-terminal inline-flex cursor-not-allowed items-center justify-center gap-2 px-6 py-3 opacity-40"
-              >
-                <Mic className="h-4 w-4" />
-                <span>Voice</span>
-              </button>
-              <span className="industrial-header pointer-events-none absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap border border-[var(--color-border-strong)] bg-[var(--color-bg-elevated)] px-2 py-1 text-[9px] tracking-widest text-[var(--color-text-muted)] opacity-0 transition-opacity group-hover:opacity-100">
-                COMING_SOON
-              </span>
-            </div>
+            <button
+              type="button"
+              onClick={onOpenVoice}
+              className="button-ghost-terminal inline-flex items-center justify-center gap-2 px-6 py-3"
+            >
+              <Mic className="h-4 w-4" />
+              <span>Voice</span>
+            </button>
           </div>
 
           {meta.description && (
