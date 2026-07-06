@@ -53,7 +53,6 @@ export const TEXT_COPIES = {
 }
 
 export const LOCAL_API_PATH = 'https://tee.redsentinel.xyz'
-export const RED_TEAM_API_URL = `https://redteam.redsentinel.xyz/`
 export const SUI_SENTINEL_API_URL =
   process.env.NEXT_PUBLIC_SUI_SENTINEL_API_URL || 'https://api.redsentinel.xyz'
 export const BACKEND_API_ADMIN_TOKEN = process.env.BACKEND_API_ADMIN_TOKEN
