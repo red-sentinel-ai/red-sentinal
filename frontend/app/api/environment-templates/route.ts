@@ -1,13 +1,17 @@
 import { NextResponse } from 'next/server'
 
-import { REDTEAM_BASE, redteamAuthHeader } from '@/lib/redteam'
+import { BACKEND_API_ADMIN_TOKEN, SUI_SENTINEL_API_URL } from '@/constants'
+import { PRACTICE_NETWORK } from '@/lib/practice'
 
 export async function GET() {
   try {
-    const response = await fetch(`${REDTEAM_BASE}/environment-templates`, {
-      headers: { Authorization: redteamAuthHeader() },
-      cache: 'no-store',
-    })
+    const response = await fetch(
+      `${SUI_SENTINEL_API_URL}/sentinels/${PRACTICE_NETWORK}/environment-templates`,
+      {
+        headers: { Authorization: `Bearer ${BACKEND_API_ADMIN_TOKEN}` },
+        cache: 'no-store',
+      }
+    )
 
     if (!response.ok) {
       const errorText = await response.text()
