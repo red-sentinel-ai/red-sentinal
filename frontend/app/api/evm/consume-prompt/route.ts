@@ -1,3 +1,4 @@
+import { APP_ENVIRONMENT } from '@/constants'
 import { EVM_TEE_API_PATH, EVM_TEE_NETWORK, resolveEvmTeeNetwork } from '@/constants/evm'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -6,7 +7,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { chainId, ...payload } = body
     const teeNetwork = chainId ? resolveEvmTeeNetwork(chainId) : EVM_TEE_NETWORK
-    const teeUrl = `${EVM_TEE_API_PATH}/${teeNetwork}/consume-prompt`
+    const teeUrl = `${EVM_TEE_API_PATH}/${APP_ENVIRONMENT}/${teeNetwork}/consume-prompt`
 
     const response = await fetch(teeUrl, {
       method: 'POST',
