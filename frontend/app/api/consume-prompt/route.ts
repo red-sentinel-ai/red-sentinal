@@ -1,11 +1,11 @@
-import { APP_NETWORK, LOCAL_API_PATH } from '@/constants'
+import { APP_ENVIRONMENT, APP_NETWORK, LOCAL_API_PATH } from '@/constants'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
 
-    const response = await fetch(`${LOCAL_API_PATH}/${APP_NETWORK}/consume-prompt`, {
+    const response = await fetch(`${LOCAL_API_PATH}/${APP_ENVIRONMENT}/${APP_NETWORK}/consume-prompt`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
