@@ -12,3 +12,6 @@ export type SupportedToken = {
 
 export const APP_NETWORK: 'mainnet' | 'testnet' =
   process.env.NEXT_PUBLIC_APP_NETWORK === 'testnet' ? 'testnet' : 'mainnet'
+
+export const APP_ENVIRONMENT: 'staging' | 'prod' =
+  APP_NETWORK === 'testnet' ? 'staging' : 'prod'
