@@ -8,6 +8,7 @@ import { isEvmChain } from '@/constants/chains'
 import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
 import { type SupportedToken } from '@/constants'
 import { registerAgentUtil, resolveProviderCredentials } from '../utils'
+import type { AgenticConfig } from '../agentic-types'
 import { useDeploySuiAgent } from './useDeploySuiAgent'
 import { useDeploySolanaAgent } from './useDeploySolanaAgent'
 import { useDeployEvmAgent } from './useDeployEvmAgent'
@@ -21,6 +22,7 @@ interface UseDeployAgentOptions {
   tokenCount: number
   agentImage: File | null
   selectedImage: { url: string; isCustom: boolean; file?: File | null } | null
+  agenticConfig: AgenticConfig | null
 }
 
 export function useDeployAgent({
@@ -31,6 +33,7 @@ export function useDeployAgent({
   tokenCount,
   agentImage,
   selectedImage,
+  agenticConfig,
 }: UseDeployAgentOptions) {
   const { activeChain } = useActiveChain()
   const evmChainId = useChainId()
@@ -149,7 +152,8 @@ export function useDeployAgent({
         formData.juryPrompt,
         activeChain,
         credentials,
-        isEvmChain(activeChain) ? evmChainId : undefined
+        isEvmChain(activeChain) ? evmChainId : undefined,
+        agenticConfig
       )
 
       // 3. Execute chain-specific transaction
