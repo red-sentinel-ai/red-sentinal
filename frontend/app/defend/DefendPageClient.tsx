@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -43,7 +43,8 @@ import { EnvironmentTemplatePicker } from '@/components/defend/agentic/Environme
 import { EnvironmentSeedEditor } from '@/components/defend/agentic/EnvironmentSeedEditor'
 import { EnabledToolsChecklist } from '@/components/defend/agentic/EnabledToolsChecklist'
 import { useEnvironmentTemplate } from './hooks/useEnvironmentTemplates'
-import type { SentinelType } from './agentic-types'
+import type { AgenticConfig, SentinelType } from './agentic-types'
+import { buildAgenticConfig, validateAgenticSelection } from './agentic-utils'
 import { FormInput } from './components/FormInput'
 import { LLMProviderSection } from './components/LLMProviderSection'
 import { useDefendForm } from './hooks/useDefendForm'
@@ -198,6 +199,15 @@ export default function DefendPageClient() {
     countJuryPromptTokens,
   })
 
+  const agenticConfig = useMemo<AgenticConfig | null>(() => {
+    if (sentinelType !== 'agentic' || !templateDetail) return null
+    return buildAgenticConfig({
+      templateDetail,
+      enabledToolIds,
+      initialEnvironment: agenticEnvironment,
+    })
+  }, [sentinelType, templateDetail, enabledToolIds, agenticEnvironment])
+
   const {
     isLoading,
     deployedAgentPath,
@@ -214,6 +224,7 @@ export default function DefendPageClient() {
     tokenCount,
     agentImage,
     selectedImage,
+    agenticConfig,
   })
 
   const [isGeneratingConfig, setIsGeneratingConfig] = useState(false)
@@ -251,6 +262,13 @@ export default function DefendPageClient() {
     if (formData.llmProvider === 'custom' && !customProvider.isValidated) {
       toast.error('Please validate your custom provider connection before deploying')
       return
+    }
+    if (sentinelType === 'agentic') {
+      const agenticError = validateAgenticSelection({ templateDetail, enabledToolIds })
+      if (agenticError) {
+        toast.error(agenticError)
+        return
+      }
     }
     const result = await deploy(customProvider.isValidated, () =>
       validateForm(customProvider.isValidated)
