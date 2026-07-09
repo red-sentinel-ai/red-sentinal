@@ -50,7 +50,7 @@ export const BNB_CONFIG = APP_NETWORK === 'testnet' ? BNB_TESTNET_CONFIG : BNB_M
 export const BOT_CHAIN_TESTNET_CONFIG = {
   chainId: 968,
   rpcUrl: process.env.NEXT_PUBLIC_BOT_TESTNET_RPC_URL ?? 'https://rpc.bohr.life',
-  contractAddress: '0x5edD3650E090192f0f54EDdC870B25536F5CaB29' as `0x${string}`,
+  contractAddress: '0xa0f0ECe3e04906adBCD1005AC525D8Fddc01a576' as `0x${string}`,
   explorerUrl: 'https://scan.bohr.life',
 }
 
