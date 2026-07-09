@@ -35,10 +35,6 @@ export function PracticeSentinelCard({ sentinel }: { sentinel: PracticeSentinel 
           <h3 className="font-display min-w-0 flex-1 truncate text-lg font-extrabold uppercase tracking-[0.04em] text-white">
             {name}
           </h3>
-          {/* <span className="font-body mt-1 inline-flex shrink-0 items-center gap-1 text-[9px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
-            <Gauge className="h-3 w-3" />
-            Lvl {sentinel.difficulty_level}
-          </span> */}
         </div>
 
         {sentinel.model_name && (

@@ -47,6 +47,12 @@ export interface ToolConfig {
   permissions?: Record<string, unknown>
 }
 
+export interface LiveToolMeta {
+  tool_id: string
+  name: string
+  description: string
+}
+
 /** Composed sandbox configuration: which templates and their seeded state. */
 export interface ScenarioConfig {
   template_ids: string[]
