@@ -42,6 +42,7 @@ import { SentinelTypeToggle } from '@/components/defend/agentic/SentinelTypeTogg
 import { EnvironmentTemplatePicker } from '@/components/defend/agentic/EnvironmentTemplatePicker'
 import { EnvironmentSeedEditor } from '@/components/defend/agentic/EnvironmentSeedEditor'
 import { EnabledToolsChecklist } from '@/components/defend/agentic/EnabledToolsChecklist'
+import { LiveToolsChecklist } from '@/components/defend/agentic/LiveToolsChecklist'
 import { useEnvironmentTemplate } from './hooks/useEnvironmentTemplates'
 import type { AgenticConfig, SentinelType } from './agentic-types'
 import { buildAgenticConfig, validateAgenticSelection } from './agentic-utils'
@@ -79,6 +80,7 @@ export default function DefendPageClient() {
   // The seeded `initial_environment` (namespace-keyed) for the agentic sandbox.
   const [agenticEnvironment, setAgenticEnvironment] = useState<Record<string, unknown>>({})
   const [enabledToolIds, setEnabledToolIds] = useState<string[]>([])
+  const [enabledLiveToolIds, setEnabledLiveToolIds] = useState<string[]>([])
   const { data: templateDetail } = useEnvironmentTemplate(selectedTemplateId)
 
   const handleSelectTemplate = (templateId: string) => {
@@ -200,13 +202,16 @@ export default function DefendPageClient() {
   })
 
   const agenticConfig = useMemo<AgenticConfig | null>(() => {
-    if (sentinelType !== 'agentic' || !templateDetail) return null
+    if (sentinelType !== 'agentic') return null
+    const hasSelection = Boolean(templateDetail) || enabledLiveToolIds.length > 0
+    if (!hasSelection) return null
     return buildAgenticConfig({
       templateDetail,
       enabledToolIds,
+      enabledLiveToolIds,
       initialEnvironment: agenticEnvironment,
     })
-  }, [sentinelType, templateDetail, enabledToolIds, agenticEnvironment])
+  }, [sentinelType, templateDetail, enabledToolIds, enabledLiveToolIds, agenticEnvironment])
 
   const {
     isLoading,
@@ -264,7 +269,11 @@ export default function DefendPageClient() {
       return
     }
     if (sentinelType === 'agentic') {
-      const agenticError = validateAgenticSelection({ templateDetail, enabledToolIds })
+      const agenticError = validateAgenticSelection({
+        templateDetail,
+        enabledToolIds,
+        enabledLiveToolIds,
+      })
       if (agenticError) {
         toast.error(agenticError)
         return
@@ -405,36 +414,43 @@ export default function DefendPageClient() {
           <SentinelTypeToggle value={sentinelType} onChange={setSentinelType} />
 
           {sentinelType === 'agentic' && (
-            <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
-              {/* Left: environment list (fixed) */}
-              <div className="lg:w-72 lg:shrink-0">
-                <EnvironmentTemplatePicker
-                  selectedTemplateId={selectedTemplateId}
-                  onSelect={handleSelectTemplate}
-                />
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
+                {/* Left: environment list (fixed) */}
+                <div className="lg:w-72 lg:shrink-0">
+                  <EnvironmentTemplatePicker
+                    selectedTemplateId={selectedTemplateId}
+                    onSelect={handleSelectTemplate}
+                  />
+                </div>
+
+                {/* Right: selected environment's configuration panel */}
+                <div className="min-w-0 flex-1">
+                  {templateDetail ? (
+                    <div className="flex flex-col gap-6">
+                      <EnvironmentSeedEditor
+                        templateDetail={templateDetail}
+                        value={agenticEnvironment}
+                        onChange={setAgenticEnvironment}
+                      />
+                      <EnabledToolsChecklist
+                        tools={templateDetail.tools}
+                        enabledToolIds={enabledToolIds}
+                        onChange={setEnabledToolIds}
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex h-full min-h-[160px] items-center justify-center rounded-lg border border-dashed border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-6 text-center text-sm text-[var(--color-text-muted)]">
+                      Select an environment, or enable a live tool below.
+                    </div>
+                  )}
+                </div>
               </div>
 
-              {/* Right: selected environment's configuration panel */}
-              <div className="min-w-0 flex-1">
-                {templateDetail ? (
-                  <div className="flex flex-col gap-6">
-                    <EnvironmentSeedEditor
-                      templateDetail={templateDetail}
-                      value={agenticEnvironment}
-                      onChange={setAgenticEnvironment}
-                    />
-                    <EnabledToolsChecklist
-                      tools={templateDetail.tools}
-                      enabledToolIds={enabledToolIds}
-                      onChange={setEnabledToolIds}
-                    />
-                  </div>
-                ) : (
-                  <div className="flex h-full min-h-[160px] items-center justify-center rounded-lg border border-dashed border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-6 text-center text-sm text-[var(--color-text-muted)]">
-                    Select an environment to configure its settings.
-                  </div>
-                )}
-              </div>
+              <LiveToolsChecklist
+                enabledLiveToolIds={enabledLiveToolIds}
+                onChange={setEnabledLiveToolIds}
+              />
             </div>
           )}
 

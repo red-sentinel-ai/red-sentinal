@@ -54,10 +54,7 @@ export function AttackWorkspace({
 
       <div className="min-h-0 flex-1">
         {challengeMode === 'casual' ? (
-          <CasualChatInterface
-            agent={agent}
-            onSwitchToAttackMode={() => onChangeChallengeMode('attack')}
-          />
+          <CasualChatInterface agent={agent} />
         ) : (
           <ChatInterface
             agent={agent}

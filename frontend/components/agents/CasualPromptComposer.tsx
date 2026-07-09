@@ -44,7 +44,7 @@ export function CasualPromptComposer({
             onChange={e => onChange(e.target.value)}
             className="terminal-scrollbar placeholder:text-[var(--color-text-muted)]/30 min-h-[56px] w-full resize-none border-0 bg-[var(--color-bg-base)] px-4 py-3 font-mono text-sm text-white focus:outline-none focus:ring-0"
             disabled={isSubmitting}
-            placeholder="Craft your attack prompt here — no wallet needed..."
+            placeholder="Type a message — no wallet needed..."
             rows={1}
             style={{ overflow: 'hidden' }}
             autoComplete="off"
