@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { FocusModeProvider, useFocusMode } from '@/context/FocusModeContext'
+import { TopbarSlotProvider } from '@/context/TopbarSlotContext'
 import { AppSidebar } from './AppSidebar'
 import { AppTopbar } from './AppTopbar'
 
@@ -25,7 +26,9 @@ function AppShellContent({ children }: { children: ReactNode }) {
 export function AppShell({ children }: { children: ReactNode }) {
   return (
     <FocusModeProvider>
-      <AppShellContent>{children}</AppShellContent>
+      <TopbarSlotProvider>
+        <AppShellContent>{children}</AppShellContent>
+      </TopbarSlotProvider>
     </FocusModeProvider>
   )
 }

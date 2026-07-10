@@ -188,6 +188,11 @@
     @apply data-[state=active]:border-[var(--color-text-primary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)];
   }
 
+  .attack-stat-cell {
+    @apply relative min-h-[84px] bg-[var(--color-bg-base)] p-4 md:min-h-[126px] md:p-8;
+    @apply last:col-span-2 lg:last:col-span-1;
+  }
+
   .sentinel-action-attack {
     @apply border-white bg-transparent text-white hover:bg-white hover:text-black;
   }

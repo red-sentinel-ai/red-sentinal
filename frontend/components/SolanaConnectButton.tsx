@@ -4,12 +4,13 @@ import { useEffect } from 'react'
 import posthog from 'posthog-js'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'
 import { SOLANA_CLUSTER } from '@/constants/solana'
-import { truncateAddress } from '@/lib/utils'
+import { cn, truncateAddress } from '@/lib/utils'
 import { useSolanaWallet } from '@/hooks/useSolanaWallet'
 import { useSolanaBalance } from '@/hooks/useSolanaBalance'
+import { ConnectWalletLabel } from '@/components/ConnectWalletLabel'
 import { WalletDropdown } from '@/components/WalletDropdown'
 
-export function SolanaConnectButton() {
+export function SolanaConnectButton({ compact }: { compact?: boolean }) {
   const { publicKey, disconnect } = useSolanaWallet()
   const { setVisible } = useWalletModal()
   const { balance, isLoading: isLoadingBalance } = useSolanaBalance()
@@ -32,9 +33,13 @@ export function SolanaConnectButton() {
     return (
       <button
         onClick={() => setVisible(true)}
-        className="rs-connect-button min-w-[180px] px-6 py-2"
+        aria-label="Connect Wallet"
+        className={cn(
+          'rs-connect-button group py-2',
+          compact ? 'px-3 md:min-w-[180px] md:px-6' : 'min-w-[180px] px-6'
+        )}
       >
-        Connect Wallet
+        <ConnectWalletLabel compact={compact} />
       </button>
     )
   }
@@ -46,6 +51,7 @@ export function SolanaConnectButton() {
       balanceLabel={`${balance?.toFixed(4) ?? '0.0000'} SOL`}
       isLoadingBalance={isLoadingBalance}
       onDisconnect={disconnect}
+      compact={compact}
     />
   )
 }

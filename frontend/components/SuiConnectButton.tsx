@@ -10,10 +10,12 @@ import {
 import { formatAddress } from '@mysten/sui/utils'
 import { APP_NETWORK } from '@/constants'
 import { SUI_TOKEN } from '@/constants/tokens'
+import { cn } from '@/lib/utils'
 import { useSuiTokenBalance } from '@/hooks/useSuiTokenBalance'
+import { ConnectWalletLabel } from '@/components/ConnectWalletLabel'
 import { WalletDropdown } from '@/components/WalletDropdown'
 
-export function SuiConnectButton() {
+export function SuiConnectButton({ compact }: { compact?: boolean }) {
   const account = useCurrentAccount()
   const { mutate: disconnect } = useDisconnectWallet()
   const { balance, isLoading: isLoadingBalance } = useSuiTokenBalance(
@@ -34,7 +36,13 @@ export function SuiConnectButton() {
   }, [account?.address])
 
   if (!account) {
-    return <DappKitConnectButton className="rs-connect-button min-w-[180px]" />
+    return (
+      <DappKitConnectButton
+        className={cn('rs-connect-button group', compact ? 'md:min-w-[180px]' : 'min-w-[180px]')}
+        aria-label="Connect Wallet"
+        connectText={<ConnectWalletLabel compact={compact} />}
+      />
+    )
   }
 
   return (
@@ -44,6 +52,7 @@ export function SuiConnectButton() {
       balanceLabel={`${balance.toFixed(4)} SUI`}
       isLoadingBalance={isLoadingBalance}
       onDisconnect={disconnect}
+      compact={compact}
     />
   )
 }
