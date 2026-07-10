@@ -27,7 +27,7 @@ export function CasualMessageFeed({ agent, messages, isSubmitting }: CasualMessa
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div className="flex h-12 shrink-0 items-center border-b border-[var(--color-border-strong)] px-6 lg:px-8">
+      <div className="hidden h-12 shrink-0 items-center border-b border-[var(--color-border-strong)] px-6 md:flex lg:px-8">
         <span className="industrial-header text-[11px] tracking-widest text-white">
           CASUAL_CHAT
         </span>

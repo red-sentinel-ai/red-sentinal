@@ -17,6 +17,8 @@ interface AttackWorkspaceProps {
   onBackToAttack: () => void
   challengeMode: ChallengeMode
   onChangeChallengeMode: (mode: ChallengeMode) => void
+  /** False when the mode toggle is hoisted into the app topbar (mobile). */
+  showModeToggle?: boolean
   chatEvents: ChatEvent[]
   eventsLoading?: boolean
   apiResponse: ConsumePromptApiResponse | null
@@ -33,6 +35,7 @@ export function AttackWorkspace({
   onBackToAttack,
   challengeMode,
   onChangeChallengeMode,
+  showModeToggle = true,
   chatEvents,
   eventsLoading,
   apiResponse,
@@ -48,9 +51,11 @@ export function AttackWorkspace({
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex shrink-0 items-center justify-center border-b border-[var(--color-border-strong)] bg-[var(--color-bg-base)] px-4 py-2">
-        <ChallengeModeToggle mode={challengeMode} onChange={onChangeChallengeMode} />
-      </div>
+      {showModeToggle && (
+        <div className="flex shrink-0 items-center justify-center border-b border-[var(--color-border-strong)] bg-[var(--color-bg-base)] px-4 py-2">
+          <ChallengeModeToggle mode={challengeMode} onChange={onChangeChallengeMode} />
+        </div>
+      )}
 
       <div className="min-h-0 flex-1">
         {challengeMode === 'casual' ? (
