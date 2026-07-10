@@ -64,6 +64,29 @@ function getSentinelReference(agent: Agent): SentinelReference | null {
   }
 }
 
+interface SentinelOwnerLink {
+  label: string
+  href: string
+}
+
+function getSentinelOwnerLink(agent: Agent): SentinelOwnerLink {
+  const { syndicate } = agent
+
+  if (syndicate) {
+    return {
+      label: truncateAddress(agent.creator),
+      href: syndicate.syndicate_path ?? `/syndicate/${syndicate.contract_address}`,
+    }
+  }
+
+  const ownerUsername = agent.defender_profile?.username
+  if (ownerUsername) {
+    return { label: ownerUsername, href: `/u/${ownerUsername}` }
+  }
+
+  return { label: truncateAddress(agent.creator), href: `/u/${agent.creator}` }
+}
+
 export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: AgentSidebarProps) => {
   const [activeSince, setActiveSince] = useState({
     days: 0,
@@ -95,9 +118,7 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
   const creatorRewardLabel = `${DUMMY_CREATOR_REWARD.toFixed(2)} ${agentToken.symbol}`
 
   const isSyndicate = !!agent.syndicate
-  const ownerHref = agent.syndicate
-    ? (agent.syndicate.syndicate_path ?? `/syndicate/${agent.syndicate.contract_address}`)
-    : `/u/${agent.creator}`
+  const ownerLink = getSentinelOwnerLink(agent)
 
   const sentinelReference = getSentinelReference(agent)
 
@@ -336,10 +357,11 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
               </span>
               <div className="flex flex-col items-start gap-1.5">
                 <Link
-                  href={ownerHref}
-                  className="industrial-header text-accent text-[11px] transition-opacity hover:opacity-70"
+                  href={ownerLink.href}
+                  title={agent.creator}
+                  className="industrial-header text-accent max-w-full truncate text-[11px] transition-opacity hover:opacity-70"
                 >
-                  {truncateAddress(agent.creator)}
+                  {ownerLink.label}
                 </Link>
                 {isSyndicate && (
                   <span className="industrial-header inline-block border border-[var(--color-gold-primary)] px-1.5 py-0.5 text-[9px] tracking-widest text-[var(--color-gold-primary)]">
