@@ -42,10 +42,11 @@ export interface PracticeAttackResponse {
   confidence?: number
 }
 
-/** One attempt in the public feed (GET /practice/{network}/{id}/attacks). */
+/** One turn in the public feed (GET /practice/{network}/{id}/attacks). */
 export interface PracticeAttackFeedItem {
   type: 'prompt'
   id: string
+  mode: SentinelInteractionMode
   session_id: string | null
   sender: string | null
   content: string

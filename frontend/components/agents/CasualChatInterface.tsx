@@ -9,7 +9,9 @@ import { CasualMessageFeed } from './CasualMessageFeed'
 import { CasualPromptComposer } from './CasualPromptComposer'
 import { getPracticeAttackerAddress } from '@/lib/practice'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
+import { useAttackFeedMessages } from '@/hooks/practice/useAttackFeedMessages'
 import { useAttackPracticeSentinel } from '@/hooks/practice/useAttackPracticeSentinel'
+import { usePracticeAttacksFeed } from '@/hooks/practice/usePracticeAttacksFeed'
 
 interface CasualChatInterfaceProps {
   agent: Agent
@@ -20,7 +22,7 @@ export function CasualChatInterface({ agent }: CasualChatInterfaceProps) {
   const [anonAddress, setAnonAddress] = useState('')
 
   const [promptInput, setPromptInput] = useState('')
-  const [messages, setMessages] = useState<ChatMessageType[]>([])
+  const [pendingRound, setPendingRound] = useState<ChatMessageType[] | null>(null)
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
 
@@ -29,8 +31,18 @@ export function CasualChatInterface({ agent }: CasualChatInterfaceProps) {
   }, [connectedAddress])
   const attackerAddress = connectedAddress ?? anonAddress
 
+  const { data: feed, refetch: refetchFeed } = usePracticeAttacksFeed(agent.agent_id, {
+    network: agent.casual_network,
+    mode: 'chat',
+  })
   const chat = useAttackPracticeSentinel()
   const isSubmitting = chat.isPending
+
+  const { messages, isRoundIndexed } = useAttackFeedMessages(feed, pendingRound)
+
+  useEffect(() => {
+    if (pendingRound && isRoundIndexed) setPendingRound(null)
+  }, [pendingRound, isRoundIndexed])
 
   const handleSubmit = async () => {
     const prompt = promptInput.trim()
@@ -45,7 +57,7 @@ export function CasualChatInterface({ agent }: CasualChatInterfaceProps) {
     }
 
     setSubmitError(null)
-    setMessages(prev => [...prev, userMessage])
+    setPendingRound([userMessage])
     setPromptInput('')
 
     try {
@@ -58,20 +70,21 @@ export function CasualChatInterface({ agent }: CasualChatInterfaceProps) {
         mode: 'chat',
       })
       setSessionId(data.session_id)
-      setMessages(prev => [
-        ...prev,
-        {
-          id: `agent-${Date.now()}`,
-          type: 'agent',
-          content: data.agent_response,
-          timestamp: Date.now().toString(),
-        },
-      ])
+
+      const agentMessage: ChatMessageType = {
+        id: `agent-${Date.now()}`,
+        type: 'agent',
+        content: data.agent_response,
+        timestamp: Date.now().toString(),
+      }
+      setPendingRound(prev => (prev ? [...prev, agentMessage] : [agentMessage]))
+
+      refetchFeed()
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Message failed to send'
       setSubmitError(message)
       toast.error(message)
-      setMessages(prev => prev.filter(msg => msg.id !== userMessage.id))
+      setPendingRound(null)
       setPromptInput(prompt)
     }
   }

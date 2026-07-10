@@ -39,7 +39,9 @@ export function PracticeChatInterface({
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-  const { data: feed, refetch: refetchFeed } = usePracticeAttacksFeed(sentinel.sentinel_id)
+  const { data: feed, refetch: refetchFeed } = usePracticeAttacksFeed(sentinel.sentinel_id, {
+    mode: 'attack',
+  })
   const attackMutation = useAttackPracticeSentinel()
   const isSubmitting = attackMutation.isPending
 
