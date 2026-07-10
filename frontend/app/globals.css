@@ -241,6 +241,53 @@
   .text-accent {
     color: var(--color-accent);
   }
+
+  /* Markdown content rendered from LLM output */
+  .markdown-content {
+    @apply font-mono text-sm leading-relaxed text-white/80;
+  }
+  .markdown-content p {
+    @apply mb-3 last:mb-0;
+  }
+  .markdown-content strong {
+    @apply font-bold text-white;
+  }
+  .markdown-content em {
+    @apply italic;
+  }
+  .markdown-content ul {
+    @apply mb-3 list-disc pl-5 last:mb-0;
+  }
+  .markdown-content ol {
+    @apply mb-3 list-decimal pl-5 last:mb-0;
+  }
+  .markdown-content li {
+    @apply mb-1 last:mb-0;
+  }
+  .markdown-content code {
+    @apply rounded bg-white/10 px-1 py-0.5 text-xs text-white/90;
+  }
+  .markdown-content pre {
+    @apply mb-3 overflow-x-auto border border-white/10 bg-black/30 p-3 last:mb-0;
+  }
+  .markdown-content pre code {
+    @apply bg-transparent p-0;
+  }
+  .markdown-content a {
+    @apply text-[var(--color-accent)] underline transition-opacity hover:opacity-80;
+  }
+  .markdown-content blockquote {
+    @apply mb-3 border-l-2 border-white/20 pl-3 italic last:mb-0;
+  }
+  .markdown-content h1,
+  .markdown-content h2,
+  .markdown-content h3,
+  .markdown-content h4 {
+    @apply mb-2 mt-4 font-bold text-white first:mt-0;
+  }
+  .markdown-content hr {
+    @apply my-4 border-white/10;
+  }
 }
 
 @layer utilities {
