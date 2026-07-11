@@ -54,8 +54,8 @@ Browser (React, Next.js App Router)
   │  lib/auth-api.ts  →  fetch()  with `x-user-id` header (writes) / plain GET (reads)
   ▼
 Backend Fastify API  (backend-service/api)   base URL = SUI_SENTINEL_API_URL
-  │   routes/social/index.js     ← follow / unfollow / followers / following / counts
-  │   shared/user-auth.js         ← requireUserAuth preHandler (x-user-id gate)
+  │   routes/social/index.ts     ← follow / unfollow / followers / following / counts
+  │   shared/user-auth.ts         ← requireUserAuth preHandler (x-user-id gate)
   │   plugins/supabase.js         ← service-role client, schema: 'sentinel'
   ▼
 Supabase Postgres  (sentinel schema)
@@ -69,7 +69,7 @@ Why the backend and not Next.js API routes? Two reasons:
    check) already lives in the backend `/auth` routes. The Next.js `/api/profile/*` routes trust a
    wallet address passed in the request body — we deliberately do **not** put follow writes there.
 2. **Reuse.** The enrichment join (username/avatar/socials/wallets) is the same one the rewards
-   leaderboard already does in `routes/rewards/index.js`, using the service-role Supabase client.
+   leaderboard already does in `routes/rewards/index.ts`, using the service-role Supabase client.
 
 ---
 
@@ -158,7 +158,7 @@ All three files live under `backend-service/api/`. Routes are auto-loaded by `@f
 (`app.js`), so the folder name `routes/social/` becomes the URL prefix `/social`. The full base URL
 in the frontend is `SUI_SENTINEL_API_URL` (prod: `https://api.redsentinel.xyz`).
 
-### 5.1 `shared/user-auth.js` — the auth gate
+### 5.1 `shared/user-auth.ts` — the auth gate
 
 ```js
 export async function requireUserAuth(request) { … }
@@ -172,7 +172,7 @@ A Fastify `preHandler`. It:
 This mirrors `shared/auth.js`'s `requireAdminAuth` (the admin-token equivalent). Use it on any new
 user-attributed write endpoint, social or otherwise.
 
-### 5.2 `routes/social/schemas.js` — request/response validation
+### 5.2 `routes/social/schemas.ts` — request/response validation
 
 Plain Fastify JSON-schema objects (the repo convention — **not** Zod). Notable bits:
 - `userIdHeader` — `headers: { required: ['x-user-id'], 'x-user-id': { format: 'uuid' } }`. Fastify
@@ -180,7 +180,7 @@ Plain Fastify JSON-schema objects (the repo convention — **not** Zod). Notable
 - List user objects are `{ type: 'object', additionalProperties: true }` on purpose — Fastify's
   response serializer strips unknown keys, and we don't want to lose enriched fields.
 
-### 5.3 `routes/social/index.js` — the endpoints + helpers
+### 5.3 `routes/social/index.ts` — the endpoints + helpers
 
 **Internal helpers** (not exported, used by the handlers):
 
@@ -405,7 +405,7 @@ another user's `/u/<username>`:
 - **Notifications on follow:** already wired. `POST /social/follow` fires the Novu `new-follower`
   workflow to the followed user (fire-and-forget, only on a *new* follow — the upsert's `.select('id')`
   returns a row only when an edge is actually inserted). See `notifyNewFollower` in
-  `routes/social/index.js` and the full notification system in
+  `routes/social/index.ts` and the full notification system in
   `sui-sentinel/docs/NOVU_NOTIFICATIONS.md` (Flow C). If you change this trigger, update that doc too.
 - **Denormalized counts:** only if profiling shows the live `count` queries are hot. Add
   `followers_count`/`following_count` to `ss_users` and maintain them in the follow/unfollow handlers
@@ -438,9 +438,9 @@ another user's `/u/<username>`:
 
 | file | role |
 |---|---|
-| `shared/user-auth.js` | `requireUserAuth` preHandler (x-user-id gate) |
-| `routes/social/schemas.js` | JSON-schema validation for the 5 endpoints |
-| `routes/social/index.js` | the 5 endpoints + enrichment helpers + `notifyNewFollower` (Novu `new-follower` trigger) |
+| `shared/user-auth.ts` | `requireUserAuth` preHandler (x-user-id gate) |
+| `routes/social/schemas.ts` | JSON-schema validation for the 5 endpoints |
+| `routes/social/index.ts` | the 5 endpoints + enrichment helpers + `notifyNewFollower` (Novu `new-follower` trigger) |
 
 **Frontend — `sui-sentinel/frontend/`**
 
