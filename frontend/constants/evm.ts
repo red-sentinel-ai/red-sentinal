@@ -3,10 +3,9 @@ import type { SupportedToken } from './shared'
 import { getEvmChainKey } from './chains'
 import { getSupportedTokens } from './tokens'
 
-export const EVM_TEE_API_PATH = 'https://tee-evm.redsentinel.xyz'
-// Kept for backwards compatibility with hooks that haven't been migrated to
-// resolveEvmTeeNetwork(chainId) yet. Defaults to the BSC network for the
-// current APP_NETWORK.
+// Fallback red-team/TEE network when no chainId is available (e.g. register
+// before a wallet chain is known). Prefer resolveEvmTeeNetwork(chainId).
+// The unified TEE base URL lives in constants/tee.ts (UNIFIED_TEE_API_PATH).
 export const EVM_TEE_NETWORK = APP_NETWORK === 'testnet' ? 'bsc-testnet' : 'bsc-mainnet'
 
 export function resolveEvmTeeNetwork(chainId: number | undefined): string {
