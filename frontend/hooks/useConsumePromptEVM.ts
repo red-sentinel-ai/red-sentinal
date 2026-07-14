@@ -148,10 +148,11 @@ export function useConsumePromptEVM({
 
         // Step 3: Call EVM TEE consume-prompt
         if (showToasts) toast.info('Processing prompt...')
-        const teeRes = await fetch('/api/evm/consume-prompt', {
+        const teeRes = await fetch('/api/consume-prompt', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
+            chain: agentDetails.chain,
             agent_id: String(agentDetails.agent_id),
             message,
             attack_id: Number(attackId),
