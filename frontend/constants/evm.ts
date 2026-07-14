@@ -1,6 +1,6 @@
 import { APP_NETWORK } from './shared'
 import type { SupportedToken } from './shared'
-import { getEvmChainKey} from './chains'
+import { getEvmChainKey } from './chains'
 import { getSupportedTokens } from './tokens'
 
 export const EVM_TEE_API_PATH = 'https://tee-evm.redsentinel.xyz'
@@ -29,7 +29,9 @@ export function resolveEvmTeeNetwork(chainId: number | undefined): string {
 
 export const BNB_TESTNET_CONFIG = {
   chainId: 97,
-  rpcUrl: process.env.NEXT_PUBLIC_BNB_TESTNET_RPC_URL ?? 'https://data-seed-prebsc-1-s1.bnbchain.org:8545',
+  rpcUrl:
+    process.env.NEXT_PUBLIC_BNB_TESTNET_RPC_URL ??
+    'https://data-seed-prebsc-1-s1.bnbchain.org:8545',
   contractAddress: '0x41730fab3F81Dd50Fbab78150C52Cc5fFFCEeB42' as `0x${string}`,
   explorerUrl: 'https://testnet.bscscan.com',
 }
@@ -48,7 +50,7 @@ export const BNB_CONFIG = APP_NETWORK === 'testnet' ? BNB_TESTNET_CONFIG : BNB_M
 export const BOT_CHAIN_TESTNET_CONFIG = {
   chainId: 968,
   rpcUrl: process.env.NEXT_PUBLIC_BOT_TESTNET_RPC_URL ?? 'https://rpc.bohr.life',
-  contractAddress: '0x5edD3650E090192f0f54EddC870B25536F5CaB29' as `0x${string}`,
+  contractAddress: '0xa0f0ECe3e04906adBCD1005AC525D8Fddc01a576' as `0x${string}`,
   explorerUrl: 'https://scan.bohr.life',
 }
 
@@ -59,7 +61,8 @@ export const BOT_CHAIN_MAINNET_CONFIG = {
   explorerUrl: 'https://scan.botchain.ai',
 }
 
-export const BOT_CHAIN_CONFIG = APP_NETWORK === 'testnet' ? BOT_CHAIN_TESTNET_CONFIG : BOT_CHAIN_MAINNET_CONFIG
+export const BOT_CHAIN_CONFIG =
+  APP_NETWORK === 'testnet' ? BOT_CHAIN_TESTNET_CONFIG : BOT_CHAIN_MAINNET_CONFIG
 
 // ─── Arbitrum ────────────────────────────────────────────────────────────────
 // Testnet = Arbitrum Sepolia (chainId 421614). Native gas token is ETH.

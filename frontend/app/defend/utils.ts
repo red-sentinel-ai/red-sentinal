@@ -1,4 +1,5 @@
 import type { SupportedChain } from '@/constants/chains'
+import type { AgenticConfig } from './agentic-types'
 import { providerNeedsApiKey, type DefendFormData } from './hooks/useDefendForm'
 
 export interface ProviderCredentials {
@@ -29,7 +30,8 @@ export const registerAgentUtil = async (
   juryPrompt: string,
   chain: SupportedChain = 'sui',
   credentials?: ProviderCredentials,
-  chainId?: number
+  chainId?: number,
+  agenticConfig?: AgenticConfig | null
 ) => {
   const body: Record<string, any> = {
     chain,
@@ -46,6 +48,16 @@ export const registerAgentUtil = async (
 
   if (credentials?.apiKey) body.api_key = credentials.apiKey
   if (credentials?.apiBaseUrl) body.api_base_url = credentials.apiBaseUrl
+
+  if (agenticConfig) {
+    body.sentinel_type = 'agentic'
+    body.scenario = agenticConfig.scenario
+    body.enabled_tools = agenticConfig.enabledTools
+    body.user_task = agenticConfig.userTask
+    body.attack_success_checks = agenticConfig.attackSuccessChecks
+    body.utility_checks = agenticConfig.utilityChecks
+    body.evaluation_mode = agenticConfig.evaluationMode
+  }
 
   const response = await fetch('/api/register-agent', {
     method: 'POST',

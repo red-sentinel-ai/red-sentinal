@@ -1,15 +1,13 @@
 import { NextResponse } from 'next/server'
 
-import { REDTEAM_BASE, redteamAuthHeader } from '@/lib/redteam'
+import { BACKEND_API_ADMIN_TOKEN, SUI_SENTINEL_API_URL } from '@/constants'
+import { PRACTICE_NETWORK } from '@/lib/practice'
 
-export async function POST(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params
     const body = await req.json()
-    const { attacker_address, user_prompt, session_id } = body
+    const { attacker_address, user_prompt, session_id, network, mode } = body
 
     if (!attacker_address || !user_prompt) {
       return NextResponse.json(
@@ -18,18 +16,23 @@ export async function POST(
       )
     }
 
-    const response = await fetch(`${REDTEAM_BASE}/attack/${id}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: redteamAuthHeader(),
-      },
-      body: JSON.stringify({
-        attacker_address,
-        user_prompt,
-        ...(session_id ? { session_id } : {}),
-      }),
-    })
+    const targetNetwork = network || PRACTICE_NETWORK
+    const response = await fetch(
+      `${SUI_SENTINEL_API_URL}/sentinels/${targetNetwork}/attack/${id}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${BACKEND_API_ADMIN_TOKEN}`,
+        },
+        body: JSON.stringify({
+          attacker_address,
+          user_prompt,
+          ...(session_id ? { session_id } : {}),
+          ...(mode ? { mode } : {}),
+        }),
+      }
+    )
 
     if (!response.ok) {
       const errorText = await response.text()

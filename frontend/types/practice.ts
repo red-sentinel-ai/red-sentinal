@@ -7,7 +7,6 @@ export interface PracticeSentinel {
   attack_goal: string
   model_provider: string
   model_name: string
-  difficulty_level: number
   is_active: boolean
   visibility: string
   created_at: string
@@ -27,24 +26,27 @@ export interface PracticeSentinelPublic {
   sentinel_type: string
   public_instructions: string
   attack_goal: string
-  difficulty_level: number
   is_active: boolean
 }
+
+export type SentinelInteractionMode = 'attack' | 'chat'
 
 export interface PracticeAttackResponse {
   session_id: string
   turn: number
   agent_response: string
-  jury_response: string
-  success: boolean
-  score: number
-  confidence: number
+  mode?: SentinelInteractionMode
+  jury_response?: string
+  success?: boolean
+  score?: number
+  confidence?: number
 }
 
-/** One attempt in the public feed (GET /practice/{network}/{id}/attacks). */
+/** One turn in the public feed (GET /practice/{network}/{id}/attacks). */
 export interface PracticeAttackFeedItem {
   type: 'prompt'
   id: string
+  mode: SentinelInteractionMode
   session_id: string | null
   sender: string | null
   content: string

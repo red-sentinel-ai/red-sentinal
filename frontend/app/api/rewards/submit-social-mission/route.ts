@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseServiceClient } from '@/db/config/server'
-import { SUI_SENTINEL_API_URL } from '@/constants'
+import { BACKEND_API_ADMIN_TOKEN, SUI_SENTINEL_API_URL } from '@/constants'
 
 const VALID_MISSION_TYPES = [
   'follow_x',
@@ -46,7 +46,7 @@ const MISSION_LABELS: Record<SocialMissionType, string> = {
   written_article: 'Written Article',
   viral_content: 'Viral Content (10K+ Views)',
 }
-const ADMIN_API_TOKEN = process.env.BACKEND_API_ADMIN_TOKEN || ""
+const ADMIN_API_TOKEN = BACKEND_API_ADMIN_TOKEN || ""
 
 
 export async function POST(req: NextRequest) {

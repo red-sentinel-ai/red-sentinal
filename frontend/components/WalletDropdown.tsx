@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Skeleton } from '@/components/ui/skeleton'
 import { SUI_SENTINEL_DOCS_URL } from '@/constants'
+import { cn } from '@/lib/utils'
 
 type Props = {
   address: string
@@ -21,6 +22,8 @@ type Props = {
   balanceLabel: string
   isLoadingBalance: boolean
   onDisconnect: () => void
+  /** Shrink to just the wallet icon below `md` — for the app topbar. */
+  compact?: boolean
 }
 
 export function WalletDropdown({
@@ -29,6 +32,7 @@ export function WalletDropdown({
   balanceLabel,
   isLoadingBalance,
   onDisconnect,
+  compact,
 }: Props) {
   const [copied, setCopied] = useState(false)
 
@@ -41,7 +45,13 @@ export function WalletDropdown({
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <button className="group flex min-h-[34px] items-center gap-2 rounded-full border border-white bg-[var(--color-bg-deepest)] px-3 py-1.5 text-white transition-colors hover:bg-white hover:text-black">
+        <button
+          aria-label="Wallet menu"
+          className={cn(
+            'group flex min-h-[34px] items-center gap-2 rounded-full border border-white bg-[var(--color-bg-deepest)] py-1.5 text-white transition-colors hover:bg-white hover:text-black',
+            compact ? 'px-2 md:px-3' : 'px-3'
+          )}
+        >
           <Image
             width={18}
             height={18}
@@ -49,10 +59,20 @@ export function WalletDropdown({
             alt="wallet icon"
             className="h-[18px] w-[18px] group-hover:invert"
           />
-          <span className="font-body text-[11px] font-extrabold uppercase tracking-[0.08em]">
+          <span
+            className={cn(
+              'font-body text-[11px] font-extrabold uppercase tracking-[0.08em]',
+              compact && 'hidden md:inline'
+            )}
+          >
             {address}
           </span>
-          <ChevronDown className="h-4 w-4 text-[var(--color-text-muted)] transition-colors" />
+          <ChevronDown
+            className={cn(
+              'h-4 w-4 text-[var(--color-text-muted)] transition-colors',
+              compact && 'hidden md:block'
+            )}
+          />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent

@@ -1,6 +1,6 @@
-import { RED_TEAM_API_URL } from '@/constants'
-import { redteamAuthHeader } from '@/lib/redteam'
 import { NextResponse } from 'next/server'
+
+import { BACKEND_API_ADMIN_TOKEN, SUI_SENTINEL_API_URL } from '@/constants'
 
 export async function POST(req: Request) {
   try {
@@ -11,11 +11,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Public instructions are required' }, { status: 400 })
     }
 
-    const response = await fetch(`${RED_TEAM_API_URL}generate-config`, {
+    const response = await fetch(`${SUI_SENTINEL_API_URL}/sentinels/generate-config`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: redteamAuthHeader(),
+        Authorization: `Bearer ${BACKEND_API_ADMIN_TOKEN}`,
       },
       body: JSON.stringify({
         public_instructions,
@@ -24,7 +24,6 @@ export async function POST(req: Request) {
     })
 
     if (!response.ok) {
-      console.log({ response })
       const errorText = await response.text()
       return NextResponse.json({ error: errorText }, { status: response.status })
     }
