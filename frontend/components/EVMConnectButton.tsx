@@ -6,14 +6,15 @@ import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { useChainId, useSwitchChain } from 'wagmi'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
 import { useEVMBalance } from '@/hooks/useEVMBalance'
+import { ConnectWalletLabel } from '@/components/ConnectWalletLabel'
 import { WalletDropdown } from '@/components/WalletDropdown'
-import { truncateAddress } from '@/lib/utils'
+import { cn, truncateAddress } from '@/lib/utils'
 import { getEvmChainKey, getEvmChainIdForActive } from '@/constants/chains'
 import { getNativeToken } from '@/constants/tokens'
 import { APP_NETWORK } from '@/constants/shared'
 import { useActiveChain } from '@/context/ActiveChainContext'
 
-export function EVMConnectButton() {
+export function EVMConnectButton({ compact }: { compact?: boolean }) {
   const { address, isConnected, disconnect } = useEVMWallet()
   const { openConnectModal } = useConnectModal()
   const { balance, isLoading: isLoadingBalance } = useEVMBalance()
@@ -46,8 +47,15 @@ export function EVMConnectButton() {
 
   if (!isConnected || !address) {
     return (
-      <button onClick={openConnectModal} className="rs-connect-button min-w-[180px] px-6 py-2">
-        Connect Wallet
+      <button
+        onClick={openConnectModal}
+        aria-label="Connect Wallet"
+        className={cn(
+          'rs-connect-button group py-2',
+          compact ? 'px-3 md:min-w-[180px] md:px-6' : 'min-w-[180px] px-6'
+        )}
+      >
+        <ConnectWalletLabel compact={compact} />
       </button>
     )
   }
@@ -61,6 +69,7 @@ export function EVMConnectButton() {
       balanceLabel={`${balance?.toFixed(4) ?? '0.0000'} ${nativeSymbol}`}
       isLoadingBalance={isLoadingBalance}
       onDisconnect={disconnect}
+      compact={compact}
     />
   )
 }

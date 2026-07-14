@@ -1,5 +1,6 @@
-import { RED_TEAM_API_URL } from '@/constants'
 import { NextResponse } from 'next/server'
+
+import { BACKEND_API_ADMIN_TOKEN, SUI_SENTINEL_API_URL } from '@/constants'
 
 export async function POST(req: Request) {
   try {
@@ -13,10 +14,11 @@ export async function POST(req: Request) {
       )
     }
 
-    const response = await fetch(`${RED_TEAM_API_URL}test-model`, {
+    const response = await fetch(`${SUI_SENTINEL_API_URL}/sentinels/test-model`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${BACKEND_API_ADMIN_TOKEN}`,
       },
       body: JSON.stringify({
         model_provider: model_provider || 'custom',

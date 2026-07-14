@@ -8,6 +8,7 @@ import { motion } from 'framer-motion'
 import clsx from 'clsx'
 import { formatDistanceToNow } from 'date-fns'
 import { Trophy, ExternalLink, Scale } from 'lucide-react'
+import ReactMarkdown from 'react-markdown'
 import { generateAvatarUrl } from '@/lib/utils'
 import { getExplorerTxUrl } from '@/lib/explorer'
 import { truncateAddress } from '@/lib/utils'
@@ -26,6 +27,7 @@ type ChatMessageProps = {
   senderProfile: UserProfile
   isWinningPrompt?: boolean
   onShowJury?: () => void
+  hideSuccessBanner?: boolean
 }
 
 export const ChatMessage = ({
@@ -34,10 +36,11 @@ export const ChatMessage = ({
   senderProfile,
   isWinningPrompt,
   onShowJury,
+  hideSuccessBanner,
 }: ChatMessageProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const [shouldTruncate, setShouldTruncate] = useState(false)
-  const contentRef = useRef<HTMLParagraphElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (contentRef.current) {
@@ -47,9 +50,9 @@ export const ChatMessage = ({
     }
   }, [message.content])
 
+  const username = senderProfile?.username
   const displayName =
-    senderProfile?.username || (message.sender ? truncateAddress(message.sender) : 'OPERATOR')
-  const profileLink = `/u/${senderProfile?.username || message.sender}`
+    username || (message.sender ? truncateAddress(message.sender) : 'OPERATOR')
 
   const timestamp = formatDistanceToNow(new Date(Number.parseInt(message.timestamp)))
 
@@ -65,9 +68,13 @@ export const ChatMessage = ({
       >
         {/* Header with username and timestamp */}
         <div className="industrial-header flex items-center gap-2 text-[10px] text-[var(--color-text-muted)]">
-          <Link href={profileLink} className="transition-colors hover:text-white">
-            @{displayName.toUpperCase()}
-          </Link>
+          {username ? (
+            <Link href={`/u/${username}`} className="transition-colors hover:text-white">
+              @{displayName.toUpperCase()}
+            </Link>
+          ) : (
+            <span>@{displayName.toUpperCase()}</span>
+          )}
           <span>//</span>
           <span>{timestamp.toUpperCase()} AGO</span>
           {isWinningPrompt && (
@@ -85,15 +92,15 @@ export const ChatMessage = ({
             isWinningPrompt ? 'border-accent/40 bg-accent/5' : 'border-white/20 bg-white/5'
           )}
         >
-          <p
+          <div
             ref={contentRef}
             className={clsx(
-              'font-mono text-sm leading-relaxed text-white',
+              'markdown-content',
               !isExpanded && shouldTruncate && 'line-clamp-4'
             )}
           >
-            {message.content}
-          </p>
+            <ReactMarkdown>{message.content}</ReactMarkdown>
+          </div>
 
           {shouldTruncate && (
             <button
@@ -137,15 +144,15 @@ export const ChatMessage = ({
       {/* Message Content */}
       <div className="border-hairline max-w-[90%] bg-[var(--color-bg-elevated)]">
         <div className="p-5 lg:p-6">
-          <p
+          <div
             ref={contentRef}
             className={clsx(
-              'mb-6 font-mono text-sm leading-relaxed text-white/80',
+              'markdown-content mb-6',
               !isExpanded && shouldTruncate && 'line-clamp-4'
             )}
           >
-            {message.content}
-          </p>
+            <ReactMarkdown>{message.content}</ReactMarkdown>
+          </div>
 
           {shouldTruncate && (
             <button
@@ -208,7 +215,7 @@ export const ChatMessage = ({
       </div>
 
       {/* Success Banner */}
-      {message.isSuccess && (
+      {message.isSuccess && !hideSuccessBanner && (
         <div className="border-[var(--color-success)]/30 border bg-[var(--color-success-muted)] p-4">
           <div className="industrial-header text-center text-sm text-[var(--color-success)]">
             SENTINEL_BREACHED // FUNDS_EXTRACTED

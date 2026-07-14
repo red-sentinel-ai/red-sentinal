@@ -1,6 +1,6 @@
 'use client'
 
-import { Gauge, Shield, Target } from 'lucide-react'
+import { Shield, Target } from 'lucide-react'
 
 import type { PracticeSentinelPublic } from '@/types/practice'
 
@@ -17,10 +17,6 @@ export function PracticeSentinelPanel({
         <div className="mb-2 flex items-center gap-2">
           <span className="font-body inline-flex items-center bg-white px-2.5 py-1 text-[9px] font-extrabold uppercase leading-none tracking-[0.1em] text-black">
             {sentinel.sentinel_type}
-          </span>
-          <span className="industrial-header flex items-center gap-1 text-[10px] text-[var(--color-text-muted)]">
-            <Gauge className="h-3 w-3" />
-            LVL {sentinel.difficulty_level}
           </span>
         </div>
         <h1 className="font-display text-2xl font-extrabold uppercase tracking-[0.04em] text-white">

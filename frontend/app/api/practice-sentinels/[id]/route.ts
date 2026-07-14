@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 
-import { REDTEAM_BASE } from '@/lib/redteam'
+import { SUI_SENTINEL_API_URL } from '@/constants'
+import { PRACTICE_NETWORK } from '@/lib/practice'
 
 export async function GET(
   _req: Request,
@@ -9,9 +10,12 @@ export async function GET(
   try {
     const { id } = await params
 
-    const response = await fetch(`${REDTEAM_BASE}/sentinels/${id}/public`, {
-      cache: 'no-store',
-    })
+    const response = await fetch(
+      `${SUI_SENTINEL_API_URL}/sentinels/${PRACTICE_NETWORK}/${id}/public`,
+      {
+        cache: 'no-store',
+      }
+    )
 
     if (!response.ok) {
       const errorText = await response.text()

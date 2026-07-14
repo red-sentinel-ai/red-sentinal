@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -38,6 +38,14 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { useSuiTokenBalance } from '@/hooks/useSuiTokenBalance'
 import { Skeleton } from '@/components/ui/skeleton'
 
+import { SentinelTypeToggle } from '@/components/defend/agentic/SentinelTypeToggle'
+import { EnvironmentTemplatePicker } from '@/components/defend/agentic/EnvironmentTemplatePicker'
+import { EnvironmentSeedEditor } from '@/components/defend/agentic/EnvironmentSeedEditor'
+import { EnabledToolsChecklist } from '@/components/defend/agentic/EnabledToolsChecklist'
+import { LiveToolsChecklist } from '@/components/defend/agentic/LiveToolsChecklist'
+import { useEnvironmentTemplate } from './hooks/useEnvironmentTemplates'
+import type { AgenticConfig, SentinelType } from './agentic-types'
+import { buildAgenticConfig, validateAgenticSelection } from './agentic-utils'
 import { FormInput } from './components/FormInput'
 import { LLMProviderSection } from './components/LLMProviderSection'
 import { useDefendForm } from './hooks/useDefendForm'
@@ -66,6 +74,23 @@ export default function DefendPageClient() {
   // EVM wallet
   const { address: evmAddress } = useEVMWallet()
   const { openConnectModal: openEvmConnectModal } = useConnectModal()
+
+  const [sentinelType, setSentinelType] = useState<SentinelType>('basic')
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null)
+  // The seeded `initial_environment` (namespace-keyed) for the agentic sandbox.
+  const [agenticEnvironment, setAgenticEnvironment] = useState<Record<string, unknown>>({})
+  const [enabledToolIds, setEnabledToolIds] = useState<string[]>([])
+  const [enabledLiveToolIds, setEnabledLiveToolIds] = useState<string[]>([])
+  const { data: templateDetail } = useEnvironmentTemplate(selectedTemplateId)
+
+  const handleSelectTemplate = (templateId: string) => {
+    setSelectedTemplateId(templateId)
+    setAgenticEnvironment({})
+  }
+
+  useEffect(() => {
+    if (templateDetail) setEnabledToolIds(templateDetail.tools.map(tool => tool.tool_id))
+  }, [templateDetail?.template_id])
 
   const [agentImage, setAgentImage] = useState<File | null>(null)
   const [imagePickerOpen, setImagePickerOpen] = useState(false)
@@ -176,6 +201,18 @@ export default function DefendPageClient() {
     countJuryPromptTokens,
   })
 
+  const agenticConfig = useMemo<AgenticConfig | null>(() => {
+    if (sentinelType !== 'agentic') return null
+    const hasSelection = Boolean(templateDetail) || enabledLiveToolIds.length > 0
+    if (!hasSelection) return null
+    return buildAgenticConfig({
+      templateDetail,
+      enabledToolIds,
+      enabledLiveToolIds,
+      initialEnvironment: agenticEnvironment,
+    })
+  }, [sentinelType, templateDetail, enabledToolIds, enabledLiveToolIds, agenticEnvironment])
+
   const {
     isLoading,
     deployedAgentPath,
@@ -192,6 +229,7 @@ export default function DefendPageClient() {
     tokenCount,
     agentImage,
     selectedImage,
+    agenticConfig,
   })
 
   const [isGeneratingConfig, setIsGeneratingConfig] = useState(false)
@@ -229,6 +267,17 @@ export default function DefendPageClient() {
     if (formData.llmProvider === 'custom' && !customProvider.isValidated) {
       toast.error('Please validate your custom provider connection before deploying')
       return
+    }
+    if (sentinelType === 'agentic') {
+      const agenticError = validateAgenticSelection({
+        templateDetail,
+        enabledToolIds,
+        enabledLiveToolIds,
+      })
+      if (agenticError) {
+        toast.error(agenticError)
+        return
+      }
     }
     const result = await deploy(customProvider.isValidated, () =>
       validateForm(customProvider.isValidated)
@@ -361,6 +410,49 @@ export default function DefendPageClient() {
             error={errors.agentName}
             placeholder="e.g. Atlas Guard, Void Watcher, Nova Sentinel"
           />
+
+          <SentinelTypeToggle value={sentinelType} onChange={setSentinelType} />
+
+          {sentinelType === 'agentic' && (
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
+                {/* Left: environment list (fixed) */}
+                <div className="lg:w-72 lg:shrink-0">
+                  <EnvironmentTemplatePicker
+                    selectedTemplateId={selectedTemplateId}
+                    onSelect={handleSelectTemplate}
+                  />
+                </div>
+
+                {/* Right: selected environment's configuration panel */}
+                <div className="min-w-0 flex-1">
+                  {templateDetail ? (
+                    <div className="flex flex-col gap-6">
+                      <EnvironmentSeedEditor
+                        templateDetail={templateDetail}
+                        value={agenticEnvironment}
+                        onChange={setAgenticEnvironment}
+                      />
+                      <EnabledToolsChecklist
+                        tools={templateDetail.tools}
+                        enabledToolIds={enabledToolIds}
+                        onChange={setEnabledToolIds}
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex h-full min-h-[160px] items-center justify-center rounded-lg border border-dashed border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-6 text-center text-sm text-[var(--color-text-muted)]">
+                      Select an environment, or enable a live tool below.
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <LiveToolsChecklist
+                enabledLiveToolIds={enabledLiveToolIds}
+                onChange={setEnabledLiveToolIds}
+              />
+            </div>
+          )}
 
           <LLMProviderSection
             formData={formData}

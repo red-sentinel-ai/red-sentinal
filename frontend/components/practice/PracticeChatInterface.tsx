@@ -15,6 +15,7 @@ import { ChatMessage } from '@/components/agents/ChatMessage'
 import { JuryResponseModal } from '@/components/agents/JuryResponseModal'
 import { usePracticeAttacksFeed } from '@/hooks/practice/usePracticeAttacksFeed'
 import { useAttackPracticeSentinel } from '@/hooks/practice/useAttackPracticeSentinel'
+import { useAttackFeedMessages } from '@/hooks/practice/useAttackFeedMessages'
 import type { PracticeSentinelPublic } from '@/types/practice'
 
 interface PracticeChatInterfaceProps {
@@ -22,12 +23,6 @@ interface PracticeChatInterfaceProps {
   attackerAddress: string
   /** Mobile-only briefing toggle (the sidebar is hidden on small screens). */
   onToggleBriefing?: () => void
-}
-
-function toEpochMs(iso: string | null): string {
-  if (!iso) return Date.now().toString()
-  const ms = new Date(iso).getTime()
-  return Number.isFinite(ms) ? ms.toString() : Date.now().toString()
 }
 
 export function PracticeChatInterface({
@@ -44,7 +39,9 @@ export function PracticeChatInterface({
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-  const { data: feed, refetch: refetchFeed } = usePracticeAttacksFeed(sentinel.sentinel_id)
+  const { data: feed, refetch: refetchFeed } = usePracticeAttacksFeed(sentinel.sentinel_id, {
+    mode: 'attack',
+  })
   const attackMutation = useAttackPracticeSentinel()
   const isSubmitting = attackMutation.isPending
 
@@ -59,49 +56,11 @@ export function PracticeChatInterface({
     [sentinel]
   )
 
-  // Source of truth: the polled public feed (newest-first → oldest-first for chat).
-  const serverMessages = useMemo<ChatMessageType[]>(() => {
-    const items = [...(feed?.messages ?? [])].reverse()
-    const msgs: ChatMessageType[] = []
-    for (const item of items) {
-      const ts = toEpochMs(item.timestamp)
-      msgs.push({
-        id: `user-${item.id}`,
-        type: 'user',
-        content: item.content,
-        timestamp: ts,
-        sender: item.sender ?? undefined,
-      })
-      msgs.push({
-        id: `agent-${item.id}`,
-        type: 'agent',
-        content: item.agent_response,
-        timestamp: ts,
-        isSuccess: item.success ?? undefined,
-        score: item.score ?? undefined,
-        juryResponse: item.jury_response ?? undefined,
-      })
-    }
-    return msgs
-  }, [feed])
-
-  // Render server history plus any in-flight optimistic round, dropping the
-  // optimistic round once the feed has caught up (matched by sender + content).
-  const chatMessages = useMemo<ChatMessageType[]>(() => {
-    if (!pendingRound) return serverMessages
-    const optimisticUser = pendingRound[0]
-    const indexed = serverMessages.some(
-      m =>
-        m.type === 'user' &&
-        m.sender === optimisticUser.sender &&
-        m.content === optimisticUser.content
-    )
-    return indexed ? serverMessages : [...serverMessages, ...pendingRound]
-  }, [serverMessages, pendingRound])
+  const { messages: chatMessages, isRoundIndexed } = useAttackFeedMessages(feed, pendingRound)
 
   useEffect(() => {
-    if (pendingRound && chatMessages === serverMessages) setPendingRound(null)
-  }, [chatMessages, serverMessages, pendingRound])
+    if (pendingRound && isRoundIndexed) setPendingRound(null)
+  }, [pendingRound, isRoundIndexed])
 
   const [isJuryModalOpen, setIsJuryModalOpen] = useState(false)
   const [selectedJuryResponse, setSelectedJuryResponse] = useState('')

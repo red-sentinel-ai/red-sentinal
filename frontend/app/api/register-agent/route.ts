@@ -1,4 +1,4 @@
-import { APP_NETWORK, LOCAL_API_PATH } from '@/constants'
+import { APP_ENVIRONMENT, APP_NETWORK, LOCAL_API_PATH } from '@/constants'
 import { SOLANA_TEE_API_PATH, SOLANA_TEE_NETWORK } from '@/constants/solana'
 import { EVM_TEE_API_PATH, EVM_TEE_NETWORK, resolveEvmTeeNetwork } from '@/constants/evm'
 import { NextRequest, NextResponse } from 'next/server'
@@ -6,17 +6,17 @@ import { NextRequest, NextResponse } from 'next/server'
 function getTeeUrl(chain: string, chainId?: number): string {
   switch (chain) {
     case 'solana':
-      return `${SOLANA_TEE_API_PATH}/${SOLANA_TEE_NETWORK}/register-agent`
+      return `${SOLANA_TEE_API_PATH}/${APP_ENVIRONMENT}/${SOLANA_TEE_NETWORK}/register-agent`
     case 'bnb':
     case 'bot':
     case 'arb':
     case 'evm': {
       const teeNetwork = chainId ? resolveEvmTeeNetwork(chainId) : EVM_TEE_NETWORK
-      return `${EVM_TEE_API_PATH}/${teeNetwork}/register-agent`
+      return `${EVM_TEE_API_PATH}/${APP_ENVIRONMENT}/${teeNetwork}/register-agent`
     }
     case 'sui':
     default:
-      return `${LOCAL_API_PATH}/${APP_NETWORK}/register-agent`
+      return `${LOCAL_API_PATH}/${APP_ENVIRONMENT}/${APP_NETWORK}/register-agent`
   }
 }
 
