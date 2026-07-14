@@ -3,6 +3,8 @@
 import { Shield, Target } from 'lucide-react'
 
 import type { PracticeSentinelPublic } from '@/types/practice'
+import { PRACTICE_NETWORK } from '@/lib/practice'
+import { SentinelMemoryPanel } from './SentinelMemoryPanel'
 
 export function PracticeSentinelPanel({
   sentinel,
@@ -55,6 +57,12 @@ export function PracticeSentinelPanel({
           </p>
         </div>
       </div>
+
+      {/* Owner-only: renders nothing for non-owners. */}
+      <SentinelMemoryPanel
+        network={PRACTICE_NETWORK}
+        sentinelId={sentinel.sentinel_id}
+      />
     </div>
   )
 }
