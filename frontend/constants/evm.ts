@@ -49,14 +49,14 @@ export const BNB_CONFIG = APP_NETWORK === 'testnet' ? BNB_TESTNET_CONFIG : BNB_M
 export const BOT_CHAIN_TESTNET_CONFIG = {
   chainId: 968,
   rpcUrl: process.env.NEXT_PUBLIC_BOT_TESTNET_RPC_URL ?? 'https://rpc.bohr.life',
-  contractAddress: '0xa0f0ECe3e04906adBCD1005AC525D8Fddc01a576' as `0x${string}`,
+  contractAddress: '0x7f0e865187B35ade39dA35963CC855460199ED04' as `0x${string}`,
   explorerUrl: 'https://scan.bohr.life',
 }
 
 export const BOT_CHAIN_MAINNET_CONFIG = {
   chainId: 677,
   rpcUrl: process.env.NEXT_PUBLIC_BOT_MAINNET_RPC_URL ?? 'https://rpc.botchain.ai',
-  contractAddress: '0x0000000000000000000000000000000000000000' as `0x${string}`,
+  contractAddress: '0xAE3B5C52Aee124F0C9466B8d57f1eED17ccebF6d' as `0x${string}`,
   explorerUrl: 'https://scan.botchain.ai',
 }
 
