@@ -53,7 +53,7 @@ export const ProfileSentinelCard = ({
   const [isWithdrawalLocked, setIsWithdrawalLocked] = useState(true)
   const [timeRemaining, setTimeRemaining] = useState('')
 
-  const token = getTokenForCoinType(agent.coin_type)
+  const token = getTokenForCoinType(agent.coin_type, agent.chain)
   const tokenDivisor = Math.pow(10, token.decimals)
 
   const hasNoBalance = Number(agent.total_balance) === 0

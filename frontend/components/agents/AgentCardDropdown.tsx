@@ -141,7 +141,7 @@ export const AgentDropdown = ({
             onClose={() => setIsCostModalOpen(false)}
             agentId={agentId}
             agentObjectId={agentObjectId}
-            currentCost={currentCost ? currentCost / Math.pow(10, getTokenForCoinType(coinType).decimals) : 0}
+            currentCost={currentCost ? currentCost / Math.pow(10, getTokenForCoinType(coinType, chain).decimals) : 0}
             coinType={coinType}
             chain={chain}
           />

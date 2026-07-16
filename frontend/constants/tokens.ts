@@ -1,8 +1,11 @@
 import { APP_NETWORK, type SupportedToken } from './shared'
 import { NATIVE_SOL_MINT } from './solana'
+import { NATIVE_TOKEN_ADDRESS, isNativeToken } from '@/lib/evm/native-token'
 
 export const SUI_COIN_TYPE = '0x2::sui::SUI'
 export const SENTINEL_TOKEN_DECIMALS = 0
+
+const NATIVE_TOKEN_MINIMUM_AMOUNT = 0.01
 
 // ─── Sui tokens ──────────────────────────────────────────────────────────────
 
@@ -207,43 +210,44 @@ export const USDC_TOKEN: SupportedToken = {
 export const BNB_TOKEN: SupportedToken = {
   symbol: 'BNB',
   name: 'BNB',
-  coinType: '0x0000000000000000000000000000000000000000',
+  coinType: NATIVE_TOKEN_ADDRESS,
   decimals: 18,
   icon: '/icons/tokens/bnb.png',
-  minimumAmount: 0,
+  minimumAmount: NATIVE_TOKEN_MINIMUM_AMOUNT,
 }
 
-export const EVM_SUPPORTED_TOKENS: SupportedToken[] = [USDC_TOKEN]
+export const EVM_SUPPORTED_TOKENS: SupportedToken[] = [BNB_TOKEN, USDC_TOKEN]
 
 export const BOT_TOKEN: SupportedToken = {
   symbol: 'BOT',
   name: 'BOT',
-  coinType: '0x0000000000000000000000000000000000000000',
+  coinType: NATIVE_TOKEN_ADDRESS,
   decimals: 18,
   icon: '/icons/tokens/bot.png',
-  minimumAmount: 0,
+  minimumAmount: NATIVE_TOKEN_MINIMUM_AMOUNT,
 }
 
-const BOT_CHAIN_USDC_ADDRESS = '0xAA3091862373B4ae9cd25FfC94DeFA4bbC5f59a6' as `0x${string}`
+const BOT_CHAIN_TESTNET_USDC_ADDRESS = '0xAA3091862373B4ae9cd25FfC94DeFA4bbC5f59a6' as `0x${string}`
 
 export const BOT_CHAIN_USDC_TOKEN: SupportedToken = {
   symbol: 'USDC',
   name: 'USD Coin',
-  coinType: BOT_CHAIN_USDC_ADDRESS,
+  coinType: BOT_CHAIN_TESTNET_USDC_ADDRESS,
   decimals: 6,
   icon: '/icons/tokens/usdc.png',
   minimumAmount: 0.01,
 }
 
-export const BOT_CHAIN_SUPPORTED_TOKENS: SupportedToken[] = [BOT_CHAIN_USDC_TOKEN]
+export const BOT_CHAIN_SUPPORTED_TOKENS: SupportedToken[] =
+  APP_NETWORK === 'mainnet' ? [BOT_TOKEN] : [BOT_TOKEN, BOT_CHAIN_USDC_TOKEN]
 
 export const ARB_TOKEN: SupportedToken = {
   symbol: 'ETH',
   name: 'Ethereum',
-  coinType: '0x0000000000000000000000000000000000000000',
+  coinType: NATIVE_TOKEN_ADDRESS,
   decimals: 18,
   icon: '/chain-logos/arb.svg',
-  minimumAmount: 0,
+  minimumAmount: NATIVE_TOKEN_MINIMUM_AMOUNT,
 }
 
 const ARB_SEPOLIA_USDC_ADDRESS = '0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d' as `0x${string}`
@@ -257,7 +261,7 @@ export const ARB_USDC_TOKEN: SupportedToken = {
   minimumAmount: 0.01,
 }
 
-export const ARB_SUPPORTED_TOKENS: SupportedToken[] = [ARB_USDC_TOKEN]
+export const ARB_SUPPORTED_TOKENS: SupportedToken[] = [ARB_TOKEN, ARB_USDC_TOKEN]
 
 // ─── Chain-aware token helpers ───────────────────────────────────────────────
 
@@ -305,7 +309,7 @@ export function getTokenForCoinType(
   coinType: string | undefined,
   chainHint?: SupportedChain
 ): SupportedToken {
-  if (!coinType) return getNativeToken(chainHint ?? 'sui')
+  if (!coinType || isNativeToken(coinType)) return getNativeToken(chainHint ?? 'sui')
   const candidates = chainHint ? getSupportedTokens(chainHint) : ALL_SUPPORTED_TOKENS
   const found = candidates.find(
     t => t.coinType === coinType || t.coinType.toLowerCase() === coinType.toLowerCase()

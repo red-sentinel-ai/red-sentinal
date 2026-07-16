@@ -5,7 +5,7 @@ export const SENTINEL_ABI = [
   {
     type: 'function',
     name: 'registerAgent',
-    stateMutability: 'nonpayable',
+    stateMutability: 'payable',
     inputs: [
       { name: 'agentId', type: 'string' },
       { name: 'timestampMs', type: 'uint256' },
@@ -20,7 +20,7 @@ export const SENTINEL_ABI = [
   {
     type: 'function',
     name: 'requestAttack',
-    stateMutability: 'nonpayable',
+    stateMutability: 'payable',
     inputs: [
       { name: 'agentId', type: 'string' },
       { name: 'paymentAmount', type: 'uint256' },
@@ -76,7 +76,7 @@ export const SENTINEL_ABI = [
   {
     type: 'function',
     name: 'fundAgent',
-    stateMutability: 'nonpayable',
+    stateMutability: 'payable',
     inputs: [
       { name: 'agentId', type: 'string' },
       { name: 'amount', type: 'uint256' },
@@ -138,7 +138,7 @@ export const SYNDICATE_ABI = [
   {
     type: 'function',
     name: 'deposit',
-    stateMutability: 'nonpayable',
+    stateMutability: 'payable',
     inputs: [{ name: 'amount', type: 'uint256' }],
     outputs: [{ name: 'mintedShares', type: 'uint256' }],
   },
@@ -152,7 +152,7 @@ export const SYNDICATE_ABI = [
   {
     type: 'function',
     name: 'registerAgent',
-    stateMutability: 'nonpayable',
+    stateMutability: 'payable',
     inputs: [
       { name: '_agentId', type: 'string' },
       { name: 'timestampMs', type: 'uint256' },

@@ -114,7 +114,7 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
     setPageUrl(currentUrl)
   }, [])
 
-  const agentToken = getTokenForCoinType(agent.coin_type)
+  const agentToken = getTokenForCoinType(agent.coin_type, agent.chain)
   const creatorRewardLabel = `${DUMMY_CREATOR_REWARD.toFixed(2)} ${agentToken.symbol}`
 
   const isSyndicate = !!agent.syndicate

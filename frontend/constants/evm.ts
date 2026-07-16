@@ -3,10 +3,9 @@ import type { SupportedToken } from './shared'
 import { getEvmChainKey } from './chains'
 import { getSupportedTokens } from './tokens'
 
-export const EVM_TEE_API_PATH = 'https://tee-evm.redsentinel.xyz'
-// Kept for backwards compatibility with hooks that haven't been migrated to
-// resolveEvmTeeNetwork(chainId) yet. Defaults to the BSC network for the
-// current APP_NETWORK.
+// Fallback red-team/TEE network when no chainId is available (e.g. register
+// before a wallet chain is known). Prefer resolveEvmTeeNetwork(chainId).
+// The unified TEE base URL lives in constants/tee.ts (UNIFIED_TEE_API_PATH).
 export const EVM_TEE_NETWORK = APP_NETWORK === 'testnet' ? 'bsc-testnet' : 'bsc-mainnet'
 
 export function resolveEvmTeeNetwork(chainId: number | undefined): string {
@@ -50,14 +49,14 @@ export const BNB_CONFIG = APP_NETWORK === 'testnet' ? BNB_TESTNET_CONFIG : BNB_M
 export const BOT_CHAIN_TESTNET_CONFIG = {
   chainId: 968,
   rpcUrl: process.env.NEXT_PUBLIC_BOT_TESTNET_RPC_URL ?? 'https://rpc.bohr.life',
-  contractAddress: '0xa0f0ECe3e04906adBCD1005AC525D8Fddc01a576' as `0x${string}`,
+  contractAddress: '0x7f0e865187B35ade39dA35963CC855460199ED04' as `0x${string}`,
   explorerUrl: 'https://scan.bohr.life',
 }
 
 export const BOT_CHAIN_MAINNET_CONFIG = {
   chainId: 677,
   rpcUrl: process.env.NEXT_PUBLIC_BOT_MAINNET_RPC_URL ?? 'https://rpc.botchain.ai',
-  contractAddress: '0x0000000000000000000000000000000000000000' as `0x${string}`,
+  contractAddress: '0xAE3B5C52Aee124F0C9466B8d57f1eED17ccebF6d' as `0x${string}`,
   explorerUrl: 'https://scan.botchain.ai',
 }
 
