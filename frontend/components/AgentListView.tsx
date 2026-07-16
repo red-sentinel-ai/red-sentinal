@@ -98,7 +98,7 @@ export const AgentListView = () => {
           })
         : allAgents
     if (selectedSymbol) {
-      base = base.filter(agent => getTokenForCoinType(agent.coin_type).symbol === selectedSymbol)
+      base = base.filter(agent => getTokenForCoinType(agent.coin_type, agent.chain).symbol === selectedSymbol)
     }
     const normalizedSearch = searchQuery.trim().toLowerCase()
     if (normalizedSearch) {
