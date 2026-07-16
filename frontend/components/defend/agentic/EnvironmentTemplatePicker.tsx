@@ -6,13 +6,13 @@ import { cn } from '@/lib/utils'
 import { useEnvironmentTemplates } from '@/app/defend/hooks/useEnvironmentTemplates'
 
 interface EnvironmentTemplatePickerProps {
-  selectedTemplateId: string | null
-  onSelect: (templateId: string) => void
+  selectedTemplateIds: string[]
+  onToggleTemplate: (templateId: string) => void
 }
 
 export function EnvironmentTemplatePicker({
-  selectedTemplateId,
-  onSelect,
+  selectedTemplateIds,
+  onToggleTemplate,
 }: EnvironmentTemplatePickerProps) {
   const { data: templates, isLoading, isError } = useEnvironmentTemplates()
 
@@ -23,8 +23,8 @@ export function EnvironmentTemplatePicker({
           Environment
         </label>
         <span className="mt-1 block text-xs text-[var(--color-text-muted)]">
-          Pick the sandbox your Sentinel operates in. Its tools and attack surfaces come from this
-          environment.
+          Pick one or more sandboxes your Sentinel operates in. Its tools and attack surfaces come
+          from these environments.
         </span>
       </div>
 
@@ -45,12 +45,13 @@ export function EnvironmentTemplatePicker({
       {templates && (
         <div className="flex flex-col gap-1.5">
           {templates.map(template => {
-            const isSelected = selectedTemplateId === template.template_id
+            const isSelected = selectedTemplateIds.includes(template.template_id)
             return (
               <button
                 key={template.template_id}
                 type="button"
-                onClick={() => onSelect(template.template_id)}
+                aria-pressed={isSelected}
+                onClick={() => onToggleTemplate(template.template_id)}
                 className={cn(
                   'group flex items-start gap-3 rounded-lg border px-3 py-2.5 text-left transition-all',
                   isSelected
