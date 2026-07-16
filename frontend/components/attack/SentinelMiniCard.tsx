@@ -12,7 +12,7 @@ import { TokenAmount } from '@/components/ui/common/TokenAmount'
 type Variant = 'featured' | 'trending'
 
 export function SentinelMiniCard({ agent, variant }: { agent: Agent; variant?: Variant }) {
-  const token = getTokenForCoinType(agent.coin_type)
+  const token = getTokenForCoinType(agent.coin_type, agent.chain)
   const chain = CHAINS[agent.chain ?? 'sui']
   const label = variant === 'trending' ? 'Trending' : 'Featured'
 
