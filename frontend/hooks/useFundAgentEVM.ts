@@ -3,11 +3,13 @@
 import { useState, useCallback } from 'react'
 import { useWriteContract, usePublicClient, useAccount, useChainId } from 'wagmi'
 import { waitForTransactionReceipt } from '@wagmi/core'
+import { parseUnits } from 'viem'
 import { toast } from 'sonner'
 import { wagmiConfig } from '@/lib/wagmi'
 import { getEvmConfig } from '@/constants/evm'
 import { getEvmFeeOverrides } from '@/lib/evm/fees'
 import { SENTINEL_ABI, ERC20_ABI } from '@/lib/evm/abi'
+import { isNativeToken } from '@/lib/evm/native-token'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
 
 interface UseFundAgentEVMOptions {
@@ -49,20 +51,24 @@ export const useFundAgentEVM = (options: UseFundAgentEVMOptions = {}) => {
       setError(null)
 
       const txArgs = { account: walletAddress, chain: currentChain ?? null }
-      const amountRaw = BigInt(Math.floor(amount * Math.pow(10, decimals)))
+      const amountRaw = parseUnits(String(amount), decimals)
+
+      const isNativeFunding = isNativeToken(tokenAddress)
 
       try {
-        if (showToasts) toast.info('Approving token...')
-        const approveTxHash = await writeContractAsync({
-          ...txArgs,
-          ...(await getEvmFeeOverrides(chainId, publicClient)),
-          address: tokenAddress as `0x${string}`,
-          abi: ERC20_ABI,
-          functionName: 'approve',
-          args: [evmCfg.contractAddress, amountRaw],
-        })
+        if (!isNativeFunding) {
+          if (showToasts) toast.info('Approving token...')
+          const approveTxHash = await writeContractAsync({
+            ...txArgs,
+            ...(await getEvmFeeOverrides(chainId, publicClient)),
+            address: tokenAddress as `0x${string}`,
+            abi: ERC20_ABI,
+            functionName: 'approve',
+            args: [evmCfg.contractAddress, amountRaw],
+          })
 
-        await waitForTransactionReceipt(wagmiConfig, { hash: approveTxHash })
+          await waitForTransactionReceipt(wagmiConfig, { hash: approveTxHash })
+        }
 
         if (showToasts) toast.info('Adding funds...')
         const txHash = await writeContractAsync({
@@ -72,6 +78,7 @@ export const useFundAgentEVM = (options: UseFundAgentEVMOptions = {}) => {
           abi: SENTINEL_ABI,
           functionName: 'fundAgent',
           args: [agentId, amountRaw],
+          value: isNativeFunding ? amountRaw : undefined,
         })
 
         if (showToasts) toast.success(`Successfully funded agent with ${amount} ${symbol}`)

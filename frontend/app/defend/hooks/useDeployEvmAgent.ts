@@ -7,6 +7,7 @@ import { wagmiConfig } from '@/lib/wagmi'
 import { getEvmConfig } from '@/constants/evm'
 import { getEvmFeeOverrides } from '@/lib/evm/fees'
 import { SENTINEL_ABI, ERC20_ABI } from '@/lib/evm/abi'
+import { isNativeToken } from '@/lib/evm/native-token'
 import { buildEvmSignature, bytesToHex32 } from '@/lib/evm/signature'
 import type { SupportedToken } from '@/constants'
 import type { ChainDeployHook, EvmTeeResponse, DeployTransactionResult } from '../types'
@@ -43,18 +44,22 @@ export function useDeployEvmAgent({
 
     const txArgs = { account: walletAddress, chain: currentChain ?? null }
 
-    // Compute explicit fees fresh before each tx — Arbitrum's base fee drifts,
-    // and MetaMask's own estimate lands too low (see lib/evm/fees.ts).
-    const approveTxHash = await writeContractAsync({
-      ...txArgs,
-      ...(await getEvmFeeOverrides(chainId, publicClient)),
-      address: tokenAddress,
-      abi: ERC20_ABI,
-      functionName: 'approve',
-      args: [evmCfg.contractAddress, initialFundRaw],
-    })
+    const isNativeFunding = isNativeToken(tokenAddress)
 
-    await waitForTransactionReceipt(wagmiConfig, { hash: approveTxHash })
+    if (!isNativeFunding) {
+      // Compute explicit fees fresh before each tx — Arbitrum's base fee drifts,
+      // and MetaMask's own estimate lands too low (see lib/evm/fees.ts).
+      const approveTxHash = await writeContractAsync({
+        ...txArgs,
+        ...(await getEvmFeeOverrides(chainId, publicClient)),
+        address: tokenAddress,
+        abi: ERC20_ABI,
+        functionName: 'approve',
+        args: [evmCfg.contractAddress, initialFundRaw],
+      })
+
+      await waitForTransactionReceipt(wagmiConfig, { hash: approveTxHash })
+    }
 
     const registerTxHash = await writeContractAsync({
       ...txArgs,
@@ -71,6 +76,7 @@ export function useDeployEvmAgent({
         initialFundRaw,
         fullSignature,
       ],
+      value: isNativeFunding ? initialFundRaw : undefined,
     })
 
     return {

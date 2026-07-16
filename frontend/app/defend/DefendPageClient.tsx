@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -34,16 +34,16 @@ import { RewardsConditions } from '@/components/defend/RewardsConditions'
 import { SuccessModal } from '@/components/DefenderSuccessModal'
 import { formatCompact, TokenAmount } from '@/components/ui/common/TokenAmount'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 import { useSuiTokenBalance } from '@/hooks/useSuiTokenBalance'
 import { Skeleton } from '@/components/ui/skeleton'
 
 import { SentinelTypeToggle } from '@/components/defend/agentic/SentinelTypeToggle'
 import { EnvironmentTemplatePicker } from '@/components/defend/agentic/EnvironmentTemplatePicker'
-import { EnvironmentSeedEditor } from '@/components/defend/agentic/EnvironmentSeedEditor'
-import { EnabledToolsChecklist } from '@/components/defend/agentic/EnabledToolsChecklist'
+import { EnvironmentConfigPanel } from '@/components/defend/agentic/EnvironmentConfigPanel'
 import { LiveToolsChecklist } from '@/components/defend/agentic/LiveToolsChecklist'
-import { useEnvironmentTemplate } from './hooks/useEnvironmentTemplates'
+import { useEnvironmentTemplateDetails } from './hooks/useEnvironmentTemplates'
 import type { AgenticConfig, SentinelType } from './agentic-types'
 import { buildAgenticConfig, validateAgenticSelection } from './agentic-utils'
 import { FormInput } from './components/FormInput'
@@ -68,29 +68,69 @@ export default function DefendPageClient() {
 
   // Sui wallet
   const account = useCurrentAccount()
-  // Solana wallet
   const { publicKey: solanaPublicKey } = useSolanaWallet()
   const { setVisible: setSolanaWalletModalVisible } = useWalletModal()
-  // EVM wallet
   const { address: evmAddress } = useEVMWallet()
   const { openConnectModal: openEvmConnectModal } = useConnectModal()
 
   const [sentinelType, setSentinelType] = useState<SentinelType>('basic')
-  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null)
-  // The seeded `initial_environment` (namespace-keyed) for the agentic sandbox.
+  const [selectedTemplateIds, setSelectedTemplateIds] = useState<string[]>([])
   const [agenticEnvironment, setAgenticEnvironment] = useState<Record<string, unknown>>({})
   const [enabledToolIds, setEnabledToolIds] = useState<string[]>([])
   const [enabledLiveToolIds, setEnabledLiveToolIds] = useState<string[]>([])
-  const { data: templateDetail } = useEnvironmentTemplate(selectedTemplateId)
+  const [activeTemplateId, setActiveTemplateId] = useState<string | null>(null)
+  const selectedTemplates = useEnvironmentTemplateDetails(selectedTemplateIds)
+  const activeTabValue =
+    selectedTemplates.find(template => template.template_id === activeTemplateId)?.template_id ??
+    selectedTemplates[0]?.template_id
 
-  const handleSelectTemplate = (templateId: string) => {
-    setSelectedTemplateId(templateId)
-    setAgenticEnvironment({})
+  const toggleTemplate = (templateId: string) => {
+    if (selectedTemplateIds.includes(templateId)) {
+      const remaining = selectedTemplateIds.filter(id => id !== templateId)
+      setSelectedTemplateIds(remaining)
+      setActiveTemplateId(current =>
+        current === templateId ? (remaining[remaining.length - 1] ?? null) : current
+      )
+    } else {
+      setSelectedTemplateIds([...selectedTemplateIds, templateId])
+      setActiveTemplateId(templateId)
+    }
   }
 
+  const seededTemplateIdsRef = useRef<Set<string>>(new Set())
+
   useEffect(() => {
-    if (templateDetail) setEnabledToolIds(templateDetail.tools.map(tool => tool.tool_id))
-  }, [templateDetail?.template_id])
+    for (const templateId of Array.from(seededTemplateIdsRef.current)) {
+      if (!selectedTemplateIds.includes(templateId)) {
+        seededTemplateIdsRef.current.delete(templateId)
+      }
+    }
+  }, [selectedTemplateIds])
+
+  useEffect(() => {
+    const templatesToSeed = selectedTemplates.filter(
+      template => !seededTemplateIdsRef.current.has(template.template_id)
+    )
+    if (templatesToSeed.length === 0) return
+    templatesToSeed.forEach(template => seededTemplateIdsRef.current.add(template.template_id))
+
+    const defaultToolIds = templatesToSeed.flatMap(template =>
+      template.tools.map(tool => tool.tool_id)
+    )
+    setEnabledToolIds(prev => Array.from(new Set([...prev, ...defaultToolIds])))
+
+    setAgenticEnvironment(prev => {
+      const next = { ...prev }
+      for (const template of templatesToSeed) {
+        if (next[template.namespace] === undefined) {
+          next[template.namespace] = structuredClone(
+            template.default_environment?.[template.namespace] ?? {}
+          )
+        }
+      }
+      return next
+    })
+  }, [selectedTemplates])
 
   const [agentImage, setAgentImage] = useState<File | null>(null)
   const [imagePickerOpen, setImagePickerOpen] = useState(false)
@@ -203,15 +243,15 @@ export default function DefendPageClient() {
 
   const agenticConfig = useMemo<AgenticConfig | null>(() => {
     if (sentinelType !== 'agentic') return null
-    const hasSelection = Boolean(templateDetail) || enabledLiveToolIds.length > 0
+    const hasSelection = selectedTemplates.length > 0 || enabledLiveToolIds.length > 0
     if (!hasSelection) return null
     return buildAgenticConfig({
-      templateDetail,
+      templates: selectedTemplates,
       enabledToolIds,
       enabledLiveToolIds,
       initialEnvironment: agenticEnvironment,
     })
-  }, [sentinelType, templateDetail, enabledToolIds, enabledLiveToolIds, agenticEnvironment])
+  }, [sentinelType, selectedTemplates, enabledToolIds, enabledLiveToolIds, agenticEnvironment])
 
   const {
     isLoading,
@@ -270,7 +310,7 @@ export default function DefendPageClient() {
     }
     if (sentinelType === 'agentic') {
       const agenticError = validateAgenticSelection({
-        templateDetail,
+        templates: selectedTemplates,
         enabledToolIds,
         enabledLiveToolIds,
       })
@@ -419,30 +459,48 @@ export default function DefendPageClient() {
                 {/* Left: environment list (fixed) */}
                 <div className="lg:w-72 lg:shrink-0">
                   <EnvironmentTemplatePicker
-                    selectedTemplateId={selectedTemplateId}
-                    onSelect={handleSelectTemplate}
+                    selectedTemplateIds={selectedTemplateIds}
+                    onToggleTemplate={toggleTemplate}
                   />
                 </div>
 
-                {/* Right: selected environment's configuration panel */}
+                {/* Right: a tab per selected environment, holding its configuration */}
                 <div className="min-w-0 flex-1">
-                  {templateDetail ? (
-                    <div className="flex flex-col gap-6">
-                      <EnvironmentSeedEditor
-                        templateDetail={templateDetail}
-                        value={agenticEnvironment}
-                        onChange={setAgenticEnvironment}
-                      />
-                      <EnabledToolsChecklist
-                        tools={templateDetail.tools}
-                        enabledToolIds={enabledToolIds}
-                        onChange={setEnabledToolIds}
-                      />
+                  {selectedTemplateIds.length === 0 ? (
+                    <div className="flex h-full min-h-[160px] items-center justify-center rounded-lg border border-dashed border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-6 text-center text-sm text-[var(--color-text-muted)]">
+                      Select one or more environments, or enable a live tool below.
+                    </div>
+                  ) : selectedTemplates.length === 0 ? (
+                    <div className="flex h-full min-h-[160px] items-center justify-center gap-2 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-6 text-sm text-[var(--color-text-muted)]">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Loading environment…
                     </div>
                   ) : (
-                    <div className="flex h-full min-h-[160px] items-center justify-center rounded-lg border border-dashed border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-6 text-center text-sm text-[var(--color-text-muted)]">
-                      Select an environment, or enable a live tool below.
-                    </div>
+                    <Tabs value={activeTabValue} onValueChange={setActiveTemplateId}>
+                      <TabsList className="h-auto w-full justify-start overflow-x-auto border-b border-[var(--color-border-default)] p-0">
+                        {selectedTemplates.map(template => (
+                          <TabsTrigger key={template.template_id} value={template.template_id}>
+                            {template.name}
+                          </TabsTrigger>
+                        ))}
+                      </TabsList>
+
+                      {selectedTemplates.map(template => (
+                        <TabsContent
+                          key={template.template_id}
+                          value={template.template_id}
+                          className="mt-4"
+                        >
+                          <EnvironmentConfigPanel
+                            template={template}
+                            environment={agenticEnvironment}
+                            onEnvironmentChange={setAgenticEnvironment}
+                            enabledToolIds={enabledToolIds}
+                            onEnabledToolIdsChange={setEnabledToolIds}
+                          />
+                        </TabsContent>
+                      ))}
+                    </Tabs>
                   )}
                 </div>
               </div>

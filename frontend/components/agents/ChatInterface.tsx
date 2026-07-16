@@ -75,7 +75,7 @@ export default function ChatInterface({
 
   const [isAttackPaused, setIsAttackPaused] = useState(false)
 
-  const agentToken = getTokenForCoinType(agent.coin_type)
+  const agentToken = getTokenForCoinType(agent.coin_type, agent.chain)
 
   useEffect(() => {
     setIsAttackPaused(Number(agent.unlock_timestamp) < Date.now())

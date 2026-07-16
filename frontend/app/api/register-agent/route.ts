@@ -1,31 +1,19 @@
-import { APP_ENVIRONMENT, APP_NETWORK, LOCAL_API_PATH } from '@/constants'
-import { SOLANA_TEE_API_PATH, SOLANA_TEE_NETWORK } from '@/constants/solana'
-import { EVM_TEE_API_PATH, EVM_TEE_NETWORK, resolveEvmTeeNetwork } from '@/constants/evm'
+import { buildTeeUrl } from '@/constants/tee'
+import type { SupportedChain } from '@/constants/chains'
 import { NextRequest, NextResponse } from 'next/server'
-
-function getTeeUrl(chain: string, chainId?: number): string {
-  switch (chain) {
-    case 'solana':
-      return `${SOLANA_TEE_API_PATH}/${APP_ENVIRONMENT}/${SOLANA_TEE_NETWORK}/register-agent`
-    case 'bnb':
-    case 'bot':
-    case 'arb':
-    case 'evm': {
-      const teeNetwork = chainId ? resolveEvmTeeNetwork(chainId) : EVM_TEE_NETWORK
-      return `${EVM_TEE_API_PATH}/${APP_ENVIRONMENT}/${teeNetwork}/register-agent`
-    }
-    case 'sui':
-    default:
-      return `${LOCAL_API_PATH}/${APP_ENVIRONMENT}/${APP_NETWORK}/register-agent`
-  }
-}
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { chain, chainId, ...payload } = body
+    const { chain, chainId, ...payload } = body as {
+      chain?: SupportedChain | 'evm'
+      chainId?: number
+    }
 
-    const teeUrl = getTeeUrl(chain, chainId)
+    // `chain` selects the TEE endpoint. 'evm' is a generic alias (the EVM
+    // network is derived from chainId), and a missing chain defaults to Sui.
+    const teeChain: SupportedChain = chain === 'evm' ? 'bnb' : (chain ?? 'sui')
+    const teeUrl = buildTeeUrl(teeChain, 'register-agent', chainId)
 
     const response = await fetch(teeUrl, {
       method: 'POST',

@@ -31,7 +31,7 @@ export const UpdateCostModal = ({
   const { updateCost: updateCostSui, isLoading: isSuiLoading } = useUpdateAgentSui()
   const { updateCost: updateCostSolana, isLoading: isSolanaLoading } = useUpdateAgentSolana()
   const { updateCost: updateCostEvm, isLoading: isEvmLoading } = useUpdateAgentEVM()
-  const token = getTokenForCoinType(coinType)
+  const token = getTokenForCoinType(coinType, chain)
 
   const isSolana = chain === 'solana'
   const isEvm = isEvmChain(chain)
