@@ -1,7 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import { SUI_SENTINEL_API_URL, APP_NETWORK } from '@/constants'
 import { SupportedToken } from '@/constants/shared'
+import { type SupportedChain } from '@/constants/chains'
 import { getTokenForCoinType } from '@/constants/tokens'
+
+type AvailableCoinType = { coin_type: string; chain: SupportedChain }
 
 export const useAgentCoinTypes = () => {
   return useQuery<SupportedToken[]>({
@@ -11,11 +14,11 @@ export const useAgentCoinTypes = () => {
         credentials: 'include',
       })
       if (!res.ok) throw new Error('Failed to fetch available coin types')
-      const data = await res.json()
+      const data = (await res.json()) as { coin_types: AvailableCoinType[] }
       const seen = new Set<string>()
       const tokens: SupportedToken[] = []
-      for (const ct of data.coin_types as string[]) {
-        const token = getTokenForCoinType(ct)
+      for (const { coin_type, chain } of data.coin_types) {
+        const token = getTokenForCoinType(coin_type, chain)
         if (!seen.has(token.symbol)) {
           seen.add(token.symbol)
           tokens.push(token)

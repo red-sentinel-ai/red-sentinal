@@ -31,7 +31,7 @@ export const WithdrawAgentModal = ({
 }: WithdrawAgentModalProps) => {
   const [amount, setAmount] = useState('')
   const [error, setError] = useState('')
-  const token = getTokenForCoinType(coinType)
+  const token = getTokenForCoinType(coinType, chain)
   const agentBalanceHuman = agentBalanceRaw / Math.pow(10, token.decimals)
   const isSolana = chain === 'solana'
   const isEvm = isEvmChain(chain)

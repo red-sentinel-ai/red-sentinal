@@ -6,6 +6,7 @@ import { waitForTransactionReceipt } from '@wagmi/core'
 import { parseUnits } from 'viem'
 import { wagmiConfig } from '@/lib/wagmi'
 import { SYNDICATE_ABI, ERC20_ABI } from '@/lib/evm/abi'
+import { isNativeToken } from '@/lib/evm/native-token'
 import { APP_NETWORK } from '@/constants/shared'
 import { SUI_SENTINEL_API_URL } from '@/constants'
 
@@ -36,15 +37,18 @@ export function useSyndicateMemberActions(syndicateAddress: `0x${string}`) {
   const deposit = (tokenAddress: `0x${string}`, amount: string, decimals: number) =>
     exec('deposit', async () => {
       const amountRaw = parseUnits(amount, decimals)
+      const isNativeDeposit = isNativeToken(tokenAddress)
 
-      const approveTx = await writeContractAsync({
-        ...txArgs,
-        address: tokenAddress,
-        abi: ERC20_ABI,
-        functionName: 'approve',
-        args: [syndicateAddress, amountRaw],
-      })
-      await waitForTransactionReceipt(wagmiConfig, { hash: approveTx })
+      if (!isNativeDeposit) {
+        const approveTx = await writeContractAsync({
+          ...txArgs,
+          address: tokenAddress,
+          abi: ERC20_ABI,
+          functionName: 'approve',
+          args: [syndicateAddress, amountRaw],
+        })
+        await waitForTransactionReceipt(wagmiConfig, { hash: approveTx })
+      }
 
       return writeContractAsync({
         ...txArgs,
@@ -52,6 +56,7 @@ export function useSyndicateMemberActions(syndicateAddress: `0x${string}`) {
         abi: SYNDICATE_ABI,
         functionName: 'deposit',
         args: [amountRaw],
+        value: isNativeDeposit ? amountRaw : undefined,
       })
     })
 

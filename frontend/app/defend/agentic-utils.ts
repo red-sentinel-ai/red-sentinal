@@ -21,34 +21,54 @@ export function getEnabledWriteTools(
   )
 }
 
+function collectTemplateTools(
+  templates: EnvironmentTemplateDetail[]
+): EnvironmentToolMeta[] {
+  return templates.flatMap(template => template.tools)
+}
+
+function resolveActiveTemplateToolIds(
+  templates: EnvironmentTemplateDetail[],
+  enabledToolIds: string[]
+): string[] {
+  const templateToolIds = new Set(collectTemplateTools(templates).map(tool => tool.tool_id))
+  return enabledToolIds.filter(toolId => templateToolIds.has(toolId))
+}
+
 interface BuildAgenticConfigArgs {
-  templateDetail?: EnvironmentTemplateDetail | null
+  templates: EnvironmentTemplateDetail[]
   enabledToolIds: string[]
   enabledLiveToolIds: string[]
   initialEnvironment: Record<string, unknown>
 }
 
 export function buildAgenticConfig({
-  templateDetail,
+  templates,
   enabledToolIds,
   enabledLiveToolIds,
   initialEnvironment,
 }: BuildAgenticConfigArgs): AgenticConfig {
-  const writeTools = templateDetail
-    ? getEnabledWriteTools(templateDetail.tools, enabledToolIds)
-    : []
+  const hasTemplates = templates.length > 0
+  const activeTemplateToolIds = resolveActiveTemplateToolIds(templates, enabledToolIds)
+  const writeTools = getEnabledWriteTools(collectTemplateTools(templates), activeTemplateToolIds)
 
-  const enabledTools: ToolConfig[] = [
-    ...(templateDetail ? enabledToolIds : []),
-    ...enabledLiveToolIds,
-  ].map(toolId => ({ tool_id: toolId, enabled: true }))
+  const enabledTools: ToolConfig[] = [...activeTemplateToolIds, ...enabledLiveToolIds].map(
+    toolId => ({ tool_id: toolId, enabled: true })
+  )
+
+  const selectedNamespaces = new Set(templates.map(template => template.namespace))
+  const initial_environment = Object.fromEntries(
+    Object.entries(initialEnvironment).filter(([namespace]) => selectedNamespaces.has(namespace))
+  )
 
   return {
-    scenario: templateDetail
+    scenario: hasTemplates
       ? {
-          template_ids: [templateDetail.template_id],
-          template_versions: { [templateDetail.template_id]: templateDetail.version },
-          initial_environment: initialEnvironment,
+          template_ids: templates.map(template => template.template_id),
+          template_versions: Object.fromEntries(
+            templates.map(template => [template.template_id, template.version])
+          ),
+          initial_environment,
         }
       : EMPTY_SCENARIO,
     enabledTools,
@@ -59,33 +79,34 @@ export function buildAgenticConfig({
       weight: 1,
     })),
     utilityChecks: [],
-    evaluationMode: templateDetail ? 'hybrid' : 'llm',
+    evaluationMode: hasTemplates ? 'hybrid' : 'llm',
   }
 }
 
 interface ValidateAgenticSelectionArgs {
-  templateDetail: EnvironmentTemplateDetail | null | undefined
+  templates: EnvironmentTemplateDetail[]
   enabledToolIds: string[]
   enabledLiveToolIds: string[]
 }
 
 export function validateAgenticSelection({
-  templateDetail,
+  templates,
   enabledToolIds,
   enabledLiveToolIds,
 }: ValidateAgenticSelectionArgs): string | null {
   const hasLiveTools = enabledLiveToolIds.length > 0
 
-  if (!templateDetail) {
+  if (templates.length === 0) {
     return hasLiveTools
       ? null
       : 'Select an environment or enable a live tool for your agentic Sentinel.'
   }
 
-  if (enabledToolIds.length === 0) {
+  const activeTemplateToolIds = resolveActiveTemplateToolIds(templates, enabledToolIds)
+  if (activeTemplateToolIds.length === 0) {
     return 'Enable at least one tool for your agentic Sentinel.'
   }
-  if (getEnabledWriteTools(templateDetail.tools, enabledToolIds).length === 0) {
+  if (getEnabledWriteTools(collectTemplateTools(templates), activeTemplateToolIds).length === 0) {
     return 'Enable at least one write tool — those are what attackers try to trigger, and how a breach is detected.'
   }
   return null
