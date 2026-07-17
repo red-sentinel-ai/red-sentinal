@@ -4,17 +4,15 @@ import { Brain } from 'lucide-react'
 
 import { useSentinelMemories } from '@/hooks/agents/useSentinelMemories'
 
-/**
- * Owner-only view of a sentinel's Walrus memories (prompts that have breached
- * it before). Renders nothing for non-owners — the hook returns `null` when the
- * backend refuses the request — so live exploits are never shown to attackers.
- */
 export function SentinelMemoryPanel({
   network,
   sentinelId,
+  className,
 }: {
   network: string
   sentinelId: number
+  /** Wrapper classes so each host controls its own section spacing. */
+  className?: string
 }) {
   const { data, isPending } = useSentinelMemories(network, sentinelId)
 
@@ -24,7 +22,7 @@ export function SentinelMemoryPanel({
   const { memories } = data
 
   return (
-    <div>
+    <div className={className}>
       <p className="industrial-header mb-2 flex items-center gap-1.5 text-[10px] text-accent">
         <Brain className="h-3 w-3" />
         DEFENSIVE_MEMORY

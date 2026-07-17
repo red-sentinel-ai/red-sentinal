@@ -28,6 +28,7 @@ import { TokenAmount } from '../ui/common/TokenAmount'
 import { SocialMissionModal } from '@/components/rewards/SocialMissionModal'
 import { REWARDS_CONSTANTS } from '@/constants/rewards'
 import { SentinelFollowButton } from '@/components/agents/SentinelFollowButton'
+import { SentinelMemoryPanel } from '@/components/agents/SentinelMemoryPanel'
 import { APP_NETWORK } from '@/constants'
 
 const SHARE_MISSION = REWARDS_CONSTANTS.DEFAULT_MISSIONS.find(m => m.type === 'share_with_hashtag')!
@@ -402,6 +403,14 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
               )}
             </div>
           </div>
+
+          {Number.isFinite(Number(agent.agent_id)) && (
+            <SentinelMemoryPanel
+              network={APP_NETWORK}
+              sentinelId={Number(agent.agent_id)}
+              className="space-y-2 border-t border-[var(--color-border-strong)] pt-6"
+            />
+          )}
 
           {/* System Telemetry */}
           <div className="space-y-3 border-t border-[var(--color-border-strong)] pt-6">

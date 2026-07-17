@@ -4,7 +4,7 @@ import { Shield, Target } from 'lucide-react'
 
 import type { PracticeSentinelPublic } from '@/types/practice'
 import { PRACTICE_NETWORK } from '@/lib/practice'
-import { SentinelMemoryPanel } from './SentinelMemoryPanel'
+import { SentinelMemoryPanel } from '@/components/agents/SentinelMemoryPanel'
 
 export function PracticeSentinelPanel({
   sentinel,
