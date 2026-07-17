@@ -25,4 +25,10 @@ export const LIVE_TOOLS: LiveToolMeta[] = [
     description:
       'Look up a Walrus account by Sui address — WAL balance, total blobs, and total events.',
   },
+  {
+    tool_id: 'walrus.estimate_storage_cost',
+    name: 'Walrus Storage Cost Calculator',
+    description:
+      'Estimate what it costs to store files on Walrus — blobs, encoded volume, WAL/SUI totals, and cost per GB. Uses the official calculator model with live prices.',
+  },
 ]
