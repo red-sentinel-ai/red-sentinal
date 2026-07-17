@@ -8,6 +8,7 @@ import { getEvmConfig } from '@/constants/evm'
 import { getEvmFeeOverrides } from '@/lib/evm/fees'
 import { ethers } from "ethers";
 import { SENTINEL_ABI, ERC20_ABI } from '@/lib/evm/abi'
+import { isNativeToken } from '@/lib/evm/native-token'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
 import type { ConsumePromptApiResponse } from '@/types'
 import type { Agent } from '@/types/agents'
@@ -84,20 +85,23 @@ export function useConsumePromptEVM({
           args: [agentDetails.agent_id],
         } as any) as bigint
         const paymentAmount = (latestEffectiveCost * 101n) / 100n
-        const paymentFormatted = ethers.formatUnits(paymentAmount, 18)
-        console.log({ latestEffectiveCost, paymentAmount, paymentFormatted })
+
+        const isNativePayment = isNativeToken(tokenAddress)
+
         // Step 1: Approve payment token
-        if (showToasts) toast.info('Approving payment...')
-        await writeContractAsync({
-          ...txArgs,
-          ...(await getEvmFeeOverrides(chainId, publicClient)),
-          address: tokenAddress,
-          abi: ERC20_ABI,
-          functionName: 'approve',
-          args: [evmCfg.contractAddress, paymentAmount],
-        })
-        // Wait for BSC block (~3s)
-        await new Promise(r => setTimeout(r, 3000))
+        if (!isNativePayment) {
+          if (showToasts) toast.info('Approving payment...')
+          await writeContractAsync({
+            ...txArgs,
+            ...(await getEvmFeeOverrides(chainId, publicClient)),
+            address: tokenAddress,
+            abi: ERC20_ABI,
+            functionName: 'approve',
+            args: [evmCfg.contractAddress, paymentAmount],
+          })
+          // Wait for BSC block (~3s)
+          await new Promise(r => setTimeout(r, 3000))
+        }
 
         // Step 2: Request attack — returns attackId via event
         if (showToasts) toast.info('Processing payment...')
@@ -108,6 +112,7 @@ export function useConsumePromptEVM({
           abi: SENTINEL_ABI,
           functionName: 'requestAttack',
           args: [agentDetails.agent_id, paymentAmount],
+          value: isNativePayment ? paymentAmount : undefined,
         })
 
         // Wait for the tx to be mined and extract attackId from AttackRequested event
@@ -148,10 +153,11 @@ export function useConsumePromptEVM({
 
         // Step 3: Call EVM TEE consume-prompt
         if (showToasts) toast.info('Processing prompt...')
-        const teeRes = await fetch('/api/evm/consume-prompt', {
+        const teeRes = await fetch('/api/consume-prompt', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
+            chain: agentDetails.chain,
             agent_id: String(agentDetails.agent_id),
             message,
             attack_id: Number(attackId),

@@ -40,7 +40,7 @@ export const ClaimFeesModal = ({
   const isSolana = chain === 'solana'
   const isEvm = isEvmChain(chain)
   const isLoading = isEvm ? isEvmLoading : isSolana ? isSolanaLoading : isSuiLoading
-  const token = getTokenForCoinType(coinType)
+  const token = getTokenForCoinType(coinType, chain)
   const hasFees = accumulatedFees > 0
 
   const handleClaim = async () => {

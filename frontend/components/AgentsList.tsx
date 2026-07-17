@@ -107,7 +107,7 @@ export const AgentsList = ({
                 </div>
               )}
               {agents.map((agent, idx) => {
-                const agentToken = getTokenForCoinType(agent.coin_type)
+                const agentToken = getTokenForCoinType(agent.coin_type, agent.chain)
                 const chainData = CHAINS[agent.chain as keyof typeof CHAINS] ?? CHAINS.sui
                 const status = getSentinelStatus(agent)
                 const statusMeta = SENTINEL_STATUS_META[status]

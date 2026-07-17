@@ -179,10 +179,11 @@ export const useConsumePromptSolana = (options: UseConsumeSolanaPromptOptions = 
     const retryDelayMs = 5000
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
-      const response = await fetch('/api/solana/consume-prompt', {
+      const response = await fetch('/api/consume-prompt', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          chain: 'solana',
           agent_id: `${agentId}`,
           message,
           attack_account_pubkey: attackAccountPubkey,

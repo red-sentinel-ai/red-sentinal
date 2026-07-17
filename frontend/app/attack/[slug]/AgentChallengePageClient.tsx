@@ -124,7 +124,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
           tx_digest: txDigest,
           cost_to_attack:
             Number(agent.cost_per_message) /
-            Math.pow(10, getTokenForCoinType(agent.coin_type).decimals),
+            Math.pow(10, getTokenForCoinType(agent.coin_type, agent.chain).decimals),
           chain: activeChain,
         })
 
@@ -133,7 +133,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
             agent_id: agent.agent_id,
             prize_pool_won:
               Number(agent.total_balance) /
-              Math.pow(10, getTokenForCoinType(agent.coin_type).decimals),
+              Math.pow(10, getTokenForCoinType(agent.coin_type, agent.chain).decimals),
             winner_address: connectedAddress,
             chain: activeChain,
           })
