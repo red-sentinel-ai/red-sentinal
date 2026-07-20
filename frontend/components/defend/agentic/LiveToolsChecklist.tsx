@@ -26,8 +26,8 @@ export function LiveToolsChecklist({ enabledLiveToolIds, onChange }: LiveToolsCh
           Live Tools
         </label>
         <span className="mt-1 block text-xs text-[var(--color-text-muted)]">
-          Give your Sentinel real integrations it can call to answer questions. These run against
-          live services — no sandbox required.
+          Optional add-ons — real integrations your Sentinel can call to answer questions. They run
+          against live services, on top of the environment you selected.
         </span>
       </div>
 
