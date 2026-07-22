@@ -75,6 +75,14 @@ export function useSpeechPlayback(text: string) {
     }
   }, [status, stop, text])
 
+  useEffect(() => {
+    stop()
+    if (audioUrlRef.current) {
+      URL.revokeObjectURL(audioUrlRef.current)
+      audioUrlRef.current = null
+    }
+  }, [text, stop])
+
   // Release the cached audio and the shared stopper when unmounting.
   useEffect(() => {
     return () => {
