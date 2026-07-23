@@ -5,12 +5,8 @@ import { SUI_SENTINEL_API_URL } from '@/constants'
 
 export type SpeechPlaybackStatus = 'idle' | 'loading' | 'playing'
 
-// Only one message may speak at a time across the whole page. Each hook
-// instance registers its own stopper here when it starts playing, and the
-// next message to play stops whatever was already speaking.
 let stopActivePlayback: (() => void) | null = null
 
-/** Fetch synthesized audio for `text` and return a playable object URL. */
 async function fetchSpeechAudioUrl(text: string): Promise<string> {
   const response = await fetch(`${SUI_SENTINEL_API_URL}/tts`, {
     method: 'POST',
@@ -25,11 +21,6 @@ async function fetchSpeechAudioUrl(text: string): Promise<string> {
   return URL.createObjectURL(await response.blob())
 }
 
-/**
- * Reads a single piece of text aloud on demand. The generated audio is cached
- * for the lifetime of the component, so replaying is instant and free. Starting
- * playback stops any other message that is currently speaking.
- */
 export function useSpeechPlayback(text: string) {
   const [status, setStatus] = useState<SpeechPlaybackStatus>('idle')
   const audioRef = useRef<HTMLAudioElement | null>(null)
@@ -83,7 +74,6 @@ export function useSpeechPlayback(text: string) {
     }
   }, [text, stop])
 
-  // Release the cached audio and the shared stopper when unmounting.
   useEffect(() => {
     return () => {
       if (stopActivePlayback === stop) {
