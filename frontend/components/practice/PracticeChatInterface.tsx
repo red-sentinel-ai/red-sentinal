@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
 
 import { generateAvatarUrl } from '@/lib/utils'
+import { playSpeech } from '@/lib/speech-playback'
 import type { Agent } from '@/types/agents'
 import type { ChatMessage as ChatMessageType } from '@/components/agents/ChatInterface'
 import { ChatMessage } from '@/components/agents/ChatMessage'
@@ -141,6 +142,7 @@ export function PracticeChatInterface({
         juryResponse: data.jury_response,
       }
       setPendingRound(prev => (prev ? [...prev, newAgentMessage] : [newAgentMessage]))
+      playSpeech(newAgentMessage.content)
       if (data.success) toast.success('Sentinel breached — attack succeeded!')
       // Pull the feed forward so the optimistic round resolves to server truth.
       refetchFeed()
