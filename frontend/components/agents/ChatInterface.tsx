@@ -12,6 +12,7 @@ import { ConnectModal } from '@mysten/dapp-kit'
 import { ATTACK_PROMPT_MAX_TOKENS } from '@/constants'
 import { getTokenForCoinType } from '@/constants/tokens'
 import { generateAvatarUrl } from '@/lib/utils'
+import { playSpeech } from '@/lib/speech-playback'
 import type { SupportedChain } from '@/constants/chains'
 import { truncateAddress } from '@/lib/utils'
 import type { ConsumePromptApiResponse } from '@/types'
@@ -216,6 +217,7 @@ export default function ChatInterface({
         juryResponse: apiResponse.response.data.jury_response,
       }
       setPendingRound(prev => (prev ? [...prev, newAgentMessage] : [newAgentMessage]))
+      playSpeech(newAgentMessage.content)
       refetchAgent()
     }
   }, [apiResponse, refetchAgent])
