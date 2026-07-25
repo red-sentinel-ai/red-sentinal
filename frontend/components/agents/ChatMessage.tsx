@@ -14,6 +14,8 @@ import { getExplorerTxUrl } from '@/lib/explorer'
 import { truncateAddress } from '@/lib/utils'
 import type { Agent } from '@/types/agents'
 import { type ChatMessage as ChatMessageType } from './ChatInterface'
+import { SentinelSpeechButton } from './SentinelSpeechButton'
+import { useSpeechPlayback } from '@/hooks/useSpeechPlayback'
 import type { Tables } from '@/lib/database.types'
 
 type UserProfile = Pick<
@@ -41,6 +43,7 @@ export const ChatMessage = ({
   const [isExpanded, setIsExpanded] = useState(false)
   const [shouldTruncate, setShouldTruncate] = useState(false)
   const contentRef = useRef<HTMLDivElement>(null)
+  const speech = useSpeechPlayback(message.content)
 
   useEffect(() => {
     if (contentRef.current) {
@@ -165,6 +168,9 @@ export const ChatMessage = ({
 
           {/* Footer with score, jury, and tx link */}
           <div className="flex flex-wrap items-center gap-4 border-t border-[var(--color-border-strong)] pt-4 lg:gap-6">
+            {/* Read Aloud */}
+            <SentinelSpeechButton status={speech.status} onToggle={speech.toggle} />
+
             {/* Jury Logged Badge */}
             {message.juryResponse && onShowJury && (
               <button
