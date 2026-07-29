@@ -40,10 +40,9 @@ export interface Agent {
   current_cost_per_message?: string
   chain?: SupportedChain
   winner?: AgentWinner | null
-  // Trending fields (top 10 agents only)
+  // Trending fields (top 8 agents only)
   trending?: boolean
   trending_rank?: number | null
-  trending_window?: '24h' | '7d' | '30d' | null
   // Fields only populated by the /details endpoint (single agent page)
   deployment_tx_hash?: string | null
   participants_count?: number
