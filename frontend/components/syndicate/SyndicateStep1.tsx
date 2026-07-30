@@ -3,13 +3,14 @@
 import { useRef, useState } from 'react'
 import { Loader2, Users } from 'lucide-react'
 import { toast } from 'sonner'
-import { useAccount, useChainId } from 'wagmi'
+import { useAccount } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { getEvmSupportedTokens } from '@/constants/evm'
 import { SUI_SENTINEL_API_URL } from '@/constants'
 import { APP_NETWORK } from '@/constants/shared'
 import { TokenSelectDropdown } from '@/components/defend/TokenSelectDropdown'
 import { useDeploySyndicate } from '@/hooks/syndicate/useDeploySyndicate'
+import { useEvmChain } from '@/hooks/evm/useEvmChain'
 import type { SupportedToken } from '@/constants/shared'
 
 interface SyndicateStep1Props {
@@ -24,8 +25,8 @@ interface SyndicateStep1Props {
 
 export function SyndicateStep1({ onComplete }: SyndicateStep1Props) {
   const { address: evmAddress } = useAccount()
-  const chainId = useChainId()
-  const evmTokens = getEvmSupportedTokens(chainId)
+  const { activeEvmChainKey } = useEvmChain()
+  const evmTokens = getEvmSupportedTokens(activeEvmChainKey ?? 'bnb')
   const { openConnectModal } = useConnectModal()
   const { deploy, isDeploying } = useDeploySyndicate()
 
