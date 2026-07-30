@@ -487,7 +487,7 @@ export type Database = {
           platform: string
           platform_avatar_url: string | null
           platform_user_id: string
-          platform_username: string
+          platform_username: string | null
           user_id: string | null
         }
         Insert: {
@@ -496,7 +496,7 @@ export type Database = {
           platform: string
           platform_avatar_url?: string | null
           platform_user_id: string
-          platform_username: string
+          platform_username?: string | null
           user_id?: string | null
         }
         Update: {
@@ -505,7 +505,7 @@ export type Database = {
           platform?: string
           platform_avatar_url?: string | null
           platform_user_id?: string
-          platform_username?: string
+          platform_username?: string | null
           user_id?: string | null
         }
         Relationships: [
@@ -519,6 +519,56 @@ export type Database = {
           {
             foreignKeyName: "ss_social_connections_user_id_fkey"
             columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "ss_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ss_user_follows: {
+        Row: {
+          created_at: string
+          follower_id: string
+          following_id: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          follower_id: string
+          following_id: string
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          follower_id?: string
+          following_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ss_user_follows_follower_id_fkey"
+            columns: ["follower_id"]
+            isOneToOne: false
+            referencedRelation: "ss_rewards_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "ss_user_follows_follower_id_fkey"
+            columns: ["follower_id"]
+            isOneToOne: false
+            referencedRelation: "ss_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ss_user_follows_following_id_fkey"
+            columns: ["following_id"]
+            isOneToOne: false
+            referencedRelation: "ss_rewards_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "ss_user_follows_following_id_fkey"
+            columns: ["following_id"]
             isOneToOne: false
             referencedRelation: "ss_users"
             referencedColumns: ["id"]
@@ -665,6 +715,62 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      syndicate_chat_message: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          room_id: string
+          sender_address: string
+          sender_role: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          room_id: string
+          sender_address: string
+          sender_role?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          room_id?: string
+          sender_address?: string
+          sender_role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "syndicate_chat_message_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "syndicate_chat_room"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      syndicate_chat_room: {
+        Row: {
+          created_at: string
+          id: string
+          network: string
+          syndicate_address: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          network: string
+          syndicate_address: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          network?: string
+          syndicate_address?: string
+        }
+        Relationships: []
       }
     }
     Views: {

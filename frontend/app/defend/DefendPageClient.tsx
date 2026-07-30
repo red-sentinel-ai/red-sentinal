@@ -312,7 +312,6 @@ export default function DefendPageClient() {
       const agenticError = validateAgenticSelection({
         templates: selectedTemplates,
         enabledToolIds,
-        enabledLiveToolIds,
       })
       if (agenticError) {
         toast.error(agenticError)

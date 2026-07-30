@@ -18,7 +18,10 @@ import { FilterSelect, type FilterSelectOption } from '@/components/attack/Filte
 import { useAllAgents } from '@/hooks/agents/useAllAgents'
 import type { SortField, SortDirection } from '@/types/agents'
 import { useFeaturedAgents } from '@/hooks/agents/useFeaturedAgents'
-import { useTrendingAgents } from '@/hooks/agents/useTrendingAgents'
+import {
+  useTrendingAgents,
+  MAX_TRENDING_SENTINELS,
+} from '@/hooks/agents/useTrendingAgents'
 import { useAgentCoinTypes } from '@/hooks/agents/useAgentCoinTypes'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -35,9 +38,7 @@ import { AttackStats } from '@/components/attack/AttackStats'
 import { SentinelMarquee } from '@/components/attack/SentinelMarquee'
 import { SentinelRowSkeleton } from '@/components/attack/SentinelRowSkeleton'
 
-const BIG_BOUNTY_THRESHOLD_MIST = BigInt(20_000_000_000) // 20 SUI
-
-const MAX_TRENDING_SENTINELS = 8
+const BIG_BOUNTY_THRESHOLD_MIST = BigInt(20_000_000_000) // 20 
 
 type BountyTab = 'all' | 'big_bounties'
 

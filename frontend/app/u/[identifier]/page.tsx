@@ -15,8 +15,10 @@ async function resolveProfile(identifier: string): Promise<ProfileViewData | nul
     const { data: walletConnection, error: walletError } = await supabaseServiceClient
       .from('ss_wallet_connections')
       .select('user_id')
-      .eq('wallet_address', identifier)
-      .single()
+      .ilike('wallet_address', identifier)
+      .order('connected_at', { ascending: true })
+      .limit(1)
+      .maybeSingle()
 
     if (walletError || !walletConnection) {
       console.error('Wallet lookup error:', walletError?.message)

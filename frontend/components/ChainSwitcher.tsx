@@ -9,11 +9,11 @@ import {
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu'
 import { CHAINS, SUPPORTED_CHAINS } from '@/constants/chains'
-import { useActiveChain } from '@/context/ActiveChainContext'
+import { useChainSelection } from '@/hooks/useChainSelection'
 import { cn } from '@/lib/utils'
 
 export function ChainSwitcher() {
-  const { activeChain, setActiveChain, isHydrated } = useActiveChain()
+  const { activeChain, selectChain, isSelectingChain, isHydrated } = useChainSelection()
   const active = CHAINS[activeChain]
 
   // Show a disabled button while hydrating to prevent flash of wrong chain
@@ -55,7 +55,8 @@ export function ChainSwitcher() {
           return (
             <DropdownMenuItem
               key={chainId}
-              onClick={() => setActiveChain(chainId)}
+              onSelect={() => selectChain(chainId)}
+              disabled={isSelectingChain}
               className={cn(
                 'font-body flex cursor-pointer items-center gap-3 rounded-none px-3 py-2 text-[10px] uppercase tracking-[0.1em] transition-colors hover:bg-white/[0.06]',
                 isActive && 'bg-white/[0.08]'

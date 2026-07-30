@@ -2,15 +2,8 @@ import type {
   AgenticConfig,
   EnvironmentTemplateDetail,
   EnvironmentToolMeta,
-  ScenarioConfig,
   ToolConfig,
 } from './agentic-types'
-
-const EMPTY_SCENARIO: ScenarioConfig = {
-  template_ids: [],
-  template_versions: {},
-  initial_environment: {},
-}
 
 export function getEnabledWriteTools(
   tools: EnvironmentToolMeta[],
@@ -48,7 +41,6 @@ export function buildAgenticConfig({
   enabledLiveToolIds,
   initialEnvironment,
 }: BuildAgenticConfigArgs): AgenticConfig {
-  const hasTemplates = templates.length > 0
   const activeTemplateToolIds = resolveActiveTemplateToolIds(templates, enabledToolIds)
   const writeTools = getEnabledWriteTools(collectTemplateTools(templates), activeTemplateToolIds)
 
@@ -62,15 +54,13 @@ export function buildAgenticConfig({
   )
 
   return {
-    scenario: hasTemplates
-      ? {
-          template_ids: templates.map(template => template.template_id),
-          template_versions: Object.fromEntries(
-            templates.map(template => [template.template_id, template.version])
-          ),
-          initial_environment,
-        }
-      : EMPTY_SCENARIO,
+    scenario: {
+      template_ids: templates.map(template => template.template_id),
+      template_versions: Object.fromEntries(
+        templates.map(template => [template.template_id, template.version])
+      ),
+      initial_environment,
+    },
     enabledTools,
     userTask: null,
     attackSuccessChecks: writeTools.map(tool => ({
@@ -79,27 +69,21 @@ export function buildAgenticConfig({
       weight: 1,
     })),
     utilityChecks: [],
-    evaluationMode: hasTemplates ? 'hybrid' : 'llm',
+    evaluationMode: 'hybrid',
   }
 }
 
 interface ValidateAgenticSelectionArgs {
   templates: EnvironmentTemplateDetail[]
   enabledToolIds: string[]
-  enabledLiveToolIds: string[]
 }
 
 export function validateAgenticSelection({
   templates,
   enabledToolIds,
-  enabledLiveToolIds,
 }: ValidateAgenticSelectionArgs): string | null {
-  const hasLiveTools = enabledLiveToolIds.length > 0
-
   if (templates.length === 0) {
-    return hasLiveTools
-      ? null
-      : 'Select an environment or enable a live tool for your agentic Sentinel.'
+    return 'Select an environment — every agentic Sentinel needs a sandbox to defend. Live tools are add-ons on top of it.'
   }
 
   const activeTemplateToolIds = resolveActiveTemplateToolIds(templates, enabledToolIds)

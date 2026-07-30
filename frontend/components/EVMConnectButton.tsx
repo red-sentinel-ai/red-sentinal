@@ -3,47 +3,34 @@
 import { useEffect } from 'react'
 import posthog from 'posthog-js'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
-import { useChainId, useSwitchChain } from 'wagmi'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
 import { useEVMBalance } from '@/hooks/useEVMBalance'
+import { useEvmChain } from '@/hooks/evm/useEvmChain'
 import { ConnectWalletLabel } from '@/components/ConnectWalletLabel'
 import { WalletDropdown } from '@/components/WalletDropdown'
 import { cn, truncateAddress } from '@/lib/utils'
-import { getEvmChainKey, getEvmChainIdForActive } from '@/constants/chains'
 import { getNativeToken } from '@/constants/tokens'
-import { APP_NETWORK } from '@/constants/shared'
 import { useActiveChain } from '@/context/ActiveChainContext'
 
 export function EVMConnectButton({ compact }: { compact?: boolean }) {
   const { address, isConnected, disconnect } = useEVMWallet()
   const { openConnectModal } = useConnectModal()
   const { balance, isLoading: isLoadingBalance } = useEVMBalance()
-  const chainId = useChainId()
-  const { switchChain } = useSwitchChain()
+  const { walletChainId, walletChainKey } = useEvmChain()
   const { activeChain } = useActiveChain()
-  const intendedChainId = getEvmChainIdForActive(activeChain, APP_NETWORK as 'testnet' | 'mainnet')
 
-  // When the user picks a different EVM chain in the header selector while a
-  // wallet is connected, push wagmi to switch to the matching chainId so all
-  // hooks resolve against the right contract.
-  useEffect(() => {
-    if (!isConnected || !intendedChainId) return
-    if (chainId !== intendedChainId) {
-      switchChain({ chainId: intendedChainId })
-    }
-  }, [isConnected, chainId, intendedChainId, switchChain])
 
   useEffect(() => {
     if (address) {
       posthog.identify(address)
       posthog.capture('wallet_connected', {
         address,
-        chain: `evm:${getEvmChainKey(chainId) ?? 'unknown'}:${chainId}`,
+        chain: `evm:${walletChainKey ?? 'unknown'}:${walletChainId}`,
       })
     } else {
       posthog.reset()
     }
-  }, [address, chainId])
+  }, [address, walletChainId, walletChainKey])
 
   if (!isConnected || !address) {
     return (

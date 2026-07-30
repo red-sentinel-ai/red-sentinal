@@ -1,12 +1,12 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { useWriteContract, useAccount, useChainId } from 'wagmi'
+import { parseUnits } from 'viem'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
-import { getEvmConfig } from '@/constants/evm'
 import { SENTINEL_ABI } from '@/lib/evm/abi'
-import { useEVMWallet } from '@/hooks/useEVMWallet'
+import { toReadableEvmError } from '@/lib/evm/errors'
+import { useEvmContractWriter } from '@/hooks/evm/useEvmContractWriter'
 import { AGENT_QUERY_KEY } from './useAgentDetails'
 
 interface UseWithdrawAgentEVMOptions {
@@ -24,10 +24,8 @@ interface WithdrawAgentEVMParams {
 
 export const useWithdrawAgentEVM = (options: UseWithdrawAgentEVMOptions = {}) => {
   const { onSuccess, onError, showToasts = true } = options
-  const { address: walletAddress } = useEVMWallet()
-  const { chain: currentChain } = useAccount()
-  const evmCfg = getEvmConfig(useChainId())
-  const { writeContractAsync } = useWriteContract()
+  const { walletAddress, requireEvmConfig, writeContract, isWalletConnected } =
+    useEvmContractWriter()
   const queryClient = useQueryClient()
 
   const [isLoading, setIsLoading] = useState(false)
@@ -35,26 +33,15 @@ export const useWithdrawAgentEVM = (options: UseWithdrawAgentEVMOptions = {}) =>
 
   const withdrawAgent = useCallback(
     async ({ agentId, amount, decimals, symbol }: WithdrawAgentEVMParams) => {
-      if (!walletAddress) {
-        const msg = 'EVM wallet not connected'
-        setError(msg)
-        if (showToasts) toast.error(msg)
-        throw new Error(msg)
-      }
-
       setIsLoading(true)
       setError(null)
 
-      const amountRaw = BigInt(Math.round(amount * Math.pow(10, decimals)))
-
       try {
-        const txHash = await writeContractAsync({
-          account: walletAddress,
-          chain: currentChain ?? null,
-          address: evmCfg.contractAddress,
+        const txHash = await writeContract({
+          address: requireEvmConfig().contractAddress,
           abi: SENTINEL_ABI,
           functionName: 'withdrawFromAgent',
-          args: [agentId, amountRaw],
+          args: [agentId, parseUnits(String(amount), decimals)],
         })
 
         if (showToasts) toast.success(`Successfully withdrew ${amount} ${symbol}`)
@@ -64,7 +51,7 @@ export const useWithdrawAgentEVM = (options: UseWithdrawAgentEVMOptions = {}) =>
         onSuccess?.(txHash)
         return txHash
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to withdraw'
+        const message = toReadableEvmError(err, 'Failed to withdraw')
         setError(message)
         if (showToasts) toast.error(message)
         const final = err instanceof Error ? err : new Error(message)
@@ -74,10 +61,10 @@ export const useWithdrawAgentEVM = (options: UseWithdrawAgentEVMOptions = {}) =>
         setIsLoading(false)
       }
     },
-    [walletAddress, currentChain, writeContractAsync, queryClient, onSuccess, onError, showToasts]
+    [walletAddress, requireEvmConfig, writeContract, queryClient, onSuccess, onError, showToasts]
   )
 
-  return { withdrawAgent, isLoading, error, isConnected: !!walletAddress }
+  return { withdrawAgent, isLoading, error, isConnected: isWalletConnected }
 }
 
 export type { WithdrawAgentEVMParams, UseWithdrawAgentEVMOptions }

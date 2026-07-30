@@ -18,9 +18,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Wallet addresses are stored lowercase in ss_wallet_connections (for every
-    // chain, incl. EVM), so always query in lowercase form.
-    const normalizedAddresses = walletAddresses.map((a: string) => a.toLowerCase())
+    const normalizedAddresses = [
+      ...new Set(
+        walletAddresses.flatMap((a: string) =>
+          a.startsWith('0x') ? [a.toLowerCase()] : [a, a.toLowerCase()]
+        )
+      ),
+    ]
 
     // Query wallet connections with user data
     const { data: walletConnections, error } = await supabaseServiceClient
