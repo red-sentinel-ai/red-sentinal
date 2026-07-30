@@ -9,6 +9,8 @@ import { ConsumePromptApiResponse } from '@/types'
 import { useActiveChain } from '@/context/ActiveChainContext'
 import { getExplorerTxUrl } from '@/lib/explorer'
 import { cn } from '@/lib/utils'
+import { SentinelSpeechButton } from '@/components/agents/SentinelSpeechButton'
+import { useSpeechPlayback } from '@/hooks/useSpeechPlayback'
 
 type AttackStatusModalProps = {
   apiResponse: ConsumePromptApiResponse
@@ -33,6 +35,8 @@ export const AttackStatusModal = ({
   const score = success ? 100 : originalScore
   const explanation = apiResponse?.response.data.agent_response
   const juryResponse = apiResponse?.response.data.jury_response
+
+  const explanationSpeech = useSpeechPlayback(explanation || '')
 
   return (
     <Dialog
@@ -98,15 +102,24 @@ export const AttackStatusModal = ({
             </div>
 
             <div className="mb-2">
-              <button
-                onClick={() => setIsExplanationOpen(!isExplanationOpen)}
-                className="group flex w-full items-center justify-between text-left"
-              >
-                <h3 className="text-[15px] font-medium text-white">Explanation</h3>
-                <span className="text-white/40 transition-colors group-hover:text-white">
-                  {isExplanationOpen ? '▲' : '▼'}
-                </span>
-              </button>
+              <div className="flex items-center justify-between">
+                <button
+                  onClick={() => setIsExplanationOpen(!isExplanationOpen)}
+                  className="group flex items-center gap-2 text-left"
+                >
+                  <h3 className="text-[15px] font-medium text-white">Explanation</h3>
+                  <span className="text-white/40 transition-colors group-hover:text-white">
+                    {isExplanationOpen ? '▲' : '▼'}
+                  </span>
+                </button>
+                {explanation && (
+                  <SentinelSpeechButton
+                    status={explanationSpeech.status}
+                    onToggle={explanationSpeech.toggle}
+                    variant="plain"
+                  />
+                )}
+              </div>
 
               <AnimatePresence initial={false}>
                 {isExplanationOpen && (

@@ -6,12 +6,14 @@ import { Folder, Activity, Gift } from 'lucide-react'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
+import { useActiveChain } from '@/context/ActiveChainContext'
 import { BoosterRewards } from '@/components/rewards/BoosterRewards'
 import { UserAgents } from './UserAgents'
 import { UserActivity } from './UserActivity'
 import { ProfileSocialConnections } from './ProfileSocialConnections'
 import { ProfileHeader } from './ProfileHeader'
 import { ProfileStatsBar } from './ProfileStatsBar'
+import { resolveWalletForChain } from './profile-utils'
 import type { ProfileViewData } from '@/types/Profile'
 
 const PROFILE_TABS = {
@@ -31,6 +33,7 @@ export function UserProfileView({ profile }: UserProfileViewProps) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const { address: connectedAddress } = useConnectedAddress()
+  const { activeChain } = useActiveChain()
 
   const isOwner = useMemo(() => {
     if (!connectedAddress) return false
@@ -39,6 +42,10 @@ export function UserProfileView({ profile }: UserProfileViewProps) {
   }, [connectedAddress, profile.wallets])
 
   const primaryWallet = profile.wallets[0]?.address
+  const activeChainWallet = useMemo(
+    () => resolveWalletForChain(profile.wallets, activeChain),
+    [profile.wallets, activeChain]
+  )
 
   const [activeTab, setActiveTab] = useState<ProfileTabValue>(PROFILE_TABS.AGENTS)
 
@@ -61,7 +68,7 @@ export function UserProfileView({ profile }: UserProfileViewProps) {
       <div className="relative mx-auto min-h-screen max-w-[1400px] px-4 pb-12 pt-24 md:px-12">
         <ProfileHeader profile={profile} isOwner={isOwner} primaryWallet={primaryWallet} />
 
-        <ProfileStatsBar walletAddress={primaryWallet} />
+        <ProfileStatsBar walletAddress={activeChainWallet} />
 
         {isOwner && <ProfileSocialConnections />}
 
@@ -87,10 +94,10 @@ export function UserProfileView({ profile }: UserProfileViewProps) {
 
           <div>
             <TabsContent value={PROFILE_TABS.AGENTS}>
-              <UserAgents address={primaryWallet} isOwner={isOwner} />
+              <UserAgents address={activeChainWallet} chain={activeChain} isOwner={isOwner} />
             </TabsContent>
             <TabsContent value={PROFILE_TABS.ACTIVITY}>
-              <UserActivity address={primaryWallet} isOwner={isOwner} />
+              <UserActivity address={activeChainWallet} isOwner={isOwner} />
             </TabsContent>
             {isOwner && (
               <TabsContent value={PROFILE_TABS.REWARDS}>

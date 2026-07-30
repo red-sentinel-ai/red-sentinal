@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { SUPPORTED_CHAINS, ACTIVE_CHAIN_STORAGE_KEY, type SupportedChain } from '@/constants/chains'
 
 const DEFAULT_CHAIN: SupportedChain = SUPPORTED_CHAINS.includes('solana') ? 'solana' : 'arb'
@@ -32,16 +32,17 @@ export function ActiveChainProvider({ children }: { children: React.ReactNode })
     setIsHydrated(true)
   }, [])
 
-  const setActiveChain = (chain: SupportedChain) => {
+  const setActiveChain = useCallback((chain: SupportedChain) => {
     setActiveChainState(chain)
     localStorage.setItem(ACTIVE_CHAIN_STORAGE_KEY, chain)
-  }
+  }, [])
 
-  return (
-    <ActiveChainContext.Provider value={{ activeChain, setActiveChain, isHydrated }}>
-      {children}
-    </ActiveChainContext.Provider>
+  const value = useMemo(
+    () => ({ activeChain, setActiveChain, isHydrated }),
+    [activeChain, setActiveChain, isHydrated]
   )
+
+  return <ActiveChainContext.Provider value={value}>{children}</ActiveChainContext.Provider>
 }
 
 export function useActiveChain() {

@@ -5,6 +5,7 @@ import type { ReactNode } from 'react'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { FocusModeProvider, useFocusMode } from '@/context/FocusModeContext'
 import { TopbarSlotProvider } from '@/context/TopbarSlotContext'
+import { WalletChainMismatchNotice } from '@/components/wallet/WalletChainMismatchNotice'
 import { AppSidebar } from './AppSidebar'
 import { AppTopbar } from './AppTopbar'
 
@@ -17,6 +18,7 @@ function AppShellContent({ children }: { children: ReactNode }) {
       {!isFocusMode && <AppSidebar />}
       <SidebarInset className={isFocusMode ? 'ml-0' : undefined}>
         {!isFocusMode && <AppTopbar />}
+        <WalletChainMismatchNotice />
         <div className="min-w-0 flex-1">{children}</div>
       </SidebarInset>
     </SidebarProvider>

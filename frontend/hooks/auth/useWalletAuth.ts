@@ -2,10 +2,11 @@
 
 import { useCallback, useState } from 'react'
 import { useSignPersonalMessage, useCurrentAccount } from '@mysten/dapp-kit'
-import { useSignMessage as useWagmiSignMessage, useAccount as useWagmiAccount, useChainId } from 'wagmi'
+import { useSignMessage as useWagmiSignMessage, useAccount as useWagmiAccount } from 'wagmi'
 import { useSolanaWallet } from '@/hooks/useSolanaWallet'
 import { useActiveChain } from '@/context/ActiveChainContext'
 import { isEvmChain } from '@/constants/chains'
+import { useEvmChain } from '@/hooks/evm/useEvmChain'
 import { useAuth } from '@/context/AuthContext'
 import type { ChainType, UserProfile, WalletConnection } from '@/lib/auth-api'
 import { toast } from 'sonner'
@@ -48,9 +49,8 @@ export function useWalletAuth(): UseWalletAuthReturn {
   const suiAccount = useCurrentAccount()
   const { mutateAsync: signSuiMessage } = useSignPersonalMessage()
 
-  // EVM wallet
   const { address: evmAddress } = useWagmiAccount()
-  const evmChainId = useChainId()
+  const { intendedChainId: evmChainId } = useEvmChain()
   const { signMessageAsync: signEvmMessage } = useWagmiSignMessage()
 
   // Solana wallet

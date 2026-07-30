@@ -1,16 +1,12 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { useWriteContract, usePublicClient, useAccount, useChainId } from 'wagmi'
-import { waitForTransactionReceipt } from '@wagmi/core'
 import { parseUnits } from 'viem'
 import { toast } from 'sonner'
-import { wagmiConfig } from '@/lib/wagmi'
-import { getEvmConfig } from '@/constants/evm'
-import { getEvmFeeOverrides } from '@/lib/evm/fees'
 import { SENTINEL_ABI, ERC20_ABI } from '@/lib/evm/abi'
+import { toReadableEvmError } from '@/lib/evm/errors'
 import { isNativeToken } from '@/lib/evm/native-token'
-import { useEVMWallet } from '@/hooks/useEVMWallet'
+import { useEvmContractWriter } from '@/hooks/evm/useEvmContractWriter'
 
 interface UseFundAgentEVMOptions {
   onSuccess?: (txHash: string) => void
@@ -28,53 +24,35 @@ interface FundAgentEVMParams {
 
 export const useFundAgentEVM = (options: UseFundAgentEVMOptions = {}) => {
   const { onSuccess, onError, showToasts = true } = options
-  const { address: walletAddress } = useEVMWallet()
-  const { chain: currentChain } = useAccount()
-  const chainId = useChainId()
-  const evmCfg = getEvmConfig(chainId)
-  const publicClient = usePublicClient()
-  const { writeContractAsync } = useWriteContract()
+  const { requireEvmConfig, writeContract, writeContractAndWait, isWalletConnected } =
+    useEvmContractWriter()
 
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const fundAgent = useCallback(
     async ({ agentId, tokenAddress, amount, decimals, symbol }: FundAgentEVMParams) => {
-      if (!walletAddress) {
-        const msg = 'EVM wallet not connected'
-        setError(msg)
-        if (showToasts) toast.error(msg)
-        throw new Error(msg)
-      }
-
       setIsLoading(true)
       setError(null)
 
-      const txArgs = { account: walletAddress, chain: currentChain ?? null }
+      const { contractAddress } = requireEvmConfig()
       const amountRaw = parseUnits(String(amount), decimals)
-
       const isNativeFunding = isNativeToken(tokenAddress)
 
       try {
         if (!isNativeFunding) {
           if (showToasts) toast.info('Approving token...')
-          const approveTxHash = await writeContractAsync({
-            ...txArgs,
-            ...(await getEvmFeeOverrides(chainId, publicClient)),
+          await writeContractAndWait({
             address: tokenAddress as `0x${string}`,
             abi: ERC20_ABI,
             functionName: 'approve',
-            args: [evmCfg.contractAddress, amountRaw],
+            args: [contractAddress, amountRaw],
           })
-
-          await waitForTransactionReceipt(wagmiConfig, { hash: approveTxHash })
         }
 
         if (showToasts) toast.info('Adding funds...')
-        const txHash = await writeContractAsync({
-          ...txArgs,
-          ...(await getEvmFeeOverrides(chainId, publicClient)),
-          address: evmCfg.contractAddress,
+        const txHash = await writeContract({
+          address: contractAddress,
           abi: SENTINEL_ABI,
           functionName: 'fundAgent',
           args: [agentId, amountRaw],
@@ -85,7 +63,7 @@ export const useFundAgentEVM = (options: UseFundAgentEVMOptions = {}) => {
         onSuccess?.(txHash)
         return txHash
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to fund agent'
+        const message = toReadableEvmError(err, 'Failed to fund agent')
         setError(message)
         if (showToasts) toast.error(message)
         const final = err instanceof Error ? err : new Error(message)
@@ -95,10 +73,10 @@ export const useFundAgentEVM = (options: UseFundAgentEVMOptions = {}) => {
         setIsLoading(false)
       }
     },
-    [walletAddress, currentChain, chainId, publicClient, writeContractAsync, onSuccess, onError, showToasts]
+    [requireEvmConfig, writeContract, writeContractAndWait, onSuccess, onError, showToasts]
   )
 
-  return { fundAgent, isLoading, error, isConnected: !!walletAddress }
+  return { fundAgent, isLoading, error, isConnected: isWalletConnected }
 }
 
 export type { FundAgentEVMParams, UseFundAgentEVMOptions }

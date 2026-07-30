@@ -1,12 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { useAccount, useWriteContract } from 'wagmi'
-import { waitForTransactionReceipt } from '@wagmi/core'
 import { parseUnits } from 'viem'
-import { wagmiConfig } from '@/lib/wagmi'
 import { SYNDICATE_ABI } from '@/lib/evm/abi'
+import { toReadableEvmError } from '@/lib/evm/errors'
 import { buildEvmSignature, bytesToHex32 } from '@/lib/evm/signature'
+import { useEvmChain } from '@/hooks/evm/useEvmChain'
+import { useEvmContractWriter } from '@/hooks/evm/useEvmContractWriter'
 import { registerAgentUtil, resolveProviderCredentials } from '@/app/defend/utils'
 import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
 import { APP_NETWORK } from '@/constants/shared'
@@ -29,8 +29,8 @@ export function useDeploySyndicateAgent({
   selectedImage,
   agentImage,
 }: UseSyndicateAgentOptions) {
-  const { address: walletAddress, chain } = useAccount()
-  const { writeContractAsync } = useWriteContract()
+  const { activeEvmChainKey, intendedChainId, ensureWalletOnActiveChain } = useEvmChain()
+  const { writeContractAndWait } = useEvmContractWriter()
   const { mutate: createAgent } = useCreateAgent()
 
   const [isLoading, setIsLoading] = useState(false)
@@ -39,12 +39,13 @@ export function useDeploySyndicateAgent({
   const [txHash, setTxHash] = useState<string | null>(null)
 
   const deploy = async () => {
-    if (!walletAddress) throw new Error('EVM wallet not connected')
-
     setIsLoading(true)
     setError(null)
 
     try {
+      await ensureWalletOnActiveChain()
+      if (!activeEvmChainKey) throw new Error('No EVM chain is selected')
+
       const decimals = selectedToken.decimals
       const feePerMessage = Number(parseUnits(formData.feePerMessage, decimals))
       const initialFundRaw = parseUnits(formData.initialBalance, decimals)
@@ -61,35 +62,27 @@ export function useDeploySyndicateAgent({
         formData.privatePrompt,
         formData.attackGoal,
         formData.juryPrompt,
-        'bnb',
-        credentials
+        activeEvmChainKey,
+        credentials,
+        intendedChainId ?? undefined
       )
 
       const { response: teeData, signature: sigHex, recovery_id } = teeResponse
       const { data } = teeData
 
-      const promptHash = bytesToHex32(data.prompt_hash)
-      const fullSignature = buildEvmSignature(sigHex, recovery_id)
-      const timestampMs = BigInt(teeData.timestamp)
-      const costPerMessage = BigInt(data.cost_per_message)
-      const txArgs = { account: walletAddress, chain: chain ?? null }
-
-      const registerTx = await writeContractAsync({
-        ...txArgs,
+      const registerTx = await writeContractAndWait({
         address: syndicateAddress,
         abi: SYNDICATE_ABI,
         functionName: 'registerAgent',
         args: [
           data.agent_id,
-          timestampMs,
-          costPerMessage,
-          promptHash,
+          BigInt(teeData.timestamp),
+          BigInt(data.cost_per_message),
+          bytesToHex32(data.prompt_hash),
           initialFundRaw,
-          fullSignature,
+          buildEvmSignature(sigHex, recovery_id),
         ],
       })
-
-      await waitForTransactionReceipt(wagmiConfig, { hash: registerTx })
 
       setAgentId(data.agent_id)
       setTxHash(registerTx)
@@ -113,7 +106,7 @@ export function useDeploySyndicateAgent({
       payload.append('owner', syndicateAddress)
       payload.append('digest', registerTx)
       payload.append('model_provider', formData.llmProvider)
-      payload.append('chain', 'bnb')
+      payload.append('chain', activeEvmChainKey)
       payload.append('model_name', isCustom ? formData.customModelName : formData.llmModel)
 
       if (agentImage) {
@@ -123,8 +116,8 @@ export function useDeploySyndicateAgent({
       }
       createAgent(payload)
       return { agentId: data.agent_id, txHash: registerTx }
-    } catch (err: any) {
-      const msg = err?.shortMessage ?? err?.message ?? 'Failed to launch sentinel'
+    } catch (err) {
+      const msg = toReadableEvmError(err, 'Failed to launch sentinel')
       setError(msg)
       throw new Error(msg)
     } finally {
