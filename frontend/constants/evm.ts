@@ -1,6 +1,6 @@
 import { APP_NETWORK } from './shared'
 import type { SupportedToken } from './shared'
-import { getEvmChainKey } from './chains'
+import type { EvmChainKey } from './chains'
 import { getSupportedTokens } from './tokens'
 
 // Fallback red-team/TEE network when no chainId is available (e.g. register
@@ -88,31 +88,16 @@ export const ARB_CONFIG = APP_NETWORK === 'testnet' ? ARB_TESTNET_CONFIG : ARB_M
 
 export type EvmConfig = typeof BNB_TESTNET_CONFIG
 
-/**
- * Returns the EVM contract / RPC / explorer config for the connected chainId.
- * Falls back to BNB_CONFIG when the chainId is unknown so callers that haven't
- * been migrated yet keep working.
- */
-export function getEvmConfig(chainId: number | undefined): EvmConfig {
-  switch (chainId) {
-    case 968:
-      return BOT_CHAIN_TESTNET_CONFIG
-    case 677:
-      return BOT_CHAIN_MAINNET_CONFIG
-    case 421614:
-      return ARB_TESTNET_CONFIG
-    case 42161:
-      return ARB_MAINNET_CONFIG
-    case 56:
-      return BNB_MAINNET_CONFIG
-    case 97:
-      return BNB_TESTNET_CONFIG
-    default:
-      return BNB_CONFIG
-  }
+const EVM_CONFIG_BY_CHAIN_KEY: Record<EvmChainKey, EvmConfig> = {
+  bnb: BNB_CONFIG,
+  bot: BOT_CHAIN_CONFIG,
+  arb: ARB_CONFIG,
 }
 
-export function getEvmSupportedTokens(chainId: number | undefined): SupportedToken[] {
-  const key = getEvmChainKey(chainId) ?? 'bnb'
-  return getSupportedTokens(key)
+export function getEvmConfigForChainKey(chainKey: EvmChainKey): EvmConfig {
+  return EVM_CONFIG_BY_CHAIN_KEY[chainKey]
+}
+
+export function getEvmSupportedTokens(chainKey: EvmChainKey): SupportedToken[] {
+  return getSupportedTokens(chainKey)
 }

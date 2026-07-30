@@ -1,11 +1,17 @@
 'use client'
 
 import { useState } from 'react'
-import { useAccount, useWriteContract } from 'wagmi'
-import { simulateContract, waitForTransactionReceipt } from '@wagmi/core'
+import { useAccount } from 'wagmi'
+import { simulateContract } from '@wagmi/core'
 import { parseUnits } from 'viem'
 import { wagmiConfig } from '@/lib/wagmi'
 import { SYNDICATE_ABI } from '@/lib/evm/abi'
+import { toReadableEvmError } from '@/lib/evm/errors'
+import { useEvmChain } from '@/hooks/evm/useEvmChain'
+import {
+  useEvmContractWriter,
+  type ContractWriteRequest,
+} from '@/hooks/evm/useEvmContractWriter'
 
 const OWNABLE_UNAUTHORIZED_SIGNATURE = '0x118cdaa7'
 
@@ -19,38 +25,30 @@ function formatRevertReason(reason: string): string {
   return reason
 }
 
-export function useSyndicateOwnerActions(
-  syndicateAddress: `0x${string}`,
-  ownerAddress?: string
-) {
-  const { address: walletAddress, chain } = useAccount()
-  const { writeContractAsync } = useWriteContract()
+export function useSyndicateOwnerActions(syndicateAddress: `0x${string}`, ownerAddress?: string) {
+  const { address: walletAddress } = useAccount()
+  const { intendedChainId, ensureWalletOnActiveChain } = useEvmChain()
+  const { writeContractAndWait } = useEvmContractWriter()
   const [loading, setLoading] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  const txArgs = { account: walletAddress!, chain: chain ?? null }
   const isOwner =
-    !!walletAddress &&
-    !!ownerAddress &&
-    walletAddress.toLowerCase() === ownerAddress.toLowerCase()
+    !!walletAddress && !!ownerAddress && walletAddress.toLowerCase() === ownerAddress.toLowerCase()
 
   // Mirrors the on-chain `onlyOwner` modifier so a non-owner gets a readable
   // error before signing instead of an OwnableUnauthorizedAccount revert.
-  const ensureOwner = () => {
-    if (!isOwner) {
-      throw new Error('Only the syndicate owner can perform this action.')
-    }
+  const ensureOwner = (action = 'perform this action') => {
+    if (!isOwner) throw new Error(`Only the syndicate owner can ${action}.`)
   }
 
-  const exec = async (key: string, fn: () => Promise<`0x${string}`>) => {
+  const exec = async (key: string, run: () => Promise<`0x${string}`>) => {
     setLoading(key)
     setError(null)
     try {
-      const hash = await fn()
-      await waitForTransactionReceipt(wagmiConfig, { hash })
-      return hash
-    } catch (err: any) {
-      const msg = err?.shortMessage ?? err?.message ?? 'Transaction failed'
+      await ensureWalletOnActiveChain()
+      return await run()
+    } catch (err) {
+      const msg = toReadableEvmError(err, 'Transaction failed')
       setError(msg)
       throw new Error(msg)
     } finally {
@@ -66,20 +64,21 @@ export function useSyndicateOwnerActions(
   // `tokenAddress` is kept in the signature for caller compatibility but unused.
   const fundAgent = (_tokenAddress: `0x${string}`, amount: string, decimals: number) =>
     exec('fundAgent', async () => {
-      if (!isOwner) {
-        throw new Error(
-          'Only the syndicate owner can add funds to the sentinel bounty pool.'
-        )
-      }
-      const call = {
-        ...txArgs,
+      ensureOwner('add funds to the sentinel bounty pool')
+
+      const call: ContractWriteRequest = {
         address: syndicateAddress,
         abi: SYNDICATE_ABI,
-        functionName: 'fundAgent' as const,
-        args: [parseUnits(amount, decimals)] as const,
+        functionName: 'fundAgent',
+        args: [parseUnits(amount, decimals)],
       }
+
       try {
-        await simulateContract(wagmiConfig, call)
+        await simulateContract(wagmiConfig, {
+          ...call,
+          account: walletAddress,
+          chainId: intendedChainId ?? undefined,
+        } as any)
       } catch (err: any) {
         const reason =
           err?.cause?.shortMessage ??
@@ -89,14 +88,14 @@ export function useSyndicateOwnerActions(
           'Simulation failed'
         throw new Error(`fundAgent would revert: ${formatRevertReason(reason)}`)
       }
-      return writeContractAsync(call)
+
+      return writeContractAndWait(call)
     })
 
   const withdrawFromSentinel = (amount: string, decimals: number) =>
     exec('withdraw', () => {
       ensureOwner()
-      return writeContractAsync({
-        ...txArgs,
+      return writeContractAndWait({
         address: syndicateAddress,
         abi: SYNDICATE_ABI,
         functionName: 'withdrawFromSentinel',
@@ -107,8 +106,7 @@ export function useSyndicateOwnerActions(
   const setWhitelistEnabled = (enabled: boolean) =>
     exec('whitelist', () => {
       ensureOwner()
-      return writeContractAsync({
-        ...txArgs,
+      return writeContractAndWait({
         address: syndicateAddress,
         abi: SYNDICATE_ABI,
         functionName: 'setWhitelistEnabled',
@@ -119,8 +117,7 @@ export function useSyndicateOwnerActions(
   const whitelistAddresses = (addresses: `0x${string}`[], isWhitelisted: boolean) =>
     exec('whitelistAddrs', () => {
       ensureOwner()
-      return writeContractAsync({
-        ...txArgs,
+      return writeContractAndWait({
         address: syndicateAddress,
         abi: SYNDICATE_ABI,
         functionName: 'setContributorsWhitelisted',

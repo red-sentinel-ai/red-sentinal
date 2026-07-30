@@ -102,32 +102,29 @@ export const ACTIVE_CHAIN_STORAGE_KEY = 'ss-active-chain'
 
 export type EvmChainKey = 'bnb' | 'bot' | 'arb'
 
-// Single source of truth for EVM chain IDs per network.
-export const EVM_CHAIN_IDS: Record<'testnet' | 'mainnet', Record<EvmChainKey, number>> = {
+export const EVM_CHAIN_IDS = {
   testnet: { bnb: 97, bot: 968, arb: 421614 },
   mainnet: { bnb: 56, bot: 677, arb: 42161 },
+} as const satisfies Record<'testnet' | 'mainnet', Record<EvmChainKey, number>>
+
+export type EvmChainId = (typeof EVM_CHAIN_IDS)['testnet' | 'mainnet'][EvmChainKey]
+
+export function toEvmChainKey(chain: SupportedChain | undefined): EvmChainKey | null {
+  return chain && isEvmChain(chain) ? (chain as EvmChainKey) : null
+}
+export function getEvmChainId(chain: SupportedChain | undefined): EvmChainId | null {
+  const evmChainKey = toEvmChainKey(chain)
+  return evmChainKey ? EVM_CHAIN_IDS[APP_NETWORK][evmChainKey] : null
 }
 
-/**
- * The wagmi chainId that corresponds to a given SupportedChain on the current
- * APP_NETWORK. Returns null for non-EVM chains.
- */
-export function getEvmChainIdForActive(
-  active: SupportedChain | undefined,
-  appNetwork: 'testnet' | 'mainnet'
-): number | null {
-  if (!active || !isEvmChain(active)) return null
-  return EVM_CHAIN_IDS[appNetwork][active as EvmChainKey]
-}
-
-/**
- * Maps a wagmi chainId back to our internal EVM chain key for the current
- * APP_NETWORK. Returns null when the chainId is unknown.
- */
 export function getEvmChainKey(chainId: number | undefined): EvmChainKey | null {
   if (chainId === undefined) return null
-  const map = EVM_CHAIN_IDS[APP_NETWORK]
-  return (Object.keys(map) as EvmChainKey[]).find(k => map[k] === chainId) ?? null
+  const chainIdsForNetwork = EVM_CHAIN_IDS[APP_NETWORK]
+  return (
+    (Object.keys(chainIdsForNetwork) as EvmChainKey[]).find(
+      key => chainIdsForNetwork[key] === chainId
+    ) ?? null
+  )
 }
 
 const EVM_CHAIN_ID_TO_KEY: Record<string, EvmChainKey> = Object.fromEntries(
