@@ -2,9 +2,9 @@ import { useState } from 'react'
 import { parseUnits } from 'viem'
 import { toast } from 'sonner'
 import posthog from 'posthog-js'
-import { useChainId } from 'wagmi'
 import { useActiveChain } from '@/context/ActiveChainContext'
 import { isEvmChain } from '@/constants/chains'
+import { useEvmChain } from '@/hooks/evm/useEvmChain'
 import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
 import { type SupportedToken } from '@/constants'
 import { registerAgentUtil, resolveProviderCredentials } from '../utils'
@@ -36,7 +36,7 @@ export function useDeployAgent({
   agenticConfig,
 }: UseDeployAgentOptions) {
   const { activeChain } = useActiveChain()
-  const evmChainId = useChainId()
+  const { intendedChainId, ensureWalletOnActiveChain } = useEvmChain()
   const { mutate: createAgent } = useCreateAgent()
 
   // All chain-specific deploy hooks must be called unconditionally (hook rules)
@@ -121,6 +121,8 @@ export function useDeployAgent({
 
     setIsLoading(true)
     try {
+      if (isEvmChain(activeChain)) await ensureWalletOnActiveChain()
+
       // 1. Check agent name uniqueness
       const checkResponse = await fetch(
         `/api/agents/check-name?name=${encodeURIComponent(formData.agentName)}`
@@ -152,7 +154,7 @@ export function useDeployAgent({
         formData.juryPrompt,
         activeChain,
         credentials,
-        isEvmChain(activeChain) ? evmChainId : undefined,
+        intendedChainId ?? undefined,
         agenticConfig
       )
 

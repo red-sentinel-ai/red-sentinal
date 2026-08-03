@@ -1,14 +1,10 @@
 'use client'
 
-import { useWriteContract, usePublicClient, useAccount, useChainId } from 'wagmi'
-import { waitForTransactionReceipt } from '@wagmi/core'
 import { parseUnits } from 'viem'
-import { wagmiConfig } from '@/lib/wagmi'
-import { getEvmConfig } from '@/constants/evm'
-import { getEvmFeeOverrides } from '@/lib/evm/fees'
 import { SENTINEL_ABI, ERC20_ABI } from '@/lib/evm/abi'
 import { isNativeToken } from '@/lib/evm/native-token'
 import { buildEvmSignature, bytesToHex32 } from '@/lib/evm/signature'
+import { useEvmContractWriter } from '@/hooks/evm/useEvmContractWriter'
 import type { SupportedToken } from '@/constants'
 import type { ChainDeployHook, EvmTeeResponse, DeployTransactionResult } from '../types'
 
@@ -21,60 +17,41 @@ export function useDeployEvmAgent({
   formData,
   selectedEvmToken,
 }: UseDeployEvmAgentOptions): ChainDeployHook {
-  const { address: walletAddress, chain: currentChain } = useAccount()
-  const chainId = useChainId()
-  const evmCfg = getEvmConfig(chainId)
-  const publicClient = usePublicClient()
-  const { writeContractAsync } = useWriteContract()
+  const { walletAddress, requireEvmConfig, writeContract, writeContractAndWait } =
+    useEvmContractWriter()
 
   const executeTransaction = async (
     teeResponse: EvmTeeResponse
   ): Promise<DeployTransactionResult> => {
-    if (!walletAddress) throw new Error('EVM wallet not connected')
-
     const { response: teeData, signature: sigHex, recovery_id } = teeResponse
     const { data } = teeData
 
+    const { contractAddress } = requireEvmConfig()
     const tokenAddress = selectedEvmToken.coinType as `0x${string}`
     const initialFundRaw = parseUnits(formData.initialBalance, selectedEvmToken.decimals)
-    const promptHash = bytesToHex32(data.prompt_hash)
-    const fullSignature = buildEvmSignature(sigHex, recovery_id)
-    const timestampMs = BigInt(teeData.timestamp)
-    const costPerMessage = BigInt(data.cost_per_message)
-
-    const txArgs = { account: walletAddress, chain: currentChain ?? null }
-
     const isNativeFunding = isNativeToken(tokenAddress)
 
     if (!isNativeFunding) {
-      // Compute explicit fees fresh before each tx — Arbitrum's base fee drifts,
-      // and MetaMask's own estimate lands too low (see lib/evm/fees.ts).
-      const approveTxHash = await writeContractAsync({
-        ...txArgs,
-        ...(await getEvmFeeOverrides(chainId, publicClient)),
+      await writeContractAndWait({
         address: tokenAddress,
         abi: ERC20_ABI,
         functionName: 'approve',
-        args: [evmCfg.contractAddress, initialFundRaw],
+        args: [contractAddress, initialFundRaw],
       })
-
-      await waitForTransactionReceipt(wagmiConfig, { hash: approveTxHash })
     }
 
-    const registerTxHash = await writeContractAsync({
-      ...txArgs,
-      ...(await getEvmFeeOverrides(chainId, publicClient)),
-      address: evmCfg.contractAddress,
+    const registerTxHash = await writeContract({
+      address: contractAddress,
       abi: SENTINEL_ABI,
       functionName: 'registerAgent',
       args: [
         data.agent_id,
-        timestampMs,
-        costPerMessage,
-        promptHash,
+        BigInt(teeData.timestamp),
+        BigInt(data.cost_per_message),
+        bytesToHex32(data.prompt_hash),
         tokenAddress,
         initialFundRaw,
-        fullSignature,
+        buildEvmSignature(sigHex, recovery_id),
       ],
       value: isNativeFunding ? initialFundRaw : undefined,
     })

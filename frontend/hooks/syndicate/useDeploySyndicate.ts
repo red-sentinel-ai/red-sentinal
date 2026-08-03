@@ -1,15 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import { useAccount, useChainId, useSwitchChain } from 'wagmi'
+import { useAccount } from 'wagmi'
 import { getWalletClient, waitForTransactionReceipt } from '@wagmi/core'
 import { wagmiConfig } from '@/lib/wagmi'
 import { SYNDICATE_ABI, SYNDICATE_BYTECODE } from '@/lib/evm/abi'
-import { getEvmConfig } from '@/constants/evm'
+import { toReadableEvmError } from '@/lib/evm/errors'
 import { SUI_SENTINEL_API_URL } from '@/constants'
 import { APP_NETWORK } from '@/constants/shared'
-import { getEvmChainIdForActive } from '@/constants/chains'
-import { useActiveChain } from '@/context/ActiveChainContext'
+import { useEvmChain } from '@/hooks/evm/useEvmChain'
 
 export interface DeploySyndicateParams {
   name: string
@@ -27,9 +26,7 @@ export interface DeployedSyndicate {
 
 export function useDeploySyndicate() {
   const { address: walletAddress } = useAccount()
-  const currentChainId = useChainId()
-  const { switchChainAsync } = useSwitchChain()
-  const { activeChain } = useActiveChain()
+  const { evmConfig, ensureWalletOnActiveChain } = useEvmChain()
   const [isDeploying, setIsDeploying] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -40,23 +37,17 @@ export function useDeploySyndicate() {
     setError(null)
 
     try {
-      const targetChainId =
-        getEvmChainIdForActive(activeChain, APP_NETWORK as 'testnet' | 'mainnet') ?? currentChainId
-
-      if (currentChainId !== targetChainId) {
-        await switchChainAsync({ chainId: targetChainId })
-      }
+      const targetChainId = await ensureWalletOnActiveChain()
+      if (!evmConfig) throw new Error('No EVM chain is selected')
 
       const walletClient = await getWalletClient(wagmiConfig, { chainId: targetChainId })
       if (!walletClient) throw new Error('EVM wallet not connected')
-
-      const evmCfg = getEvmConfig(targetChainId)
 
       const txHash = await walletClient.deployContract({
         abi: SYNDICATE_ABI,
         bytecode: SYNDICATE_BYTECODE,
         args: [
-          evmCfg.contractAddress,
+          evmConfig.contractAddress,
           params.tokenAddress,
           walletAddress,
           params.whitelistEnabled,
@@ -65,7 +56,10 @@ export function useDeploySyndicate() {
         account: walletAddress,
       } as any)
 
-      const receipt = await waitForTransactionReceipt(wagmiConfig, { hash: txHash })
+      const receipt = await waitForTransactionReceipt(wagmiConfig, {
+        hash: txHash,
+        chainId: targetChainId,
+      })
 
       if (!receipt.contractAddress) throw new Error('Contract deployment failed: no address returned')
 
@@ -88,8 +82,8 @@ export function useDeploySyndicate() {
       })
 
       return { contractAddress: receipt.contractAddress as `0x${string}`, txHash }
-    } catch (err: any) {
-      const msg = err?.shortMessage ?? err?.message ?? 'Deploy failed'
+    } catch (err) {
+      const msg = toReadableEvmError(err, 'Deploy failed')
       setError(msg)
       throw new Error(msg)
     } finally {

@@ -1,12 +1,11 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { useWriteContract, useAccount, useChainId } from 'wagmi'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
-import { getEvmConfig } from '@/constants/evm'
 import { SENTINEL_ABI } from '@/lib/evm/abi'
-import { useEVMWallet } from '@/hooks/useEVMWallet'
+import { toReadableEvmError } from '@/lib/evm/errors'
+import { useEvmContractWriter } from '@/hooks/evm/useEvmContractWriter'
 import { AGENT_QUERY_KEY } from './useAgentDetails'
 
 interface UseClaimFeesEVMOptions {
@@ -17,10 +16,8 @@ interface UseClaimFeesEVMOptions {
 
 export const useClaimFeesEVM = (options: UseClaimFeesEVMOptions = {}) => {
   const { onSuccess, onError, showToasts = true } = options
-  const { address: walletAddress } = useEVMWallet()
-  const { chain: currentChain } = useAccount()
-  const evmCfg = getEvmConfig(useChainId())
-  const { writeContractAsync } = useWriteContract()
+  const { walletAddress, requireEvmConfig, writeContract, isWalletConnected } =
+    useEvmContractWriter()
   const queryClient = useQueryClient()
 
   const [isLoading, setIsLoading] = useState(false)
@@ -28,21 +25,12 @@ export const useClaimFeesEVM = (options: UseClaimFeesEVMOptions = {}) => {
 
   const claimFees = useCallback(
     async (agentId: string) => {
-      if (!walletAddress) {
-        const msg = 'EVM wallet not connected'
-        setError(msg)
-        if (showToasts) toast.error(msg)
-        throw new Error(msg)
-      }
-
       setIsLoading(true)
       setError(null)
 
       try {
-        const txHash = await writeContractAsync({
-          account: walletAddress,
-          chain: currentChain ?? null,
-          address: evmCfg.contractAddress,
+        const txHash = await writeContract({
+          address: requireEvmConfig().contractAddress,
           abi: SENTINEL_ABI,
           functionName: 'claimFees',
           args: [agentId],
@@ -55,7 +43,7 @@ export const useClaimFeesEVM = (options: UseClaimFeesEVMOptions = {}) => {
         onSuccess?.(txHash)
         return txHash
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to claim fees'
+        const message = toReadableEvmError(err, 'Failed to claim fees')
         setError(message)
         if (showToasts) toast.error(message)
         const final = err instanceof Error ? err : new Error(message)
@@ -65,10 +53,10 @@ export const useClaimFeesEVM = (options: UseClaimFeesEVMOptions = {}) => {
         setIsLoading(false)
       }
     },
-    [walletAddress, currentChain, writeContractAsync, queryClient, onSuccess, onError, showToasts]
+    [walletAddress, requireEvmConfig, writeContract, queryClient, onSuccess, onError, showToasts]
   )
 
-  return { claimFees, isLoading, error, isConnected: !!walletAddress }
+  return { claimFees, isLoading, error, isConnected: isWalletConnected }
 }
 
 export type { UseClaimFeesEVMOptions }

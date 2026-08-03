@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { AlertTriangle } from 'lucide-react'
 import { CHAINS, type SupportedChain } from '@/constants/chains'
-import { useActiveChain } from '@/context/ActiveChainContext'
+import { useChainSelection } from '@/hooks/useChainSelection'
 
 interface ChainMismatchBannerProps {
   agentChain: SupportedChain
@@ -16,7 +16,7 @@ export function ChainMismatchBanner({
   variant = 'block',
   message,
 }: ChainMismatchBannerProps) {
-  const { setActiveChain } = useActiveChain()
+  const { selectChain, isSelectingChain } = useChainSelection()
   const target = CHAINS[agentChain]
 
   const defaultMessage =
@@ -41,8 +41,9 @@ export function ChainMismatchBanner({
         </div>
         <button
           type="button"
-          onClick={() => setActiveChain(agentChain)}
-          className="flex items-center gap-1.5 bg-[var(--color-text-primary)] px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-[var(--color-bg-deepest)] transition-colors hover:opacity-90"
+          onClick={() => selectChain(agentChain)}
+          disabled={isSelectingChain}
+          className="flex items-center gap-1.5 bg-[var(--color-text-primary)] px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-[var(--color-bg-deepest)] transition-colors hover:opacity-90 disabled:opacity-50"
         >
           <Image
             src={target.icon}
