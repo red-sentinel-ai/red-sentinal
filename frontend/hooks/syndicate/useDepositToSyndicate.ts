@@ -1,16 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import { useAccount, useWriteContract } from 'wagmi'
-import { waitForTransactionReceipt } from '@wagmi/core'
 import { parseUnits } from 'viem'
-import { wagmiConfig } from '@/lib/wagmi'
 import { SYNDICATE_ABI, ERC20_ABI } from '@/lib/evm/abi'
+import { toReadableEvmError } from '@/lib/evm/errors'
 import { isNativeToken } from '@/lib/evm/native-token'
+import { useEvmContractWriter } from '@/hooks/evm/useEvmContractWriter'
 
 export function useDepositToSyndicate() {
-  const { address: walletAddress, chain } = useAccount()
-  const { writeContractAsync } = useWriteContract()
+  const { writeContractAndWait } = useEvmContractWriter()
   const [isDepositing, setIsDepositing] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -20,41 +18,31 @@ export function useDepositToSyndicate() {
     amount: string,
     decimals: number
   ) => {
-    if (!walletAddress) throw new Error('EVM wallet not connected')
-
     setIsDepositing(true)
     setError(null)
 
     try {
       const amountRaw = parseUnits(amount, decimals)
-      const txArgs = { account: walletAddress, chain: chain ?? null }
-
       const isNativeDeposit = isNativeToken(tokenAddress)
 
       if (!isNativeDeposit) {
-        const approveTx = await writeContractAsync({
-          ...txArgs,
+        await writeContractAndWait({
           address: tokenAddress,
           abi: ERC20_ABI,
           functionName: 'approve',
           args: [syndicateAddress, amountRaw],
         })
-        await waitForTransactionReceipt(wagmiConfig, { hash: approveTx })
       }
 
-      const depositTx = await writeContractAsync({
-        ...txArgs,
+      return await writeContractAndWait({
         address: syndicateAddress,
         abi: SYNDICATE_ABI,
         functionName: 'deposit',
         args: [amountRaw],
         value: isNativeDeposit ? amountRaw : undefined,
       })
-      await waitForTransactionReceipt(wagmiConfig, { hash: depositTx })
-
-      return depositTx
-    } catch (err: any) {
-      const msg = err?.shortMessage ?? err?.message ?? 'Deposit failed'
+    } catch (err) {
+      const msg = toReadableEvmError(err, 'Deposit failed')
       setError(msg)
       throw new Error(msg)
     } finally {

@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { Shield, Plus } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAgentsByOwner } from '@/hooks/agents/useOwnerAgents'
+import type { SupportedChain } from '@/constants/chains'
 import { useFundAgentModal } from '@/hooks/useFundAgentModal'
 import { useWithdrawAgentModal } from '@/hooks/agents/useWithdrawAgentModal'
 import { useFeatureAgentModal } from '@/hooks/useFeatureAgentModal'
@@ -14,11 +15,12 @@ import { ClaimFeesModal } from '../agents/ClaimFeesModal'
 
 interface UserAgentsProps {
   address?: string
+  chain?: SupportedChain
   isOwner: boolean
 }
 
-export const UserAgents = ({ address, isOwner }: UserAgentsProps) => {
-  const { data: userAgents, isPending: isFetchingAgents } = useAgentsByOwner(address)
+export const UserAgents = ({ address, chain, isOwner }: UserAgentsProps) => {
+  const { data: userAgents, isLoading: isFetchingAgents } = useAgentsByOwner(address, chain)
   const { openModal: openFundModal, Modal: FundModal } = useFundAgentModal()
   const { openModal: openWithdrawModal, Modal: WithdrawModal } = useWithdrawAgentModal()
   const { openModal: openFeatureModal, Modal: FeatureModal } = useFeatureAgentModal()

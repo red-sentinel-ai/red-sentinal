@@ -1,32 +1,28 @@
 'use client'
 
 import { useState } from 'react'
-import { useAccount, useWriteContract } from 'wagmi'
-import { waitForTransactionReceipt } from '@wagmi/core'
 import { parseUnits } from 'viem'
-import { wagmiConfig } from '@/lib/wagmi'
+import { useAccount } from 'wagmi'
 import { SYNDICATE_ABI, ERC20_ABI } from '@/lib/evm/abi'
+import { toReadableEvmError } from '@/lib/evm/errors'
 import { isNativeToken } from '@/lib/evm/native-token'
+import { useEvmContractWriter } from '@/hooks/evm/useEvmContractWriter'
 import { APP_NETWORK } from '@/constants/shared'
 import { SUI_SENTINEL_API_URL } from '@/constants'
 
 export function useSyndicateMemberActions(syndicateAddress: `0x${string}`) {
-  const { address: walletAddress, chain } = useAccount()
-  const { writeContractAsync } = useWriteContract()
+  const { address: walletAddress } = useAccount()
+  const { writeContractAndWait } = useEvmContractWriter()
   const [loading, setLoading] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  const txArgs = { account: walletAddress!, chain: chain ?? null }
-
-  const exec = async (key: string, fn: () => Promise<`0x${string}`>) => {
+  const exec = async (key: string, run: () => Promise<`0x${string}`>) => {
     setLoading(key)
     setError(null)
     try {
-      const hash = await fn()
-      await waitForTransactionReceipt(wagmiConfig, { hash })
-      return hash
-    } catch (err: any) {
-      const msg = err?.shortMessage ?? err?.message ?? 'Transaction failed'
+      return await run()
+    } catch (err) {
+      const msg = toReadableEvmError(err, 'Transaction failed')
       setError(msg)
       throw new Error(msg)
     } finally {
@@ -40,18 +36,15 @@ export function useSyndicateMemberActions(syndicateAddress: `0x${string}`) {
       const isNativeDeposit = isNativeToken(tokenAddress)
 
       if (!isNativeDeposit) {
-        const approveTx = await writeContractAsync({
-          ...txArgs,
+        await writeContractAndWait({
           address: tokenAddress,
           abi: ERC20_ABI,
           functionName: 'approve',
           args: [syndicateAddress, amountRaw],
         })
-        await waitForTransactionReceipt(wagmiConfig, { hash: approveTx })
       }
 
-      return writeContractAsync({
-        ...txArgs,
+      return writeContractAndWait({
         address: syndicateAddress,
         abi: SYNDICATE_ABI,
         functionName: 'deposit',
@@ -62,8 +55,7 @@ export function useSyndicateMemberActions(syndicateAddress: `0x${string}`) {
 
   const redeem = (shares: bigint) =>
     exec('redeem', () =>
-      writeContractAsync({
-        ...txArgs,
+      writeContractAndWait({
         address: syndicateAddress,
         abi: SYNDICATE_ABI,
         functionName: 'redeem',
@@ -73,8 +65,7 @@ export function useSyndicateMemberActions(syndicateAddress: `0x${string}`) {
 
   const claimFeesForSyndicate = () =>
     exec('claimForSyndicate', () =>
-      writeContractAsync({
-        ...txArgs,
+      writeContractAndWait({
         address: syndicateAddress,
         abi: SYNDICATE_ABI,
         functionName: 'claimCreatorFeesFromSentinel',
@@ -84,8 +75,7 @@ export function useSyndicateMemberActions(syndicateAddress: `0x${string}`) {
 
   const claimFeesForSelf = () =>
     exec('claimSelf', () =>
-      writeContractAsync({
-        ...txArgs,
+      writeContractAndWait({
         address: syndicateAddress,
         abi: SYNDICATE_ABI,
         functionName: 'claimFees',

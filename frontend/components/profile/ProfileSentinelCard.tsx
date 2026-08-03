@@ -163,9 +163,7 @@ export const ProfileSentinelCard = ({
             {agent.trending && (
               <div className="absolute bottom-2 left-2 z-20 flex items-center gap-1 rounded-full border border-amber-400/30 bg-amber-900/20 px-2 py-0.5 text-[10px] font-medium leading-none text-amber-400">
                 <Flame className="size-2.5 sm:size-3" />
-                {agent.trending_window === '24h' || !agent.trending_window
-                  ? 'Trending'
-                  : `Trending ${agent.trending_window}`}
+                Trending
               </div>
             )}
 
