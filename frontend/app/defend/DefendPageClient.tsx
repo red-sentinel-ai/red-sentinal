@@ -44,6 +44,7 @@ import { EnvironmentTemplatePicker } from '@/components/defend/agentic/Environme
 import { EnvironmentConfigPanel } from '@/components/defend/agentic/EnvironmentConfigPanel'
 import { LiveToolsChecklist } from '@/components/defend/agentic/LiveToolsChecklist'
 import { useEnvironmentTemplateDetails } from './hooks/useEnvironmentTemplates'
+import { buildSeedEnvironmentForTemplate } from './agentic-sample-environments'
 import type { AgenticConfig, SentinelType } from './agentic-types'
 import { buildAgenticConfig, validateAgenticSelection } from './agentic-utils'
 import { FormInput } from './components/FormInput'
@@ -123,9 +124,7 @@ export default function DefendPageClient() {
       const next = { ...prev }
       for (const template of templatesToSeed) {
         if (next[template.namespace] === undefined) {
-          next[template.namespace] = structuredClone(
-            template.default_environment?.[template.namespace] ?? {}
-          )
+          next[template.namespace] = buildSeedEnvironmentForTemplate(template)
         }
       }
       return next
