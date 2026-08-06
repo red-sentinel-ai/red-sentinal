@@ -21,7 +21,7 @@ import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useActiveChain } from '@/context/ActiveChainContext'
 import { useFocusMode } from '@/context/FocusModeContext'
 import { useRenderInTopbar } from '@/context/TopbarSlotContext'
-import { CHAINS, type SupportedChain } from '@/constants/chains'
+import { CHAINS, isEvmChain, type SupportedChain } from '@/constants/chains'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
 import { AttackWorkspace, type ViewMode } from '@/components/agents/AttackWorkspace'
@@ -177,15 +177,10 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   const chainToSwitch: SupportedChain | null =
     agent && agentChain !== activeChain ? agentChain : null
   let consumePrompt = suiConsumePrompt
-  switch (agentChain) {
-    case 'solana':
-      consumePrompt = solanaConsumePrompt
-      break
-    case 'bnb':
-    case 'bot':
-    case 'arb':
-      consumePrompt = evmConsumePrompt as typeof suiConsumePrompt // we should fix this
-      break
+  if (agentChain === 'solana') {
+    consumePrompt = solanaConsumePrompt
+  } else if (isEvmChain(agentChain)) {
+    consumePrompt = evmConsumePrompt as typeof suiConsumePrompt // we should fix this
   }
 
   const handleTextChatClick = useCallback(() => {
