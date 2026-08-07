@@ -92,12 +92,11 @@ export function useDeploySuiAgent({
         tx.object(SUI_CONFIG.AGENT_REGISTRY),
         tx.object(SUI_CONFIG.PROTOCOL_CONFIG_ID),
         tx.pure.string(teeResponse.response.data.agent_id),
-        tx.pure.u64(teeResponse.response.timestamp_ms),
+        tx.pure.u64(teeResponse.response.timestamp), // seconds
         tx.pure.u64(teeResponse.response.data.cost_per_message),
-        tx.pure.string(teeResponse.response.data.system_prompt),
+        tx.pure.vector('u8', teeResponse.response.data.prompt_hash),
         initialFundCoin,
         tx.pure.vector('u8', sigVector),
-        tx.object(SUI_CONFIG.ENCLAVE_OBJECT_ID),
         tx.object(SUI_CLOCK_OBJECT_ID),
       ],
     })

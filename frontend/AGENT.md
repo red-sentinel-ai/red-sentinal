@@ -81,13 +81,15 @@ Frontend (Next.js) → Supabase (Database) → TEE Backend API → Blockchain
 **Key Concepts:**
 - **On-chain data**: Agent deployments, funding, bounties via blockchain
 - **Off-chain data**: User profiles, agents metadata, rewards tracked in Supabase
-- **AI Interactions**: Proxied through TEE backend (`https://tee.redsentinel.xyz`)
+- **AI Interactions**: Proxied through the unified TEE backend (`https://tee-evm.redsentinel.xyz`), shared by Sui, Solana and every EVM chain
 
 ### Backend API
 
 The frontend proxies AI agent interactions through a Trusted Execution Environment (TEE) backend:
-- **Production URL**: `https://tee.redsentinel.xyz`
-- Defined in `constants/index.ts` as `LOCAL_API_PATH`
+- **Production URL**: `https://tee-evm.redsentinel.xyz` — one TEE for all chains
+- Defined in `constants/tee.ts` as `UNIFIED_TEE_API_PATH`; `buildTeeUrl(chain, action, chainId)` resolves the
+  full `/{environment}/{network}/{action}` URL, where `network` is the chain's TEE network id
+  (`sui-testnet`, `solana-devnet`, `bsc-testnet`, …)
 - Agent prompts are sent via `POST /api/consume-prompt`
 - Agent registration via `POST /api/register-agent`
 
@@ -334,7 +336,7 @@ Note: `getCoins()` is still appropriate inside transaction-building hooks (e.g. 
 **"Agent creation fails"**
 - Verify wallet is connected and has sufficient balance (minimum amounts vary by token)
 - Check browser console for specific error messages
-- Ensure the TEE backend is reachable (`https://tee.redsentinel.xyz`)
+- Ensure the TEE backend is reachable (`https://tee-evm.redsentinel.xyz/health_check`)
 
 **"OAuth login not working"**
 - Verify `NEXTAUTH_URL` matches your current environment
