@@ -12,14 +12,14 @@ export interface ChainDeployHook {
   executeTransaction: (teeResponse: any) => Promise<DeployTransactionResult>
 }
 
-// Sui TEE response shape (from tee.redsentinel.xyz)
+// Sui TEE response shape
 export interface SuiTeeResponse {
   response: {
-    timestamp_ms: number
+    timestamp: number // Unix seconds — the contract compares against clock/1000
     data: {
       agent_id: string
       cost_per_message: number
-      system_prompt: string
+      prompt_hash: number[] // 32 bytes (SHA-256 of system prompt)
     }
   }
   signature: string

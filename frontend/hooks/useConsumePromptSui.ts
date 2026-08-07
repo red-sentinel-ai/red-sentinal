@@ -12,7 +12,37 @@ import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 
 const GAS_BUDGET = 50_000_000
 
-// Define response types
+// Raw shape returned by the TEE's /consume-prompt for Sui. The contract signs
+// message_hash/score/timestamp; the response strings are for the UI only.
+interface SuiConsumePromptTeeResponse {
+  response: {
+    intent: number
+    timestamp: number // Unix seconds — the contract compares against clock/1000
+    data: {
+      agent_id: string
+      success: boolean
+      score: number
+      message_hash: number[] // 32 bytes
+      agent_response: string
+      jury_response: string
+      fun_response: string
+    }
+  }
+  signature: string
+}
+
+// The TEE names the timestamp field `timestamp` on every chain, while the app's
+// shared response type calls it `timestamp_ms` (see the EVM and Solana hooks).
+const toConsumePromptApiResponse = (
+  teeData: SuiConsumePromptTeeResponse
+): ConsumePromptApiResponse => ({
+  signature: teeData.signature,
+  response: {
+    intent: teeData.response.intent,
+    timestamp_ms: teeData.response.timestamp * 1000,
+    data: teeData.response.data,
+  },
+})
 
 interface UseConsumePromptOptions {
   onSuccess?: (result: any) => void
@@ -250,8 +280,8 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
   const callConsumePromptApi = async (
     agentId: string,
     message: string,
-    attack_object_id: string
-  ): Promise<ConsumePromptApiResponse> => {
+    attackNonce: string
+  ): Promise<SuiConsumePromptTeeResponse> => {
     if (!account?.address) {
       throw new Error('Wallet not connected')
     }
@@ -264,7 +294,12 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
       body: JSON.stringify({
         agent_id: `${agentId}`,
         message: message,
-        attack_object_id,
+        // Sui identifies the attack the same way EVM does: the nonce minted into
+        // the Attack object, plus the attacker. The contract re-derives both from
+        // chain when it verifies, so these must match the ticket exactly — the
+        // nonce stays a string because a full u64 loses precision as a JS number.
+        attack_id: attackNonce,
+        attacker: account.address,
       }),
     })
 
@@ -272,31 +307,26 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
       throw new Error(`API request failed: ${response.status}`)
     }
 
-    const apiResponse: ConsumePromptApiResponse = await response.json()
-    onApiSuccess?.(apiResponse)
-    return apiResponse
+    const teeData: SuiConsumePromptTeeResponse = await response.json()
+    onApiSuccess?.(toConsumePromptApiResponse(teeData))
+    return teeData
   }
 
   // Step 4: Execute consume prompt transaction
   const executeConsumePrompt = async (
     agentObjectId: string,
     agentDetails: Agent,
-    apiResponse: ConsumePromptApiResponse,
-    prompt: string,
+    teeData: SuiConsumePromptTeeResponse,
     attackObjectId: string
   ): Promise<any> => {
     const tx = new Transaction()
-    const sigVector = hexToVector(apiResponse.signature)
-
-    // Extract data from API response
-    const { response: apiData } = apiResponse
+    const { data: attackResult } = teeData.response
 
     const isNewContract = !!agentDetails.coin_type
     const contractConfig = isNewContract ? SUI_CONFIG : SUI_LEGACY_CONFIG
     const packageId = contractConfig.APP_PACKAGE_ID || SUI_CONFIG.APP_PACKAGE_ID
     const agentRegistry = contractConfig.AGENT_REGISTRY || SUI_CONFIG.AGENT_REGISTRY
     const protocolConfigId = contractConfig.PROTOCOL_CONFIG_ID || SUI_CONFIG.PROTOCOL_CONFIG_ID
-    const enclaveObjectId = contractConfig.ENCLAVE_OBJECT_ID || SUI_CONFIG.ENCLAVE_OBJECT_ID
 
     tx.moveCall({
       target: `${packageId}::${SUI_CONFIG.MODULE_NAME}::consume_prompt`,
@@ -304,17 +334,13 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
       arguments: [
         tx.object(agentRegistry),
         tx.object(protocolConfigId),
-        tx.object(agentObjectId), // agent: &mut Agent
-        tx.pure.bool(apiData.data.success), // success: bool
-        tx.pure.string(apiData.data.agent_response), // explanation: String,
-        tx.pure.string(apiData.data.jury_response), // explanation: String,
-        tx.pure.string(apiData.data.fun_response), // explanation: String,
-        tx.pure.string(prompt),
-        tx.pure.u8(apiData.data.score), // score: u8
-        tx.pure.u64(apiData.timestamp_ms), // timestamp_ms: u64
-        tx.pure.vector('u8', sigVector), // sig: &vector<u8>
-        tx.object(enclaveObjectId), // enclave: &Enclave<T>
-        tx.object(attackObjectId), // attack: &mut Attack,
+        tx.object(agentObjectId), // agent: &mut Agent<T>
+        tx.pure.bool(attackResult.success), // success: bool
+        tx.pure.u64(attackResult.score), // score: u64
+        tx.pure.vector('u8', attackResult.message_hash), // message_hash: vector<u8>
+        tx.pure.u64(teeData.response.timestamp), // timestamp: u64 (seconds)
+        tx.pure.vector('u8', hexToVector(teeData.signature)), // sig: &vector<u8>
+        tx.object(attackObjectId), // attack: Attack<T>
         tx.object(SUI_CLOCK_OBJECT_ID),
       ],
     })
@@ -365,18 +391,14 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
         // Step 2: Request Attack Ticket
         setCurrentStep('Requesting attack ticket...')
         if (showToasts) toast.info('Processing payment...')
-        const { objectId: attackObjectId } = await requestAttackTicket(agentDetails)
+        const { objectId: attackObjectId, nonce: attackNonce } =
+          await requestAttackTicket(agentDetails)
 
         // Step 3: Call consume prompt API
         setCurrentStep('Processing prompt...')
         if (showToasts) toast.info('Processing prompt...')
-        const apiResponse = await callConsumePromptApi(
-          agentDetails.agent_id,
-          message,
-          attackObjectId
-        )
-        console.log('API response:', apiResponse)
-        onApiSuccess?.(apiResponse)
+        const teeData = await callConsumePromptApi(agentDetails.agent_id, message, attackNonce)
+        const apiResponse = toConsumePromptApiResponse(teeData)
 
         // Step 4: Execute consume prompt transaction
         setCurrentStep('Finalizing transaction...')
@@ -384,8 +406,7 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
         const result = await executeConsumePrompt(
           agentDetails.agent_object_id,
           agentDetails,
-          apiResponse,
-          message,
+          teeData,
           attackObjectId
         )
 
