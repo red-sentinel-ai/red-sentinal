@@ -6,6 +6,7 @@ export const SUI_COIN_TYPE = '0x2::sui::SUI'
 export const SENTINEL_TOKEN_DECIMALS = 0
 
 const NATIVE_TOKEN_MINIMUM_AMOUNT = 0.01
+const TESTNET_STABLECOIN_MINIMUM_AMOUNT = 0.1
 
 // ─── Sui tokens ──────────────────────────────────────────────────────────────
 
@@ -15,7 +16,7 @@ export const SUI_TOKEN: SupportedToken = {
   coinType: SUI_COIN_TYPE,
   decimals: 9,
   icon: '/icons/tokens/sui.png',
-  minimumAmount: 5,
+  minimumAmount: NATIVE_TOKEN_MINIMUM_AMOUNT,
 }
 
 export const TESTNET_SUPPORTED_TOKENS: SupportedToken[] = [
@@ -25,7 +26,7 @@ export const TESTNET_SUPPORTED_TOKENS: SupportedToken[] = [
     coinType: '0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC',
     decimals: 6,
     icon: '/icons/tokens/usdc.png',
-    minimumAmount: 20,
+    minimumAmount: TESTNET_STABLECOIN_MINIMUM_AMOUNT,
   },
   SUI_TOKEN,
 ]

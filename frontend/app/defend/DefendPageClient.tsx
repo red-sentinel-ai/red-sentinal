@@ -9,6 +9,7 @@ import { toast } from 'sonner'
 import { ConnectButton, useCurrentAccount } from '@mysten/dapp-kit'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'
 import {
+  MINIMUM_FEE_PER_MESSAGE,
   SESSION_KEYS,
   SUI_SENTINEL_DOCS_URL,
   SYSTEM_PROMPT_MAX_TOKENS,
@@ -812,7 +813,7 @@ export default function DefendPageClient() {
 
             <FormInput
               label={`Fee Per Message (${activeTokenSymbol})`}
-              subLabel={`You earn this fee whenever users interact with your Sentinel. Minimum 0.001 ${activeTokenSymbol}.`}
+              subLabel={`You earn this fee whenever users interact with your Sentinel. Minimum ${MINIMUM_FEE_PER_MESSAGE} ${activeTokenSymbol}.`}
               name="feePerMessage"
               value={formData.feePerMessage}
               onChange={handleChangeWithProviderReset}
