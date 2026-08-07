@@ -23,17 +23,26 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify(payload),
     })
 
+    const responseText = await response.text()
+
+    // Forward the TEE's status and body verbatim. Collapsing these into a generic
+    // 500 hides actionable errors — an unsupported `network` comes back as a
+    // Fastify validation 400 that the caller needs to see.
     if (!response.ok) {
-      const errorText = await response.text()
-      console.error(`TEE error (${chain ?? 'sui'}): ${response.status} - ${errorText}`)
-      throw new Error(`External API error! status: ${response.status}`)
+      console.error(`TEE register-agent error (${chain ?? 'sui'}): ${response.status} - ${responseText}`)
+      try {
+        return NextResponse.json(JSON.parse(responseText), { status: response.status })
+      } catch {
+        return NextResponse.json({ error: responseText }, { status: response.status })
+      }
     }
 
-    const data = await response.json()
-
-    return NextResponse.json(data)
-  } catch (error) {
+    return NextResponse.json(JSON.parse(responseText))
+  } catch (error: any) {
     console.error('Error in register-agent API route:', error)
-    return NextResponse.json({ error: 'Failed to register agent' }, { status: 500 })
+    return NextResponse.json(
+      { error: error.message || 'Failed to register agent' },
+      { status: 500 }
+    )
   }
 }
