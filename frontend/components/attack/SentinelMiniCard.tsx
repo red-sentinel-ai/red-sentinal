@@ -21,7 +21,7 @@ export function SentinelMiniCard({ agent, variant }: { agent: Agent; variant?: V
       href={`/attack/${agent.agent_path}`}
       className="group flex h-full min-w-0 flex-col overflow-hidden border border-[var(--color-border-default)] bg-[var(--color-bg-base)] transition-colors hover:border-white/45"
     >
-      <div className="relative h-48 w-full overflow-hidden bg-[var(--color-bg-subtle)]">
+      <div className="relative h-36 w-full overflow-hidden bg-[var(--color-bg-subtle)] sm:h-48">
         {agent.agent_image ? (
           <Image
             src={agent.agent_image}
@@ -37,7 +37,7 @@ export function SentinelMiniCard({ agent, variant }: { agent: Agent; variant?: V
         )}
         <div className="from-[var(--color-bg-deepest)]/80 pointer-events-none absolute inset-0 bg-gradient-to-t via-transparent to-transparent" />
         {variant && (
-          <span className="font-body absolute left-4 top-4 inline-flex items-center gap-1 bg-white px-3 py-1 text-[9px] font-extrabold uppercase leading-none tracking-[0.1em] text-black">
+          <span className="font-body absolute left-3 top-3 inline-flex items-center gap-1 bg-white px-2 py-1 text-[8px] font-extrabold uppercase leading-none tracking-[0.1em] text-black sm:left-4 sm:top-4 sm:px-3 sm:text-[9px]">
             {variant === 'featured' ? (
               <Star className="h-2.5 w-2.5" />
             ) : (
@@ -48,9 +48,9 @@ export function SentinelMiniCard({ agent, variant }: { agent: Agent; variant?: V
         )}
       </div>
 
-      <div className="flex flex-1 flex-col p-6">
-        <div className="mb-6 flex items-start gap-2">
-          <h3 className="font-display min-w-0 flex-1 truncate text-lg font-extrabold uppercase tracking-[0.04em] text-white">
+      <div className="flex flex-1 flex-col p-4 sm:p-6">
+        <div className="mb-4 flex items-start gap-2 sm:mb-6">
+          <h3 className="font-display min-w-0 flex-1 truncate text-base font-extrabold uppercase tracking-[0.04em] text-white sm:text-lg">
             {agent.agent_name}
           </h3>
           <Image
@@ -62,7 +62,7 @@ export function SentinelMiniCard({ agent, variant }: { agent: Agent; variant?: V
           />
         </div>
 
-        <div className="mb-8 grid grid-cols-2 gap-4">
+        <div className="mb-5 grid grid-cols-2 gap-3 sm:mb-8 sm:gap-4">
           <div className="min-w-0">
             <p className="font-body mb-1 text-[8px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
               Prize Pool
@@ -91,7 +91,7 @@ export function SentinelMiniCard({ agent, variant }: { agent: Agent; variant?: V
           </div>
         </div>
 
-        <div className="font-body mt-auto flex h-11 w-full items-center justify-center rounded-full border border-white text-[11px] font-extrabold uppercase tracking-[0.1em] text-white transition-all group-hover:bg-white group-hover:text-black group-active:scale-[0.98]">
+        <div className="font-body mt-auto flex h-10 w-full items-center justify-center rounded-full border border-white text-[10px] font-extrabold uppercase tracking-[0.1em] text-white transition-all group-hover:bg-white group-hover:text-black group-active:scale-[0.98] sm:h-11 sm:text-[11px]">
           Attack Sentinel
         </div>
       </div>

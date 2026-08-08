@@ -21,7 +21,14 @@ import { CHAINS, isEvmChain } from '@/constants/chains'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { getExplorerObjectUrl, getExplorerTxUrl } from '@/lib/explorer'
 import type { Agent } from '@/types/agents'
-import { formatDuration, cn, buildAgentShareTweetUrl, truncateAddress, generateAvatarUrl } from '@/lib/utils'
+import {
+  formatDuration,
+  cn,
+  buildAgentShareTweetUrl,
+  truncateAddress,
+  generateAvatarUrl,
+  formatSentinelId,
+} from '@/lib/utils'
 import { Skeleton } from '@/components/ui'
 import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
 import { TokenAmount } from '../ui/common/TokenAmount'
@@ -224,15 +231,17 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
                   className="h-full w-full object-cover"
                 />
               </div>
-              <div>
+              <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <h1 className="industrial-header text-lg text-white">{agent.agent_name}</h1>
+                  <h1 className="industrial-header truncate text-lg text-white">
+                    {agent.agent_name}
+                  </h1>
                   <Image
                     src={CHAINS[agent.chain].icon}
                     width={18}
                     height={18}
                     alt={CHAINS[agent.chain].name}
-                    className={`rounded-full ${CHAINS[agent.chain].iconFilterClass}`}
+                    className={`shrink-0 rounded-full ${CHAINS[agent.chain].iconFilterClass}`}
                   />
                 </div>
                 {agent.is_featured && (
@@ -241,6 +250,12 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
                   </span>
                 )}
               </div>
+              <span
+                className="industrial-header shrink-0 self-start border border-[var(--color-border-strong)] px-1.5 py-0.5 text-[9px] text-[var(--color-text-muted)]"
+                title="Sentinel ID"
+              >
+                ID {formatSentinelId(agent.agent_id)}
+              </span>
             </div>
 
             <SentinelFollowButton
