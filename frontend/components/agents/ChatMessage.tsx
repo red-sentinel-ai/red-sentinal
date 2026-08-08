@@ -212,7 +212,7 @@ export const ChatMessage = ({
                 rel="noopener noreferrer"
                 className="industrial-header ml-auto flex items-center gap-1 text-[10px] text-[var(--color-text-muted)] transition-colors hover:text-white"
               >
-                VIEW_TRACE
+                VIEW_ONCHAIN
                 <ExternalLink className="h-3 w-3" />
               </a>
             )}
