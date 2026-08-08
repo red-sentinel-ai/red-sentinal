@@ -12,6 +12,7 @@ export interface PromptChatEvent {
   tx_digest: string
   amount_sent: string
   jury_response: string | null
+  walrus_blob_id?: string | null
   timestamp: string
 }
 

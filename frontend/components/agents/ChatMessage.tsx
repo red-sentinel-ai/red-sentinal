@@ -10,7 +10,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { Trophy, ExternalLink, Scale } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import { generateAvatarUrl } from '@/lib/utils'
-import { getExplorerTxUrl } from '@/lib/explorer'
+import { getExplorerTxUrl, getWalrusBlobUrl } from '@/lib/explorer'
 import { truncateAddress } from '@/lib/utils'
 import type { Agent } from '@/types/agents'
 import { type ChatMessage as ChatMessageType } from './ChatInterface'
@@ -213,6 +213,21 @@ export const ChatMessage = ({
                 className="industrial-header ml-auto flex items-center gap-1 text-[10px] text-[var(--color-text-muted)] transition-colors hover:text-white"
               >
                 VIEW_ONCHAIN
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            )}
+
+            {message.walrusBlobId && (
+              <a
+                href={getWalrusBlobUrl(message.walrusBlobId)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={clsx(
+                  'industrial-header flex items-center gap-1 text-[10px] text-[var(--color-text-muted)] transition-colors hover:text-white',
+                  !message.txDigest && 'ml-auto'
+                )}
+              >
+                SEE_ON_WALRUS
                 <ExternalLink className="h-3 w-3" />
               </a>
             )}

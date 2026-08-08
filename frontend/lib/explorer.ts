@@ -5,6 +5,13 @@ import { BNB_CONFIG, getEvmConfigForChainKey } from '@/constants/evm'
 const SOLANA_EXPLORER = 'https://explorer.solana.com'
 const SOLANA_CLUSTER_SUFFIX = APP_NETWORK === 'mainnet' ? '' : '?cluster=devnet'
 
+const WALRUS_AGGREGATOR_URL = 'https://aggregator.walrus-testnet.walrus.space'
+
+/** Public URL for reading a stored attack record blob back from Walrus. */
+export function getWalrusBlobUrl(blobId: string): string {
+  return `${WALRUS_AGGREGATOR_URL}/v1/blobs/${blobId}`
+}
+
 function evmExplorer(chain: SupportedChain): string {
   const evmChainKey = toEvmChainKey(chain)
   return evmChainKey ? getEvmConfigForChainKey(evmChainKey).explorerUrl : BNB_CONFIG.explorerUrl

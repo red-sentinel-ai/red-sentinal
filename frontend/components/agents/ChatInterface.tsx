@@ -34,6 +34,7 @@ export interface ChatMessage {
   isSuccess?: boolean
   score?: number
   txDigest?: string
+  walrusBlobId?: string
   amountWon?: string
   winner?: string
   sender?: string
@@ -102,6 +103,7 @@ export default function ChatInterface({
         isSuccess: event.success,
         score: event.score,
         txDigest: event.tx_digest,
+        walrusBlobId: event.walrus_blob_id ?? undefined,
         juryResponse: event.jury_response ?? undefined,
       })
     }
