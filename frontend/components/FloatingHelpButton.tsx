@@ -26,13 +26,17 @@ const additionalLinks = [
   },
 ]
 
+const ROUTE_PREFIXES_WITHOUT_HELP_BUTTON = ['/attack/', '/practice/']
+
 export function FloatingHelpButton() {
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false)
   const pathname = usePathname()
 
-  const shouldHide = pathname.startsWith('/attack/')
+  const isHiddenOnRoute = ROUTE_PREFIXES_WITHOUT_HELP_BUTTON.some(prefix =>
+    pathname.startsWith(prefix)
+  )
 
-  if (shouldHide) return null
+  if (isHiddenOnRoute) return null
 
   const allLinks = [...socialLinks, ...additionalLinks]
 

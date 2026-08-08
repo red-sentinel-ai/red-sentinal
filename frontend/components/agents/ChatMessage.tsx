@@ -70,7 +70,7 @@ export const ChatMessage = ({
         className="flex flex-col items-end gap-2"
       >
         {/* Header with username and timestamp */}
-        <div className="industrial-header flex items-center gap-2 text-[10px] text-[var(--color-text-muted)]">
+        <div className="industrial-header flex flex-wrap items-center justify-end gap-x-2 gap-y-1 text-[9px] text-[var(--color-text-muted)] sm:text-[10px]">
           {username ? (
             <Link href={`/u/${username}`} className="transition-colors hover:text-white">
               @{displayName.toUpperCase()}
@@ -91,7 +91,7 @@ export const ChatMessage = ({
         {/* Message Content */}
         <div
           className={clsx(
-            'max-w-[85%] border p-4 lg:max-w-[75%] lg:p-5',
+            'max-w-[92%] border p-3 sm:max-w-[85%] sm:p-4 lg:max-w-[75%] lg:p-5',
             isWinningPrompt ? 'border-accent/40 bg-accent/5' : 'border-white/20 bg-white/5'
           )}
         >
@@ -128,8 +128,8 @@ export const ChatMessage = ({
       className="flex flex-col gap-3"
     >
       {/* Header with avatar and sentinel info */}
-      <div className="flex items-center gap-3">
-        <div className="flex h-8 w-8 items-center justify-center border border-[var(--color-border-strong)] bg-[var(--color-bg-elevated)]">
+      <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex h-7 w-7 shrink-0 items-center justify-center border border-[var(--color-border-strong)] bg-[var(--color-bg-elevated)] sm:h-8 sm:w-8">
           <Image
             src={agent.agent_image || generateAvatarUrl(agent.agent_id)}
             width={32}
@@ -138,19 +138,19 @@ export const ChatMessage = ({
             className="h-full w-full object-cover"
           />
         </div>
-        <div className="industrial-header text-[10px] text-[var(--color-text-muted)]">
+        <div className="industrial-header min-w-0 break-all text-[9px] text-[var(--color-text-muted)] sm:text-[10px]">
           SENTINEL_{agent.agent_name.toUpperCase().replace(/\s+/g, '_')} //{' '}
           {timestamp.toUpperCase()} AGO
         </div>
       </div>
 
       {/* Message Content */}
-      <div className="border-hairline max-w-[90%] bg-[var(--color-bg-elevated)]">
-        <div className="p-5 lg:p-6">
+      <div className="border-hairline max-w-full bg-[var(--color-bg-elevated)] sm:max-w-[90%]">
+        <div className="p-3 sm:p-5 lg:p-6">
           <div
             ref={contentRef}
             className={clsx(
-              'markdown-content mb-6',
+              'markdown-content mb-4 sm:mb-6',
               !isExpanded && shouldTruncate && 'line-clamp-4'
             )}
           >
@@ -160,14 +160,14 @@ export const ChatMessage = ({
           {shouldTruncate && (
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="industrial-header mb-6 border-b border-white text-[10px] tracking-widest text-white transition-opacity hover:opacity-70"
+              className="industrial-header mb-4 border-b border-white text-[10px] tracking-widest text-white transition-opacity hover:opacity-70 sm:mb-6"
             >
               {isExpanded ? 'COLLAPSE' : 'EXPAND'}
             </button>
           )}
 
           {/* Footer with score, jury, and tx link */}
-          <div className="flex flex-wrap items-center gap-4 border-t border-[var(--color-border-strong)] pt-4 lg:gap-6">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-[var(--color-border-strong)] pt-3 sm:gap-4 sm:pt-4 lg:gap-6">
             {/* Read Aloud */}
             <SentinelSpeechButton status={speech.status} onToggle={speech.toggle} />
 

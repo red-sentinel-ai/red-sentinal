@@ -8,7 +8,6 @@ import type { ChatMessage as ChatMessageType } from './ChatInterface'
 import { CasualMessageFeed } from './CasualMessageFeed'
 import { CasualPromptComposer } from './CasualPromptComposer'
 import { getPracticeAttackerAddress } from '@/lib/practice'
-import { playSpeech } from '@/lib/speech-playback'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { useAttackFeedMessages } from '@/hooks/practice/useAttackFeedMessages'
 import { useAttackPracticeSentinel } from '@/hooks/practice/useAttackPracticeSentinel'
@@ -79,7 +78,6 @@ export function CasualChatInterface({ agent }: CasualChatInterfaceProps) {
         timestamp: Date.now().toString(),
       }
       setPendingRound(prev => (prev ? [...prev, agentMessage] : [agentMessage]))
-      playSpeech(agentMessage.content)
 
       refetchFeed()
     } catch (err) {

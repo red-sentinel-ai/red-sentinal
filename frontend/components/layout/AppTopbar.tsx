@@ -21,8 +21,8 @@ export function AppTopbar() {
       <div className="ml-auto flex shrink-0 items-center gap-3 md:gap-8">
         {/* Arbitrum-only mode locks the app to one chain, so the switcher is hidden. */}
         <ChainSwitcher />
-        <NovuInbox />
         <ConnectButton compact />
+        <NovuInbox />
       </div>
     </header>
   )
