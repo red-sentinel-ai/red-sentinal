@@ -52,6 +52,7 @@ export interface PracticeAttackFeedItem {
   content: string
   agent_response: string
   jury_response: string | null
+  walrus_blob_id: string | null
   score: number | null
   success: boolean | null
   confidence: number | null
