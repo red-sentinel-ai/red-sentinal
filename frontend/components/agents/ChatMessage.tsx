@@ -23,6 +23,10 @@ type UserProfile = Pick<
   'username' | 'avatar_url'
 > | null
 
+const COLLAPSED_MESSAGE_CLAMP = 'line-clamp-[14]'
+
+const CONTENT_OVERFLOW_TOLERANCE_PX = 2
+
 type ChatMessageProps = {
   message: ChatMessageType
   agent: Agent
@@ -41,17 +45,24 @@ export const ChatMessage = ({
   hideSuccessBanner,
 }: ChatMessageProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
-  const [shouldTruncate, setShouldTruncate] = useState(false)
+  const [isContentClamped, setIsContentClamped] = useState(false)
   const contentRef = useRef<HTMLDivElement>(null)
   const speech = useSpeechPlayback(message.content)
 
   useEffect(() => {
-    if (contentRef.current) {
-      const lineHeight = parseFloat(getComputedStyle(contentRef.current).lineHeight || '20')
-      const totalLines = contentRef.current.scrollHeight / lineHeight
-      setShouldTruncate(totalLines > 4)
-    }
-  }, [message.content])
+    const contentElement = contentRef.current
+    if (!contentElement || isExpanded) return
+
+    const measureContentOverflow = () =>
+      setIsContentClamped(
+        contentElement.scrollHeight - contentElement.clientHeight > CONTENT_OVERFLOW_TOLERANCE_PX
+      )
+
+    measureContentOverflow()
+    const resizeObserver = new ResizeObserver(measureContentOverflow)
+    resizeObserver.observe(contentElement)
+    return () => resizeObserver.disconnect()
+  }, [message.content, isExpanded])
 
   const username = senderProfile?.username
   const displayName =
@@ -97,15 +108,12 @@ export const ChatMessage = ({
         >
           <div
             ref={contentRef}
-            className={clsx(
-              'markdown-content',
-              !isExpanded && shouldTruncate && 'line-clamp-4'
-            )}
+            className={clsx('markdown-content', !isExpanded && COLLAPSED_MESSAGE_CLAMP)}
           >
             <ReactMarkdown>{message.content}</ReactMarkdown>
           </div>
 
-          {shouldTruncate && (
+          {isContentClamped && (
             <button
               onClick={() => setIsExpanded(!isExpanded)}
               className="industrial-header mt-3 border-b border-white text-[10px] tracking-widest text-white transition-opacity hover:opacity-70"
@@ -149,15 +157,12 @@ export const ChatMessage = ({
         <div className="p-3 sm:p-5 lg:p-6">
           <div
             ref={contentRef}
-            className={clsx(
-              'markdown-content mb-4 sm:mb-6',
-              !isExpanded && shouldTruncate && 'line-clamp-4'
-            )}
+            className={clsx('markdown-content mb-4 sm:mb-6', !isExpanded && COLLAPSED_MESSAGE_CLAMP)}
           >
             <ReactMarkdown>{message.content}</ReactMarkdown>
           </div>
 
-          {shouldTruncate && (
+          {isContentClamped && (
             <button
               onClick={() => setIsExpanded(!isExpanded)}
               className="industrial-header mb-4 border-b border-white text-[10px] tracking-widest text-white transition-opacity hover:opacity-70 sm:mb-6"
