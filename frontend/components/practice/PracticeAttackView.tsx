@@ -4,14 +4,21 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { AlertTriangle, Loader2 } from 'lucide-react'
 
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui'
 import { usePracticeSentinel } from '@/hooks/practice/usePracticeSentinel'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { getPracticeAttackerAddress } from '@/lib/practice'
 import { PracticeSentinelPanel } from './PracticeSentinelPanel'
 import { PracticeSentinelInfoModal } from './PracticeSentinelInfoModal'
 import { PracticeChatInterface } from './PracticeChatInterface'
 
+const BRIEFING_SIDEBAR_MEDIA_QUERY = '(min-width: 1024px)'
+
+const BRIEFING_SIDEBAR_SIZE = { default: 28, min: 22, max: 40 }
+
 export function PracticeAttackView({ sentinelId }: { sentinelId: number }) {
   const { data: sentinel, isPending, isError } = usePracticeSentinel(sentinelId)
+  const hasBriefingSidebar = useMediaQuery(BRIEFING_SIDEBAR_MEDIA_QUERY)
 
   const [attackerAddress, setAttackerAddress] = useState('')
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false)
@@ -47,22 +54,35 @@ export function PracticeAttackView({ sentinelId }: { sentinelId: number }) {
     )
   }
 
-  return (
-    <div className="flex h-[calc(100dvh-64px)] flex-col bg-[var(--color-bg-base)] lg:flex-row">
-      {/* Briefing — desktop sidebar */}
-      <aside className="hidden lg:block lg:h-full lg:w-[360px] lg:shrink-0">
-        <PracticeSentinelPanel sentinel={sentinel} />
-      </aside>
-
-      <div className="flex min-h-0 flex-1 flex-col">
-        <PracticeChatInterface
-          sentinel={sentinel}
-          attackerAddress={attackerAddress}
-          onOpenSentinelInfo={() => setIsInfoModalOpen(true)}
-        />
+  if (hasBriefingSidebar) {
+    return (
+      <div className="flex h-[calc(100dvh-64px)] bg-[var(--color-bg-base)]">
+        <ResizablePanelGroup direction="horizontal">
+          <ResizablePanel
+            defaultSize={BRIEFING_SIDEBAR_SIZE.default}
+            minSize={BRIEFING_SIDEBAR_SIZE.min}
+            maxSize={BRIEFING_SIDEBAR_SIZE.max}
+          >
+            <PracticeSentinelPanel sentinel={sentinel} />
+          </ResizablePanel>
+          <ResizableHandle withHandle className="bg-[var(--color-border-strong)]" />
+          <ResizablePanel>
+            <PracticeChatInterface sentinel={sentinel} attackerAddress={attackerAddress} />
+          </ResizablePanel>
+        </ResizablePanelGroup>
       </div>
+    )
+  }
 
-      {/* Same briefing as the sidebar, for screens where the sidebar is hidden */}
+  return (
+    <div className="flex h-[calc(100dvh-64px)] flex-col bg-[var(--color-bg-base)]">
+      <PracticeChatInterface
+        sentinel={sentinel}
+        attackerAddress={attackerAddress}
+        onOpenSentinelInfo={() => setIsInfoModalOpen(true)}
+      />
+
+      {/* Same briefing the sidebar shows, for widths where the sidebar is gone */}
       <PracticeSentinelInfoModal
         open={isInfoModalOpen}
         onClose={() => setIsInfoModalOpen(false)}
