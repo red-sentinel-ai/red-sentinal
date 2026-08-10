@@ -16,12 +16,13 @@ import { JuryResponseModal } from '@/components/agents/JuryResponseModal'
 import { usePracticeAttacksFeed } from '@/hooks/practice/usePracticeAttacksFeed'
 import { useAttackPracticeSentinel } from '@/hooks/practice/useAttackPracticeSentinel'
 import { useAttackFeedMessages } from '@/hooks/practice/useAttackFeedMessages'
+import { useAutoResizingTextarea } from '@/hooks/useAutoResizingTextarea'
 import type { PracticeSentinelPublic } from '@/types/practice'
 
 interface PracticeChatInterfaceProps {
   sentinel: PracticeSentinelPublic
   attackerAddress: string
-  onOpenSentinelInfo: () => void
+  onOpenSentinelInfo?: () => void
 }
 
 export function PracticeChatInterface({
@@ -36,7 +37,7 @@ export function PracticeChatInterface({
   const [submitError, setSubmitError] = useState<string | null>(null)
 
   const chatContainerRef = useRef<HTMLDivElement>(null)
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const textareaRef = useAutoResizingTextarea(promptInput)
 
   const { data: feed, refetch: refetchFeed } = usePracticeAttacksFeed(sentinel.sentinel_id, {
     mode: 'attack',
@@ -85,19 +86,6 @@ export function PracticeChatInterface({
     }
     return filtered
   }, [chatMessages, activeTab, attackerAddress])
-
-  const adjustTextareaHeight = () => {
-    const textarea = textareaRef.current
-    if (textarea) {
-      textarea.style.height = 'auto'
-      const maxHeight = Math.min(window.innerHeight * 0.4, 300)
-      textarea.style.height = `${Math.min(textarea.scrollHeight, maxHeight)}px`
-    }
-  }
-
-  useEffect(() => {
-    adjustTextareaHeight()
-  }, [promptInput])
 
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -184,15 +172,17 @@ export function PracticeChatInterface({
         >
           MY_ATTACKS
         </button>
-        <button
-          type="button"
-          onClick={onOpenSentinelInfo}
-          className="chat-toolbar-action ml-auto lg:hidden"
-          title="Sentinel info"
-        >
-          <Info className="h-3 w-3" />
-          <span className="industrial-header text-[9px] tracking-widest">INFO</span>
-        </button>
+        {onOpenSentinelInfo && (
+          <button
+            type="button"
+            onClick={onOpenSentinelInfo}
+            className="chat-toolbar-action ml-auto"
+            title="Sentinel info"
+          >
+            <Info className="h-3 w-3" />
+            <span className="industrial-header text-[9px] tracking-widest">INFO</span>
+          </button>
+        )}
       </div>
 
       {/* Chat Feed */}

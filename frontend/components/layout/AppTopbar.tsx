@@ -18,7 +18,7 @@ export function AppTopbar() {
 
       {content && <div className="flex min-w-0 flex-1 items-center gap-2">{content}</div>}
 
-      <div className="ml-auto flex shrink-0 items-center gap-3 md:gap-8">
+      <div className="ml-auto flex shrink-0 items-center gap-3">
         {/* Arbitrum-only mode locks the app to one chain, so the switcher is hidden. */}
         <ChainSwitcher />
         <ConnectButton compact />
