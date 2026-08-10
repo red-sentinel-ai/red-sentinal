@@ -7,13 +7,14 @@ import { AlertTriangle, Loader2 } from 'lucide-react'
 import { usePracticeSentinel } from '@/hooks/practice/usePracticeSentinel'
 import { getPracticeAttackerAddress } from '@/lib/practice'
 import { PracticeSentinelPanel } from './PracticeSentinelPanel'
+import { PracticeSentinelInfoModal } from './PracticeSentinelInfoModal'
 import { PracticeChatInterface } from './PracticeChatInterface'
 
 export function PracticeAttackView({ sentinelId }: { sentinelId: number }) {
   const { data: sentinel, isPending, isError } = usePracticeSentinel(sentinelId)
 
   const [attackerAddress, setAttackerAddress] = useState('')
-  const [showBriefing, setShowBriefing] = useState(false)
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false)
 
   // Per-browser practice identity lives in localStorage, read on the client
   // only to avoid an SSR hydration mismatch.
@@ -54,19 +55,19 @@ export function PracticeAttackView({ sentinelId }: { sentinelId: number }) {
       </aside>
 
       <div className="flex min-h-0 flex-1 flex-col">
-        {/* Mobile briefing drawer (sidebar is hidden on small screens) */}
-        {showBriefing && (
-          <div className="max-h-[45%] overflow-y-auto border-b border-[var(--color-border-default)] lg:hidden">
-            <PracticeSentinelPanel sentinel={sentinel} />
-          </div>
-        )}
-
         <PracticeChatInterface
           sentinel={sentinel}
           attackerAddress={attackerAddress}
-          onToggleBriefing={() => setShowBriefing(v => !v)}
+          onOpenSentinelInfo={() => setIsInfoModalOpen(true)}
         />
       </div>
+
+      {/* Same briefing as the sidebar, for screens where the sidebar is hidden */}
+      <PracticeSentinelInfoModal
+        open={isInfoModalOpen}
+        onClose={() => setIsInfoModalOpen(false)}
+        sentinel={sentinel}
+      />
     </div>
   )
 }

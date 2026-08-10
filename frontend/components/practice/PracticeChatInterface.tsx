@@ -21,14 +21,13 @@ import type { PracticeSentinelPublic } from '@/types/practice'
 interface PracticeChatInterfaceProps {
   sentinel: PracticeSentinelPublic
   attackerAddress: string
-  /** Mobile-only briefing toggle (the sidebar is hidden on small screens). */
-  onToggleBriefing?: () => void
+  onOpenSentinelInfo: () => void
 }
 
 export function PracticeChatInterface({
   sentinel,
   attackerAddress,
-  onToggleBriefing,
+  onOpenSentinelInfo,
 }: PracticeChatInterfaceProps) {
   const [promptInput, setPromptInput] = useState('')
   const [pendingRound, setPendingRound] = useState<ChatMessageType[] | null>(null)
@@ -185,16 +184,15 @@ export function PracticeChatInterface({
         >
           MY_ATTACKS
         </button>
-        {onToggleBriefing && (
-          <button
-            onClick={onToggleBriefing}
-            className="chat-toolbar-action ml-auto lg:hidden"
-            title="Sentinel briefing"
-          >
-            <Info className="h-3 w-3" />
-            <span className="industrial-header text-[9px] tracking-widest">BRIEFING</span>
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={onOpenSentinelInfo}
+          className="chat-toolbar-action ml-auto lg:hidden"
+          title="Sentinel info"
+        >
+          <Info className="h-3 w-3" />
+          <span className="industrial-header text-[9px] tracking-widest">INFO</span>
+        </button>
       </div>
 
       {/* Chat Feed */}
