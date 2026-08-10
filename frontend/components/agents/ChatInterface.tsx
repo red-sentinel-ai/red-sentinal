@@ -18,6 +18,7 @@ import type { ConsumePromptApiResponse } from '@/types'
 import type { ChatEvent } from '@/hooks/agents/useAgentChatHistory'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { useTokenCount } from '@/hooks/useTokenCount'
+import { useAutoResizingTextarea } from '@/hooks/useAutoResizingTextarea'
 import type { Agent } from '@/types/agents'
 import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
 import { ChainMismatchBanner } from '@/components/ui/common/ChainMismatchBanner'
@@ -69,7 +70,7 @@ export default function ChatInterface({
   const [pendingRound, setPendingRound] = useState<ChatMessage[] | null>(null)
   const [activeTab, setActiveTab] = useState<'global' | 'mine'>('global')
   const chatContainerRef = useRef<HTMLDivElement>(null)
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const textareaRef = useAutoResizingTextarea(promptInput)
   const { address: connectedAddress } = useConnectedAddress()
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
   const { isFocusMode, enableFocusMode } = useFocusMode()
@@ -192,19 +193,6 @@ export default function ChatInterface({
     }
     return filtered
   }, [orderedMessages, activeTab, connectedAddress])
-
-  const adjustTextareaHeight = () => {
-    const textarea = textareaRef.current
-    if (textarea) {
-      textarea.style.height = 'auto'
-      const maxHeight = Math.min(window.innerHeight * 0.4, 300)
-      textarea.style.height = `${Math.min(textarea.scrollHeight, maxHeight)}px`
-    }
-  }
-
-  useEffect(() => {
-    adjustTextareaHeight()
-  }, [promptInput])
 
   useEffect(() => {
     if (apiResponse) {
