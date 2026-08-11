@@ -263,18 +263,18 @@ aws sts get-session-token \
 3. Once you get value for above keys, set
    {
    "Credentials": {
-   "AccessKeyId": "*STS_KEY_REMOVED*",
-   "SecretAccessKey": "*REMOVED*",
-   "SessionToken": "IQoJb3JpZ2luX2VjEEgaCXVzLWVhc3QtMSJGMEQCIEMcE2qjSA5YQ8At+L3do/YeWQGSdfnXpkMPGglCQItjAiB4V1LNIHCtpxsC4H+fKlibrWUJGk0hnpLGCYcAaeYfnSrvAQgREAAaDDQwMjA1NDgwMzExMyIMZYg7Z0HGvjzaQC2UKswBgoxFMu1IeIMqJ9ApDwGSd7vuS5fAPAzrMLcX348XEDgwuCvzGBP5591HkZ7w1BbyOyMvht7pqA2vfcFTB0JFKYpOGekboGd8+YsgQZk/T8sy/JoKLTqYyCM/kxI/DzBLliMOX4WANm20fnV4+2xGJH1e6iNUOGMqnzEqsqzGrVjNw2HliSzQyi66pOj8fldKTR34cGa62o9cUmvPlXilXbTJneUVQwKOdnuR3FuuGSd0kzufNotH3cIu70swXOZa+Zl0mfYorYZCLvVRMKH1qsoGOpkBgn69nDuqyXow3z3SDO6/r3oOqhIvPFtdbuygNKVdI0WbaixgR1arzm0PGNrZMJ+jazo13CvSPm/GZg4FwtFhEy+hsfXg5lNn94j4XaagVUUDTJHbr/KNNLEtsYLVdvDtyr4Vg9714TyXZ+WFZlPj7ABeYtgeOya0/3l80ggeXCqwCCfJG+wig9OXbqFzuP2PfcYfGqzHrsjs",
+   "AccessKeyId": "",
+   "SecretAccessKey": "",
+   "SessionToken": "",
    "Expiration": "2025-12-24T03:52:01+00:00"
    }
    }
 
 ```
 export KEY_PAIR=MyEC2KeyPair
-export AWS_ACCESS_KEY_ID=*STS_KEY_REMOVED*
+export AWS_ACCESS_KEY_ID=
 export AWS_SECRET_ACCESS_KEY=*AWS_SECRET_REMOVED*
-export AWS_SESSION_TOKEN="IQoJb3JpZ2luX2VjEEgaCXVzLWVhc3QtMSJGMEQCIEMcE2qjSA5YQ8At+L3do/YeWQGSdfnXpkMPGglCQItjAiB4V1LNIHCtpxsC4H+fKlibrWUJGk0hnpLGCYcAaeYfnSrvAQgREAAaDDQwMjA1NDgwMzExMyIMZYg7Z0HGvjzaQC2UKswBgoxFMu1IeIMqJ9ApDwGSd7vuS5fAPAzrMLcX348XEDgwuCvzGBP5591HkZ7w1BbyOyMvht7pqA2vfcFTB0JFKYpOGekboGd8+YsgQZk/T8sy/JoKLTqYyCM/kxI/DzBLliMOX4WANm20fnV4+2xGJH1e6iNUOGMqnzEqsqzGrVjNw2HliSzQyi66pOj8fldKTR34cGa62o9cUmvPlXilXbTJneUVQwKOdnuR3FuuGSd0kzufNotH3cIu70swXOZa+Zl0mfYorYZCLvVRMKH1qsoGOpkBgn69nDuqyXow3z3SDO6/r3oOqhIvPFtdbuygNKVdI0WbaixgR1arzm0PGNrZMJ+jazo13CvSPm/GZg4FwtFhEy+hsfXg5lNn94j4XaagVUUDTJHbr/KNNLEtsYLVdvDtyr4Vg9714TyXZ+WFZlPj7ABeYtgeOya0/3l80ggeXCqwCCfJG+wig9OXbqFzuP2PfcYfGqzHrsjs"
+export AWS_SESSION_TOKEN=""
 ```
 
 4. Now run `sh configure_enclave.sh`. here for secrets, select existing ARN
