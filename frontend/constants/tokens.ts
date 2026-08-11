@@ -6,6 +6,7 @@ export const SUI_COIN_TYPE = '0x2::sui::SUI'
 export const SENTINEL_TOKEN_DECIMALS = 0
 
 const NATIVE_TOKEN_MINIMUM_AMOUNT = 0.01
+const TESTNET_STABLECOIN_MINIMUM_AMOUNT = 0.1
 
 // ─── Sui tokens ──────────────────────────────────────────────────────────────
 
@@ -15,7 +16,7 @@ export const SUI_TOKEN: SupportedToken = {
   coinType: SUI_COIN_TYPE,
   decimals: 9,
   icon: '/icons/tokens/sui.png',
-  minimumAmount: 5,
+  minimumAmount: NATIVE_TOKEN_MINIMUM_AMOUNT,
 }
 
 export const TESTNET_SUPPORTED_TOKENS: SupportedToken[] = [
@@ -25,7 +26,7 @@ export const TESTNET_SUPPORTED_TOKENS: SupportedToken[] = [
     coinType: '0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC',
     decimals: 6,
     icon: '/icons/tokens/usdc.png',
-    minimumAmount: 20,
+    minimumAmount: TESTNET_STABLECOIN_MINIMUM_AMOUNT,
   },
   SUI_TOKEN,
 ]
@@ -263,6 +264,28 @@ export const ARB_USDC_TOKEN: SupportedToken = {
 
 export const ARB_SUPPORTED_TOKENS: SupportedToken[] = [ARB_TOKEN, ARB_USDC_TOKEN]
 
+export const MONAD_TOKEN: SupportedToken = {
+  symbol: 'MON',
+  name: 'Monad',
+  coinType: NATIVE_TOKEN_ADDRESS,
+  decimals: 18,
+  icon: '/chain-logos/mon.webp',
+  minimumAmount: NATIVE_TOKEN_MINIMUM_AMOUNT,
+}
+
+const MONAD_TESTNET_USDC_ADDRESS = '0x534b2f3A21130d7a60830c2Df862319e593943A3' as `0x${string}`
+
+export const MONAD_USDC_TOKEN: SupportedToken = {
+  symbol: 'USDC',
+  name: 'USD Coin',
+  coinType: MONAD_TESTNET_USDC_ADDRESS,
+  decimals: 6,
+  icon: '/icons/tokens/usdc.png',
+  minimumAmount: 0.01,
+}
+
+export const MONAD_SUPPORTED_TOKENS: SupportedToken[] = [MONAD_TOKEN, MONAD_USDC_TOKEN]
+
 // ─── Chain-aware token helpers ───────────────────────────────────────────────
 
 import { CHAINS, type SupportedChain } from './chains'
@@ -279,6 +302,8 @@ export function getSupportedTokens(chain: SupportedChain): SupportedToken[] {
       return BOT_CHAIN_SUPPORTED_TOKENS
     case 'arb':
       return ARB_SUPPORTED_TOKENS
+    case 'monad':
+      return MONAD_SUPPORTED_TOKENS
     default:
       return SUPPORTED_TOKENS
   }
@@ -296,6 +321,8 @@ export function getNativeToken(chain: SupportedChain): SupportedToken {
       return BOT_TOKEN
     case 'arb':
       return ARB_TOKEN
+    case 'monad':
+      return MONAD_TOKEN
     default:
       return SUI_TOKEN
   }

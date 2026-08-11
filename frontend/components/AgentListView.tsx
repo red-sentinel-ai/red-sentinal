@@ -161,20 +161,20 @@ export const AgentListView = () => {
   )
 
   return (
-    <div className="px-4 py-8 md:px-12 md:py-12">
-      <section className="mx-auto mb-16 max-w-5xl py-8 text-center md:mb-20 md:py-12">
-        <h1 className="font-display text-4xl font-extrabold uppercase leading-[1.08] tracking-[0.04em] text-white sm:text-5xl md:text-7xl">
+    <div className="px-3 py-6 md:px-12 md:py-12">
+      <section className="mx-auto mb-10 max-w-5xl py-4 text-center md:mb-20 md:py-12">
+        <h1 className="font-display text-3xl font-extrabold uppercase leading-[1.08] tracking-[0.04em] text-white sm:text-4xl md:text-7xl">
           Prepare Yourself for Age of Agents
         </h1>
-        <p className="font-body mx-auto mt-6 max-w-2xl text-sm font-semibold leading-relaxed tracking-[0.08em] text-[var(--color-text-secondary)]">
+        <p className="font-body mx-auto mt-4 max-w-2xl text-[13px] font-semibold leading-relaxed tracking-[0.06em] text-[var(--color-text-secondary)] sm:mt-6 sm:text-sm sm:tracking-[0.08em]">
           Agents are already in our life. Learn how they think, where they break, and how to
           outsmart them by actually doing it.
         </p>
-        <div className="mt-12 flex flex-col justify-center gap-4 sm:flex-row sm:items-center">
+        <div className="mt-8 flex flex-col justify-center gap-3 sm:mt-12 sm:flex-row sm:items-center sm:gap-4">
           <span className="font-body text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
             LIVE ON:
           </span>
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
             {SUPPORTED_CHAINS.map(chainId => {
               const chain = CHAINS[chainId]
               const active = selectedChain === chainId
@@ -183,11 +183,12 @@ export const AgentListView = () => {
                   type="button"
                   key={chainId}
                   onClick={() => setSelectedChain(active ? undefined : chainId)}
-                  className={`font-body inline-flex items-center gap-2 border px-5 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.1em] transition-colors ${
+                  className={cn(
+                    'font-body inline-flex items-center gap-2 border px-3.5 py-1.5 text-[9px] font-extrabold uppercase tracking-[0.1em] transition-colors sm:px-5 sm:text-[10px]',
                     active
                       ? 'border-white bg-white text-black'
                       : 'border-[var(--color-border-default)] text-[var(--color-text-secondary)] hover:border-white hover:text-white'
-                  }`}
+                  )}
                 >
                   <Image
                     src={chain.icon}
@@ -205,18 +206,18 @@ export const AgentListView = () => {
       </section>
 
       {/* Stats are hidden in Arbitrum-only mode. */}
-      <div className="mb-16 md:mb-20">
+      <div className="mb-10 md:mb-20">
         <AttackStats />
       </div>
 
       {(isFetchingFeatured || featuredForRow.length > 0) && (
-        <section className="mb-16 md:mb-20">
-          <div className="mb-8 flex items-end justify-between gap-4">
+        <section className="mb-10 md:mb-20">
+          <div className="mb-5 flex items-end justify-between gap-4 md:mb-8">
             <div>
-              <h2 className="font-display text-2xl font-extrabold uppercase tracking-[0.04em] text-white">
+              <h2 className="font-display text-xl font-extrabold uppercase tracking-[0.04em] text-white sm:text-2xl">
                 Featured Sentinels
               </h2>
-              <p className="font-body mt-2 text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] opacity-70">
+              <p className="font-body mt-1.5 text-[9px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] opacity-70 sm:mt-2 sm:text-[10px]">
                 Curated high-value targets. Bigger pools, proven resilience.
               </p>
             </div>
@@ -237,13 +238,13 @@ export const AgentListView = () => {
 
       {/* Trending Sentinels — auto-scrolling row (deduped against Featured) */}
       {(isFetchingTrending || trendingForRow.length > 0) && (
-        <section className="mb-16 md:mb-20">
-          <div className="mb-8 flex items-end justify-between gap-4">
+        <section className="mb-10 md:mb-20">
+          <div className="mb-5 flex items-end justify-between gap-4 md:mb-8">
             <div>
-              <h2 className="font-display text-2xl font-extrabold uppercase tracking-[0.04em] text-white">
+              <h2 className="font-display text-xl font-extrabold uppercase tracking-[0.04em] text-white sm:text-2xl">
                 Trending Sentinels
               </h2>
-              <p className="font-body mt-2 text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] opacity-70">
+              <p className="font-body mt-1.5 text-[9px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] opacity-70 sm:mt-2 sm:text-[10px]">
                 The most-attacked sentinels right now. Where the action is.
               </p>
             </div>
@@ -264,30 +265,30 @@ export const AgentListView = () => {
 
       <div id="active-sentinels" className="scroll-mt-20">
         <div className="mb-6 flex flex-col">
-          <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+          <div className="mb-5 flex flex-wrap items-end justify-between gap-3 md:mb-8 md:gap-4">
             <div>
-              <h2 className="font-display text-2xl font-extrabold uppercase tracking-[0.04em] text-white">
+              <h2 className="font-display text-xl font-extrabold uppercase tracking-[0.04em] text-white sm:text-2xl">
                 All Sentinels
               </h2>
-              <p className="font-body mt-2 text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] opacity-70">
+              <p className="font-body mt-1.5 text-[9px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] opacity-70 sm:mt-2 sm:text-[10px]">
                 Every active target, ranked and sortable. Find your edge.
               </p>
             </div>
             {!isFetchingAllAgents && totalAgents > 0 && (
-              <span className="font-body border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
+              <span className="font-body border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-2.5 py-1 text-[9px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] sm:px-3 sm:text-[10px]">
                 Showing {filteredAgents.length} of {totalAgents}
               </span>
             )}
           </div>
 
-          <div className="flex flex-wrap items-center gap-0 border border-[var(--color-border-default)] bg-[var(--color-bg-base)]">
-            <label className="relative min-w-[240px] flex-1">
-              <Search className="absolute left-4 top-1/2 size-[18px] -translate-y-1/2 text-[var(--color-text-muted)]" />
+          <div className="grid grid-cols-2 border border-[var(--color-border-default)] bg-[var(--color-bg-base)] md:flex md:flex-wrap md:items-center">
+            <label className="relative col-span-2 border-b border-[var(--color-border-default)] md:col-span-1 md:min-w-[240px] md:flex-1 md:border-b-0">
+              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[var(--color-text-muted)] md:left-4 md:size-[18px]" />
               <span className="sr-only">Search agents</span>
               <input
                 value={searchQuery}
                 onChange={event => setSearchQuery(event.target.value)}
-                className="font-body h-12 w-full border-0 border-r border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-12 text-[10px] font-extrabold uppercase tracking-[0.1em] text-white transition-all placeholder:text-[var(--color-text-faint)] focus:outline-none focus:ring-1 focus:ring-white"
+                className="font-body h-11 w-full border-0 bg-[var(--color-bg-base)] px-9 text-[9px] font-extrabold uppercase tracking-[0.1em] text-white transition-all placeholder:text-[var(--color-text-faint)] focus:outline-none focus:ring-1 focus:ring-white md:h-12 md:border-r md:border-[var(--color-border-default)] md:px-12 md:text-[10px]"
                 placeholder="SEARCH AGENTS..."
                 type="search"
               />
@@ -301,7 +302,7 @@ export const AgentListView = () => {
               onValueChange={value =>
                 setSelectedChain(value === ALL_FILTER_VALUE ? undefined : (value as SupportedChain))
               }
-              className="min-w-[170px] border-r border-[var(--color-border-default)]"
+              className="border-b border-r border-[var(--color-border-default)] md:min-w-[170px] md:border-b-0"
             />
 
             <FilterSelect
@@ -310,7 +311,7 @@ export const AgentListView = () => {
               options={SENTINEL_STATUS_FILTER_OPTIONS}
               value={selectedStatus}
               onValueChange={value => setSelectedStatus(value as SentinelStatusFilter)}
-              className="min-w-[150px] border-r border-[var(--color-border-default)]"
+              className="border-b border-[var(--color-border-default)] md:min-w-[150px] md:border-b-0 md:border-r"
             />
 
             <FilterSelect
@@ -321,7 +322,7 @@ export const AgentListView = () => {
               onValueChange={value =>
                 setSelectedSymbol(value === ALL_FILTER_VALUE ? undefined : value)
               }
-              className="min-w-[150px] border-r border-[var(--color-border-default)]"
+              className="border-r border-[var(--color-border-default)] md:min-w-[150px]"
             />
 
             <FilterSelect
@@ -330,7 +331,7 @@ export const AgentListView = () => {
               options={poolOptions}
               value={activeTab}
               onValueChange={value => setActiveTab(value as BountyTab)}
-              className="min-w-[180px]"
+              className="md:min-w-[180px]"
             />
           </div>
         </div>

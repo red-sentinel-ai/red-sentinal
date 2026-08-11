@@ -9,7 +9,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
 
 import { generateAvatarUrl } from '@/lib/utils'
-import { playSpeech } from '@/lib/speech-playback'
 import type { Agent } from '@/types/agents'
 import type { ChatMessage as ChatMessageType } from '@/components/agents/ChatInterface'
 import { ChatMessage } from '@/components/agents/ChatMessage'
@@ -17,19 +16,19 @@ import { JuryResponseModal } from '@/components/agents/JuryResponseModal'
 import { usePracticeAttacksFeed } from '@/hooks/practice/usePracticeAttacksFeed'
 import { useAttackPracticeSentinel } from '@/hooks/practice/useAttackPracticeSentinel'
 import { useAttackFeedMessages } from '@/hooks/practice/useAttackFeedMessages'
+import { useAutoResizingTextarea } from '@/hooks/useAutoResizingTextarea'
 import type { PracticeSentinelPublic } from '@/types/practice'
 
 interface PracticeChatInterfaceProps {
   sentinel: PracticeSentinelPublic
   attackerAddress: string
-  /** Mobile-only briefing toggle (the sidebar is hidden on small screens). */
-  onToggleBriefing?: () => void
+  onOpenSentinelInfo?: () => void
 }
 
 export function PracticeChatInterface({
   sentinel,
   attackerAddress,
-  onToggleBriefing,
+  onOpenSentinelInfo,
 }: PracticeChatInterfaceProps) {
   const [promptInput, setPromptInput] = useState('')
   const [pendingRound, setPendingRound] = useState<ChatMessageType[] | null>(null)
@@ -38,7 +37,7 @@ export function PracticeChatInterface({
   const [submitError, setSubmitError] = useState<string | null>(null)
 
   const chatContainerRef = useRef<HTMLDivElement>(null)
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const textareaRef = useAutoResizingTextarea(promptInput)
 
   const { data: feed, refetch: refetchFeed } = usePracticeAttacksFeed(sentinel.sentinel_id, {
     mode: 'attack',
@@ -88,19 +87,6 @@ export function PracticeChatInterface({
     return filtered
   }, [chatMessages, activeTab, attackerAddress])
 
-  const adjustTextareaHeight = () => {
-    const textarea = textareaRef.current
-    if (textarea) {
-      textarea.style.height = 'auto'
-      const maxHeight = Math.min(window.innerHeight * 0.4, 300)
-      textarea.style.height = `${Math.min(textarea.scrollHeight, maxHeight)}px`
-    }
-  }
-
-  useEffect(() => {
-    adjustTextareaHeight()
-  }, [promptInput])
-
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
@@ -142,7 +128,6 @@ export function PracticeChatInterface({
         juryResponse: data.jury_response,
       }
       setPendingRound(prev => (prev ? [...prev, newAgentMessage] : [newAgentMessage]))
-      playSpeech(newAgentMessage.content)
       if (data.success) toast.success('Sentinel breached — attack succeeded!')
       // Pull the feed forward so the optimistic round resolves to server truth.
       refetchFeed()
@@ -164,11 +149,11 @@ export function PracticeChatInterface({
       />
 
       {/* Terminal-style Tabs */}
-      <div className="flex h-12 shrink-0 items-center border-b border-[var(--color-border-strong)] px-6 lg:px-8">
+      <div className="chat-toolbar">
         <button
           onClick={() => setActiveTab('global')}
           className={clsx(
-            'industrial-header h-12 border-b-2 px-4 text-[11px] tracking-widest transition-colors',
+            'chat-toolbar-tab industrial-header',
             activeTab === 'global'
               ? 'border-white text-white'
               : 'border-transparent text-[var(--color-text-muted)] hover:text-white'
@@ -179,7 +164,7 @@ export function PracticeChatInterface({
         <button
           onClick={() => setActiveTab('mine')}
           className={clsx(
-            'industrial-header h-12 border-b-2 px-4 text-[11px] tracking-widest transition-colors',
+            'chat-toolbar-tab industrial-header',
             activeTab === 'mine'
               ? 'border-white text-white'
               : 'border-transparent text-[var(--color-text-muted)] hover:text-white'
@@ -187,32 +172,28 @@ export function PracticeChatInterface({
         >
           MY_ATTACKS
         </button>
-        {onToggleBriefing && (
+        {onOpenSentinelInfo && (
           <button
-            onClick={onToggleBriefing}
-            className="ml-auto flex items-center gap-1.5 border border-[var(--color-border-strong)] px-2.5 py-1 text-[var(--color-text-muted)] transition-colors hover:border-white hover:text-white lg:hidden"
-            title="Sentinel briefing"
+            type="button"
+            onClick={onOpenSentinelInfo}
+            className="chat-toolbar-action ml-auto"
+            title="Sentinel info"
           >
             <Info className="h-3 w-3" />
-            <span className="industrial-header text-[9px] tracking-widest">BRIEFING</span>
+            <span className="industrial-header text-[9px] tracking-widest">INFO</span>
           </button>
         )}
       </div>
 
       {/* Chat Feed */}
-      <div
-        ref={chatContainerRef}
-        className="terminal-scrollbar min-h-0 flex-1 space-y-10 overflow-y-auto p-6 lg:p-8"
-      >
+      <div ref={chatContainerRef} className="chat-feed terminal-scrollbar">
         {displayedMessages.length === 0 && (
           <div className="py-12 text-center">
-            <span className="industrial-header text-[10px] tracking-[8px] text-[var(--color-text-muted)] opacity-40">
-              AWAITING_INITIAL_PAYLOADS
-            </span>
+            <span className="chat-feed-notice industrial-header">AWAITING_INITIAL_PAYLOADS</span>
           </div>
         )}
 
-        <div className="mx-auto max-w-4xl space-y-10">
+        <div className="chat-feed-stack">
           <AnimatePresence>
             {displayedMessages.map((message, index) => {
               const isWinningUserPrompt =
@@ -249,7 +230,7 @@ export function PracticeChatInterface({
                     SENTINEL_PROCESSING...
                   </div>
                 </div>
-                <div className="border-hairline flex items-center gap-3 bg-[var(--color-bg-elevated)] p-6">
+                <div className="border-hairline flex items-center gap-3 bg-[var(--color-bg-elevated)] p-4 sm:p-6">
                   <Loader2 className="h-4 w-4 animate-spin text-[var(--color-text-muted)]" />
                   <span className="font-mono text-xs uppercase text-[var(--color-text-muted)]">
                     Analyzing breach attempt...
@@ -261,23 +242,21 @@ export function PracticeChatInterface({
         </div>
 
         {displayedMessages.length > 0 && !isSubmitting && (
-          <div className="border-y border-[var(--color-border-strong)] py-8 text-center">
-            <span className="industrial-header text-[10px] tracking-[8px] text-[var(--color-text-muted)] opacity-40">
-              AWAITING_NEW_PAYLOADS
-            </span>
+          <div className="border-y border-[var(--color-border-strong)] py-6 text-center sm:py-8">
+            <span className="chat-feed-notice industrial-header">AWAITING_NEW_PAYLOADS</span>
           </div>
         )}
       </div>
 
       {/* Input Area */}
-      <div className="border-t border-[var(--color-border-strong)] bg-[var(--color-bg-base)] px-4 py-3 lg:px-6 lg:py-4">
+      <div className="chat-composer">
         <form onSubmit={handleSubmit} className="mx-auto max-w-4xl space-y-2">
           <div className="border border-[var(--color-border-strong)] bg-[var(--color-bg-base)] transition-all focus-within:border-white">
             <textarea
               ref={textareaRef}
               value={promptInput}
               onChange={e => setPromptInput(e.target.value)}
-              className="terminal-scrollbar placeholder:text-[var(--color-text-muted)]/30 min-h-[56px] w-full resize-none border-0 bg-[var(--color-bg-base)] px-4 py-3 font-mono text-sm text-white focus:outline-none focus:ring-0"
+              className="chat-composer-input terminal-scrollbar"
               disabled={isSubmitting}
               placeholder="Craft your attack prompt here..."
               rows={1}
@@ -291,11 +270,11 @@ export function PracticeChatInterface({
                 }
               }}
             />
-            <div className="flex items-center justify-end border-t border-[var(--color-border-default)] px-3 py-2">
+            <div className="chat-composer-footer justify-end">
               <button
                 type="submit"
                 disabled={isSubmitting || promptInput.length === 0}
-                className="button-ghost-terminal flex items-center gap-2 px-4 py-1.5 text-[11px] disabled:cursor-not-allowed disabled:opacity-30"
+                className="chat-submit-button button-ghost-terminal"
               >
                 {isSubmitting ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -309,13 +288,7 @@ export function PracticeChatInterface({
             </div>
           </div>
 
-          {submitError && (
-            <div className="border-[var(--color-danger)]/30 border bg-[var(--color-danger-muted)] px-3 py-2">
-              <span className="font-mono text-[11px] uppercase text-[var(--color-danger)]">
-                {submitError}
-              </span>
-            </div>
-          )}
+          {submitError && <p className="chat-error-banner">{submitError}</p>}
         </form>
       </div>
     </div>

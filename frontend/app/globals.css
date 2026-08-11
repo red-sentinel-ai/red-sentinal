@@ -189,7 +189,7 @@
   }
 
   .attack-stat-cell {
-    @apply relative min-h-[84px] bg-[var(--color-bg-base)] p-4 md:min-h-[126px] md:p-8;
+    @apply relative min-h-[72px] bg-[var(--color-bg-base)] p-3 md:min-h-[126px] md:p-8;
     @apply last:col-span-2 lg:last:col-span-1;
   }
 
@@ -247,9 +247,67 @@
     color: var(--color-accent);
   }
 
+  /*
+   * Chat workspace shell — shared by the attack, casual and practice chat screens.
+   * Every size here is mobile-first: compact on phones, roomier from `sm` up. Change
+   * the chat's density in this block, not in the individual chat components.
+   */
+  .chat-toolbar {
+    @apply flex h-11 shrink-0 items-center border-b border-[var(--color-border-strong)] px-3 sm:h-12 sm:px-6 lg:px-8;
+  }
+
+  .chat-toolbar-tab {
+    @apply h-11 shrink-0 border-b-2 px-2.5 text-[10px] tracking-widest transition-colors sm:h-12 sm:px-4 sm:text-[11px];
+  }
+
+  /* Small bordered control that sits at the end of the toolbar (focus, briefing, …) */
+  .chat-toolbar-action {
+    @apply flex shrink-0 items-center gap-1.5 border border-[var(--color-border-strong)] px-2 py-1 text-[var(--color-text-muted)] transition-colors hover:border-white hover:text-white sm:px-2.5;
+  }
+
+  .chat-feed {
+    @apply min-h-0 flex-1 space-y-6 overflow-y-auto p-3 sm:space-y-10 sm:p-6 lg:p-8;
+  }
+
+  .chat-feed-stack {
+    @apply mx-auto max-w-4xl space-y-6 sm:space-y-10;
+  }
+
+  /* "AWAITING_NEW_PAYLOADS"-style placeholder text between rounds */
+  .chat-feed-notice {
+    @apply text-[10px] tracking-[4px] text-[var(--color-text-muted)] opacity-40 sm:tracking-[8px];
+  }
+
+  .chat-composer {
+    @apply shrink-0 border-t border-[var(--color-border-strong)] bg-[var(--color-bg-base)] px-3 py-2 sm:px-4 sm:py-3 lg:px-6 lg:py-4;
+  }
+
+  .chat-composer-input {
+    @apply min-h-[48px] w-full resize-none border-0 bg-[var(--color-bg-base)] px-3 py-2.5 font-mono text-[13px] text-white focus:outline-none focus:ring-0 sm:min-h-[56px] sm:px-4 sm:py-3 sm:text-sm;
+  }
+
+  .chat-composer-input::placeholder {
+    color: var(--color-text-faint);
+  }
+
+  .chat-composer-footer {
+    @apply flex items-center gap-3 border-t border-[var(--color-border-default)] px-3 py-2 sm:gap-4;
+  }
+
+  .chat-submit-button {
+    @apply flex items-center gap-2 px-3 py-1.5 text-[10px] disabled:cursor-not-allowed disabled:opacity-30 sm:px-4 sm:text-[11px];
+  }
+
+  .chat-error-banner {
+    @apply bg-[var(--color-danger-muted)] px-3 py-2 font-mono text-[11px] uppercase text-[var(--color-danger)];
+    /* Tailwind can't apply an opacity modifier to an arbitrary var() colour, so the
+       translucent border is mixed here instead of via `border-[…]/30`. */
+    border: 1px solid color-mix(in srgb, var(--color-danger) 30%, transparent);
+  }
+
   /* Markdown content rendered from LLM output */
   .markdown-content {
-    @apply font-mono text-sm leading-relaxed text-white/80;
+    @apply font-mono text-[13px] leading-relaxed text-white/80 sm:text-sm;
   }
   .markdown-content p {
     @apply mb-3 last:mb-0;
@@ -791,6 +849,22 @@ body::-webkit-scrollbar-thumb:hover {
   border-color: var(--color-text-primary) !important;
   background: var(--color-text-primary) !important;
   color: var(--color-bg-deepest) !important;
+}
+
+/*
+ * dapp-kit stamps `data-dapp-kit` on its own Connect Wallet button and ships a reset
+ * (`[data-dapp-kit] :where(*)`) that restyles every descendant with its own theme —
+ * including a near-black body colour under `lightTheme`. The Sui button's label lives
+ * in a nested <span>, so without this it renders black-on-black while the EVM and
+ * Solana buttons (plain <button>s) look correct. Descendants inherit from the button.
+ */
+.rs-connect-button * {
+  color: inherit !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  letter-spacing: inherit !important;
+  line-height: inherit !important;
 }
 
 /* ========================================

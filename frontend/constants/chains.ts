@@ -1,16 +1,24 @@
 import { APP_NETWORK } from './shared'
 
 // Every chain the codebase knows about — drives the SupportedChain type.
-export const ALL_CHAINS = ['sui', 'solana', 'bnb', 'bot', 'arb'] as const
+export const ALL_CHAINS = ['sui', 'solana', 'bnb', 'bot', 'arb', 'monad'] as const
 export type SupportedChain = (typeof ALL_CHAINS)[number]
 
 export type ChainFamily = 'sui' | 'solana' | 'evm'
 
-// Chains actually shown/selectable in the UI. Arbitrum-only mode locks this to
-// just Arbitrum (for a chain-specific deployment); otherwise the full set.
-// Note: 'arb' is intentionally absent from the default list — it's surfaced only
-// when ARBITRUM_ONLY is enabled.
-export const SUPPORTED_CHAINS: readonly SupportedChain[] = ['sui', 'solana', 'bnb', 'bot', 'arb']
+// Chains actually shown/selectable in the UI — ChainSwitcher, ChainFilterDropdown,
+// ChainLogos, AgentListView and the active-chain default all iterate this list,
+// so adding an entry here is what makes a chain user-visible. Keep it a subset of ALL_CHAINS:
+// a chain can be wired up (types, explorer links, indexed agents) without being
+// selectable yet by leaving it out.
+export const SUPPORTED_CHAINS: readonly SupportedChain[] = [
+  'sui',
+  'solana',
+  'bnb',
+  'bot',
+  'arb',
+  'monad',
+]
 
 export type ChainConfig = {
   id: SupportedChain
@@ -80,6 +88,17 @@ export const CHAINS = {
     rounded: true,
     iconFilterClass: '',
   },
+  monad: {
+    id: 'monad' as const,
+    family: 'evm' as const,
+    name: 'Monad',
+    icon: '/chain-logos/mon.webp',
+    logo: '/chain-logos/mon.webp',
+    active: true,
+    nativeToken: 'MON',
+    rounded: true,
+    iconFilterClass: '',
+  },
 } satisfies Record<SupportedChain, ChainConfig>
 
 export const EVM_CHAINS: SupportedChain[] = Object.values(CHAINS)
@@ -100,11 +119,11 @@ export function isSolanaChain(chain: SupportedChain | undefined): boolean {
 
 export const ACTIVE_CHAIN_STORAGE_KEY = 'ss-active-chain'
 
-export type EvmChainKey = 'bnb' | 'bot' | 'arb'
+export type EvmChainKey = 'bnb' | 'bot' | 'arb' | 'monad'
 
 export const EVM_CHAIN_IDS = {
-  testnet: { bnb: 97, bot: 968, arb: 421614 },
-  mainnet: { bnb: 56, bot: 677, arb: 42161 },
+  testnet: { bnb: 97, bot: 968, arb: 421614, monad: 10143 },
+  mainnet: { bnb: 56, bot: 677, arb: 42161, monad: 143 },
 } as const satisfies Record<'testnet' | 'mainnet', Record<EvmChainKey, number>>
 
 export type EvmChainId = (typeof EVM_CHAIN_IDS)['testnet' | 'mainnet'][EvmChainKey]

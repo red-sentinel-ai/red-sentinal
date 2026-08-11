@@ -32,6 +32,7 @@ export function useAttackFeedMessages(
         timestamp: ts,
         isSuccess: item.success ?? undefined,
         score: item.score ?? undefined,
+        walrusBlobId: item.walrus_blob_id ?? undefined,
         juryResponse: item.jury_response ?? undefined,
       })
     }
