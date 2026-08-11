@@ -246,8 +246,8 @@ sui-sentinel/
 1. First Do aws configure with `aws configure`
 
 ```
-AWS_ACCESS_KEY_ID=AKIAV3HCVN2UW2GJZYBL
-AWS_SECRET_ACCESS_KEY=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
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
 ```
 
 2. Generate temporary `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_SESSION_TOKEN` using
@@ -273,7 +273,7 @@ aws sts get-session-token \
 ```
 export KEY_PAIR=MyEC2KeyPair
 export AWS_ACCESS_KEY_ID=
-export AWS_SECRET_ACCESS_KEY=ahLojLR9PBOgNljQIv/
+export AWS_SECRET_ACCESS_KEY=
 export AWS_SESSION_TOKEN=""
 ```
 
