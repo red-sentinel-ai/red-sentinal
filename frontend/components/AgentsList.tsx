@@ -8,7 +8,7 @@ import type { Agent, SortField, SortDirection } from '@/types/agents'
 import { getTokenForCoinType } from '@/constants/tokens'
 import { CHAINS } from '@/constants/chains'
 import { TokenAmount } from './ui/common/TokenAmount'
-import { cn } from '@/lib/utils'
+import { cn, formatSentinelId, truncateText } from '@/lib/utils'
 import { getSentinelStatus, SENTINEL_STATUS_META } from '@/lib/sentinel-status'
 import Image from 'next/image'
 
@@ -17,6 +17,8 @@ export enum TabType {
   ActiveAgents = 'ACTIVE_AGENTS',
   TopAttackers = 'TOP_ATTACKERS',
 }
+
+const MOBILE_NAME_MAX_CHARS = 13
 
 interface AgentsListProps {
   agents: Agent[]
@@ -34,13 +36,6 @@ export const AgentsList = ({
   onSort,
 }: AgentsListProps) => {
   const router = useRouter()
-
-  const formatSerial = (value?: string | number | null) => {
-    if (!value) return 'UNKNOWN'
-    const serial = String(value)
-    if (serial.length <= 12) return serial
-    return `${serial.slice(0, 6)}...${serial.slice(-3)}`
-  }
 
   const SortIcon = ({ field }: { field: SortField }) => {
     if (sortField !== field) {
@@ -119,10 +114,10 @@ export const AgentsList = ({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.15 }}
-                    className="font-body cursor-pointer border-b border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] p-4 text-sm transition-colors last:border-b-0 hover:bg-white/[0.04] md:px-8 md:py-6"
+                    className="font-body cursor-pointer border-b border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] p-3 text-sm transition-colors last:border-b-0 hover:bg-white/[0.04] md:px-8 md:py-6"
                     onClick={() => router.push(`/attack/${agent.agent_path}`)}
                   >
-                    <div className="space-y-3 md:hidden">
+                    <div className="space-y-2.5 md:hidden">
                       <div className="flex items-center justify-between">
                         <div className="flex min-w-0 flex-1 items-center gap-2">
                           <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden border border-[var(--color-border-default)] bg-[var(--color-bg-base)]">
@@ -141,8 +136,11 @@ export const AgentsList = ({
                             )}
                           </span>
                           <div className="flex min-w-0 flex-1 items-center gap-1.5">
-                            <span className="min-w-0 truncate font-bold uppercase text-[var(--color-text-primary)]">
-                              {agent.agent_name}
+                            <span
+                              className="min-w-0 truncate font-bold uppercase text-[var(--color-text-primary)]"
+                              title={agent.agent_name ?? undefined}
+                            >
+                              {truncateText(agent.agent_name ?? '', MOBILE_NAME_MAX_CHARS)}
                             </span>
                             <Image
                               src={chainData.icon}
@@ -175,8 +173,8 @@ export const AgentsList = ({
                           {statusMeta.actionLabel}
                         </button>
                       </div>
-                      <p className="font-body pl-10 text-[9px] uppercase tracking-[0.08em] text-[var(--color-text-faint)]">
-                        SERIAL: {formatSerial(agent.agent_object_id || agent.agent_id)}
+                      <p className="font-body text-[9px] uppercase tracking-[0.08em] text-[var(--color-text-faint)]">
+                        ID: {formatSentinelId(agent.agent_id)}
                       </p>
                       <div className="grid grid-cols-2 gap-2 text-sm">
                         <div>
@@ -272,7 +270,7 @@ export const AgentsList = ({
                             )}
                           </div>
                           <span className="font-body text-[8px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-faint)]">
-                            SERIAL: {formatSerial(agent.agent_object_id || agent.agent_id)}
+                            ID: {formatSentinelId(agent.agent_id)}
                           </span>
                         </div>
                       </div>

@@ -1,5 +1,10 @@
 import { useState } from 'react'
-import { PROVIDER_MODELS, SYSTEM_PROMPT_MAX_TOKENS, type SupportedToken } from '@/constants'
+import {
+  MINIMUM_FEE_PER_MESSAGE,
+  PROVIDER_MODELS,
+  SYSTEM_PROMPT_MAX_TOKENS,
+  type SupportedToken,
+} from '@/constants'
 
 export const BEDROCK_PROVIDER = 'amazon bedrock'
 export const DEFAULT_PROVIDER = BEDROCK_PROVIDER
@@ -119,8 +124,8 @@ export function useDefendForm({
     const minimumAmount = activeMinimumAmount ?? selectedToken.minimumAmount
 
     const fee = parseFloat(formData.feePerMessage)
-    if (isNaN(fee) || fee < 0.001) {
-      newErrors.feePerMessage = `Fee must be at least 0.1 ${tokenSymbol}`
+    if (isNaN(fee) || fee < MINIMUM_FEE_PER_MESSAGE) {
+      newErrors.feePerMessage = `Fee must be at least ${MINIMUM_FEE_PER_MESSAGE} ${tokenSymbol}`
     }
 
     const balance = parseFloat(formData.initialBalance)

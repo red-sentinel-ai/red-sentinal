@@ -49,8 +49,14 @@ export interface ToolConfig {
 
 export interface LiveToolMeta {
   tool_id: string
+  provider: string
   name: string
   description: string
+}
+
+export interface LiveToolProviderGroup {
+  provider: string
+  tools: LiveToolMeta[]
 }
 
 /** Composed sandbox configuration: which templates and their seeded state. */

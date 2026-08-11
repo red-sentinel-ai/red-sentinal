@@ -98,6 +98,16 @@ export const truncateAddress = (addr: string) => {
   return addr.slice(0, 6) + '...' + addr.slice(-6)
 }
 
+export const truncateText = (text: string, maxLength: number) => {
+  return text.length > maxLength ? `${text.slice(0, maxLength)}…` : text
+}
+
+export const formatSentinelId = (sentinelId?: string | number | null) => {
+  return sentinelId === null || sentinelId === undefined || sentinelId === ''
+    ? 'UNKNOWN'
+    : String(sentinelId)
+}
+
 /**
  * Format a uint256 wei string (or bigint) to a locale-formatted human number
  * with thousands separators. Returns '0.00' on any parse failure so callers

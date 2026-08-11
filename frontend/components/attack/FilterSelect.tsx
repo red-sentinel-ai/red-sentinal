@@ -42,11 +42,11 @@ export const FilterSelect = ({
       <DropdownMenuTrigger
         aria-label={label}
         className={cn(
-          'font-body flex h-12 items-center gap-2 bg-[var(--color-bg-base)] px-4 text-[10px] font-extrabold uppercase tracking-[0.1em] text-white transition-colors focus:outline-none focus-visible:bg-[var(--color-bg-subtle)] data-[state=open]:bg-[var(--color-bg-subtle)]',
+          'font-body flex h-11 items-center gap-1.5 bg-[var(--color-bg-base)] px-2.5 text-[9px] font-extrabold uppercase tracking-[0.1em] text-white transition-colors focus:outline-none focus-visible:bg-[var(--color-bg-subtle)] data-[state=open]:bg-[var(--color-bg-subtle)] md:h-12 md:gap-2 md:px-4 md:text-[10px]',
           className
         )}
       >
-        <Icon className="size-[18px] shrink-0 text-[var(--color-text-muted)]" />
+        <Icon className="size-4 shrink-0 text-[var(--color-text-muted)] md:size-[18px]" />
         {selectedOption?.iconSrc && (
           <Image
             src={selectedOption.iconSrc}
@@ -56,7 +56,7 @@ export const FilterSelect = ({
             className={cn('shrink-0 rounded-full', selectedOption.iconClassName)}
           />
         )}
-        <span className="flex-1 text-left">{selectedOption?.label}</span>
+        <span className="min-w-0 flex-1 truncate text-left">{selectedOption?.label}</span>
         <ChevronDown className="size-3.5 shrink-0 text-[var(--color-text-muted)]" />
       </DropdownMenuTrigger>
 

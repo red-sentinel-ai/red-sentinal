@@ -12,13 +12,13 @@ import { ConnectModal } from '@mysten/dapp-kit'
 import { ATTACK_PROMPT_MAX_TOKENS } from '@/constants'
 import { getTokenForCoinType } from '@/constants/tokens'
 import { generateAvatarUrl } from '@/lib/utils'
-import { playSpeech } from '@/lib/speech-playback'
 import type { SupportedChain } from '@/constants/chains'
 import { truncateAddress } from '@/lib/utils'
 import type { ConsumePromptApiResponse } from '@/types'
 import type { ChatEvent } from '@/hooks/agents/useAgentChatHistory'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { useTokenCount } from '@/hooks/useTokenCount'
+import { useAutoResizingTextarea } from '@/hooks/useAutoResizingTextarea'
 import type { Agent } from '@/types/agents'
 import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
 import { ChainMismatchBanner } from '@/components/ui/common/ChainMismatchBanner'
@@ -35,6 +35,7 @@ export interface ChatMessage {
   isSuccess?: boolean
   score?: number
   txDigest?: string
+  walrusBlobId?: string
   amountWon?: string
   winner?: string
   sender?: string
@@ -69,7 +70,7 @@ export default function ChatInterface({
   const [pendingRound, setPendingRound] = useState<ChatMessage[] | null>(null)
   const [activeTab, setActiveTab] = useState<'global' | 'mine'>('global')
   const chatContainerRef = useRef<HTMLDivElement>(null)
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const textareaRef = useAutoResizingTextarea(promptInput)
   const { address: connectedAddress } = useConnectedAddress()
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
   const { isFocusMode, enableFocusMode } = useFocusMode()
@@ -103,6 +104,7 @@ export default function ChatInterface({
         isSuccess: event.success,
         score: event.score,
         txDigest: event.tx_digest,
+        walrusBlobId: event.walrus_blob_id ?? undefined,
         juryResponse: event.jury_response ?? undefined,
       })
     }
@@ -192,19 +194,6 @@ export default function ChatInterface({
     return filtered
   }, [orderedMessages, activeTab, connectedAddress])
 
-  const adjustTextareaHeight = () => {
-    const textarea = textareaRef.current
-    if (textarea) {
-      textarea.style.height = 'auto'
-      const maxHeight = Math.min(window.innerHeight * 0.4, 300)
-      textarea.style.height = `${Math.min(textarea.scrollHeight, maxHeight)}px`
-    }
-  }
-
-  useEffect(() => {
-    adjustTextareaHeight()
-  }, [promptInput])
-
   useEffect(() => {
     if (apiResponse) {
       const newAgentMessage: ChatMessage = {
@@ -217,7 +206,6 @@ export default function ChatInterface({
         juryResponse: apiResponse.response.data.jury_response,
       }
       setPendingRound(prev => (prev ? [...prev, newAgentMessage] : [newAgentMessage]))
-      playSpeech(newAgentMessage.content)
       refetchAgent()
     }
   }, [apiResponse, refetchAgent])
@@ -264,11 +252,11 @@ export default function ChatInterface({
       />
 
       {/* Terminal-style Tabs */}
-      <div className="flex h-12 shrink-0 items-center border-b border-[var(--color-border-strong)] px-6 lg:px-8">
+      <div className="chat-toolbar">
         <button
           onClick={() => setActiveTab('global')}
           className={clsx(
-            'industrial-header h-12 border-b-2 px-4 text-[11px] tracking-widest transition-colors',
+            'chat-toolbar-tab industrial-header',
             activeTab === 'global'
               ? 'border-white text-white'
               : 'border-transparent text-[var(--color-text-muted)] hover:text-white'
@@ -279,7 +267,7 @@ export default function ChatInterface({
         <button
           onClick={() => setActiveTab('mine')}
           className={clsx(
-            'industrial-header h-12 border-b-2 px-4 text-[11px] tracking-widest transition-colors',
+            'chat-toolbar-tab industrial-header',
             activeTab === 'mine'
               ? 'border-white text-white'
               : 'border-transparent text-[var(--color-text-muted)] hover:text-white'
@@ -287,34 +275,27 @@ export default function ChatInterface({
         >
           MY_ATTACKS
         </button>
-        <div className="ml-auto flex items-center gap-4">
-          {!isFocusMode && (
-            <button
-              onClick={enableFocusMode}
-              className="flex items-center gap-1.5 border border-[var(--color-border-strong)] px-2.5 py-1 text-[var(--color-text-muted)] transition-colors hover:border-white hover:text-white"
-              title="Enter focus mode"
-            >
-              <Maximize2 className="h-3 w-3" />
-              <span className="industrial-header text-[9px] tracking-widest">FOCUS</span>
-            </button>
-          )}
-        </div>
+        {!isFocusMode && (
+          <button
+            onClick={enableFocusMode}
+            className="chat-toolbar-action ml-auto"
+            title="Enter focus mode"
+          >
+            <Maximize2 className="h-3 w-3" />
+            <span className="industrial-header text-[9px] tracking-widest">FOCUS</span>
+          </button>
+        )}
       </div>
 
       {/* Chat Feed */}
-      <div
-        ref={chatContainerRef}
-        className="terminal-scrollbar min-h-0 flex-1 space-y-10 overflow-y-auto p-6 lg:p-8"
-      >
+      <div ref={chatContainerRef} className="chat-feed terminal-scrollbar">
         {displayedMessages.length === 0 && !eventsLoading && (
           <div className="py-12 text-center">
-            <span className="industrial-header text-[10px] tracking-[8px] text-[var(--color-text-muted)] opacity-40">
-              AWAITING_INITIAL_PAYLOADS
-            </span>
+            <span className="chat-feed-notice industrial-header">AWAITING_INITIAL_PAYLOADS</span>
           </div>
         )}
 
-        <div className="mx-auto max-w-4xl space-y-10">
+        <div className="chat-feed-stack">
           <AnimatePresence>
             {displayedMessages.map((message, index) => {
               const isWinningUserPrompt =
@@ -351,7 +332,7 @@ export default function ChatInterface({
                     SENTINEL_PROCESSING...
                   </div>
                 </div>
-                <div className="border-hairline flex items-center gap-3 bg-[var(--color-bg-elevated)] p-6">
+                <div className="border-hairline flex items-center gap-3 bg-[var(--color-bg-elevated)] p-4 sm:p-6">
                   <Loader2 className="h-4 w-4 animate-spin text-[var(--color-text-muted)]" />
                   <span className="font-mono text-xs uppercase text-[var(--color-text-muted)]">
                     Analyzing breach attempt...
@@ -364,10 +345,8 @@ export default function ChatInterface({
 
         {/* Awaiting Status */}
         {displayedMessages.length > 0 && !isSubmitting && !isAgentDrained && (
-          <div className="border-y border-[var(--color-border-strong)] py-8 text-center">
-            <span className="industrial-header text-[10px] tracking-[8px] text-[var(--color-text-muted)] opacity-40">
-              AWAITING_NEW_PAYLOADS
-            </span>
+          <div className="border-y border-[var(--color-border-strong)] py-6 text-center sm:py-8">
+            <span className="chat-feed-notice industrial-header">AWAITING_NEW_PAYLOADS</span>
           </div>
         )}
       </div>
@@ -376,7 +355,7 @@ export default function ChatInterface({
       {chainMismatch ? (
         <ChainMismatchBanner agentChain={chainMismatch} />
       ) : isAttackPaused && !isAgentDrained ? (
-        <div className="border-t border-[var(--color-border-strong)] bg-[var(--color-bg-base)] p-6">
+        <div className="shrink-0 border-t border-[var(--color-border-strong)] bg-[var(--color-bg-base)] p-4 sm:p-6">
           <div className="mx-auto max-w-4xl text-center">
             <h3 className="industrial-header text-accent text-sm">ATTACKS_PAUSED</h3>
             <p className="mt-2 font-mono text-[11px] uppercase text-[var(--color-text-muted)]">
@@ -386,7 +365,7 @@ export default function ChatInterface({
           </div>
         </div>
       ) : isAgentDrained ? (
-        <div className="border-t border-[var(--color-border-strong)] bg-[var(--color-bg-base)] p-6">
+        <div className="shrink-0 border-t border-[var(--color-border-strong)] bg-[var(--color-bg-base)] p-4 sm:p-6">
           <div className="mx-auto max-w-4xl text-center">
             <h3 className="industrial-header text-sm text-[var(--color-danger)]">
               SENTINEL_COMPROMISED
@@ -396,7 +375,7 @@ export default function ChatInterface({
             </p>
 
             {winnerInfo && (
-              <div className="mt-4 inline-flex items-center gap-6 border border-[var(--color-border-strong)] bg-[var(--color-bg-elevated)] px-6 py-3">
+              <div className="mt-4 inline-flex flex-wrap items-center justify-center gap-4 border border-[var(--color-border-strong)] bg-[var(--color-bg-elevated)] px-4 py-3 sm:gap-6 sm:px-6">
                 <div className="text-left">
                   <span className="industrial-header block text-[9px] text-[var(--color-text-muted)]">
                     WINNER
@@ -427,7 +406,7 @@ export default function ChatInterface({
           </div>
         </div>
       ) : (
-        <div className="border-t border-[var(--color-border-strong)] bg-[var(--color-bg-base)] px-4 py-3 lg:px-6 lg:py-4">
+        <div className="chat-composer">
           <form onSubmit={handleSubmit} className="mx-auto max-w-4xl space-y-2">
             <div className="border border-[var(--color-border-strong)] bg-[var(--color-bg-base)] transition-all focus-within:border-white">
               <textarea
@@ -437,7 +416,7 @@ export default function ChatInterface({
                   setPromptInput(e.target.value)
                   countTokens(e.target.value)
                 }}
-                className="terminal-scrollbar placeholder:text-[var(--color-text-muted)]/30 min-h-[56px] w-full resize-none border-0 bg-[var(--color-bg-base)] px-4 py-3 font-mono text-sm text-white focus:outline-none focus:ring-0"
+                className="chat-composer-input terminal-scrollbar"
                 disabled={isSubmitting}
                 placeholder="Craft your attack prompt here..."
                 rows={1}
@@ -451,7 +430,7 @@ export default function ChatInterface({
                   }
                 }}
               />
-              <div className="flex items-center justify-between border-t border-[var(--color-border-default)] px-3 py-2">
+              <div className="chat-composer-footer justify-between">
                 <div className="industrial-header text-[var(--color-text-muted)]/50 flex items-center gap-2 text-[9px] tracking-widest">
                   FEE:{' '}
                   <span className="text-[var(--color-text-muted)]">
@@ -463,7 +442,7 @@ export default function ChatInterface({
                     />
                   </span>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3 sm:gap-4">
                   <span
                     className={clsx(
                       'industrial-header text-[9px] tabular-nums tracking-widest',
@@ -483,7 +462,7 @@ export default function ChatInterface({
                       promptInput.length === 0 ||
                       tokenCount > ATTACK_PROMPT_MAX_TOKENS
                     }
-                    className="button-ghost-terminal flex items-center gap-2 px-4 py-1.5 text-[11px] disabled:cursor-not-allowed disabled:opacity-30"
+                    className="chat-submit-button button-ghost-terminal"
                   >
                     {isSubmitting ? (
                       <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -498,20 +477,10 @@ export default function ChatInterface({
               </div>
             </div>
 
-            {submitError && (
-              <div className="border-[var(--color-danger)]/30 border bg-[var(--color-danger-muted)] px-3 py-2">
-                <span className="font-mono text-[11px] uppercase text-[var(--color-danger)]">
-                  {submitError}
-                </span>
-              </div>
-            )}
+            {submitError && <p className="chat-error-banner">{submitError}</p>}
 
             {tokenCount > ATTACK_PROMPT_MAX_TOKENS && (
-              <div className="border-[var(--color-danger)]/30 border bg-[var(--color-danger-muted)] px-3 py-2">
-                <span className="font-mono text-[11px] uppercase text-[var(--color-danger)]">
-                  TOKEN_LIMIT_EXCEEDED
-                </span>
-              </div>
+              <p className="chat-error-banner">TOKEN_LIMIT_EXCEEDED</p>
             )}
           </form>
         </div>
