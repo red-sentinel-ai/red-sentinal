@@ -278,7 +278,7 @@ export AWS_SESSION_TOKEN=""
 ```
 
 4. Now run `sh configure_enclave.sh`. here for secrets, select existing ARN
-   value `arn:aws:secretsmanager:us-east-1:402054803113:secret:API_KEY-tSacqO`
+   value `arn:aws:secretsmanager:us-east-1:402054803113:secret:API_KEY-`
 5. SSH in your newly created VM using
 
 ```
