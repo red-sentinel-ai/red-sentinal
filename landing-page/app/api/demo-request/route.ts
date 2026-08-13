@@ -3,7 +3,7 @@ import { supabaseServiceClient } from '@/db/config/server'
 import { TablesInsert } from '@/lib/database.types'
 import { sendDemoRequestConfirmationEmail } from '@/lib/emailUtils'
 
-type DemoRequestInsert = TablesInsert<'ss_demo_requests'>
+type DemoRequestInsert = TablesInsert<{ schema: 'sentinel' }, 'ss_demo_requests'>
 
 export async function POST(request: Request) {
   try {

@@ -3,8 +3,8 @@ import { supabaseServiceClient } from '@/db/config/server'
 import { TablesInsert, TablesUpdate } from '@/lib/database.types'
 import { sendAmbassadorConfirmationEmail } from '@/lib/emailUtils'
 
-type AmbassadorInsert = TablesInsert<'ss_ambassador_applications'>
-type AmbassadorUpdate = TablesUpdate<'ss_ambassador_applications'>
+type AmbassadorInsert = TablesInsert<{ schema: 'sentinel' }, 'ss_ambassador_applications'>
+type AmbassadorUpdate = TablesUpdate<{ schema: 'sentinel' }, 'ss_ambassador_applications'>
 
 export async function POST(request: Request) {
   try {
