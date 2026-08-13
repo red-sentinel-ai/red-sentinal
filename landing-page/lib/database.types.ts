@@ -12,1302 +12,67 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "13.0.5"
   }
-  public: {
+  sentinel: {
     Tables: {
-      aztec_discord_server_collections: {
-        Row: {
-          collection_id: string
-          created_at: string | null
-          discord_server_id: string
-          id: string
-          role_id: string
-        }
-        Insert: {
-          collection_id: string
-          created_at?: string | null
-          discord_server_id: string
-          id?: string
-          role_id: string
-        }
-        Update: {
-          collection_id?: string
-          created_at?: string | null
-          discord_server_id?: string
-          id?: string
-          role_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "aztec_discord_server_collections_collection_id_fkey"
-            columns: ["collection_id"]
-            isOneToOne: false
-            referencedRelation: "aztec_nft_collections"
-            referencedColumns: ["collection_id"]
-          },
-        ]
-      }
-      aztec_discord_verifications: {
-        Row: {
-          discord_user_id: string
-          id: string
-          verified_at: string
-          wallet_address: string
-        }
-        Insert: {
-          discord_user_id: string
-          id?: string
-          verified_at?: string
-          wallet_address: string
-        }
-        Update: {
-          discord_user_id?: string
-          id?: string
-          verified_at?: string
-          wallet_address?: string
-        }
-        Relationships: []
-      }
-      aztec_nft_collections: {
-        Row: {
-          banner_url: string | null
-          base_image_url: string | null
-          collection_id: string
-          collection_type: string | null
-          contract_address: string | null
-          contract_artifact_hash: string | null
-          created_at: string | null
-          creator_address: string
-          description: string
-          environment: string | null
-          floor_price: number | null
-          id: string
-          image_url: string | null
-          is_featured: boolean
-          is_mint_public: boolean
-          launch_date: string | null
-          max_supply: number
-          mint_limit_per_wallet: number | null
-          mint_price: number
-          mint_start_date: number | null
-          name: string
-          owner_count: number | null
-          public_keys: string | null
-          rh_public_duration: number | null
-          rh_whitelist_duration: number | null
-          royalty_fee: number | null
-          salt: string | null
-          socials: Json
-          symbol: string
-          total_volume: number | null
-          trait_schema: Json | null
-          updated_at: string | null
-          voucher_amount: number | null
-          whitelist_mint_price: number | null
-          whitelist_mint_start_date: number | null
-          whitelisted_addresses: Json | null
-        }
-        Insert: {
-          banner_url?: string | null
-          base_image_url?: string | null
-          collection_id?: string
-          collection_type?: string | null
-          contract_address?: string | null
-          contract_artifact_hash?: string | null
-          created_at?: string | null
-          creator_address: string
-          description: string
-          environment?: string | null
-          floor_price?: number | null
-          id?: string
-          image_url?: string | null
-          is_featured?: boolean
-          is_mint_public?: boolean
-          launch_date?: string | null
-          max_supply: number
-          mint_limit_per_wallet?: number | null
-          mint_price: number
-          mint_start_date?: number | null
-          name: string
-          owner_count?: number | null
-          public_keys?: string | null
-          rh_public_duration?: number | null
-          rh_whitelist_duration?: number | null
-          royalty_fee?: number | null
-          salt?: string | null
-          socials?: Json
-          symbol: string
-          total_volume?: number | null
-          trait_schema?: Json | null
-          updated_at?: string | null
-          voucher_amount?: number | null
-          whitelist_mint_price?: number | null
-          whitelist_mint_start_date?: number | null
-          whitelisted_addresses?: Json | null
-        }
-        Update: {
-          banner_url?: string | null
-          base_image_url?: string | null
-          collection_id?: string
-          collection_type?: string | null
-          contract_address?: string | null
-          contract_artifact_hash?: string | null
-          created_at?: string | null
-          creator_address?: string
-          description?: string
-          environment?: string | null
-          floor_price?: number | null
-          id?: string
-          image_url?: string | null
-          is_featured?: boolean
-          is_mint_public?: boolean
-          launch_date?: string | null
-          max_supply?: number
-          mint_limit_per_wallet?: number | null
-          mint_price?: number
-          mint_start_date?: number | null
-          name?: string
-          owner_count?: number | null
-          public_keys?: string | null
-          rh_public_duration?: number | null
-          rh_whitelist_duration?: number | null
-          royalty_fee?: number | null
-          salt?: string | null
-          socials?: Json
-          symbol?: string
-          total_volume?: number | null
-          trait_schema?: Json | null
-          updated_at?: string | null
-          voucher_amount?: number | null
-          whitelist_mint_price?: number | null
-          whitelist_mint_start_date?: number | null
-          whitelisted_addresses?: Json | null
-        }
-        Relationships: []
-      }
-      aztec_nfts: {
-        Row: {
-          claim_txn_hash: string | null
-          collection_id: string
-          created_at: string | null
-          current_price: number | null
-          description: string | null
-          id: number
-          image_url: string
-          is_listed: boolean | null
-          last_sale_date: string | null
-          last_sale_price: number | null
-          mint_date: string | null
-          name: string
-          owner_address: string | null
-          token_id: number | null
-          token_uri: string | null
-          traits: Json | null
-          txn_hash: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          claim_txn_hash?: string | null
-          collection_id: string
-          created_at?: string | null
-          current_price?: number | null
-          description?: string | null
-          id?: never
-          image_url: string
-          is_listed?: boolean | null
-          last_sale_date?: string | null
-          last_sale_price?: number | null
-          mint_date?: string | null
-          name: string
-          owner_address?: string | null
-          token_id?: number | null
-          token_uri?: string | null
-          traits?: Json | null
-          txn_hash?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          claim_txn_hash?: string | null
-          collection_id?: string
-          created_at?: string | null
-          current_price?: number | null
-          description?: string | null
-          id?: never
-          image_url?: string
-          is_listed?: boolean | null
-          last_sale_date?: string | null
-          last_sale_price?: number | null
-          mint_date?: string | null
-          name?: string
-          owner_address?: string | null
-          token_id?: number | null
-          token_uri?: string | null
-          traits?: Json | null
-          txn_hash?: string | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "aztec_nfts_collection_id_fkey"
-            columns: ["collection_id"]
-            isOneToOne: false
-            referencedRelation: "aztec_nft_collections"
-            referencedColumns: ["collection_id"]
-          },
-        ]
-      }
-      aztec_transactions: {
-        Row: {
-          age: string
-          block_height: string | null
-          created_at: string
-          id: number
-          txn_hash: string
-          txn_status: string
-          txn_type: string
-        }
-        Insert: {
-          age: string
-          block_height?: string | null
-          created_at?: string
-          id?: number
-          txn_hash: string
-          txn_status: string
-          txn_type: string
-        }
-        Update: {
-          age?: string
-          block_height?: string | null
-          created_at?: string
-          id?: number
-          txn_hash?: string
-          txn_status?: string
-          txn_type?: string
-        }
-        Relationships: []
-      }
-      fitrace_signup_emails: {
-        Row: {
-          created_at: string
-          email: string | null
-          id: number
-          name: string | null
-        }
-        Insert: {
-          created_at?: string
-          email?: string | null
-          id?: number
-          name?: string | null
-        }
-        Update: {
-          created_at?: string
-          email?: string | null
-          id?: number
-          name?: string | null
-        }
-        Relationships: []
-      }
-      game_scores: {
-        Row: {
-          competition_key: string
-          created_at: string
-          game_id: number
-          id: number
-          score: number
-          updated_at: string | null
-          wallet_address: string
-        }
-        Insert: {
-          competition_key: string
-          created_at?: string
-          game_id: number
-          id?: number
-          score: number
-          updated_at?: string | null
-          wallet_address: string
-        }
-        Update: {
-          competition_key?: string
-          created_at?: string
-          game_id?: number
-          id?: number
-          score?: number
-          updated_at?: string | null
-          wallet_address?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "game_scores_game_id_fkey"
-            columns: ["game_id"]
-            isOneToOne: true
-            referencedRelation: "transaction_logs"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      global_config: {
-        Row: {
-          config_values: Json
-          created_at: string
-          id: number
-          name: string | null
-        }
-        Insert: {
-          config_values: Json
-          created_at?: string
-          id?: number
-          name?: string | null
-        }
-        Update: {
-          config_values?: Json
-          created_at?: string
-          id?: number
-          name?: string | null
-        }
-        Relationships: []
-      }
-      minapunks_nfts: {
-        Row: {
-          category: string
-          created_at: string
-          id: number
-          img_url: string
-          is_public_mint: boolean
-          name: string
-          nft_id: number | null
-          owner_address: string | null
-          price: number
-          traits: Json | null
-          txn_hash: string | null
-        }
-        Insert: {
-          category: string
-          created_at?: string
-          id?: number
-          img_url: string
-          is_public_mint?: boolean
-          name: string
-          nft_id?: number | null
-          owner_address?: string | null
-          price: number
-          traits?: Json | null
-          txn_hash?: string | null
-        }
-        Update: {
-          category?: string
-          created_at?: string
-          id?: number
-          img_url?: string
-          is_public_mint?: boolean
-          name?: string
-          nft_id?: number | null
-          owner_address?: string | null
-          price?: number
-          traits?: Json | null
-          txn_hash?: string | null
-        }
-        Relationships: []
-      }
-      minaty_nfts: {
-        Row: {
-          category: Database["public"]["Enums"]["nft_category"]
-          created_at: string
-          description: string | null
-          id: number
-          img_url: string
-          is_public_mint: boolean
-          name: string
-          nft_id: number | null
-          owner_address: string | null
-          price: number
-          traits: Json | null
-          txn_hash: string | null
-        }
-        Insert: {
-          category: Database["public"]["Enums"]["nft_category"]
-          created_at?: string
-          description?: string | null
-          id?: number
-          img_url: string
-          is_public_mint?: boolean
-          name: string
-          nft_id?: number | null
-          owner_address?: string | null
-          price: number
-          traits?: Json | null
-          txn_hash?: string | null
-        }
-        Update: {
-          category?: Database["public"]["Enums"]["nft_category"]
-          created_at?: string
-          description?: string | null
-          id?: number
-          img_url?: string
-          is_public_mint?: boolean
-          name?: string
-          nft_id?: number | null
-          owner_address?: string | null
-          price?: number
-          traits?: Json | null
-          txn_hash?: string | null
-        }
-        Relationships: []
-      }
-      nonce_counters: {
-        Row: {
-          counter: number | null
-          id: number
-          last_updated: string | null
-          wallet_address: string
-        }
-        Insert: {
-          counter?: number | null
-          id?: number
-          last_updated?: string | null
-          wallet_address: string
-        }
-        Update: {
-          counter?: number | null
-          id?: number
-          last_updated?: string | null
-          wallet_address?: string
-        }
-        Relationships: []
-      }
-      places: {
-        Row: {
-          address: string
-          category: string
-          created_at: string | null
-          description: string
-          id: string
-          image_url: string | null
-          latitude: number
-          longitude: number
-          name: string
-          place_id: string
-        }
-        Insert: {
-          address: string
-          category: string
-          created_at?: string | null
-          description: string
-          id?: string
-          image_url?: string | null
-          latitude: number
-          longitude: number
-          name: string
-          place_id: string
-        }
-        Update: {
-          address?: string
-          category?: string
-          created_at?: string | null
-          description?: string
-          id?: string
-          image_url?: string | null
-          latitude?: number
-          longitude?: number
-          name?: string
-          place_id?: string
-        }
-        Relationships: []
-      }
-      player_profile: {
-        Row: {
-          avatar_url: string | null
-          created_at: string
-          discord_username: Json
-          email_address: Json
-          followers: string[]
-          following: string[]
-          fullname: string | null
-          id: number
-          telegram_username: Json
-          total_rewards: number
-          twitter_username: Json
-          username: string
-          wallet_address: string
-        }
-        Insert: {
-          avatar_url?: string | null
-          created_at?: string
-          discord_username?: Json
-          email_address?: Json
-          followers?: string[]
-          following?: string[]
-          fullname?: string | null
-          id?: number
-          telegram_username?: Json
-          total_rewards?: number
-          twitter_username?: Json
-          username: string
-          wallet_address: string
-        }
-        Update: {
-          avatar_url?: string | null
-          created_at?: string
-          discord_username?: Json
-          email_address?: Json
-          followers?: string[]
-          following?: string[]
-          fullname?: string | null
-          id?: number
-          telegram_username?: Json
-          total_rewards?: number
-          twitter_username?: Json
-          username?: string
-          wallet_address?: string
-        }
-        Relationships: []
-      }
-      pvp_challenge_participants: {
-        Row: {
-          challenge_id: number
-          created_at: string
-          has_played: boolean
-          id: number
-          joined_at: string
-          played_at: string | null
-          score: number | null
-          txn_hash: string | null
-          txn_status: string | null
-          wallet_address: string
-        }
-        Insert: {
-          challenge_id: number
-          created_at?: string
-          has_played?: boolean
-          id?: number
-          joined_at?: string
-          played_at?: string | null
-          score?: number | null
-          txn_hash?: string | null
-          txn_status?: string | null
-          wallet_address: string
-        }
-        Update: {
-          challenge_id?: number
-          created_at?: string
-          has_played?: boolean
-          id?: number
-          joined_at?: string
-          played_at?: string | null
-          score?: number | null
-          txn_hash?: string | null
-          txn_status?: string | null
-          wallet_address?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "pvp_challenge_participants_challenge_id_fkey"
-            columns: ["challenge_id"]
-            isOneToOne: false
-            referencedRelation: "pvp_challenges"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      pvp_challenges: {
-        Row: {
-          created_at: string
-          created_by: string
-          end_time: string
-          entry_fee: number
-          id: number
-          invite_code: string
-          is_public: boolean
-          is_reward_sent: boolean
-          is_speed_challenge: boolean
-          max_participants: number
-          name: string
-          reward_txn_hash: string | null
-          speed_duration: number | null
-          updated_at: string | null
-        }
-        Insert: {
-          created_at?: string
-          created_by: string
-          end_time: string
-          entry_fee?: number
-          id?: number
-          invite_code: string
-          is_public?: boolean
-          is_reward_sent?: boolean
-          is_speed_challenge?: boolean
-          max_participants?: number
-          name: string
-          reward_txn_hash?: string | null
-          speed_duration?: number | null
-          updated_at?: string | null
-        }
-        Update: {
-          created_at?: string
-          created_by?: string
-          end_time?: string
-          entry_fee?: number
-          id?: number
-          invite_code?: string
-          is_public?: boolean
-          is_reward_sent?: boolean
-          is_speed_challenge?: boolean
-          max_participants?: number
-          name?: string
-          reward_txn_hash?: string | null
-          speed_duration?: number | null
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
-      raven_comments: {
-        Row: {
-          commenter_hash: string
-          confession_id: number | null
-          content: string
-          created_at: string | null
-          id: number
-        }
-        Insert: {
-          commenter_hash: string
-          confession_id?: number | null
-          content: string
-          created_at?: string | null
-          id?: never
-        }
-        Update: {
-          commenter_hash?: string
-          confession_id?: number | null
-          content?: string
-          created_at?: string | null
-          id?: never
-        }
-        Relationships: [
-          {
-            foreignKeyName: "raven_comments_confession_id_fkey"
-            columns: ["confession_id"]
-            isOneToOne: false
-            referencedRelation: "raven_confessions"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      raven_confessions: {
+      chat_messages: {
         Row: {
           content: string
           created_at: string | null
-          id: number
-          nullifier_hash: string
-          tips_count: number | null
-          title: string
-          total_tips_value: number | null
-          views_count: number | null
+          id: string
+          room_id: string | null
+          sender_address: string
+          sender_role: string | null
         }
         Insert: {
           content: string
           created_at?: string | null
-          id?: never
-          nullifier_hash: string
-          tips_count?: number | null
-          title: string
-          total_tips_value?: number | null
-          views_count?: number | null
+          id?: string
+          room_id?: string | null
+          sender_address: string
+          sender_role?: string | null
         }
         Update: {
           content?: string
           created_at?: string | null
-          id?: never
-          nullifier_hash?: string
-          tips_count?: number | null
-          title?: string
-          total_tips_value?: number | null
-          views_count?: number | null
-        }
-        Relationships: []
-      }
-      raven_likes: {
-        Row: {
-          confession_id: number | null
-          id: number
-          user_nullifier: string
-        }
-        Insert: {
-          confession_id?: number | null
-          id?: never
-          user_nullifier: string
-        }
-        Update: {
-          confession_id?: number | null
-          id?: never
-          user_nullifier?: string
+          id?: string
+          room_id?: string | null
+          sender_address?: string
+          sender_role?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "raven_likes_confession_id_fkey"
-            columns: ["confession_id"]
+            foreignKeyName: "chat_messages_room_id_fkey"
+            columns: ["room_id"]
             isOneToOne: false
-            referencedRelation: "raven_confessions"
+            referencedRelation: "chat_rooms"
             referencedColumns: ["id"]
           },
         ]
       }
-      reviews: {
+      chat_rooms: {
         Row: {
-          created_at: string | null
-          downvotes: number | null
-          id: string
-          location_proof: string
-          place_id: string
-          rating: number
-          review_text: string
-          upvotes: number | null
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          downvotes?: number | null
-          id?: string
-          location_proof: string
-          place_id: string
-          rating: number
-          review_text: string
-          upvotes?: number | null
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          downvotes?: number | null
-          id?: string
-          location_proof?: string
-          place_id?: string
-          rating?: number
-          review_text?: string
-          upvotes?: number | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "reviews_place_id_fkey"
-            columns: ["place_id"]
-            isOneToOne: false
-            referencedRelation: "places"
-            referencedColumns: ["place_id"]
-          },
-        ]
-      }
-      rh_bridge_transactions: {
-        Row: {
-          amount: string
-          claim_secret: string | null
-          created_at: string
-          id: number
-          is_private: boolean | null
-          l1_tx_hash: string | null
-          l2_tx_hash: string | null
-          message_leaf_index: string | null
-          recipient_address: string
-          status: Database["public"]["Enums"]["bridge_status"] | null
-          token_symbol: string
-          updated_at: string
-          user_address: string
-        }
-        Insert: {
-          amount: string
-          claim_secret?: string | null
-          created_at?: string
-          id?: number
-          is_private?: boolean | null
-          l1_tx_hash?: string | null
-          l2_tx_hash?: string | null
-          message_leaf_index?: string | null
-          recipient_address: string
-          status?: Database["public"]["Enums"]["bridge_status"] | null
-          token_symbol: string
-          updated_at?: string
-          user_address: string
-        }
-        Update: {
-          amount?: string
-          claim_secret?: string | null
-          created_at?: string
-          id?: number
-          is_private?: boolean | null
-          l1_tx_hash?: string | null
-          l2_tx_hash?: string | null
-          message_leaf_index?: string | null
-          recipient_address?: string
-          status?: Database["public"]["Enums"]["bridge_status"] | null
-          token_symbol?: string
-          updated_at?: string
-          user_address?: string
-        }
-        Relationships: []
-      }
-      rh_feature_requests: {
-        Row: {
-          collection_id: string
-          created_at: string | null
-          email: string
-          id: string
-          name: string
-          notes: string | null
-          telegram_username: string | null
-          twitter_username: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          collection_id: string
-          created_at?: string | null
-          email: string
-          id?: string
-          name: string
-          notes?: string | null
-          telegram_username?: string | null
-          twitter_username?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          collection_id?: string
-          created_at?: string | null
-          email?: string
-          id?: string
-          name?: string
-          notes?: string | null
-          telegram_username?: string | null
-          twitter_username?: string | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_feature_requests_collection_id"
-            columns: ["collection_id"]
-            isOneToOne: false
-            referencedRelation: "aztec_nft_collections"
-            referencedColumns: ["collection_id"]
-          },
-        ]
-      }
-      rh_nft_upload_tasks: {
-        Row: {
-          collection_id: string
-          created_at: string | null
-          file_path: string | null
-          id: string
-          public_url: string | null
-          status: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          collection_id: string
-          created_at?: string | null
-          file_path?: string | null
-          id?: string
-          public_url?: string | null
-          status?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          collection_id?: string
-          created_at?: string | null
-          file_path?: string | null
-          id?: string
-          public_url?: string | null
-          status?: string | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "rh_nft_upload_tasks_collection_id_fkey"
-            columns: ["collection_id"]
-            isOneToOne: false
-            referencedRelation: "aztec_nft_collections"
-            referencedColumns: ["collection_id"]
-          },
-        ]
-      }
-      rh_proposal_choices: {
-        Row: {
-          created_at: string
-          id: number
-          order_index: number
-          percentage: number
-          proposal_id: number
-          text: string
-          vote_count: number
-        }
-        Insert: {
-          created_at?: string
-          id?: never
-          order_index?: number
-          percentage?: number
-          proposal_id: number
-          text: string
-          vote_count?: number
-        }
-        Update: {
-          created_at?: string
-          id?: never
-          order_index?: number
-          percentage?: number
-          proposal_id?: number
-          text?: string
-          vote_count?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "rh_proposal_choices_proposal_id_fkey"
-            columns: ["proposal_id"]
-            isOneToOne: false
-            referencedRelation: "rh_proposals"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      rh_proposals: {
-        Row: {
-          author: string
-          created_at: string
-          description: string
-          eligibility_requirements: string[]
-          end_date: string
-          hide_vote_count: boolean
-          id: number
-          is_private_voting: boolean
-          start_date: string
-          status: string
-          title: string
-          updated_at: string
-          vote_count: number
-          vote_visibility: string
-        }
-        Insert: {
-          author: string
-          created_at?: string
-          description: string
-          eligibility_requirements?: string[]
-          end_date: string
-          hide_vote_count?: boolean
-          id?: never
-          is_private_voting?: boolean
-          start_date: string
-          status?: string
-          title: string
-          updated_at?: string
-          vote_count?: number
-          vote_visibility?: string
-        }
-        Update: {
-          author?: string
-          created_at?: string
-          description?: string
-          eligibility_requirements?: string[]
-          end_date?: string
-          hide_vote_count?: boolean
-          id?: never
-          is_private_voting?: boolean
-          start_date?: string
-          status?: string
-          title?: string
-          updated_at?: string
-          vote_count?: number
-          vote_visibility?: string
-        }
-        Relationships: []
-      }
-      rh_rewards_activity: {
-        Row: {
-          completed_at: string | null
-          id: string
-          metadata: Json | null
-          mission_type: string
-          points_earned: number
-          transaction_hash: string | null
-          user_id: string
-        }
-        Insert: {
-          completed_at?: string | null
-          id?: string
-          metadata?: Json | null
-          mission_type: string
-          points_earned: number
-          transaction_hash?: string | null
-          user_id: string
-        }
-        Update: {
-          completed_at?: string | null
-          id?: string
-          metadata?: Json | null
-          mission_type?: string
-          points_earned?: number
-          transaction_hash?: string | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_rh_rewards_activity_user_id"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "rh_rewards_leaderboard"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "fk_rh_rewards_activity_user_id"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "rh_users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      rh_social_connections: {
-        Row: {
-          connected_at: string | null
-          id: string
-          platform: string
-          platform_avatar_url: string | null
-          platform_user_id: string
-          platform_username: string
-          user_id: string | null
-        }
-        Insert: {
-          connected_at?: string | null
-          id?: string
-          platform: string
-          platform_avatar_url?: string | null
-          platform_user_id: string
-          platform_username: string
-          user_id?: string | null
-        }
-        Update: {
-          connected_at?: string | null
-          id?: string
-          platform?: string
-          platform_avatar_url?: string | null
-          platform_user_id?: string
-          platform_username?: string
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "rh_social_connections_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "rh_rewards_leaderboard"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "rh_social_connections_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "rh_users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      rh_users: {
-        Row: {
-          avatar_url: string | null
-          banner_url: string | null
-          citizenship_country: string | null
-          created_at: string | null
-          current_streak: number | null
-          display_name: string | null
-          email: string | null
-          id: string
-          is_public: boolean | null
-          is_verified_human: boolean | null
-          last_activity_date: string | null
-          lifetime_points: number | null
-          longest_streak: number | null
-          rewards_tier: string | null
-          rewards_updated_at: string | null
-          total_points: number | null
-          username: string | null
-          verification_data: Json | null
-          wallet_addresses: string[] | null
-          zk_passport_id: string | null
-        }
-        Insert: {
-          avatar_url?: string | null
-          banner_url?: string | null
-          citizenship_country?: string | null
-          created_at?: string | null
-          current_streak?: number | null
-          display_name?: string | null
-          email?: string | null
-          id?: string
-          is_public?: boolean | null
-          is_verified_human?: boolean | null
-          last_activity_date?: string | null
-          lifetime_points?: number | null
-          longest_streak?: number | null
-          rewards_tier?: string | null
-          rewards_updated_at?: string | null
-          total_points?: number | null
-          username?: string | null
-          verification_data?: Json | null
-          wallet_addresses?: string[] | null
-          zk_passport_id?: string | null
-        }
-        Update: {
-          avatar_url?: string | null
-          banner_url?: string | null
-          citizenship_country?: string | null
-          created_at?: string | null
-          current_streak?: number | null
-          display_name?: string | null
-          email?: string | null
-          id?: string
-          is_public?: boolean | null
-          is_verified_human?: boolean | null
-          last_activity_date?: string | null
-          lifetime_points?: number | null
-          longest_streak?: number | null
-          rewards_tier?: string | null
-          rewards_updated_at?: string | null
-          total_points?: number | null
-          username?: string | null
-          verification_data?: Json | null
-          wallet_addresses?: string[] | null
-          zk_passport_id?: string | null
-        }
-        Relationships: []
-      }
-      rh_votes: {
-        Row: {
-          choice_id: number
-          created_at: string
-          id: number
-          proposal_id: number
-          voter_address: string
-        }
-        Insert: {
-          choice_id: number
-          created_at?: string
-          id?: never
-          proposal_id: number
-          voter_address: string
-        }
-        Update: {
-          choice_id?: number
-          created_at?: string
-          id?: never
-          proposal_id?: number
-          voter_address?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "rh_votes_choice_id_fkey"
-            columns: ["choice_id"]
-            isOneToOne: false
-            referencedRelation: "rh_proposal_choices"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "rh_votes_proposal_id_fkey"
-            columns: ["proposal_id"]
-            isOneToOne: false
-            referencedRelation: "rh_proposals"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      rh_whitelist_addresses: {
-        Row: {
-          address: string
-          collection_id: string | null
+          agent_id: string
+          chain: string | null
           created_at: string | null
           id: string
-          identifier_hash: string | null
-          indices: string[]
-          is_active: boolean | null
-          root: string
-          siblings: string[]
-          whitelist_type: string | null
+          network: string | null
+          owner_address: string | null
         }
         Insert: {
-          address: string
-          collection_id?: string | null
+          agent_id: string
+          chain?: string | null
           created_at?: string | null
           id?: string
-          identifier_hash?: string | null
-          indices: string[]
-          is_active?: boolean | null
-          root: string
-          siblings: string[]
-          whitelist_type?: string | null
+          network?: string | null
+          owner_address?: string | null
         }
         Update: {
-          address?: string
-          collection_id?: string | null
+          agent_id?: string
+          chain?: string | null
           created_at?: string | null
           id?: string
-          identifier_hash?: string | null
-          indices?: string[]
-          is_active?: boolean | null
-          root?: string
-          siblings?: string[]
-          whitelist_type?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "rh_whitelist_addresses_collection_id_fkey"
-            columns: ["collection_id"]
-            isOneToOne: false
-            referencedRelation: "aztec_nft_collections"
-            referencedColumns: ["collection_id"]
-          },
-        ]
-      }
-      signup_emails: {
-        Row: {
-          access_grant_email_sent: boolean | null
-          created_at: string
-          description: string | null
-          discord_username: string | null
-          email: string
-          email_sent_at: string | null
-          id: string
-          is_approved: boolean | null
-          is_call_schedule_email_send: boolean | null
-          is_email_sent: boolean | null
-          is_priority: boolean | null
-          name: string
-          twitter_username: string | null
-          type: string | null
-          wallet_address: string | null
-        }
-        Insert: {
-          access_grant_email_sent?: boolean | null
-          created_at?: string
-          description?: string | null
-          discord_username?: string | null
-          email: string
-          email_sent_at?: string | null
-          id?: string
-          is_approved?: boolean | null
-          is_call_schedule_email_send?: boolean | null
-          is_email_sent?: boolean | null
-          is_priority?: boolean | null
-          name: string
-          twitter_username?: string | null
-          type?: string | null
-          wallet_address?: string | null
-        }
-        Update: {
-          access_grant_email_sent?: boolean | null
-          created_at?: string
-          description?: string | null
-          discord_username?: string | null
-          email?: string
-          email_sent_at?: string | null
-          id?: string
-          is_approved?: boolean | null
-          is_call_schedule_email_send?: boolean | null
-          is_email_sent?: boolean | null
-          is_priority?: boolean | null
-          name?: string
-          twitter_username?: string | null
-          type?: string | null
-          wallet_address?: string | null
+          network?: string | null
+          owner_address?: string | null
         }
         Relationships: []
       }
@@ -1373,7 +138,12 @@ export type Database = {
           preferred_name: string | null
           previous_ambassador_programs: Json | null
           roles: string[] | null
-          status: Database["public"]["Enums"]["ss_ambassador_status"]
+          status:
+            | "draft"
+            | "submitted"
+            | "under_review"
+            | "approved"
+            | "rejected"
           submitted_at: string | null
           sui_wallet_address: string | null
           target_region_language_audience: string | null
@@ -1382,7 +152,10 @@ export type Database = {
           twitter_url: string | null
           updated_at: string
           web3_experience_level:
-            | Database["public"]["Enums"]["ss_web3_experience_level"]
+            | "beginner"
+            | "intermediate"
+            | "advanced"
+            | "expert"
             | null
           weekly_availability: string | null
           why_become_ambassador: string | null
@@ -1406,7 +179,12 @@ export type Database = {
           preferred_name?: string | null
           previous_ambassador_programs?: Json | null
           roles?: string[] | null
-          status?: Database["public"]["Enums"]["ss_ambassador_status"]
+          status?:
+            | "draft"
+            | "submitted"
+            | "under_review"
+            | "approved"
+            | "rejected"
           submitted_at?: string | null
           sui_wallet_address?: string | null
           target_region_language_audience?: string | null
@@ -1415,7 +193,10 @@ export type Database = {
           twitter_url?: string | null
           updated_at?: string
           web3_experience_level?:
-            | Database["public"]["Enums"]["ss_web3_experience_level"]
+            | "beginner"
+            | "intermediate"
+            | "advanced"
+            | "expert"
             | null
           weekly_availability?: string | null
           why_become_ambassador?: string | null
@@ -1439,7 +220,12 @@ export type Database = {
           preferred_name?: string | null
           previous_ambassador_programs?: Json | null
           roles?: string[] | null
-          status?: Database["public"]["Enums"]["ss_ambassador_status"]
+          status?:
+            | "draft"
+            | "submitted"
+            | "under_review"
+            | "approved"
+            | "rejected"
           submitted_at?: string | null
           sui_wallet_address?: string | null
           target_region_language_audience?: string | null
@@ -1448,10 +234,58 @@ export type Database = {
           twitter_url?: string | null
           updated_at?: string
           web3_experience_level?:
-            | Database["public"]["Enums"]["ss_web3_experience_level"]
+            | "beginner"
+            | "intermediate"
+            | "advanced"
+            | "expert"
             | null
           weekly_availability?: string | null
           why_become_ambassador?: string | null
+        }
+        Relationships: []
+      }
+      ss_defender_templates: {
+        Row: {
+          attack_goal: string | null
+          created_at: string
+          creator_address: string
+          id: number
+          jury_prompt: string | null
+          name: string
+          private_instructions: string | null
+          public_instructions: string | null
+          rank: number | null
+          status: "pending" | "approved" | "denied" | null
+          tags: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          attack_goal?: string | null
+          created_at?: string
+          creator_address: string
+          id?: number
+          jury_prompt?: string | null
+          name: string
+          private_instructions?: string | null
+          public_instructions?: string | null
+          rank?: number | null
+          status?: "pending" | "approved" | "denied" | null
+          tags?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          attack_goal?: string | null
+          created_at?: string
+          creator_address?: string
+          id?: number
+          jury_prompt?: string | null
+          name?: string
+          private_instructions?: string | null
+          public_instructions?: string | null
+          rank?: number | null
+          status?: "pending" | "approved" | "denied" | null
+          tags?: string[] | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -1502,7 +336,7 @@ export type Database = {
           email_id: string
           id: string
           name: string
-          status: Database["public"]["Enums"]["status"] | null
+          status: "pending" | "approved" | "denied" | null
           telegram_username: string | null
           twitter_username: string | null
           wallet_address: string
@@ -1514,7 +348,7 @@ export type Database = {
           email_id: string
           id?: string
           name: string
-          status?: Database["public"]["Enums"]["status"] | null
+          status?: "pending" | "approved" | "denied" | null
           telegram_username?: string | null
           twitter_username?: string | null
           wallet_address: string
@@ -1526,7 +360,7 @@ export type Database = {
           email_id?: string
           id?: string
           name?: string
-          status?: Database["public"]["Enums"]["status"] | null
+          status?: "pending" | "approved" | "denied" | null
           telegram_username?: string | null
           twitter_username?: string | null
           wallet_address?: string
@@ -1653,7 +487,7 @@ export type Database = {
           platform: string
           platform_avatar_url: string | null
           platform_user_id: string
-          platform_username: string
+          platform_username: string | null
           user_id: string | null
         }
         Insert: {
@@ -1662,7 +496,7 @@ export type Database = {
           platform: string
           platform_avatar_url?: string | null
           platform_user_id: string
-          platform_username: string
+          platform_username?: string | null
           user_id?: string | null
         }
         Update: {
@@ -1671,7 +505,7 @@ export type Database = {
           platform?: string
           platform_avatar_url?: string | null
           platform_user_id?: string
-          platform_username?: string
+          platform_username?: string | null
           user_id?: string | null
         }
         Relationships: [
@@ -1691,329 +525,255 @@ export type Database = {
           },
         ]
       }
+      ss_user_follows: {
+        Row: {
+          created_at: string
+          follower_id: string
+          following_id: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          follower_id: string
+          following_id: string
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          follower_id?: string
+          following_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ss_user_follows_follower_id_fkey"
+            columns: ["follower_id"]
+            isOneToOne: false
+            referencedRelation: "ss_rewards_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "ss_user_follows_follower_id_fkey"
+            columns: ["follower_id"]
+            isOneToOne: false
+            referencedRelation: "ss_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ss_user_follows_following_id_fkey"
+            columns: ["following_id"]
+            isOneToOne: false
+            referencedRelation: "ss_rewards_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "ss_user_follows_following_id_fkey"
+            columns: ["following_id"]
+            isOneToOne: false
+            referencedRelation: "ss_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ss_users: {
         Row: {
           avatar_url: string | null
           created_at: string | null
           display_name: string | null
-          email: string | null
           email_notifications: boolean | null
           id: string
           lifetime_points: number | null
           rewards_tier: string | null
           rewards_updated_at: string | null
           total_points: number | null
+          updated_at: string | null
           username: string
-          wallet_addresses: string[] | null
         }
         Insert: {
           avatar_url?: string | null
           created_at?: string | null
           display_name?: string | null
-          email?: string | null
           email_notifications?: boolean | null
           id?: string
           lifetime_points?: number | null
           rewards_tier?: string | null
           rewards_updated_at?: string | null
           total_points?: number | null
+          updated_at?: string | null
           username: string
-          wallet_addresses?: string[] | null
         }
         Update: {
           avatar_url?: string | null
           created_at?: string | null
           display_name?: string | null
-          email?: string | null
           email_notifications?: boolean | null
           id?: string
           lifetime_points?: number | null
           rewards_tier?: string | null
           rewards_updated_at?: string | null
           total_points?: number | null
+          updated_at?: string | null
           username?: string
-          wallet_addresses?: string[] | null
         }
         Relationships: []
       }
-      telegram_auth: {
+      ss_verification_codes: {
         Row: {
-          authenticated: boolean | null
-          chat_id: string | null
-          created_at: string
-          id: number
-          wallet_address: string | null
-        }
-        Insert: {
-          authenticated?: boolean | null
-          chat_id?: string | null
-          created_at?: string
-          id?: number
-          wallet_address?: string | null
-        }
-        Update: {
-          authenticated?: boolean | null
-          chat_id?: string | null
-          created_at?: string
-          id?: number
-          wallet_address?: string | null
-        }
-        Relationships: []
-      }
-      tileville_builder_nfts: {
-        Row: {
-          created_at: string
-          img_url: string
-          is_public_mint: boolean
-          name: string
-          nft_id: number
-          owner_address: string | null
-          price: number
-          traits: Json | null
-          txn_hash: string | null
-        }
-        Insert: {
-          created_at?: string
-          img_url: string
-          is_public_mint?: boolean
-          name: string
-          nft_id?: number
-          owner_address?: string | null
-          price: number
-          traits?: Json | null
-          txn_hash?: string | null
-        }
-        Update: {
-          created_at?: string
-          img_url?: string
-          is_public_mint?: boolean
-          name?: string
-          nft_id?: number
-          owner_address?: string | null
-          price?: number
-          traits?: Json | null
-          txn_hash?: string | null
-        }
-        Relationships: []
-      }
-      tileville_competitions: {
-        Row: {
-          competition_tweet_content: string
-          created_at: string
-          currency_symbol: string
-          description: string
-          end_date: string
-          funds: number
-          id: number
-          is_speed_version: boolean
-          name: string
-          participation_fee: number | null
-          poster_url: string | null
-          priority: number
-          prizes: Json | null
-          score_tweet_content: string
-          seed: number
-          speed_duration: number
-          start_date: string
-          treasury_address: string | null
-          unique_keyname: string
-        }
-        Insert: {
-          competition_tweet_content?: string
-          created_at?: string
-          currency_symbol?: string
-          description: string
-          end_date: string
-          funds?: number
-          id?: number
-          is_speed_version?: boolean
-          name: string
-          participation_fee?: number | null
-          poster_url?: string | null
-          priority?: number
-          prizes?: Json | null
-          score_tweet_content?: string
-          seed?: number
-          speed_duration?: number
-          start_date: string
-          treasury_address?: string | null
-          unique_keyname: string
-        }
-        Update: {
-          competition_tweet_content?: string
-          created_at?: string
-          currency_symbol?: string
-          description?: string
-          end_date?: string
-          funds?: number
-          id?: number
-          is_speed_version?: boolean
-          name?: string
-          participation_fee?: number | null
-          poster_url?: string | null
-          priority?: number
-          prizes?: Json | null
-          score_tweet_content?: string
-          seed?: number
-          speed_duration?: number
-          start_date?: string
-          treasury_address?: string | null
-          unique_keyname?: string
-        }
-        Relationships: []
-      }
-      transaction_logs: {
-        Row: {
-          competition_key: string
-          created_at: string
-          id: number
-          is_game_played: boolean
-          network: string
-          txn_hash: string
-          txn_status: string
-          wallet_address: string
-        }
-        Insert: {
-          competition_key: string
-          created_at?: string
-          id?: number
-          is_game_played?: boolean
-          network?: string
-          txn_hash: string
-          txn_status?: string
-          wallet_address: string
-        }
-        Update: {
-          competition_key?: string
-          created_at?: string
-          id?: number
-          is_game_played?: boolean
-          network?: string
-          txn_hash?: string
-          txn_status?: string
-          wallet_address?: string
-        }
-        Relationships: []
-      }
-      voucher_codes: {
-        Row: {
+          attempts: number | null
           code: string
-          competition_id: number | null
-          created_at: string
-          expiry_date: string | null
-          id: number
-          is_redeemed: boolean
-          redeemed_at: string | null
-          redeemed_by: string | null
-        }
-        Insert: {
-          code: string
-          competition_id?: number | null
-          created_at?: string
-          expiry_date?: string | null
-          id?: number
-          is_redeemed?: boolean
-          redeemed_at?: string | null
-          redeemed_by?: string | null
-        }
-        Update: {
-          code?: string
-          competition_id?: number | null
-          created_at?: string
-          expiry_date?: string | null
-          id?: number
-          is_redeemed?: boolean
-          redeemed_at?: string | null
-          redeemed_by?: string | null
-        }
-        Relationships: []
-      }
-      wallet_sessions: {
-        Row: {
           created_at: string | null
           expires_at: string
-          fingerprint: string
           id: string
-          token: string
-          wallet_address: string
+          target: string
+          target_username: string | null
+          type: string
+          used_at: string | null
+          user_id: string | null
         }
         Insert: {
+          attempts?: number | null
+          code: string
           created_at?: string | null
           expires_at: string
-          fingerprint: string
           id?: string
-          token: string
+          target: string
+          target_username?: string | null
+          type: string
+          used_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          attempts?: number | null
+          code?: string
+          created_at?: string | null
+          expires_at?: string
+          id?: string
+          target?: string
+          target_username?: string | null
+          type?: string
+          used_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ss_verification_codes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "ss_rewards_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "ss_verification_codes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "ss_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ss_wallet_connections: {
+        Row: {
+          chain_id: string | null
+          chain_type: string
+          connected_at: string | null
+          id: string
+          is_primary: boolean | null
+          user_id: string
+          wallet_address: string
+        }
+        Insert: {
+          chain_id?: string | null
+          chain_type: string
+          connected_at?: string | null
+          id?: string
+          is_primary?: boolean | null
+          user_id: string
           wallet_address: string
         }
         Update: {
-          created_at?: string | null
-          expires_at?: string
-          fingerprint?: string
+          chain_id?: string | null
+          chain_type?: string
+          connected_at?: string | null
           id?: string
-          token?: string
+          is_primary?: boolean | null
+          user_id?: string
           wallet_address?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "ss_wallet_connections_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "ss_rewards_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "ss_wallet_connections_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "ss_users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
-      zkgod_nfts: {
+      syndicate_chat_message: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          room_id: string
+          sender_address: string
+          sender_role: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          room_id: string
+          sender_address: string
+          sender_role?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          room_id?: string
+          sender_address?: string
+          sender_role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "syndicate_chat_message_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "syndicate_chat_room"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      syndicate_chat_room: {
         Row: {
           created_at: string
-          id: number
-          img_url: string
-          is_public_mint: boolean
-          name: string
-          nft_id: number | null
-          owner_address: string | null
-          price: number
-          traits: Json | null
-          txn_hash: string | null
+          id: string
+          network: string
+          syndicate_address: string
         }
         Insert: {
           created_at?: string
-          id?: number
-          img_url: string
-          is_public_mint?: boolean
-          name: string
-          nft_id?: number | null
-          owner_address?: string | null
-          price: number
-          traits?: Json | null
-          txn_hash?: string | null
+          id?: string
+          network: string
+          syndicate_address: string
         }
         Update: {
           created_at?: string
-          id?: number
-          img_url?: string
-          is_public_mint?: boolean
-          name?: string
-          nft_id?: number | null
-          owner_address?: string | null
-          price?: number
-          traits?: Json | null
-          txn_hash?: string | null
+          id?: string
+          network?: string
+          syndicate_address?: string
         }
         Relationships: []
       }
     }
     Views: {
-      rh_rewards_leaderboard: {
-        Row: {
-          avatar_url: string | null
-          discord_avatar: string | null
-          discord_user_id: string | null
-          discord_username: string | null
-          lifetime_points: number | null
-          rank: number | null
-          tier: string | null
-          total_points: number | null
-          twitter_avatar: string | null
-          twitter_user_id: string | null
-          twitter_username: string | null
-          user_id: string | null
-          username: string | null
-        }
-        Relationships: []
-      }
       ss_rewards_leaderboard: {
         Row: {
           avatar_url: string | null
@@ -2035,37 +795,13 @@ export type Database = {
       }
     }
     Functions: {
-      increment_nonce_counter: {
-        Args: { wallet_addr: string }
-        Returns: number
-      }
-      increment_user_points: {
-        Args: { points_to_add: number; user_id: string }
+      merge_user_accounts: {
+        Args: { merging_user_id: string; surviving_user_id: string }
         Returns: undefined
       }
     }
     Enums: {
-      bridge_status: "DEPOSITED" | "CLAIMED" | "FAILED"
-      nft_category:
-        | "FOUNDER"
-        | "DESIGNER"
-        | "SOLDIER"
-        | "GUARDIAN"
-        | "TOTEM"
-        | "YOUR_NEW_CATEGORY"
-        | "ZKON"
-      ss_ambassador_status:
-        | "draft"
-        | "submitted"
-        | "under_review"
-        | "approved"
-        | "rejected"
-      ss_web3_experience_level:
-        | "beginner"
-        | "intermediate"
-        | "advanced"
-        | "expert"
-      status: "pending" | "approved" | "denied"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2191,32 +927,7 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  public: {
-    Enums: {
-      bridge_status: ["DEPOSITED", "CLAIMED", "FAILED"],
-      nft_category: [
-        "FOUNDER",
-        "DESIGNER",
-        "SOLDIER",
-        "GUARDIAN",
-        "TOTEM",
-        "YOUR_NEW_CATEGORY",
-        "ZKON",
-      ],
-      ss_ambassador_status: [
-        "draft",
-        "submitted",
-        "under_review",
-        "approved",
-        "rejected",
-      ],
-      ss_web3_experience_level: [
-        "beginner",
-        "intermediate",
-        "advanced",
-        "expert",
-      ],
-      status: ["pending", "approved", "denied"],
-    },
+  sentinel: {
+    Enums: {},
   },
 } as const
