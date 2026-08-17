@@ -11,7 +11,13 @@ import { useUserBoosters, useSpinHistory } from '@/hooks/rewards/useBoosters'
 import { useClaimReward } from '@/hooks/rewards/useClaimReward'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import type { Booster, SpinResponse } from '@/types'
-import { BOOSTER_TIERS, SUI_SENTINEL_X_USERNAME, getTierAsset, getTierStyleConfig, getTierTextConfig } from '@/constants'
+import {
+  BOOSTER_TIERS,
+  SUI_SENTINEL_X_USERNAME,
+  getTierAsset,
+  getTierStyleConfig,
+  getTierTextConfig,
+} from '@/constants'
 import Image from 'next/image'
 
 export const BoosterRewards = () => {
@@ -49,7 +55,7 @@ export const BoosterRewards = () => {
     }
 
     claimPendingRewards()
-  }, [connectedAddress])
+  }, [connectedAddress, claimReward, refetchBoosters])
 
   const activeBoosters = boostersData?.boosters.filter(b => b.status === 'active') || []
   const expiredBoosters = boostersData?.boosters.filter(b => b.status === 'expired') || []
@@ -128,7 +134,9 @@ export const BoosterRewards = () => {
           <SpinFeed />
 
           <div className="p-6 md:p-8">
-            <h2 className="mb-16 text-center text-xl font-bold text-[var(--color-text-primary)] md:text-3xl">Select a Spin Pass</h2>
+            <h2 className="mb-16 text-center text-xl font-bold text-[var(--color-text-primary)] md:text-3xl">
+              Select a Spin Pass
+            </h2>
 
             <div className="mb-6 py-6 md:py-8 lg:py-12">
               <SlotMachine
@@ -147,12 +155,12 @@ export const BoosterRewards = () => {
                       <h4 className="font-semibold">
                         {BOOSTER_TIERS[selectedBooster.tier].name} Spin Pass
                       </h4>
-                      <p className="text-xs text-[var(--color-text-on-gold)]/80">
+                      <p className="text-[var(--color-text-on-gold)]/80 text-xs">
                         {selectedBooster.multiplier}x Multiplier
                       </p>
                     </div>
                   </div>
-                  <div className="text-right text-xs text-[var(--color-text-on-gold)]/70">
+                  <div className="text-[var(--color-text-on-gold)]/70 text-right text-xs">
                     {BOOSTER_TIERS[selectedBooster.tier].minReward.toLocaleString()} -{' '}
                     {BOOSTER_TIERS[selectedBooster.tier].maxReward.toLocaleString()}
                   </div>
@@ -160,7 +168,9 @@ export const BoosterRewards = () => {
               </div>
             ) : (
               <div className="mx-auto mb-4 max-w-md rounded-lg border-2 border-dashed border-[var(--color-border-default)] bg-[var(--color-bg-subtle)] p-3 text-center">
-                <p className="text-sm text-[var(--color-text-secondary)]">Select a Spin Pass below to start</p>
+                <p className="text-sm text-[var(--color-text-secondary)]">
+                  Select a Spin Pass below to start
+                </p>
               </div>
             )}
 
@@ -230,11 +240,13 @@ export const BoosterRewards = () => {
         <div className="flex h-[700px] flex-col rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)]">
           <div className="flex-shrink-0 border-b border-[var(--color-border-subtle)] p-4 pb-0">
             <div className="mb-3 flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-[var(--color-text-primary)]">Spin Passes</h3>
+              <h3 className="text-lg font-semibold text-[var(--color-text-primary)]">
+                Spin Passes
+              </h3>
               <button
                 onClick={handleManualRefresh}
                 disabled={isRefreshing}
-                className="flex items-center gap-1.5 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-3 py-1.5 text-sm font-medium text-[var(--color-text-secondary)] transition-all hover:bg-[var(--color-bg-subtle)] hover:border-[var(--color-border-strong)] disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex items-center gap-1.5 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-3 py-1.5 text-sm font-medium text-[var(--color-text-secondary)] transition-all hover:border-[var(--color-border-strong)] hover:bg-[var(--color-bg-subtle)] disabled:cursor-not-allowed disabled:opacity-50"
                 title="Refresh to claim pending rewards"
               >
                 <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
@@ -295,17 +307,17 @@ export const BoosterRewards = () => {
                       key={booster._id}
                       onClick={() => passFilter === 'active' && handleSelectBooster(booster)}
                       disabled={passFilter === 'expired'}
-                      className={`w-full min-h-[140px] p-3 rounded-2xl transition-all ${
+                      className={`min-h-[140px] w-full rounded-2xl p-3 transition-all ${
                         passFilter === 'active'
                           ? 'hover:scale-105'
                           : 'cursor-not-allowed opacity-60'
                       } ${
                         isSelected
-                          ? 'flex flex-col items-center justify-center text-center relative overflow-hidden border-2 border-[var(--color-gold-primary)] bg-[var(--color-gold-primary)] text-[var(--color-text-on-gold)] shadow-lg'
+                          ? 'relative flex flex-col items-center justify-center overflow-hidden border-2 border-[var(--color-gold-primary)] bg-[var(--color-gold-primary)] text-center text-[var(--color-text-on-gold)] shadow-lg'
                           : `${styleClass} rounded-2xl`
                       }`}
                     >
-                      <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-bg-surface)]/80 shadow-sm backdrop-blur-sm mb-2">
+                      <div className="bg-[var(--color-bg-surface)]/80 relative mb-2 flex h-10 w-10 items-center justify-center rounded-xl shadow-sm backdrop-blur-sm">
                         <Image
                           src={assetPath}
                           alt={`${tierInfo.name} icon`}
@@ -315,25 +327,52 @@ export const BoosterRewards = () => {
                         />
                       </div>
 
-                      <h4 className={`text-sm font-black tracking-tight uppercase ${isSelected ? 'text-[var(--color-text-on-gold)]' : textColorClass}`}>
+                      <h4
+                        className={`text-sm font-black uppercase tracking-tight ${isSelected ? 'text-[var(--color-text-on-gold)]' : textColorClass}`}
+                      >
                         {tierInfo.name} Pass
                       </h4>
 
-                      <div className={`mt-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold shadow-sm ${isSelected ? 'bg-[var(--color-bg-surface)]/20 text-[var(--color-text-on-gold)]' : 'bg-[var(--color-bg-surface)]/90 text-[var(--color-text-secondary)]'}`}>
+                      <div
+                        className={`mt-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold shadow-sm ${isSelected ? 'bg-[var(--color-bg-surface)]/20 text-[var(--color-text-on-gold)]' : 'bg-[var(--color-bg-surface)]/90 text-[var(--color-text-secondary)]'}`}
+                      >
                         <span>⚡</span>
                         {booster.multiplier}x Booster
                       </div>
 
                       <div className="mt-2 text-[10px] font-bold leading-tight">
-                        <span className={isSelected ? 'text-[var(--color-text-on-gold)]/70' : 'text-[var(--color-text-muted)]'}>Sentinels: </span>
-                        <span className={isSelected ? 'text-[var(--color-text-on-gold)]' : 'text-[var(--color-text-primary)]'}>{tierInfo.minReward.toLocaleString()} - {tierInfo.maxReward.toLocaleString()}</span>
+                        <span
+                          className={
+                            isSelected
+                              ? 'text-[var(--color-text-on-gold)]/70'
+                              : 'text-[var(--color-text-muted)]'
+                          }
+                        >
+                          Sentinels:{' '}
+                        </span>
+                        <span
+                          className={
+                            isSelected
+                              ? 'text-[var(--color-text-on-gold)]'
+                              : 'text-[var(--color-text-primary)]'
+                          }
+                        >
+                          {tierInfo.minReward.toLocaleString()} -{' '}
+                          {tierInfo.maxReward.toLocaleString()}
+                        </span>
                       </div>
 
-                      <div className={`mt-2 flex items-center gap-1 text-[10px] font-semibold ${
-                        isExpiringSoon
-                          ? isSelected ? 'text-yellow-300' : 'text-[var(--color-danger)]'
-                          : isSelected ? 'text-[var(--color-text-on-gold)]/70' : 'text-[var(--color-text-secondary)]'
-                      }`}>
+                      <div
+                        className={`mt-2 flex items-center gap-1 text-[10px] font-semibold ${
+                          isExpiringSoon
+                            ? isSelected
+                              ? 'text-yellow-300'
+                              : 'text-[var(--color-danger)]'
+                            : isSelected
+                              ? 'text-[var(--color-text-on-gold)]/70'
+                              : 'text-[var(--color-text-secondary)]'
+                        }`}
+                      >
                         <Clock className="h-3 w-3" />
                         <span>
                           {isExpiringSoon && '⚠️ '}

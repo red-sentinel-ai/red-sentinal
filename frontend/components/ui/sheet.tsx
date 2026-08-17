@@ -57,9 +57,9 @@ function SheetContent({
           side === 'left' &&
             'inset-y-0 left-0 h-full w-3/4 border-r border-[var(--color-border-subtle)] data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm',
           side === 'top' &&
-            'inset-x-0 top-0 h-auto border-b border-[var(--color-border-subtle)] data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top',
+            'inset-x-0 top-0 h-auto max-h-[90dvh] overflow-y-auto border-b border-[var(--color-border-subtle)] data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top',
           side === 'bottom' &&
-            'inset-x-0 bottom-0 h-auto border-t border-[var(--color-border-subtle)] data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom',
+            'inset-x-0 bottom-0 h-auto max-h-[90dvh] overflow-y-auto border-t border-[var(--color-border-subtle)] data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom',
           className
         )}
         {...props}

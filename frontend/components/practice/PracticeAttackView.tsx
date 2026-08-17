@@ -31,7 +31,7 @@ export function PracticeAttackView({ sentinelId }: { sentinelId: number }) {
 
   if (isPending) {
     return (
-      <div className="flex h-[calc(100dvh-64px)] items-center justify-center bg-[var(--color-bg-base)]">
+      <div className="flex h-[calc(100dvh-var(--topbar-h))] items-center justify-center bg-[var(--color-bg-base)]">
         <Loader2 className="h-6 w-6 animate-spin text-[var(--color-text-muted)]" />
       </div>
     )
@@ -39,7 +39,7 @@ export function PracticeAttackView({ sentinelId }: { sentinelId: number }) {
 
   if (isError || !sentinel) {
     return (
-      <div className="flex h-[calc(100dvh-64px)] flex-col items-center justify-center gap-3 bg-[var(--color-bg-base)] p-4 text-center">
+      <div className="flex h-[calc(100dvh-var(--topbar-h))] flex-col items-center justify-center gap-3 bg-[var(--color-bg-base)] p-4 text-center">
         <AlertTriangle className="h-8 w-8 text-[var(--color-text-muted)]" />
         <p className="industrial-header text-sm text-[var(--color-text-muted)]">
           SENTINEL_NOT_FOUND
@@ -56,7 +56,7 @@ export function PracticeAttackView({ sentinelId }: { sentinelId: number }) {
 
   if (hasBriefingSidebar) {
     return (
-      <div className="flex h-[calc(100dvh-64px)] bg-[var(--color-bg-base)]">
+      <div className="flex h-[calc(100dvh-var(--topbar-h))] bg-[var(--color-bg-base)]">
         <ResizablePanelGroup direction="horizontal">
           <ResizablePanel
             defaultSize={BRIEFING_SIDEBAR_SIZE.default}
@@ -75,7 +75,7 @@ export function PracticeAttackView({ sentinelId }: { sentinelId: number }) {
   }
 
   return (
-    <div className="flex h-[calc(100dvh-64px)] flex-col bg-[var(--color-bg-base)]">
+    <div className="flex h-[calc(100dvh-var(--topbar-h))] flex-col bg-[var(--color-bg-base)]">
       <PracticeChatInterface
         sentinel={sentinel}
         attackerAddress={attackerAddress}
