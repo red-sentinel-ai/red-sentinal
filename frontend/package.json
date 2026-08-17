@@ -15,11 +15,14 @@
     "@100mslive/react-sdk": "^0.12.4",
     "@aws-sdk/client-ses": "^3.1019.0",
     "@coral-xyz/anchor": "^0.32.1",
+    "@ducanh2912/next-pwa": "^10.2.9",
     "@mysten/bcs": "^1.6.1",
     "@mysten/dapp-kit": "^0.16.4",
     "@mysten/sui": "^1.30.0",
     "@mysten/wallet-standard": "^0.15.1",
     "@novu/nextjs": "^3.18.2",
+    "@privy-io/react-auth": "^3.37.1",
+    "@privy-io/wagmi": "^4.0.16",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-navigation-menu": "^1.2.14",
     "@radix-ui/react-slot": "^1.1.2",
@@ -85,7 +88,8 @@
     "prettier-plugin-tailwindcss": "^0.7.2",
     "supabase": "^2.100.1",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "typescript": "^5",
+    "webpack": "^5.109.2"
   },
   "packageManager": "bun@1.1.10"
 }
