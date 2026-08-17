@@ -10,9 +10,9 @@ export function AppTopbar() {
   const { content } = useTopbarSlot()
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center gap-2 border-b border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-3 md:px-12">
+    <header className="pt-safe sticky top-0 z-40 flex h-[var(--topbar-h)] items-center gap-2 border-b border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-3 md:px-12">
       <SidebarTrigger
-        className="shrink-0 rounded-none border border-[var(--color-border-default)] bg-[var(--color-bg-base)] text-white hover:bg-white hover:text-black md:hidden"
+        className="flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-none border border-[var(--color-border-default)] bg-[var(--color-bg-base)] text-white hover:bg-white hover:text-black md:hidden"
         aria-label="Open navigation"
       />
 
@@ -21,8 +21,12 @@ export function AppTopbar() {
       <div className="ml-auto flex shrink-0 items-center gap-3">
         {/* Arbitrum-only mode locks the app to one chain, so the switcher is hidden. */}
         <ChainSwitcher />
-        <ConnectButton compact />
-        <NovuInbox />
+        <div className="flex min-h-[44px] min-w-[44px] items-center justify-center">
+          <ConnectButton compact />
+        </div>
+        <div className="flex min-h-[44px] min-w-[44px] items-center justify-center">
+          <NovuInbox />
+        </div>
       </div>
     </header>
   )

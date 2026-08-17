@@ -21,8 +21,6 @@
     "@mysten/sui": "^1.30.0",
     "@mysten/wallet-standard": "^0.15.1",
     "@novu/nextjs": "^3.18.2",
-    "@privy-io/react-auth": "^3.37.1",
-    "@privy-io/wagmi": "^4.0.16",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-navigation-menu": "^1.2.14",
     "@radix-ui/react-slot": "^1.1.2",

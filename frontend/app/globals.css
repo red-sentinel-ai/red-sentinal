@@ -5,6 +5,10 @@
 :root {
   font-family: var(--font-inter, 'Inter'), Arial, sans-serif;
 
+  /* iOS PWA: top safe-area inset (status bar) and topbar height including it */
+  --sat: env(safe-area-inset-top, 0px);
+  --topbar-h: calc(4rem + var(--sat));
+
   /* Mission Control: Aave-inspired warm dark interface */
   --color-bg-deepest: #0a0a0a;
   --color-bg-base: #100f0f;
@@ -279,7 +283,7 @@
   }
 
   .chat-composer {
-    @apply shrink-0 border-t border-[var(--color-border-strong)] bg-[var(--color-bg-base)] px-3 py-2 sm:px-4 sm:py-3 lg:px-6 lg:py-4;
+    @apply shrink-0 border-t border-[var(--color-border-strong)] bg-[var(--color-bg-base)] px-3 py-2 pb-safe sm:px-4 sm:py-3 lg:px-6 lg:py-4;
   }
 
   .chat-composer-input {
@@ -394,10 +398,10 @@
     animation-play-state: paused;
   }
   .min-h-body {
-    min-height: 100vh;
+    min-height: 100dvh;
   }
   .max-h-body {
-    max-height: 100vh;
+    max-height: 100dvh;
   }
   .max-w-v1 {
     max-width: 856px;
