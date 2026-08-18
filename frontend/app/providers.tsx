@@ -4,7 +4,7 @@ import '@mysten/dapp-kit/dist/index.css'
 import React, { useState, useEffect } from 'react'
 import posthog from 'posthog-js'
 import { PostHogProvider as PHProvider } from 'posthog-js/react'
-import { SuiClientProvider, WalletProvider, lightTheme } from '@mysten/dapp-kit'
+import { SuiClientProvider, WalletProvider as SuiWalletProvider, lightTheme } from '@mysten/dapp-kit'
 import { AppShell } from '@/components/layout/AppShell'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ProfileInitializer } from '@/components/profile/ProfileInitializer'
@@ -15,6 +15,7 @@ import { SolanaWalletProvider } from '@/app/SolanaWalletProvider'
 import { EVMWalletProvider } from '@/app/EVMWalletProvider'
 import { ActiveChainProvider } from '@/context/ActiveChainContext'
 import { AuthProvider } from '@/context/AuthContext'
+import { InstallPromptProvider } from '@/context/InstallPromptContext'
 
 const suiNetworks = {
   testnet: { url: SUI_RPC_URLS.testnet },
@@ -49,17 +50,19 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <QueryClientProvider client={queryClient}>
         <EVMWalletProvider>
           <SuiClientProvider networks={suiNetworks} defaultNetwork={APP_NETWORK}>
-            <WalletProvider autoConnect theme={lightTheme}>
+            <SuiWalletProvider autoConnect theme={lightTheme}>
               <SolanaWalletProvider>
                 <ActiveChainProvider>
                   <AuthProvider>
                     <ProfileInitializer />
-                    <AppShell>{children}</AppShell>
+                    <InstallPromptProvider>
+                      <AppShell>{children}</AppShell>
+                    </InstallPromptProvider>
                     <ConnectSocialPrompt />
                   </AuthProvider>
                 </ActiveChainProvider>
               </SolanaWalletProvider>
-            </WalletProvider>
+            </SuiWalletProvider>
           </SuiClientProvider>
         </EVMWalletProvider>
       </QueryClientProvider>

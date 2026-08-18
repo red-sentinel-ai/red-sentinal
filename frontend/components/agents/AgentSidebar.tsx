@@ -217,7 +217,7 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
 
   return (
     <>
-      <div className="terminal-scrollbar flex h-[calc(100vh-64px)] w-full flex-col overflow-y-auto bg-[var(--color-bg-base)]">
+      <div className="terminal-scrollbar flex h-[calc(100dvh-var(--topbar-h))] w-full flex-col overflow-y-auto bg-[var(--color-bg-base)]">
         <div className="space-y-8 p-6 lg:p-8">
           {/* Agent Profile Card */}
           <div className="space-y-4">

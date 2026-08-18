@@ -8,6 +8,9 @@ import { TopbarSlotProvider } from '@/context/TopbarSlotContext'
 import { WalletChainMismatchNotice } from '@/components/wallet/WalletChainMismatchNotice'
 import { AppSidebar } from './AppSidebar'
 import { AppTopbar } from './AppTopbar'
+import { PWAInstallBanner } from '@/components/pwa/PWAInstallBanner'
+import { IOSInstallGuide } from '@/components/pwa/IOSInstallGuide'
+import { OfflineBanner } from '@/components/OfflineBanner'
 
 function AppShellContent({ children }: { children: ReactNode }) {
   const { isFocusMode } = useFocusMode()
@@ -19,7 +22,10 @@ function AppShellContent({ children }: { children: ReactNode }) {
       <SidebarInset className={isFocusMode ? 'ml-0' : undefined}>
         {!isFocusMode && <AppTopbar />}
         <WalletChainMismatchNotice />
+        <OfflineBanner />
         <div className="min-w-0 flex-1">{children}</div>
+        <PWAInstallBanner />
+        <IOSInstallGuide />
       </SidebarInset>
     </SidebarProvider>
   )

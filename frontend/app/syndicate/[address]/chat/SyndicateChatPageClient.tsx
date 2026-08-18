@@ -23,7 +23,7 @@ interface Props {
 
 function ChatPageNotice({ children }: { children: ReactNode }) {
   return (
-    <div className="flex h-[calc(100vh-64px)] flex-col items-center justify-center gap-4 bg-[var(--color-bg-base)] px-6 text-center">
+    <div className="flex h-[calc(100dvh-var(--topbar-h))] flex-col items-center justify-center gap-4 bg-[var(--color-bg-base)] px-6 text-center">
       {children}
     </div>
   )
@@ -108,7 +108,7 @@ export default function SyndicateChatPageClient({ identifier }: Props) {
     pendingFees !== undefined ? formatTokenAmount(pendingFees.toString(), tokenDecimals) : null
 
   return (
-    <div className="flex h-[calc(100vh-64px)] bg-[var(--color-bg-base)]">
+    <div className="flex h-[calc(100dvh-var(--topbar-h))] bg-[var(--color-bg-base)]">
       <aside className="hidden w-[360px] shrink-0 border-r border-[var(--color-border-strong)] lg:block">
         <SyndicateChatSidebar
           syndicate={syndicate}
