@@ -3,12 +3,15 @@
 import { useRef, useEffect } from 'react'
 import { Loader2, Zap } from 'lucide-react'
 
+import { SentinelVoiceCallButton } from '@/components/sentinel-voice/SentinelVoiceCallButton'
+
 interface CasualPromptComposerProps {
   value: string
   onChange: (value: string) => void
   onSubmit: () => void
   isSubmitting: boolean
   error: string | null
+  onStartVoiceCall: () => void
 }
 
 export function CasualPromptComposer({
@@ -17,6 +20,7 @@ export function CasualPromptComposer({
   onSubmit,
   isSubmitting,
   error,
+  onStartVoiceCall,
 }: CasualPromptComposerProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -60,20 +64,23 @@ export function CasualPromptComposer({
             <span className="industrial-header text-[var(--color-text-muted)]/50 text-[9px] tracking-widest">
               FEE: <span className="text-[var(--color-text-muted)]">FREE</span>
             </span>
-            <button
-              type="submit"
-              disabled={isSubmitting || value.length === 0}
-              className="chat-submit-button button-ghost-terminal"
-            >
-              {isSubmitting ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              ) : (
-                <>
-                  <span>EXECUTE</span>
-                  <Zap className="h-3.5 w-3.5" />
-                </>
-              )}
-            </button>
+            <div className="flex items-center gap-3 sm:gap-4">
+              <SentinelVoiceCallButton onClick={onStartVoiceCall} disabled={isSubmitting} />
+              <button
+                type="submit"
+                disabled={isSubmitting || value.length === 0}
+                className="chat-submit-button button-ghost-terminal"
+              >
+                {isSubmitting ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <>
+                    <span>EXECUTE</span>
+                    <Zap className="h-3.5 w-3.5" />
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
 

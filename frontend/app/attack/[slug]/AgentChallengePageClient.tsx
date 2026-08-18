@@ -7,6 +7,7 @@ import { Info, X } from 'lucide-react'
 
 import { APP_NETWORK } from '@/constants'
 import { getTokenForCoinType } from '@/constants/tokens'
+import { formatTokenAmount } from '@/lib/utils'
 import type { ConsumePromptApiResponse } from '@/types'
 import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from '@/components/ui'
 import { AgentChallengePageSkeleton } from '@/components/ui/skeletons/AgentChallengePageSkeleton'
@@ -28,7 +29,9 @@ import { AttackWorkspace, type ViewMode } from '@/components/agents/AttackWorksp
 import { AgentSidebar } from '@/components/agents/AgentSidebar'
 import { AgentReadMoreModal } from '@/components/agents/AgentReadMoreModal'
 import { VoiceRoomModal } from '@/components/voice/VoiceRoomModal'
+import { SentinelVoiceCallOverlay } from '@/components/sentinel-voice/SentinelVoiceCallOverlay'
 import type { ChallengeMode } from '@/components/agents/ChallengeModeToggle'
+import type { SentinelVoiceTurnHandler } from '@/types/voice'
 import { AttackTopbarSlot } from './AttackTopbarSlot'
 import { MobileAgentHeader } from './MobileAgentHeader'
 
@@ -70,6 +73,12 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
   const [isReadMoreOpen, setIsReadMoreOpen] = useState(false)
   const [isVoiceRoomOpen, setIsVoiceRoomOpen] = useState(false)
+  const [isVoiceCallOpen, setIsVoiceCallOpen] = useState(false)
+
+  // `consumePrompt` reports the sentinel's reply through `onComplete` rather
+  // than its return value, so a spoken turn picks it up here. Written just
+  // before `consumePrompt` resolves, and read immediately after.
+  const lastAttackResponseRef = useRef<ConsumePromptApiResponse | null>(null)
 
   // On mobile the sentinel name and the attack/casual toggle share the topbar row
   // with the wallet button instead of each taking a bar of their own.
@@ -97,6 +106,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
   const handleAttackComplete = useCallback(
     (apiResponse: ConsumePromptApiResponse, txDigest: string) => {
+      lastAttackResponseRef.current = apiResponse
       setApiResponse(apiResponse)
       setTxnHash(txDigest)
       setShowResultModal(true)
@@ -197,22 +207,19 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
     setViewMode('attack')
   }, [])
 
+  /** Why this attack can't be sent right now, or null when it can. */
+  const describeAttackBlocker = (prompt: string): string | null => {
+    if (!agent) return 'Agent not loaded'
+    if (chainToSwitch) return `Switch to ${CHAINS[chainToSwitch]?.name} to attack this sentinel`
+    if (!connectedAddress) return 'Please connect your wallet'
+    if (prompt.length === 0) return 'Please enter a prompt'
+    return null
+  }
+
   const handleSendMessage = async (prompt: string) => {
-    if (!agent) {
-      setSubmitError('Agent not loaded')
-      return
-    }
-    if (chainToSwitch) {
-      const chainName = CHAINS[chainToSwitch]?.name
-      setSubmitError(`Switch to ${chainName} to attack this sentinel`)
-      return
-    }
-    if (!connectedAddress) {
-      setSubmitError('Please connect your wallet')
-      return
-    }
-    if (prompt.length === 0) {
-      setSubmitError('Please enter a prompt')
+    const blocker = describeAttackBlocker(prompt)
+    if (blocker) {
+      setSubmitError(blocker)
       return
     }
 
@@ -225,6 +232,28 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
       console.error(err)
     } finally {
       setIsSubmitting(false)
+    }
+  }
+
+  /**
+   * A spoken attack is a normal on-chain attack: it still costs the message fee
+   * and still needs a wallet signature, so the wallet prompt appears mid-call
+   * while the orb shows SENTINEL_PROCESSING.
+   */
+  const handleVoiceTurn: SentinelVoiceTurnHandler = async spokenPrompt => {
+    const blocker = describeAttackBlocker(spokenPrompt)
+    if (blocker) throw new Error(blocker)
+
+    lastAttackResponseRef.current = null
+    await consumePrompt({ agentDetails: agent, message: spokenPrompt })
+
+    const attackResponse = lastAttackResponseRef.current
+    if (!attackResponse) throw new Error('The sentinel did not respond to that attack')
+
+    return {
+      text: attackResponse.response.data.agent_response,
+      isBreach: attackResponse.response.data.success,
+      score: attackResponse.response.data.score,
     }
   }
 
@@ -246,6 +275,22 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
       </div>
     )
   }
+
+  const attackToken = getTokenForCoinType(agent.coin_type, agent.chain)
+
+  // Rendered in every layout branch below — the audio-to-audio attack session.
+  const sentinelVoiceCall = isVoiceCallOpen && (
+    <SentinelVoiceCallOverlay
+      sentinelName={agent.agent_name}
+      onClose={() => setIsVoiceCallOpen(false)}
+      onUserTurn={handleVoiceTurn}
+      callNotice={`Each spoken attack costs ${formatTokenAmount(
+        agent.current_cost_per_message ?? agent.cost_per_message,
+        attackToken.decimals,
+        4
+      )} ${attackToken.symbol} and needs a wallet signature`}
+    />
+  )
 
   // Rendered in every layout branch below — the sentinel's community voice room.
   const voiceRoomModal = (
@@ -278,6 +323,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
       submitError={submitError}
       refetchAgent={refetch}
       chainMismatch={chainToSwitch}
+      onStartVoiceCall={() => setIsVoiceCallOpen(true)}
     />
   )
 
@@ -360,6 +406,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
         )}
 
         {voiceRoomModal}
+        {sentinelVoiceCall}
       </div>
     )
   }
@@ -400,6 +447,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
         )}
 
         {voiceRoomModal}
+        {sentinelVoiceCall}
       </div>
     )
   }
@@ -458,6 +506,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
       )}
 
       {voiceRoomModal}
+      {sentinelVoiceCall}
     </div>
   )
 }

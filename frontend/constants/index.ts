@@ -56,6 +56,14 @@ export const TEXT_COPIES = {
 
 export const SUI_SENTINEL_API_URL =
   process.env.NEXT_PUBLIC_SUI_SENTINEL_API_URL || 'https://api.redsentinel.xyz'
+
+/**
+ * POSTed to open a speech-to-speech call; answers with the per-session
+ * `connect_url` of a realtime compute. Overridable so a local s2s server can be
+ * used in development without touching the rest of the API base URL.
+ */
+export const SPEECH_TO_SPEECH_SESSION_URL =
+  process.env.NEXT_PUBLIC_SPEECH_TO_SPEECH_SESSION_URL || `${SUI_SENTINEL_API_URL}/realtime/session`
 export const BACKEND_API_ADMIN_TOKEN = process.env.BACKEND_API_ADMIN_TOKEN
 
 // Re-export shared types and constants (extracted to break circular dependency with solana.ts)

@@ -22,6 +22,7 @@ import { useAutoResizingTextarea } from '@/hooks/useAutoResizingTextarea'
 import type { Agent } from '@/types/agents'
 import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
 import { ChainMismatchBanner } from '@/components/ui/common/ChainMismatchBanner'
+import { SentinelVoiceCallButton } from '@/components/sentinel-voice/SentinelVoiceCallButton'
 import { useFocusMode } from '@/context/FocusModeContext'
 import { ChatMessage } from './ChatMessage'
 import { JuryResponseModal } from './JuryResponseModal'
@@ -53,6 +54,7 @@ interface ChatInterfaceProps {
   submitError: string | null
   refetchAgent: () => void
   chainMismatch?: SupportedChain | null
+  onStartVoiceCall: () => void
 }
 
 export default function ChatInterface({
@@ -65,6 +67,7 @@ export default function ChatInterface({
   submitError,
   refetchAgent,
   chainMismatch,
+  onStartVoiceCall,
 }: ChatInterfaceProps) {
   const [promptInput, setPromptInput] = useState('')
   const [pendingRound, setPendingRound] = useState<ChatMessage[] | null>(null)
@@ -455,6 +458,9 @@ export default function ChatInterface({
                       {tokenCount}/{ATTACK_PROMPT_MAX_TOKENS}
                     </span>
                   </span>
+                  {/* This branch only renders while the sentinel is attackable,
+                      so a paused or wrong-chain sentinel never reaches here. */}
+                  <SentinelVoiceCallButton onClick={onStartVoiceCall} disabled={isSubmitting} />
                   <button
                     type="submit"
                     disabled={

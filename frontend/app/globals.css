@@ -1183,3 +1183,267 @@ body::-webkit-scrollbar-thumb:hover {
   --bell-gradient-start: var(--color-text-secondary) !important;
   --bell-gradient-end: var(--color-text-secondary) !important;
 }
+
+.voice-orb {
+  --voice-orb-glow: var(--color-text-muted);
+  --voice-mic-level: 0;
+  --voice-speech-level: 0;
+
+  position: relative;
+  /* Capped by height as well as width so the orb shrinks on short screens
+   * (mobile landscape, small viewports) instead of pushing the transcript out. */
+  width: clamp(140px, min(58vw, 34vh), 260px);
+  aspect-ratio: 1 / 1;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--voice-orb-glow);
+  cursor: pointer;
+  outline: none;
+  /* Treat taps as immediate clicks: no 300ms delay, no double-tap zoom. */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.18s ease, filter 0.18s ease;
+}
+
+.voice-orb:active {
+  transform: scale(0.97);
+}
+
+.voice-orb:disabled {
+  cursor: default;
+}
+
+.voice-orb:focus-visible .voice-orb-core {
+  outline: 2px solid var(--voice-orb-glow);
+  outline-offset: 6px;
+}
+
+.voice-orb-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, var(--voice-orb-glow) 0%, transparent 65%);
+  filter: blur(28px);
+  opacity: 0.45;
+  pointer-events: none;
+  transition: opacity 0.25s ease, background 0.25s ease;
+}
+
+.voice-orb-ring,
+.voice-orb-ring-outer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.3s ease;
+}
+
+.voice-orb-ring {
+  width: 82%;
+  height: 82%;
+  border: 1.5px solid color-mix(in srgb, var(--voice-orb-glow) 35%, transparent);
+  opacity: 0.35;
+}
+
+.voice-orb-ring-outer {
+  width: 94%;
+  height: 94%;
+  border: 1px solid color-mix(in srgb, var(--voice-orb-glow) 22%, transparent);
+  opacity: 0;
+}
+
+.voice-orb-core {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 72%;
+  height: 72%;
+  border-radius: 50%;
+  border: 2px solid color-mix(in srgb, var(--voice-orb-glow) 40%, transparent);
+  background: radial-gradient(
+    circle at 35% 28%,
+    color-mix(in srgb, var(--voice-orb-glow) 28%, transparent),
+    color-mix(in srgb, var(--voice-orb-glow) 10%, transparent) 55%,
+    color-mix(in srgb, var(--voice-orb-glow) 5%, transparent)
+  );
+  box-shadow:
+    0 0 32px color-mix(in srgb, var(--voice-orb-glow) 22%, transparent),
+    inset 0 0 28px color-mix(in srgb, var(--voice-orb-glow) 18%, transparent);
+  transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+}
+
+.voice-orb-indicator {
+  display: grid;
+  place-items: center;
+  width: 44%;
+  height: 44%;
+  color: color-mix(in srgb, var(--voice-orb-glow) 85%, white);
+}
+
+/* The glyph is swapped out whenever the status changes, so fading in the child
+ * (not the slot) is what makes each new indicator appear rather than snap. */
+.voice-orb-indicator > * {
+  animation: voice-orb-indicator-in 0.25s ease;
+}
+
+.voice-orb-glyph {
+  width: 60%;
+  height: 60%;
+}
+
+.voice-orb-spinner {
+  width: 48%;
+  height: 48%;
+  border: 3px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: voice-orb-spin 0.9s linear infinite;
+}
+
+/* Five bars whose heights track the speech bands of whoever is talking. */
+.voice-orb-bars {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 42%;
+}
+
+.voice-orb-bar {
+  width: 4px;
+  min-height: 4px;
+  border-radius: 3px;
+  background: currentColor;
+  height: calc(4px + var(--voice-orb-bar-level, 0) * 36px);
+  opacity: calc(0.55 + 0.45 * var(--voice-orb-bar-level, 0));
+  transition: height 0.08s ease-out, opacity 0.08s ease-out;
+}
+
+.voice-orb-bar:nth-child(1) { --voice-orb-bar-level: var(--voice-bar-0, 0); }
+.voice-orb-bar:nth-child(2) { --voice-orb-bar-level: var(--voice-bar-1, 0); }
+.voice-orb-bar:nth-child(3) { --voice-orb-bar-level: var(--voice-bar-2, 0); }
+.voice-orb-bar:nth-child(4) { --voice-orb-bar-level: var(--voice-bar-3, 0); }
+.voice-orb-bar:nth-child(5) { --voice-orb-bar-level: var(--voice-bar-4, 0); }
+
+/* Three dots pulsing in sequence while the sentinel composes its answer. */
+.voice-orb-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 60%;
+  height: 60%;
+}
+
+.voice-orb-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.3;
+  animation: voice-orb-dot-pulse 1.25s ease-in-out infinite;
+}
+
+.voice-orb-dot:nth-child(2) { animation-delay: 0.16s; }
+.voice-orb-dot:nth-child(3) { animation-delay: 0.32s; }
+
+/* State colours: one hue per phase of the turn cycle. */
+.voice-orb--idle { --voice-orb-glow: var(--color-text-muted); }
+.voice-orb--connecting,
+.voice-orb--transcribing,
+.voice-orb--thinking { --voice-orb-glow: var(--color-warning); }
+.voice-orb--listening,
+.voice-orb--user-speaking { --voice-orb-glow: var(--color-info); }
+.voice-orb--speaking { --voice-orb-glow: var(--color-accent); }
+.voice-orb--error { --voice-orb-glow: var(--color-danger); }
+
+/* Idle and listening breathe on a timer; the audio-reactive states below
+ * override the animation with the live level instead. */
+.voice-orb--idle .voice-orb-ring,
+.voice-orb--listening .voice-orb-ring {
+  animation: voice-orb-breathe 2.4s ease-in-out infinite;
+}
+
+.voice-orb--connecting .voice-orb-core,
+.voice-orb--transcribing .voice-orb-core {
+  animation: voice-orb-throb 1.4s ease-in-out infinite;
+}
+
+/* The user's voice expands the rings. */
+.voice-orb--user-speaking .voice-orb-ring {
+  animation: none;
+  opacity: calc(0.25 + 0.55 * var(--voice-mic-level));
+  transform: translate(-50%, -50%) scale(calc(1 + 0.08 * var(--voice-mic-level)));
+  transition: transform 0.08s linear, opacity 0.08s linear;
+}
+
+.voice-orb--user-speaking .voice-orb-ring-outer {
+  opacity: calc(0.1 + 0.35 * var(--voice-mic-level));
+  transform: translate(-50%, -50%) scale(calc(1 + 0.12 * var(--voice-mic-level)));
+  transition: transform 0.08s linear, opacity 0.08s linear;
+}
+
+/* The sentinel's voice moves the whole orb, so the orb reads as the voice. */
+.voice-orb--speaking .voice-orb-core {
+  animation: none;
+  transform: scale(calc(1 + 0.09 * var(--voice-speech-level)));
+  transition: transform 0.08s linear;
+}
+
+.voice-orb--speaking .voice-orb-ring {
+  animation: none;
+  opacity: calc(0.3 + 0.5 * var(--voice-speech-level));
+  transform: translate(-50%, -50%) scale(calc(1 + 0.05 * var(--voice-speech-level)));
+  transition: transform 0.08s linear, opacity 0.08s linear;
+}
+
+.voice-orb--speaking .voice-orb-ring-outer {
+  opacity: calc(0.15 + 0.55 * var(--voice-speech-level));
+  transform: translate(-50%, -50%) scale(calc(1 + 0.18 * var(--voice-speech-level)));
+  transition: transform 0.08s linear, opacity 0.08s linear;
+}
+
+.voice-orb--speaking .voice-orb-glow {
+  opacity: calc(0.35 + 0.45 * var(--voice-speech-level));
+  transition: opacity 0.08s linear;
+}
+
+@keyframes voice-orb-breathe {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.4; }
+  50%      { transform: translate(-50%, -50%) scale(1.06); opacity: 0.15; }
+}
+
+@keyframes voice-orb-throb {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50%      { transform: scale(0.96); opacity: 0.45; }
+}
+
+@keyframes voice-orb-dot-pulse {
+  0%, 60%, 100% { transform: scale(0.7); opacity: 0.3; }
+  30%           { transform: scale(1.15); opacity: 1; }
+}
+
+@keyframes voice-orb-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes voice-orb-indicator-in {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .voice-orb-ring,
+  .voice-orb-ring-outer,
+  .voice-orb-core,
+  .voice-orb-dot,
+  .voice-orb-indicator > * {
+    animation: none !important;
+  }
+}

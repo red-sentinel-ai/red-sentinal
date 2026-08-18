@@ -27,6 +27,7 @@ interface AttackWorkspaceProps {
   submitError: string | null
   refetchAgent: () => void
   chainMismatch?: SupportedChain | null
+  onStartVoiceCall: () => void
 }
 
 export function AttackWorkspace({
@@ -44,6 +45,7 @@ export function AttackWorkspace({
   submitError,
   refetchAgent,
   chainMismatch,
+  onStartVoiceCall,
 }: AttackWorkspaceProps) {
   if (viewMode === 'chat') {
     return <ChatRoom agent={agent} onBack={onBackToAttack} />
@@ -71,6 +73,7 @@ export function AttackWorkspace({
             submitError={submitError}
             refetchAgent={refetchAgent}
             chainMismatch={chainMismatch}
+            onStartVoiceCall={onStartVoiceCall}
           />
         )}
       </div>

@@ -1,4 +1,4 @@
-import { SUI_SENTINEL_API_URL } from '@/constants'
+import { fetchSynthesizedSpeech } from '@/lib/voice/speech-synthesis'
 
 export type SpeechPlaybackStatus = 'idle' | 'loading' | 'playing'
 
@@ -40,17 +40,7 @@ export function stopSpeechPlayback() {
 }
 
 async function fetchSpeechAudioUrl(text: string): Promise<string> {
-  const response = await fetch(`${SUI_SENTINEL_API_URL}/tts`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ text })
-  })
-
-  if (!response.ok) {
-    throw new Error(`Text-to-speech request failed (${response.status})`)
-  }
-
-  return URL.createObjectURL(await response.blob())
+  return URL.createObjectURL(await fetchSynthesizedSpeech(text))
 }
 
 function cacheAudioUrl(text: string, audioUrl: string) {

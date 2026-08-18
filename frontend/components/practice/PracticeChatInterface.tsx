@@ -17,7 +17,10 @@ import { usePracticeAttacksFeed } from '@/hooks/practice/usePracticeAttacksFeed'
 import { useAttackPracticeSentinel } from '@/hooks/practice/useAttackPracticeSentinel'
 import { useAttackFeedMessages } from '@/hooks/practice/useAttackFeedMessages'
 import { useAutoResizingTextarea } from '@/hooks/useAutoResizingTextarea'
-import type { PracticeSentinelPublic } from '@/types/practice'
+import { SentinelVoiceCallButton } from '@/components/sentinel-voice/SentinelVoiceCallButton'
+import { SentinelVoiceCallOverlay } from '@/components/sentinel-voice/SentinelVoiceCallOverlay'
+import type { PracticeAttackResponse, PracticeSentinelPublic } from '@/types/practice'
+import type { SentinelVoiceTurnHandler } from '@/types/voice'
 
 interface PracticeChatInterfaceProps {
   sentinel: PracticeSentinelPublic
@@ -33,8 +36,13 @@ export function PracticeChatInterface({
   const [promptInput, setPromptInput] = useState('')
   const [pendingRound, setPendingRound] = useState<ChatMessageType[] | null>(null)
   const [activeTab, setActiveTab] = useState<'global' | 'mine'>('global')
-  const [sessionId, setSessionId] = useState<string | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [isVoiceCallOpen, setIsVoiceCallOpen] = useState(false)
+
+  // Typed and spoken attacks share one conversation with the sentinel. A ref
+  // rather than state: nothing renders it, and a voice turn started moments
+  // after a typed one must see the id the typed one just returned.
+  const sessionIdRef = useRef<string | null>(null)
 
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const textareaRef = useAutoResizingTextarea(promptInput)
@@ -45,15 +53,17 @@ export function PracticeChatInterface({
   const attackMutation = useAttackPracticeSentinel()
   const isSubmitting = attackMutation.isPending
 
+  const sentinelDisplayName = sentinel.name || `Sentinel ${sentinel.sentinel_id}`
+
   // ChatMessage is built for on-chain agents; practice only needs name/avatar/chain.
   const agentForMessage = useMemo(
     () =>
       ({
-        agent_name: sentinel.name || `Sentinel ${sentinel.sentinel_id}`,
+        agent_name: sentinelDisplayName,
         agent_image: null,
         chain: 'sui',
       }) as unknown as Agent,
-    [sentinel]
+    [sentinelDisplayName]
   )
 
   const { messages: chatMessages, isRoundIndexed } = useAttackFeedMessages(feed, pendingRound)
@@ -93,31 +103,31 @@ export function PracticeChatInterface({
     }
   }, [chatMessages, isSubmitting])
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!promptInput.trim() || isSubmitting || !attackerAddress) return
-
-    const prompt = promptInput
-    const newUserMessage: ChatMessageType = {
-      id: `user-${Date.now()}`,
-      type: 'user',
-      content: prompt,
-      timestamp: Date.now().toString(),
-      sender: attackerAddress,
-    }
-
-    setSubmitError(null)
-    setPendingRound([newUserMessage])
-    setPromptInput('')
+  /**
+   * One full attack round, shared by the composer and the voice call: show the
+   * prompt optimistically, send it, then show the sentinel's reply. Throws on
+   * failure so each caller can restore its own input state.
+   */
+  const runAttackRound = async (prompt: string): Promise<PracticeAttackResponse> => {
+    setPendingRound([
+      {
+        id: `user-${Date.now()}`,
+        type: 'user',
+        content: prompt,
+        timestamp: Date.now().toString(),
+        sender: attackerAddress,
+      },
+    ])
 
     try {
       const data = await attackMutation.mutateAsync({
         sentinelId: sentinel.sentinel_id,
         attackerAddress,
         userPrompt: prompt,
-        sessionId,
+        sessionId: sessionIdRef.current,
       })
-      setSessionId(data.session_id)
+      sessionIdRef.current = data.session_id
+
       const newAgentMessage: ChatMessageType = {
         id: `agent-new-${Date.now()}`,
         type: 'agent',
@@ -131,13 +141,34 @@ export function PracticeChatInterface({
       if (data.success) toast.success('Sentinel breached — attack succeeded!')
       // Pull the feed forward so the optimistic round resolves to server truth.
       refetchFeed()
+      return data
+    } catch (err) {
+      setPendingRound(null)
+      throw err
+    }
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!promptInput.trim() || isSubmitting || !attackerAddress) return
+
+    const prompt = promptInput
+    setSubmitError(null)
+    setPromptInput('')
+
+    try {
+      await runAttackRound(prompt)
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Attack failed'
       setSubmitError(message)
       toast.error(message)
-      setPendingRound(null)
       setPromptInput(prompt)
     }
+  }
+
+  const handleVoiceTurn: SentinelVoiceTurnHandler = async spokenPrompt => {
+    const data = await runAttackRound(spokenPrompt)
+    return { text: data.agent_response, isBreach: data.success, score: data.score }
   }
 
   return (
@@ -271,6 +302,10 @@ export function PracticeChatInterface({
               }}
             />
             <div className="chat-composer-footer justify-end">
+              <SentinelVoiceCallButton
+                onClick={() => setIsVoiceCallOpen(true)}
+                disabled={isSubmitting || !attackerAddress}
+              />
               <button
                 type="submit"
                 disabled={isSubmitting || promptInput.length === 0}
@@ -291,6 +326,14 @@ export function PracticeChatInterface({
           {submitError && <p className="chat-error-banner">{submitError}</p>}
         </form>
       </div>
+
+      {isVoiceCallOpen && (
+        <SentinelVoiceCallOverlay
+          sentinelName={sentinelDisplayName}
+          onClose={() => setIsVoiceCallOpen(false)}
+          onUserTurn={handleVoiceTurn}
+        />
+      )}
     </div>
   )
 }
