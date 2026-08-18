@@ -85,7 +85,7 @@ export const MONAD_MAINNET_CONFIG = {
   chainId: 143,
   rpcUrl: process.env.NEXT_PUBLIC_MONAD_MAINNET_RPC_URL ?? 'https://rpc.monad.xyz',
   contractAddress: (process.env.NEXT_PUBLIC_MONAD_MAINNET_CONTRACT_ADDRESS ??
-    '0x0000000000000000000000000000000000000000') as `0x${string}`,
+    '0x5edD3650E090192f0f54EDdC870B25536F5CaB29') as `0x${string}`,
   explorerUrl: 'https://monadscan.com',
   teeNetwork: 'monad-mainnet',
 }
