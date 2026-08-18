@@ -89,9 +89,16 @@ export const metadata: Metadata = {
   ],
 
   icons: {
-    icon: '/icons/logo-sm.svg',
-    shortcut: '/icons/logo-sm.svg',
-    apple: '/icons/logo-sm.svg',
+    icon: '/icons/pwa-192x192.png',
+    shortcut: '/icons/pwa-192x192.png',
+    apple: '/icons/pwa-192x192.png',
+  },
+
+  other: {
+    'mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-status-bar-style': 'black-translucent',
+    'apple-mobile-web-app-title': 'Red Sentinel',
   },
 
   openGraph: {
@@ -276,6 +283,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
         />
+        <link rel="apple-touch-icon" href="/icons/pwa-192x192.png" />
       </head>
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable} flex min-h-screen flex-col bg-[var(--color-bg-base)] text-[var(--color-text-primary)]`}

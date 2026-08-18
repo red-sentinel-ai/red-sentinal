@@ -234,7 +234,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
   if (error || !agent) {
     return (
-      <div className="flex h-[calc(100vh-64px)] items-center justify-center bg-black p-4">
+      <div className="flex h-[calc(100dvh-var(--topbar-h))] items-center justify-center bg-black p-4">
         <div className="text-center">
           <p className="industrial-header text-sm text-[var(--color-text-muted)]">
             {error?.message ? 'ERROR_LOADING_SENTINEL' : 'SENTINEL_NOT_FOUND'}
@@ -284,7 +284,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   // Focus mode - full screen chat
   if (isFocusMode) {
     return (
-      <div className="flex h-screen flex-col bg-black">
+      <div className="pt-safe flex h-[100dvh] flex-col bg-black">
         {/* Focus mode header */}
         <div className="flex h-12 shrink-0 items-center justify-between border-b border-[var(--color-border-strong)] px-4">
           <div className="flex items-center gap-3">
@@ -366,7 +366,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
   if (!isMobile) {
     return (
-      <div className="flex h-[calc(100vh-64px)] bg-black">
+      <div className="flex h-[calc(100dvh-var(--topbar-h))] bg-black">
         <ResizablePanelGroup direction="horizontal" className="w-full">
           <ResizablePanel defaultSize={28} minSize={22} maxSize={40}>
             <AgentSidebar
@@ -405,7 +405,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   }
 
   return (
-    <div className="ios-scroll flex h-[calc(100dvh-64px)] flex-col bg-black">
+    <div className="ios-scroll flex h-[calc(100dvh-var(--topbar-h))] flex-col bg-black">
       {viewMode !== 'chat' && <MobileAgentHeader onInfoClick={() => setIsSidebarOpen(true)} />}
 
       <div className="min-h-0 flex-1 overflow-hidden">{attackWorkspace}</div>

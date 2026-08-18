@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui'
 
 export const AgentChallengePageSkeleton = () => {
   return (
-    <div className="flex h-[calc(100dvh-64px)] flex-col bg-[var(--color-bg-base)] md:h-[calc(100vh-64px)] md:flex-row">
+    <div className="flex h-[calc(100dvh-var(--topbar-h))] flex-col bg-[var(--color-bg-base)] md:h-[calc(100dvh-var(--topbar-h))] md:flex-row">
       {/* Mobile header skeleton */}
       <div className="flex shrink-0 items-center gap-2 border-b border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] px-3 py-2 md:hidden">
         <Skeleton className="h-8 w-8 rounded-full bg-[var(--color-border-subtle)]" />

@@ -15,6 +15,8 @@ import {
   Users,
   type LucideIcon,
 } from 'lucide-react'
+import { InstallButton } from '@/components/pwa/InstallButton'
+import { useInstallPrompt } from '@/context/InstallPromptContext'
 
 import { APP_NETWORK, SUI_SENTINEL_SUPPORT_EMAIL } from '@/constants'
 import { cn } from '@/lib/utils'
@@ -61,6 +63,7 @@ function isItemActive(pathname: string, href: string) {
 export function AppSidebar() {
   const pathname = usePathname()
   const { isMobile, setOpenMobile } = useSidebar()
+  const { isInstalled } = useInstallPrompt()
 
   const renderItem = (item: NavItem) => {
     const Icon = item.icon
@@ -88,7 +91,7 @@ export function AppSidebar() {
       collapsible="offcanvas"
       className="z-50 border-[var(--color-border-default)] bg-[var(--sidebar)]"
     >
-      <SidebarHeader className="p-8">
+      <SidebarHeader className="p-8 pt-[calc(2rem+var(--sat))]">
         <div className="flex min-h-12 items-start">
           <Link href="/" aria-label="Red Sentinel home" className="flex min-w-0 flex-col gap-1">
             <Image
@@ -113,6 +116,12 @@ export function AppSidebar() {
 
       <SidebarFooter className="mt-auto border-t border-[var(--color-border-default)] p-8">
         <div className="space-y-4">
+          {!isInstalled && (
+            <InstallButton
+              variant="sidebar"
+              onClick={() => isMobile && setOpenMobile(false)}
+            />
+          )}
           <Link
             href={`mailto:${SUI_SENTINEL_SUPPORT_EMAIL}`}
             className="font-body flex items-center gap-3 text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] transition-colors hover:text-white"
