@@ -31,10 +31,7 @@ interface PracticeChatInterfaceProps {
   onOpenSentinelInfo?: () => void
 }
 
-function transcriptToChatMessage(
-  transcript: VoiceTranscript,
-  sender?: string
-): ChatMessageType {
+function transcriptToChatMessage(transcript: VoiceTranscript, sender?: string): ChatMessageType {
   return {
     id: `voice-${transcript.id}`,
     type: transcript.role === 'user' ? 'user' : 'agent',
@@ -179,6 +176,8 @@ export function PracticeChatInterface({
     return filtered
   }, [chatMessages, activeTab, attackerAddress])
 
+  const isVoiceMode = interactionMode === 'voice' && !isBreached
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!promptInput.trim() || isSubmitting || !attackerAddress) return
@@ -227,7 +226,7 @@ export function PracticeChatInterface({
   }
 
   return (
-    <div className="flex h-full flex-1 flex-col bg-[var(--color-bg-base)]">
+    <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-[var(--color-bg-base)]">
       <JuryResponseModal
         isOpen={isJuryModalOpen}
         onClose={() => setIsJuryModalOpen(false)}
@@ -297,13 +296,18 @@ export function PracticeChatInterface({
             title="Sentinel info"
           >
             <Info className="h-3 w-3" />
-            <span className="industrial-header hidden text-[9px] tracking-widest sm:inline">INFO</span>
+            <span className="industrial-header hidden text-[9px] tracking-widest sm:inline">
+              INFO
+            </span>
           </button>
         )}
       </div>
 
       {/* Chat Feed */}
-      <div ref={chatContainerRef} className="chat-feed terminal-scrollbar">
+      <div
+        ref={chatContainerRef}
+        className={clsx('chat-feed terminal-scrollbar', isVoiceMode && 'hidden md:block')}
+      >
         {displayedMessages.length === 0 && (
           <div className="py-8 text-center sm:py-10">
             <span className="chat-feed-notice industrial-header">AWAITING_INITIAL_PAYLOADS</span>
@@ -358,12 +362,11 @@ export function PracticeChatInterface({
             )}
           </AnimatePresence>
         </div>
-
       </div>
 
       {/* Input Area */}
-      {interactionMode === 'voice' && !isBreached ? (
-        <div className="min-h-[200px] shrink-0 border-t border-[var(--color-border-strong)] sm:min-h-[240px]">
+      {isVoiceMode ? (
+        <div className="min-h-0 flex-1 border-t border-[var(--color-border-strong)] md:min-h-[240px] md:flex-none md:shrink-0">
           <VoiceChatSurface
             agentName={sentinel.name || `Sentinel ${sentinel.sentinel_id}`}
             status={voice.status}
@@ -451,7 +454,8 @@ function ModeButton({
         active
           ? 'bg-white text-black'
           : 'text-[var(--color-text-muted)] hover:bg-[var(--color-bg-elevated)] hover:text-white',
-        disabled && 'cursor-not-allowed opacity-40 hover:bg-transparent hover:text-[var(--color-text-muted)]'
+        disabled &&
+          'cursor-not-allowed opacity-40 hover:bg-transparent hover:text-[var(--color-text-muted)]'
       )}
       aria-pressed={active}
     >
