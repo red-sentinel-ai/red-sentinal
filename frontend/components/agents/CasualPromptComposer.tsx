@@ -60,20 +60,22 @@ export function CasualPromptComposer({
             <span className="industrial-header text-[var(--color-text-muted)]/50 text-[9px] tracking-widest">
               FEE: <span className="text-[var(--color-text-muted)]">FREE</span>
             </span>
-            <button
-              type="submit"
-              disabled={isSubmitting || value.length === 0}
-              className="chat-submit-button button-ghost-terminal"
-            >
-              {isSubmitting ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              ) : (
-                <>
-                  <span>EXECUTE</span>
-                  <Zap className="h-3.5 w-3.5" />
-                </>
-              )}
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="submit"
+                disabled={isSubmitting || value.length === 0}
+                className="chat-submit-button button-ghost-terminal"
+              >
+                {isSubmitting ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <>
+                    <span>EXECUTE</span>
+                    <Zap className="h-3.5 w-3.5" />
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
 
