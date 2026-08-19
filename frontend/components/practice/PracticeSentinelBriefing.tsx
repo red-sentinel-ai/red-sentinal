@@ -2,10 +2,16 @@
 
 import { Shield, Target } from 'lucide-react'
 
+import { cn } from '@/lib/utils'
 import type { PracticeSentinelPublic } from '@/types/practice'
+import { PracticeSentinelSpecTile } from './PracticeSentinelSpecTile'
 
 export function PracticeSentinelBriefing({ sentinel }: { sentinel: PracticeSentinelPublic }) {
   const sentinelName = sentinel.name || `Sentinel ${sentinel.sentinel_id}`
+  const modelSpecs = [
+    { label: 'MODEL', value: sentinel.model_name },
+    { label: 'PROVIDER', value: sentinel.model_provider },
+  ].filter(spec => Boolean(spec.value))
 
   return (
     <div className="flex flex-col gap-6">
@@ -27,6 +33,23 @@ export function PracticeSentinelBriefing({ sentinel }: { sentinel: PracticeSenti
           </p>
         )}
       </div>
+
+      {modelSpecs.length > 0 && (
+        <div
+          className={cn(
+            'grid gap-px bg-[var(--color-border-strong)]',
+            modelSpecs.length > 1 ? 'grid-cols-2' : 'grid-cols-1'
+          )}
+        >
+          {modelSpecs.map(spec => (
+            <PracticeSentinelSpecTile
+              key={spec.label}
+              label={spec.label}
+              value={spec.value.toUpperCase()}
+            />
+          ))}
+        </div>
+      )}
 
       <div>
         <p className="industrial-header mb-2 flex items-center gap-1.5 text-[10px] text-accent">
