@@ -12,29 +12,31 @@ export function VoiceControls({ onLeave }: VoiceControlsProps) {
   const hmsActions = useHMSActions()
   const isAudioEnabled = useHMSStore(selectIsLocalAudioEnabled)
 
-  const toggleMic = () => hmsActions.setLocalAudioEnabled(!isAudioEnabled)
-
   return (
-    <div className="flex items-center justify-center gap-3 border-t border-[var(--color-border-strong)] px-4 py-4">
+    <div className="flex shrink-0 items-center justify-center gap-5 px-4 py-4 pb-safe">
+      {/* Mic toggle — circular, phone-call style */}
       <button
         type="button"
-        onClick={toggleMic}
+        onClick={() => hmsActions.setLocalAudioEnabled(!isAudioEnabled)}
+        aria-label={isAudioEnabled ? 'Mute microphone' : 'Unmute microphone'}
         className={cn(
-          'button-ghost-terminal flex items-center gap-2 px-5 py-3',
-          !isAudioEnabled && 'border-[var(--color-danger)] text-[var(--color-danger)]'
+          'flex h-12 w-12 items-center justify-center rounded-full border transition-colors',
+          isAudioEnabled
+            ? 'border-[var(--color-border-strong)] bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)]'
+            : 'border-[var(--color-danger)] bg-[var(--color-danger)] text-white'
         )}
       >
-        {isAudioEnabled ? <Mic className="h-4 w-4" /> : <MicOff className="h-4 w-4" />}
-        <span>{isAudioEnabled ? 'MUTE' : 'UNMUTE'}</span>
+        {isAudioEnabled ? <Mic className="h-5 w-5" /> : <MicOff className="h-5 w-5" />}
       </button>
 
+      {/* Leave — red circular hang-up */}
       <button
         type="button"
         onClick={onLeave}
-        className="flex items-center gap-2 border border-[var(--color-danger)] px-5 py-3 text-[11px] font-bold uppercase tracking-widest text-[var(--color-danger)] transition-colors hover:bg-[var(--color-danger)] hover:text-white"
+        aria-label="Leave voice room"
+        className="flex h-14 w-14 items-center justify-center rounded-full border border-[var(--color-danger)] bg-[var(--color-danger)] text-white transition-transform active:scale-95"
       >
-        <PhoneOff className="h-4 w-4" />
-        <span>LEAVE</span>
+        <PhoneOff className="h-6 w-6" />
       </button>
     </div>
   )

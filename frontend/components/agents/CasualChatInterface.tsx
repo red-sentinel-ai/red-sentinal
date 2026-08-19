@@ -29,10 +29,7 @@ function generateVoiceSessionId(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`
 }
 
-function transcriptToChatMessage(
-  transcript: VoiceTranscript,
-  sender?: string
-): ChatMessageType {
+function transcriptToChatMessage(transcript: VoiceTranscript, sender?: string): ChatMessageType {
   return {
     id: `voice-${transcript.id}`,
     type: transcript.role === 'user' ? 'user' : 'agent',
@@ -102,8 +99,6 @@ export function CasualChatInterface({ agent }: CasualChatInterfaceProps) {
       }
     }
   }, [isBreached, interactionMode, isVoiceActive, voice])
-
-
 
   const handleSubmit = async () => {
     const prompt = promptInput.trim()
@@ -182,8 +177,10 @@ export function CasualChatInterface({ agent }: CasualChatInterfaceProps) {
     }
   }, [isVoiceActive, voice.start])
 
+  const isVoiceMode = interactionMode === 'voice' && !isBreached
+
   return (
-    <div className="flex h-full flex-1 flex-col bg-[var(--color-bg-base)]">
+    <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-[var(--color-bg-base)]">
       <div className="chat-toolbar flex items-center justify-between">
         <div className="flex items-center gap-1">
           <ModeButton
@@ -207,16 +204,21 @@ export function CasualChatInterface({ agent }: CasualChatInterfaceProps) {
             VOICE DISABLED // BREACHED
           </span>
         ) : (
-          <span className="industrial-header ml-auto hidden text-[9px] tracking-[4px] text-[var(--color-text-muted)]/60 sm:block">
+          <span className="industrial-header text-[var(--color-text-muted)]/60 ml-auto hidden text-[9px] tracking-[4px] sm:block">
             FREE // OFF-CHAIN
           </span>
         )}
       </div>
 
-      <CasualMessageFeed agent={agent} messages={messages} isSubmitting={isSubmitting} />
+      <CasualMessageFeed
+        agent={agent}
+        messages={messages}
+        isSubmitting={isSubmitting}
+        className={isVoiceMode ? 'hidden md:flex' : undefined}
+      />
 
-      {interactionMode === 'voice' && !isBreached ? (
-        <div className="min-h-[200px] shrink-0 border-t border-[var(--color-border-strong)] sm:min-h-[240px]">
+      {isVoiceMode ? (
+        <div className="min-h-0 flex-1 border-t border-[var(--color-border-strong)] md:min-h-[240px] md:flex-none md:shrink-0">
           <VoiceChatSurface
             agentName={agent.agent_name || 'Sentinel'}
             status={voice.status}
@@ -269,7 +271,8 @@ function ModeButton({
         active
           ? 'bg-white text-black'
           : 'text-[var(--color-text-muted)] hover:bg-[var(--color-bg-elevated)] hover:text-white',
-        disabled && 'cursor-not-allowed opacity-40 hover:bg-transparent hover:text-[var(--color-text-muted)]'
+        disabled &&
+          'cursor-not-allowed opacity-40 hover:bg-transparent hover:text-[var(--color-text-muted)]'
       )}
       aria-pressed={active}
     >
