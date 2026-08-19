@@ -8,6 +8,7 @@ export interface PracticeSentinel {
   model_provider: string
   model_name: string
   is_active: boolean
+  is_breached: boolean
   visibility: string
   created_at: string
 }

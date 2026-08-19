@@ -1,26 +1,39 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Loader2, Search, ShieldX, Swords } from 'lucide-react'
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { usePracticeSentinels } from '@/hooks/practice/usePracticeSentinels'
-import { PracticeSentinelCard } from './PracticeSentinelCard'
+import type { PracticeSentinel } from '@/types/practice'
+import { PracticeSentinelGrid } from './PracticeSentinelGrid'
 
 export function PracticeListView() {
   const { data, isPending, isError } = usePracticeSentinels()
   const [search, setSearch] = useState('')
 
-  const sentinels = data?.sentinels ?? []
-  const normalized = search.trim().toLowerCase()
-  const filtered = normalized
-    ? sentinels.filter(s =>
-        [s.name, s.attack_goal, s.public_instructions, s.model_name]
-          .filter(Boolean)
-          .join(' ')
-          .toLowerCase()
-          .includes(normalized)
-      )
-    : sentinels
+  const normalizedSearch = search.trim().toLowerCase()
+
+  const { activeSentinels, breachedSentinels } = useMemo(() => {
+    const matchesSearch = (sentinel: PracticeSentinel) =>
+      !normalizedSearch ||
+      [
+        sentinel.name,
+        sentinel.attack_goal,
+        sentinel.public_instructions,
+        sentinel.model_name,
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase()
+        .includes(normalizedSearch)
+
+    const matching = (data?.sentinels ?? []).filter(matchesSearch)
+    return {
+      activeSentinels: matching.filter(sentinel => !sentinel.is_breached),
+      breachedSentinels: matching.filter(sentinel => sentinel.is_breached),
+    }
+  }, [data, normalizedSearch])
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-10 md:px-12">
@@ -63,21 +76,43 @@ export function PracticeListView() {
             FAILED_TO_LOAD_SENTINELS
           </p>
         </div>
-      ) : filtered.length === 0 ? (
-        <div className="flex h-64 flex-col items-center justify-center gap-3 text-center">
-          <Swords className="h-8 w-8 text-[var(--color-text-muted)] opacity-40" />
-          <p className="text-sm text-[var(--color-text-muted)]">
-            {normalized
-              ? 'No sentinels match your search.'
-              : 'No practice sentinels available yet.'}
-          </p>
-        </div>
       ) : (
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {filtered.map(sentinel => (
-            <PracticeSentinelCard key={sentinel.sentinel_id} sentinel={sentinel} />
-          ))}
-        </div>
+        <Tabs defaultValue="active">
+          <nav className="mb-8 flex items-center border-b border-[var(--color-border-subtle)]">
+            <TabsList className="flex h-auto gap-0 bg-transparent p-0">
+              <TabsTrigger value="active" className="profile-tab-trigger">
+                <Swords className="h-4 w-4" />
+                Active ({activeSentinels.length})
+              </TabsTrigger>
+              <TabsTrigger value="breached" className="profile-tab-trigger">
+                <ShieldX className="h-4 w-4" />
+                Breached ({breachedSentinels.length})
+              </TabsTrigger>
+            </TabsList>
+          </nav>
+
+          <TabsContent value="active">
+            <PracticeSentinelGrid
+              sentinels={activeSentinels}
+              emptyMessage={
+                normalizedSearch
+                  ? 'No unbreached sentinels match your search.'
+                  : 'No practice sentinels available yet.'
+              }
+            />
+          </TabsContent>
+
+          <TabsContent value="breached">
+            <PracticeSentinelGrid
+              sentinels={breachedSentinels}
+              emptyMessage={
+                normalizedSearch
+                  ? 'No breached sentinels match your search.'
+                  : 'No practice sentinel has been breached yet.'
+              }
+            />
+          </TabsContent>
+        </Tabs>
       )}
     </div>
   )
