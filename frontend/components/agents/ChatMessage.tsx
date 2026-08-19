@@ -27,6 +27,8 @@ const COLLAPSED_MESSAGE_CLAMP = 'line-clamp-[14]'
 
 const CONTENT_OVERFLOW_TOLERANCE_PX = 2
 
+const ONCHAIN_BREACH_BANNER_LABEL = 'SENTINEL_BREACHED // FUNDS_EXTRACTED'
+
 type ChatMessageProps = {
   message: ChatMessageType
   agent: Agent
@@ -34,6 +36,7 @@ type ChatMessageProps = {
   isWinningPrompt?: boolean
   onShowJury?: () => void
   hideSuccessBanner?: boolean
+  successBannerLabel?: string
 }
 
 export const ChatMessage = ({
@@ -43,6 +46,7 @@ export const ChatMessage = ({
   isWinningPrompt,
   onShowJury,
   hideSuccessBanner,
+  successBannerLabel = ONCHAIN_BREACH_BANNER_LABEL,
 }: ChatMessageProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const [isContentClamped, setIsContentClamped] = useState(false)
@@ -244,7 +248,7 @@ export const ChatMessage = ({
       {message.isSuccess && !hideSuccessBanner && (
         <div className="border-[var(--color-success)]/30 border bg-[var(--color-success-muted)] p-4">
           <div className="industrial-header text-center text-sm text-[var(--color-success)]">
-            SENTINEL_BREACHED // FUNDS_EXTRACTED
+            {successBannerLabel}
           </div>
         </div>
       )}

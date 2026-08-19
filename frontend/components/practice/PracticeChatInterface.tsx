@@ -19,6 +19,8 @@ import { useAttackFeedMessages } from '@/hooks/practice/useAttackFeedMessages'
 import { useAutoResizingTextarea } from '@/hooks/useAutoResizingTextarea'
 import type { PracticeSentinelPublic } from '@/types/practice'
 
+const PRACTICE_BREACH_BANNER_LABEL = 'SENTINEL_BREACHED // OBJECTIVE_COMPLETE'
+
 interface PracticeChatInterfaceProps {
   sentinel: PracticeSentinelPublic
   attackerAddress: string
@@ -205,6 +207,7 @@ export function PracticeChatInterface({
                   agent={agentForMessage}
                   senderProfile={null}
                   isWinningPrompt={isWinningUserPrompt}
+                  successBannerLabel={PRACTICE_BREACH_BANNER_LABEL}
                   onShowJury={() => message.juryResponse && handleShowJury(message.juryResponse)}
                 />
               )

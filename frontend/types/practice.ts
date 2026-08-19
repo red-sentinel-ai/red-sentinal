@@ -26,6 +26,8 @@ export interface PracticeSentinelPublic {
   sentinel_type: string
   public_instructions: string
   attack_goal: string
+  model_provider?: string
+  model_name?: string
   is_active: boolean
 }
 
