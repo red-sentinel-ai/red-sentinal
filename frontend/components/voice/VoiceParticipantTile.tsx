@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { Mic, MicOff } from 'lucide-react'
+import { MicOff } from 'lucide-react'
 import { selectIsPeerAudioEnabled, useHMSStore, type HMSPeer } from '@100mslive/react-sdk'
 import { cn, truncateAddress, generateAvatarUrl } from '@/lib/utils'
 
@@ -24,44 +24,30 @@ export function VoiceParticipantTile({
   const avatar = avatarUrl || generateAvatarUrl(peer.name || displayName)
 
   return (
-    <div className="flex items-center gap-3 border border-[var(--color-border-strong)] bg-[var(--color-bg-elevated)] px-3 py-2.5">
+    <div className="flex flex-col items-center gap-1.5">
       <div
         className={cn(
-          'relative h-9 w-9 shrink-0 overflow-hidden rounded-full border',
-          isSpeaking ? 'border-[var(--color-success)]' : 'border-[var(--color-border-strong)]'
+          'relative h-14 w-14 shrink-0 overflow-hidden rounded-full border-2 transition-colors',
+          isSpeaking
+            ? 'border-[var(--color-success)] shadow-[0_0_0_3px_var(--color-success-muted)]'
+            : 'border-[var(--color-border-strong)]'
         )}
       >
-        <Image src={avatar} alt={displayName} fill sizes="36px" className="object-cover" />
+        <Image src={avatar} alt={displayName} fill sizes="56px" className="object-cover" />
+        {!isMicOn && (
+          <span className="absolute bottom-0 right-0 flex h-5 w-5 items-center justify-center rounded-full border border-[var(--color-bg-elevated)] bg-[var(--color-danger)]">
+            <MicOff className="h-2.5 w-2.5 text-white" />
+          </span>
+        )}
       </div>
-
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
-          <Link
-            href={`/u/${username}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="truncate font-mono text-xs text-white transition-colors hover:text-[var(--color-gold-primary)] hover:underline"
-          >
-            {displayName}
-          </Link>
-          {peer.isLocal && (
-            <span className="industrial-header text-[8px] tracking-widest text-[var(--color-text-muted)]">
-              YOU
-            </span>
-          )}
-        </div>
-      </div>
-
-      {isMicOn ? (
-        <Mic
-          className={cn(
-            'h-4 w-4 shrink-0',
-            isSpeaking ? 'text-[var(--color-success)]' : 'text-[var(--color-text-muted)]'
-          )}
-        />
-      ) : (
-        <MicOff className="h-4 w-4 shrink-0 text-[var(--color-danger)]" />
-      )}
+      <Link
+        href={`/u/${username}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="max-w-[64px] truncate font-mono text-[10px] text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-accent)] hover:underline"
+      >
+        {peer.isLocal ? 'You' : displayName}
+      </Link>
     </div>
   )
 }
