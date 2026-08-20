@@ -13,6 +13,7 @@ import { CHAINS, type SupportedChain } from '@/constants/chains'
 import { AgentDropdown } from '../agents/AgentCardDropdown'
 import { useWithdrawAgentModal } from '@/hooks/agents/useWithdrawAgentModal'
 import { cn, formatDuration, truncateAddress } from '@/lib/utils'
+import { getSentinelStatus } from '@/lib/sentinel-status'
 import { PrizePoolChangeDisplay } from '../agents/PrizePoolChangeDisplay'
 import { TokenAmount } from '../ui/common/TokenAmount'
 import { Flame } from 'lucide-react'
@@ -57,7 +58,9 @@ export const ProfileSentinelCard = ({
   const tokenDivisor = Math.pow(10, token.decimals)
 
   const hasNoBalance = Number(agent.total_balance) === 0
-  const isAttackPaused = !isWithdrawalLocked && Number(agent.unlock_timestamp) > 0
+  const hasFundingLock = Number(agent.unlock_timestamp) > 0
+
+  const isAttackPaused = getSentinelStatus(agent) === 'paused' || (hasNoBalance && hasFundingLock)
   const earnings = Number(agent.accumulated_fees || 0) / tokenDivisor
   const hasEarnings = earnings > 0
 

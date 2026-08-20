@@ -17,6 +17,7 @@ import { truncateAddress } from '@/lib/utils'
 import type { ConsumePromptApiResponse } from '@/types'
 import type { ChatEvent } from '@/hooks/agents/useAgentChatHistory'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
+import { getSentinelStatus } from '@/lib/sentinel-status'
 import { useTokenCount } from '@/hooks/useTokenCount'
 import { useAutoResizingTextarea } from '@/hooks/useAutoResizingTextarea'
 import type { Agent } from '@/types/agents'
@@ -75,13 +76,9 @@ export default function ChatInterface({
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
   const { isFocusMode, enableFocusMode } = useFocusMode()
 
-  const [isAttackPaused, setIsAttackPaused] = useState(false)
+  const isAttackPaused = getSentinelStatus(agent) === 'paused'
 
   const agentToken = getTokenForCoinType(agent.coin_type, agent.chain)
-
-  useEffect(() => {
-    setIsAttackPaused(Number(agent.unlock_timestamp) < Date.now())
-  }, [agent.unlock_timestamp])
 
   // Source of truth: the indexed on-chain chat history.
   const serverMessages = useMemo<ChatMessage[]>(() => {
