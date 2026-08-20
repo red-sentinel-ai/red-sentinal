@@ -39,9 +39,12 @@ const nextConfig: NextConfig = {
   },
   webpack(config, { isServer, dev }) {
     config.experiments = {
-      asyncWebAssembly: true,
       layers: true,
     }
+
+    config.ignoreWarnings = [
+      { module: /node_modules[\\/]ox[\\/]_esm[\\/]tempo/ },
+    ]
 
     return config
   },
