@@ -225,7 +225,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   // FAQ Schema for common questions
   const faqSchema = {
-    '@context': 'https://schema.org',
     '@type': 'FAQPage',
     mainEntity: [
       {
@@ -252,7 +251,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           text: 'Blockchain gives Red Sentinel verifiable outcomes, transparent bounty pools, instant reward settlement, and portable reputation. Every mission, exploit, defense, and payout can be recorded on-chain, so users can prove what they completed and rewards can be distributed without relying on a central gatekeeper.',
         },
       },
-
       {
         '@type': 'Question',
         name: 'What is AI red teaming?',
@@ -264,24 +262,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     ],
   }
 
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      { ...organizationSchema, '@context': undefined },
+      { ...softwareSchema, '@context': undefined },
+      { ...websiteSchema, '@context': undefined },
+      faqSchema,
+    ],
+  }
+
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
         <link rel="apple-touch-icon" href="/icons/pwa-192x192.png" />
       </head>

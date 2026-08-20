@@ -1,22 +1,16 @@
 import { useState, useEffect, useCallback } from 'react'
-import { encoding_for_model, TiktokenModel } from 'tiktoken'
+import { encodingForModel, TiktokenModel } from 'js-tiktoken'
 import { useDebouncedCallback } from 'use-debounce'
 
 export const useTokenCount = (model: TiktokenModel = 'gpt-4') => {
   const [tokenCount, setTokenCount] = useState<number>(0)
   const [isDebouncing, setIsDebouncing] = useState(false)
-  const [encoder, setEncoder] = useState<ReturnType<typeof encoding_for_model> | null>(null)
+  const [encoder, setEncoder] = useState<ReturnType<typeof encodingForModel> | null>(null)
   const [lastText, setLastText] = useState('')
 
   useEffect(() => {
-    const enc = encoding_for_model(model)
+    const enc = encodingForModel(model)
     setEncoder(enc)
-
-    return () => {
-      if (enc) {
-        enc.free()
-      }
-    }
   }, [model])
 
   const debouncedCount = useDebouncedCallback((text: string) => {

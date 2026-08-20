@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { Loader2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-import { generateAvatarUrl } from '@/lib/utils'
+import { cn, generateAvatarUrl } from '@/lib/utils'
 import type { Agent } from '@/types/agents'
 import type { ChatMessage as ChatMessageType } from './ChatInterface'
 import { ChatMessage } from './ChatMessage'
@@ -14,9 +14,15 @@ interface CasualMessageFeedProps {
   agent: Agent
   messages: ChatMessageType[]
   isSubmitting: boolean
+  className?: string
 }
 
-export function CasualMessageFeed({ agent, messages, isSubmitting }: CasualMessageFeedProps) {
+export function CasualMessageFeed({
+  agent,
+  messages,
+  isSubmitting,
+  className,
+}: CasualMessageFeedProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -26,19 +32,19 @@ export function CasualMessageFeed({ agent, messages, isSubmitting }: CasualMessa
   }, [messages, isSubmitting])
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
+    <div className={cn('flex min-h-0 flex-1 flex-col', className)}>
       <div className="chat-toolbar hidden md:flex">
         <span className="industrial-header text-[11px] tracking-widest text-white">
           CASUAL_CHAT
         </span>
-        <span className="industrial-header ml-auto text-[9px] tracking-[4px] text-[var(--color-text-muted)]/60">
+        <span className="industrial-header text-[var(--color-text-muted)]/60 ml-auto text-[9px] tracking-[4px]">
           FREE // OFF-CHAIN
         </span>
       </div>
 
       <div ref={scrollRef} className="chat-feed terminal-scrollbar">
         {messages.length === 0 && !isSubmitting && (
-          <div className="py-12 text-center">
+          <div className="py-8 text-center sm:py-10">
             <span className="chat-feed-notice industrial-header">START_A_CONVERSATION</span>
           </div>
         )}
@@ -59,7 +65,7 @@ export function CasualMessageFeed({ agent, messages, isSubmitting }: CasualMessa
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="flex flex-col gap-3"
+                className="flex flex-col gap-2 sm:gap-3"
               >
                 <div className="flex items-center gap-2 sm:gap-3">
                   <div className="flex h-7 w-7 shrink-0 items-center justify-center border border-[var(--color-border-strong)] bg-[var(--color-bg-elevated)] sm:h-8 sm:w-8">
@@ -75,7 +81,7 @@ export function CasualMessageFeed({ agent, messages, isSubmitting }: CasualMessa
                     SENTINEL_PROCESSING...
                   </div>
                 </div>
-                <div className="border-hairline flex items-center gap-3 bg-[var(--color-bg-elevated)] p-4 sm:p-6">
+                <div className="border-hairline flex items-center gap-3 bg-[var(--color-bg-elevated)] p-3 sm:p-4">
                   <Loader2 className="h-4 w-4 animate-spin text-[var(--color-text-muted)]" />
                   <span className="font-mono text-xs uppercase text-[var(--color-text-muted)]">
                     Thinking…
