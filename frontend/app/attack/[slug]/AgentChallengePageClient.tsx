@@ -1,5 +1,5 @@
 'use client'
-import { useState, useCallback, useEffect, useMemo, useRef } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useQueryClient } from '@tanstack/react-query'
 import posthog from 'posthog-js'
@@ -41,7 +41,7 @@ const VOICE_PERMISSION_HINT =
 export default function AgentChallengePage({ slug }: { slug: string }) {
   const queryClient = useQueryClient()
   const { activeChain } = useActiveChain()
-  const { address: connectedAddress, isHydrated } = useConnectedAddress()
+  const { address: connectedAddress } = useConnectedAddress()
   const { isFocusMode, disableFocusMode } = useFocusMode()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -51,17 +51,11 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('attack')
-  const [challengeMode, setChallengeMode] = useState<ChallengeMode>('attack')
+  const [challengeMode, setChallengeMode] = useState<ChallengeMode>('casual')
   const isMobile = useMediaQuery('(max-width: 768px)')
 
   const { data: agent, isLoading, error, refetch } = useAgent(slug)
 
-  const didInitChallengeMode = useRef(false)
-  useEffect(() => {
-    if (didInitChallengeMode.current || !agent || !isHydrated) return
-    didInitChallengeMode.current = true
-    if (!connectedAddress) setChallengeMode('casual')
-  }, [agent, isHydrated, connectedAddress])
   const {
     data: chat,
     isLoading: chatLoading,
