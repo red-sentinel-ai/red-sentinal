@@ -177,6 +177,15 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
     consumePrompt = evmConsumePrompt as typeof suiConsumePrompt // we should fix this
   }
 
+  // The bounty only grows once the indexer has picked the donation up, so wait
+  // out roughly one poll cycle instead of refetching a value we know is stale.
+  const handleBountyDonated = useCallback(() => {
+    setTimeout(() => {
+      refetch()
+      queryClient.invalidateQueries({ queryKey: [AGENT_QUERY_KEY, slug, APP_NETWORK] })
+    }, 5000)
+  }, [refetch, queryClient, slug])
+
   const handleTextChatClick = useCallback(() => {
     setIsSidebarOpen(false)
     setViewMode('chat')
@@ -331,6 +340,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
                   }}
                   onTextChat={handleTextChatClick}
                   onVoiceChat={handleVoiceChatClick}
+                  onDonated={handleBountyDonated}
                 />
               </motion.div>
             </>
@@ -368,6 +378,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
               onReadMore={() => setIsReadMoreOpen(true)}
               onTextChat={handleTextChatClick}
               onVoiceChat={handleVoiceChatClick}
+              onDonated={handleBountyDonated}
             />
           </ResizablePanel>
           <ResizableHandle withHandle={true} className="bg-[var(--color-border-strong)]" />
@@ -429,6 +440,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
                 }}
                 onTextChat={handleTextChatClick}
                 onVoiceChat={handleVoiceChatClick}
+                onDonated={handleBountyDonated}
               />
             </motion.div>
           </>

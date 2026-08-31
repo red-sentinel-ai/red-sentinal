@@ -18,6 +18,8 @@ import {
 } from '@/constants'
 import { getTokenForCoinType } from '@/constants/tokens'
 import { CHAINS, isEvmChain } from '@/constants/chains'
+import { supportsDonations } from '@/constants/evm'
+import { isSentinelAttackable } from '@/lib/sentinel-status'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { getExplorerObjectUrl, getExplorerTxUrl } from '@/lib/explorer'
 import type { Agent } from '@/types/agents'
@@ -31,6 +33,7 @@ import {
 } from '@/lib/utils'
 import { Skeleton } from '@/components/ui'
 import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
+import { DonateFundsModal } from '@/components/agents/DonateFundsModal'
 import { TokenAmount } from '../ui/common/TokenAmount'
 import { SocialMissionModal } from '@/components/rewards/SocialMissionModal'
 import { REWARDS_CONSTANTS } from '@/constants/rewards'
@@ -44,6 +47,8 @@ interface AgentSidebarProps {
   onReadMore?: () => void
   onTextChat?: () => void
   onVoiceChat?: () => void
+  /** Called after a confirmed bounty donation so the page can refetch the agent. */
+  onDonated?: () => void
 }
 
 const DUMMY_CREATOR_REWARD = 0.05
@@ -94,7 +99,13 @@ function getSentinelOwnerLink(agent: Agent): SentinelOwnerLink {
   return { label: truncateAddress(agent.creator), href: `/u/${agent.creator}` }
 }
 
-export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: AgentSidebarProps) => {
+export const AgentSidebar = ({
+  agent,
+  onReadMore,
+  onTextChat,
+  onVoiceChat,
+  onDonated,
+}: AgentSidebarProps) => {
   const [activeSince, setActiveSince] = useState({
     days: 0,
     hours: 0,
@@ -108,6 +119,7 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
   const [timeRemaining, setTimeRemaining] = useState<string | null>(null)
   const [isChartModalOpen, setIsChartModalOpen] = useState(false)
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
+  const [isDonateModalOpen, setIsDonateModalOpen] = useState(false)
 
   const { address: connectedAddress, chain: connectedChain } = useConnectedAddress()
   const isOwner =
@@ -131,6 +143,8 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
 
   const isDrained = agent.state === 'defeated'
   const winnerAddress = agent.winner?.address ?? null
+
+  const canDonate = supportsDonations(agent.chain) && isSentinelAttackable(agent)
 
   useEffect(() => {
     if (!agent.timestampMs || isDrained) return
@@ -334,6 +348,14 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
                 </div>
               </div>
             </div>
+            {canDonate && (
+              <button
+                onClick={() => setIsDonateModalOpen(true)}
+                className="industrial-header w-full border border-white bg-transparent py-2 text-[10px] tracking-[2px] text-white transition-all hover:bg-white hover:text-black"
+              >
+                DONATE_FUNDS
+              </button>
+            )}
             {!isDrained && prizePoolData && prizePoolData.history.length > 0 && (
               <button
                 onClick={() => setIsChartModalOpen(true)}
@@ -616,6 +638,15 @@ export const AgentSidebar = ({ agent, onReadMore, onTextChat, onVoiceChat }: Age
         agentName={agent.agent_name}
         tokenSymbol={agentToken.symbol}
       />
+
+      {canDonate && (
+        <DonateFundsModal
+          open={isDonateModalOpen}
+          onClose={() => setIsDonateModalOpen(false)}
+          agent={agent}
+          onDonated={onDonated}
+        />
+      )}
 
       <SocialMissionModal
         mission={SHARE_MISSION}
