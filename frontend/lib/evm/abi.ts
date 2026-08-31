@@ -84,6 +84,18 @@ export const SENTINEL_ABI = [
     outputs: [],
   },
   {
+    // Unlike fundAgent, donateToAgent needs no AgentCap/ownership — anyone can
+    // top up a sentinel's bounty, and it does not reset the owner withdrawal lock.
+    type: 'function',
+    name: 'donateToAgent',
+    stateMutability: 'payable',
+    inputs: [
+      { name: 'agentId', type: 'string' },
+      { name: 'amount', type: 'uint256' },
+    ],
+    outputs: [],
+  },
+  {
     type: 'function',
     name: 'withdrawFromAgent',
     stateMutability: 'nonpayable',

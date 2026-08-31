@@ -1,6 +1,6 @@
 import { APP_NETWORK } from './shared'
 import type { SupportedToken } from './shared'
-import type { EvmChainKey } from './chains'
+import { toEvmChainKey, type EvmChainKey, type SupportedChain } from './chains'
 import { getSupportedTokens } from './tokens'
 
 // Fallback red-team/TEE network when no chainId is available (e.g. register
@@ -16,6 +16,7 @@ export const BNB_TESTNET_CONFIG = {
   contractAddress: '0x41730fab3F81Dd50Fbab78150C52Cc5fFFCEeB42' as `0x${string}`,
   explorerUrl: 'https://testnet.bscscan.com',
   teeNetwork: 'bsc-testnet',
+  supportsDonations: false,
 }
 
 export const BNB_MAINNET_CONFIG = {
@@ -24,6 +25,7 @@ export const BNB_MAINNET_CONFIG = {
   contractAddress: '0x41730fab3F81Dd50Fbab78150C52Cc5fFFCEeB42' as `0x${string}`,
   explorerUrl: 'https://bscscan.com',
   teeNetwork: 'bsc-mainnet',
+  supportsDonations: false,
 }
 
 export const BNB_CONFIG = APP_NETWORK === 'testnet' ? BNB_TESTNET_CONFIG : BNB_MAINNET_CONFIG
@@ -36,6 +38,7 @@ export const BOT_CHAIN_TESTNET_CONFIG = {
   contractAddress: '0x7f0e865187B35ade39dA35963CC855460199ED04' as `0x${string}`,
   explorerUrl: 'https://scan.bohr.life',
   teeNetwork: 'bot-testnet',
+  supportsDonations: true,
 }
 
 export const BOT_CHAIN_MAINNET_CONFIG = {
@@ -44,6 +47,7 @@ export const BOT_CHAIN_MAINNET_CONFIG = {
   contractAddress: '0xAE3B5C52Aee124F0C9466B8d57f1eED17ccebF6d' as `0x${string}`,
   explorerUrl: 'https://scan.botchain.ai',
   teeNetwork: 'bot-mainnet',
+  supportsDonations: true,
 }
 
 export const BOT_CHAIN_CONFIG =
@@ -59,6 +63,7 @@ export const ARB_TESTNET_CONFIG = {
     '0x68D60E86Ae1DA4c26cc3B1EA680745500451fD2c') as `0x${string}`,
   explorerUrl: 'https://sepolia.arbiscan.io',
   teeNetwork: 'arbitrum-sepolia',
+  supportsDonations: false,
 }
 
 export const ARB_MAINNET_CONFIG = {
@@ -68,6 +73,7 @@ export const ARB_MAINNET_CONFIG = {
     '0x0000000000000000000000000000000000000000') as `0x${string}`,
   explorerUrl: 'https://arbiscan.io',
   teeNetwork: 'arbitrum-sepolia',
+  supportsDonations: false,
 }
 
 export const ARB_CONFIG = APP_NETWORK === 'testnet' ? ARB_TESTNET_CONFIG : ARB_MAINNET_CONFIG
@@ -79,6 +85,7 @@ export const MONAD_TESTNET_CONFIG = {
     '0x014C5D2e41c7898F8C8734331F873f807b6F8B5F') as `0x${string}`,
   explorerUrl: 'https://testnet.monadexplorer.com',
   teeNetwork: 'monad-testnet',
+  supportsDonations: true,
 }
 
 export const MONAD_MAINNET_CONFIG = {
@@ -88,6 +95,7 @@ export const MONAD_MAINNET_CONFIG = {
     '0x5edD3650E090192f0f54EDdC870B25536F5CaB29') as `0x${string}`,
   explorerUrl: 'https://monadscan.com',
   teeNetwork: 'monad-mainnet',
+  supportsDonations: true,
 }
 
 export const MONAD_CONFIG = APP_NETWORK === 'testnet' ? MONAD_TESTNET_CONFIG : MONAD_MAINNET_CONFIG
@@ -128,4 +136,18 @@ export function getEvmConfigForChainKey(chainKey: EvmChainKey): EvmConfig {
 
 export function getEvmSupportedTokens(chainKey: EvmChainKey): SupportedToken[] {
   return getSupportedTokens(chainKey)
+}
+
+/**
+ * Whether the deployed contract on this chain exposes `donateToAgent` — the
+ * permissionless "anyone can top up the bounty" entry point.
+ *
+ * `donateToAgent` only exists in deployments made from the current Sentinel.sol.
+ * Chains still running an older deployment revert on the call, so the Donate
+ * Funds UI is hidden there. After redeploying a chain, flip its
+ * `supportsDonations` flag above — no other change is needed.
+ */
+export function supportsDonations(chain: SupportedChain | undefined): boolean {
+  const chainKey = toEvmChainKey(chain)
+  return chainKey !== null && EVM_CONFIG_BY_CHAIN_KEY[chainKey].supportsDonations
 }
