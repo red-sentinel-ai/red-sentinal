@@ -11,6 +11,7 @@ import { ProfileInitializer } from '@/components/profile/ProfileInitializer'
 import { ConnectSocialPrompt } from '@/components/notifications/ConnectSocialPrompt'
 import { APP_NETWORK } from '@/constants'
 import { SUI_RPC_URLS } from '@/constants/sui-rpc'
+import { createSuiClient } from '@/lib/sui/rpc-client'
 import { SolanaWalletProvider } from '@/app/SolanaWalletProvider'
 import { EVMWalletProvider } from '@/app/EVMWalletProvider'
 import { ActiveChainProvider } from '@/context/ActiveChainContext'
@@ -21,6 +22,10 @@ const suiNetworks = {
   testnet: { url: SUI_RPC_URLS.testnet },
   mainnet: { url: SUI_RPC_URLS.mainnet },
 }
+
+// Build every dapp-kit client through createSuiClient so all Sui RPC traffic —
+// hooks, wallet queries, the attack flow — goes through the retrying transport.
+const createClient = (_name: string, { url }: { url: string }) => createSuiClient(url)
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -49,7 +54,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <PHProvider client={posthog}>
       <QueryClientProvider client={queryClient}>
         <EVMWalletProvider>
-          <SuiClientProvider networks={suiNetworks} defaultNetwork={APP_NETWORK}>
+          <SuiClientProvider
+            networks={suiNetworks}
+            defaultNetwork={APP_NETWORK}
+            createClient={createClient}
+          >
             <SuiWalletProvider autoConnect theme={lightTheme}>
               <SolanaWalletProvider>
                 <ActiveChainProvider>
