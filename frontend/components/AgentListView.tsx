@@ -31,7 +31,7 @@ import {
   SENTINEL_STATUS_META,
   type SentinelStatusFilter,
 } from '@/lib/sentinel-status'
-import { AttackStats } from '@/components/attack/AttackStats'
+// import { AttackStats } from '@/components/attack/AttackStats'
 import { SentinelMarquee } from '@/components/attack/SentinelMarquee'
 import { SentinelRowSkeleton } from '@/components/attack/SentinelRowSkeleton'
 
