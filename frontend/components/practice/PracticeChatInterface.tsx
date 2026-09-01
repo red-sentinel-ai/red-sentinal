@@ -83,6 +83,7 @@ export function PracticeChatInterface({
     attackerAddress,
     sessionId: sessionId ?? `${Date.now()}`,
     instructions: sentinel.public_instructions,
+    voice: 'paul',
   })
 
   const voiceMessages = useMemo<ChatMessageType[]>(() => {
