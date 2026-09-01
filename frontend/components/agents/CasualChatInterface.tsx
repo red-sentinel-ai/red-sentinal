@@ -72,6 +72,7 @@ export function CasualChatInterface({ agent }: CasualChatInterfaceProps) {
     attackerAddress,
     sessionId: sessionId ?? generateVoiceSessionId(),
     instructions: agent.prompt,
+    voice: 'paul',
   })
 
   const voiceMessages = useMemo<ChatMessageType[]>(() => {
