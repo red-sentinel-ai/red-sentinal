@@ -15,7 +15,6 @@ export const SUPPORTED_CHAINS: readonly SupportedChain[] = [
   'sui',
   'solana',
   'bnb',
-  'bot',
   'arb',
   'monad',
 ]
