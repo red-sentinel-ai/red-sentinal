@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useSuiClient } from '@mysten/dapp-kit'
 import { SuiClient } from '@mysten/sui/client'
 import { useQuery } from '@tanstack/react-query'
-import { SUI_CONFIG } from '@/constants'
+import { APP_NETWORK, SUI_CONFIG } from '@/constants'
+import { SUI_EVENTS_RPC_URLS } from '@/constants/sui-rpc'
+import { createSuiClient } from '@/lib/sui/rpc-client'
 
 export interface AgentEvents {
   agentDefeated: any[]
@@ -11,8 +12,9 @@ export interface AgentEvents {
 
 export const AGENT_EVENTS_QUERY_KEY = 'agentEvents'
 
+const eventsClient = createSuiClient(SUI_EVENTS_RPC_URLS[APP_NETWORK])
+
 export function useAgentEvents() {
-  const client = useSuiClient()
 
   const {
     data: events,
@@ -22,7 +24,7 @@ export function useAgentEvents() {
     refetch,
   } = useQuery<AgentEvents, Error>({
     queryKey: [AGENT_EVENTS_QUERY_KEY],
-    queryFn: () => getAgentEvents(client),
+    queryFn: () => getAgentEvents(eventsClient),
     staleTime: 60 * 1000,
   })
 
