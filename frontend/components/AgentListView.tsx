@@ -18,10 +18,7 @@ import { FilterSelect, type FilterSelectOption } from '@/components/attack/Filte
 import { useAllAgents } from '@/hooks/agents/useAllAgents'
 import type { SortField, SortDirection } from '@/types/agents'
 import { useFeaturedAgents } from '@/hooks/agents/useFeaturedAgents'
-import {
-  useTrendingAgents,
-  MAX_TRENDING_SENTINELS,
-} from '@/hooks/agents/useTrendingAgents'
+import { useTrendingAgents, MAX_TRENDING_SENTINELS } from '@/hooks/agents/useTrendingAgents'
 import { useAgentCoinTypes } from '@/hooks/agents/useAgentCoinTypes'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -38,7 +35,7 @@ import { AttackStats } from '@/components/attack/AttackStats'
 import { SentinelMarquee } from '@/components/attack/SentinelMarquee'
 import { SentinelRowSkeleton } from '@/components/attack/SentinelRowSkeleton'
 
-const BIG_BOUNTY_THRESHOLD_MIST = BigInt(20_000_000_000) // 20 
+const BIG_BOUNTY_THRESHOLD_MIST = BigInt(20_000_000_000) // 20
 
 type BountyTab = 'all' | 'big_bounties'
 
@@ -99,7 +96,9 @@ export const AgentListView = () => {
           })
         : allAgents
     if (selectedSymbol) {
-      base = base.filter(agent => getTokenForCoinType(agent.coin_type, agent.chain).symbol === selectedSymbol)
+      base = base.filter(
+        agent => getTokenForCoinType(agent.coin_type, agent.chain).symbol === selectedSymbol
+      )
     }
     const normalizedSearch = searchQuery.trim().toLowerCase()
     if (normalizedSearch) {
@@ -163,12 +162,12 @@ export const AgentListView = () => {
   return (
     <div className="px-3 py-6 md:px-12 md:py-12">
       <section className="mx-auto mb-10 max-w-5xl py-4 text-center md:mb-20 md:py-12">
-        <h1 className="font-display text-3xl font-extrabold uppercase leading-[1.08] tracking-[0.04em] text-white sm:text-4xl md:text-7xl">
-          Prepare Yourself for Age of Agents
+        <h1 className="font-display text-3xl font-extrabold leading-[1.08] tracking-[0.04em] text-white sm:text-4xl md:text-7xl">
+          Outsmart the Machine. Claim The Bounty.
         </h1>
         <p className="font-body mx-auto mt-4 max-w-2xl text-[13px] font-semibold leading-relaxed tracking-[0.06em] text-[var(--color-text-secondary)] sm:mt-6 sm:text-sm sm:tracking-[0.08em]">
-          Agents are already in our life. Learn how they think, where they break, and how to
-          outsmart them by actually doing it.
+          Red Sentinel is the premier arena for adversarial AI. Deploy autonomous agents with unique
+          data access, or break them to claim the ounty.
         </p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:mt-12 sm:flex-row sm:items-center sm:gap-4">
           <span className="font-body text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
@@ -206,9 +205,9 @@ export const AgentListView = () => {
       </section>
 
       {/* Stats are hidden in Arbitrum-only mode. */}
-      <div className="mb-10 md:mb-20">
+      {/* <div className="mb-10 md:mb-20">
         <AttackStats />
-      </div>
+      </div> */}
 
       {(isFetchingFeatured || featuredForRow.length > 0) && (
         <section className="mb-10 md:mb-20">
@@ -336,10 +335,7 @@ export const AgentListView = () => {
           </div>
         </div>
 
-        {(selectedSymbol ||
-          selectedChain ||
-          selectedStatus !== 'all' ||
-          searchQuery.trim()) && (
+        {(selectedSymbol || selectedChain || selectedStatus !== 'all' || searchQuery.trim()) && (
           <div className="mb-3 flex flex-wrap items-center gap-2">
             <span className="font-body text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-muted)]">
               Filtered by:
