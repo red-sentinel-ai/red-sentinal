@@ -6,6 +6,7 @@ import { SUI_COIN_TYPE, getTokenForCoinType } from '@/constants/tokens'
 import { toast } from 'sonner'
 import { ConsumePromptApiResponse } from '@/types'
 import { hexToVector } from '@/lib/utils'
+import { fetchEffectiveCost } from '@/lib/sui/effective-cost'
 import { type Agent } from '@/types/agents'
 import { SuiTransactionBlockResponse, SuiObjectResponse } from '@mysten/sui/client'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
@@ -61,6 +62,21 @@ interface ConsumePromptParams {
   message: string
 }
 
+const ATTACK_ABORT_REASONS: Record<string, string> = {
+  '4': "The agent's price went up while this attack was being submitted. Please try again.",
+  '17': 'This token is not accepted by the protocol.',
+  '18': 'This sentinel is not accepting attacks right now — its creator has started a withdrawal.',
+  '19': 'The protocol is paused. Please try again later.',
+  '24': 'This sentinel has already been defeated.',
+}
+
+const describeAttackAbort = (error: string | null | undefined): string => {
+  const code = error?.match(/,\s*(\d+)\)\s*in command/)?.[1]
+  const reason = code ? ATTACK_ABORT_REASONS[code] : undefined
+  if (reason) return reason
+  return `Attack request failed on-chain: ${error ?? 'unknown error'}`
+}
+
 interface AttackTicket {
   objectId: string
   nonce: string
@@ -106,12 +122,6 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
 
     const isNewContract = !!agentDetails.coin_type
 
-    // Use backend-computed current price (based on indexed PromptConsumed event count).
-    // Falls back to the base cost for legacy agents or if the field is missing.
-    const costInBaseUnits = BigInt(
-      agentDetails.current_cost_per_message ?? agentDetails.cost_per_message
-    )
-
     const token = getTokenForCoinType(agentDetails.coin_type)
     const tokenDivisor = Math.pow(10, token.decimals)
 
@@ -119,6 +129,18 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
     const contractConfig = isNewContract ? SUI_CONFIG : SUI_LEGACY_CONFIG
     const agentRegistry = contractConfig.AGENT_REGISTRY || SUI_CONFIG.AGENT_REGISTRY
     const protocolConfigId = contractConfig.PROTOCOL_CONFIG_ID || SUI_CONFIG.PROTOCOL_CONFIG_ID
+    const packageId = contractConfig.APP_PACKAGE_ID || SUI_CONFIG.APP_PACKAGE_ID
+
+    const costInBaseUnits = isNewContract
+      ? await fetchEffectiveCost(client, {
+          packageId,
+          moduleName: SUI_CONFIG.MODULE_NAME,
+          agentObjectId: agentDetails.agent_object_id,
+          protocolConfigId,
+          coinType: token.coinType,
+          sender: account.address,
+        })
+      : BigInt(agentDetails.cost_per_message)
 
     const tx = new Transaction()
     let paymentCoin
@@ -173,8 +195,6 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
       }
     }
 
-    const packageId = contractConfig.APP_PACKAGE_ID || SUI_CONFIG.APP_PACKAGE_ID
-
     const [attackTicket] = tx.moveCall({
       target: `${packageId}::${SUI_CONFIG.MODULE_NAME}::request_attack`,
       // Old contract had no type parameters; new contract is generic over the coin type
@@ -188,7 +208,6 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
         tx.object(SUI_CLOCK_OBJECT_ID),
       ],
     })
-    console.log({attackTicket})
 
     tx.transferObjects([attackTicket], tx.pure.address(account.address))
 
@@ -199,73 +218,64 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
         { transaction: tx },
         {
           onSuccess: async result => {
-            onAttackRequestSuccess?.(result)
+            try {
+              onAttackRequestSuccess?.(result)
 
-            // Fast path: objectChanges (works when node has locally executed the tx)
-            let attackObjectId: string | null =
-              (result.objectChanges?.find(
-                (obj: any) => obj.type === 'created' && (obj as any).objectType?.includes('::sentinel::Attack')
-              ) as any)?.objectId ?? null
+              // The custom `execute` above returns as soon as the node accepts the
+              // tx, so its objectChanges can arrive before the ticket is readable.
+              // Waiting for the digest to be indexed makes the read-back
+              // deterministic — previously this raced the tx and the retry loops
+              // that papered over it swallowed RPC errors, so a rate-limited read
+              // surfaced as "Failed to create Attack ticket object".
+              const confirmed = await client.waitForTransaction({
+                digest: result.digest,
+                options: { showObjectChanges: true, showEffects: true },
+              })
 
-            // Fallback: poll getOwnedObjects — queries current chain state directly.
-            if (!attackObjectId) {
-              const structTypes = isNewContract
-                ? [`${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Attack<${token.coinType}>`]
-                : [`${SUI_LEGACY_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::Attack`]
-
-              for (let attempt = 0; attempt < 5 && !attackObjectId; attempt++) {
-                await new Promise(resolve => setTimeout(resolve, 1500))
-                for (const structType of structTypes) {
-                  try {
-                    const { data } = await client.getOwnedObjects({
-                      owner: account.address,
-                      filter: { StructType: structType },
-                      options: { showContent: true },
-                    })
-                    const match = data.find(
-                      obj => (obj.data?.content as any)?.fields?.agent_id === agentDetails.agent_id
-                    )
-                    if (match?.data?.objectId) {
-                      attackObjectId = match.data.objectId
-                      break
-                    }
-                  } catch {
-                    // ignore, retry next attempt
-                  }
-                }
+              if (confirmed.effects?.status?.status !== 'success') {
+                return reject(new Error(describeAttackAbort(confirmed.effects?.status?.error)))
               }
-            }
 
-            if (!attackObjectId) {
-              return reject(new Error('Failed to create Attack ticket object.'))
-            }
+              const attackObjectId: string | null =
+                (
+                  confirmed.objectChanges?.find(
+                    (obj: any) =>
+                      obj.type === 'created' &&
+                      (obj as any).objectType?.includes(`::${SUI_CONFIG.MODULE_NAME}::Attack`)
+                  ) as any
+                )?.objectId ?? null
 
-            let objectResponse: SuiObjectResponse | null = null
-            for (let attempt = 0; attempt < 5; attempt++) {
-              try {
-                objectResponse = await client.getObject({
-                  id: attackObjectId!,
-                  options: { showContent: true },
-                })
-                if (objectResponse?.data?.content?.dataType === 'moveObject') break
-              } catch {
-                // ignore, retry
+              if (!attackObjectId) {
+                return reject(new Error('Failed to create Attack ticket object.'))
               }
-              await new Promise(resolve => setTimeout(resolve, 1000))
+
+              const objectResponse: SuiObjectResponse = await client.getObject({
+                id: attackObjectId,
+                options: { showContent: true },
+              })
+
+              if (objectResponse?.data?.content?.dataType !== 'moveObject') {
+                return reject(new Error('Failed to fetch Attack ticket content.'))
+              }
+
+              const fields = (objectResponse.data.content as any).fields
+              const nonce = fields.nonce
+
+              if (!nonce) {
+                return reject(new Error('Failed to retrieve nonce from Attack ticket.'))
+              }
+
+              resolve({ objectId: attackObjectId, nonce: nonce as string })
+            } catch (readError) {
+              // Surface the underlying failure (RPC status, timeout) instead of
+              // collapsing every cause into a generic "ticket creation failed".
+              console.error('Failed to read back Attack ticket:', readError)
+              reject(
+                readError instanceof Error
+                  ? readError
+                  : new Error('Failed to read back Attack ticket')
+              )
             }
-
-            if (objectResponse?.data?.content?.dataType !== 'moveObject') {
-              return reject(new Error('Failed to fetch Attack ticket content.'))
-            }
-
-            const fields = (objectResponse.data.content as any).fields
-            const nonce = fields.nonce
-
-            if (!nonce) {
-              return reject(new Error('Failed to retrieve nonce from Attack ticket.'))
-            }
-
-            resolve({ objectId: attackObjectId!, nonce: nonce as string })
           },
           onError: txError => {
             console.error('Attack request transaction failed:', txError)
@@ -351,8 +361,24 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
       signAndExecuteTransaction(
         { transaction: tx },
         {
-          onSuccess: result => {
-            console.log('Consume prompt transaction success:', result)
+          onSuccess: async result => {
+            // Settle before handing back, so anything the caller refetches on
+            // completion reads post-attack state instead of the pre-attack one.
+            try {
+              const confirmed = await client.waitForTransaction({
+                digest: result.digest,
+                options: { showEffects: true },
+              })
+              if (confirmed.effects?.status?.status !== 'success') {
+                return reject(
+                  new Error(`Attack failed on-chain: ${confirmed.effects?.status?.error ?? 'unknown error'}`)
+                )
+              }
+            } catch (waitError) {
+              // The tx was already accepted — a slow confirmation must not fail
+              // an attack that in fact landed.
+              console.warn('Consume prompt confirmation wait failed:', waitError)
+            }
             setLastResult(result)
             onSuccess?.(result)
             resolve(result)
