@@ -42,6 +42,13 @@ export function TemplateDetailModal({
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
+                    {template.avatar_url && (
+                      <img
+                        src={template.avatar_url}
+                        alt={template.name}
+                        className="h-12 w-12 shrink-0 rounded-xl border border-[var(--color-border-subtle)] object-cover"
+                      />
+                    )}
                     <h2 className="text-2xl font-semibold text-[var(--color-text-primary)]">{template.name}</h2>
                     <span
                       className={cn(

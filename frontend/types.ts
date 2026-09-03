@@ -125,6 +125,7 @@ export interface SentinelTemplate {
   public_instructions: string
   hidden_instructions: string
   attack_goal: string
+  avatar_url?: string | null
 }
 
 export interface Chain {
