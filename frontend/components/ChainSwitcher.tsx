@@ -21,7 +21,7 @@ export function ChainSwitcher() {
     return (
       <button
         disabled
-        className="font-body flex min-h-[34px] items-center gap-2 bg-[var(--color-bg-deepest)] px-1 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.1em] text-white opacity-50 md:text-[11px]"
+        className="font-body flex min-h-[34px] items-center gap-2 bg-[var(--color-bg-deepest)] px-1 py-1.5 text-[11px] font-semibold uppercase tracking-[0.06em] text-white opacity-50"
       >
         <div className="h-5 w-5 rounded-full bg-white/20" />
         <span className="hidden sm:inline">Loading...</span>
@@ -33,7 +33,7 @@ export function ChainSwitcher() {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <button className="font-body flex min-h-[34px] items-center gap-2 bg-[var(--color-bg-deepest)] px-1 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.1em] text-white transition-opacity hover:opacity-70 md:text-[11px]">
+        <button className="font-body flex min-h-[34px] items-center gap-2 bg-[var(--color-bg-deepest)] px-1 py-1.5 text-[11px] font-semibold uppercase tracking-[0.06em] text-white transition-opacity hover:opacity-70">
           <Image
             src={active.icon}
             alt={active.name}
@@ -58,7 +58,7 @@ export function ChainSwitcher() {
               onSelect={() => selectChain(chainId)}
               disabled={isSelectingChain}
               className={cn(
-                'font-body flex cursor-pointer items-center gap-3 rounded-none px-3 py-2 text-[10px] uppercase tracking-[0.1em] transition-colors hover:bg-white/[0.06]',
+                'font-body flex cursor-pointer items-center gap-3 rounded-none px-3 py-2 text-[11px] uppercase tracking-[0.06em] transition-colors hover:bg-white/[0.06]',
                 isActive && 'bg-white/[0.08]'
               )}
             >
@@ -69,7 +69,7 @@ export function ChainSwitcher() {
                 height={20}
                 className={cn('rounded-full', chain.iconFilterClass)}
               />
-              <span className="flex-1 font-bold text-[var(--color-text-primary)]">
+              <span className="flex-1 font-semibold text-[var(--color-text-primary)]">
                 {chain.name}
               </span>
               {isActive && <Check className="h-4 w-4 text-white" />}

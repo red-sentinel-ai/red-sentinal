@@ -36,7 +36,7 @@ export function FollowStats({ identifier, className }: FollowStatsProps) {
             <span className="font-mono text-xl font-bold leading-none text-[var(--color-text-primary)]">
               {data?.followers ?? 0}
             </span>
-            <span className="text-[10px] font-bold uppercase tracking-[2px] text-[var(--color-text-muted)] transition-colors group-hover:text-[var(--color-text-secondary)]">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-muted)] transition-colors group-hover:text-[var(--color-text-secondary)]">
               Followers
             </span>
           </button>
@@ -49,7 +49,7 @@ export function FollowStats({ identifier, className }: FollowStatsProps) {
             <span className="font-mono text-xl font-bold leading-none text-[var(--color-text-primary)]">
               {data?.following ?? 0}
             </span>
-            <span className="text-[10px] font-bold uppercase tracking-[2px] text-[var(--color-text-muted)] transition-colors group-hover:text-[var(--color-text-secondary)]">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-muted)] transition-colors group-hover:text-[var(--color-text-secondary)]">
               Following
             </span>
           </button>

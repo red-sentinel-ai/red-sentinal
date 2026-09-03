@@ -36,7 +36,7 @@ export function SyndicateHero({ meta, onRequestPermission, onOpenVoice }: Props)
                   View Sentinel
                 </Link>
               ) : (
-                <span className="inline-flex items-center gap-2 border border-[var(--color-border-default)] px-6 py-3 text-xs font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
+                <span className="inline-flex items-center gap-2 border border-[var(--color-border-default)] px-6 py-3 text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
                   No Sentinel
                 </span>
               )}
@@ -75,17 +75,17 @@ export function SyndicateHero({ meta, onRequestPermission, onOpenVoice }: Props)
                 className="flex items-center gap-1.5 text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-primary)]"
               >
                 <Globe className="h-4 w-4" />
-                <span className="text-xs font-medium uppercase tracking-widest">Website</span>
+                <span className="text-xs font-semibold uppercase tracking-[0.08em]">Website</span>
               </a>
             )}
             <button className="flex items-center gap-1.5 text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-primary)]">
               <Share2 className="h-4 w-4" />
-              <span className="text-xs font-medium uppercase tracking-widest">Share</span>
+              <span className="text-xs font-semibold uppercase tracking-[0.08em]">Share</span>
             </button>
           </div>
 
           <div className="flex flex-col gap-2 pt-1">
-            <div className="flex items-center gap-2 text-sm font-medium text-[var(--color-text-secondary)]">
+            <div className="flex items-center gap-2 text-sm font-medium text-[var(--color-text-muted)]">
               {isPermissioned ? (
                 <Lock className="h-4 w-4 text-[var(--color-gold-primary)]" />
               ) : (
@@ -95,13 +95,15 @@ export function SyndicateHero({ meta, onRequestPermission, onOpenVoice }: Props)
                 {isPermissioned ? (
                   <>
                     This syndicate is{' '}
-                    <span className="font-bold text-[var(--color-text-primary)]">permissioned</span>.
-                    You need syndicate owner permission to join this syndicate.
+                    <span className="font-semibold text-[var(--color-text-primary)]">
+                      permissioned
+                    </span>
+                    . You need syndicate owner permission to join this syndicate.
                   </>
                 ) : (
                   <>
                     This syndicate is{' '}
-                    <span className="font-bold text-[var(--color-text-primary)]">public</span>.
+                    <span className="font-semibold text-[var(--color-text-primary)]">public</span>.
                     Anybody can join this syndicate.
                   </>
                 )}

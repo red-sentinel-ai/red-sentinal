@@ -255,7 +255,7 @@ export function PracticeChatInterface({
         </div>
 
         {isBreached && (
-          <span className="industrial-header ml-2 text-[9px] tracking-widest text-[var(--color-danger)] sm:tracking-[4px]">
+          <span className="industrial-header ml-2 text-[10px] tracking-[0.06em] text-[var(--color-danger)]">
             VOICE DISABLED // BREACHED
           </span>
         )}
@@ -297,7 +297,7 @@ export function PracticeChatInterface({
             title="Sentinel info"
           >
             <Info className="h-3 w-3" />
-            <span className="industrial-header hidden text-[9px] tracking-widest sm:inline">
+            <span className="industrial-header hidden text-[10px] tracking-[0.06em] sm:inline">
               INFO
             </span>
           </button>
@@ -349,13 +349,13 @@ export function PracticeChatInterface({
                       className="h-full w-full object-cover"
                     />
                   </div>
-                  <div className="industrial-header text-[9px] text-[var(--color-text-muted)] sm:text-[10px]">
+                  <div className="industrial-header text-[10px] text-[var(--color-text-muted)] sm:text-[11px]">
                     SENTINEL_PROCESSING...
                   </div>
                 </div>
                 <div className="border-hairline flex items-center gap-3 bg-[var(--color-bg-elevated)] p-3 sm:p-4">
                   <Loader2 className="h-4 w-4 animate-spin text-[var(--color-text-muted)]" />
-                  <span className="font-mono text-xs uppercase text-[var(--color-text-muted)]">
+                  <span className="font-mono text-xs tracking-normal text-[var(--color-text-muted)]">
                     Analyzing breach attempt...
                   </span>
                 </div>
@@ -451,7 +451,7 @@ function ModeButton({
       onClick={onClick}
       disabled={disabled}
       className={clsx(
-        'industrial-header flex items-center gap-1 px-2 py-1 text-[9px] tracking-wider transition-colors sm:gap-1.5 sm:px-2.5 sm:py-1.5 sm:text-[10px]',
+        'industrial-header flex items-center gap-1 px-2 py-1 text-[10px] tracking-wider transition-colors sm:gap-1.5 sm:px-2.5 sm:py-1.5 sm:text-[11px]',
         active
           ? 'bg-white text-black'
           : 'text-[var(--color-text-muted)] hover:bg-[var(--color-bg-elevated)] hover:text-white',

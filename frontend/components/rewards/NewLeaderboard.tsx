@@ -117,7 +117,7 @@ function RankCell({ rank }: { rank: number }) {
       <div className="flex items-center justify-center">
         <div className="relative">
           <Crown className="h-6 w-6 text-yellow-500" />
-          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-[var(--color-bg-surface)] bg-yellow-500 text-[9px] font-bold text-white">
+          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-[var(--color-bg-surface)] bg-yellow-500 text-[10px] font-semibold text-white">
             1
           </span>
         </div>
@@ -128,7 +128,7 @@ function RankCell({ rank }: { rank: number }) {
       <div className="flex items-center justify-center">
         <div className="relative">
           <Trophy className="h-5 w-5 text-slate-400" />
-          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-[var(--color-bg-surface)] bg-slate-400 text-[9px] font-bold text-white">
+          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-[var(--color-bg-surface)] bg-slate-400 text-[10px] font-semibold text-white">
             2
           </span>
         </div>
@@ -139,7 +139,7 @@ function RankCell({ rank }: { rank: number }) {
       <div className="flex items-center justify-center">
         <div className="relative">
           <Medal className="h-5 w-5 text-amber-700" />
-          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-[var(--color-bg-surface)] bg-amber-700 text-[9px] font-bold text-white">
+          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-[var(--color-bg-surface)] bg-amber-700 text-[10px] font-semibold text-white">
             3
           </span>
         </div>
@@ -287,7 +287,9 @@ function RewardCalculatorBanner() {
           <Calculator className="h-5 w-5 text-blue-400" />
         </div>
         <div>
-          <p className="text-sm font-semibold text-[var(--color-text-primary)]">Estimate your defender earnings</p>
+          <p className="text-sm font-semibold text-[var(--color-text-primary)]">
+            Estimate your defender earnings
+          </p>
           <p className="mt-0.5 text-xs text-[var(--color-text-muted)]">
             Use our Reward Calculator to project returns based on pool size and attack volume.
           </p>
@@ -365,7 +367,7 @@ function DefenderCard({ entry }: { entry: DefenderEntry }) {
         <div className="flex flex-col items-end gap-1.5">
           <DefenderTierBadge tier={entry.defenderTier} />
           {entry.isCurrentUser && (
-            <span className="rounded-full border border-blue-500/30 bg-blue-900/20 px-2 py-0.5 text-[10px] font-semibold text-blue-400">
+            <span className="rounded-full border border-blue-500/30 bg-blue-900/20 px-2 py-0.5 text-[11px] font-semibold text-blue-400">
               You
             </span>
           )}
@@ -374,12 +376,14 @@ function DefenderCard({ entry }: { entry: DefenderEntry }) {
 
       <div className="mt-3 grid grid-cols-2 gap-2">
         <div className="rounded-lg bg-white/5 px-3 py-2">
-          <p className="text-[10px] uppercase tracking-wide text-white/40">Score</p>
-          <p className="text-sm font-bold text-white">{entry.compositeScore.toLocaleString()}</p>
+          <p className="text-[11px] uppercase tracking-wide text-white/40">Score</p>
+          <p className="text-sm font-semibold text-white">
+            {entry.compositeScore.toLocaleString()}
+          </p>
         </div>
         <div className="rounded-lg bg-white/5 px-3 py-2">
-          <p className="text-[10px] uppercase tracking-wide text-white/40">TVL</p>
-          <p className="text-sm font-bold text-white">{formatUsd(entry.tvlUsd)}</p>
+          <p className="text-[11px] uppercase tracking-wide text-white/40">TVL</p>
+          <p className="text-sm font-semibold text-white">{formatUsd(entry.tvlUsd)}</p>
         </div>
       </div>
 
@@ -408,7 +412,7 @@ function DefenderCard({ entry }: { entry: DefenderEntry }) {
                 { label: 'Fees Earned', value: formatUsd(entry.totalFeesEarnedUsd) },
               ].map(({ label, value, colorClass }) => (
                 <div key={label} className="rounded-lg bg-white/5 px-3 py-2">
-                  <p className="text-[10px] uppercase tracking-wide text-white/40">{label}</p>
+                  <p className="text-[11px] uppercase tracking-wide text-white/40">{label}</p>
                   <p className={cn('text-sm font-semibold text-white', colorClass)}>{value}</p>
                 </div>
               ))}
@@ -476,7 +480,7 @@ function AttackerCard({ entry }: { entry: AttackerEntry }) {
         <div className="flex flex-col items-end gap-1.5">
           <AttackerTierBadge tier={entry.attackerTier} />
           {entry.isCurrentUser && (
-            <span className="rounded-full border border-blue-500/30 bg-blue-900/20 px-2 py-0.5 text-[10px] font-semibold text-blue-400">
+            <span className="rounded-full border border-blue-500/30 bg-blue-900/20 px-2 py-0.5 text-[11px] font-semibold text-blue-400">
               You
             </span>
           )}
@@ -485,14 +489,12 @@ function AttackerCard({ entry }: { entry: AttackerEntry }) {
 
       <div className="mt-3 grid grid-cols-2 gap-2">
         <div className="rounded-lg bg-white/5 px-3 py-2">
-          <p className="text-[10px] uppercase tracking-wide text-white/40">Bounty Won</p>
-          <p className="text-sm font-bold text-white">
-            {formatUsd(entry.totalBountyWonUsd)}
-          </p>
+          <p className="text-[11px] uppercase tracking-wide text-white/40">Bounty Won</p>
+          <p className="text-sm font-semibold text-white">{formatUsd(entry.totalBountyWonUsd)}</p>
         </div>
         <div className="rounded-lg bg-white/5 px-3 py-2">
-          <p className="text-[10px] uppercase tracking-wide text-white/40">Breaches</p>
-          <p className="text-sm font-bold text-white">{entry.successfulBreaches}</p>
+          <p className="text-[11px] uppercase tracking-wide text-white/40">Breaches</p>
+          <p className="text-sm font-semibold text-white">{entry.successfulBreaches}</p>
         </div>
       </div>
 
@@ -523,7 +525,7 @@ function AttackerCard({ entry }: { entry: AttackerEntry }) {
                 { label: 'Last Active', value: formatTimeAgo(entry.lastActiveTimestamp) },
               ].map(({ label, value, colorClass }) => (
                 <div key={label} className="rounded-lg bg-white/5 px-3 py-2">
-                  <p className="text-[10px] uppercase tracking-wide text-white/40">{label}</p>
+                  <p className="text-[11px] uppercase tracking-wide text-white/40">{label}</p>
                   <p className={cn('text-sm font-semibold text-white', colorClass)}>{value}</p>
                 </div>
               ))}
@@ -683,14 +685,14 @@ function DefendersTable({ entries }: { entries: DefenderEntry[] }) {
                       avatarUrl={entry.avatarUrl}
                     />
                     {entry.isCurrentUser && (
-                      <span className="ml-12 w-fit rounded-full border border-blue-500/30 bg-blue-900/20 px-2 py-0.5 text-[10px] font-semibold text-blue-400">
+                      <span className="ml-12 w-fit rounded-full border border-blue-500/30 bg-blue-900/20 px-2 py-0.5 text-[11px] font-semibold text-blue-400">
                         You
                       </span>
                     )}
                   </div>
                 </td>
                 <td className="px-3 py-3">
-                  <span className="font-bold text-white">
+                  <span className="font-semibold text-white">
                     {entry.compositeScore.toLocaleString()}
                   </span>
                 </td>
@@ -845,7 +847,7 @@ function AttackersTable({ entries }: { entries: AttackerEntry[] }) {
                       avatarUrl={entry.avatarUrl}
                     />
                     {entry.isCurrentUser && (
-                      <span className="ml-12 w-fit rounded-full border border-blue-500/30 bg-blue-900/20 px-2 py-0.5 text-[10px] font-semibold text-blue-400">
+                      <span className="ml-12 w-fit rounded-full border border-blue-500/30 bg-blue-900/20 px-2 py-0.5 text-[11px] font-semibold text-blue-400">
                         You
                       </span>
                     )}
@@ -854,7 +856,7 @@ function AttackersTable({ entries }: { entries: AttackerEntry[] }) {
                 <td className="px-3 py-3">
                   <AttackerTierBadge tier={entry.attackerTier} />
                 </td>
-                <td className="px-3 py-3 font-bold text-white">
+                <td className="px-3 py-3 font-semibold text-white">
                   {formatUsd(entry.totalBountyWonUsd)}
                 </td>
                 <td className="px-3 py-3 text-white/70">
@@ -1125,7 +1127,7 @@ export function NewLeaderboard() {
                 />
               )}
 
-              <p className="mt-4 text-center text-xs text-[var(--color-text-faint)]">
+              <p className="mt-4 text-center text-xs text-[var(--color-text-muted)]">
                 Sorted by Composite Defender Score · Scores recompute every 5 minutes
               </p>
             </TabsContent>
@@ -1232,7 +1234,7 @@ export function NewLeaderboard() {
                 />
               )}
 
-              <p className="mt-4 text-center text-xs text-[var(--color-text-faint)]">
+              <p className="mt-4 text-center text-xs text-[var(--color-text-muted)]">
                 Sorted by Total Bounty Won · Data recomputes every 5 minutes
               </p>
             </TabsContent>

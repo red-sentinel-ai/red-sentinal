@@ -103,8 +103,10 @@ export function VoiceRoomSession({ authToken, userName, title, onLeave }: VoiceR
           <Mic className="h-6 w-6 text-[var(--color-text-muted)]" />
         </div>
         <div className="space-y-1">
-          <p className="industrial-header text-[11px] tracking-widest text-white">{title}</p>
-          <p className="font-mono text-[10px] text-[var(--color-text-muted)]">
+          <p className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-white">
+            {title}
+          </p>
+          <p className="font-mono text-[11px] text-[var(--color-text-muted)]">
             Mic enables on join.
           </p>
         </div>
@@ -112,7 +114,7 @@ export function VoiceRoomSession({ authToken, userName, title, onLeave }: VoiceR
           type="button"
           onClick={handleJoin}
           disabled={isConnecting}
-          className="flex items-center gap-2 rounded-full bg-[var(--color-accent)] px-6 py-2.5 text-[11px] font-bold uppercase tracking-widest text-[var(--color-accent-fg)] transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+          className="flex items-center gap-2 rounded-full bg-[var(--color-accent)] px-6 py-2.5 text-[11px] font-bold uppercase tracking-[0.06em] text-[var(--color-accent-fg)] transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
         >
           {isConnecting ? (
             <>
@@ -139,24 +141,26 @@ export function VoiceRoomSession({ authToken, userName, title, onLeave }: VoiceR
   return (
     <div className="flex flex-1 flex-col">
       <div className="flex h-10 shrink-0 items-center justify-between gap-3 border-b border-[var(--color-border-strong)] px-4">
-        <span className="industrial-header truncate text-[11px] tracking-widest text-white">
+        <span className="industrial-header truncate text-[11px] font-semibold tracking-[0.06em] text-white">
           {title}
         </span>
         <div className="flex shrink-0 items-center gap-2.5">
           {isReconnecting ? (
             <div className="flex items-center gap-1.5">
               <Wifi className="h-3 w-3 animate-pulse text-[var(--color-warning)]" />
-              <span className="industrial-header text-[9px] text-[var(--color-warning)]">
+              <span className="industrial-header text-[10px] font-semibold tracking-[0.06em] text-[var(--color-warning)]">
                 RECONNECTING
               </span>
             </div>
           ) : (
             <div className="flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--color-success)]" />
-              <span className="industrial-header text-[9px] text-[var(--color-success)]">LIVE</span>
+              <span className="industrial-header text-[10px] font-semibold tracking-[0.06em] text-[var(--color-success)]">
+                LIVE
+              </span>
             </div>
           )}
-          <span className="industrial-header text-[9px] text-[var(--color-text-muted)]">
+          <span className="industrial-header text-[10px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
             {peers.length}
           </span>
         </div>

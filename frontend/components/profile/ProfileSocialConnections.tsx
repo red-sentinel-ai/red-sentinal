@@ -92,10 +92,10 @@ export function ProfileSocialConnections() {
   return (
     <section className="mb-10">
       <div className="mb-4 flex items-center gap-3">
-        <h2 className="text-[11px] font-bold uppercase tracking-[2px] text-[var(--color-text-muted)]">
+        <h2 className="text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-muted)]">
           Connected Accounts
         </h2>
-        <span className="text-[9px] uppercase tracking-wider text-[var(--color-text-faint)]">
+        <span className="text-[11px] tracking-normal text-[var(--color-text-muted)]">
           For recovery & notifications
         </span>
       </div>
@@ -109,7 +109,7 @@ export function ProfileSocialConnections() {
               <span className="industrial-label">Email</span>
             </div>
             {hasEmail && (
-              <span className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider text-[var(--color-success)]">
+              <span className="flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider text-[var(--color-success)]">
                 <Check className="h-3 w-3" />
                 Connected
               </span>
@@ -124,7 +124,7 @@ export function ProfileSocialConnections() {
               <button
                 onClick={() => handleDisconnect('email', emailConnection?.id)}
                 disabled={disconnectingPlatform === 'email'}
-                className="text-[9px] font-bold uppercase tracking-wider text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-danger)] disabled:opacity-50"
+                className="text-[11px] font-bold uppercase tracking-wider text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-danger)] disabled:opacity-50"
               >
                 {disconnectingPlatform === 'email' ? (
                   <Loader2 className="h-3 w-3 animate-spin" />
@@ -135,7 +135,7 @@ export function ProfileSocialConnections() {
             </div>
           ) : emailState === 'code_input' || emailState === 'verifying' ? (
             <div className="space-y-3">
-              <p className="text-[10px] text-[var(--color-text-secondary)]">
+              <p className="text-[11px] text-[var(--color-text-muted)]">
                 Enter the 4-digit code sent to{' '}
                 <span className="font-medium text-[var(--color-text-primary)]">{emailValue}</span>
               </p>
@@ -152,12 +152,12 @@ export function ProfileSocialConnections() {
                 maxLength={4}
                 className="h-9 w-full border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-3 text-center text-sm tracking-[0.5em] text-[var(--color-text-primary)] placeholder:tracking-normal placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-text-primary)] focus:outline-none"
               />
-              {emailError && <p className="text-[10px] text-[var(--color-danger)]">{emailError}</p>}
+              {emailError && <p className="text-[11px] text-[var(--color-danger)]">{emailError}</p>}
               <div className="flex gap-2">
                 <button
                   onClick={handleEmailVerify}
                   disabled={emailState === 'verifying' || emailCode.length !== 4}
-                  className="button-ghost-terminal flex-1 px-3 py-2 text-[10px] disabled:opacity-50"
+                  className="button-ghost-terminal flex-1 px-3 py-2 text-[11px] disabled:opacity-50"
                 >
                   {emailState === 'verifying' ? (
                     <Loader2 className="mx-auto h-3 w-3 animate-spin" />
@@ -168,7 +168,7 @@ export function ProfileSocialConnections() {
                 <button
                   onClick={changeEmailAddress}
                   disabled={emailState === 'verifying'}
-                  className="px-3 py-2 text-[10px] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] disabled:opacity-50"
+                  className="px-3 py-2 text-[11px] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] disabled:opacity-50"
                 >
                   Change
                 </button>
@@ -188,12 +188,12 @@ export function ProfileSocialConnections() {
                 }}
                 className="h-9 w-full border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-text-primary)] focus:outline-none"
               />
-              {emailError && <p className="text-[10px] text-[var(--color-danger)]">{emailError}</p>}
+              {emailError && <p className="text-[11px] text-[var(--color-danger)]">{emailError}</p>}
               <div className="flex gap-2">
                 <button
                   onClick={() => sendEmailCode()}
                   disabled={emailState === 'sending' || !emailValue.trim()}
-                  className="button-ghost-terminal flex-1 px-3 py-2 text-[10px] disabled:opacity-50"
+                  className="button-ghost-terminal flex-1 px-3 py-2 text-[11px] disabled:opacity-50"
                 >
                   {emailState === 'sending' ? (
                     <Loader2 className="mx-auto h-3 w-3 animate-spin" />
@@ -203,7 +203,7 @@ export function ProfileSocialConnections() {
                 </button>
                 <button
                   onClick={cancelEmailVerification}
-                  className="px-3 py-2 text-[10px] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
+                  className="px-3 py-2 text-[11px] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
                 >
                   Cancel
                 </button>
@@ -212,7 +212,7 @@ export function ProfileSocialConnections() {
           ) : (
             <button
               onClick={startEmailVerification}
-              className="button-ghost-terminal w-full py-2 text-[10px]"
+              className="button-ghost-terminal w-full py-2 text-[11px]"
             >
               Connect Email
             </button>
@@ -227,7 +227,7 @@ export function ProfileSocialConnections() {
               <span className="industrial-label">Telegram</span>
             </div>
             {hasTelegram && (
-              <span className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider text-[var(--color-success)]">
+              <span className="flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider text-[var(--color-success)]">
                 <Check className="h-3 w-3" />
                 Connected
               </span>
@@ -242,7 +242,7 @@ export function ProfileSocialConnections() {
               <button
                 onClick={() => handleDisconnect('telegram', telegramConnection?.id)}
                 disabled={disconnectingPlatform === 'telegram'}
-                className="text-[9px] font-bold uppercase tracking-wider text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-danger)] disabled:opacity-50"
+                className="text-[11px] font-bold uppercase tracking-wider text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-danger)] disabled:opacity-50"
               >
                 {disconnectingPlatform === 'telegram' ? (
                   <Loader2 className="h-3 w-3 animate-spin" />
@@ -254,7 +254,7 @@ export function ProfileSocialConnections() {
           ) : telegramState === 'input' || telegramState === 'verifying' ? (
             <div className="space-y-3">
               <div className="border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-2">
-                <p className="mb-1 text-[10px] text-[var(--color-text-secondary)]">
+                <p className="mb-1 text-[11px] text-[var(--color-text-muted)]">
                   1. Open{' '}
                   <a
                     href={`https://t.me/${TELEGRAM_BOT_USERNAME}`}
@@ -265,7 +265,7 @@ export function ProfileSocialConnections() {
                     @{TELEGRAM_BOT_USERNAME}
                   </a>
                 </p>
-                <p className="text-[10px] text-[var(--color-text-secondary)]">
+                <p className="text-[11px] text-[var(--color-text-muted)]">
                   2. Send{' '}
                   <code className="bg-[var(--color-bg-surface)] px-1 text-[var(--color-text-primary)]">
                     /connect
@@ -288,7 +288,7 @@ export function ProfileSocialConnections() {
                 <button
                   onClick={handleTelegramVerify}
                   disabled={telegramState === 'verifying' || telegramCode.length !== 4}
-                  className="button-ghost-terminal flex-1 px-3 py-2 text-[10px] disabled:opacity-50"
+                  className="button-ghost-terminal flex-1 px-3 py-2 text-[11px] disabled:opacity-50"
                 >
                   {telegramState === 'verifying' ? (
                     <Loader2 className="mx-auto h-3 w-3 animate-spin" />
@@ -299,7 +299,7 @@ export function ProfileSocialConnections() {
                 <button
                   onClick={cancelTelegramVerification}
                   disabled={telegramState === 'verifying'}
-                  className="px-3 py-2 text-[10px] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] disabled:opacity-50"
+                  className="px-3 py-2 text-[11px] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] disabled:opacity-50"
                 >
                   Cancel
                 </button>
@@ -308,13 +308,13 @@ export function ProfileSocialConnections() {
           ) : (
             <button
               onClick={showTelegramCodeInput}
-              className="button-ghost-terminal w-full py-2 text-[10px]"
+              className="button-ghost-terminal w-full py-2 text-[11px]"
             >
               Connect Telegram
             </button>
           )}
 
-          <p className="text-[9px] text-[var(--color-text-faint)]">
+          <p className="text-[11px] text-[var(--color-text-muted)]">
             Get notified when someone attacks your Sentinel
           </p>
         </div>
@@ -335,12 +335,12 @@ export function ProfileSocialConnections() {
 
           <button
             disabled
-            className="button-ghost-terminal w-full cursor-not-allowed py-2 text-[10px] opacity-50"
+            className="button-ghost-terminal w-full cursor-not-allowed py-2 text-[11px] opacity-50"
           >
             Coming Soon
           </button>
 
-          <p className="text-[9px] text-[var(--color-text-faint)]">
+          <p className="text-[11px] text-[var(--color-text-muted)]">
             Link your Discord for community perks
           </p>
         </div>

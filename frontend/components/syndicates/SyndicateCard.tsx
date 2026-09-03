@@ -36,7 +36,7 @@ export function SyndicateCard({ syndicate, isUserSyndicate }: SyndicateCardProps
         <div className="flex items-center gap-2">
           <SyndicateStatusBadge status={syndicate.status} />
           {isUserSyndicate && (
-            <span className="rounded-sm bg-[var(--color-gold-primary)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--color-text-on-gold)]">
+            <span className="rounded-sm bg-[var(--color-gold-primary)] px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-on-gold)]">
               Your Syndicate
             </span>
           )}
@@ -47,13 +47,13 @@ export function SyndicateCard({ syndicate, isUserSyndicate }: SyndicateCardProps
       <h3 className="mb-2 text-xl font-semibold leading-8 tracking-tight text-[var(--color-text-primary)]">
         {syndicate.name}
       </h3>
-      <p className="mb-6 line-clamp-2 text-base leading-6 text-[var(--color-text-secondary)]">
+      <p className="mb-6 line-clamp-2 text-base leading-6 text-[var(--color-text-muted)]">
         {syndicate.description || 'No description provided.'}
       </p>
 
       <div className="mt-auto grid grid-cols-2 gap-4">
         <div className="rounded border border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] p-3">
-          <div className="text-[10px] font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
+          <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]">
             Members
           </div>
           <div className="mt-0.5 font-mono text-sm text-[var(--color-text-primary)]">
@@ -61,7 +61,7 @@ export function SyndicateCard({ syndicate, isUserSyndicate }: SyndicateCardProps
           </div>
         </div>
         <div className="rounded border border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] p-3">
-          <div className="text-[10px] font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
+          <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]">
             Total Managed Asset
           </div>
           <div className="mt-0.5 truncate font-mono text-sm text-[var(--color-text-primary)]">
@@ -71,7 +71,7 @@ export function SyndicateCard({ syndicate, isUserSyndicate }: SyndicateCardProps
       </div>
 
       <div className="mb-6 mt-6 flex items-center justify-between gap-2 text-[var(--color-text-secondary)]">
-        <span className="text-[10px] font-semibold uppercase tracking-wider">Primary Sentinel</span>
+        <span className="text-[11px] font-semibold uppercase tracking-wider">Primary Sentinel</span>
         {sentinelHref ? (
           <Link
             href={sentinelHref}
@@ -97,7 +97,7 @@ export function SyndicateCard({ syndicate, isUserSyndicate }: SyndicateCardProps
       ) : (
         <Link
           href={`/syndicate/${address}`}
-          className="block w-full rounded border border-[var(--color-gold-primary)] py-2.5 text-center text-sm font-semibold uppercase tracking-wider text-[var(--color-gold-primary)] transition-colors hover:bg-[var(--color-gold-primary)]/10"
+          className="hover:bg-[var(--color-gold-primary)]/10 block w-full rounded border border-[var(--color-gold-primary)] py-2.5 text-center text-sm font-semibold uppercase tracking-wider text-[var(--color-gold-primary)] transition-colors"
         >
           View Syndicate
         </Link>

@@ -69,8 +69,7 @@ export const ChatMessage = ({
   }, [message.content, isExpanded])
 
   const username = senderProfile?.username
-  const displayName =
-    username || (message.sender ? truncateAddress(message.sender) : 'OPERATOR')
+  const displayName = username || (message.sender ? truncateAddress(message.sender) : 'OPERATOR')
 
   const timestamp = formatDistanceToNow(new Date(Number.parseInt(message.timestamp)))
 
@@ -85,7 +84,7 @@ export const ChatMessage = ({
         className="flex flex-col items-end gap-2"
       >
         {/* Header with username and timestamp */}
-        <div className="industrial-header flex flex-wrap items-center justify-end gap-x-2 gap-y-1 text-[9px] text-[var(--color-text-muted)] sm:text-[10px]">
+        <div className="industrial-header flex flex-wrap items-center justify-end gap-x-2 gap-y-1 text-[10px] font-medium tracking-[0.06em] text-[var(--color-text-muted)] sm:text-[11px]">
           {username ? (
             <Link href={`/u/${username}`} className="transition-colors hover:text-white">
               @{displayName.toUpperCase()}
@@ -120,7 +119,7 @@ export const ChatMessage = ({
           {isContentClamped && (
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="industrial-header mt-3 border-b border-white text-[10px] tracking-widest text-white transition-opacity hover:opacity-70"
+              className="industrial-header mt-3 border-b border-white text-[10px] tracking-[0.06em] text-white transition-opacity hover:opacity-70"
             >
               {isExpanded ? 'COLLAPSE' : 'EXPAND'}
             </button>
@@ -150,7 +149,7 @@ export const ChatMessage = ({
             className="h-full w-full object-cover"
           />
         </div>
-        <div className="industrial-header min-w-0 break-all text-[9px] text-[var(--color-text-muted)] sm:text-[10px]">
+        <div className="industrial-header min-w-0 break-all text-[10px] font-medium tracking-[0.06em] text-[var(--color-text-muted)] sm:text-[11px]">
           SENTINEL_{agent.agent_name.toUpperCase().replace(/\s+/g, '_')} //{' '}
           {timestamp.toUpperCase()} AGO
         </div>
@@ -161,7 +160,10 @@ export const ChatMessage = ({
         <div className="p-3 sm:p-5 lg:p-6">
           <div
             ref={contentRef}
-            className={clsx('markdown-content mb-4 sm:mb-6', !isExpanded && COLLAPSED_MESSAGE_CLAMP)}
+            className={clsx(
+              'markdown-content mb-4 sm:mb-6',
+              !isExpanded && COLLAPSED_MESSAGE_CLAMP
+            )}
           >
             <ReactMarkdown>{message.content}</ReactMarkdown>
           </div>
@@ -169,7 +171,7 @@ export const ChatMessage = ({
           {isContentClamped && (
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="industrial-header mb-4 border-b border-white text-[10px] tracking-widest text-white transition-opacity hover:opacity-70 sm:mb-6"
+              className="industrial-header mb-4 border-b border-white text-[10px] tracking-[0.06em] text-white transition-opacity hover:opacity-70 sm:mb-6"
             >
               {isExpanded ? 'COLLAPSE' : 'EXPAND'}
             </button>
@@ -187,7 +189,7 @@ export const ChatMessage = ({
                   e.stopPropagation()
                   onShowJury()
                 }}
-                className="industrial-header text-accent flex items-center gap-1.5 text-[10px] transition-opacity hover:opacity-70"
+                className="industrial-header text-accent flex items-center gap-1.5 text-[10px] tracking-[0.06em] transition-opacity hover:opacity-70"
               >
                 <Scale className="h-3.5 w-3.5" />
                 JURY_LOGGED
@@ -196,7 +198,7 @@ export const ChatMessage = ({
 
             {/* Threat Score */}
             {message.score !== undefined && (
-              <div className="industrial-header text-[10px] text-white">
+              <div className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-white">
                 THREAT_SCORE:{' '}
                 <span
                   className={clsx(
@@ -219,7 +221,7 @@ export const ChatMessage = ({
                 href={getExplorerTxUrl(message.txDigest, agent.chain)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="industrial-header ml-auto flex items-center gap-1 text-[10px] text-[var(--color-text-muted)] transition-colors hover:text-white"
+                className="industrial-header ml-auto flex items-center gap-1 text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)] transition-colors hover:text-white"
               >
                 VIEW_ONCHAIN
                 <ExternalLink className="h-3 w-3" />
@@ -232,7 +234,7 @@ export const ChatMessage = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 className={clsx(
-                  'industrial-header flex items-center gap-1 text-[10px] text-[var(--color-text-muted)] transition-colors hover:text-white',
+                  'industrial-header flex items-center gap-1 text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)] transition-colors hover:text-white',
                   !message.txDigest && 'ml-auto'
                 )}
               >
@@ -247,7 +249,7 @@ export const ChatMessage = ({
       {/* Success Banner */}
       {message.isSuccess && !hideSuccessBanner && (
         <div className="border-[var(--color-success)]/30 border bg-[var(--color-success-muted)] p-4">
-          <div className="industrial-header text-center text-sm text-[var(--color-success)]">
+          <div className="industrial-header text-center text-sm font-semibold tracking-[0.08em] text-[var(--color-success)]">
             {successBannerLabel}
           </div>
         </div>

@@ -91,7 +91,7 @@ export const ClaimFeesModal = ({
       isConfirmDisabled={isLoading || !hasFees}
     >
       <div className="flex flex-col items-center justify-center space-y-1.5 rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] py-4">
-        <span className="text-[10px] font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-muted)]">
           Available to Claim
         </span>
         <div className="text-xl font-bold tracking-tight text-[var(--color-text-primary)]">
@@ -105,7 +105,7 @@ export const ClaimFeesModal = ({
         </p>
       )}
 
-      <p className="px-2 text-center text-[10px] text-[var(--color-text-faint)] sm:px-4 sm:text-xs">
+      <p className="px-2 text-center text-[11px] text-[var(--color-text-muted)] sm:px-4 sm:text-xs">
         These fees are collected from attackers who pay to interact with your agent.
       </p>
     </AgentUpdateDialog>

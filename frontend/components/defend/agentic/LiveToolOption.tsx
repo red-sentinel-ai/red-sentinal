@@ -39,7 +39,7 @@ export function LiveToolOption({ tool, isEnabled, onToggle }: LiveToolOptionProp
           <span className="font-mono text-[10px] text-[var(--color-text-faint)]">
             {tool.tool_id}
           </span>
-          <span className="rounded-full border border-[var(--color-border-subtle)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--color-text-muted)]">
+          <span className="rounded-full border border-[var(--color-border-subtle)] px-1.5 py-0.5 text-[11px] font-medium text-[var(--color-text-muted)]">
             Live
           </span>
         </div>

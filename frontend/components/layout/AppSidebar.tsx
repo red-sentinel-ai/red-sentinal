@@ -127,7 +127,7 @@ export function AppSidebar() {
               isActive={active}
               tooltip={item.title}
               size="default"
-              className="font-body h-11 rounded-none px-4 text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] transition-colors hover:bg-white/[0.04] hover:text-white data-[active=true]:bg-white/[0.05] data-[active=true]:text-white data-[active=true]:shadow-none [&>svg]:size-5"
+              className="font-body h-11 rounded-none px-4 text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-secondary)] transition-colors hover:bg-white/[0.04] hover:text-white data-[active=true]:bg-white/[0.05] data-[active=true]:text-white data-[active=true]:shadow-none [&>svg]:size-5"
             >
               <Link href={item.href} onClick={() => isMobile && setOpenMobile(false)}>
                 <Icon />
@@ -140,7 +140,7 @@ export function AppSidebar() {
             align="center"
             sideOffset={8}
             hidden={isMobile || !item.description}
-            className="font-body max-w-[240px] px-4 py-3 text-[13px] font-medium leading-relaxed text-white"
+            className="font-body max-w-[240px] px-4 py-3 text-[13px] font-medium leading-relaxed text-[var(--color-text-muted)]"
           >
             {item.description}
           </TooltipContent>
@@ -186,14 +186,14 @@ export function AppSidebar() {
             href={SUI_SENTINEL_DOCS_URL}
             target="_blank"
             rel="noreferrer"
-            className="font-body flex items-center gap-3 text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] transition-colors hover:text-white"
+            className="font-body flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-secondary)] transition-colors hover:text-white"
           >
             <BookOpen className="size-3.5" />
             Docs
           </Link>
           <Link
             href={`mailto:${SUI_SENTINEL_SUPPORT_EMAIL}`}
-            className="font-body flex items-center gap-3 text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] transition-colors hover:text-white"
+            className="font-body flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-secondary)] transition-colors hover:text-white"
           >
             <HelpCircle className="size-3.5" />
             Support

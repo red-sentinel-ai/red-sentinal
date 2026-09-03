@@ -38,7 +38,7 @@ export function InstallButton({ variant = 'button', className, onClick }: Instal
       <button
         onClick={handleClick}
         className={cn(
-          'font-body flex items-center gap-3 text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] transition-colors hover:text-white',
+          'font-body flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-secondary)] transition-colors hover:text-white',
           className
         )}
       >
@@ -68,7 +68,7 @@ export function InstallButton({ variant = 'button', className, onClick }: Instal
       onClick={handleClick}
       className={cn(
         'inline-flex items-center justify-center gap-2 rounded-none border border-[var(--color-text-primary)]',
-        'bg-[var(--color-text-primary)] px-6 py-3 text-xs font-extrabold uppercase tracking-[0.08em] text-[var(--color-bg-deepest)]',
+        'bg-[var(--color-text-primary)] px-6 py-3 text-xs font-bold uppercase tracking-[0.08em] text-[var(--color-bg-deepest)]',
         'transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50',
         className
       )}

@@ -8,7 +8,7 @@ interface StatBadgeProps {
 export function StatBadge({ label, value }: StatBadgeProps) {
   return (
     <div className="flex flex-col">
-      <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
+      <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]">
         {label}
       </span>
       {value === null ? (

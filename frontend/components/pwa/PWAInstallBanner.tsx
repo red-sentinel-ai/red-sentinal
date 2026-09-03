@@ -22,7 +22,8 @@ export function PWAInstallBanner() {
 
     const isMobile = window.innerWidth < 768
     const isInstallPage = pathname === '/install'
-    const eligible = isMobile && !isInstalled && !isDismissed && !isInstallPage && (canInstall || isIOS)
+    const eligible =
+      isMobile && !isInstalled && !isDismissed && !isInstallPage && (canInstall || isIOS)
 
     if (!eligible) return
 
@@ -56,7 +57,7 @@ export function PWAInstallBanner() {
           transition={{ type: 'spring', damping: 25, stiffness: 200 }}
           className={cn(
             'fixed inset-x-0 bottom-0 z-[60] border-t border-[var(--color-border-strong)]',
-            'bg-[var(--color-bg-surface)] px-4 pb-safe pt-3 shadow-[var(--shadow-elevated)]'
+            'pb-safe bg-[var(--color-bg-surface)] px-4 pt-3 shadow-[var(--shadow-elevated)]'
           )}
         >
           <div className="flex items-center gap-3">
@@ -71,7 +72,7 @@ export function PWAInstallBanner() {
             </div>
 
             <div className="min-w-0 flex-1">
-              <p className="font-body text-sm font-extrabold uppercase tracking-[0.06em] text-[var(--color-text-primary)]">
+              <p className="font-body text-sm font-semibold uppercase tracking-[0.06em] text-[var(--color-text-primary)]">
                 Red Sentinel
               </p>
               <p className="text-xs text-[var(--color-text-muted)]">
@@ -82,7 +83,7 @@ export function PWAInstallBanner() {
             <div className="flex items-center gap-2">
               <button
                 onClick={handleInstall}
-                className="flex items-center gap-1.5 rounded-none bg-[var(--color-text-primary)] px-3 py-2 text-xs font-extrabold uppercase tracking-[0.06em] text-[var(--color-bg-deepest)] transition-opacity hover:opacity-90"
+                className="flex items-center gap-1.5 rounded-none bg-[var(--color-text-primary)] px-3 py-2 text-xs font-bold uppercase tracking-[0.06em] text-[var(--color-bg-deepest)] transition-opacity hover:opacity-90"
               >
                 <Download className="h-3.5 w-3.5" />
                 Install

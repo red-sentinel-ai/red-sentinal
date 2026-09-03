@@ -37,7 +37,7 @@ export function SentinelMiniCard({ agent, variant }: { agent: Agent; variant?: V
         )}
         <div className="from-[var(--color-bg-deepest)]/80 pointer-events-none absolute inset-0 bg-gradient-to-t via-transparent to-transparent" />
         {variant && (
-          <span className="font-body absolute left-3 top-3 inline-flex items-center gap-1 bg-white px-2 py-1 text-[8px] font-extrabold uppercase leading-none tracking-[0.1em] text-black sm:left-4 sm:top-4 sm:px-3 sm:text-[9px]">
+          <span className="font-body absolute left-3 top-3 inline-flex items-center gap-1 bg-white px-2 py-1 text-[10px] font-semibold uppercase leading-none tracking-[0.06em] text-black sm:left-4 sm:top-4 sm:px-3">
             {variant === 'featured' ? (
               <Star className="h-2.5 w-2.5" />
             ) : (
@@ -50,7 +50,7 @@ export function SentinelMiniCard({ agent, variant }: { agent: Agent; variant?: V
 
       <div className="flex flex-1 flex-col p-4 sm:p-6">
         <div className="mb-4 flex items-start gap-2 sm:mb-6">
-          <h3 className="font-display min-w-0 flex-1 truncate text-base font-extrabold uppercase tracking-[0.04em] text-white sm:text-lg">
+          <h3 className="font-display min-w-0 flex-1 truncate text-base font-bold uppercase tracking-[0.04em] text-white sm:text-lg">
             {agent.agent_name}
           </h3>
           <Image
@@ -64,10 +64,10 @@ export function SentinelMiniCard({ agent, variant }: { agent: Agent; variant?: V
 
         <div className="mb-5 grid grid-cols-2 gap-3 sm:mb-8 sm:gap-4">
           <div className="min-w-0">
-            <p className="font-body mb-1 text-[8px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
+            <p className="font-body mb-1 text-[10px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-secondary)]">
               Prize Pool
             </p>
-            <div className="font-display truncate text-sm font-extrabold uppercase tracking-[0.04em] text-white">
+            <div className="font-display truncate text-sm font-semibold uppercase tracking-[0.04em] text-white">
               <TokenAmount
                 rawAmount={agent.total_balance}
                 token={token}
@@ -77,10 +77,10 @@ export function SentinelMiniCard({ agent, variant }: { agent: Agent; variant?: V
             </div>
           </div>
           <div className="min-w-0 text-right">
-            <p className="font-body mb-1 text-[8px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
+            <p className="font-body mb-1 text-[10px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-secondary)]">
               Attack Fee
             </p>
-            <div className="font-display truncate text-sm font-extrabold uppercase tracking-[0.04em] text-white">
+            <div className="font-display truncate text-sm font-semibold uppercase tracking-[0.04em] text-white">
               <TokenAmount
                 rawAmount={agent.cost_per_message}
                 token={token}
@@ -91,7 +91,7 @@ export function SentinelMiniCard({ agent, variant }: { agent: Agent; variant?: V
           </div>
         </div>
 
-        <div className="font-body mt-auto flex h-10 w-full items-center justify-center rounded-full border border-white text-[10px] font-extrabold uppercase tracking-[0.1em] text-white transition-all group-hover:bg-white group-hover:text-black group-active:scale-[0.98] sm:h-11 sm:text-[11px]">
+        <div className="font-body mt-auto flex h-10 w-full items-center justify-center rounded-full border border-white text-[11px] font-semibold uppercase tracking-[0.06em] text-white transition-all group-hover:bg-white group-hover:text-black group-active:scale-[0.98] sm:h-11">
           Attack Sentinel
         </div>
       </div>

@@ -22,7 +22,7 @@ export const PrizePoolChangeDisplay = ({
 
   const displayText = !isFinite(percentage) ? 'New' : `${Math.abs(percentage).toFixed(1)}%`
 
-  const textSize = variant === 'card' ? 'text-[10px]' : 'text-xs'
+  const textSize = variant === 'card' ? 'text-[11px]' : 'text-xs'
 
   return (
     <div
@@ -32,14 +32,10 @@ export const PrizePoolChangeDisplay = ({
         textSize
       )}
     >
-      {isPositive ? (
-        <ArrowUp className="h-3 w-3" />
-      ) : (
-        <ArrowDown className="h-3 w-3" />
-      )}
+      {isPositive ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />}
       <span>{displayText}</span>
       {variant === 'card' && isFinite(percentage) && (
-        <span className="ml-1 text-[10px] font-medium text-[var(--color-success)]">(7d)</span>
+        <span className="ml-1 text-[11px] font-medium text-[var(--color-success)]">(7d)</span>
       )}
     </div>
   )

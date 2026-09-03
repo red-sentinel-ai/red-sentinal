@@ -25,11 +25,11 @@ export function PracticeSentinelCard({ sentinel }: { sentinel: PracticeSentinel 
           className="h-24 w-24 object-cover"
           unoptimized
         />
-        <span className="font-body absolute left-4 top-4 inline-flex items-center bg-white px-3 py-1 text-[9px] font-extrabold uppercase leading-none tracking-[0.1em] text-black">
+        <span className="font-body absolute left-4 top-4 inline-flex items-center bg-white px-3 py-1 text-[10px] font-semibold uppercase leading-none tracking-[0.06em] text-black">
           {sentinel.sentinel_type}
         </span>
         {sentinel.is_breached && (
-          <span className="font-body absolute right-4 top-4 inline-flex items-center gap-1 border border-[var(--color-danger)] bg-[var(--color-bg-base)] px-2.5 py-1 text-[9px] font-extrabold uppercase leading-none tracking-[0.1em] text-[var(--color-danger)]">
+          <span className="font-body absolute right-4 top-4 inline-flex items-center gap-1 border border-[var(--color-danger)] bg-[var(--color-bg-base)] px-2.5 py-1 text-[10px] font-semibold uppercase leading-none tracking-[0.06em] text-[var(--color-danger)]">
             <ShieldX className="h-3 w-3" />
             Breached
           </span>
@@ -38,20 +38,20 @@ export function PracticeSentinelCard({ sentinel }: { sentinel: PracticeSentinel 
 
       <div className="flex flex-1 flex-col p-6">
         <div className="mb-4 flex items-start gap-2">
-          <h3 className="font-display min-w-0 flex-1 truncate text-lg font-extrabold uppercase tracking-[0.04em] text-white">
+          <h3 className="font-display min-w-0 flex-1 truncate text-lg font-semibold uppercase tracking-[0.04em] text-white">
             {name}
           </h3>
         </div>
 
         {sentinel.model_name && (
-          <div className="mb-4 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--color-text-muted)]">
+          <div className="mb-4 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-muted)]">
             <Cpu className="h-3 w-3" />
             <span className="truncate">{sentinel.model_name}</span>
           </div>
         )}
 
         <div className="mb-8 min-w-0">
-          <p className="font-body mb-1 flex items-center gap-1 text-[8px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
+          <p className="font-body mb-1 flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-secondary)]">
             <Target className="h-2.5 w-2.5" />
             Attack Goal
           </p>
@@ -60,7 +60,7 @@ export function PracticeSentinelCard({ sentinel }: { sentinel: PracticeSentinel 
           </p>
         </div>
 
-        <div className="font-body mt-auto flex h-11 w-full items-center justify-center rounded-full border border-white text-[11px] font-extrabold uppercase tracking-[0.1em] text-white transition-all group-hover:bg-white group-hover:text-black group-active:scale-[0.98]">
+        <div className="font-body mt-auto flex h-11 w-full items-center justify-center rounded-full border border-white text-xs font-bold uppercase tracking-[0.08em] text-white transition-all group-hover:bg-white group-hover:text-black group-active:scale-[0.98]">
           Practice Attack
         </div>
       </div>

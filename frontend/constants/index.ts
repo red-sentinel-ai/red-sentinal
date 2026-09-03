@@ -5,8 +5,8 @@ export const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || ''
 export const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 
 export const NOVU_APP_IDENTIFIER = process.env.NEXT_PUBLIC_NOVU_APPLICATION_IDENTIFIER || ''
-export const NOVU_BACKEND_URL = "https://notifications-api.redsentinel.xyz"
-export const NOVU_WEBSOCKET_HOSTNAME = "wss://notifications-ws.redsentinel.xyz"
+export const NOVU_BACKEND_URL = 'https://notifications-api.redsentinel.xyz'
+export const NOVU_WEBSOCKET_HOSTNAME = 'wss://notifications-ws.redsentinel.xyz'
 
 export const SYSTEM_PROMPT_MAX_TOKENS = 600
 export const ATTACK_PROMPT_MAX_TOKENS = 600
@@ -41,6 +41,14 @@ export const SESSION_KEYS = {
   DEFEND_FORM_DATA: 'defendFormData',
 } as const
 
+// Marquee/spotlight sentinel for the hero primary CTA.
+// Rotate the spotlight by updating this config — never hand-edit the hero copy.
+export const PREMIUM_SENTINEL = {
+  id: 990,
+  name: 'Rex AF',
+  agentPath: 'rex_af',
+} as const
+
 export const TEXT_COPIES = {
   leaderboard: {
     heading: 'Red Team Leaderboard',
@@ -65,31 +73,32 @@ import { APP_NETWORK } from './shared'
 
 // New multi-token contract (Mar 2026 testnet deployment)
 export const SUI_TESTNET_CONFIG = {
-  "CLOCK_OBJECT_ID": "0x6",
-  "GAS_BUDGET": 100000000,
-  "PCR0": "b8715f9f324b7e608ba265c3b43a2bc95bc93cd9b9129f4ad45edfe7fa548028179fe76e0977e3244a32778badd09690",
-  "PCR1": "b8715f9f324b7e608ba265c3b43a2bc95bc93cd9b9129f4ad45edfe7fa548028179fe76e0977e3244a32778badd09690",
-  "PCR2": "21b9efbc184807662e966d34f390821309eeac6802309798826296bf3e8bec7c10edb30948c90ba67310f7b964fc500a",
-  "ENCLAVE_URL": "http://18.213.79.225:3000",
-  "MODULE_NAME": "sentinel",
-  "OTW_NAME": "SENTINEL",
-  "ENCLAVE_PACKAGE_ID": "0xd2d85bb57ad36227a78760e93efb59471732abdd31e72036185093931db9f43a",
-  "CAP_OBJECT_ID": "0x973ddc084736875deae3793252f849f065080043bef1286b05b83d2b98ddf473",
-  "ENCLAVE_CONFIG_OBJECT_ID": "0x6910a8e5b323c309bc57a7774561ed21d7229592147989725117a4155c93c522",
-  "APP_PACKAGE_ID": "0x090d494390663f1d7980b59bffc09b56519db7734c461375959d3980e7260ed6",
-  "AGENT_REGISTRY": "0x3ef0c26df1a8f2e5e83387ff34ffe705d393ce2a6595c1051530ec92095a50ef",
-  "PROTOCOL_CONFIG_ID": "0x7cf78ac36a127a2be6b6626744bad8ecef7375d8ef1842c3a9a4a727e0cfc1cc",
-  "ENCLAVE_OBJECT_ID": "0x1402ac05cdffc604a2592c9504d9afb1b145879c691daf08ec0df7fc9f013348",
-  "TOKENS_TO_WHITELIST": [
-    "0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC"
+  CLOCK_OBJECT_ID: '0x6',
+  GAS_BUDGET: 100000000,
+  PCR0: 'b8715f9f324b7e608ba265c3b43a2bc95bc93cd9b9129f4ad45edfe7fa548028179fe76e0977e3244a32778badd09690',
+  PCR1: 'b8715f9f324b7e608ba265c3b43a2bc95bc93cd9b9129f4ad45edfe7fa548028179fe76e0977e3244a32778badd09690',
+  PCR2: '21b9efbc184807662e966d34f390821309eeac6802309798826296bf3e8bec7c10edb30948c90ba67310f7b964fc500a',
+  ENCLAVE_URL: 'http://18.213.79.225:3000',
+  MODULE_NAME: 'sentinel',
+  OTW_NAME: 'SENTINEL',
+  ENCLAVE_PACKAGE_ID: '0xd2d85bb57ad36227a78760e93efb59471732abdd31e72036185093931db9f43a',
+  CAP_OBJECT_ID: '0x973ddc084736875deae3793252f849f065080043bef1286b05b83d2b98ddf473',
+  ENCLAVE_CONFIG_OBJECT_ID: '0x6910a8e5b323c309bc57a7774561ed21d7229592147989725117a4155c93c522',
+  APP_PACKAGE_ID: '0x090d494390663f1d7980b59bffc09b56519db7734c461375959d3980e7260ed6',
+  AGENT_REGISTRY: '0x3ef0c26df1a8f2e5e83387ff34ffe705d393ce2a6595c1051530ec92095a50ef',
+  PROTOCOL_CONFIG_ID: '0x7cf78ac36a127a2be6b6626744bad8ecef7375d8ef1842c3a9a4a727e0cfc1cc',
+  ENCLAVE_OBJECT_ID: '0x1402ac05cdffc604a2592c9504d9afb1b145879c691daf08ec0df7fc9f013348',
+  TOKENS_TO_WHITELIST: [
+    '0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC',
   ],
-  "SENTINEL_COIN_TYPE": "0xb0a3b08be99cb5becf1787e565cdd027edc40791df89ca4a603ba7d1575b21e9::sentinel::SENTINEL",
-  "MINIMUM_TOKEN_AMOUNTS": [
+  SENTINEL_COIN_TYPE:
+    '0xb0a3b08be99cb5becf1787e565cdd027edc40791df89ca4a603ba7d1575b21e9::sentinel::SENTINEL',
+  MINIMUM_TOKEN_AMOUNTS: [
     {
-      "type": "0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC",
-      "minimum_token": 5
-    }
-  ]
+      type: '0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC',
+      minimum_token: 5,
+    },
+  ],
 }
 
 // Legacy single-token testnet contract (pre-Mar 2026 deployment)
@@ -119,97 +128,97 @@ export const SUI_MAINNET_LEGACY_CONFIG = {
 }
 
 export const SUI_MAINNET_CONFIG = {
-  "PCR0": "b8715f9f324b7e608ba265c3b43a2bc95bc93cd9b9129f4ad45edfe7fa548028179fe76e0977e3244a32778badd09690",
-  "PCR1": "b8715f9f324b7e608ba265c3b43a2bc95bc93cd9b9129f4ad45edfe7fa548028179fe76e0977e3244a32778badd09690",
-  "PCR2": "21b9efbc184807662e966d34f390821309eeac6802309798826296bf3e8bec7c10edb30948c90ba67310f7b964fc500a",
-  "ENCLAVE_URL": "http://18.213.79.225:3000",
-  "MODULE_NAME": "sentinel",
-  "OTW_NAME": "SENTINEL",
-  "ENCLAVE_PACKAGE_ID": "0x6d64f3022453d67d3298dadfb410316ff064463fb1f01c3d06d255bc7321e135",
-  "CAP_OBJECT_ID": "0xbf82b7c41b6f9a52f10f87ca0320bf7325eafd8cc648c00a0dff2c594535fc21",
-  "ENCLAVE_CONFIG_OBJECT_ID": "0x4755fad511ca0d40355a92ae3e129084e6205caaa46574c602969aba64b067c4",
-  "APP_PACKAGE_ID": "0x037bc647dd1fb211101a896617c85574edd5f2cda7f31a2ebd982ee63eb9668d",
-  "AGENT_REGISTRY": "0xd7ad36e0e1a09fdd3d28e796a0a42d4b32c8f3868e810fe7014e60d9883a0c32",
-  "PROTOCOL_CONFIG_ID": "0xd34205207fb2be845f21d53e1a5308477d2a35ea2936d0667a2d659000b55966",
-  "ENCLAVE_OBJECT_ID": "0x29bb2ca51e2547729bae5f174d82ead78dfbbe80256242953b3fcc6a0bdd36fb",
-  "CLOCK_OBJECT_ID": "0x6",
-  "GAS_BUDGET": 100000000,
-  "TOKENS_TO_WHITELIST": [
-    "0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC",
-    "0x375f70cf2ae4c00bf37117d0c85a2c71545e6ee05c4a5c7d282cd66a4504b068::usdt::USDT",
-    "0x9f854b3ad20f8161ec0886f15f4a1752bf75d22261556f14cc8d3a1c5d50e529::magma::MAGMA",
-    "0x44f838219cf67b058f3b37907b655f226153c18e33dfcd0da559a844fea9b1c1::usdsui::USDSUI",
-    "0xdeeb7a4662eec9f2f3def03fb937a663dddaa2e215b8078a284d026b7946c270::deep::DEEP",
-    "0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL",
-    "0x876a4b7bce8aeaef60464c11f4026903e9afacab79b9b142686158aa86560b50::xbtc::XBTC",
-    "0x66aaa74fecd25cb19b7576e101b25fd3a844e6b9f678421429d0d49d55e0fca0::sentinel::SENTINEL",
-    "0xe1b45a0e641b9955a20aa0ad1c1f4ad86aad8afb07296d4085e349a50e90bdca::blue::BLUE",
-    "0x06864a6f921804860930db6ddbe2e16acdf8504495ea7481637a1c8b9a8fe54b::cetus::CETUS",
-    "0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2::buck::BUCK",
-    "0xd1b72982e40348d069bb1ff701e634c117bb5f741f44dff91e472d3b01461e55::stsui::STSUI",
-    "0xd0e89b2af5e4910726fbcd8b8dd37bb79b29e5f83f7491bca830e94f7f226d29::eth::ETH"
+  PCR0: 'b8715f9f324b7e608ba265c3b43a2bc95bc93cd9b9129f4ad45edfe7fa548028179fe76e0977e3244a32778badd09690',
+  PCR1: 'b8715f9f324b7e608ba265c3b43a2bc95bc93cd9b9129f4ad45edfe7fa548028179fe76e0977e3244a32778badd09690',
+  PCR2: '21b9efbc184807662e966d34f390821309eeac6802309798826296bf3e8bec7c10edb30948c90ba67310f7b964fc500a',
+  ENCLAVE_URL: 'http://18.213.79.225:3000',
+  MODULE_NAME: 'sentinel',
+  OTW_NAME: 'SENTINEL',
+  ENCLAVE_PACKAGE_ID: '0x6d64f3022453d67d3298dadfb410316ff064463fb1f01c3d06d255bc7321e135',
+  CAP_OBJECT_ID: '0xbf82b7c41b6f9a52f10f87ca0320bf7325eafd8cc648c00a0dff2c594535fc21',
+  ENCLAVE_CONFIG_OBJECT_ID: '0x4755fad511ca0d40355a92ae3e129084e6205caaa46574c602969aba64b067c4',
+  APP_PACKAGE_ID: '0x037bc647dd1fb211101a896617c85574edd5f2cda7f31a2ebd982ee63eb9668d',
+  AGENT_REGISTRY: '0xd7ad36e0e1a09fdd3d28e796a0a42d4b32c8f3868e810fe7014e60d9883a0c32',
+  PROTOCOL_CONFIG_ID: '0xd34205207fb2be845f21d53e1a5308477d2a35ea2936d0667a2d659000b55966',
+  ENCLAVE_OBJECT_ID: '0x29bb2ca51e2547729bae5f174d82ead78dfbbe80256242953b3fcc6a0bdd36fb',
+  CLOCK_OBJECT_ID: '0x6',
+  GAS_BUDGET: 100000000,
+  TOKENS_TO_WHITELIST: [
+    '0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC',
+    '0x375f70cf2ae4c00bf37117d0c85a2c71545e6ee05c4a5c7d282cd66a4504b068::usdt::USDT',
+    '0x9f854b3ad20f8161ec0886f15f4a1752bf75d22261556f14cc8d3a1c5d50e529::magma::MAGMA',
+    '0x44f838219cf67b058f3b37907b655f226153c18e33dfcd0da559a844fea9b1c1::usdsui::USDSUI',
+    '0xdeeb7a4662eec9f2f3def03fb937a663dddaa2e215b8078a284d026b7946c270::deep::DEEP',
+    '0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL',
+    '0x876a4b7bce8aeaef60464c11f4026903e9afacab79b9b142686158aa86560b50::xbtc::XBTC',
+    '0x66aaa74fecd25cb19b7576e101b25fd3a844e6b9f678421429d0d49d55e0fca0::sentinel::SENTINEL',
+    '0xe1b45a0e641b9955a20aa0ad1c1f4ad86aad8afb07296d4085e349a50e90bdca::blue::BLUE',
+    '0x06864a6f921804860930db6ddbe2e16acdf8504495ea7481637a1c8b9a8fe54b::cetus::CETUS',
+    '0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2::buck::BUCK',
+    '0xd1b72982e40348d069bb1ff701e634c117bb5f741f44dff91e472d3b01461e55::stsui::STSUI',
+    '0xd0e89b2af5e4910726fbcd8b8dd37bb79b29e5f83f7491bca830e94f7f226d29::eth::ETH',
   ],
-  "SENTINEL_COIN_TYPE": "0x66aaa74fecd25cb19b7576e101b25fd3a844e6b9f678421429d0d49d55e0fca0::sentinel::SENTINEL",
-  "MINIMUM_TOKEN_AMOUNTS": [
+  SENTINEL_COIN_TYPE:
+    '0x66aaa74fecd25cb19b7576e101b25fd3a844e6b9f678421429d0d49d55e0fca0::sentinel::SENTINEL',
+  MINIMUM_TOKEN_AMOUNTS: [
     {
-      "type": "0x2::sui::SUI",
-      "minimum_token": 20
+      type: '0x2::sui::SUI',
+      minimum_token: 20,
     },
     {
-      "type": "0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC",
-      "minimum_token": 20
+      type: '0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC',
+      minimum_token: 20,
     },
     {
-      "type": "0x375f70cf2ae4c00bf37117d0c85a2c71545e6ee05c4a5c7d282cd66a4504b068::usdt::USDT",
-      "minimum_token": 20
+      type: '0x375f70cf2ae4c00bf37117d0c85a2c71545e6ee05c4a5c7d282cd66a4504b068::usdt::USDT',
+      minimum_token: 20,
     },
     {
-      "type": "0x9f854b3ad20f8161ec0886f15f4a1752bf75d22261556f14cc8d3a1c5d50e529::magma::MAGMA",
-      "minimum_token": 385
+      type: '0x9f854b3ad20f8161ec0886f15f4a1752bf75d22261556f14cc8d3a1c5d50e529::magma::MAGMA',
+      minimum_token: 385,
     },
     {
-      "type": "0x44f838219cf67b058f3b37907b655f226153c18e33dfcd0da559a844fea9b1c1::usdsui::USDSUI",
-      "minimum_token": 20
+      type: '0x44f838219cf67b058f3b37907b655f226153c18e33dfcd0da559a844fea9b1c1::usdsui::USDSUI',
+      minimum_token: 20,
     },
     {
-      "type": "0xdeeb7a4662eec9f2f3def03fb937a663dddaa2e215b8078a284d026b7946c270::deep::DEEP",
-      "minimum_token": 1667
+      type: '0xdeeb7a4662eec9f2f3def03fb937a663dddaa2e215b8078a284d026b7946c270::deep::DEEP',
+      minimum_token: 1667,
     },
     {
-      "type": "0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL",
-      "minimum_token": 625
+      type: '0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL',
+      minimum_token: 625,
     },
     {
-      "type": "0x876a4b7bce8aeaef60464c11f4026903e9afacab79b9b142686158aa86560b50::xbtc::XBTC",
-      "minimum_token": 20
+      type: '0x876a4b7bce8aeaef60464c11f4026903e9afacab79b9b142686158aa86560b50::xbtc::XBTC',
+      minimum_token: 20,
     },
     {
-      "type": "0x66aaa74fecd25cb19b7576e101b25fd3a844e6b9f678421429d0d49d55e0fca0::sentinel::SENTINEL",
-      "minimum_token": 100000
+      type: '0x66aaa74fecd25cb19b7576e101b25fd3a844e6b9f678421429d0d49d55e0fca0::sentinel::SENTINEL',
+      minimum_token: 100000,
     },
     {
-      "type": "0xe1b45a0e641b9955a20aa0ad1c1f4ad86aad8afb07296d4085e349a50e90bdca::blue::BLUE",
-      "minimum_token": 2942
+      type: '0xe1b45a0e641b9955a20aa0ad1c1f4ad86aad8afb07296d4085e349a50e90bdca::blue::BLUE',
+      minimum_token: 2942,
     },
     {
-      "type": "0x06864a6f921804860930db6ddbe2e16acdf8504495ea7481637a1c8b9a8fe54b::cetus::CETUS",
-      "minimum_token": 2000
+      type: '0x06864a6f921804860930db6ddbe2e16acdf8504495ea7481637a1c8b9a8fe54b::cetus::CETUS',
+      minimum_token: 2000,
     },
     {
-      "type": "0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2::buck::BUCK",
-      "minimum_token": 20
+      type: '0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2::buck::BUCK',
+      minimum_token: 20,
     },
     {
-      "type": "0xd1b72982e40348d069bb1ff701e634c117bb5f741f44dff91e472d3b01461e55::stsui::STSUI",
-      "minimum_token": 20
+      type: '0xd1b72982e40348d069bb1ff701e634c117bb5f741f44dff91e472d3b01461e55::stsui::STSUI',
+      minimum_token: 20,
     },
     {
-      "type": "0xd0e89b2af5e4910726fbcd8b8dd37bb79b29e5f83f7491bca830e94f7f226d29::eth::ETH",
-      "minimum_token": 0.025
-    }
-  ]
+      type: '0xd0e89b2af5e4910726fbcd8b8dd37bb79b29e5f83f7491bca830e94f7f226d29::eth::ETH',
+      minimum_token: 0.025,
+    },
+  ],
 }
-
 
 export const SUI_CONFIG = APP_NETWORK === 'mainnet' ? SUI_MAINNET_CONFIG : SUI_TESTNET_CONFIG
 // Legacy config for agents deployed before the multi-token upgrade
@@ -384,7 +393,8 @@ export const getTierAsset = (name: string) => {
 
 // Re-map the theme colors based on specific palette for the gradients and borders
 export const getTierStyleConfig = (name: string) => {
-  const baseConfig = 'bg-gradient-to-b via-[#FFFFFF] flex flex-col items-center text-center relative overflow-hidden group hover:shadow-lg transition-all duration-300 justify-center'
+  const baseConfig =
+    'bg-gradient-to-b via-[#FFFFFF] flex flex-col items-center text-center relative overflow-hidden group hover:shadow-lg transition-all duration-300 justify-center'
 
   switch (name.toLowerCase()) {
     case 'common':
@@ -414,17 +424,28 @@ export const getTierStyleConfig = (name: string) => {
 
 export const getTierTextConfig = (name: string) => {
   switch (name.toLowerCase()) {
-    case 'common': return 'text-[#049414]'
-    case 'uncommon': return 'text-[#C532F6]'
-    case 'rare': return 'text-[#947204]'
-    case 'epic': return 'text-[#F632F3]'
-    case 'legendary': return 'text-[#F632F3]'
-    case 'mythic': return 'text-[#C532F6]'
-    case 'divine': return 'text-[#049414]'
-    case 'celestial': return 'text-[#0098C7]'
-    case 'eternal': return 'text-[#4930D6]'
-    case 'transcendent': return 'text-[#A08200]'
-    default: return 'text-[#049414]'
+    case 'common':
+      return 'text-[#049414]'
+    case 'uncommon':
+      return 'text-[#C532F6]'
+    case 'rare':
+      return 'text-[#947204]'
+    case 'epic':
+      return 'text-[#F632F3]'
+    case 'legendary':
+      return 'text-[#F632F3]'
+    case 'mythic':
+      return 'text-[#C532F6]'
+    case 'divine':
+      return 'text-[#049414]'
+    case 'celestial':
+      return 'text-[#0098C7]'
+    case 'eternal':
+      return 'text-[#4930D6]'
+    case 'transcendent':
+      return 'text-[#A08200]'
+    default:
+      return 'text-[#049414]'
   }
 }
 
@@ -529,11 +550,7 @@ export const WITHDRAWAL_LOCK_MS = 1_209_600_000 // 14 days in milliseconds
 
 export const PROVIDER_MODELS: Record<string, string[]> = {
   openai: ['gpt-4o', 'gpt-4.1', 'gpt-4o-mini', 'gpt-3.5-turbo'],
-  anthropic: [
-    'claude-opus-4-6',
-    'claude-sonnet-4-6',
-    'claude-haiku-4-5',
-  ],
+  anthropic: ['claude-opus-4-6', 'claude-sonnet-4-6', 'claude-haiku-4-5'],
   deepseek: ['deepseek-chat', 'deepseek-reasoner'],
   'amazon bedrock': [
     'mistral.mistral-large-3-675b-instruct',
@@ -545,14 +562,16 @@ export const PROVIDER_MODELS: Record<string, string[]> = {
   custom: [],
 }
 
-
-export const MISSION_STEP1_CONFIG: Record<string, {
-  heading: string
-  hint: string
-  actionLabel?: string
-  actionUrl?: string
-  urlPlaceholder: string
-}> = {
+export const MISSION_STEP1_CONFIG: Record<
+  string,
+  {
+    heading: string
+    hint: string
+    actionLabel?: string
+    actionUrl?: string
+    urlPlaceholder: string
+  }
+> = {
   like_tweet: {
     heading: 'Like an official tweet from @redsentinel_ai',
     hint: 'Go to our X profile and like any official tweet.',

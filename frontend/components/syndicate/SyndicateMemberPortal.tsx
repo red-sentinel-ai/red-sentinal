@@ -28,15 +28,15 @@ export function SyndicateMemberPortal({
     <div className="space-y-6">
       <div className="flex items-center gap-3">
         <User className="h-5 w-5 text-[var(--color-text-primary)]" />
-        <h3 className="text-sm font-bold uppercase tracking-widest text-[var(--color-text-primary)]">
+        <h3 className="text-sm font-semibold uppercase tracking-[0.08em] text-[var(--color-text-primary)]">
           Member Portal
         </h3>
         {isActive ? (
-          <span className="bg-[var(--color-text-primary)]/20 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-[var(--color-text-primary)]">
+          <span className="bg-[var(--color-text-primary)]/20 px-2 py-0.5 text-[11px] font-medium uppercase tracking-wider text-[var(--color-text-primary)]">
             Member Active
           </span>
         ) : (
-          <span className="bg-[var(--color-text-muted)]/20 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
+          <span className="bg-[var(--color-text-muted)]/20 px-2 py-0.5 text-[11px] font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
             Not a Member
           </span>
         )}

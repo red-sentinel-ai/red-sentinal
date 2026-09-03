@@ -142,7 +142,7 @@ export function ContentSubmissionModal({ mission, isOpen, onClose }: ContentSubm
 
   const step1 = MISSION_STEP1_CONFIG[mission.id] ?? {
     heading: `Create your content about Red Sentinel`,
-    hint: 'Share accurate information and showcase the platform\'s features.',
+    hint: "Share accurate information and showcase the platform's features.",
     urlPlaceholder: 'https://...',
   }
 
@@ -152,11 +152,13 @@ export function ContentSubmissionModal({ mission, isOpen, onClose }: ContentSubm
         <div className="mb-4 flex items-center justify-between md:mb-6">
           <div className="flex items-center gap-2">
             <div className={`rounded-lg px-2 py-1 ${tierInfo.bgColor}`}>
-              <span className={`text-sm font-bold ${tierInfo.textColor}`}>
+              <span className={`text-sm font-semibold ${tierInfo.textColor}`}>
                 {mission.multiplier}x {tierInfo.name}
               </span>
             </div>
-            <h2 className="font-display text-base font-bold text-[var(--color-text-primary)] md:text-lg">{mission.title}</h2>
+            <h2 className="font-display text-base font-bold text-[var(--color-text-primary)] md:text-lg">
+              {mission.title}
+            </h2>
           </div>
           <button
             onClick={handleClose}
@@ -175,7 +177,7 @@ export function ContentSubmissionModal({ mission, isOpen, onClose }: ContentSubm
               <h3 className="font-display mb-1.5 text-base font-bold text-[var(--color-text-primary)] md:mb-2 md:text-lg">
                 Submission Received!
               </h3>
-              <p className="font-body mx-auto max-w-xs text-xs text-[var(--color-text-secondary)] md:text-sm">
+              <p className="font-body mx-auto max-w-xs text-xs text-[var(--color-text-muted)] md:text-sm">
                 Our team will review your content within 48 hours. Quality content earns you a{' '}
                 {mission.multiplier}x {tierInfo.name} Spin Pass.
               </p>
@@ -191,7 +193,9 @@ export function ContentSubmissionModal({ mission, isOpen, onClose }: ContentSubm
           <div className="space-y-4 md:space-y-5">
             {/* Mission Description */}
             <div className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] p-4">
-              <p className="font-body text-sm text-[var(--color-text-secondary)]">{mission.description}</p>
+              <p className="font-body text-sm text-[var(--color-text-muted)]">
+                {mission.description}
+              </p>
               {mission.requirements.description && (
                 <p className="font-body mt-2 text-xs text-[var(--color-text-muted)]">
                   Requirements: {mission.requirements.description}
@@ -203,8 +207,12 @@ export function ContentSubmissionModal({ mission, isOpen, onClose }: ContentSubm
 
             {/* Step 1: Mission-specific action */}
             <div>
-              <p className="font-body mb-1 text-xs font-medium text-[var(--color-text-muted)] md:text-sm">Step 1</p>
-              <p className="font-body mb-2 text-sm font-medium text-[var(--color-text-primary)] md:text-base">{step1.heading}</p>
+              <p className="font-body mb-1 text-xs font-medium text-[var(--color-text-muted)] md:text-sm">
+                Step 1
+              </p>
+              <p className="font-body mb-2 text-sm font-medium text-[var(--color-text-primary)] md:text-base">
+                {step1.heading}
+              </p>
               <p className="font-body mb-3 text-xs text-[var(--color-text-muted)]">{step1.hint}</p>
               {step1.actionLabel && step1.actionUrl && (
                 <a
@@ -223,8 +231,12 @@ export function ContentSubmissionModal({ mission, isOpen, onClose }: ContentSubm
 
             {/* Step 2: Submit Link */}
             <div>
-              <p className="font-body mb-1 text-xs font-medium text-[var(--color-text-muted)] md:text-sm">Step 2</p>
-              <p className="font-body mb-3 text-sm font-medium text-[var(--color-text-primary)] md:text-base">Submit your content link</p>
+              <p className="font-body mb-1 text-xs font-medium text-[var(--color-text-muted)] md:text-sm">
+                Step 2
+              </p>
+              <p className="font-body mb-3 text-sm font-medium text-[var(--color-text-primary)] md:text-base">
+                Submit your content link
+              </p>
 
               <div className="space-y-3">
                 {/* Content URL */}
@@ -241,7 +253,7 @@ export function ContentSubmissionModal({ mission, isOpen, onClose }: ContentSubm
                       className="w-full rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] py-2 pl-10 pr-3 text-xs text-[var(--color-text-primary)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)] md:text-sm"
                     />
                   </div>
-                  <p className="font-body mt-1 text-[10px] text-[var(--color-text-faint)] md:text-xs">
+                  <p className="font-body mt-1 text-[11px] text-[var(--color-text-muted)] md:text-xs">
                     Supported: YouTube, Twitter, Substack, Medium, Google Docs, Notion, and more
                   </p>
                 </div>
@@ -249,7 +261,8 @@ export function ContentSubmissionModal({ mission, isOpen, onClose }: ContentSubm
                 {/* Optional Description */}
                 <div>
                   <label className="font-body mb-1 block text-xs font-medium text-[var(--color-text-secondary)] md:text-sm">
-                    Additional Notes <span className="text-[var(--color-text-muted)]">(optional)</span>
+                    Additional Notes{' '}
+                    <span className="text-[var(--color-text-muted)]">(optional)</span>
                   </label>
                   <textarea
                     value={description}
@@ -297,8 +310,10 @@ export function ContentSubmissionModal({ mission, isOpen, onClose }: ContentSubm
                     ) : (
                       <>
                         <Upload className="mb-1.5 h-5 w-5 text-[var(--color-text-muted)] md:h-6 md:w-6" />
-                        <p className="font-body text-xs text-[var(--color-text-secondary)] md:text-sm">Click to upload screenshot</p>
-                        <p className="font-body text-[10px] text-[var(--color-text-muted)] md:text-xs">
+                        <p className="font-body text-xs text-[var(--color-text-muted)] md:text-sm">
+                          Click to upload screenshot
+                        </p>
+                        <p className="font-body text-[11px] text-[var(--color-text-muted)] md:text-xs">
                           PNG, JPG, GIF or WebP up to 5MB
                         </p>
                       </>
