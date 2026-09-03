@@ -24,6 +24,7 @@ export function useInstructionTemplates() {
           public_instructions: t.public_instructions,
           hidden_instructions: t.private_instructions,
           attack_goal: t.attack_goal,
+          avatar_url: t.avatar_url,
         }))
         setAllTemplates(mapped)
       }
