@@ -163,11 +163,11 @@ export const AgentListView = () => {
     <div className="px-3 py-6 md:px-12 md:py-12">
       <section className="mx-auto mb-10 max-w-5xl py-4 text-center md:mb-20 md:py-12">
         <h1 className="font-display text-3xl font-extrabold leading-[1.08] tracking-[0.04em] text-white sm:text-4xl md:text-7xl">
-          Outsmart the Machine. Claim The Bounty.
+          Break AI Agents. Take the Pool.
         </h1>
         <p className="font-body mx-auto mt-4 max-w-2xl text-[13px] font-semibold leading-relaxed tracking-[0.06em] text-[var(--color-text-secondary)] sm:mt-6 sm:text-sm sm:tracking-[0.08em]">
-          Red Sentinel is the premier arena for adversarial AI. Deploy autonomous agents with unique
-          data access, or break them to claim the ounty.
+          Attackers pay to break sentinels and win the entire on-chain bounty. Defenders deploy
+          agents and earn from every attack they survive. Skill-gated PvP, no luck, no lottery.
         </p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:mt-12 sm:flex-row sm:items-center sm:gap-4">
           <span className="font-body text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
@@ -209,32 +209,6 @@ export const AgentListView = () => {
         <AttackStats />
       </div> */}
 
-      {(isFetchingFeatured || featuredForRow.length > 0) && (
-        <section className="mb-10 md:mb-20">
-          <div className="mb-5 flex items-end justify-between gap-4 md:mb-8">
-            <div>
-              <h2 className="font-display text-xl font-extrabold uppercase tracking-[0.04em] text-white sm:text-2xl">
-                Featured Sentinels
-              </h2>
-              <p className="font-body mt-1.5 text-[9px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] opacity-70 sm:mt-2 sm:text-[10px]">
-                Curated high-value targets. Bigger pools, proven resilience.
-              </p>
-            </div>
-            <a
-              href="#active-sentinels"
-              className="font-body hidden items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.1em] text-white hover:underline sm:inline-flex"
-            >
-              View all <ArrowRight className="size-3.5" />
-            </a>
-          </div>
-          {isFetchingFeatured ? (
-            <SentinelRowSkeleton />
-          ) : (
-            <SentinelMarquee agents={featuredForRow} variant="featured" />
-          )}
-        </section>
-      )}
-
       {/* Trending Sentinels — auto-scrolling row (deduped against Featured) */}
       {(isFetchingTrending || trendingForRow.length > 0) && (
         <section className="mb-10 md:mb-20">
@@ -258,6 +232,32 @@ export const AgentListView = () => {
             <SentinelRowSkeleton />
           ) : (
             <SentinelMarquee agents={trendingForRow} variant="trending" />
+          )}
+        </section>
+      )}
+
+      {(isFetchingFeatured || featuredForRow.length > 0) && (
+        <section className="mb-10 md:mb-20">
+          <div className="mb-5 flex items-end justify-between gap-4 md:mb-8">
+            <div>
+              <h2 className="font-display text-xl font-extrabold uppercase tracking-[0.04em] text-white sm:text-2xl">
+                Featured Sentinels
+              </h2>
+              <p className="font-body mt-1.5 text-[9px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] opacity-70 sm:mt-2 sm:text-[10px]">
+                The biggest pools on the arena. Broken ones paid out. these haven&apos;t. Yet.
+              </p>
+            </div>
+            <a
+              href="#active-sentinels"
+              className="font-body hidden items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.1em] text-white hover:underline sm:inline-flex"
+            >
+              View all <ArrowRight className="size-3.5" />
+            </a>
+          </div>
+          {isFetchingFeatured ? (
+            <SentinelRowSkeleton />
+          ) : (
+            <SentinelMarquee agents={featuredForRow} variant="featured" />
           )}
         </section>
       )}

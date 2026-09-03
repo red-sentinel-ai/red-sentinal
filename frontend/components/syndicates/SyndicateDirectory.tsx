@@ -27,10 +27,11 @@ export function SyndicateDirectory() {
         <div className="flex flex-col justify-between gap-4 border-b border-[var(--color-border-default)] pb-6 md:flex-row md:items-end">
           <div>
             <h1 className="mb-2 text-4xl font-bold leading-[56px] tracking-tight text-[var(--color-text-primary)] md:text-5xl">
-              SYNDICATE DIRECTORY
+              Syndicates
             </h1>
             <p className="max-w-2xl text-base leading-6 text-[var(--color-text-secondary)]">
-              Groups of defenders collaboratively securing AI agents and earning attack fees
+              One defender seeds a pool. A syndicate builds a fortress. Pool your funds, launch
+              bigger sentinels, split the attack fees by contribution.
             </p>
           </div>
           <div className="flex items-center gap-4">
