@@ -34,30 +34,21 @@ export function PlayerDirectory() {
     [queryClient]
   )
 
-  const {
-    data,
-    isLoading,
-    isError,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = usePlayerDirectory(viewerId, search)
+  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    usePlayerDirectory(viewerId, search)
 
   const total = data?.pages[0]?.total ?? 0
   const currentPlayer = data?.pages[0]?.currentPlayer
 
-  const players = useMemo(
-    () => data?.pages.flatMap(page => page.players) ?? [],
-    [data]
-  )
+  const players = useMemo(() => data?.pages.flatMap(page => page.players) ?? [], [data])
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-8 md:px-6">
       <header className="mb-6">
-        <h1 className="page-heading">Player Directory</h1>
+        <h1 className="page-heading">Operators</h1>
         <p className="page-subheading mt-2">
-          Every operator on Red Sentinel — their attacks, bounties won, sentinels
-          launched, and social reach. Follow the players you want to track.
+          Every operator on Red Sentinel, their attacks, bounties won, sentinels launched, and
+          social reach. Follow the players you want to track.
         </p>
       </header>
 
@@ -85,11 +76,7 @@ export function PlayerDirectory() {
         </div>
 
         {currentPlayer && (
-          <PlayerRow
-            player={currentPlayer}
-            isCurrentUser
-            onFollowToggle={handleFollowToggle}
-          />
+          <PlayerRow player={currentPlayer} isCurrentUser onFollowToggle={handleFollowToggle} />
         )}
 
         {isLoading ? (
@@ -110,11 +97,7 @@ export function PlayerDirectory() {
           </div>
         ) : (
           players.map(player => (
-            <PlayerRow
-              key={player.user_id}
-              player={player}
-              onFollowToggle={handleFollowToggle}
-            />
+            <PlayerRow key={player.user_id} player={player} onFollowToggle={handleFollowToggle} />
           ))
         )}
       </div>
