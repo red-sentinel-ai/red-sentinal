@@ -8,7 +8,6 @@ interface TemplateFormData {
   public_instructions: string
   private_instructions: string
   attack_goal: string
-  jury_prompt: string
 }
 
 const EMPTY_FORM: TemplateFormData = {
@@ -17,7 +16,6 @@ const EMPTY_FORM: TemplateFormData = {
   public_instructions: '',
   private_instructions: '',
   attack_goal: '',
-  jury_prompt: '',
 }
 
 export function useCreateTemplate(onSuccess?: () => void) {
@@ -47,8 +45,7 @@ export function useCreateTemplate(onSuccess?: () => void) {
       !formData.name ||
       !formData.public_instructions ||
       !formData.private_instructions ||
-      !formData.attack_goal ||
-      !formData.jury_prompt
+      !formData.attack_goal
     ) {
       toast.error('Please fill in all fields')
       return

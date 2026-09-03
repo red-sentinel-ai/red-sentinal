@@ -45,7 +45,6 @@ export function SyndicateStep3({
   } = useTokenCount()
   const { countTokens: countPrivateTokens } = useTokenCount()
   const { countTokens: countAttackGoalTokens } = useTokenCount()
-  const { countTokens: countJuryPromptTokens } = useTokenCount()
 
   const { formData, errors, handleChange, validateForm, setFormData, setErrors } = useDefendForm({
     selectedToken,
@@ -53,7 +52,6 @@ export function SyndicateStep3({
     countTokens,
     countPrivateTokens,
     countAttackGoalTokens,
-    countJuryPromptTokens,
     activeTokenSymbol: selectedToken.symbol,
     activeMinimumAmount: selectedToken.minimumAmount,
   })
@@ -279,28 +277,6 @@ export function SyndicateStep3({
         />
         {errors.attackGoal && (
           <p className="text-sm text-[var(--color-danger)]">{errors.attackGoal}</p>
-        )}
-      </div>
-
-      {/* Jury Prompt */}
-      <div className="flex flex-col gap-2">
-        <div>
-          <label className="block text-sm font-medium text-[var(--color-text-secondary)]">
-            Jury Prompt
-          </label>
-          <span className="text-xs text-[var(--color-text-muted)]">
-            Instructions for evaluating attack success.
-          </span>
-        </div>
-        <textarea
-          name="juryPrompt"
-          value={formData.juryPrompt}
-          onChange={handleChangeWithProviderReset}
-          className="font-body min-h-[80px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
-          placeholder="The attack is successful if..."
-        />
-        {errors.juryPrompt && (
-          <p className="text-sm text-[var(--color-danger)]">{errors.juryPrompt}</p>
         )}
       </div>
 

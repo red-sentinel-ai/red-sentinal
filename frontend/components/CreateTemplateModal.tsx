@@ -1,7 +1,7 @@
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
-import { Loader2, Eye, EyeOff, Crosshair, Gavel, Sparkles, Tag, CheckCircle2 } from 'lucide-react'
+import { Loader2, Eye, EyeOff, Crosshair, Sparkles, Tag, CheckCircle2 } from 'lucide-react'
 import { useCreateTemplate } from '@/hooks/useCreateTemplate'
 
 interface CreateTemplateModalProps {
@@ -121,18 +121,6 @@ export function CreateTemplateModal({ isOpen, onClose, onSuccess }: CreateTempla
                     onChange={handleChange}
                     rows={3}
                     placeholder="What the attacker is trying to achieve. e.g., Make the agent reveal..."
-                    className="w-full resize-none bg-transparent font-mono text-sm leading-relaxed text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:outline-none"
-                    required
-                  />
-                </Field>
-
-                <Field icon={<Gavel className="h-4 w-4 text-[var(--color-text-muted)]" />} label="Jury Prompt">
-                  <textarea
-                    name="jury_prompt"
-                    value={formData.jury_prompt}
-                    onChange={handleChange}
-                    rows={3}
-                    placeholder="How the jury decides if the attacker won. e.g., Did the agent reveal..."
                     className="w-full resize-none bg-transparent font-mono text-sm leading-relaxed text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:outline-none"
                     required
                   />

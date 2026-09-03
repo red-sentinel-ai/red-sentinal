@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Eye, EyeOff, Crosshair, Gavel } from 'lucide-react'
+import { Eye, EyeOff, Crosshair } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { CopyButton } from '@/components/ui/common/CopyButton'
@@ -121,26 +121,6 @@ export function TemplateDetailModal({
                 <div className="rounded-xl border border-[var(--color-danger)]/20 bg-[var(--color-danger)]/5 p-4">
                   <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-[var(--color-text-secondary)]">
                     {template.attack_goal}
-                  </pre>
-                </div>
-              </div>
-
-              <div>
-                <div className="mb-2 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Gavel className="h-4 w-4 text-[var(--color-gold-primary)]" />
-                    <h3 className="text-base font-semibold text-[var(--color-text-primary)]">Jury Prompt</h3>
-                  </div>
-                  <CopyButton
-                    text={template.jury_prompt}
-                    fieldId="jury"
-                    copiedField={copiedField}
-                    onCopy={onCopy}
-                  />
-                </div>
-                <div className="rounded-xl border border-[var(--color-gold-primary)]/20 bg-[var(--color-gold-muted)] p-4">
-                  <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-[var(--color-text-secondary)]">
-                    {template.jury_prompt}
                   </pre>
                 </div>
               </div>

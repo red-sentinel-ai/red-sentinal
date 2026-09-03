@@ -7,7 +7,6 @@ interface UseTemplateLoaderOptions {
   countTokens: (text: string) => void
   countPrivateTokens: (text: string) => void
   countAttackGoalTokens: (text: string) => void
-  countJuryPromptTokens: (text: string) => void
 }
 
 export function useTemplateLoader({
@@ -15,7 +14,6 @@ export function useTemplateLoader({
   countTokens,
   countPrivateTokens,
   countAttackGoalTokens,
-  countJuryPromptTokens,
 }: UseTemplateLoaderOptions) {
   useEffect(() => {
     const templateData = sessionStorage.getItem(SESSION_KEYS.SELECTED_TEMPLATE)
@@ -30,7 +28,6 @@ export function useTemplateLoader({
         else if (template.prompt) fields.systemPrompt = template.prompt
         if (template.hidden_instructions) fields.privatePrompt = template.hidden_instructions
         if (template.attack_goal) fields.attackGoal = template.attack_goal
-        if (template.jury_prompt) fields.juryPrompt = template.jury_prompt
         if (template.name) fields.agentName = template.name
 
         if (savedFormData) {
@@ -44,7 +41,6 @@ export function useTemplateLoader({
         if (fields.systemPrompt) countTokens(fields.systemPrompt)
         if (fields.privatePrompt) countPrivateTokens(fields.privatePrompt)
         if (fields.attackGoal) countAttackGoalTokens(fields.attackGoal)
-        if (fields.juryPrompt) countJuryPromptTokens(fields.juryPrompt)
 
         sessionStorage.removeItem(SESSION_KEYS.SELECTED_TEMPLATE)
       } catch (error) {

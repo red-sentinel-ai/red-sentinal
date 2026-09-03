@@ -25,9 +25,9 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { name, tags, public_instructions, private_instructions, attack_goal, jury_prompt, creator_address } = body
+    const { name, tags, public_instructions, private_instructions, attack_goal, creator_address } = body
 
-    if (!name || !public_instructions || !private_instructions || !attack_goal || !jury_prompt || !creator_address) {
+    if (!name || !public_instructions || !private_instructions || !attack_goal || !creator_address) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
@@ -45,7 +45,6 @@ export async function POST(request: Request) {
           public_instructions,
           private_instructions,
           attack_goal,
-          jury_prompt,
           creator_address,
           status: 'pending',
           rank: 0

@@ -24,7 +24,6 @@ export function useInstructionTemplates() {
           public_instructions: t.public_instructions,
           hidden_instructions: t.private_instructions,
           attack_goal: t.attack_goal,
-          jury_prompt: t.jury_prompt
         }))
         setAllTemplates(mapped)
       }

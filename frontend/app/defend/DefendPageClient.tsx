@@ -189,11 +189,6 @@ export default function DefendPageClient() {
     countTokens: countAttackGoalTokens,
     isDebouncing: isAttackGoalTokenCountDebouncing,
   } = useTokenCount()
-  const {
-    tokenCount: juryPromptTokenCount,
-    countTokens: countJuryPromptTokens,
-    isDebouncing: isJuryPromptTokenCountDebouncing,
-  } = useTokenCount()
 
   const { formData, setFormData, errors, setErrors, handleChange, validateForm, resetForm } =
     useDefendForm({
@@ -202,7 +197,6 @@ export default function DefendPageClient() {
       countTokens,
       countPrivateTokens,
       countAttackGoalTokens,
-      countJuryPromptTokens,
       activeTokenSymbol: isEvm
         ? selectedEvmToken.symbol
         : isSolana
@@ -231,7 +225,6 @@ export default function DefendPageClient() {
     countTokens,
     countPrivateTokens,
     countAttackGoalTokens,
-    countJuryPromptTokens,
   })
 
   const agenticConfig = useMemo<AgenticConfig | null>(() => {
@@ -284,9 +277,8 @@ export default function DefendPageClient() {
       setFormData(prev => ({
         ...prev,
         attackGoal: data.attack_goal || prev.attackGoal,
-        juryPrompt: data.judge_prompt || prev.juryPrompt,
       }))
-      toast.success('Generated Attack Goal and Jury Prompt successfully!')
+      toast.success('Generated Attack Objective successfully!')
     } catch (error) {
       console.error('Error generating config:', error)
       toast.error('Failed to generate config')
@@ -633,8 +625,8 @@ export default function DefendPageClient() {
                           className="max-w-xs border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)]"
                         >
                           <p className="font-body">
-                            Generate with AI will create both Attack Objective and Jury Prompt based
-                            on your Public and Private Instructions.
+                            Generate with AI will create an Attack Objective based on your Public
+                            and Private Instructions.
                           </p>
                         </TooltipContent>
                       </Tooltip>
@@ -695,41 +687,6 @@ export default function DefendPageClient() {
                   className={`font-body text-xs text-[var(--color-text-muted)] ${isAttackGoalTokenCountDebouncing ? 'animate-pulse' : ''}`}
                 >
                   Tokens: {attackGoalTokenCount}
-                </p>
-              </div>
-            </div>
-
-            {/* Jury Prompt */}
-            <div className="flex flex-col gap-2">
-              <div className="mb-1 flex items-start justify-between">
-                <div>
-                  <label className="block text-sm font-medium text-[var(--color-text-secondary)]">
-                    Jury Prompt
-                  </label>
-                  <span className="mt-1 block text-xs text-[var(--color-text-muted)]">
-                    Instructions for the jury to evaluate whether an attack was successful.
-                  </span>
-                </div>
-              </div>
-              <textarea
-                name="juryPrompt"
-                value={formData.juryPrompt}
-                onChange={handleChangeWithProviderReset}
-                className="font-body min-h-[100px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 text-sm text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
-                placeholder="Enter instructions for the jury..."
-                autoComplete="off"
-                spellCheck="false"
-              />
-              <div className="mt-1 flex items-center justify-between">
-                {errors.juryPrompt && (
-                  <p className="font-body text-sm text-[var(--color-danger)]">
-                    {errors.juryPrompt}
-                  </p>
-                )}
-                <p
-                  className={`font-body text-xs text-[var(--color-text-muted)] ${isJuryPromptTokenCountDebouncing ? 'animate-pulse' : ''}`}
-                >
-                  Tokens: {juryPromptTokenCount}
                 </p>
               </div>
             </div>
