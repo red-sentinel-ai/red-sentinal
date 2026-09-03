@@ -61,7 +61,6 @@ export function useDeploySyndicateAgent({
         isCustom ? formData.customModelName : formData.llmModel,
         formData.privatePrompt,
         formData.attackGoal,
-        formData.juryPrompt,
         activeEvmChainKey,
         credentials,
         intendedChainId ?? undefined

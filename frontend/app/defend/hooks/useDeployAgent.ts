@@ -151,7 +151,6 @@ export function useDeployAgent({
         isCustom ? formData.customModelName : formData.llmModel,
         formData.privatePrompt,
         formData.attackGoal,
-        formData.juryPrompt,
         activeChain,
         credentials,
         intendedChainId ?? undefined,

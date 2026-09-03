@@ -27,7 +27,6 @@ export const registerAgentUtil = async (
   modelName: string,
   privatePrompt: string,
   attackGoal: string,
-  juryPrompt: string,
   chain: SupportedChain = 'sui',
   credentials?: ProviderCredentials,
   chainId?: number,
@@ -43,7 +42,6 @@ export const registerAgentUtil = async (
     model_name: modelName,
     private_prompt: privatePrompt || 'NA',
     attack_goal: attackGoal,
-    jury_prompt: juryPrompt,
   }
 
   if (credentials?.apiKey) body.api_key = credentials.apiKey

@@ -125,7 +125,6 @@ export interface SentinelTemplate {
   public_instructions: string
   hidden_instructions: string
   attack_goal: string
-  jury_prompt: string
 }
 
 export interface Chain {

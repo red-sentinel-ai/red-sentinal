@@ -23,7 +23,6 @@ export interface DefendFormData {
   llmModel: string
   privatePrompt: string
   attackGoal: string
-  juryPrompt: string
   providerApiKey: string
   customEndpointUrl: string
   customApiKey: string
@@ -40,7 +39,6 @@ export const INITIAL_FORM_DATA: DefendFormData = {
   llmModel: DEFAULT_MODEL,
   privatePrompt: '',
   attackGoal: '',
-  juryPrompt: '',
   providerApiKey: '',
   customEndpointUrl: '',
   customApiKey: '',
@@ -53,7 +51,6 @@ interface UseDefendFormOptions {
   countTokens: (text: string) => void
   countPrivateTokens: (text: string) => void
   countAttackGoalTokens: (text: string) => void
-  countJuryPromptTokens: (text: string) => void
   /** Called when any custom-provider field (url/key/model) changes */
   onCustomProviderFieldChange?: () => void
   /** Override token symbol and minimum for validation (used for chain-specific tokens) */
@@ -67,7 +64,6 @@ export function useDefendForm({
   countTokens,
   countPrivateTokens,
   countAttackGoalTokens,
-  countJuryPromptTokens,
   onCustomProviderFieldChange,
   activeTokenSymbol,
   activeMinimumAmount,
@@ -98,7 +94,6 @@ export function useDefendForm({
     if (name === 'systemPrompt') countTokens(value)
     else if (name === 'privatePrompt') countPrivateTokens(value)
     else if (name === 'attackGoal') countAttackGoalTokens(value)
-    else if (name === 'juryPrompt') countJuryPromptTokens(value)
 
     if (errors[name as keyof DefendFormData]) {
       setErrors(prev => ({ ...prev, [name]: '' }))
@@ -134,7 +129,6 @@ export function useDefendForm({
     }
 
     if (!formData.attackGoal.trim()) newErrors.attackGoal = 'Attack goal is required'
-    if (!formData.juryPrompt.trim()) newErrors.juryPrompt = 'Jury prompt is required'
 
     if (formData.llmProvider === 'custom') {
       if (!formData.customEndpointUrl.trim()) newErrors.customEndpointUrl = 'Endpoint URL is required'
