@@ -16,11 +16,7 @@ import {
 } from '@/constants'
 import type { SupportedToken } from '@/constants/shared'
 import { isEvmChain } from '@/constants/chains'
-import {
-  SUPPORTED_TOKENS,
-  SOLANA_SUPPORTED_TOKENS,
-  getSupportedTokens,
-} from '@/constants/tokens'
+import { SUPPORTED_TOKENS, SOLANA_SUPPORTED_TOKENS, getSupportedTokens } from '@/constants/tokens'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
 import { useEVMBalance } from '@/hooks/useEVMBalance'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
@@ -142,10 +138,8 @@ export default function DefendPageClient() {
 
   // Sui token selection
   const [selectedToken, setSelectedToken] = useState<SupportedToken>(SUPPORTED_TOKENS[0])
-  const { rawBalance: selectedTokenRawBalance, isLoading: isTokenBalanceLoading } = useSuiTokenBalance(
-    selectedToken.coinType,
-    selectedToken.decimals
-  )
+  const { rawBalance: selectedTokenRawBalance, isLoading: isTokenBalanceLoading } =
+    useSuiTokenBalance(selectedToken.coinType, selectedToken.decimals)
 
   // Solana token selection
   const [selectedSolanaToken, setSelectedSolanaToken] = useState<SupportedToken>(
@@ -161,7 +155,6 @@ export default function DefendPageClient() {
   useEffect(() => {
     if (searchParams.get('mode') === 'syndicate') setDefendMode('syndicate')
   }, [searchParams])
-
 
   useEffect(() => {
     setSelectedEvmToken(evmTokenList[0])
@@ -372,7 +365,6 @@ export default function DefendPageClient() {
             ))}
           </div>
         </div>
-
         {/* Syndicate Mode */}
         {defendMode === 'syndicate' && (
           <div className="mx-auto max-w-[640px] px-4">
@@ -385,498 +377,500 @@ export default function DefendPageClient() {
             <SyndicateLaunchFlow />
           </div>
         )}
-
         {/* Individual Mode */}
         {defendMode === 'individual' && (
-        <form onSubmit={handleSubmit} className="relative mx-auto max-w-[969px] space-y-8 px-4">
-          {/* Header */}
-          <div className="flex flex-col-reverse items-center gap-6 sm:flex-row sm:items-start sm:justify-between">
-            <div className="text-center sm:text-left">
-              <h1 className="page-heading">Deploy Your Sentinel</h1>
-              <p className="page-subheading mt-2">
-                Launch an AI agent. Let the world try to break it. Earn from every attack.
-              </p>
-            </div>
-
-            {/* Image Picker */}
-            <div className="flex flex-col items-center justify-center gap-2">
-              <div
-                className="group relative flex h-[70px] w-[70px] cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] text-[var(--color-text-muted)] shadow-[var(--shadow-card)] transition-all hover:border-[var(--color-gold-primary)] hover:text-[var(--color-text-primary)] sm:h-[90px] sm:w-[90px]"
-                onClick={() => setImagePickerOpen(true)}
-              >
-                {selectedImage?.url ? (
-                  <Image
-                    src={selectedImage.url}
-                    alt="Selected"
-                    width={90}
-                    height={90}
-                    className="relative z-10 h-full w-full object-cover"
-                  />
-                ) : null}
-                <div className="absolute inset-0 z-10 h-full w-full bg-[var(--color-overlay)] opacity-0 transition-opacity group-hover:opacity-100" />
-                <span className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 text-white opacity-0 transition-opacity group-hover:opacity-100">
-                  <CameraIcon className="h-8 w-8" />
-                </span>
-              </div>
-              <p className="mt-2 text-center text-xs font-medium text-[var(--color-text-muted)]">
-                Choose Sentinel Image
-              </p>
-            </div>
-          </div>
-
-          <ImagePickerSheet
-            open={imagePickerOpen}
-            onClose={() => setImagePickerOpen(false)}
-            onSelectImage={img => {
-              setSelectedImage(img)
-              setImagePickerOpen(false)
-              setAgentImage(img.isCustom ? (img.file ?? null) : null)
-            }}
-            title="Select Sentinel Image"
-            subtitle="Choose a profile image for your Sentinel."
-            imageArray={SENTINEL_IMAGES}
-            gifArray={SENTINEL_GIFS}
-            disableGifs={true}
-          />
-
-          {/* Form Fields */}
-          <FormInput
-            label="Sentinel Name"
-            subLabel="Give your Sentinel a unique identity."
-            name="agentName"
-            value={formData.agentName}
-            onChange={handleChangeWithProviderReset}
-            error={errors.agentName}
-            placeholder="e.g. Atlas Guard, Void Watcher, Nova Sentinel"
-          />
-
-          <SentinelTypeToggle value={sentinelType} onChange={setSentinelType} />
-
-          {sentinelType === 'agentic' && (
-            <div className="flex flex-col gap-6">
-              <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
-                {/* Left: environment list (fixed) */}
-                <div className="lg:w-72 lg:shrink-0">
-                  <EnvironmentTemplatePicker
-                    selectedTemplateIds={selectedTemplateIds}
-                    onToggleTemplate={toggleTemplate}
-                  />
-                </div>
-
-                {/* Right: a tab per selected environment, holding its configuration */}
-                <div className="min-w-0 flex-1">
-                  {selectedTemplateIds.length === 0 ? (
-                    <div className="flex h-full min-h-[160px] items-center justify-center rounded-lg border border-dashed border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-6 text-center text-sm text-[var(--color-text-muted)]">
-                      Select one or more environments, or enable a live tool below.
-                    </div>
-                  ) : selectedTemplates.length === 0 ? (
-                    <div className="flex h-full min-h-[160px] items-center justify-center gap-2 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-6 text-sm text-[var(--color-text-muted)]">
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Loading environment…
-                    </div>
-                  ) : (
-                    <Tabs value={activeTabValue} onValueChange={setActiveTemplateId}>
-                      <TabsList className="h-auto w-full justify-start overflow-x-auto border-b border-[var(--color-border-default)] p-0">
-                        {selectedTemplates.map(template => (
-                          <TabsTrigger key={template.template_id} value={template.template_id}>
-                            {template.name}
-                          </TabsTrigger>
-                        ))}
-                      </TabsList>
-
-                      {selectedTemplates.map(template => (
-                        <TabsContent
-                          key={template.template_id}
-                          value={template.template_id}
-                          className="mt-4"
-                        >
-                          <EnvironmentConfigPanel
-                            template={template}
-                            environment={agenticEnvironment}
-                            onEnvironmentChange={setAgenticEnvironment}
-                            enabledToolIds={enabledToolIds}
-                            onEnabledToolIdsChange={setEnabledToolIds}
-                          />
-                        </TabsContent>
-                      ))}
-                    </Tabs>
-                  )}
-                </div>
+          <form onSubmit={handleSubmit} className="relative mx-auto max-w-[969px] space-y-8 px-4">
+            {/* Header */}
+            <div className="flex flex-col-reverse items-center gap-6 sm:flex-row sm:items-start sm:justify-between">
+              <div className="text-center sm:text-left">
+                <h1 className="page-heading">Deploy Your Sentinel</h1>
+                <p className="page-subheading mt-2">
+                  Launch an AI agent. Let the world try to break it. Earn from every attack.
+                </p>
               </div>
 
-              <LiveToolsChecklist
-                enabledLiveToolIds={enabledLiveToolIds}
-                onChange={setEnabledLiveToolIds}
-              />
-            </div>
-          )}
-
-          <LLMProviderSection
-            formData={formData}
-            errors={errors}
-            onChange={handleChangeWithProviderReset}
-            onProviderChange={customProvider.handleProviderChange}
-            onModelChange={val => setFormData(prev => ({ ...prev, llmModel: val }))}
-            isValidating={customProvider.isValidating}
-            isValidated={customProvider.isValidated}
-            validationError={customProvider.validationError}
-            showApiKey={customProvider.showApiKey}
-            onToggleApiKey={() => customProvider.setShowApiKey(v => !v)}
-            onValidate={() => customProvider.handleValidate(formData)}
-          />
-
-          {/* Public Instructions */}
-          <div className="flex flex-col gap-2">
-            <div className="mb-1 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-              <div>
-                <label className="block text-sm font-medium text-[var(--color-text-secondary)]">
-                  Public Instructions
-                </label>
-                <span className="mt-1 block text-xs text-[var(--color-text-muted)]">
-                  Define how your Sentinel thinks, acts, and responds. Describe its role, tone,
-                  constraints, and objectives.
-                </span>
-              </div>
-              <div className="flex shrink-0 gap-4 sm:ml-4">
-                <Link
-                  href="/instruction-templates"
-                  className="text-xs text-[var(--color-gold-primary)] underline hover:text-[var(--color-gold-light)]"
-                  onClick={() =>
-                    sessionStorage.setItem(SESSION_KEYS.DEFEND_FORM_DATA, JSON.stringify(formData))
-                  }
+              {/* Image Picker */}
+              <div className="flex flex-col items-center justify-center gap-2">
+                <div
+                  className="group relative flex h-[70px] w-[70px] cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] text-[var(--color-text-muted)] shadow-[var(--shadow-card)] transition-all hover:border-[var(--color-gold-primary)] hover:text-[var(--color-text-primary)] sm:h-[90px] sm:w-[90px]"
+                  onClick={() => setImagePickerOpen(true)}
                 >
-                  View Templates
-                </Link>
-                <Link
-                  href={`${SUI_SENTINEL_DOCS_URL}/guides/defender-guide`}
-                  target="_blank"
-                  className="text-xs text-[var(--color-gold-primary)] underline hover:text-[var(--color-gold-light)]"
-                >
-                  Docs Example
-                </Link>
+                  {selectedImage?.url ? (
+                    <Image
+                      src={selectedImage.url}
+                      alt="Selected"
+                      width={90}
+                      height={90}
+                      className="relative z-10 h-full w-full object-cover"
+                    />
+                  ) : null}
+                  <div className="absolute inset-0 z-10 h-full w-full bg-[var(--color-overlay)] opacity-0 transition-opacity group-hover:opacity-100" />
+                  <span className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 text-white opacity-0 transition-opacity group-hover:opacity-100">
+                    <CameraIcon className="h-8 w-8" />
+                  </span>
+                </div>
+                <p className="mt-2 text-center text-xs font-medium text-[var(--color-text-muted)]">
+                  Choose Sentinel Image
+                </p>
               </div>
             </div>
 
-            <textarea
-              name="systemPrompt"
-              value={formData.systemPrompt}
-              onChange={handleChangeWithProviderReset}
-              className="font-body min-h-[120px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 text-sm text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
-              placeholder="Enter sentinel public instructions..."
-              autoComplete="off"
-              spellCheck="false"
+            <ImagePickerSheet
+              open={imagePickerOpen}
+              onClose={() => setImagePickerOpen(false)}
+              onSelectImage={img => {
+                setSelectedImage(img)
+                setImagePickerOpen(false)
+                setAgentImage(img.isCustom ? (img.file ?? null) : null)
+              }}
+              title="Select Sentinel Image"
+              subtitle="Choose a profile image for your Sentinel."
+              imageArray={SENTINEL_IMAGES}
+              gifArray={SENTINEL_GIFS}
+              disableGifs={true}
             />
-            <div className="mt-1 flex items-center justify-between">
-              {errors.systemPrompt && (
-                <p className="font-body text-sm text-[var(--color-danger)]">
-                  {errors.systemPrompt}
+
+            {/* Form Fields */}
+            <FormInput
+              label="Sentinel Name"
+              subLabel="Give your Sentinel a unique identity."
+              name="agentName"
+              value={formData.agentName}
+              onChange={handleChangeWithProviderReset}
+              error={errors.agentName}
+              placeholder="e.g. Atlas Guard, Void Watcher, Nova Sentinel"
+            />
+
+            <SentinelTypeToggle value={sentinelType} onChange={setSentinelType} />
+
+            {sentinelType === 'agentic' && (
+              <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
+                  {/* Left: environment list (fixed) */}
+                  <div className="lg:w-72 lg:shrink-0">
+                    <EnvironmentTemplatePicker
+                      selectedTemplateIds={selectedTemplateIds}
+                      onToggleTemplate={toggleTemplate}
+                    />
+                  </div>
+
+                  {/* Right: a tab per selected environment, holding its configuration */}
+                  <div className="min-w-0 flex-1">
+                    {selectedTemplateIds.length === 0 ? (
+                      <div className="flex h-full min-h-[160px] items-center justify-center rounded-lg border border-dashed border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-6 text-center text-sm text-[var(--color-text-muted)]">
+                        Select one or more environments, or enable a live tool below.
+                      </div>
+                    ) : selectedTemplates.length === 0 ? (
+                      <div className="flex h-full min-h-[160px] items-center justify-center gap-2 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-6 text-sm text-[var(--color-text-muted)]">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Loading environment…
+                      </div>
+                    ) : (
+                      <Tabs value={activeTabValue} onValueChange={setActiveTemplateId}>
+                        <TabsList className="h-auto w-full justify-start overflow-x-auto border-b border-[var(--color-border-default)] p-0">
+                          {selectedTemplates.map(template => (
+                            <TabsTrigger key={template.template_id} value={template.template_id}>
+                              {template.name}
+                            </TabsTrigger>
+                          ))}
+                        </TabsList>
+
+                        {selectedTemplates.map(template => (
+                          <TabsContent
+                            key={template.template_id}
+                            value={template.template_id}
+                            className="mt-4"
+                          >
+                            <EnvironmentConfigPanel
+                              template={template}
+                              environment={agenticEnvironment}
+                              onEnvironmentChange={setAgenticEnvironment}
+                              enabledToolIds={enabledToolIds}
+                              onEnabledToolIdsChange={setEnabledToolIds}
+                            />
+                          </TabsContent>
+                        ))}
+                      </Tabs>
+                    )}
+                  </div>
+                </div>
+
+                <LiveToolsChecklist
+                  enabledLiveToolIds={enabledLiveToolIds}
+                  onChange={setEnabledLiveToolIds}
+                />
+              </div>
+            )}
+
+            <LLMProviderSection
+              formData={formData}
+              errors={errors}
+              onChange={handleChangeWithProviderReset}
+              onProviderChange={customProvider.handleProviderChange}
+              onModelChange={val => setFormData(prev => ({ ...prev, llmModel: val }))}
+              isValidating={customProvider.isValidating}
+              isValidated={customProvider.isValidated}
+              validationError={customProvider.validationError}
+              showApiKey={customProvider.showApiKey}
+              onToggleApiKey={() => customProvider.setShowApiKey(v => !v)}
+              onValidate={() => customProvider.handleValidate(formData)}
+            />
+
+            {/* Public Instructions */}
+            <div className="flex flex-col gap-2">
+              <div className="mb-1 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <label className="block text-sm font-medium text-[var(--color-text-secondary)]">
+                    Public Instructions
+                  </label>
+                  <span className="mt-1 block text-xs text-[var(--color-text-muted)]">
+                    Define how your Sentinel thinks, acts, and responds. Describe its role, tone,
+                    constraints, and objectives.
+                  </span>
+                </div>
+                <div className="flex shrink-0 gap-4 sm:ml-4">
+                  <Link
+                    href="/sentinel-templates"
+                    className="text-xs text-[var(--color-gold-primary)] underline hover:text-[var(--color-gold-light)]"
+                    onClick={() =>
+                      sessionStorage.setItem(
+                        SESSION_KEYS.DEFEND_FORM_DATA,
+                        JSON.stringify(formData)
+                      )
+                    }
+                  >
+                    View Templates
+                  </Link>
+                  <Link
+                    href={`${SUI_SENTINEL_DOCS_URL}/guides/defender-guide`}
+                    target="_blank"
+                    className="text-xs text-[var(--color-gold-primary)] underline hover:text-[var(--color-gold-light)]"
+                  >
+                    Docs Example
+                  </Link>
+                </div>
+              </div>
+
+              <textarea
+                name="systemPrompt"
+                value={formData.systemPrompt}
+                onChange={handleChangeWithProviderReset}
+                className="font-body min-h-[120px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 text-sm text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
+                placeholder="Enter sentinel public instructions..."
+                autoComplete="off"
+                spellCheck="false"
+              />
+              <div className="mt-1 flex items-center justify-between">
+                {errors.systemPrompt && (
+                  <p className="font-body text-sm text-[var(--color-danger)]">
+                    {errors.systemPrompt}
+                  </p>
+                )}
+                <p
+                  className={`font-body ml-auto text-xs text-[var(--color-text-muted)] ${isTokenCountDebouncing ? 'animate-pulse' : ''}`}
+                >
+                  Tokens: {tokenCount} / {SYSTEM_PROMPT_MAX_TOKENS}
+                </p>
+              </div>
+              {tokenCount > SYSTEM_PROMPT_MAX_TOKENS && (
+                <p className="font-body text-right text-sm text-[var(--color-danger)]">
+                  System prompt exceeds token limit
                 </p>
               )}
-              <p
-                className={`font-body ml-auto text-xs text-[var(--color-text-muted)] ${isTokenCountDebouncing ? 'animate-pulse' : ''}`}
-              >
-                Tokens: {tokenCount} / {SYSTEM_PROMPT_MAX_TOKENS}
-              </p>
             </div>
-            {tokenCount > SYSTEM_PROMPT_MAX_TOKENS && (
-              <p className="font-body text-right text-sm text-[var(--color-danger)]">
-                System prompt exceeds token limit
-              </p>
-            )}
-          </div>
 
-          {/* Private Instructions */}
-          <div className="flex flex-col gap-2">
-            <div className="mb-1 flex items-start justify-between">
-              <div>
-                <label className="block text-sm font-medium text-[var(--color-text-secondary)]">
-                  Private Instructions
-                </label>
-                <span className="mt-1 block text-xs text-[var(--color-text-muted)]">
-                  Instructions only accessible to the Sentinel agent. Attackers will not be able to
-                  see this.
-                </span>
+            {/* Private Instructions */}
+            <div className="flex flex-col gap-2">
+              <div className="mb-1 flex items-start justify-between">
+                <div>
+                  <label className="block text-sm font-medium text-[var(--color-text-secondary)]">
+                    Private Instructions
+                  </label>
+                  <span className="mt-1 block text-xs text-[var(--color-text-muted)]">
+                    Instructions only accessible to the Sentinel agent. Attackers will not be able
+                    to see this.
+                  </span>
+                </div>
+              </div>
+              <textarea
+                name="privatePrompt"
+                value={formData.privatePrompt}
+                onChange={handleChangeWithProviderReset}
+                className="font-body min-h-[100px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 text-sm text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
+                placeholder="Enter private instructions for your sentinel..."
+                autoComplete="off"
+                spellCheck="false"
+              />
+              <div className="mt-1 flex items-center justify-end">
+                <p
+                  className={`font-body text-xs text-[var(--color-text-muted)] ${isPrivateTokenCountDebouncing ? 'animate-pulse' : ''}`}
+                >
+                  Tokens: {privateTokenCount}
+                </p>
               </div>
             </div>
-            <textarea
-              name="privatePrompt"
-              value={formData.privatePrompt}
-              onChange={handleChangeWithProviderReset}
-              className="font-body min-h-[100px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 text-sm text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
-              placeholder="Enter private instructions for your sentinel..."
-              autoComplete="off"
-              spellCheck="false"
-            />
-            <div className="mt-1 flex items-center justify-end">
-              <p
-                className={`font-body text-xs text-[var(--color-text-muted)] ${isPrivateTokenCountDebouncing ? 'animate-pulse' : ''}`}
-              >
-                Tokens: {privateTokenCount}
-              </p>
-            </div>
-          </div>
 
-          {/* Attack Goal */}
-          <div className="flex flex-col gap-2">
-            <div className="mb-1 flex items-start justify-between">
-              <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <label className="block text-sm font-medium text-[var(--color-text-secondary)]">
-                    Attack Objective
-                  </label>
+            {/* Attack Goal */}
+            <div className="flex flex-col gap-2">
+              <div className="mb-1 flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <label className="block text-sm font-medium text-[var(--color-text-secondary)]">
+                      Attack Objective
+                    </label>
+                    <TooltipProvider delayDuration={100}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            type="button"
+                            className="text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]"
+                          >
+                            <Info className="h-4 w-4" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent
+                          side="right"
+                          className="max-w-xs border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)]"
+                        >
+                          <p className="font-body">
+                            Generate with AI will create both Attack Objective and Jury Prompt based
+                            on your Public and Private Instructions.
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                  <span className="mt-1 block text-xs text-[var(--color-text-muted)]">
+                    Mirror actual attacks such as stealing sensitive data, extracting secret system
+                    instructions, or causing the Sentinel to malfunction. The more specific the
+                    objective, the better attackers can strategize their attacks.
+                  </span>
+                </div>
+                <div className="ml-4 shrink-0">
                   <TooltipProvider delayDuration={100}>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <button
                           type="button"
-                          className="text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]"
+                          onClick={handleGenerateConfig}
+                          disabled={isGeneratingConfig || !formData.systemPrompt}
+                          className="font-body flex items-center gap-2 rounded-lg bg-[var(--color-gold-primary)] px-4 py-2 text-xs font-semibold text-[var(--color-text-on-gold)] shadow-md transition-all duration-200 hover:bg-[var(--color-gold-light)] disabled:cursor-not-allowed disabled:opacity-50"
                         >
-                          <Info className="h-4 w-4" />
+                          {isGeneratingConfig ? (
+                            <Loader2 className="h-3 w-3 animate-spin" />
+                          ) : (
+                            <Sparkles className="h-3 w-3" />
+                          )}
+                          {isGeneratingConfig ? 'Generating...' : 'Generate with AI'}
                         </button>
                       </TooltipTrigger>
-                      <TooltipContent
-                        side="right"
-                        className="max-w-xs border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)]"
-                      >
-                        <p className="font-body">
-                          Generate with AI will create both Attack Objective and Jury Prompt based
-                          on your Public and Private Instructions.
-                        </p>
-                      </TooltipContent>
+                      {!formData.systemPrompt && (
+                        <TooltipContent
+                          side="bottom"
+                          className="border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)]"
+                        >
+                          <p className="font-body">Enter Public Instructions first</p>
+                        </TooltipContent>
+                      )}
                     </Tooltip>
                   </TooltipProvider>
                 </div>
-                <span className="mt-1 block text-xs text-[var(--color-text-muted)]">
-                  Mirror actual attacks such as stealing sensitive data, extracting secret system
-                  instructions, or causing the Sentinel to malfunction. The more specific the
-                  objective, the better attackers can strategize their attacks.
-                </span>
               </div>
-              <div className="ml-4 shrink-0">
-                <TooltipProvider delayDuration={100}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button
-                        type="button"
-                        onClick={handleGenerateConfig}
-                        disabled={isGeneratingConfig || !formData.systemPrompt}
-                        className="font-body flex items-center gap-2 rounded-lg bg-[var(--color-gold-primary)] px-4 py-2 text-xs font-semibold text-[var(--color-text-on-gold)] shadow-md transition-all duration-200 hover:bg-[var(--color-gold-light)] disabled:cursor-not-allowed disabled:opacity-50"
-                      >
-                        {isGeneratingConfig ? (
-                          <Loader2 className="h-3 w-3 animate-spin" />
-                        ) : (
-                          <Sparkles className="h-3 w-3" />
-                        )}
-                        {isGeneratingConfig ? 'Generating...' : 'Generate with AI'}
-                      </button>
-                    </TooltipTrigger>
-                    {!formData.systemPrompt && (
-                      <TooltipContent
-                        side="bottom"
-                        className="border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)]"
-                      >
-                        <p className="font-body">Enter Public Instructions first</p>
-                      </TooltipContent>
-                    )}
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-            </div>
-            <textarea
-              name="attackGoal"
-              value={formData.attackGoal}
-              onChange={handleChangeWithProviderReset}
-              className="font-body min-h-[100px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 text-sm text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
-              placeholder="e.g., Convince the sentinel to reveal the secret password"
-              autoComplete="off"
-              spellCheck="false"
-            />
-            <div className="mt-1 flex items-center justify-between">
-              {errors.attackGoal && (
-                <p className="font-body text-sm text-[var(--color-danger)]">{errors.attackGoal}</p>
-              )}
-              <p
-                className={`font-body text-xs text-[var(--color-text-muted)] ${isAttackGoalTokenCountDebouncing ? 'animate-pulse' : ''}`}
-              >
-                Tokens: {attackGoalTokenCount}
-              </p>
-            </div>
-          </div>
-
-          {/* Jury Prompt */}
-          <div className="flex flex-col gap-2">
-            <div className="mb-1 flex items-start justify-between">
-              <div>
-                <label className="block text-sm font-medium text-[var(--color-text-secondary)]">
-                  Jury Prompt
-                </label>
-                <span className="mt-1 block text-xs text-[var(--color-text-muted)]">
-                  Instructions for the jury to evaluate whether an attack was successful.
-                </span>
-              </div>
-            </div>
-            <textarea
-              name="juryPrompt"
-              value={formData.juryPrompt}
-              onChange={handleChangeWithProviderReset}
-              className="font-body min-h-[100px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 text-sm text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
-              placeholder="Enter instructions for the jury..."
-              autoComplete="off"
-              spellCheck="false"
-            />
-            <div className="mt-1 flex items-center justify-between">
-              {errors.juryPrompt && (
-                <p className="font-body text-sm text-[var(--color-danger)]">{errors.juryPrompt}</p>
-              )}
-              <p
-                className={`font-body text-xs text-[var(--color-text-muted)] ${isJuryPromptTokenCountDebouncing ? 'animate-pulse' : ''}`}
-              >
-                Tokens: {juryPromptTokenCount}
-              </p>
-            </div>
-          </div>
-
-          {/* Bounty Pool & Fee */}
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div className="flex flex-col gap-2">
-              <div>
-                <label className="block text-sm font-medium text-[var(--color-text-secondary)]">
-                  Bounty Pool
-                </label>
-                <span className="mt-1 block text-xs text-[var(--color-text-muted)]">
-                  Minimum {formatCompact(activeMinimumAmount, 3)} {activeTokenSymbol} required to
-                  deploy.
-                </span>
-                {isWalletConnected && (
-                  <span className="font-body mt-0.5 flex items-center gap-1 text-sm text-[var(--color-text-muted)]">
-                    Balance:{' '}
-                    {isEvm ? (
-                      isEvmBalanceLoading ? (
-                        <Skeleton className="inline-block h-4 w-20 align-middle" />
-                      ) : (
-                        <span className="font-medium text-[var(--color-text-primary)]">
-                          {evmBalance?.toFixed(4) ?? '0.0000'} {selectedEvmToken.symbol}
-                        </span>
-                      )
-                    ) : (isSolana ? isSolanaTokenBalanceLoading : isTokenBalanceLoading) ? (
-                      <Skeleton className="inline-block h-4 w-20 align-middle" />
-                    ) : (
-                      <TokenAmount
-                        rawAmount={isSolana ? solanaTokenRawBalance : selectedTokenRawBalance}
-                        token={isSolana ? selectedSolanaToken : selectedToken}
-                        className="font-medium text-[var(--color-text-primary)]"
-                      />
-                    )}
-                  </span>
+              <textarea
+                name="attackGoal"
+                value={formData.attackGoal}
+                onChange={handleChangeWithProviderReset}
+                className="font-body min-h-[100px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 text-sm text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
+                placeholder="e.g., Convince the sentinel to reveal the secret password"
+                autoComplete="off"
+                spellCheck="false"
+              />
+              <div className="mt-1 flex items-center justify-between">
+                {errors.attackGoal && (
+                  <p className="font-body text-sm text-[var(--color-danger)]">
+                    {errors.attackGoal}
+                  </p>
                 )}
+                <p
+                  className={`font-body text-xs text-[var(--color-text-muted)] ${isAttackGoalTokenCountDebouncing ? 'animate-pulse' : ''}`}
+                >
+                  Tokens: {attackGoalTokenCount}
+                </p>
               </div>
-              <div className="mt-auto flex h-9 overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] transition-all focus-within:border-[var(--color-gold-primary)] focus-within:ring-1 focus-within:ring-[var(--color-gold-primary)]">
-                <input
-                  name="initialBalance"
-                  type="number"
-                  value={formData.initialBalance}
-                  onChange={handleChangeWithProviderReset}
-                  className="font-body h-full flex-1 bg-transparent px-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:outline-none"
-                  placeholder="0.00"
-                  step="any"
-                  min={activeMinimumAmount.toString()}
-                  autoComplete="off"
-                />
-                <div className="flex shrink-0 items-center border-l border-[var(--color-border-subtle)]">
-                  <TokenSelectDropdown
-                    tokens={
-                      isEvm
-                        ? evmTokenList
-                        : isSolana
-                          ? SOLANA_SUPPORTED_TOKENS
-                          : SUPPORTED_TOKENS
-                    }
-                    selected={
-                      isEvm ? selectedEvmToken : isSolana ? selectedSolanaToken : selectedToken
-                    }
-                    onSelect={
-                      isEvm
-                        ? setSelectedEvmToken
-                        : isSolana
-                          ? setSelectedSolanaToken
-                          : setSelectedToken
-                    }
-                  />
+            </div>
+
+            {/* Jury Prompt */}
+            <div className="flex flex-col gap-2">
+              <div className="mb-1 flex items-start justify-between">
+                <div>
+                  <label className="block text-sm font-medium text-[var(--color-text-secondary)]">
+                    Jury Prompt
+                  </label>
+                  <span className="mt-1 block text-xs text-[var(--color-text-muted)]">
+                    Instructions for the jury to evaluate whether an attack was successful.
+                  </span>
                 </div>
               </div>
-              {errors.initialBalance && (
-                <p className="font-body mt-1 text-sm text-[var(--color-danger)]">
-                  {errors.initialBalance}
+              <textarea
+                name="juryPrompt"
+                value={formData.juryPrompt}
+                onChange={handleChangeWithProviderReset}
+                className="font-body min-h-[100px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 text-sm text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
+                placeholder="Enter instructions for the jury..."
+                autoComplete="off"
+                spellCheck="false"
+              />
+              <div className="mt-1 flex items-center justify-between">
+                {errors.juryPrompt && (
+                  <p className="font-body text-sm text-[var(--color-danger)]">
+                    {errors.juryPrompt}
+                  </p>
+                )}
+                <p
+                  className={`font-body text-xs text-[var(--color-text-muted)] ${isJuryPromptTokenCountDebouncing ? 'animate-pulse' : ''}`}
+                >
+                  Tokens: {juryPromptTokenCount}
                 </p>
-              )}
+              </div>
             </div>
 
-            <FormInput
-              label={`Fee Per Message (${activeTokenSymbol})`}
-              subLabel={`You earn this fee whenever users interact with your Sentinel. Minimum ${MINIMUM_FEE_PER_MESSAGE} ${activeTokenSymbol}.`}
-              name="feePerMessage"
-              value={formData.feePerMessage}
-              onChange={handleChangeWithProviderReset}
-              error={errors.feePerMessage}
-              type="number"
-              placeholder="0.00"
-              step="any"
-              className="h-full"
-            />
-          </div>
-
-          <RewardsConditions />
-
-          {/* Deploy Button */}
-          <div className="pb-20 pt-2">
-            {isWalletConnected ? (
-              <button
-                type="submit"
-                disabled={
-                  isLoading ||
-                  tokenCount > SYSTEM_PROMPT_MAX_TOKENS ||
-                  (formData.llmProvider === 'custom' && !customProvider.isValidated)
-                }
-                className="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-gold-primary)] text-sm font-medium text-[var(--color-text-on-gold)] shadow-[var(--shadow-card)] transition-all hover:bg-[var(--color-gold-light)] disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="h-6 w-6 animate-spin" />
-                    Deploying...
-                  </>
-                ) : (
-                  'Deploy Sentinel'
-                )}
-              </button>
-            ) : (
-              <div className="h-12">
-                {isSolana ? (
-                  <button
-                    type="button"
-                    onClick={() => setSolanaWalletModalVisible(true)}
-                    className="flex h-full w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-gold-primary)] text-sm font-medium text-[var(--color-text-on-gold)] shadow-[var(--shadow-card)] transition-all hover:bg-[var(--color-gold-light)]"
-                  >
-                    <Wallet className="h-5 w-5" />
-                    Connect Wallet
-                  </button>
-                ) : isEvm ? (
-                  <button
-                    type="button"
-                    onClick={openEvmConnectModal}
-                    className="flex h-full w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-gold-primary)] text-sm font-medium text-[var(--color-text-on-gold)] shadow-[var(--shadow-card)] transition-all hover:bg-[var(--color-gold-light)]"
-                  >
-                    <Wallet className="h-5 w-5" />
-                    Connect BNB Wallet
-                  </button>
-                ) : (
-                  <ConnectButton className="h-full w-full !rounded-lg !text-sm" />
+            {/* Bounty Pool & Fee */}
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div className="flex flex-col gap-2">
+                <div>
+                  <label className="block text-sm font-medium text-[var(--color-text-secondary)]">
+                    Bounty Pool
+                  </label>
+                  <span className="mt-1 block text-xs text-[var(--color-text-muted)]">
+                    Minimum {formatCompact(activeMinimumAmount, 3)} {activeTokenSymbol} required to
+                    deploy.
+                  </span>
+                  {isWalletConnected && (
+                    <span className="font-body mt-0.5 flex items-center gap-1 text-sm text-[var(--color-text-muted)]">
+                      Balance:{' '}
+                      {isEvm ? (
+                        isEvmBalanceLoading ? (
+                          <Skeleton className="inline-block h-4 w-20 align-middle" />
+                        ) : (
+                          <span className="font-medium text-[var(--color-text-primary)]">
+                            {evmBalance?.toFixed(4) ?? '0.0000'} {selectedEvmToken.symbol}
+                          </span>
+                        )
+                      ) : (isSolana ? isSolanaTokenBalanceLoading : isTokenBalanceLoading) ? (
+                        <Skeleton className="inline-block h-4 w-20 align-middle" />
+                      ) : (
+                        <TokenAmount
+                          rawAmount={isSolana ? solanaTokenRawBalance : selectedTokenRawBalance}
+                          token={isSolana ? selectedSolanaToken : selectedToken}
+                          className="font-medium text-[var(--color-text-primary)]"
+                        />
+                      )}
+                    </span>
+                  )}
+                </div>
+                <div className="mt-auto flex h-9 overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] transition-all focus-within:border-[var(--color-gold-primary)] focus-within:ring-1 focus-within:ring-[var(--color-gold-primary)]">
+                  <input
+                    name="initialBalance"
+                    type="number"
+                    value={formData.initialBalance}
+                    onChange={handleChangeWithProviderReset}
+                    className="font-body h-full flex-1 bg-transparent px-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:outline-none"
+                    placeholder="0.00"
+                    step="any"
+                    min={activeMinimumAmount.toString()}
+                    autoComplete="off"
+                  />
+                  <div className="flex shrink-0 items-center border-l border-[var(--color-border-subtle)]">
+                    <TokenSelectDropdown
+                      tokens={
+                        isEvm ? evmTokenList : isSolana ? SOLANA_SUPPORTED_TOKENS : SUPPORTED_TOKENS
+                      }
+                      selected={
+                        isEvm ? selectedEvmToken : isSolana ? selectedSolanaToken : selectedToken
+                      }
+                      onSelect={
+                        isEvm
+                          ? setSelectedEvmToken
+                          : isSolana
+                            ? setSelectedSolanaToken
+                            : setSelectedToken
+                      }
+                    />
+                  </div>
+                </div>
+                {errors.initialBalance && (
+                  <p className="font-body mt-1 text-sm text-[var(--color-danger)]">
+                    {errors.initialBalance}
+                  </p>
                 )}
               </div>
-            )}
-          </div>
-        </form>
-        )} {/* end individual mode */}
 
+              <FormInput
+                label={`Fee Per Message (${activeTokenSymbol})`}
+                subLabel={`You earn this fee whenever users interact with your Sentinel. Minimum ${MINIMUM_FEE_PER_MESSAGE} ${activeTokenSymbol}.`}
+                name="feePerMessage"
+                value={formData.feePerMessage}
+                onChange={handleChangeWithProviderReset}
+                error={errors.feePerMessage}
+                type="number"
+                placeholder="0.00"
+                step="any"
+                className="h-full"
+              />
+            </div>
+
+            <RewardsConditions />
+
+            {/* Deploy Button */}
+            <div className="pb-20 pt-2">
+              {isWalletConnected ? (
+                <button
+                  type="submit"
+                  disabled={
+                    isLoading ||
+                    tokenCount > SYSTEM_PROMPT_MAX_TOKENS ||
+                    (formData.llmProvider === 'custom' && !customProvider.isValidated)
+                  }
+                  className="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-gold-primary)] text-sm font-medium text-[var(--color-text-on-gold)] shadow-[var(--shadow-card)] transition-all hover:bg-[var(--color-gold-light)] disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="h-6 w-6 animate-spin" />
+                      Deploying...
+                    </>
+                  ) : (
+                    'Deploy Sentinel'
+                  )}
+                </button>
+              ) : (
+                <div className="h-12">
+                  {isSolana ? (
+                    <button
+                      type="button"
+                      onClick={() => setSolanaWalletModalVisible(true)}
+                      className="flex h-full w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-gold-primary)] text-sm font-medium text-[var(--color-text-on-gold)] shadow-[var(--shadow-card)] transition-all hover:bg-[var(--color-gold-light)]"
+                    >
+                      <Wallet className="h-5 w-5" />
+                      Connect Wallet
+                    </button>
+                  ) : isEvm ? (
+                    <button
+                      type="button"
+                      onClick={openEvmConnectModal}
+                      className="flex h-full w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-gold-primary)] text-sm font-medium text-[var(--color-text-on-gold)] shadow-[var(--shadow-card)] transition-all hover:bg-[var(--color-gold-light)]"
+                    >
+                      <Wallet className="h-5 w-5" />
+                      Connect BNB Wallet
+                    </button>
+                  ) : (
+                    <ConnectButton className="h-full w-full !rounded-lg !text-sm" />
+                  )}
+                </div>
+              )}
+            </div>
+          </form>
+        )}{' '}
+        {/* end individual mode */}
         <SuccessModal
           open={showSuccessModal}
           onClose={handleCloseSuccessModal}
