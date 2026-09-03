@@ -61,7 +61,7 @@ export function WalletDropdown({
           />
           <span
             className={cn(
-              'font-body text-[11px] font-extrabold uppercase tracking-[0.08em]',
+              'font-body text-[11px] font-semibold uppercase tracking-[0.06em]',
               compact && 'hidden md:inline'
             )}
           >
@@ -79,13 +79,13 @@ export function WalletDropdown({
         className="z-[110] w-60 rounded-none border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-1.5 text-[var(--color-text-secondary)] shadow-[var(--shadow-elevated)]"
         align="end"
       >
-        <DropdownMenuLabel className="px-2 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-muted)]">
+        <DropdownMenuLabel className="px-2 py-1.5 text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-secondary)]">
           My Wallet
         </DropdownMenuLabel>
 
         <div className="flex items-center justify-between px-2 py-1.5">
-          <div className="text-sm text-[var(--color-text-muted)]">Balance</div>
-          <span className="text-sm font-bold text-[var(--color-text-primary)]">
+          <div className="text-sm text-[var(--color-text-secondary)]">Balance</div>
+          <span className="text-sm font-semibold text-[var(--color-text-primary)]">
             {isLoadingBalance ? <Skeleton className="h-4 w-20" /> : balanceLabel}
           </span>
         </div>

@@ -49,7 +49,8 @@ export const ProfileSentinelCard = ({
 }: ProfileSentinelCardProps) => {
   const router = useRouter()
   const { address: connectedAddress } = useConnectedAddress()
-  const isOwner = !!connectedAddress && connectedAddress.toLowerCase() === agent.creator?.toLowerCase()
+  const isOwner =
+    !!connectedAddress && connectedAddress.toLowerCase() === agent.creator?.toLowerCase()
 
   const [isWithdrawalLocked, setIsWithdrawalLocked] = useState(true)
   const [timeRemaining, setTimeRemaining] = useState('')
@@ -150,7 +151,7 @@ export const ProfileSentinelCard = ({
               className={`absolute left-2 top-2 z-20 flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${
                 agent.state === 'active'
                   ? 'border border-[var(--color-success)] bg-[var(--color-success-muted)] text-[var(--color-success)]'
-                  : 'border border-[var(--color-danger)]/20 bg-[var(--color-danger-muted)] text-[var(--color-danger)]'
+                  : 'border-[var(--color-danger)]/20 border bg-[var(--color-danger-muted)] text-[var(--color-danger)]'
               }`}
             >
               <Image
@@ -222,26 +223,36 @@ export const ProfileSentinelCard = ({
             <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
               <span className="text-[var(--color-text-secondary)]">Total Bounty Won:</span>
               <div className="flex items-center justify-end font-semibold text-[var(--color-danger)]">
-                <TokenAmount rawAmount={agent.winner?.amount_won ?? 0} token={token} precision={4} />
+                <TokenAmount
+                  rawAmount={agent.winner?.amount_won ?? 0}
+                  token={token}
+                  precision={4}
+                />
               </div>
             </div>
           ) : (
             <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
               <span className="text-[var(--color-text-secondary)]">Prize Pool:</span>
               <div className="flex items-center justify-end">
-                <span className="mr-1 sm:mr-2"><TokenAmount rawAmount={agent.total_balance} token={token} precision={4} /></span>
+                <span className="mr-1 sm:mr-2">
+                  <TokenAmount rawAmount={agent.total_balance} token={token} precision={4} />
+                </span>
                 <PrizePoolChangeDisplay prizePoolHistory={agent.prizePoolHistory} variant="card" />
               </div>
             </div>
           )}
           <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
             <span className="text-[var(--color-text-secondary)]">Message Cost:</span>
-            <span className="text-right"><TokenAmount rawAmount={agent.cost_per_message} token={token} precision={4} /></span>
+            <span className="text-right">
+              <TokenAmount rawAmount={agent.cost_per_message} token={token} precision={4} />
+            </span>
           </div>
           {!isDefeated && fromProfile && isOwner && (
             <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-2 sm:gap-x-4">
               <span className="text-[var(--color-text-secondary)]">Your Earnings:</span>
-              <span className={`text-right ${hasEarnings ? 'font-semibold text-[var(--color-success)]' : ''}`}>
+              <span
+                className={`text-right ${hasEarnings ? 'font-semibold text-[var(--color-success)]' : ''}`}
+              >
                 <TokenAmount rawAmount={agent.accumulated_fees || 0} token={token} precision={4} />
               </span>
             </div>
@@ -249,7 +260,7 @@ export const ProfileSentinelCard = ({
         </div>
 
         {!isDefeated && fromProfile && isOwner && timeRemaining && (
-          <div className="mb-2 text-center text-[10px]">
+          <div className="mb-2 text-center text-[11px]">
             {isWithdrawalLocked ? (
               <span className="font-medium text-[var(--color-warning)]">{timeRemaining}</span>
             ) : (
@@ -258,7 +269,7 @@ export const ProfileSentinelCard = ({
           </div>
         )}
         {!isDefeated && fromProfile && isOwner && isAttackPaused && (
-          <div className="mb-2 rounded-md border border-yellow-500/20 bg-yellow-500/10 px-2 py-1 text-center text-[10px] text-yellow-400">
+          <div className="mb-2 rounded-md border border-yellow-500/20 bg-yellow-500/10 px-2 py-1 text-center text-[11px] text-yellow-400">
             Attacks are paused, add funds to resume
           </div>
         )}
@@ -312,7 +323,7 @@ export const ProfileSentinelCard = ({
                           chain: agent.chain,
                         })
                       }
-                      className="btn btn-black w-1/2 px-2 py-1.5 text-[10px]"
+                      className="btn btn-black w-1/2 px-2 py-1.5 text-[11px]"
                     >
                       Add Funds
                     </button>
@@ -326,7 +337,7 @@ export const ProfileSentinelCard = ({
                           chain: agent.chain,
                         })
                       }
-                      className="btn btn-outline w-1/2 px-2 py-1.5 text-[10px]"
+                      className="btn btn-outline w-1/2 px-2 py-1.5 text-[11px]"
                       disabled={isWithdrawalLocked || Number(agent.total_balance) === 0}
                       title={
                         isWithdrawalLocked
@@ -351,7 +362,7 @@ export const ProfileSentinelCard = ({
                       })
                     }}
                     disabled={!hasEarnings}
-                    className="btn btn-outline w-full px-2 py-1.5 text-[10px] disabled:opacity-50"
+                    className="btn btn-outline w-full px-2 py-1.5 text-[11px] disabled:opacity-50"
                     title={hasEarnings ? 'Collect your earned fees' : 'No earnings to claim yet'}
                   >
                     {hasEarnings ? (

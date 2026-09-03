@@ -12,10 +12,7 @@ import {
   ExternalLink,
 } from 'lucide-react'
 import { toast } from 'sonner'
-import {
-  WITHDRAWAL_LOCK_MS,
-  SUI_SENTINEL_X_USERNAME,
-} from '@/constants'
+import { WITHDRAWAL_LOCK_MS, SUI_SENTINEL_X_USERNAME } from '@/constants'
 import { getTokenForCoinType } from '@/constants/tokens'
 import { CHAINS, isEvmChain } from '@/constants/chains'
 import { supportsDonations } from '@/constants/evm'
@@ -259,13 +256,13 @@ export const AgentSidebar = ({
                   />
                 </div>
                 {agent.is_featured && (
-                  <span className="industrial-header text-accent mt-1 inline-block text-[9px]">
+                  <span className="industrial-header text-accent mt-1 inline-block text-[10px] font-semibold tracking-[0.06em]">
                     VERIFIED_SENTINEL
                   </span>
                 )}
               </div>
               <span
-                className="industrial-header shrink-0 self-start border border-[var(--color-border-strong)] px-1.5 py-0.5 text-[9px] text-[var(--color-text-muted)]"
+                className="industrial-header shrink-0 self-start border border-[var(--color-border-strong)] px-1.5 py-0.5 text-[10px] font-medium tracking-[0.06em] text-[var(--color-text-muted)]"
                 title="Sentinel ID"
               >
                 ID {formatSentinelId(agent.agent_id)}
@@ -282,7 +279,7 @@ export const AgentSidebar = ({
           {/* Attack Objective */}
           {agent.attack_goal && (
             <div className="space-y-2">
-              <div className="industrial-header text-[10px] text-[var(--color-text-muted)]">
+              <div className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
                 ATTACK_OBJECTIVE
               </div>
               <div className="border-hairline bg-[var(--color-bg-base)] p-4">
@@ -295,7 +292,7 @@ export const AgentSidebar = ({
 
           {/* Active Bounty / Prize Pool */}
           <div className="space-y-2">
-            <div className="industrial-header text-[10px] text-[var(--color-text-muted)]">
+            <div className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
               {isDrained ? 'TOTAL_BOUNTY_WON' : 'ACTIVE_BOUNTY'}
             </div>
             <div className="border-hairline group relative overflow-hidden bg-[var(--color-bg-base)] p-6">
@@ -326,7 +323,7 @@ export const AgentSidebar = ({
                   {!isDrained && prizePoolData && prizePoolData.history.length > 0 && (
                     <div
                       className={cn(
-                        'industrial-header flex items-center gap-1 text-[10px] tracking-widest',
+                        'industrial-header flex items-center gap-1 text-[11px] font-semibold tracking-[0.06em]',
                         prizePoolData.change7d.percentage >= 0
                           ? 'text-accent'
                           : 'text-[var(--color-danger)]'
@@ -351,7 +348,7 @@ export const AgentSidebar = ({
             {canDonate && (
               <button
                 onClick={() => setIsDonateModalOpen(true)}
-                className="industrial-header w-full border border-white bg-transparent py-2 text-[10px] tracking-[2px] text-white transition-all hover:bg-white hover:text-black"
+                className="industrial-header w-full border border-white bg-transparent py-2 text-[10px] tracking-[0.06em] text-white transition-all hover:bg-white hover:text-black"
               >
                 DONATE_FUNDS
               </button>
@@ -359,7 +356,7 @@ export const AgentSidebar = ({
             {!isDrained && prizePoolData && prizePoolData.history.length > 0 && (
               <button
                 onClick={() => setIsChartModalOpen(true)}
-                className="industrial-header w-full border border-[var(--color-border-strong)] bg-transparent py-2 text-[10px] tracking-[2px] text-[var(--color-text-muted)] transition-all hover:border-white hover:text-white"
+                className="industrial-header w-full border border-[var(--color-border-strong)] bg-transparent py-2 text-[10px] tracking-[0.06em] text-[var(--color-text-muted)] transition-all hover:border-white hover:text-white"
               >
                 VIEW_GROWTH_CHART
               </button>
@@ -370,54 +367,56 @@ export const AgentSidebar = ({
           <div className="grid grid-cols-2 gap-px bg-[var(--color-border-strong)]">
             {agent.model_name && (
               <div className="bg-[var(--color-bg-base)] p-4">
-                <span className="industrial-header mb-1 block text-[9px] text-[var(--color-text-muted)]">
+                <span className="industrial-header mb-1 block text-[10px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
                   MODEL
                 </span>
-                <span className="industrial-header text-[11px] text-white">
+                <span className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-white">
                   {agent.model_name.toUpperCase()}
                 </span>
               </div>
             )}
             {agent.model_provider && (
               <div className="bg-[var(--color-bg-base)] p-4">
-                <span className="industrial-header mb-1 block text-[9px] text-[var(--color-text-muted)]">
+                <span className="industrial-header mb-1 block text-[10px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
                   PROVIDER
                 </span>
-                <span className="industrial-header text-[11px] text-white">
+                <span className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-white">
                   {agent.model_provider.toUpperCase()}
                 </span>
               </div>
             )}
             <div className="bg-[var(--color-bg-base)] p-4">
-              <span className="industrial-header mb-1 block text-[9px] text-[var(--color-text-muted)]">
+              <span className="industrial-header mb-1 block text-[10px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
                 OWNER
               </span>
               <div className="flex flex-col items-start gap-1.5">
                 <Link
                   href={ownerLink.href}
                   title={agent.creator}
-                  className="industrial-header text-accent max-w-full truncate text-[11px] transition-opacity hover:opacity-70"
+                  className="industrial-header text-accent max-w-full truncate text-[11px] font-semibold tracking-[0.06em] transition-opacity hover:opacity-70"
                 >
                   {ownerLink.label}
                 </Link>
                 {isSyndicate && (
-                  <span className="industrial-header inline-block border border-[var(--color-gold-primary)] px-1.5 py-0.5 text-[9px] tracking-widest text-[var(--color-gold-primary)]">
+                  <span className="industrial-header inline-block border border-[var(--color-gold-primary)] px-1.5 py-0.5 text-[10px] font-semibold tracking-[0.06em] text-[var(--color-gold-primary)]">
                     SYNDICATE
                   </span>
                 )}
               </div>
             </div>
             <div className="bg-[var(--color-bg-base)] p-4">
-              <span className="industrial-header mb-1 block text-[9px] text-[var(--color-text-muted)]">
+              <span className="industrial-header mb-1 block text-[10px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
                 OWNER REWARD
               </span>
-              <span className="industrial-header text-[11px] text-white">{creatorRewardLabel}</span>
+              <span className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-white">
+                {creatorRewardLabel}
+              </span>
             </div>
           </div>
 
           {/* Sentinel Instructions */}
           <div className="space-y-2 border-t border-[var(--color-border-strong)] pt-6">
-            <div className="industrial-header text-[10px] text-[var(--color-text-muted)]">
+            <div className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
               SENTINEL_INSTRUCTIONS
             </div>
             <div className="border-hairline bg-[var(--color-bg-base)] p-4">
@@ -431,7 +430,7 @@ export const AgentSidebar = ({
                 <div className="mt-3">
                   <button
                     onClick={onReadMore}
-                    className="industrial-header border-b border-white text-[10px] tracking-widest text-white transition-opacity hover:opacity-70"
+                    className="industrial-header border-b border-white text-[10px] tracking-[0.06em] text-white transition-opacity hover:opacity-70"
                   >
                     READ_ALL
                   </button>
@@ -442,16 +441,16 @@ export const AgentSidebar = ({
 
           {/* System Telemetry */}
           <div className="space-y-3 border-t border-[var(--color-border-strong)] pt-6">
-            <div className="industrial-header text-[10px] text-[var(--color-text-muted)]">
+            <div className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
               SYSTEM_TELEMETRY
             </div>
             <div className="grid grid-cols-2 gap-4">
               {!isDrained && (
                 <div>
-                  <span className="industrial-header mb-1 block text-[9px] text-[var(--color-text-muted)]">
+                  <span className="industrial-header mb-1 block text-[10px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
                     ACTIVE_SINCE
                   </span>
-                  <span className="industrial-header text-[11px] tabular-nums text-white">
+                  <span className="industrial-header text-[11px] font-semibold tabular-nums tracking-[0.06em] text-white">
                     {activeSince.days}D {String(activeSince.hours).padStart(2, '0')}H{' '}
                     {String(activeSince.minutes).padStart(2, '0')}M{' '}
                     {String(activeSince.seconds).padStart(2, '0')}S
@@ -459,21 +458,21 @@ export const AgentSidebar = ({
                 </div>
               )}
               <div>
-                <span className="industrial-header mb-1 block text-[9px] text-[var(--color-text-muted)]">
+                <span className="industrial-header mb-1 block text-[10px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
                   BREAK_ATTEMPTS
                 </span>
-                <span className="industrial-header text-[11px] tabular-nums text-white">
+                <span className="industrial-header text-[11px] font-semibold tabular-nums tracking-[0.06em] text-white">
                   {agent.total_attacks.toLocaleString()}
                 </span>
               </div>
               {isDrained && winnerAddress && (
                 <div>
-                  <span className="industrial-header mb-1 block text-[9px] text-[var(--color-text-muted)]">
+                  <span className="industrial-header mb-1 block text-[10px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
                     WINNER
                   </span>
                   <Link
                     href={`/u/${winnerAddress}`}
-                    className="industrial-header text-accent text-[11px] transition-opacity hover:opacity-70"
+                    className="industrial-header text-accent text-[11px] font-semibold tracking-[0.06em] transition-opacity hover:opacity-70"
                   >
                     {truncateAddress(winnerAddress)}
                   </Link>
@@ -512,13 +511,13 @@ export const AgentSidebar = ({
           {/* Withdrawal Lock (Owner Only) */}
           {isOwner && !isDrained && (
             <div className="space-y-2 border-t border-[var(--color-border-strong)] pt-6">
-              <div className="industrial-header text-[10px] text-[var(--color-text-muted)]">
+              <div className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
                 WITHDRAWAL_LOCK
               </div>
               {timeRemaining ? (
                 <p
                   className={cn(
-                    'industrial-header text-sm',
+                    'industrial-header text-sm font-semibold tracking-[0.08em]',
                     timeRemaining === 'Withdrawal Unlocked'
                       ? 'text-[var(--color-success)]'
                       : 'text-accent'
@@ -535,7 +534,7 @@ export const AgentSidebar = ({
           {/* On-chain reference: sentinel object/account id (Sui/Solana) or deployment tx (EVM) */}
           {sentinelReference && (
             <div className="space-y-2 border-t border-[var(--color-border-strong)] pt-6">
-              <div className="industrial-header text-[10px] text-[var(--color-text-muted)]">
+              <div className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
                 {sentinelReference.label}
               </div>
               <Link
@@ -545,7 +544,7 @@ export const AgentSidebar = ({
                 className="group flex items-center gap-2"
                 title={sentinelReference.value}
               >
-                <span className="industrial-header text-[11px] text-[var(--color-text-secondary)] transition-colors group-hover:text-white">
+                <span className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-secondary)] transition-colors group-hover:text-white">
                   {truncateAddress(sentinelReference.value)}
                 </span>
                 <ExternalLink className="h-3 w-3 text-[var(--color-text-muted)] transition-colors group-hover:text-white" />
@@ -575,7 +574,7 @@ export const AgentSidebar = ({
             </div>
             <button
               onClick={handleCopyLink}
-              className="industrial-header flex w-full items-center justify-center gap-2 border border-[var(--color-border-strong)] py-3 text-[11px] tracking-[2px] text-[var(--color-text-muted)] transition-all hover:border-white hover:text-white"
+              className="industrial-header flex w-full items-center justify-center gap-2 border border-[var(--color-border-strong)] py-3 text-[11px] tracking-[0.06em] text-[var(--color-text-muted)] transition-all hover:border-white hover:text-white"
             >
               <LinkIcon className="h-3 w-3" />
               SHARE_LINK
@@ -584,7 +583,7 @@ export const AgentSidebar = ({
 
           {/* Earn Sentinel Tokens */}
           <div className="space-y-3 border-t border-[var(--color-border-strong)] pt-6">
-            <div className="industrial-header text-[10px] text-[var(--color-text-muted)]">
+            <div className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
               EARN_REWARDS
             </div>
             <p className="font-mono text-[11px] leading-relaxed text-[var(--color-text-muted)]">

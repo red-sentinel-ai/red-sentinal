@@ -94,10 +94,10 @@ export function VoiceChatSurface({
       <div className="flex min-h-[190px] shrink-0 flex-col items-center justify-center gap-3 border-b border-[var(--color-border-strong)] px-4 py-6 sm:min-h-0 sm:gap-1.5 sm:py-3">
         <VoiceOrb status={status} />
         <div className="text-center">
-          <p className="industrial-header max-w-[78vw] truncate text-[12px] tracking-widest text-white sm:max-w-none sm:text-xs">
+          <p className="industrial-header max-w-[78vw] truncate text-[12px] tracking-[0.08em] text-white sm:max-w-none sm:text-xs">
             {agentName.toUpperCase().replace(/\s+/g, '_')}
           </p>
-          <p className="mt-1 flex min-h-[1.1rem] items-center justify-center gap-1.5 font-mono text-[11px] text-[var(--color-text-muted)] sm:mt-0 sm:text-[10px]">
+          <p className="mt-1 flex min-h-[1.1rem] items-center justify-center gap-1.5 font-mono text-[11px] text-[var(--color-text-muted)] sm:mt-0 sm:text-[11px]">
             {isConnecting && <Loader2 className="h-2.5 w-2.5 animate-spin" />}
             {isError && <AlertCircle className="h-2.5 w-2.5 text-[var(--color-danger)]" />}
             {error?.message || STATUS_LABELS[status]}
@@ -110,7 +110,7 @@ export function VoiceChatSurface({
         {showStart && transcripts.length === 0 && (
           <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
             <Radio className="text-[var(--color-text-muted)]/40 h-6 w-6 sm:h-5 sm:w-5" />
-            <p className="text-[var(--color-text-muted)]/70 max-w-56 font-mono text-[11px] leading-relaxed sm:text-[10px]">
+            <p className="max-w-56 font-mono text-[11px] leading-relaxed text-[var(--color-text-muted)] sm:text-[11px]">
               Tap start to begin a voice conversation.
             </p>
           </div>
@@ -130,7 +130,7 @@ export function VoiceChatSurface({
                     : 'border-[var(--color-accent)]/30 bg-[var(--color-accent)]/5 text-[var(--color-text-primary)]'
                 )}
               >
-                <span className="mb-0.5 block text-[9px] uppercase tracking-wider text-[var(--color-text-muted)]">
+                <span className="mb-0.5 block text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
                   {t.role === 'user' ? 'You' : agentName}
                   {t.partial && ' …'}
                 </span>
@@ -150,7 +150,7 @@ export function VoiceChatSurface({
             className="bg-[var(--color-accent)]/10 hover:bg-[var(--color-accent)]/20 active:bg-[var(--color-accent)]/20 flex h-14 w-full max-w-[280px] touch-manipulation items-center justify-center gap-2 rounded-full border border-[var(--color-accent)] px-5 text-[12px] text-[var(--color-accent)] transition-colors sm:h-11 sm:w-auto sm:rounded-none sm:text-sm"
           >
             <Mic className="h-4 w-4" />
-            <span className="industrial-header tracking-widest">START VOICE</span>
+            <span className="industrial-header tracking-[0.08em]">START VOICE</span>
           </button>
         ) : (
           <>

@@ -61,7 +61,7 @@ export const AgentsList = ({
           <LeaderboardSkeleton />
         ) : (
           <div className="overflow-x-auto overflow-y-hidden border border-[var(--color-border-default)] bg-[var(--color-bg-base)]">
-            <div className="font-body hidden min-w-[980px] border-b border-[var(--color-border-default)] bg-[var(--color-bg-elevated)] px-8 py-5 text-[9px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] md:grid md:gap-4 md:[grid-template-columns:minmax(260px,2.4fr)_minmax(120px,1fr)_minmax(120px,1fr)_minmax(130px,1fr)_minmax(105px,0.85fr)_minmax(150px,1.2fr)_minmax(96px,0.8fr)]">
+            <div className="font-body hidden min-w-[980px] border-b border-[var(--color-border-default)] bg-[var(--color-bg-elevated)] px-8 py-5 text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-secondary)] md:grid md:gap-4 md:[grid-template-columns:minmax(260px,2.4fr)_minmax(120px,1fr)_minmax(120px,1fr)_minmax(130px,1fr)_minmax(105px,0.85fr)_minmax(150px,1.2fr)_minmax(96px,0.8fr)]">
               <div
                 className="flex cursor-pointer items-center hover:text-[var(--color-text-primary)]"
                 onClick={() => onSort('agent_id')}
@@ -97,7 +97,7 @@ export const AgentsList = ({
 
             <AnimatePresence mode="popLayout">
               {agents.length === 0 && (
-                <div className="font-body px-4 py-10 text-center text-xs font-extrabold uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
+                <div className="font-body px-4 py-10 text-center text-xs font-medium tracking-normal text-[var(--color-text-muted)]">
                   No sentinels match current filters
                 </div>
               )}
@@ -166,14 +166,14 @@ export const AgentsList = ({
                             router.push(`/attack/${agent.agent_path}`)
                           }}
                           className={cn(
-                            'font-body rounded-full border px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.1em] transition-colors',
+                            'font-body rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.06em] transition-colors',
                             statusMeta.actionClassName
                           )}
                         >
                           {statusMeta.actionLabel}
                         </button>
                       </div>
-                      <p className="font-body text-[9px] uppercase tracking-[0.08em] text-[var(--color-text-faint)]">
+                      <p className="font-body text-[10px] uppercase tracking-[0.06em] text-[var(--color-text-faint)]">
                         ID: {formatSentinelId(agent.agent_id)}
                       </p>
                       <div className="grid grid-cols-2 gap-2 text-sm">
@@ -213,7 +213,7 @@ export const AgentsList = ({
                           <p className="text-xs uppercase text-[var(--color-text-muted)]">Status</p>
                           <div
                             className={cn(
-                              'flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider',
+                              'flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider',
                               statusMeta.accentClassName
                             )}
                           >
@@ -238,7 +238,7 @@ export const AgentsList = ({
                               sizes="40px"
                             />
                           ) : (
-                            <span className="font-display text-sm font-extrabold text-[var(--color-text-muted)]">
+                            <span className="font-display text-sm font-bold text-[var(--color-text-muted)]">
                               {agent.agent_name?.charAt(0).toUpperCase() ?? '?'}
                             </span>
                           )}
@@ -269,20 +269,20 @@ export const AgentsList = ({
                               />
                             )}
                           </div>
-                          <span className="font-body text-[8px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-faint)]">
+                          <span className="font-body text-[10px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-faint)]">
                             ID: {formatSentinelId(agent.agent_id)}
                           </span>
                         </div>
                       </div>
                       <div
                         className={cn(
-                          'inline-flex w-fit items-center border px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-[0.1em]',
+                          'inline-flex w-fit items-center border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.06em]',
                           statusMeta.badgeClassName
                         )}
                       >
                         {statusMeta.label}
                       </div>
-                      <div className="font-body text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
+                      <div className="font-body text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-secondary)]">
                         {chainData.name}
                       </div>
                       <div className="flex items-center text-[var(--color-text-primary)]">
@@ -296,7 +296,7 @@ export const AgentsList = ({
                       <div className="flex items-center text-[var(--color-text-secondary)]">
                         {agent.total_attacks || 0}
                       </div>
-                      <div className="flex items-center font-extrabold text-white">
+                      <div className="flex items-center font-semibold text-white">
                         <TokenAmount
                           rawAmount={agent.total_balance}
                           token={agentToken}
@@ -311,7 +311,7 @@ export const AgentsList = ({
                             router.push(`/attack/${agent.agent_path}`)
                           }}
                           className={cn(
-                            'font-body inline-flex items-center gap-1 rounded-full border px-6 py-2 text-[10px] font-extrabold uppercase tracking-[0.1em] transition-colors',
+                            'font-body inline-flex items-center gap-1 rounded-full border px-6 py-2 text-[11px] font-semibold uppercase tracking-[0.06em] transition-colors',
                             statusMeta.actionClassName
                           )}
                         >

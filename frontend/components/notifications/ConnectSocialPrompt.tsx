@@ -32,8 +32,8 @@ export function ConnectSocialPrompt() {
                 Never miss a critical alert
               </p>
               <p className="text-xs leading-relaxed text-[var(--color-text-muted)]">
-                Know the moment your Sentinel is breached, a bounty is claimed, or someone
-                mentions you.
+                Know the moment your Sentinel is breached, a bounty is claimed, or someone mentions
+                you.
               </p>
             </div>
 
@@ -41,14 +41,14 @@ export function ConnectSocialPrompt() {
               <Link
                 href="/profile"
                 onClick={enableNotifications}
-                className="inline-flex items-center justify-center whitespace-nowrap border border-[var(--color-text-primary)] bg-[var(--color-text-primary)] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[1.5px] text-[var(--color-bg-base)] transition-opacity hover:opacity-90"
+                className="inline-flex items-center justify-center whitespace-nowrap border border-[var(--color-text-primary)] bg-[var(--color-text-primary)] px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.06em] text-[var(--color-bg-base)] transition-opacity hover:opacity-90"
               >
                 Enable Notifications
               </Link>
               <button
                 type="button"
                 onClick={remindLater}
-                className="whitespace-nowrap text-[10px] font-bold uppercase tracking-[1.5px] text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-secondary)]"
+                className="whitespace-nowrap text-[11px] font-bold uppercase tracking-[0.06em] text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-secondary)]"
               >
                 Remind me later
               </button>

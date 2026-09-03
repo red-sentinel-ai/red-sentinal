@@ -123,10 +123,10 @@ export function ChatRoomView({
             className="flex items-center gap-2 border border-[var(--color-border-strong)] px-3 py-1.5 text-[var(--color-text-muted)] transition-colors hover:border-white hover:text-white"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
-            <span className="industrial-header text-[10px] tracking-widest">BACK</span>
+            <span className="industrial-header text-[10px] tracking-[0.06em]">BACK</span>
           </button>
           <div className="h-4 w-px bg-[var(--color-border-strong)]" />
-          <span className="industrial-header text-[11px] tracking-widest text-white">
+          <span className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-white">
             {headerLabel}
           </span>
         </div>
@@ -134,10 +134,12 @@ export function ChatRoomView({
           {isLive && (
             <div className="flex items-center gap-1.5">
               <div className="h-2 w-2 animate-pulse rounded-full bg-[var(--color-success)]" />
-              <span className="industrial-header text-[9px] text-[var(--color-success)]">LIVE</span>
+              <span className="industrial-header text-[10px] font-semibold tracking-[0.06em] text-[var(--color-success)]">
+                LIVE
+              </span>
             </div>
           )}
-          <span className="industrial-header text-[9px] text-[var(--color-text-muted)]">
+          <span className="industrial-header text-[10px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
             {totalMessages} MESSAGES
           </span>
         </div>
@@ -155,10 +157,10 @@ export function ChatRoomView({
 
         {!isLoadingMessages && messages.length === 0 && (
           <div className="py-12 text-center">
-            <span className="industrial-header text-[10px] tracking-[6px] text-[var(--color-text-muted)] opacity-40">
+            <span className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)] opacity-40">
               {emptyTitle}
             </span>
-            <p className="mt-2 font-mono text-[11px] text-[var(--color-text-muted)]/50">
+            <p className="mt-2 font-mono text-[11px] text-[var(--color-text-muted)]">
               {emptySubtitle}
             </p>
           </div>
@@ -180,18 +182,18 @@ export function ChatRoomView({
       <div className="border-t border-[var(--color-border-strong)] bg-[var(--color-bg-base)] px-4 py-3 lg:px-6">
         {connectedAddress && !canSend && (
           <div className="mb-3 border border-[var(--color-border-strong)] bg-[var(--color-bg-elevated)] px-3 py-2">
-            <p className="font-mono text-[10px] text-[var(--color-text-muted)]">{permissionHint}</p>
+            <p className="font-mono text-[11px] text-[var(--color-text-muted)]">{permissionHint}</p>
           </div>
         )}
 
         {userRoleStyle && (
           <div className="mb-2 flex items-center gap-2">
-            <span className="industrial-header text-[9px] text-[var(--color-text-muted)]">
+            <span className="industrial-header text-[10px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
               CHATTING_AS:
             </span>
             <span
               className={clsx(
-                'industrial-header flex items-center gap-1 text-[9px]',
+                'industrial-header flex items-center gap-1 text-[10px] font-semibold tracking-[0.06em]',
                 userRoleStyle.color
               )}
             >

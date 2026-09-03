@@ -239,7 +239,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
     return (
       <div className="flex h-[calc(100dvh-var(--topbar-h))] items-center justify-center bg-black p-4">
         <div className="text-center">
-          <p className="industrial-header text-sm text-[var(--color-text-muted)]">
+          <p className="industrial-header text-sm font-semibold tracking-[0.08em] text-[var(--color-text-muted)]">
             {error?.message ? 'ERROR_LOADING_SENTINEL' : 'SENTINEL_NOT_FOUND'}
           </p>
           <p className="mt-2 font-mono text-xs text-[var(--color-text-muted)]">
@@ -296,9 +296,9 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
               className="flex items-center gap-2 border border-[var(--color-border-strong)] px-3 py-1.5 text-[var(--color-text-muted)] transition-colors hover:border-white hover:text-white"
             >
               <Info className="h-3.5 w-3.5" />
-              <span className="industrial-header text-[10px] tracking-widest">SENTINEL_INFO</span>
+              <span className="industrial-header text-[10px] tracking-[0.06em]">SENTINEL_INFO</span>
             </button>
-            <span className="industrial-header text-[11px] tracking-widest text-white">
+            <span className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-white">
               {agent.agent_name.toUpperCase().replace(/\s+/g, '_')}
             </span>
           </div>
@@ -307,7 +307,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
             className="flex items-center gap-2 border border-[var(--color-border-strong)] px-3 py-1.5 text-[var(--color-text-muted)] transition-colors hover:border-white hover:text-white"
           >
             <X className="h-3.5 w-3.5" />
-            <span className="industrial-header text-[10px] tracking-widest">EXIT_FOCUS</span>
+            <span className="industrial-header text-[10px] tracking-[0.06em]">EXIT_FOCUS</span>
           </button>
         </div>
 

@@ -145,8 +145,8 @@
   .industrial-header {
     font-family: var(--font-mono);
     text-transform: uppercase;
-    font-weight: 700;
-    letter-spacing: 1.6px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
     line-height: 1.1;
   }
 
@@ -154,7 +154,7 @@
     font-family: var(--font-mono);
     text-transform: uppercase;
     font-weight: 500;
-    letter-spacing: 1.2px;
+    letter-spacing: 0.06em;
     font-size: 11px;
     color: var(--color-text-muted);
   }
@@ -176,7 +176,7 @@
     text-transform: uppercase;
     font-size: 13px;
     font-weight: 700;
-    letter-spacing: 1.2px;
+    letter-spacing: 0.08em;
     font-family: var(--font-mono);
     transition: all 0.2s ease;
   }
@@ -187,7 +187,7 @@
   }
 
   .profile-tab-trigger {
-    @apply flex items-center gap-2 whitespace-nowrap rounded-none border-b-2 border-transparent px-2 pb-4 text-[11px] font-bold uppercase tracking-[2px] text-[var(--color-text-muted)] transition-colors;
+    @apply flex items-center gap-2 whitespace-nowrap rounded-none border-b-2 border-transparent px-2 pb-4 text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--color-text-muted)] transition-colors;
     @apply hover:text-[var(--color-text-secondary)];
     @apply data-[state=active]:border-[var(--color-text-primary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)];
   }
@@ -261,7 +261,7 @@
   }
 
   .chat-toolbar-tab {
-    @apply h-11 shrink-0 border-b-2 px-2.5 text-[10px] tracking-widest transition-colors sm:h-12 sm:px-4 sm:text-[11px];
+    @apply h-11 shrink-0 border-b-2 px-2.5 text-[11px] font-semibold tracking-[0.06em] transition-colors sm:h-12 sm:px-4 sm:text-xs;
   }
 
   /* Small bordered control that sits at the end of the toolbar (focus, briefing, …) */
@@ -279,7 +279,7 @@
 
   /* "AWAITING_NEW_PAYLOADS"-style placeholder text between rounds */
   .chat-feed-notice {
-    @apply text-[10px] tracking-[4px] text-[var(--color-text-muted)] opacity-40 sm:tracking-[8px];
+    @apply text-[11px] tracking-[0.1em] text-[var(--color-text-muted)] opacity-40 sm:tracking-[0.2em];
   }
 
   .chat-composer {
@@ -299,11 +299,11 @@
   }
 
   .chat-submit-button {
-    @apply flex items-center gap-2 px-3 py-1.5 text-[10px] disabled:cursor-not-allowed disabled:opacity-30 sm:px-4 sm:text-[11px];
+    @apply flex items-center gap-2 px-3 py-1.5 text-[11px] disabled:cursor-not-allowed disabled:opacity-30 sm:px-4 sm:text-xs;
   }
 
   .chat-error-banner {
-    @apply bg-[var(--color-danger-muted)] px-3 py-2 font-mono text-[11px] uppercase text-[var(--color-danger)];
+    @apply bg-[var(--color-danger-muted)] px-3 py-2 font-mono text-[11px] text-[var(--color-danger)];
     /* Tailwind can't apply an opacity modifier to an arbitrary var() colour, so the
        translucent border is mixed here instead of via `border-[…]/30`. */
     border: 1px solid color-mix(in srgb, var(--color-danger) 30%, transparent);

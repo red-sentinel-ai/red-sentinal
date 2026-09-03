@@ -201,11 +201,11 @@ export function CasualChatInterface({ agent }: CasualChatInterfaceProps) {
           />
         </div>
         {isBreached ? (
-          <span className="industrial-header ml-auto text-[9px] tracking-widest text-[var(--color-danger)] sm:tracking-[4px]">
+          <span className="industrial-header ml-auto text-[10px] font-semibold tracking-[0.06em] text-[var(--color-danger)]">
             VOICE DISABLED // BREACHED
           </span>
         ) : (
-          <span className="industrial-header text-[var(--color-text-muted)]/60 ml-auto hidden text-[9px] tracking-[4px] sm:block">
+          <span className="industrial-header text-[var(--color-text-muted)]/60 ml-auto hidden text-[10px] font-semibold tracking-[0.06em] sm:block">
             FREE // OFF-CHAIN
           </span>
         )}
@@ -268,7 +268,7 @@ function ModeButton({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        'industrial-header flex items-center gap-1 px-2 py-1 text-[9px] tracking-wider transition-colors sm:gap-1.5 sm:px-2.5 sm:py-1.5 sm:text-[10px]',
+        'industrial-header flex items-center gap-1 px-2 py-1 text-[10px] tracking-[0.06em] transition-colors sm:gap-1.5 sm:px-2.5 sm:py-1.5 sm:text-[11px]',
         active
           ? 'bg-white text-black'
           : 'text-[var(--color-text-muted)] hover:bg-[var(--color-bg-elevated)] hover:text-white',

@@ -101,7 +101,8 @@ const MISSION_CONFIG = {
     title: 'Share Red Sentinel Content',
     icon: '/icons/x_black.png',
     iconAlt: 'Share',
-    instructions: 'Create content about Red Sentinel (article, video, thread, etc.) and share the link.',
+    instructions:
+      'Create content about Red Sentinel (article, video, thread, etc.) and share the link.',
     actionLabel: 'Create Content',
     actionUrl: SUI_SENTINEL_X_URL,
     usernameField: {
@@ -115,7 +116,8 @@ const MISSION_CONFIG = {
       required: true,
     },
     telegramField: null,
-    submitHint: 'Paste the link to your content about Red Sentinel (can be a tweet, article, video, etc.).',
+    submitHint:
+      'Paste the link to your content about Red Sentinel (can be a tweet, article, video, etc.).',
   },
 } as const
 
@@ -272,7 +274,9 @@ export function SocialMissionModal({
               alt={config.iconAlt}
               className="md:h-6 md:w-6"
             />
-            <h2 className="text-base font-bold text-[var(--color-text-primary)] md:text-lg">{config.title}</h2>
+            <h2 className="text-base font-bold text-[var(--color-text-primary)] md:text-lg">
+              {config.title}
+            </h2>
           </div>
           <button
             onClick={handleClose}
@@ -291,7 +295,7 @@ export function SocialMissionModal({
               <h3 className="mb-1.5 text-base font-bold text-[var(--color-text-primary)] md:mb-2 md:text-lg">
                 Submission Received!
               </h3>
-              <p className="mx-auto max-w-xs text-xs text-[var(--color-text-secondary)] md:text-sm">
+              <p className="mx-auto max-w-xs text-xs text-[var(--color-text-muted)] md:text-sm">
                 Our team will review your submission and send Sentinel tokens to your wallet once
                 verified.
               </p>
@@ -306,8 +310,12 @@ export function SocialMissionModal({
         ) : (
           <div className="space-y-4 md:space-y-5">
             <div>
-              <p className="mb-1 text-xs font-medium text-[var(--color-text-muted)] md:text-sm">Step 1</p>
-              <p className="mb-2 text-sm font-medium text-[var(--color-text-primary)] md:text-base">{config.instructions}</p>
+              <p className="mb-1 text-xs font-medium text-[var(--color-text-muted)] md:text-sm">
+                Step 1
+              </p>
+              <p className="mb-2 text-sm font-medium text-[var(--color-text-primary)] md:text-base">
+                {config.instructions}
+              </p>
               <a
                 href={actionUrlOverride ?? config.actionUrl}
                 target="_blank"
@@ -322,8 +330,12 @@ export function SocialMissionModal({
             <div className="border-t border-[var(--color-border-subtle)]" />
 
             <div>
-              <p className="mb-1 text-xs font-medium text-[var(--color-text-muted)] md:text-sm">Step 2</p>
-              <p className="mb-3 text-sm font-medium text-[var(--color-text-primary)] md:text-base">Submit proof of completion</p>
+              <p className="mb-1 text-xs font-medium text-[var(--color-text-muted)] md:text-sm">
+                Step 2
+              </p>
+              <p className="mb-3 text-sm font-medium text-[var(--color-text-primary)] md:text-base">
+                Submit proof of completion
+              </p>
 
               <div className="space-y-3">
                 {config.telegramField && (
@@ -382,7 +394,9 @@ export function SocialMissionModal({
                 <div>
                   <label className="mb-1 block text-xs font-medium text-[var(--color-text-secondary)] md:text-sm">
                     Screenshot{' '}
-                    <span className="text-[var(--color-text-muted)]">(optional — helpful for mobile)</span>
+                    <span className="text-[var(--color-text-muted)]">
+                      (optional — helpful for mobile)
+                    </span>
                   </label>
                   <div
                     onClick={() => fileInputRef.current?.click()}
@@ -416,10 +430,10 @@ export function SocialMissionModal({
                     ) : (
                       <>
                         <Upload className="mb-1.5 h-5 w-5 text-[var(--color-text-muted)] md:h-6 md:w-6" />
-                        <p className="text-xs text-[var(--color-text-secondary)] md:text-sm">
+                        <p className="text-xs text-[var(--color-text-muted)] md:text-sm">
                           Click to upload screenshot
                         </p>
-                        <p className="text-[10px] text-[var(--color-text-muted)] md:text-xs">
+                        <p className="text-[11px] text-[var(--color-text-muted)] md:text-xs">
                           PNG, JPG, GIF or WebP up to 5MB
                         </p>
                       </>
@@ -434,7 +448,9 @@ export function SocialMissionModal({
                   />
                 </div>
 
-                <p className="text-[10px] text-[var(--color-text-muted)] md:text-xs">{config.submitHint}</p>
+                <p className="text-[11px] text-[var(--color-text-muted)] md:text-xs">
+                  {config.submitHint}
+                </p>
               </div>
             </div>
 

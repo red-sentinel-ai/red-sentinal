@@ -168,7 +168,7 @@ export const BoosterRewards = () => {
               </div>
             ) : (
               <div className="mx-auto mb-4 max-w-md rounded-lg border-2 border-dashed border-[var(--color-border-default)] bg-[var(--color-bg-subtle)] p-3 text-center">
-                <p className="text-sm text-[var(--color-text-secondary)]">
+                <p className="text-sm text-[var(--color-text-muted)]">
                   Select a Spin Pass below to start
                 </p>
               </div>
@@ -200,7 +200,7 @@ export const BoosterRewards = () => {
                         Won {lastSpinResult.spin.finalAmount.toLocaleString()} SENTINEL
                       </span>
                     </div>
-                    <div className="flex flex-wrap items-center gap-1.5 text-[10px] text-[var(--color-text-muted)]">
+                    <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-[var(--color-text-muted)]">
                       <span>Base: {lastSpinResult.spin.baseAmount}</span>
                       <span>•</span>
                       <span>{lastSpinResult.spin.multiplier}x</span>
@@ -285,7 +285,7 @@ export const BoosterRewards = () => {
                 <h4 className="mb-2 text-lg font-semibold text-[var(--color-text-primary)]">
                   No {passFilter === 'active' ? 'Active' : 'Expired'} Spin Passes
                 </h4>
-                <p className="text-sm text-[var(--color-text-secondary)]">
+                <p className="text-sm text-[var(--color-text-muted)]">
                   {passFilter === 'active'
                     ? 'Complete attacks, missions, or social tasks to earn Spin Passes'
                     : 'Expired passes will appear here'}
@@ -328,19 +328,19 @@ export const BoosterRewards = () => {
                       </div>
 
                       <h4
-                        className={`text-sm font-black uppercase tracking-tight ${isSelected ? 'text-[var(--color-text-on-gold)]' : textColorClass}`}
+                        className={`text-sm font-semibold uppercase tracking-tight ${isSelected ? 'text-[var(--color-text-on-gold)]' : textColorClass}`}
                       >
                         {tierInfo.name} Pass
                       </h4>
 
                       <div
-                        className={`mt-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold shadow-sm ${isSelected ? 'bg-[var(--color-bg-surface)]/20 text-[var(--color-text-on-gold)]' : 'bg-[var(--color-bg-surface)]/90 text-[var(--color-text-secondary)]'}`}
+                        className={`mt-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold shadow-sm ${isSelected ? 'bg-[var(--color-bg-surface)]/20 text-[var(--color-text-on-gold)]' : 'bg-[var(--color-bg-surface)]/90 text-[var(--color-text-secondary)]'}`}
                       >
                         <span>⚡</span>
                         {booster.multiplier}x Booster
                       </div>
 
-                      <div className="mt-2 text-[10px] font-bold leading-tight">
+                      <div className="mt-2 text-[11px] font-semibold leading-tight">
                         <span
                           className={
                             isSelected
@@ -363,7 +363,7 @@ export const BoosterRewards = () => {
                       </div>
 
                       <div
-                        className={`mt-2 flex items-center gap-1 text-[10px] font-semibold ${
+                        className={`mt-2 flex items-center gap-1 text-[11px] font-semibold ${
                           isExpiringSoon
                             ? isSelected
                               ? 'text-yellow-300'

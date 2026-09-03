@@ -217,8 +217,8 @@ export default function ChatInterface({
     e.preventDefault()
 
     if (!connectedAddress) {
-        setIsWalletModalOpen(true)
-        return
+      setIsWalletModalOpen(true)
+      return
     }
 
     if (tokenCount > ATTACK_PROMPT_MAX_TOKENS) {
@@ -279,7 +279,7 @@ export default function ChatInterface({
             title="Enter focus mode"
           >
             <Maximize2 className="h-3 w-3" />
-            <span className="industrial-header text-[9px] tracking-widest">FOCUS</span>
+            <span className="industrial-header text-[10px] tracking-[0.06em]">FOCUS</span>
           </button>
         )}
       </div>
@@ -325,13 +325,13 @@ export default function ChatInterface({
                       className="h-full w-full object-cover"
                     />
                   </div>
-                  <div className="industrial-header text-[10px] text-[var(--color-text-muted)]">
+                  <div className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
                     SENTINEL_PROCESSING...
                   </div>
                 </div>
                 <div className="border-hairline flex items-center gap-3 bg-[var(--color-bg-elevated)] p-4 sm:p-6">
                   <Loader2 className="h-4 w-4 animate-spin text-[var(--color-text-muted)]" />
-                  <span className="font-mono text-xs uppercase text-[var(--color-text-muted)]">
+                  <span className="font-mono text-xs tracking-normal text-[var(--color-text-muted)]">
                     Analyzing breach attempt...
                   </span>
                 </div>
@@ -354,8 +354,10 @@ export default function ChatInterface({
       ) : isAttackPaused && !isAgentDrained ? (
         <div className="shrink-0 border-t border-[var(--color-border-strong)] bg-[var(--color-bg-base)] p-4 sm:p-6">
           <div className="mx-auto max-w-4xl text-center">
-            <h3 className="industrial-header text-accent text-sm">ATTACKS_PAUSED</h3>
-            <p className="mt-2 font-mono text-[11px] uppercase text-[var(--color-text-muted)]">
+            <h3 className="industrial-header text-accent text-sm font-semibold tracking-[0.08em]">
+              ATTACKS_PAUSED
+            </h3>
+            <p className="mt-2 font-mono text-[11px] tracking-normal text-[var(--color-text-muted)]">
               The owner&apos;s lock period has expired. Attacks will resume once the sentinel is
               re-funded.
             </p>
@@ -364,28 +366,28 @@ export default function ChatInterface({
       ) : isAgentDrained ? (
         <div className="shrink-0 border-t border-[var(--color-border-strong)] bg-[var(--color-bg-base)] p-4 sm:p-6">
           <div className="mx-auto max-w-4xl text-center">
-            <h3 className="industrial-header text-sm text-[var(--color-danger)]">
+            <h3 className="industrial-header text-sm font-semibold tracking-[0.08em] text-[var(--color-danger)]">
               SENTINEL_COMPROMISED
             </h3>
-            <p className="mt-2 font-mono text-[11px] uppercase text-[var(--color-text-muted)]">
+            <p className="mt-2 font-mono text-[11px] tracking-normal text-[var(--color-text-muted)]">
               This sentinel has been successfully defeated.
             </p>
 
             {winnerInfo && (
               <div className="mt-4 inline-flex flex-wrap items-center justify-center gap-4 border border-[var(--color-border-strong)] bg-[var(--color-bg-elevated)] px-4 py-3 sm:gap-6 sm:px-6">
                 <div className="text-left">
-                  <span className="industrial-header block text-[9px] text-[var(--color-text-muted)]">
+                  <span className="industrial-header block text-[10px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
                     WINNER
                   </span>
                   <Link
                     href={`/u/${winnerInfo.winnerAddress}`}
-                    className="industrial-header text-accent text-[11px] transition-opacity hover:opacity-70"
+                    className="industrial-header text-accent text-[11px] font-semibold tracking-[0.06em] transition-opacity hover:opacity-70"
                   >
                     {truncateAddress(winnerInfo.winnerAddress as string)}
                   </Link>
                 </div>
                 <div className="text-left">
-                  <span className="industrial-header block text-[9px] text-[var(--color-text-muted)]">
+                  <span className="industrial-header block text-[10px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
                     AMOUNT_WON
                   </span>
                   {winnerInfo.wonAmount && (
@@ -394,7 +396,7 @@ export default function ChatInterface({
                       token={agentToken}
                       precision={4}
                       iconSize={12}
-                      className="industrial-header text-[11px] text-[var(--color-success)]"
+                      className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-[var(--color-success)]"
                     />
                   )}
                 </div>
@@ -428,7 +430,7 @@ export default function ChatInterface({
                 }}
               />
               <div className="chat-composer-footer justify-between">
-                <div className="industrial-header text-[var(--color-text-muted)]/50 flex items-center gap-2 text-[9px] tracking-widest">
+                <div className="industrial-header text-[var(--color-text-muted)]/50 flex items-center gap-2 text-[11px] font-medium tracking-[0.06em]">
                   FEE:{' '}
                   <span className="text-[var(--color-text-muted)]">
                     <TokenAmount
@@ -442,7 +444,7 @@ export default function ChatInterface({
                 <div className="flex items-center gap-3 sm:gap-4">
                   <span
                     className={clsx(
-                      'industrial-header text-[9px] tabular-nums tracking-widest',
+                      'industrial-header text-[11px] font-semibold tabular-nums tracking-[0.06em]',
                       tokenCount > ATTACK_PROMPT_MAX_TOKENS
                         ? 'text-[var(--color-danger)]'
                         : 'text-[var(--color-text-muted)]/40'

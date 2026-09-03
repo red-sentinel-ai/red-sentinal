@@ -32,12 +32,12 @@ export function SyndicateChatSidebar({
   return (
     <div className="terminal-scrollbar flex h-full flex-col gap-6 overflow-y-auto bg-[var(--color-bg-base)] p-6">
       <div className="min-w-0">
-        <h2 className="truncate font-display text-xl font-bold uppercase tracking-tight text-[var(--color-text-primary)]">
+        <h2 className="font-display truncate text-xl font-bold uppercase tracking-tight text-[var(--color-text-primary)]">
           {syndicate.name}
         </h2>
         <Link
           href={getSyndicateBasePath(syndicate)}
-          className="industrial-header text-[10px] tracking-widest text-[var(--color-text-muted)] transition-colors hover:text-white"
+          className="industrial-header text-[11px] tracking-[0.06em] text-[var(--color-text-secondary)] transition-colors hover:text-white"
         >
           VIEW_SYNDICATE
         </Link>
@@ -55,7 +55,7 @@ export function SyndicateChatSidebar({
         ) : (
           <Unlock className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-400" />
         )}
-        <p className="font-mono text-[11px] leading-relaxed text-[var(--color-text-secondary)]">
+        <p className="font-mono text-[11px] leading-relaxed text-[var(--color-text-muted)]">
           {isPermissioned
             ? 'This syndicate is permissioned. Owner approval is required to join.'
             : 'This syndicate is public. Anybody can join.'}
@@ -65,7 +65,7 @@ export function SyndicateChatSidebar({
       <div className="space-y-3 border-t border-[var(--color-border-strong)] pt-6">
         {metrics.map(metric => (
           <div key={metric.label} className="flex items-center justify-between gap-4">
-            <span className="industrial-header text-[10px] tracking-widest text-[var(--color-text-muted)]">
+            <span className="industrial-header text-[11px] tracking-[0.06em] text-[var(--color-text-secondary)]">
               {metric.label}
             </span>
             <span className="industrial-header text-right text-[12px] text-[var(--color-text-primary)]">

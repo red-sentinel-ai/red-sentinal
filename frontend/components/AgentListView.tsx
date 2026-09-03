@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import {
   ArrowRight,
   Coins,
@@ -23,6 +24,7 @@ import { useAgentCoinTypes } from '@/hooks/agents/useAgentCoinTypes'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { TEXT_COPIES } from '@/constants/text_copies'
+import { PREMIUM_SENTINEL } from '@/constants'
 import { type SupportedChain, CHAINS, SUPPORTED_CHAINS } from '@/constants/chains'
 import { getTokenForCoinType } from '@/constants/tokens'
 import {
@@ -31,7 +33,8 @@ import {
   SENTINEL_STATUS_META,
   type SentinelStatusFilter,
 } from '@/lib/sentinel-status'
-// import { AttackStats } from '@/components/attack/AttackStats'
+import { AttackStats } from '@/components/attack/AttackStats'
+import { LiveActivityTicker } from '@/components/attack/LiveActivityTicker'
 import { SentinelMarquee } from '@/components/attack/SentinelMarquee'
 import { SentinelRowSkeleton } from '@/components/attack/SentinelRowSkeleton'
 
@@ -161,16 +164,49 @@ export const AgentListView = () => {
 
   return (
     <div className="px-3 py-6 md:px-12 md:py-12">
-      <section className="mx-auto mb-10 max-w-5xl py-4 text-center md:mb-20 md:py-12">
-        <h1 className="font-display text-3xl font-extrabold leading-[1.08] tracking-[0.04em] text-white sm:text-4xl md:text-7xl">
+      <section className="relative mx-auto mb-10 max-w-5xl py-4 text-center md:mb-20 md:py-12">
+        {/* Subtle surface glow — anchors the hero text to a surface instead of
+            floating on the flat base bg (Aave Pro-style elevation, same #100f0f base). */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-[-20%] bottom-0 top-[-10%]"
+          style={{
+            background:
+              'radial-gradient(ellipse 55% 60% at 50% 35%, rgba(255,255,255,0.05), transparent 70%)',
+          }}
+        />
+        <h1 className="font-display relative text-3xl font-extrabold leading-[1.08] tracking-[0.04em] text-white sm:text-4xl md:text-7xl">
           Break AI Agents. Take the Pool.
         </h1>
-        <p className="font-body mx-auto mt-4 max-w-2xl text-[13px] font-semibold leading-relaxed tracking-[0.06em] text-[var(--color-text-secondary)] sm:mt-6 sm:text-sm sm:tracking-[0.08em]">
+        {/* New landing hero type scale: no extrabold below heading sizes, min 11px for
+            readable copy, tracking tightened on small text, sentence case for anything
+            with a verb. Old sections still use the legacy 9–10px extrabold/0.1em style. */}
+        <p className="font-body relative mx-auto mt-4 max-w-2xl text-sm font-medium leading-relaxed tracking-normal text-[var(--color-text-muted)] sm:mt-6 sm:text-base">
           Attackers pay to break sentinels and win the entire on-chain bounty. Defenders deploy
           agents and earn from every attack they survive. Skill-gated PvP, no luck, no lottery.
         </p>
-        <div className="mt-8 flex flex-col justify-center gap-3 sm:mt-12 sm:flex-row sm:items-center sm:gap-4">
-          <span className="font-body text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
+        <div className="mt-6 sm:mt-8">
+          <AttackStats variant="strip" />
+        </div>
+        <div className="relative mt-6 flex flex-col items-center justify-center gap-3 sm:mt-8 sm:flex-row sm:gap-4">
+          <Link
+            href={`/attack/${PREMIUM_SENTINEL.agentPath}`}
+            className="font-body inline-flex items-center gap-2 border border-white bg-white px-6 py-3 text-xs font-bold uppercase tracking-[0.08em] text-black transition-colors hover:bg-transparent hover:text-white sm:px-8"
+          >
+            Attack {PREMIUM_SENTINEL.name} <ArrowRight className="size-3.5" />
+          </Link>
+          <Link
+            href="/practice"
+            className="font-body inline-flex items-center gap-2 border border-[var(--color-border-default)] px-6 py-3 text-xs font-bold uppercase tracking-[0.08em] text-[var(--color-text-secondary)] transition-colors hover:border-white hover:text-white sm:px-8"
+          >
+            Try free in Practice Arena
+          </Link>
+        </div>
+        <div className="relative mt-4 sm:mt-5">
+          <LiveActivityTicker />
+        </div>
+        <div className="relative mt-8 flex flex-col justify-center gap-3 sm:mt-12 sm:flex-row sm:items-center sm:gap-4">
+          <span className="font-body text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--color-text-secondary)]">
             LIVE ON:
           </span>
           <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
@@ -183,7 +219,7 @@ export const AgentListView = () => {
                   key={chainId}
                   onClick={() => setSelectedChain(active ? undefined : chainId)}
                   className={cn(
-                    'font-body inline-flex items-center gap-2 border px-3.5 py-1.5 text-[9px] font-extrabold uppercase tracking-[0.1em] transition-colors sm:px-5 sm:text-[10px]',
+                    'font-body inline-flex items-center gap-2 border px-3.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.06em] transition-colors sm:px-5 sm:text-[11px]',
                     active
                       ? 'border-white bg-white text-black'
                       : 'border-[var(--color-border-default)] text-[var(--color-text-secondary)] hover:border-white hover:text-white'
@@ -217,13 +253,13 @@ export const AgentListView = () => {
               <h2 className="font-display text-xl font-extrabold uppercase tracking-[0.04em] text-white sm:text-2xl">
                 Trending Sentinels
               </h2>
-              <p className="font-body mt-1.5 text-[9px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] opacity-70 sm:mt-2 sm:text-[10px]">
+              <p className="font-body mt-1.5 text-[11px] font-medium tracking-normal text-[var(--color-text-muted)] opacity-70 sm:mt-2">
                 The most-attacked sentinels right now. Where the action is.
               </p>
             </div>
             <a
               href="#active-sentinels"
-              className="font-body hidden items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.1em] text-white hover:underline sm:inline-flex"
+              className="font-body hidden items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.06em] text-white hover:underline sm:inline-flex"
             >
               View all <ArrowRight className="size-3.5" />
             </a>
@@ -243,13 +279,13 @@ export const AgentListView = () => {
               <h2 className="font-display text-xl font-extrabold uppercase tracking-[0.04em] text-white sm:text-2xl">
                 Featured Sentinels
               </h2>
-              <p className="font-body mt-1.5 text-[9px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] opacity-70 sm:mt-2 sm:text-[10px]">
+              <p className="font-body mt-1.5 text-[11px] font-medium tracking-normal text-[var(--color-text-muted)] opacity-70 sm:mt-2">
                 The biggest pools on the arena. Broken ones paid out. these haven&apos;t. Yet.
               </p>
             </div>
             <a
               href="#active-sentinels"
-              className="font-body hidden items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.1em] text-white hover:underline sm:inline-flex"
+              className="font-body hidden items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.06em] text-white hover:underline sm:inline-flex"
             >
               View all <ArrowRight className="size-3.5" />
             </a>
@@ -269,12 +305,12 @@ export const AgentListView = () => {
               <h2 className="font-display text-xl font-extrabold uppercase tracking-[0.04em] text-white sm:text-2xl">
                 All Sentinels
               </h2>
-              <p className="font-body mt-1.5 text-[9px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] opacity-70 sm:mt-2 sm:text-[10px]">
+              <p className="font-body mt-1.5 text-[11px] font-medium tracking-normal text-[var(--color-text-muted)] opacity-70 sm:mt-2">
                 Every active target, ranked and sortable. Find your edge.
               </p>
             </div>
             {!isFetchingAllAgents && totalAgents > 0 && (
-              <span className="font-body border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-2.5 py-1 text-[9px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] sm:px-3 sm:text-[10px]">
+              <span className="font-body border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-secondary)] sm:px-3 sm:text-[11px]">
                 Showing {filteredAgents.length} of {totalAgents}
               </span>
             )}
@@ -287,8 +323,8 @@ export const AgentListView = () => {
               <input
                 value={searchQuery}
                 onChange={event => setSearchQuery(event.target.value)}
-                className="font-body h-11 w-full border-0 bg-[var(--color-bg-base)] px-9 text-[9px] font-extrabold uppercase tracking-[0.1em] text-white transition-all placeholder:text-[var(--color-text-faint)] focus:outline-none focus:ring-1 focus:ring-white md:h-12 md:border-r md:border-[var(--color-border-default)] md:px-12 md:text-[10px]"
-                placeholder="SEARCH AGENTS..."
+                className="font-body h-11 w-full border-0 bg-[var(--color-bg-base)] px-9 text-[11px] font-medium tracking-normal text-white transition-all placeholder:text-[var(--color-text-faint)] focus:outline-none focus:ring-1 focus:ring-white md:h-12 md:border-r md:border-[var(--color-border-default)] md:px-12"
+                placeholder="Search agents..."
                 type="search"
               />
             </label>
@@ -337,11 +373,11 @@ export const AgentListView = () => {
 
         {(selectedSymbol || selectedChain || selectedStatus !== 'all' || searchQuery.trim()) && (
           <div className="mb-3 flex flex-wrap items-center gap-2">
-            <span className="font-body text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-muted)]">
+            <span className="font-body text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-muted)]">
               Filtered by:
             </span>
             {searchQuery.trim() && (
-              <span className="font-body flex items-center gap-1.5 border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-white">
+              <span className="font-body flex items-center gap-1.5 border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.06em] text-white">
                 Search: {searchQuery.trim()}
                 <button
                   onClick={() => setSearchQuery('')}
@@ -352,7 +388,7 @@ export const AgentListView = () => {
               </span>
             )}
             {selectedChain && (
-              <span className="font-body flex items-center gap-1.5 border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-white">
+              <span className="font-body flex items-center gap-1.5 border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.06em] text-white">
                 <Image
                   src={CHAINS[selectedChain].icon}
                   alt={CHAINS[selectedChain].name}
@@ -370,7 +406,7 @@ export const AgentListView = () => {
               </span>
             )}
             {selectedSymbol && selectedToken && (
-              <span className="font-body flex items-center gap-1.5 border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-white">
+              <span className="font-body flex items-center gap-1.5 border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.06em] text-white">
                 <Image
                   src={selectedToken.icon}
                   alt={selectedToken.symbol}
@@ -388,7 +424,7 @@ export const AgentListView = () => {
               </span>
             )}
             {selectedStatus !== 'all' && (
-              <span className="font-body flex items-center gap-1.5 border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-white">
+              <span className="font-body flex items-center gap-1.5 border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.06em] text-white">
                 {SENTINEL_STATUS_META[selectedStatus].label}
                 <button
                   onClick={() => setSelectedStatus('all')}
@@ -416,7 +452,7 @@ export const AgentListView = () => {
               onClick={() => fetchNextPage()}
               disabled={isFetchingNextPage}
               variant="outline"
-              className="font-body min-w-[200px] rounded-full border-white bg-[var(--color-bg-base)] text-[11px] font-extrabold uppercase tracking-[0.1em] text-white hover:bg-white hover:text-black"
+              className="font-body min-w-[200px] rounded-full border-white bg-[var(--color-bg-base)] text-[11px] font-semibold uppercase tracking-[0.06em] text-white hover:bg-white hover:text-black"
             >
               {isFetchingNextPage ? (
                 <>
@@ -430,7 +466,7 @@ export const AgentListView = () => {
           </div>
         )}
 
-        <p className="font-body mt-4 text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--color-text-muted)]">
+        <p className="font-body mt-4 text-[11px] font-medium tracking-normal text-[var(--color-text-muted)]">
           {TEXT_COPIES.LOW_POOL_BALANCE_HIDDEN_MESSAGE}
         </p>
       </div>

@@ -17,7 +17,7 @@ export function IOSInstallGuide() {
     <Dialog open={iosGuideOpen} onOpenChange={setIosGuideOpen}>
       <DialogContent className="max-h-[90dvh] overflow-y-auto border border-[var(--color-border-strong)] bg-[var(--color-bg-surface)] p-0">
         <DialogHeader className="border-b border-[var(--color-border-default)] p-6 pb-4 text-left">
-          <DialogTitle className="font-body text-base font-extrabold uppercase tracking-[0.08em] text-[var(--color-text-primary)]">
+          <DialogTitle className="font-body text-base font-semibold tracking-normal text-[var(--color-text-primary)]">
             Add Red Sentinel to Home Screen
           </DialogTitle>
           <DialogDescription className="text-sm text-[var(--color-text-muted)]">
@@ -77,7 +77,7 @@ function Step({
       <div className="flex-1">
         <div className="mb-1 flex items-center gap-2 text-[var(--color-text-primary)]">
           <Icon className="h-4 w-4" />
-          <span className="font-body text-sm font-extrabold uppercase tracking-[0.06em]">
+          <span className="font-body text-sm font-semibold uppercase tracking-[0.06em]">
             {title}
           </span>
         </div>

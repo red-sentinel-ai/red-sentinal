@@ -52,11 +52,11 @@ export function SyndicateMemberRow({ member, tokenSymbol, tokenDecimals }: Props
                 alt={displayName}
                 fill
                 sizes="40px"
-                className="object-cover grayscale brightness-90"
+                className="object-cover brightness-90 grayscale"
                 unoptimized
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center text-xs font-bold text-[var(--color-text-muted)]">
+              <div className="flex h-full w-full items-center justify-center text-xs font-semibold text-[var(--color-text-muted)]">
                 {avatarFallback(member)}
               </div>
             )}
@@ -84,7 +84,7 @@ export function SyndicateMemberRow({ member, tokenSymbol, tokenDecimals }: Props
                 href={`https://x.com/${member.twitter_username}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-0.5 inline-flex w-fit items-center gap-1 text-[10px] text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-primary)]"
+                className="mt-0.5 inline-flex w-fit items-center gap-1 text-[11px] text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-primary)]"
               >
                 <Twitter className="h-3 w-3" />@{member.twitter_username}
               </a>

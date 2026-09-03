@@ -42,7 +42,7 @@ export const FilterSelect = ({
       <DropdownMenuTrigger
         aria-label={label}
         className={cn(
-          'font-body flex h-11 items-center gap-1.5 bg-[var(--color-bg-base)] px-2.5 text-[9px] font-extrabold uppercase tracking-[0.1em] text-white transition-colors focus:outline-none focus-visible:bg-[var(--color-bg-subtle)] data-[state=open]:bg-[var(--color-bg-subtle)] md:h-12 md:gap-2 md:px-4 md:text-[10px]',
+          'font-body flex h-11 items-center gap-1.5 bg-[var(--color-bg-base)] px-2.5 text-[11px] font-semibold uppercase tracking-[0.06em] text-white transition-colors focus:outline-none focus-visible:bg-[var(--color-bg-subtle)] data-[state=open]:bg-[var(--color-bg-subtle)] md:h-12 md:gap-2 md:px-4',
           className
         )}
       >
@@ -68,7 +68,7 @@ export const FilterSelect = ({
           <DropdownMenuItem
             key={option.value}
             onSelect={() => onValueChange(option.value)}
-            className="font-body justify-between gap-3 text-[10px] font-extrabold uppercase tracking-[0.1em]"
+            className="font-body justify-between gap-3 text-[11px] font-semibold uppercase tracking-[0.06em]"
           >
             <span className="flex items-center gap-2">
               {option.iconSrc && (

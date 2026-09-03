@@ -30,11 +30,9 @@ export function ChallengeModeToggle({ mode, onChange, compact }: ChallengeModeTo
             className={cn(
               'industrial-header flex items-center gap-1.5 transition-colors',
               compact
-                ? 'touch-manipulation px-2 py-1.5 text-[9px] tracking-wider'
-                : 'px-3 py-1.5 text-[10px] tracking-widest',
-              isActive
-                ? 'bg-white text-black'
-                : 'text-[var(--color-text-muted)] hover:text-white'
+                ? 'touch-manipulation px-2 py-1.5 text-[10px] tracking-[0.06em]'
+                : 'px-3 py-1.5 text-[10px] tracking-[0.06em]',
+              isActive ? 'bg-white text-black' : 'text-[var(--color-text-muted)] hover:text-white'
             )}
           >
             {!compact && <Icon className="h-3 w-3" />}
