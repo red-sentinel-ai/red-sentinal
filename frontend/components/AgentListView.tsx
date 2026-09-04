@@ -20,6 +20,7 @@ import { useAllAgents } from '@/hooks/agents/useAllAgents'
 import type { SortField, SortDirection } from '@/types/agents'
 import { useFeaturedAgents } from '@/hooks/agents/useFeaturedAgents'
 import { useTrendingAgents, MAX_TRENDING_SENTINELS } from '@/hooks/agents/useTrendingAgents'
+import { useDefeatedAgents } from '@/hooks/agents/useDefeatedAgents'
 import { useAgentCoinTypes } from '@/hooks/agents/useAgentCoinTypes'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -36,6 +37,8 @@ import {
 import { AttackStats } from '@/components/attack/AttackStats'
 import { LiveActivityTicker } from '@/components/attack/LiveActivityTicker'
 import { SentinelMarquee } from '@/components/attack/SentinelMarquee'
+import { BrokenSentinelCard } from '@/components/attack/BrokenSentinelCard'
+import { ArenaHowItWorks } from '@/components/attack/ArenaHowItWorks'
 import { SentinelRowSkeleton } from '@/components/attack/SentinelRowSkeleton'
 
 const BIG_BOUNTY_THRESHOLD_MIST = BigInt(20_000_000_000) // 20
@@ -73,6 +76,7 @@ export const AgentListView = () => {
 
   const { data: featuredAgents, isPending: isFetchingFeatured } = useFeaturedAgents(true)
   const { data: trendingAgents, isPending: isFetchingTrending } = useTrendingAgents(true)
+  const { data: defeatedAgents, isPending: isFetchingDefeated } = useDefeatedAgents(true)
   const { data: availableTokens = [] } = useAgentCoinTypes()
 
   // Flatten all pages of agents
@@ -181,7 +185,7 @@ export const AgentListView = () => {
         {/* New landing hero type scale: no extrabold below heading sizes, min 11px for
             readable copy, tracking tightened on small text, sentence case for anything
             with a verb. Old sections still use the legacy 9–10px extrabold/0.1em style. */}
-        <p className="font-body relative mx-auto mt-4 max-w-2xl text-sm font-medium leading-relaxed tracking-normal text-[var(--color-text-muted)] sm:mt-6 sm:text-base">
+        <p className="font-body relative mx-auto mt-4 max-w-2xl text-sm font-normal leading-[1.7] tracking-[0.01em] text-[var(--color-text-secondary)] sm:mt-6 sm:text-base">
           Attackers pay to break sentinels and win the entire on-chain bounty. Defenders deploy
           agents and earn from every attack they survive. Skill-gated PvP, no luck, no lottery.
         </p>
@@ -238,12 +242,42 @@ export const AgentListView = () => {
             })}
           </div>
         </div>
+        <p className="font-body relative mt-4 text-[11px] font-medium tracking-normal text-[var(--color-text-secondary)] sm:mt-5 sm:text-xs">
+          Every attack, verdict, and payout is a real on-chain transaction
+        </p>
       </section>
 
       {/* Stats are hidden in Arbitrum-only mode. */}
       {/* <div className="mb-10 md:mb-20">
         <AttackStats />
       </div> */}
+
+      {/* Recently Broken — proof the game is winnable. Renders nothing until the
+          first public win exists, so the page never shows an empty shelf. */}
+      {(isFetchingDefeated || (defeatedAgents || []).length > 0) && (
+        <section className="mb-10 md:mb-20">
+          <div className="mb-5 flex items-end justify-between gap-4 md:mb-8">
+            <div>
+              <h2 className="font-display text-xl font-extrabold uppercase tracking-[0.04em] text-white sm:text-2xl">
+                Recently Broken
+              </h2>
+              <p className="font-body mt-1.5 text-[11px] font-medium tracking-normal text-[var(--color-text-secondary)] sm:mt-2">
+                Pools get claimed here. Every break is public. Every winner is paid on-chain. This
+                is what skill looks like.
+              </p>
+            </div>
+          </div>
+          {isFetchingDefeated ? (
+            <SentinelRowSkeleton />
+          ) : (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {(defeatedAgents || []).map(agent => (
+                <BrokenSentinelCard key={agent.agent_id} agent={agent} />
+              ))}
+            </div>
+          )}
+        </section>
+      )}
 
       {/* Trending Sentinels — auto-scrolling row (deduped against Featured) */}
       {(isFetchingTrending || trendingForRow.length > 0) && (
@@ -253,7 +287,7 @@ export const AgentListView = () => {
               <h2 className="font-display text-xl font-extrabold uppercase tracking-[0.04em] text-white sm:text-2xl">
                 Trending Sentinels
               </h2>
-              <p className="font-body mt-1.5 text-[11px] font-medium tracking-normal text-[var(--color-text-muted)] opacity-70 sm:mt-2">
+              <p className="font-body mt-1.5 text-[11px] font-medium tracking-normal text-[var(--color-text-secondary)] sm:mt-2">
                 The most-attacked sentinels right now. Where the action is.
               </p>
             </div>
@@ -279,7 +313,7 @@ export const AgentListView = () => {
               <h2 className="font-display text-xl font-extrabold uppercase tracking-[0.04em] text-white sm:text-2xl">
                 Featured Sentinels
               </h2>
-              <p className="font-body mt-1.5 text-[11px] font-medium tracking-normal text-[var(--color-text-muted)] opacity-70 sm:mt-2">
+              <p className="font-body mt-1.5 text-[11px] font-medium tracking-normal text-[var(--color-text-secondary)] sm:mt-2">
                 The biggest pools on the arena. Broken ones paid out. these haven&apos;t. Yet.
               </p>
             </div>
@@ -298,6 +332,19 @@ export const AgentListView = () => {
         </section>
       )}
 
+      {/* How It Works — five-second comprehension of the game before the directory. */}
+      <section className="mb-10 md:mb-20">
+        <div className="mb-5 md:mb-8">
+          <h2 className="font-display text-xl font-extrabold uppercase tracking-[0.04em] text-white sm:text-2xl">
+            How the Arena Works
+          </h2>
+          <p className="font-body mt-1.5 text-[11px] font-medium tracking-normal text-[var(--color-text-secondary)] sm:mt-2">
+            Three moves. Five seconds. That&apos;s the whole game.
+          </p>
+        </div>
+        <ArenaHowItWorks />
+      </section>
+
       <div id="active-sentinels" className="scroll-mt-20">
         <div className="mb-6 flex flex-col">
           <div className="mb-5 flex flex-wrap items-end justify-between gap-3 md:mb-8 md:gap-4">
@@ -305,7 +352,7 @@ export const AgentListView = () => {
               <h2 className="font-display text-xl font-extrabold uppercase tracking-[0.04em] text-white sm:text-2xl">
                 All Sentinels
               </h2>
-              <p className="font-body mt-1.5 text-[11px] font-medium tracking-normal text-[var(--color-text-muted)] opacity-70 sm:mt-2">
+              <p className="font-body mt-1.5 text-[11px] font-medium tracking-normal text-[var(--color-text-secondary)] sm:mt-2">
                 Every active target, ranked and sortable. Find your edge.
               </p>
             </div>
