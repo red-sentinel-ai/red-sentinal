@@ -85,6 +85,7 @@ export default function ChatInterface({
     const msgs: ChatMessage[] = []
     for (const event of chatEvents) {
       if (event.type !== 'prompt') continue
+      if (!event.content && !event.agent_response && !event.success) continue
       msgs.push({
         id: `user-${event.id}`,
         type: 'user',
