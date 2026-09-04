@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import {
   // Gift,
   BookOpen,
+  Compass,
   HelpCircle,
   Terminal,
   Network,
@@ -52,6 +53,13 @@ const NAV_ITEMS: NavItem[] = [
     href: '/attack',
     icon: Terminal,
     description: '',
+  },
+  {
+    title: 'Explore',
+    href: '/attacks',
+    icon: Compass,
+    description:
+      'Every active sentinel in the arena — filter by network, status, token, and pool size.',
   },
   {
     title: 'Practice (Free)',
