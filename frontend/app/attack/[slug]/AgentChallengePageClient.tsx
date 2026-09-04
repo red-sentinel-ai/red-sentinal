@@ -51,7 +51,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('attack')
-  const [challengeMode, setChallengeMode] = useState<ChallengeMode>('casual')
+  const [challengeMode, setChallengeMode] = useState<ChallengeMode>('attack')
   const isMobile = useMediaQuery('(max-width: 768px)')
 
   const { data: agent, isLoading, error, refetch } = useAgent(slug)
