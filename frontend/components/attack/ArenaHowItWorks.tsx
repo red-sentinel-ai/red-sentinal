@@ -5,11 +5,12 @@ import { MotionConfig, motion, useReducedMotion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
 /* Arena game palette — same trio as the rewards slot machine (SlotReel.tsx).
- * Roles: cyan = sentinel, pink = attacker, purple = verdict/payout. Money
- * amounts stay on the warm accent like everywhere else on the landing page. */
-const ARENA_CYAN = '#3BF0FF'
-const ARENA_PINK = '#F2A4FF'
-const ARENA_PURPLE = '#A06BFF'
+ * Shared with the live activity feed. Roles: cyan = sentinel/deploy, pink =
+ * attacker, purple = verdict/break. Money amounts stay on the warm accent
+ * like everywhere else on the landing page. */
+export const ARENA_CYAN = '#3BF0FF'
+export const ARENA_PINK = '#F2A4FF'
+export const ARENA_PURPLE = '#A06BFF'
 
 const STEPS = [
   {
