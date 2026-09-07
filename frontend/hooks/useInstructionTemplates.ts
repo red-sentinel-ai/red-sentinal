@@ -100,17 +100,12 @@ export function useInstructionTemplates() {
     [wallet]
   )
 
-  const handleCommentCountChange = useCallback(
-    (templateId: number, delta: number) => {
-      const update = (t: SentinelTemplate) =>
-        t.id === templateId
-          ? { ...t, comment_count: Math.max(0, (t.comment_count ?? 0) + delta) }
-          : t
-      setAllTemplates(prev => prev.map(update))
-      setSelectedTemplate(prev => (prev?.id === templateId ? update(prev) : prev))
-    },
-    []
-  )
+  const handleCommentCountChange = useCallback((templateId: number, delta: number) => {
+    const update = (t: SentinelTemplate) =>
+      t.id === templateId ? { ...t, comment_count: Math.max(0, (t.comment_count ?? 0) + delta) } : t
+    setAllTemplates(prev => prev.map(update))
+    setSelectedTemplate(prev => (prev?.id === templateId ? update(prev) : prev))
+  }, [])
 
   const originTemplates =
     selectedOrigin === 'team'
@@ -130,16 +125,13 @@ export function useInstructionTemplates() {
 
   const filteredTemplates =
     sortBy === 'popular'
-      ? [...searchedTemplates].sort(
-          (a, b) => (b.like_count ?? 0) - (a.like_count ?? 0)
-        )
+      ? [...searchedTemplates].sort((a, b) => (b.like_count ?? 0) - (a.like_count ?? 0))
       : searchedTemplates
 
   const handleCreateClick = () => {
     if (!account?.address) {
       setIsWalletModalOpen(true)
-    }
-    else {
+    } else {
       setIsCreateModalOpen(true)
     }
   }

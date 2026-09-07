@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import {
-  ChevronLeft,
   AlertTriangle,
   Plus,
   Crosshair,
@@ -61,11 +60,10 @@ export default function InstructionTemplatesPage() {
           <h1 className="mb-3 text-2xl font-medium text-[var(--color-text-primary)] sm:text-4xl md:text-5xl">
             Sentinel Templates
           </h1>
-            <p className="max-w-3xl text-base text-[var(--color-text-muted)] sm:text-xl">
-              Battle-tested defenders, pre-built and ready. Pick one, hit launch — name,
-              instructions, and objective are all pre-filled. All that&apos;s left is setting your
-              bounty.
-            </p>
+          <p className="max-w-3xl text-base text-[var(--color-text-muted)] sm:text-xl">
+            Battle-tested defenders, pre-built and ready. Pick one, hit launch — name, instructions,
+            and objective are all pre-filled. All that&apos;s left is setting your bounty.
+          </p>
         </div>
 
         <div className="border-[var(--color-warning)]/20 bg-[var(--color-warning)]/5 mb-8 rounded-xl border p-6">
@@ -289,11 +287,11 @@ export default function InstructionTemplatesPage() {
                           JSON.stringify(template)
                         )
                       }}
-                        className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--color-gold-primary)] px-4 py-2 text-sm font-medium text-[var(--color-text-on-gold)] transition-all hover:bg-[var(--color-gold-light)]"
-                      >
-                        <Zap className="h-4 w-4" />
-                        1-Click Launch
-                      </Link>
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--color-gold-primary)] px-4 py-2 text-sm font-medium text-[var(--color-text-on-gold)] transition-all hover:bg-[var(--color-gold-light)]"
+                    >
+                      <Zap className="h-4 w-4" />
+                      1-Click Launch
+                    </Link>
                   </div>
                 </div>
               </motion.div>
