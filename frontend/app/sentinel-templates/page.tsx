@@ -6,7 +6,6 @@ import {
   AlertTriangle,
   Plus,
   Crosshair,
-  ArrowRight,
   Heart,
   MessageCircle,
   ShieldCheck,
@@ -15,6 +14,7 @@ import {
   Clock,
   Search,
   X,
+  Zap,
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
@@ -57,24 +57,15 @@ export default function InstructionTemplatesPage() {
 
       <div className="container mx-auto max-w-[1400px] px-4 py-8 pt-24">
         {/* Header */}
-        <div className="mb-8">
-          <Link
-            href="/defend"
-            className="mb-4 inline-flex items-center gap-2 text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-primary)]"
-          >
-            <ChevronLeft className="h-5 w-5" />
-            <span>Back to Deploy</span>
-          </Link>
-
-          <div className="mb-3">
-            <h1 className="mb-3 text-2xl font-medium text-[var(--color-text-primary)] sm:text-4xl md:text-5xl">
-              Sentinel Templates
-            </h1>
+        <div className="mb-3">
+          <h1 className="mb-3 text-2xl font-medium text-[var(--color-text-primary)] sm:text-4xl md:text-5xl">
+            Sentinel Templates
+          </h1>
             <p className="max-w-3xl text-base text-[var(--color-text-muted)] sm:text-xl">
-              Pre-built defenders, ready in 2 minutes. Pick one, fund the pool, and earn from every
-              attack it survives.
+              Battle-tested defenders, pre-built and ready. Pick one, hit launch — name,
+              instructions, and objective are all pre-filled. All that&apos;s left is setting your
+              bounty.
             </p>
-          </div>
         </div>
 
         <div className="border-[var(--color-warning)]/20 bg-[var(--color-warning)]/5 mb-8 rounded-xl border p-6">
@@ -298,11 +289,11 @@ export default function InstructionTemplatesPage() {
                           JSON.stringify(template)
                         )
                       }}
-                      className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--color-gold-primary)] px-4 py-2 text-sm font-medium text-[var(--color-text-on-gold)] transition-all hover:bg-[var(--color-gold-light)]"
-                    >
-                      Deploy
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
+                        className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--color-gold-primary)] px-4 py-2 text-sm font-medium text-[var(--color-text-on-gold)] transition-all hover:bg-[var(--color-gold-light)]"
+                      >
+                        <Zap className="h-4 w-4" />
+                        1-Click Launch
+                      </Link>
                   </div>
                 </div>
               </motion.div>
