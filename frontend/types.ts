@@ -124,7 +124,7 @@ export type TemplateOrigin = 'team' | 'community'
 export interface SentinelTemplate {
   id?: number
   name: string
-  sentinel_type: 'basic' | 'rag'
+  sentinel_type?: 'basic' | 'rag'
   public_instructions: string
   hidden_instructions: string
   attack_goal: string
