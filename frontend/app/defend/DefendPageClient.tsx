@@ -15,6 +15,7 @@ import {
   SYSTEM_PROMPT_MAX_TOKENS,
 } from '@/constants'
 import type { SupportedToken } from '@/constants/shared'
+import type { SentinelTemplate } from '@/types'
 import { isEvmChain } from '@/constants/chains'
 import { SUPPORTED_TOKENS, SOLANA_SUPPORTED_TOKENS, getSupportedTokens } from '@/constants/tokens'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
@@ -37,6 +38,7 @@ import { useSuiTokenBalance } from '@/hooks/useSuiTokenBalance'
 import { Skeleton } from '@/components/ui/skeleton'
 
 import { SentinelTypeToggle } from '@/components/defend/agentic/SentinelTypeToggle'
+import { QuickLaunchTemplates } from '@/components/defend/QuickLaunchTemplates'
 import { EnvironmentTemplatePicker } from '@/components/defend/agentic/EnvironmentTemplatePicker'
 import { EnvironmentConfigPanel } from '@/components/defend/agentic/EnvironmentConfigPanel'
 import { LiveToolsChecklist } from '@/components/defend/agentic/LiveToolsChecklist'
@@ -260,6 +262,28 @@ export default function DefendPageClient() {
 
   const [isGeneratingConfig, setIsGeneratingConfig] = useState(false)
 
+  const handleQuickLaunch = (template: SentinelTemplate) => {
+    setFormData(prev => ({
+      ...prev,
+      agentName: template.name,
+      systemPrompt: template.public_instructions,
+      privatePrompt: template.hidden_instructions,
+      attackGoal: template.attack_goal,
+    }))
+    countTokens(template.public_instructions)
+    countPrivateTokens(template.hidden_instructions)
+    countAttackGoalTokens(template.attack_goal)
+    if (template.avatar_url) {
+      setSelectedImage({ url: template.avatar_url, isCustom: false })
+      setAgentImage(null)
+    }
+    setSentinelType('basic')
+    toast.success('Template loaded — set your bounty and deploy.')
+    setTimeout(() => {
+      document.getElementById('bounty-section')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }, 100)
+  }
+
   const handleGenerateConfig = async () => {
     if (!formData.systemPrompt) {
       toast.error('Please fill in Sentinel Instructions first')
@@ -371,7 +395,14 @@ export default function DefendPageClient() {
         )}
         {/* Individual Mode */}
         {defendMode === 'individual' && (
-          <form onSubmit={handleSubmit} className="relative mx-auto max-w-[969px] space-y-8 px-4">
+          <>
+            <QuickLaunchTemplates
+              onSelect={handleQuickLaunch}
+              onBrowse={() =>
+                sessionStorage.setItem(SESSION_KEYS.DEFEND_FORM_DATA, JSON.stringify(formData))
+              }
+            />
+            <form onSubmit={handleSubmit} className="relative mx-auto max-w-[969px] space-y-8 px-4">
             {/* Header */}
             <div className="flex flex-col-reverse items-center gap-6 sm:flex-row sm:items-start sm:justify-between">
               <div className="text-center sm:text-left">
@@ -692,7 +723,7 @@ export default function DefendPageClient() {
             </div>
 
             {/* Bounty Pool & Fee */}
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div id="bounty-section" className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div className="flex flex-col gap-2">
                 <div>
                   <label className="block text-sm font-medium text-[var(--color-text-secondary)]">
@@ -826,6 +857,7 @@ export default function DefendPageClient() {
               )}
             </div>
           </form>
+          </>
         )}{' '}
         {/* end individual mode */}
         <SuccessModal

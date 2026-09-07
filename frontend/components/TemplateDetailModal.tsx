@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Eye, EyeOff, Crosshair, Heart, MessageCircle, ShieldCheck, X } from 'lucide-react'
+import { Eye, EyeOff, Crosshair, Heart, MessageCircle, ShieldCheck, X, Zap } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { CopyButton } from '@/components/ui/common/CopyButton'
@@ -182,9 +182,10 @@ export function TemplateDetailModal({
                 onClick={() => {
                   sessionStorage.setItem(SESSION_KEYS.SELECTED_TEMPLATE, JSON.stringify(template))
                 }}
-                className="btn block w-full rounded-xl bg-[var(--color-gold-primary)] py-3.5 text-center text-base font-semibold tracking-wide text-[var(--color-text-on-gold)] transition-all hover:bg-[var(--color-gold-light)]"
+                className="btn flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--color-gold-primary)] py-3.5 text-center text-base font-semibold tracking-wide text-[var(--color-text-on-gold)] transition-all hover:bg-[var(--color-gold-light)]"
               >
-                Use This Template
+                <Zap className="h-4 w-4" />
+                1-Click Launch
               </Link>
             </div>
           </motion.div>
