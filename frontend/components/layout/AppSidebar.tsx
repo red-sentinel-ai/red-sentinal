@@ -8,6 +8,7 @@ import {
   BookOpen,
   Compass,
   HelpCircle,
+  MessageCircleQuestion,
   Terminal,
   Network,
   PlusSquare,
@@ -198,6 +199,14 @@ export function AppSidebar() {
           >
             <BookOpen className="size-3.5" />
             Docs
+          </Link>
+          <Link
+            href="/faq"
+            onClick={() => isMobile && setOpenMobile(false)}
+            className="font-body flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-secondary)] transition-colors hover:text-white"
+          >
+            <MessageCircleQuestion className="size-3.5" />
+            FAQ
           </Link>
           <Link
             href={`mailto:${SUI_SENTINEL_SUPPORT_EMAIL}`}

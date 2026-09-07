@@ -18,11 +18,18 @@ const EMPTY_FORM: TemplateFormData = {
   attack_goal: '',
 }
 
+export interface SelectedTemplateImage {
+  url: string
+  isCustom: boolean
+  file?: File | null
+}
+
 export function useCreateTemplate(onSuccess?: () => void) {
   const account = useCurrentAccount()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [formData, setFormData] = useState<TemplateFormData>(EMPTY_FORM)
+  const [selectedImage, setSelectedImage] = useState<SelectedTemplateImage | null>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
@@ -30,6 +37,7 @@ export function useCreateTemplate(onSuccess?: () => void) {
 
   const reset = () => {
     setFormData(EMPTY_FORM)
+    setSelectedImage(null)
     setIsSubmitted(false)
   }
 
@@ -53,10 +61,22 @@ export function useCreateTemplate(onSuccess?: () => void) {
 
     try {
       setIsSubmitting(true)
+      const payload = new FormData()
+      payload.append('name', formData.name)
+      payload.append('tags', formData.tags)
+      payload.append('public_instructions', formData.public_instructions)
+      payload.append('private_instructions', formData.private_instructions)
+      payload.append('attack_goal', formData.attack_goal)
+      payload.append('creator_address', account.address)
+      if (selectedImage?.isCustom && selectedImage.file) {
+        payload.append('image', selectedImage.file)
+      } else if (selectedImage?.url) {
+        payload.append('image_url', selectedImage.url)
+      }
+
       const res = await fetch('/api/templates', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, creator_address: account.address }),
+        body: payload,
       })
 
       if (!res.ok) {
@@ -74,5 +94,5 @@ export function useCreateTemplate(onSuccess?: () => void) {
     }
   }
 
-  return { formData, isSubmitting, isSubmitted, reset, handleChange, handleSubmit }
+  return { formData, selectedImage, setSelectedImage, isSubmitting, isSubmitted, reset, handleChange, handleSubmit }
 }
