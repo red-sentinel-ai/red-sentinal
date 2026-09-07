@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const title = `Challenge ${agent.agent_name} | Red Sentinel`
-  const description = `Attempt to defeat the AI agent "${agent.agent_name}" on the Sui network. Outsmart its prompts and earn rewards!`
+  const description = `Attempt to defeat the AI agent "${agent.agent_name}" on the Monad network. Outsmart its prompts and earn rewards!`
   const url = `${SUI_SENTINEL_APP_URL}/attack/${slug}`
 
   return {
