@@ -1,8 +1,12 @@
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
-import { Loader2, Eye, EyeOff, Crosshair, Sparkles, Tag, CheckCircle2 } from 'lucide-react'
+import { useState } from 'react'
+import Image from 'next/image'
+import { Loader2, Eye, EyeOff, Crosshair, Sparkles, Tag, CheckCircle2, Camera } from 'lucide-react'
 import { useCreateTemplate } from '@/hooks/useCreateTemplate'
+import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
+import { SENTINEL_IMAGES, SENTINEL_GIFS } from '@/constants/asset_paths'
 
 interface CreateTemplateModalProps {
   isOpen: boolean
@@ -11,8 +15,9 @@ interface CreateTemplateModalProps {
 }
 
 export function CreateTemplateModal({ isOpen, onClose, onSuccess }: CreateTemplateModalProps) {
-  const { formData, isSubmitting, isSubmitted, reset, handleChange, handleSubmit } =
+  const { formData, selectedImage, setSelectedImage, isSubmitting, isSubmitted, reset, handleChange, handleSubmit } =
     useCreateTemplate(onSuccess)
+  const [imagePickerOpen, setImagePickerOpen] = useState(false)
 
   const handleClose = () => {
     reset()
@@ -20,7 +25,8 @@ export function CreateTemplateModal({ isOpen, onClose, onSuccess }: CreateTempla
   }
 
   return (
-    <AnimatePresence>
+    <>
+      <AnimatePresence>
       {isOpen && (
         <motion.div
           key="create-template-modal"
@@ -46,7 +52,7 @@ export function CreateTemplateModal({ isOpen, onClose, onSuccess }: CreateTempla
                   </h2>
                   {!isSubmitted && (
                     <p className="mt-1 text-sm text-[var(--color-text-muted)]">
-                      Submitted templates are reviewed before appearing in community listings.
+                      Your template will appear in the community listing right away.
                     </p>
                   )}
                 </div>
@@ -65,9 +71,9 @@ export function CreateTemplateModal({ isOpen, onClose, onSuccess }: CreateTempla
                 <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-gold-primary)]">
                   <CheckCircle2 className="h-8 w-8 text-[var(--color-text-on-gold)]" />
                 </div>
-                <h3 className="mb-3 text-xl font-semibold text-[var(--color-text-primary)]">We&apos;ve received your template!</h3>
+                <h3 className="mb-3 text-xl font-semibold text-[var(--color-text-primary)]">Your template is live!</h3>
                 <p className="mb-2 max-w-md text-[var(--color-text-muted)]">
-                  Our team will review your submission. Once approved, it will be listed in the community templates for everyone to use.
+                  It&apos;s now listed in the community templates for everyone to use. Defenders, assemble!
                 </p>
                 <button
                   onClick={handleClose}
@@ -78,6 +84,47 @@ export function CreateTemplateModal({ isOpen, onClose, onSuccess }: CreateTempla
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5 p-6">
+                <Field icon={<Camera className="h-4 w-4 text-[var(--color-text-muted)]" />} label="Template Image" optional>
+                  <div className="flex items-center gap-4">
+                    <button
+                      type="button"
+                      onClick={() => setImagePickerOpen(true)}
+                      className="group relative h-20 w-20 shrink-0 overflow-hidden rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] transition-colors hover:border-[var(--color-gold-primary)]"
+                      aria-label="Choose template image"
+                    >
+                      {selectedImage?.url ? (
+                        <Image
+                          src={selectedImage.url}
+                          alt="Template image"
+                          width={80}
+                          height={80}
+                          className="h-full w-full object-cover"
+                          unoptimized
+                        />
+                      ) : (
+                        <span className="flex h-full w-full items-center justify-center text-[var(--color-text-faint)]">
+                          <Camera className="h-6 w-6" />
+                        </span>
+                      )}
+                      <span className="absolute inset-0 flex items-center justify-center bg-[var(--color-overlay)] opacity-0 transition-opacity group-hover:opacity-100">
+                        <Camera className="h-5 w-5 text-white" />
+                      </span>
+                    </button>
+                    <div>
+                      <p className="text-sm text-[var(--color-text-primary)]">
+                        {selectedImage ? 'Image selected' : 'Choose an image'}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setImagePickerOpen(true)}
+                        className="text-xs text-[var(--color-gold-primary)] transition-colors hover:text-[var(--color-gold-light)]"
+                      >
+                        {selectedImage ? 'Change image' : 'Pick from gallery or upload your own'}
+                      </button>
+                    </div>
+                  </div>
+                </Field>
+
                 <Field icon={<Sparkles className="h-4 w-4 text-[var(--color-text-muted)]" />} label="Template Name">
                   <input
                     type="text"
@@ -159,7 +206,22 @@ export function CreateTemplateModal({ isOpen, onClose, onSuccess }: CreateTempla
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+      </AnimatePresence>
+
+      <ImagePickerSheet
+        open={imagePickerOpen}
+        onClose={() => setImagePickerOpen(false)}
+        onSelectImage={img => {
+          setSelectedImage(img)
+          setImagePickerOpen(false)
+        }}
+        title="Select Template Image"
+        subtitle="Choose an avatar for your template."
+        imageArray={SENTINEL_IMAGES}
+        gifArray={SENTINEL_GIFS}
+        disableGifs={true}
+      />
+    </>
   )
 }
 

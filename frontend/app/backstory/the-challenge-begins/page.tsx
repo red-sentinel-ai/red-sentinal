@@ -6,7 +6,7 @@ export default function Page() {
   return (
     <div className="min-h-body mx-auto max-w-[1440px] px-4 py-4 pt-40 md:px-12">
       <h1 className="mb-20 text-2xl font-bold text-[#5F5C5C] md:text-[48px]">
-        <span>THE SUI SENTINEL</span>
+        <span>THE RED SENTINEL</span>
         <br />
         <br />
         <span>BACKSTORY</span>
