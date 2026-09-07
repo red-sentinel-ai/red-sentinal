@@ -42,6 +42,7 @@ export const registerAgentUtil = async (
     model_name: modelName,
     private_prompt: privatePrompt || 'NA',
     attack_goal: attackGoal,
+    jury_prompt: '',
   }
 
   if (credentials?.apiKey) body.api_key = credentials.apiKey

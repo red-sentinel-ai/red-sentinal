@@ -121,7 +121,7 @@ export const metadata: Metadata = {
 
   twitter: {
     card: 'summary_large_image',
-    title: 'Red Sentinel | Learn How AI Breaks',
+    title: 'Red Sentinel | Break AI Agents. Take the Bounty pool.',
     description:
       'Attack live AI Sentinels, learn how agents fail, earn real bounties for verified exploits, and build on-chain proof of skill.',
     creator: `@${SUI_SENTINEL_X_USERNAME}`,

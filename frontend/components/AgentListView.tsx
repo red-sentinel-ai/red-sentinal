@@ -21,6 +21,8 @@ import { BrokenSentinelCard } from '@/components/attack/BrokenSentinelCard'
 import { ArenaHowItWorks } from '@/components/attack/ArenaHowItWorks'
 import { BecomeTheHouse } from '@/components/attack/BecomeTheHouse'
 import { FormSyndicate } from '@/components/attack/FormSyndicate'
+import { FaqSection } from '@/components/faq/FaqSection'
+import { FAQ_ITEMS, LANDING_FAQ_COUNT } from '@/constants/faq'
 
 /** The landing page — spectacle and story. The full sortable directory lives
  *  on /attacks (SentinelExplorer); this page only curates. */
@@ -254,6 +256,27 @@ export const AgentListView = () => {
 
       {/* Syndicates — the collective supply side. No pools alone, fortresses together. */}
       <FormSyndicate />
+
+      {/* FAQ — close the open loops before the visitor bounces. Full list on /faq. */}
+      <section className="mb-10 md:mb-20">
+        <div className="mb-5 flex items-end justify-between gap-4 md:mb-8">
+          <div>
+            <h2 className="font-display text-xl font-extrabold uppercase tracking-[0.04em] text-white sm:text-2xl">
+              FAQ
+            </h2>
+            <p className="font-body mt-1.5 text-[11px] font-medium tracking-normal text-[var(--color-text-secondary)] sm:mt-2">
+              The questions everyone asks before their first attack.
+            </p>
+          </div>
+          <Link
+            href="/faq"
+            className="font-body hidden items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.06em] text-white hover:underline sm:inline-flex"
+          >
+            View all <ArrowRight className="size-3.5" />
+          </Link>
+        </div>
+        <FaqSection items={FAQ_ITEMS.slice(0, LANDING_FAQ_COUNT)} />
+      </section>
     </div>
   )
 }

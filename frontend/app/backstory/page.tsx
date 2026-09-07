@@ -61,7 +61,7 @@ export default function BackStoryPage() {
   return (
     <div className="min-h-body mx-auto max-w-[1440px] bg-[var(--color-bg-base)] px-4 py-4 pt-40 leading-loose text-[var(--color-text-primary)] md:px-12">
       <h1 className="mb-20 text-2xl font-bold md:text-[48px]">
-        <span>THE SUI SENTINEL</span>
+        <span>THE RED SENTINEL</span>
         <br />
         <br />
         <span className="text-[#C871FF]">BACKSTORY</span>
