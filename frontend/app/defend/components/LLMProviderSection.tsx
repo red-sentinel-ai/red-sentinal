@@ -36,6 +36,9 @@ export function LLMProviderSection({
   return (
     <div className="flex flex-col gap-2">
       <label className="block text-sm font-medium text-[var(--color-text-secondary)]">LLM Provider</label>
+      <p className="text-xs text-[var(--color-text-muted)]">
+        Amazon Bedrock models are free — API key needed for other providers.
+      </p>
       <div className="flex flex-col gap-4 md:flex-row">
         <CustomDropdown
           label="Select service"
