@@ -119,13 +119,31 @@ export interface SpinHistoryItem {
   spunAt: string
 }
 
+export type TemplateOrigin = 'team' | 'community'
+
 export interface SentinelTemplate {
+  id?: number
   name: string
-  sentinel_type: 'basic' | 'rag'
+  sentinel_type?: 'basic' | 'rag'
   public_instructions: string
   hidden_instructions: string
   attack_goal: string
   avatar_url?: string | null
+  origin?: TemplateOrigin
+  creator_address?: string | null
+  like_count?: number
+  comment_count?: number
+  liked_by_me?: boolean
+}
+
+export interface TemplateComment {
+  id: number
+  user_address: string
+  comment: string
+  created_at: string
+  username: string | null
+  display_name: string | null
+  avatar_url: string | null
 }
 
 export interface Chain {
