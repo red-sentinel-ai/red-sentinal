@@ -285,7 +285,8 @@ export const MONAD_USDC_TOKEN: SupportedToken = {
   minimumAmount: 0.01,
 }
 
-export const MONAD_SUPPORTED_TOKENS: SupportedToken[] = [MONAD_TOKEN, MONAD_USDC_TOKEN]
+export const MONAD_SUPPORTED_TOKENS: SupportedToken[] =
+  APP_NETWORK === 'mainnet' ? [MONAD_TOKEN] : [MONAD_TOKEN, MONAD_USDC_TOKEN]
 
 // ─── Chain-aware token helpers ───────────────────────────────────────────────
 
