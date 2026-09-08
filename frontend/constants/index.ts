@@ -541,7 +541,6 @@ export const TELEGRAM_NOTIFICATION_API =
   process.env.TELEGRAM_NOTIFICATION_API ||
   `${ADMIN_API_URL}/api/telegram/private-group-message-from-group-id`
 
-//TODO: Change this group id for sui sentinel as it's old group id
 export const SUI_SENTINEL_ALERTS_TELEGRAM_GROUP_ID =
   process.env.SUI_SENTINEL_ALERTS_TELEGRAM_GROUP_ID
 export const ADMIN_API_TOKEN = process.env.ADMIN_API_TOKEN
