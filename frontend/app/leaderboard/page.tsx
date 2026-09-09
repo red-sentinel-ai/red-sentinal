@@ -2,11 +2,11 @@ import { NewLeaderboard } from '@/components/rewards/NewLeaderboard'
 import { SUI_SENTINEL_APP_URL } from '@/constants'
 
 export const metadata = {
-  title: 'Leaderboard | Red Sentinel',
+  title: 'Leaderboard',
   description:
     'Rankings for the top defenders and attackers on Red Sentinel. See who has the most resilient AI Sentinels, the most breaches, and the biggest bounties won — all verified on-chain.',
   openGraph: {
-    title: 'Leaderboard | Red Sentinel',
+    title: 'Leaderboard',
     description:
       'Rankings for the top defenders and attackers on Red Sentinel. See who has the most resilient AI Sentinels, the most breaches, and the biggest bounties won — all verified on-chain.',
     url: `${SUI_SENTINEL_APP_URL}/leaderboard`,
@@ -21,7 +21,7 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Leaderboard | Red Sentinel',
+    title: 'Leaderboard',
     description:
       'Rankings for the top defenders and attackers on Red Sentinel. See who has the most resilient AI Sentinels, the most breaches, and the biggest bounties won, all verified on-chain.',
     images: `${SUI_SENTINEL_APP_URL}/api/leaderboard/og`,
