@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     canonical: `${SUI_SENTINEL_APP_URL}/syndicates`,
   },
   openGraph: {
-    title: 'Syndicate Directory | Red Sentinel',
+    title: 'Syndicate Directory',
     description:
         'Connect with high-performance security collectives. Pool resources, share threat intelligence, and deploy elite Sentinels.',
       url: `${SUI_SENTINEL_APP_URL}/syndicates`,
