@@ -1,6 +1,5 @@
 import { APP_NETWORK } from './shared'
 
-// Every chain the codebase knows about — drives the SupportedChain type.
 export const ALL_CHAINS = ['sui', 'solana', 'bnb', 'bot', 'arb', 'monad'] as const
 export type SupportedChain = (typeof ALL_CHAINS)[number]
 

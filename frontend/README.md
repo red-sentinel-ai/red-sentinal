@@ -1,8 +1,3 @@
-
-
-
-
-
 ## Local Development
 
 First, run the development server:
