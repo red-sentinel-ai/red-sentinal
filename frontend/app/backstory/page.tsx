@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { BackstoryGridWrapper } from '@/components/backstory/BackstoryGridWrapper'
 
 export const metadata: Metadata = {
-  title: 'Backstory | Red Sentinel',
+  title: 'Backstory',
   description: 'Explore the lore and origins of the Red Sentinel AI agents.',
 }
 

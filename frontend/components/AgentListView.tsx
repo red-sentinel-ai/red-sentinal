@@ -194,7 +194,7 @@ export const AgentListView = () => {
                 Featured Sentinels
               </h2>
               <p className="font-body mt-1.5 text-[11px] font-medium tracking-normal text-[var(--color-text-secondary)] sm:mt-2">
-                The biggest pools on the arena. Broken ones paid out. these haven&apos;t. Yet.
+                The biggest pools on the arena. Broken ones paid out. These haven&apos;t. Yet.
               </p>
             </div>
             <Link

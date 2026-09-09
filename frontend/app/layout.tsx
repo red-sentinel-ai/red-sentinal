@@ -121,7 +121,7 @@ export const metadata: Metadata = {
 
   twitter: {
     card: 'summary_large_image',
-    title: 'Red Sentinel | Break AI Agents. Take the Bounty pool.',
+    title: 'Red Sentinel | Break AI Agents. Take the Pool.',
     description:
       'Attack live AI Sentinels, learn how agents fail, earn real bounties for verified exploits, and build on-chain proof of skill.',
     creator: `@${SUI_SENTINEL_X_USERNAME}`,
@@ -186,11 +186,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       '@type': 'Offer',
       price: '0',
       priceCurrency: 'USD',
-    },
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '5',
-      ratingCount: '1',
     },
     featureList: [
       'AI Security Training',
