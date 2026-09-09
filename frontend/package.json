@@ -1,7 +1,13 @@
 {
-  "name": "frontend",
+  "name": "redsentinel-frontend",
   "version": "0.1.0",
   "private": true,
+  "description": "Crowdsourced, Verifiable AI red teaming platform",
+  "author": {
+    "name": "Satyam Bansal",
+    "email": "satyam@cyphronixsoftware.xyz",
+    "url": "https://github.com/satyambnsal"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
