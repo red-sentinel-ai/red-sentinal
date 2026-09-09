@@ -13,13 +13,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!agent) {
     return {
-      title: 'Agent Not Found | Red Sentinel',
+      title: 'Agent Not Found',
       description: 'The requested AI agent could not be found.',
     }
   }
 
-  const title = `Challenge ${agent.agent_name} | Red Sentinel`
-  const description = `Attempt to defeat the AI agent "${agent.agent_name}" on the Monad network. Outsmart its prompts and earn rewards!`
+  const title = `Challenge ${agent.agent_name}`
+  const description = `Attempt to defeat the AI agent "${agent.agent_name}". Outsmart its prompts and claim the on-chain bounty!`
   const url = `${SUI_SENTINEL_APP_URL}/attack/${slug}`
 
   return {

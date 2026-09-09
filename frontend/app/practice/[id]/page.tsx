@@ -10,7 +10,7 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params
   return {
-    title: `Practice Attack #${id} | Red Sentinel`,
+    title: `Practice Attack #${id}`,
     description:
       'Practice your prompt-injection attacks against this sentinel. No wallet, no stakes.',
     alternates: {

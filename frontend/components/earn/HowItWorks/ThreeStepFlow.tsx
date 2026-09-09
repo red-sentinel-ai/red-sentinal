@@ -25,7 +25,7 @@ const STEPS = [
     icon: Coins,
     title: 'Collect Instantly',
     description:
-      'SENTINEL tokens land in your wallet immediately after spinning. Share your spin on Twitter for a bonus +100 SENTINEL.',
+      'SENTINEL tokens land in your wallet immediately after spinning. Share your spin on X for a bonus +100 SENTINEL.',
     iconBg: 'bg-[var(--color-bg-subtle)]',
     iconColor: 'text-[var(--color-gold-primary)]',
   },
