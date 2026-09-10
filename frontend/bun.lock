@@ -22,6 +22,7 @@
         "@radix-ui/react-tabs": "^1.1.2",
         "@radix-ui/react-tooltip": "^1.2.8",
         "@rive-app/react-canvas": "^4.22.1",
+        "@solana-program/memo": "0.10.0",
         "@solana/spl-token": "^0.4.14",
         "@solana/web3.js": "^1.98.4",
         "@supabase/supabase-js": "^2.50.5",
@@ -912,6 +913,8 @@
     "@socket.io/component-emitter": ["@socket.io/component-emitter@3.1.2", "", {}, "sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA=="],
 
     "@solana-program/compute-budget": ["@solana-program/compute-budget@0.11.0", "", { "peerDependencies": { "@solana/kit": "^5.0" } }, "sha512-7f1ePqB/eURkTwTOO9TNIdUXZcyrZoX3Uy2hNo7cXMfNhPFWp9AVgIyRNBc2jf15sdUa9gNpW+PfP2iV8AYAaw=="],
+
+    "@solana-program/memo": ["@solana-program/memo@0.10.0", "", { "peerDependencies": { "@solana/kit": "^5.0" } }, "sha512-1FvQFenL3lzl5SpxhWV4QJCOLU/nvAOXGXjKjS7dprvG+0u971xoanApN7bM/a4NFZolp6S+lP2xVl6vTVIxbg=="],
 
     "@solana-program/system": ["@solana-program/system@0.10.0", "", { "peerDependencies": { "@solana/kit": "^5.0" } }, "sha512-Go+LOEZmqmNlfr+Gjy5ZWAdY5HbYzk2RBewD9QinEU/bBSzpFfzqDRT55JjFRBGJUvMgf3C2vfXEGT4i8DSI4g=="],
 

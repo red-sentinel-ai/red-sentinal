@@ -35,6 +35,7 @@
     "@radix-ui/react-tabs": "^1.1.2",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@rive-app/react-canvas": "^4.22.1",
+    "@solana-program/memo": "0.10.0",
     "@solana/spl-token": "^0.4.14",
     "@solana/web3.js": "^1.98.4",
     "@supabase/supabase-js": "^2.50.5",
