@@ -5,15 +5,16 @@ import React, { useState, useEffect } from 'react'
 import posthog from 'posthog-js'
 import { PostHogProvider as PHProvider } from 'posthog-js/react'
 import { SuiClientProvider, WalletProvider as SuiWalletProvider, lightTheme } from '@mysten/dapp-kit'
+import { WagmiProvider } from '@privy-io/wagmi'
 import { AppShell } from '@/components/layout/AppShell'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ProfileInitializer } from '@/components/profile/ProfileInitializer'
 import { ConnectSocialPrompt } from '@/components/notifications/ConnectSocialPrompt'
+import { wagmiConfig } from '@/lib/wagmi'
 import { APP_NETWORK } from '@/constants'
 import { SUI_RPC_URLS } from '@/constants/sui-rpc'
 import { createSuiClient } from '@/lib/sui/rpc-client'
-import { SolanaWalletProvider } from '@/app/SolanaWalletProvider'
-import { EVMWalletProvider } from '@/app/EVMWalletProvider'
+import { PrivyWalletProvider } from '@/app/PrivyWalletProvider'
 import { ActiveChainProvider } from '@/context/ActiveChainContext'
 import { AuthProvider } from '@/context/AuthContext'
 import { InstallPromptProvider } from '@/context/InstallPromptContext'
@@ -52,15 +53,15 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <PHProvider client={posthog}>
-      <QueryClientProvider client={queryClient}>
-        <EVMWalletProvider>
-          <SuiClientProvider
-            networks={suiNetworks}
-            defaultNetwork={APP_NETWORK}
-            createClient={createClient}
-          >
-            <SuiWalletProvider autoConnect theme={lightTheme}>
-              <SolanaWalletProvider>
+      <PrivyWalletProvider>
+        <QueryClientProvider client={queryClient}>
+          <WagmiProvider config={wagmiConfig}>
+            <SuiClientProvider
+              networks={suiNetworks}
+              defaultNetwork={APP_NETWORK}
+              createClient={createClient}
+            >
+              <SuiWalletProvider autoConnect theme={lightTheme}>
                 <ActiveChainProvider>
                   <AuthProvider>
                     <ProfileInitializer />
@@ -70,11 +71,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
                     <ConnectSocialPrompt />
                   </AuthProvider>
                 </ActiveChainProvider>
-              </SolanaWalletProvider>
-            </SuiWalletProvider>
-          </SuiClientProvider>
-        </EVMWalletProvider>
-      </QueryClientProvider>
+              </SuiWalletProvider>
+            </SuiClientProvider>
+          </WagmiProvider>
+        </QueryClientProvider>
+      </PrivyWalletProvider>
     </PHProvider>
   )
 }

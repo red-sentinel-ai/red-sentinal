@@ -2,9 +2,9 @@
 
 import { useEffect } from 'react'
 import posthog from 'posthog-js'
-import { useWalletModal } from '@solana/wallet-adapter-react-ui'
 import { SOLANA_CLUSTER } from '@/constants/solana'
 import { cn, truncateAddress } from '@/lib/utils'
+import { usePrivyConnect } from '@/hooks/usePrivyConnect'
 import { useSolanaWallet } from '@/hooks/useSolanaWallet'
 import { useSolanaBalance } from '@/hooks/useSolanaBalance'
 import { ConnectWalletLabel } from '@/components/ConnectWalletLabel'
@@ -12,7 +12,7 @@ import { WalletDropdown } from '@/components/WalletDropdown'
 
 export function SolanaConnectButton({ compact }: { compact?: boolean }) {
   const { publicKey, disconnect } = useSolanaWallet()
-  const { setVisible } = useWalletModal()
+  const { openConnectModal: setVisible } = usePrivyConnect()
   const { balance, isLoading: isLoadingBalance } = useSolanaBalance()
 
   const address = publicKey?.toBase58() ?? null
@@ -32,7 +32,7 @@ export function SolanaConnectButton({ compact }: { compact?: boolean }) {
   if (!publicKey) {
     return (
       <button
-        onClick={() => setVisible(true)}
+        onClick={setVisible}
         aria-label="Connect Wallet"
         className={cn(
           'rs-connect-button group py-2',

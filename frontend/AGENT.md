@@ -219,14 +219,20 @@ constants/
 - Connect button: `components/SuiConnectButton.tsx`
 
 ### Solana
-- Uses `@solana/wallet-adapter-react`
-- Provider: `app/SolanaWalletProvider.tsx`
+- Uses `@privy-io/react-auth/solana` (`useWallets`, wallet-standard `signAndSendTransaction`)
+- Provider: `app/PrivyWalletProvider.tsx` (Privy owns EVM + Solana wallet connection)
 - Connect button: `components/SolanaConnectButton.tsx`
+- Abstraction hooks: `hooks/useSolanaWallet.ts` + `hooks/useSolanaConnection` (adapter-compatible interface)
 - **Note**: Use a private RPC for production (public endpoints are rate-limited)
 
 ### EVM
-- Provider: `app/EVMWalletProvider.tsx`
-- Connect button: `components/EVMConnectButton.tsx`
+- Provider: `app/PrivyWalletProvider.tsx` — `PrivyProvider` + `WagmiProvider` from `@privy-io/wagmi`
+- wagmi config: `lib/wagmi.ts` (`createConfig` from `@privy-io/wagmi`; connectors driven by Privy)
+- Connect button: `components/EVMConnectButton.tsx` (modal via `hooks/usePrivyConnect.ts`)
+
+### Auth (Privy)
+- Login modal: wallet (EVM + Solana) and email; embedded wallets created on login for users without one
+- Connect modal entry point: `hooks/usePrivyConnect.ts` (replaces old RainbowKit/Solana-adapter modals)
 
 ### Active Chain Context
 - `context/ActiveChainContext.tsx` tracks which chain the user is currently interacting with

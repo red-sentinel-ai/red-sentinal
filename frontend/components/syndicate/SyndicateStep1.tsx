@@ -4,7 +4,7 @@ import { useRef, useState } from 'react'
 import { Loader2, Users } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAccount } from 'wagmi'
-import { useConnectModal } from '@rainbow-me/rainbowkit'
+import { usePrivyConnect } from '@/hooks/usePrivyConnect'
 import { getEvmSupportedTokens } from '@/constants/evm'
 import { SUI_SENTINEL_API_URL } from '@/constants'
 import { APP_NETWORK } from '@/constants/shared'
@@ -27,7 +27,7 @@ export function SyndicateStep1({ onComplete }: SyndicateStep1Props) {
   const { address: evmAddress } = useAccount()
   const { activeEvmChainKey } = useEvmChain()
   const evmTokens = getEvmSupportedTokens(activeEvmChainKey ?? 'bnb')
-  const { openConnectModal } = useConnectModal()
+  const { openConnectModal } = usePrivyConnect()
   const { deploy, isDeploying } = useDeploySyndicate()
 
   const [name, setName] = useState('')

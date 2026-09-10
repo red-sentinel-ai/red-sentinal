@@ -1124,56 +1124,6 @@ body::-webkit-scrollbar-thumb:hover {
   }
 }
 
-/* ── Wallet Adapter – dark theme overrides ─────────────────────────── */
-.wallet-adapter-modal-wrapper {
-  background: var(--color-bg-surface);
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
-  border-radius: 20px;
-  border: 1px solid var(--color-border-default);
-}
-
-.wallet-adapter-modal-title {
-  color: var(--color-text-primary);
-  padding: 40px 40px 24px;
-  font-size: 20px;
-}
-
-.wallet-adapter-button {
-  color: var(--color-text-primary);
-}
-
-.wallet-adapter-button:not([disabled]):hover {
-  background-color: var(--color-bg-elevated);
-}
-
-.wallet-adapter-modal-list .wallet-adapter-button {
-  border-radius: 12px;
-  margin: 0 12px;
-  width: calc(100% - 24px);
-}
-
-.wallet-adapter-modal-list .wallet-adapter-button span {
-  color: var(--color-text-muted);
-}
-
-.wallet-adapter-modal-button-close {
-  background: var(--color-bg-elevated);
-}
-
-.wallet-adapter-modal-button-close svg {
-  fill: var(--color-text-muted);
-}
-
-.wallet-adapter-modal-button-close:hover svg {
-  fill: var(--color-text-primary);
-}
-
-/* Hide the "More wallets" toggle – not-installed wallets do nothing when clicked */
-.wallet-adapter-modal-list-more {
-  display: none;
-}
-/* ─────────────────────────────────────────────────────────────────────────── */
-
 :root {
   --nv-color-foreground: #d0cfcf;
 }

@@ -1,9 +1,8 @@
-import { getDefaultConfig } from '@rainbow-me/rainbowkit'
+import { createConfig } from '@privy-io/wagmi'
+import { http } from 'wagmi'
 import { defineChain } from 'viem'
 import { bsc, bscTestnet, arbitrum, arbitrumSepolia, monad, monadTestnet } from 'viem/chains'
 import { APP_NETWORK } from '@/constants/shared'
-
-const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || ''
 
 export const botChainTestnet = defineChain({
   id: 968,
@@ -41,10 +40,9 @@ export const botChainMainnet = defineChain({
 
 // Every supported EVM chain is exposed to the wallet, ordered so the chains
 // matching this build's APP_NETWORK come first. Array literals are kept inline
-// so getDefaultConfig infers the required non-empty tuple type.
-export const wagmiConfig = getDefaultConfig({
-  appName: 'Red Sentinel',
-  projectId,
+// so createConfig infers the required non-empty tuple type. Connectors are
+// driven by Privy — this config only declares chains + transports.
+export const wagmiConfig = createConfig({
   chains:
     APP_NETWORK === 'testnet'
       ? [
@@ -67,5 +65,14 @@ export const wagmiConfig = getDefaultConfig({
           arbitrumSepolia,
           monadTestnet,
         ],
-  ssr: true,
+  transports: {
+    [bsc.id]: http(),
+    [bscTestnet.id]: http(),
+    [botChainMainnet.id]: http(),
+    [botChainTestnet.id]: http(),
+    [arbitrum.id]: http(),
+    [arbitrumSepolia.id]: http(),
+    [monad.id]: http(),
+    [monadTestnet.id]: http(),
+  },
 })

@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import posthog from 'posthog-js'
-import { useConnectModal } from '@rainbow-me/rainbowkit'
+import { usePrivyConnect } from '@/hooks/usePrivyConnect'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
 import { useEVMBalance } from '@/hooks/useEVMBalance'
 import { useEvmChain } from '@/hooks/evm/useEvmChain'
@@ -14,7 +14,7 @@ import { useActiveChain } from '@/context/ActiveChainContext'
 
 export function EVMConnectButton({ compact }: { compact?: boolean }) {
   const { address, isConnected, disconnect } = useEVMWallet()
-  const { openConnectModal } = useConnectModal()
+  const { openConnectModal } = usePrivyConnect()
   const { balance, isLoading: isLoadingBalance } = useEVMBalance()
   const { walletChainId, walletChainKey } = useEvmChain()
   const { activeChain } = useActiveChain()

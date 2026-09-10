@@ -25,7 +25,7 @@ const backoffDelay = (attempt: number, retryAfterHeader: string | null) => {
   return Math.random() * ceiling
 }
 
-const retryingFetch: typeof fetch = async (input, init) => {
+const retryingFetch = (async (input, init) => {
   let lastResponse: Response | null = null
 
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
@@ -54,7 +54,7 @@ const retryingFetch: typeof fetch = async (input, init) => {
   // Out of retries — hand the last throttled response back so the SDK raises its
   // own SuiHTTPStatusError and the caller sees the real status code.
   return lastResponse!
-}
+}) as typeof fetch
 
 export const createSuiClient = (url: string) =>
   new SuiClient({ transport: new SuiHTTPTransport({ url, fetch: retryingFetch }) })

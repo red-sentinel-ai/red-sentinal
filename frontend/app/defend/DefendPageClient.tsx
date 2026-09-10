@@ -7,7 +7,6 @@ import Image from 'next/image'
 import { CameraIcon, Info, Loader2, Sparkles, Wallet } from 'lucide-react'
 import { toast } from 'sonner'
 import { ConnectButton, useCurrentAccount } from '@mysten/dapp-kit'
-import { useWalletModal } from '@solana/wallet-adapter-react-ui'
 import {
   MINIMUM_FEE_PER_MESSAGE,
   SESSION_KEYS,
@@ -20,7 +19,7 @@ import { isEvmChain } from '@/constants/chains'
 import { SUPPORTED_TOKENS, SOLANA_SUPPORTED_TOKENS, getSupportedTokens } from '@/constants/tokens'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
 import { useEVMBalance } from '@/hooks/useEVMBalance'
-import { useConnectModal } from '@rainbow-me/rainbowkit'
+import { usePrivyConnect } from '@/hooks/usePrivyConnect'
 import { SENTINEL_GIFS, SENTINEL_IMAGES } from '@/constants/asset_paths'
 import { useActiveChain } from '@/context/ActiveChainContext'
 import { useTokenCount } from '@/hooks/useTokenCount'
@@ -69,9 +68,9 @@ export default function DefendPageClient() {
   // Sui wallet
   const account = useCurrentAccount()
   const { publicKey: solanaPublicKey } = useSolanaWallet()
-  const { setVisible: setSolanaWalletModalVisible } = useWalletModal()
+  const { openConnectModal: openSolanaConnectModal } = usePrivyConnect()
   const { address: evmAddress } = useEVMWallet()
-  const { openConnectModal: openEvmConnectModal } = useConnectModal()
+  const { openConnectModal: openEvmConnectModal } = usePrivyConnect()
 
   const [sentinelType, setSentinelType] = useState<SentinelType>('basic')
   const [selectedTemplateIds, setSelectedTemplateIds] = useState<string[]>([])
@@ -835,7 +834,7 @@ export default function DefendPageClient() {
                   {isSolana ? (
                     <button
                       type="button"
-                      onClick={() => setSolanaWalletModalVisible(true)}
+                      onClick={() => openSolanaConnectModal()}
                       className="flex h-full w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-gold-primary)] text-sm font-medium text-[var(--color-text-on-gold)] shadow-[var(--shadow-card)] transition-all hover:bg-[var(--color-gold-light)]"
                     >
                       <Wallet className="h-5 w-5" />

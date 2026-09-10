@@ -6,7 +6,6 @@ import localFont from 'next/font/local'
 import { JetBrains_Mono, Space_Grotesk } from 'next/font/google'
 
 import './globals.css'
-import '@rainbow-me/rainbowkit/styles.css'
 import { Providers } from './providers'
 import { FloatingHelpButton } from '@/components/FloatingHelpButton'
 import { SUI_SENTINEL_APP_URL, SUI_SENTINEL_X_USERNAME, SUI_SENTINEL_GITHUB_URL } from '@/constants'
