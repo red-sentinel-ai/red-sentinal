@@ -144,6 +144,22 @@ export function useSuiSignAndExecute() {
             // Never block a user because sponsorship hiccupped — fall back to
             // their own gas, which is the pre-sponsorship behaviour.
             console.warn('Gas sponsorship unavailable, falling back to user gas:', error)
+
+            try {
+              const result = await executeOwnGas(transaction)
+              callbacks?.onSuccess?.(result)
+              return
+            } catch (fallbackError) {
+              // Both paths failed: surface the sponsor reason too, otherwise
+              // the user only sees the fallback error (e.g. a wallet dry-run
+              // gas failure) with no hint that sponsorship was even attempted.
+              const sponsorReason = error instanceof Error ? error.message : String(error)
+              const fallbackReason =
+                fallbackError instanceof Error ? fallbackError.message : String(fallbackError)
+              throw new Error(
+                `Gas sponsorship unavailable: ${sponsorReason}. Paying gas from your own wallet also failed: ${fallbackReason}`
+              )
+            }
           }
         }
 
