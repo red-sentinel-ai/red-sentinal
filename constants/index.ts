@@ -11,8 +11,6 @@ export const NOVU_WEBSOCKET_HOSTNAME = 'wss://notifications-ws.redsentinel.xyz'
 export const SYSTEM_PROMPT_MAX_TOKENS = 600
 export const ATTACK_PROMPT_MAX_TOKENS = 600
 
-export const MINIMUM_FEE_PER_MESSAGE = 0.001
-
 export const SUI_SENTINEL_LANDING_URL = 'https://www.redsentinel.xyz'
 export const SUI_SENTINEL_APP_URL = 'https://app.redsentinel.xyz'
 export const SUI_SENTINEL_DOCS_URL = 'https://docs.redsentinel.xyz/'

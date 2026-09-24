@@ -23,7 +23,7 @@ interface EvmConsumePromptResponse {
       nonce: number
       message_hash: number[]
       agent_response: string
-      jury_response: string
+      jury_response?: string
     }
   }
   signature: string

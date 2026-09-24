@@ -1,9 +1,9 @@
 import { Transaction } from '@mysten/sui/transactions'
 import { SuiTransactionBlockResponse } from '@mysten/sui/client'
-import { useCurrentAccount, useSignAndExecuteTransaction, useSuiClient } from '@mysten/dapp-kit'
+import { useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 import { SUI_CONFIG } from '@/constants'
-import { SUI_COIN_TYPE } from '@/constants/tokens'
+import { useSuiSignAndExecute } from '@/hooks/useSuiSignAndExecute'
 import type { SupportedToken } from '@/constants/shared'
 import { hexToVector } from '@/lib/utils'
 import type { DefendFormData } from './useDefendForm'
@@ -21,21 +21,12 @@ export function useDeploySuiAgent({
   const client = useSuiClient()
   const account = useCurrentAccount()
 
-  const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction({
-    execute: async ({ bytes, signature }) =>
-      await client.executeTransactionBlock({
-        transactionBlock: bytes,
-        signature,
-        options: { showRawEffects: true, showObjectChanges: true },
-      }),
-  })
+  // Gas is sponsored by the backend; falls back to user-paid gas automatically.
+  const { mutate: signAndExecuteTransaction } = useSuiSignAndExecute()
 
   const buildInitialFundCoin = async (tx: Transaction, amountRaw: bigint) => {
-    if (selectedToken.coinType === SUI_COIN_TYPE) {
-      const [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(amountRaw)])
-      return coin
-    }
-
+    // The initial balance is paid from the user's own coin objects — never
+    // tx.gas, which belongs to the gas sponsor. Applies to SUI as well.
     const coins = await client.getCoins({
       owner: account!.address,
       coinType: selectedToken.coinType,

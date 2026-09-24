@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import {
-  MINIMUM_FEE_PER_MESSAGE,
   PROVIDER_MODELS,
   SYSTEM_PROMPT_MAX_TOKENS,
   type SupportedToken,
@@ -53,9 +52,8 @@ interface UseDefendFormOptions {
   countAttackGoalTokens: (text: string) => void
   /** Called when any custom-provider field (url/key/model) changes */
   onCustomProviderFieldChange?: () => void
-  /** Override token symbol and minimum for validation (used for chain-specific tokens) */
+  /** Override token symbol for validation messages (used for chain-specific tokens) */
   activeTokenSymbol?: string
-  activeMinimumAmount?: number
 }
 
 export function useDefendForm({
@@ -66,7 +64,6 @@ export function useDefendForm({
   countAttackGoalTokens,
   onCustomProviderFieldChange,
   activeTokenSymbol,
-  activeMinimumAmount,
 }: UseDefendFormOptions) {
   const [formData, setFormData] = useState<DefendFormData>(INITIAL_FORM_DATA)
   const [errors, setErrors] = useState<Partial<DefendFormData>>({})
@@ -116,16 +113,15 @@ export function useDefendForm({
     }
 
     const tokenSymbol = activeTokenSymbol ?? selectedToken.symbol
-    const minimumAmount = activeMinimumAmount ?? selectedToken.minimumAmount
 
     const fee = parseFloat(formData.feePerMessage)
-    if (isNaN(fee) || fee < MINIMUM_FEE_PER_MESSAGE) {
-      newErrors.feePerMessage = `Fee must be at least ${MINIMUM_FEE_PER_MESSAGE} ${tokenSymbol}`
+    if (isNaN(fee)) {
+      newErrors.feePerMessage = `Enter a valid fee in ${tokenSymbol}`
     }
 
     const balance = parseFloat(formData.initialBalance)
-    if (isNaN(balance) || balance < minimumAmount) {
-      newErrors.initialBalance = `Minimum Bounty Pool is ${minimumAmount} ${tokenSymbol}`
+    if (isNaN(balance)) {
+      newErrors.initialBalance = `Enter a valid bounty pool amount in ${tokenSymbol}`
     }
 
     if (!formData.attackGoal.trim()) newErrors.attackGoal = 'Attack goal is required'

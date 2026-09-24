@@ -8,7 +8,6 @@ import { CameraIcon, Info, Loader2, Sparkles, Wallet } from 'lucide-react'
 import { toast } from 'sonner'
 import { ConnectButton, useCurrentAccount } from '@mysten/dapp-kit'
 import {
-  MINIMUM_FEE_PER_MESSAGE,
   SESSION_KEYS,
   SUI_SENTINEL_DOCS_URL,
   SYSTEM_PROMPT_MAX_TOKENS,
@@ -29,7 +28,7 @@ import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 import { TokenSelectDropdown } from '@/components/defend/TokenSelectDropdown'
 import { RewardsConditions } from '@/components/defend/RewardsConditions'
 import { SuccessModal } from '@/components/DefenderSuccessModal'
-import { formatCompact, TokenAmount } from '@/components/ui/common/TokenAmount'
+import { TokenAmount } from '@/components/ui/common/TokenAmount'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
@@ -173,11 +172,6 @@ export default function DefendPageClient() {
     : isSolana
       ? selectedSolanaToken.symbol
       : selectedToken.symbol
-  const activeMinimumAmount = isEvm
-    ? selectedEvmToken.minimumAmount
-    : isSolana
-      ? selectedSolanaToken.minimumAmount
-      : selectedToken.minimumAmount
 
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
   const {
@@ -202,11 +196,6 @@ export default function DefendPageClient() {
         ? selectedEvmToken.symbol
         : isSolana
           ? selectedSolanaToken.symbol
-          : undefined,
-      activeMinimumAmount: isEvm
-        ? selectedEvmToken.minimumAmount
-        : isSolana
-          ? selectedSolanaToken.minimumAmount
           : undefined,
     })
 
@@ -728,10 +717,6 @@ export default function DefendPageClient() {
                   <label className="block text-sm font-medium text-[var(--color-text-secondary)]">
                     Bounty Pool
                   </label>
-                  <span className="mt-1 block text-xs text-[var(--color-text-muted)]">
-                    Minimum {formatCompact(activeMinimumAmount, 3)} {activeTokenSymbol} required to
-                    deploy.
-                  </span>
                   {isWalletConnected && (
                     <span className="font-body mt-0.5 flex items-center gap-1 text-sm text-[var(--color-text-muted)]">
                       Balance:{' '}
@@ -764,7 +749,6 @@ export default function DefendPageClient() {
                     className="font-body h-full flex-1 bg-transparent px-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:outline-none"
                     placeholder="0.00"
                     step="any"
-                    min={activeMinimumAmount.toString()}
                     autoComplete="off"
                   />
                   <div className="flex shrink-0 items-center border-l border-[var(--color-border-subtle)]">
@@ -794,7 +778,7 @@ export default function DefendPageClient() {
 
               <FormInput
                 label={`Fee Per Message (${activeTokenSymbol})`}
-                subLabel={`You earn this fee whenever users interact with your Sentinel. Minimum ${MINIMUM_FEE_PER_MESSAGE} ${activeTokenSymbol}.`}
+                subLabel="You earn this fee whenever users interact with your Sentinel."
                 name="feePerMessage"
                 value={formData.feePerMessage}
                 onChange={handleChangeWithProviderReset}

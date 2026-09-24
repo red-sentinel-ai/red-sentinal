@@ -53,7 +53,6 @@ export function SyndicateStep3({
     countPrivateTokens,
     countAttackGoalTokens,
     activeTokenSymbol: selectedToken.symbol,
-    activeMinimumAmount: selectedToken.minimumAmount,
   })
 
   const customProvider = useCustomProvider(setFormData)
@@ -285,7 +284,7 @@ export function SyndicateStep3({
         <div className="flex flex-col gap-1.5">
           <FormInput
             label={`Bounty Pool (${selectedToken.symbol})`}
-            subLabel={`Drawn from syndicate balance · Min ${selectedToken.minimumAmount} ${selectedToken.symbol}`}
+            subLabel="Drawn from syndicate balance"
             name="initialBalance"
             value={formData.initialBalance}
             onChange={handleChangeWithProviderReset}

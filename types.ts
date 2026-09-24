@@ -21,7 +21,7 @@ export type ConsumePromptApiResponse = {
       success: boolean
       agent_response: string
       fun_response: string
-      jury_response: string
+      jury_response?: string
       score: number
     }
   }

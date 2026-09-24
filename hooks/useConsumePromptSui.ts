@@ -1,8 +1,9 @@
 import { useState, useCallback } from 'react'
 import { Transaction } from '@mysten/sui/transactions'
-import { useSignAndExecuteTransaction, useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
+import { useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
+import { useSuiSignAndExecute } from '@/hooks/useSuiSignAndExecute'
 import { SUI_CONFIG, SUI_LEGACY_CONFIG } from '@/constants'
-import { SUI_COIN_TYPE, getTokenForCoinType } from '@/constants/tokens'
+import { getTokenForCoinType } from '@/constants/tokens'
 import { toast } from 'sonner'
 import { ConsumePromptApiResponse } from '@/types'
 import { hexToVector } from '@/lib/utils'
@@ -10,8 +11,6 @@ import { fetchEffectiveCost } from '@/lib/sui/effective-cost'
 import { type Agent } from '@/types/agents'
 import { SuiTransactionBlockResponse, SuiObjectResponse } from '@mysten/sui/client'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
-
-const GAS_BUDGET = 50_000_000
 
 // Raw shape returned by the TEE's /consume-prompt for Sui. The contract signs
 // message_hash/score/timestamp; the response strings are for the UI only.
@@ -25,7 +24,7 @@ interface SuiConsumePromptTeeResponse {
       score: number
       message_hash: number[] // 32 bytes
       agent_response: string
-      jury_response: string
+      jury_response?: string
       fun_response: string
     }
   }
@@ -99,17 +98,8 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
   const [lastResult, setLastResult] = useState<any>(null)
 
   const account = useCurrentAccount()
-  const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction({
-    execute: async ({ bytes, signature }) =>
-      await client.executeTransactionBlock({
-        transactionBlock: bytes,
-        signature,
-        options: {
-          showRawEffects: true,
-          showObjectChanges: true,
-        },
-      }),
-  })
+  // Gas is sponsored by the backend; falls back to user-paid gas automatically.
+  const { mutate: signAndExecuteTransaction } = useSuiSignAndExecute()
 
   // Step 2: Request an Attack Ticket
   const requestAttackTicket = async (agentDetails: Agent): Promise<AttackTicket> => {
@@ -143,56 +133,53 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
       : BigInt(agentDetails.cost_per_message)
 
     const tx = new Transaction()
-    let paymentCoin
 
-    if (token.coinType === SUI_COIN_TYPE) {
-      // SUI is the gas coin — split directly from tx.gas
-      ;[paymentCoin] = tx.splitCoins(tx.gas, [tx.pure.u64(costInBaseUnits)])
-    } else {
-      // Non-SUI token — fetch from wallet
-      const coins = await client.getCoins({
-        owner: account.address,
-        coinType: token.coinType,
-        limit: 100,
-      })
+    // The attack cost is always paid from the user's own coin objects — never
+    // from tx.gas, which belongs to the gas sponsor. Even for SUI, the payment
+    // is split from an owned SUI coin rather than the gas coin.
+    const coins = await client.getCoins({
+      owner: account.address,
+      coinType: token.coinType,
+      limit: 100,
+    })
 
-      if (!coins.data.length) {
-        throw new Error(`No ${token.symbol} coins found in wallet`)
-      }
+    if (!coins.data.length) {
+      throw new Error(`No ${token.symbol} coins found in wallet`)
+    }
 
-      const sortedCoins = coins.data.sort((a, b) => Number(b.balance) - Number(a.balance))
-      const totalAvailable = sortedCoins.reduce(
-        (sum, coin) => sum + BigInt(coin.balance),
-        BigInt(0)
+    const sortedCoins = coins.data.sort((a, b) => Number(b.balance) - Number(a.balance))
+    const totalAvailable = sortedCoins.reduce(
+      (sum, coin) => sum + BigInt(coin.balance),
+      BigInt(0)
+    )
+
+    if (totalAvailable < costInBaseUnits) {
+      throw new Error(
+        `Insufficient ${token.symbol} balance. Need ${Number(costInBaseUnits) / tokenDivisor} ${token.symbol}, have ${Number(totalAvailable) / tokenDivisor} ${token.symbol}`
       )
+    }
 
-      if (totalAvailable < costInBaseUnits) {
-        throw new Error(
-          `Insufficient ${token.symbol} balance. Need ${Number(costInBaseUnits) / tokenDivisor} ${token.symbol}, have ${Number(totalAvailable) / tokenDivisor} ${token.symbol}`
-        )
-      }
+    // Select minimum coins needed, merge if necessary, then split exact amount
+    const selectedCoins: typeof sortedCoins = []
+    let runningTotal = BigInt(0)
+    for (const coin of sortedCoins) {
+      selectedCoins.push(coin)
+      runningTotal += BigInt(coin.balance)
+      if (runningTotal >= costInBaseUnits) break
+    }
 
-      // Select minimum coins needed, merge if necessary, then split exact amount
-      const selectedCoins: typeof sortedCoins = []
-      let runningTotal = BigInt(0)
-      for (const coin of sortedCoins) {
-        selectedCoins.push(coin)
-        runningTotal += BigInt(coin.balance)
-        if (runningTotal >= costInBaseUnits) break
-      }
-
-      if (selectedCoins.length === 1) {
-        ;[paymentCoin] = tx.splitCoins(tx.object(selectedCoins[0].coinObjectId), [
-          tx.pure.u64(costInBaseUnits),
-        ])
-      } else {
-        const primaryCoinRef = tx.object(selectedCoins[0].coinObjectId)
-        tx.mergeCoins(
-          primaryCoinRef,
-          selectedCoins.slice(1).map(c => tx.object(c.coinObjectId))
-        )
-        ;[paymentCoin] = tx.splitCoins(primaryCoinRef, [tx.pure.u64(costInBaseUnits)])
-      }
+    let paymentCoin
+    if (selectedCoins.length === 1) {
+      ;[paymentCoin] = tx.splitCoins(tx.object(selectedCoins[0].coinObjectId), [
+        tx.pure.u64(costInBaseUnits),
+      ])
+    } else {
+      const primaryCoinRef = tx.object(selectedCoins[0].coinObjectId)
+      tx.mergeCoins(
+        primaryCoinRef,
+        selectedCoins.slice(1).map(c => tx.object(c.coinObjectId))
+      )
+      ;[paymentCoin] = tx.splitCoins(primaryCoinRef, [tx.pure.u64(costInBaseUnits)])
     }
 
     const [attackTicket] = tx.moveCall({
@@ -210,8 +197,6 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
     })
 
     tx.transferObjects([attackTicket], tx.pure.address(account.address))
-
-    tx.setGasBudget(GAS_BUDGET)
 
     return new Promise((resolve, reject) => {
       signAndExecuteTransaction(
@@ -354,8 +339,6 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
         tx.object(SUI_CLOCK_OBJECT_ID),
       ],
     })
-
-    tx.setGasBudget(GAS_BUDGET)
 
     return new Promise((resolve, reject) => {
       signAndExecuteTransaction(
