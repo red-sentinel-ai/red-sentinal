@@ -41,6 +41,11 @@ async function readErrorMessage(response: Response): Promise<string> {
   return `Gas sponsorship failed (${response.status})`
 }
 
+interface UseSuiSignAndExecuteOptions {
+  /** Set to false to always pay gas from the user's wallet, skipping the sponsor. */
+  sponsored?: boolean
+}
+
 /**
  * Drop-in replacement for dapp-kit's `useSignAndExecuteTransaction` that routes
  * gas payment through the backend sponsor.
@@ -55,7 +60,7 @@ async function readErrorMessage(response: Response): Promise<string> {
  * is unavailable, it transparently falls back to paying gas from the user's own
  * wallet so the transaction still goes through.
  */
-export function useSuiSignAndExecute() {
+export function useSuiSignAndExecute({ sponsored: sponsoredOption = true }: UseSuiSignAndExecuteOptions = {}) {
   const client = useSuiClient()
   const account = useCurrentAccount()
   const { user } = useAuth()
@@ -66,7 +71,17 @@ export function useSuiSignAndExecute() {
       if (!account?.address) throw new Error('Wallet not connected')
 
       transaction.setSender(account.address)
-      const bytes = await transaction.build({ client })
+      let bytes: Uint8Array
+      try {
+        bytes = await transaction.build({ client })
+      } catch (error) {
+        if (error instanceof Error && error.message.includes('No valid gas coins found')) {
+          throw new Error(
+            `No SUI gas coins found for ${account.address} on ${APP_NETWORK}. Check that your wallet is connected to ${APP_NETWORK} and has SUI.`
+          )
+        }
+        throw error
+      }
       const txBytes = toBase64(bytes)
       const { signature } = await signTransaction({
         transaction: txBytes,
@@ -133,7 +148,7 @@ export function useSuiSignAndExecute() {
       const { transaction } = variables
 
       void (async () => {
-        const shouldSponsor = SPONSORED_GAS_ENABLED && !!user?.id
+        const shouldSponsor = sponsoredOption && SPONSORED_GAS_ENABLED && !!user?.id
 
         if (shouldSponsor) {
           try {
@@ -169,7 +184,7 @@ export function useSuiSignAndExecute() {
         callbacks?.onError?.(error instanceof Error ? error : new Error(String(error)))
       })
     },
-    [executeOwnGas, executeSponsored, user?.id]
+    [executeOwnGas, executeSponsored, sponsoredOption, user?.id]
   )
 
   return { mutate }

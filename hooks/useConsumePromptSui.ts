@@ -143,10 +143,6 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
       limit: 100,
     })
 
-    if (!coins.data.length) {
-      throw new Error(`No ${token.symbol} coins found in wallet`)
-    }
-
     const sortedCoins = coins.data.sort((a, b) => Number(b.balance) - Number(a.balance))
     const totalAvailable = sortedCoins.reduce(
       (sum, coin) => sum + BigInt(coin.balance),
@@ -169,7 +165,15 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
     }
 
     let paymentCoin
-    if (selectedCoins.length === 1) {
+    if (costInBaseUnits === BigInt(0)) {
+      // Zero-cost attack: build a zero-balance Coin<CoinType> on-chain instead
+      // of splitting from the user's wallet, which may not hold the token at
+      // all (an empty selection would crash on selectedCoins[0] below).
+      ;[paymentCoin] = tx.moveCall({
+        target: '0x2::coin::zero',
+        typeArguments: [token.coinType],
+      })
+    } else if (selectedCoins.length === 1) {
       ;[paymentCoin] = tx.splitCoins(tx.object(selectedCoins[0].coinObjectId), [
         tx.pure.u64(costInBaseUnits),
       ])

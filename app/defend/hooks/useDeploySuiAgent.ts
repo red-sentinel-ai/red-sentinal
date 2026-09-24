@@ -3,6 +3,7 @@ import { SuiTransactionBlockResponse } from '@mysten/sui/client'
 import { useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 import { SUI_CONFIG } from '@/constants'
+import { SUI_COIN_TYPE } from '@/constants/tokens'
 import { useSuiSignAndExecute } from '@/hooks/useSuiSignAndExecute'
 import type { SupportedToken } from '@/constants/shared'
 import { hexToVector } from '@/lib/utils'
@@ -21,21 +22,36 @@ export function useDeploySuiAgent({
   const client = useSuiClient()
   const account = useCurrentAccount()
 
-  // Gas is sponsored by the backend; falls back to user-paid gas automatically.
-  const { mutate: signAndExecuteTransaction } = useSuiSignAndExecute()
+  // Register agent pays gas from the user's own wallet — no sponsorship.
+  const { mutate: signAndExecuteTransaction } = useSuiSignAndExecute({ sponsored: false })
 
   const buildInitialFundCoin = async (tx: Transaction, amountRaw: bigint) => {
-    // The initial balance is paid from the user's own coin objects — never
-    // tx.gas, which belongs to the gas sponsor. Applies to SUI as well.
+    // For SUI, split the fund from tx.gas itself — gas and the fund coin share
+    // the same coin, exactly like a wallet-built transaction. Building the fund
+    // from the user's coin objects instead would consume them as inputs, and
+    // the SDK's gas selection filters out coins used as inputs, so a wallet
+    // with a single SUI coin would end up with no valid gas coins.
+    if (selectedToken.coinType === SUI_COIN_TYPE) {
+      const { totalBalance } = await client.getBalance({
+        owner: account!.address,
+        coinType: SUI_COIN_TYPE,
+      })
+      if (BigInt(totalBalance) < amountRaw) {
+        throw new Error(
+          `Insufficient ${selectedToken.symbol} balance. Need ${formData.initialBalance} ${selectedToken.symbol}, have ${Number(totalBalance) / Math.pow(10, selectedToken.decimals)} ${selectedToken.symbol}`
+        )
+      }
+      const [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(amountRaw)])
+      return coin
+    }
+
+    // Non-SUI tokens are paid from the user's own coin objects — gas is always
+    // a separate SUI coin, so these inputs never overlap with gas payment.
     const coins = await client.getCoins({
       owner: account!.address,
       coinType: selectedToken.coinType,
       limit: 100,
     })
-
-    if (!coins.data.length) {
-      throw new Error(`No ${selectedToken.symbol} coins found in wallet`)
-    }
 
     const sorted = coins.data.sort((a, b) => Number(b.balance) - Number(a.balance))
     const totalAvailable = sorted.reduce((sum, c) => sum + BigInt(c.balance), BigInt(0))
