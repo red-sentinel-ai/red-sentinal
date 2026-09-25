@@ -202,14 +202,12 @@ export default function ProjectInfo() {
                 the project?
               </p>
               <div className="flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-6">
-                <a
+                <Link
                   href={PARTNER_CONTACT_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="inline-flex items-center rounded bg-white px-6 py-2.5 font-medium text-black transition-colors hover:bg-transparent hover:text-[var(--color-info)]"
                 >
                   Talk to the team →
-                </a>
+                </Link>
                 <a
                   href={`mailto:${SUI_SENTINEL_SUPPORT_EMAIL}`}
                   className="inline-flex items-center font-medium text-[var(--color-info)] hover:text-[var(--color-gold-primary)]"

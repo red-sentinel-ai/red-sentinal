@@ -102,14 +102,12 @@ export const AgentListView = () => {
         </div>
         <p className="font-body relative mt-4 text-[11px] font-medium tracking-normal text-[var(--color-text-secondary)] sm:mt-5 sm:text-xs">
           Partner or project?{' '}
-          <a
+          <Link
             href={PARTNER_CONTACT_URL}
-            target="_blank"
-            rel="noopener noreferrer"
             className="font-semibold text-white underline underline-offset-2 transition-colors hover:text-[var(--color-text-secondary)]"
           >
             Talk to the team
-          </a>{' '}
+          </Link>{' '}
           about a sponsored Campaign Sentinel.
         </p>
         <div className="relative mt-8 flex flex-col justify-center gap-3 sm:mt-12 sm:flex-row sm:items-center sm:gap-4">

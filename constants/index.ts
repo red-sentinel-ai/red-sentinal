@@ -21,8 +21,9 @@ export const SUI_SENTINEL_TELEGRAM_URL = 'https://t.me/suisentinel'
 export const SUI_SENTINEL_AUDIT_REPORT_URL = '/pdfs/audit_final.pdf'
 export const SUI_SENTINEL_SUPPORT_EMAIL = 'support@cyphronixsoftware.xyz'
 export const SUI_SENTINEL_AMBASSADOR_URL = 'https://www.redsentinel.xyz/ambassador'
-/** Partner contact destination for sponsored Campaign Sentinel inquiries. */
-export const PARTNER_CONTACT_URL = 'https://calendly.com/satyamb'
+/** Partner contact destination for sponsored Campaign Sentinel inquiries —
+ *  the public partner-application page (value prop + intake form). */
+export const PARTNER_CONTACT_URL = '/partners'
 export const SUI_SENTINEL_CHECKOUT_URL =
   'https://twitter.com/intent/tweet?text=Check+out+%40redsentinel_ai+%F0%9F%9B%A1%EF%B8%8F&hashtags=RedSentinel'
 export const REWARD_CALCULATOR_URL = 'https://www.redsentinel.xyz/reward-calculator'

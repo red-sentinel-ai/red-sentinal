@@ -25,13 +25,13 @@ export const FAQ_ITEMS: FaqItem[] = [
       'A Campaign Sentinel is a sponsored, brand-safe AI challenge. A partner seeds the Bounty Pool, and the Sentinel answers using only partner-approved public information — its docs, its ecosystem, its lore.',
       'The breach objective is to cause the exact Hidden Transmission to appear. Attackers try to make the Sentinel reveal that exact Challenge Phrase. A verified reveal is a binary, on-chain challenge result and releases the Bounty Pool under the campaign rules.',
       'Campaign Sentinels are safe by design: they do not expose private data, production credentials, or live tool actions. The outcome is a harmless phrase that is safe to share — unlike a Security Sentinel, which exists to test meaningful agent boundaries.',
-      'Want to run one for your community? Talk to the team at calendly.com/satyamb, or email support@cyphronixsoftware.xyz.',
+      'Want to run one for your community? Apply at app.redsentinel.xyz/partners, or email support@cyphronixsoftware.xyz.',
     ],
   },
   {
     question: "Why would I deploy a Sentinel? What's in it for me?",
     answer: [
-      'Defenders are the house. You earn 40% of every attack fee your Sentinel withstands. For example, say you seed a pool with 1,000 tokens and set an attack fee of 2 tokens. If 100 attackers try 5 times each, that\'s 500 attacks and 1,000 tokens in fees. You earn 400 tokens (40%), the pool grows to 1,500, and the protocol keeps 100 (10%).',
+      "Defenders are the house. You earn 40% of every attack fee your Sentinel withstands. For example, say you seed a pool with 1,000 tokens and set an attack fee of 2 tokens. If 100 attackers try 5 times each, that's 500 attacks and 1,000 tokens in fees. You earn 400 tokens (40%), the pool grows to 1,500, and the protocol keeps 100 (10%).",
       'Failed attacks also grow your pool, since 50% of every failed fee is added to it. With templates, deploying takes minutes: pick one, fund the pool, go live.',
     ],
   },
@@ -39,7 +39,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     question: 'What counts as a successful attack?',
     answer: [
       "Each Sentinel has a public attack objective, the one thing it's forbidden to do. If you make it do that, you win. Make the Professor say 2+2=5. Get Randy to approve a refund. Talk your way past Bruno.",
-      'On a Campaign Sentinel, the objective is the exact Hidden Transmission: the Breach only counts when that exact Challenge Phrase appears in the Sentinel\'s response.',
+      "On a Campaign Sentinel, the objective is the exact Hidden Transmission: the Breach only counts when that exact Challenge Phrase appears in the Sentinel's response.",
       "Every attempt is judged by an independent jury against the Sentinel's stated rules. No vibe checks, no discretion. If the Sentinel breaks its rule, the verdict says so, and the pool pays out automatically.",
     ],
   },
@@ -83,7 +83,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     answer: [
       "Yes — that's exactly what a Campaign Sentinel is. We work with partners to build a brand-safe, sponsored challenge around what makes them interesting: their tech, their ecosystem, their lore. The Sentinel answers using only partner-approved public information, and the breach objective is to make the exact Hidden Transmission appear.",
       'Your community attacks it and learns your project along the way. The engagement is real and measurable on-chain, not farmed quests, and nothing private, sensitive, or production-facing is ever exposed. You seed the pool, and you also earn the defender share of every failed attack fee.',
-      'Talk to the team at calendly.com/satyamb to discuss a sponsored campaign, or email support@cyphronixsoftware.xyz.',
+      'Apply at app.redsentinel.xyz/partners to discuss a sponsored campaign, or email support@cyphronixsoftware.xyz.',
     ],
   },
   {

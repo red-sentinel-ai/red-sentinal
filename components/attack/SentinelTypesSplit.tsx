@@ -28,14 +28,12 @@ export function SentinelTypesSplit() {
             Uses public material only. No private data or live tool actions.
           </p>
           <div className="mt-6">
-            <a
+            <Link
               href={PARTNER_CONTACT_URL}
-              target="_blank"
-              rel="noopener noreferrer"
               className="font-body inline-flex items-center gap-2 border border-white bg-white px-6 py-3 text-xs font-bold uppercase tracking-[0.08em] text-black transition-colors hover:bg-transparent hover:text-white"
             >
               Talk to the team
-            </a>
+            </Link>
           </div>
         </div>
 

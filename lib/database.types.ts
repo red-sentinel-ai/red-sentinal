@@ -502,6 +502,48 @@ export type Database = {
         }
         Relationships: []
       }
+      ss_partner_applications: {
+        Row: {
+          application_id: string
+          campaign_goal: string
+          contact_name: string
+          email: string
+          project_name: string
+          rejection_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: "approved" | "pending_review" | "rejected"
+          submitted_at: string
+          telegram_handle: string
+        }
+        Insert: {
+          application_id?: string
+          campaign_goal: string
+          contact_name: string
+          email: string
+          project_name: string
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: "approved" | "pending_review" | "rejected"
+          submitted_at?: string
+          telegram_handle: string
+        }
+        Update: {
+          application_id?: string
+          campaign_goal?: string
+          contact_name?: string
+          email?: string
+          project_name?: string
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: "approved" | "pending_review" | "rejected"
+          submitted_at?: string
+          telegram_handle?: string
+        }
+        Relationships: []
+      }
       ss_rewards_activity: {
         Row: {
           completed_at: string | null

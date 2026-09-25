@@ -1,5 +1,6 @@
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses'
-import { X_URL, SUI_SENTINEL_TELEGRAM_URL } from '@/constants'
+import { X_URL, SUI_SENTINEL_TELEGRAM_URL, SUI_SENTINEL_SUPPORT_EMAIL } from '@/constants'
+import type { PartnerApplicationInput } from '@/types/partners'
 
 const sesClient = new SESClient({
   credentials: {
@@ -118,6 +119,106 @@ export async function sendEmailVerificationLink(toEmail: string, verificationUrl
     return { success: true, messageId: response.MessageId }
   } catch (error) {
     console.error('Failed to send verification email:', error)
+    return { success: false, error }
+  }
+}
+
+/** Internal Red Sentinel team notification for a new Campaign Sentinel
+ *  partner application. Called only after the application record is
+ *  persisted; delivery is best-effort and failures are logged, never
+ *  surfaced to the applicant. */
+export async function sendPartnerApplicationNotification(
+  application: PartnerApplicationInput,
+  applicationId: string
+) {
+  const TO_ADDRESS = process.env.PARTNER_APPLICATIONS_NOTIFY_EMAIL || SUI_SENTINEL_SUPPORT_EMAIL
+
+  const row = (label: string, value: string) => `
+    <tr>
+      <td style="padding: 8px 40px; font-size: 13px; font-weight: 600; color: #000000; vertical-align: top; white-space: nowrap;">${label}</td>
+      <td style="padding: 8px 40px 8px 0; font-size: 13px; line-height: 1.6; color: ${TEXT_GRAY};">${value}</td>
+    </tr>
+  `
+
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>New partner application – Red Sentinel</title>
+    </head>
+    <body style="margin: 0; padding: 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: ${BG_GRAY}; color: #000000;">
+      <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color: ${BG_GRAY}; padding: 40px 20px;">
+        <tr>
+          <td align="center">
+            <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 560px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #EAEAEA;">
+              <tr>
+                <td style="padding: 32px 40px 0 40px;">
+                  <h1 style="margin: 0 0 8px 0; font-size: 20px; font-weight: 600; letter-spacing: -0.3px;">
+                    New <span style="color: ${SENTINEL_PINK};">Campaign Sentinel</span> partner application
+                  </h1>
+                  <p style="margin: 0 0 16px 0; font-size: 13px; color: ${TEXT_GRAY};">
+                    A pending application is waiting for review. Application ID: <strong>${applicationId}</strong>
+                  </p>
+                </td>
+              </tr>
+              ${row('Project', application.project_name)}
+              ${row('Contact', application.contact_name)}
+              ${row('Email', application.email)}
+              ${row('Telegram', application.telegram_handle)}
+              ${row('Campaign goal', application.campaign_goal.replace(/\n/g, '<br/>'))}
+              ${row('Submitted', new Date().toISOString() + ' (UTC)')}
+              <tr>
+                <td colspan="2" style="padding: 20px 40px 32px 40px;">
+                  <p style="margin: 0; font-size: 12px; line-height: 1.6; color: #999999;">
+                    Reply to the partner directly to begin qualification.
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </body>
+    </html>
+  `
+
+  const command = new SendEmailCommand({
+    Source: FROM_ADDRESS,
+    Destination: { ToAddresses: [TO_ADDRESS] },
+    Message: {
+      Subject: {
+        Data: `New partner application – ${application.project_name}`,
+        Charset: 'UTF-8',
+      },
+      Body: {
+        Html: { Data: htmlContent, Charset: 'UTF-8' },
+        Text: {
+          Data: [
+            'New Campaign Sentinel partner application',
+            '',
+            `Application ID: ${applicationId}`,
+            `Project: ${application.project_name}`,
+            `Contact: ${application.contact_name}`,
+            `Email: ${application.email}`,
+            `Telegram: ${application.telegram_handle}`,
+            'Campaign goal:',
+            application.campaign_goal,
+            '',
+            `Submitted: ${new Date().toISOString()} (UTC)`,
+          ].join('\n'),
+          Charset: 'UTF-8',
+        },
+      },
+    },
+  })
+
+  try {
+    const response = await sesClient.send(command)
+    return { success: true, messageId: response.MessageId }
+  } catch (error) {
+    console.error('Failed to send partner application notification:', error)
     return { success: false, error }
   }
 }
