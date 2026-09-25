@@ -6,7 +6,7 @@ import { FaqSection } from '@/components/faq/FaqSection'
 export const metadata: Metadata = {
   title: 'FAQ',
   description:
-    'Straight answers about Red Sentinel: how Sentinels work, attack fees and payouts, jury verdicts, and why the arena runs on-chain.',
+    'Straight answers about Red Sentinel: Security and Campaign Sentinels, attack fees and the 50-40-10 allocation, jury verdicts, Syndicates, and why the arena runs on-chain.',
   alternates: {
     canonical: `${SUI_SENTINEL_APP_URL}/faq`,
   },

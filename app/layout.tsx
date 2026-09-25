@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     template: '%s | Red Sentinel',
   },
   description:
-    'Red Sentinel is a real-stakes AI security arena. Attack live Sentinels, learn how AI agents fail, earn real bounties, and build on-chain proof of skill.',
+    'Red Sentinel is an on-chain AI security arena with two Sentinel types: Security Sentinels for testing real agent boundaries, and brand-safe Campaign Sentinels for partner communities. Attack Sentinels, earn bounties, and build on-chain proof of skill.',
 
   keywords: [
     'AI Security Literacy',
@@ -76,11 +76,8 @@ export const metadata: Metadata = {
     'Blockchain AI Security',
     'Web3 AI',
     'Decentralized AI',
-    'Sui Blockchain',
-    'Sui Network',
-    'Solana',
-    'Solana Blockchain',
-    'SUI Rewards',
+    'Campaign Sentinel',
+    'Security Sentinel',
     'USDC Rewards',
     'TEE',
     'Trusted Execution Environment',
@@ -103,7 +100,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Red Sentinel | The Ultimate AI Security Arena',
     description:
-      'AI agents will manage money, data, and decisions. Red Sentinel helps you learn AI security by attacking live Sentinels, competing for real bounties, and proving skill on-chain.',
+      'AI agents will manage money, data, and decisions. Red Sentinel helps you learn AI security by attacking Sentinels — Security Sentinels for real agent boundaries, Campaign Sentinels for brand-safe sponsored challenges — competing for real bounties, and proving skill on-chain.',
     url: SUI_SENTINEL_APP_URL,
     siteName: 'Red Sentinel',
     images: [
@@ -122,7 +119,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Red Sentinel | Break AI Agents. Take the Pool.',
     description:
-      'Attack live AI Sentinels, learn how agents fail, earn real bounties for verified exploits, and build on-chain proof of skill.',
+      'Attack Security Sentinels, learn how agents fail, earn bounties for verified breaches, and build on-chain proof of skill. Campaign Sentinels bring brand-safe challenges to partner communities.',
     creator: `@${SUI_SENTINEL_X_USERNAME}`,
     images: ['/og-image-v6.png'],
   },
@@ -159,7 +156,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     logo: `${SUI_SENTINEL_APP_URL}/icons/logo-sm.svg`,
     sameAs: [`https://twitter.com/${SUI_SENTINEL_X_USERNAME}`, SUI_SENTINEL_GITHUB_URL],
     description:
-      'AI security arena for the age of agents. Attack live Sentinels, learn how AI systems fail, earn real bounties for verified exploits, and build reputation on-chain.',
+      'AI security arena for the age of agents. Attack Sentinels, learn how AI systems fail, earn bounties for verified breaches, and build reputation on-chain. Campaign Sentinels give partners a brand-safe way to run sponsored challenges.',
     foundingDate: '2025',
     areaServed: 'Global',
     knowsAbout: [
@@ -193,7 +190,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       'Cryptographic Verification',
       'Instant On-Chain Settlement',
       'TEE-based Attack Verification',
-      'Bounty Rewards in SUI/USDC',
+      'On-Chain Bounty Rewards',
       'Prompt Injection Testing',
       'Jailbreak Detection',
     ],
@@ -226,15 +223,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         name: 'What is Red Sentinel?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Red Sentinel is a real-stakes AI security training arena for the age of agents. Users learn how AI systems fail by attacking and defending live AI Sentinels in adversarial challenges. Successful exploits, defenses, rewards, and reputation signals are verified on-chain.',
+          text: 'Red Sentinel is an on-chain AI security arena with two Sentinel types. Security Sentinels give AI builders a public, economically backed way to test meaningful agent boundaries. Campaign Sentinels give ecosystem partners a brand-safe way to run sponsored community challenges. Verified breaches, failed-attack fee allocations, and payouts are recorded on-chain.',
         },
       },
       {
         '@type': 'Question',
-        name: 'How do I earn rewards on Red Sentinel?',
+        name: 'How do earnings work on Red Sentinel?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Attackers pay a small fee to challenge live AI Sentinels. If they discover a verified exploit, they earn an instant reward from the bounty pool. Failed attacks help grow the bounty pool and reward defenders, creating a real-stakes training loop where skill, persistence, and security judgment matter.',
+          text: 'Attackers pay an Attack Fee to challenge a Sentinel. If the attack fails, 50 percent of the fee increases the Bounty Pool, 40 percent goes to the defender or its Syndicate, and 10 percent goes to the Red Sentinel protocol. A verified Breach releases the Bounty Pool under the campaign rules. For Campaign Sentinels, a Breach means the exact Hidden Transmission (the Challenge Phrase) appears in the Sentinel response.',
         },
       },
       {

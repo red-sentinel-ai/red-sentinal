@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: 'Red Sentinel',
     short_name: 'RedSentinel',
     description:
-      'Crowdsourced, gamified, cryptographically verifiable AI red teaming platform. Attack live Sentinels, earn real bounties, build on-chain proof of skill.',
+      'On-chain AI security arena with two Sentinel types: Security Sentinels for testing real agent boundaries, and brand-safe Campaign Sentinels for partner communities. Attack Sentinels, earn bounties, build on-chain proof of skill.',
     start_url: '/',
     display: 'standalone',
     background_color: '#100f0f',

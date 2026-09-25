@@ -35,6 +35,7 @@ import { TokenAmount } from '../ui/common/TokenAmount'
 import { SocialMissionModal } from '@/components/rewards/SocialMissionModal'
 import { REWARDS_CONSTANTS } from '@/constants/rewards'
 import { SentinelFollowButton } from '@/components/agents/SentinelFollowButton'
+import { SentinelMissionBrief } from '@/components/agents/SentinelMissionBrief'
 import { APP_NETWORK } from '@/constants'
 
 const SHARE_MISSION = REWARDS_CONSTANTS.DEFAULT_MISSIONS.find(m => m.type === 'share_with_hashtag')!
@@ -289,6 +290,9 @@ export const AgentSidebar = ({
               </div>
             </div>
           )}
+
+          {/* Mission Brief — Sentinel types, breach rule, failed-fee allocation */}
+          <SentinelMissionBrief />
 
           {/* Active Bounty / Prize Pool */}
           <div className="space-y-2">

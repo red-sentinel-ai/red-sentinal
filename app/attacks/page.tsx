@@ -7,7 +7,7 @@ import { SentinelExplorer } from '@/components/explore/SentinelExplorer'
 export const metadata: Metadata = {
   title: 'Explore Sentinels | Every Active Target',
   description:
-    'The full sentinel directory. Filter by network, status, token, and pool size — every active target, ranked and sortable.',
+    'The full Sentinel directory — Security Sentinels and Campaign Sentinels. Filter by network, status, token, and pool size; every active target, ranked and sortable.',
   alternates: {
     canonical: `${SUI_SENTINEL_APP_URL}/attacks`,
   },
@@ -30,7 +30,8 @@ export default async function AttacksPage({
             Explore Sentinels
           </h1>
           <p className="font-body mt-2 text-xs font-medium tracking-normal text-[var(--color-text-secondary)] md:text-sm">
-            Every active target in the arena, ranked and sortable.
+            Every active target in the arena — Security and Campaign Sentinels — ranked and
+            sortable.
           </p>
           <div className="mt-6 md:mt-8">
             <AttackStats variant="strip" />

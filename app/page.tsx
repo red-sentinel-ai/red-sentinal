@@ -5,7 +5,7 @@ import { SUI_SENTINEL_APP_URL } from '@/constants'
 export const metadata: Metadata = {
   title: 'Attack AI Sentinels | Claim Bounties',
   description:
-    'Enter the arena. Browse active AI Sentinels, engineer your attack, and claim the bounty. Every successful breach is verified on-chain and pays out instantly.',
+    'Enter the arena. Attack Security Sentinels and Campaign Sentinels, engineer your breach, and claim the bounty. Every verified Breach is settled on-chain and releases the pool instantly.',
   alternates: {
     canonical: SUI_SENTINEL_APP_URL,
   },

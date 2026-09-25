@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { SUI_SENTINEL_APP_URL } from '@/constants'
+import { SUI_SENTINEL_APP_URL, PARTNER_CONTACT_URL, SUI_SENTINEL_SUPPORT_EMAIL } from '@/constants'
 
 export const metadata: Metadata = {
   title: 'Red Sentinel | The Ultimate AI Security Arena',
   description:
-    'Red Sentinel is a real-stakes AI security arena. Attack live Sentinels, learn how AI agents fail, earn real bounties, and build on-chain proof of skill.',
+    'Red Sentinel is an on-chain AI security arena. Attack Security Sentinels and brand-safe Campaign Sentinels, learn how AI agents fail, earn bounties, and build on-chain proof of skill.',
   alternates: {
     canonical: `${SUI_SENTINEL_APP_URL}/about`,
   },
@@ -56,13 +56,55 @@ export default function ProjectInfo() {
               <span className="font-semibold text-[var(--color-info)]">
                 Trusted Execution Environment (TEE)
               </span>
-              , and rewards are processed instantly on-chain via Sui. You cannot fake a successful
-              attack. You cannot delay a payout.
+              , and rewards are processed instantly on-chain. You cannot fake a successful attack.
+              You cannot delay a payout.
             </p>
             <p className="text-[var(--color-text-secondary)]">
               For defenders, it is an always-on, real-world stress test with a public resilience
               score. For attackers, it is a skill-building game where breaking things pays real
               money.
+            </p>
+          </section>
+
+          <section className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] p-8">
+            <h2 className="mb-6 text-2xl font-bold text-[var(--color-info)]">
+              Two Sentinels, One Arena
+            </h2>
+            <p className="mb-6 text-[var(--color-text-secondary)]">
+              Red Sentinel has two complementary entry points, and each Sentinel in the directory is
+              one of the two.
+            </p>
+            <div className="mb-6 space-y-4">
+              <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-6">
+                <h3 className="mb-2 text-lg font-semibold text-[var(--color-text-primary)]">
+                  Security Sentinels
+                </h3>
+                <p className="text-[var(--color-text-secondary)]">
+                  For AI builders and defenders. A public, economically backed way to test
+                  meaningful agent boundaries: combine public and private instructions, define an
+                  attack objective, and earn from every failed attack. A verified Breach releases
+                  the Bounty Pool on-chain.
+                </p>
+              </div>
+              <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-6">
+                <h3 className="mb-2 text-lg font-semibold text-[var(--color-text-primary)]">
+                  Campaign Sentinels
+                </h3>
+                <p className="mb-3 text-[var(--color-text-secondary)]">
+                  For ecosystem partners. A sponsored, brand-safe AI challenge. The Sentinel answers
+                  using only partner-approved public information, and the breach objective is to
+                  cause the exact Hidden Transmission to appear — a harmless Challenge Phrase.
+                </p>
+                <p className="text-[var(--color-text-secondary)]">
+                  Campaign Sentinels do not expose private data, production credentials, or live
+                  tool actions. The outcome is safe to share, and a verified reveal releases the
+                  campaign Bounty Pool under the campaign rules.
+                </p>
+              </div>
+            </div>
+            <p className="text-[var(--color-text-secondary)]">
+              Campaign Sentinels are the safe first experience. Security Sentinels extend that loop
+              to real agent assurance.
             </p>
           </section>
 
@@ -91,22 +133,22 @@ export default function ProjectInfo() {
           </section>
 
           <section className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] p-8">
-            <h2 className="mb-6 text-2xl font-bold text-[var(--color-info)]">Six-Month Roadmap</h2>
+            <h2 className="mb-6 text-2xl font-bold text-[var(--color-info)]">Where We&apos;re Headed</h2>
 
             <div className="space-y-6">
               <div>
                 <h3 className="mb-2 text-xl font-semibold text-[var(--color-info)]">
-                  Mainnet Launch - Last Week of June 2025
+                  Live Today
                 </h3>
                 <p className="text-[var(--color-text-secondary)]">
-                  Full production deployment on SUI Mainnet with real economic incentives and
-                  community-driven agent battles.
+                  Production Sentinels with real economic incentives, community-driven agent
+                  battles, and on-chain settlement across the networks Red Sentinel supports.
                 </p>
               </div>
 
               <div>
                 <h3 className="mb-2 text-xl font-semibold text-[var(--color-info)]">
-                  Months 1-3: Model Expansion & Community
+                  Next: Model & Campaign Expansion
                 </h3>
                 <ul className="ml-4 space-y-2 text-[var(--color-text-secondary)]">
                   <li>
@@ -115,17 +157,17 @@ export default function ProjectInfo() {
                   </li>
                   <li>• Increased token size limits for more complex prompts and attack vectors</li>
                   <li>• Community building initiatives and educational content</li>
-                  <li>• Strategic partnerships with other projects in the SUI ecosystem</li>
+                  <li>• More partner-sponsored Campaign Sentinels across our supported networks</li>
                 </ul>
               </div>
 
               <div>
                 <h3 className="mb-2 text-xl font-semibold text-[var(--color-info)]">
-                  Months 4-6: Ecosystem Growth
+                  Then: Ecosystem Growth
                 </h3>
                 <p className="text-[var(--color-text-secondary)]">
-                  Token launch on SUI with governance features, tournament systems, and expansion to
-                  support enterprise use cases for AI security testing.
+                  Deeper partner integrations, tournament systems, and expansion to support
+                  enterprise use cases for AI security testing.
                 </p>
               </div>
             </div>
@@ -156,16 +198,25 @@ export default function ProjectInfo() {
 
             <div className="border-t border-[var(--color-border-subtle)] pt-6">
               <p className="mb-4 text-[var(--color-text-secondary)]">
-                Interested in partnerships or want to learn more about the project?
+                Want to run a sponsored Campaign Sentinel for your community, or learn more about
+                the project?
               </p>
-              <a
-                href="https://calendly.com/satyamb"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center font-medium text-[var(--color-info)] hover:text-[var(--color-gold-primary)]"
-              >
-                Schedule a call with our team →
-              </a>
+              <div className="flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-6">
+                <a
+                  href={PARTNER_CONTACT_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center rounded bg-white px-6 py-2.5 font-medium text-black transition-colors hover:bg-transparent hover:text-[var(--color-info)]"
+                >
+                  Talk to the team →
+                </a>
+                <a
+                  href={`mailto:${SUI_SENTINEL_SUPPORT_EMAIL}`}
+                  className="inline-flex items-center font-medium text-[var(--color-info)] hover:text-[var(--color-gold-primary)]"
+                >
+                  Or email {SUI_SENTINEL_SUPPORT_EMAIL}
+                </a>
+              </div>
             </div>
           </section>
         </div>

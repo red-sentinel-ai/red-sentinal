@@ -375,7 +375,8 @@ export default function DefendPageClient() {
             <div className="mb-6">
               <h1 className="page-heading">Launch a Syndicate Sentinel</h1>
               <p className="page-subheading mt-2">
-                Pool funds with others, share fees, and defend together.
+                Pool funds with others and defend together — defender-side attack-fee proceeds are
+                shared in proportion to each member&apos;s contribution.
               </p>
             </div>
             <SyndicateLaunchFlow />
@@ -394,9 +395,11 @@ export default function DefendPageClient() {
             {/* Header */}
             <div className="flex flex-col-reverse items-center gap-6 sm:flex-row sm:items-start sm:justify-between">
               <div className="text-center sm:text-left">
-                <h1 className="page-heading">Deploy Your Sentinel</h1>
+                <h1 className="page-heading">Deploy Your Security Sentinel</h1>
                 <p className="page-subheading mt-2">
-                  Launch an AI agent. Let the world try to break it. Earn from every attack.
+                  Launch an AI agent with a Bounty Pool. Let the world try to break it — you earn
+                  40% of every failed Attack Fee. Sponsored Campaign Sentinels are configured with
+                  our team.
                 </p>
               </div>
 

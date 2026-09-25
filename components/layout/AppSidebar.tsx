@@ -87,7 +87,8 @@ const NAV_ITEMS: NavItem[] = [
     title: 'Deploy a Sentinel',
     href: '/defend',
     icon: PlusSquare,
-    description: 'Launch your own agent with a bounty pool. Earn 40% of every attack it survives.',
+    description:
+      'Launch your own agent with a Bounty Pool. Earn 40% of every failed Attack Fee it withstands.',
   },
   {
     title: 'Sentinel Templates',

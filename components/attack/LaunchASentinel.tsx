@@ -2,10 +2,11 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { LayoutTemplate, PlusSquare, Shield } from 'lucide-react'
+import { Handshake, LayoutTemplate, PlusSquare, Shield } from 'lucide-react'
 import { MotionConfig, motion, useReducedMotion } from 'framer-motion'
 
 import type { Agent } from '@/types/agents'
+import { PARTNER_CONTACT_URL } from '@/constants'
 import { getTokenForCoinType } from '@/constants/tokens'
 import { CHAINS } from '@/constants/chains'
 import { TokenAmount } from '@/components/ui/common/TokenAmount'
@@ -142,8 +143,8 @@ function DeploySlotCard({
             This slot pays its defender
           </h3>
           <p className="font-body mx-auto mt-2 max-w-[16rem] text-xs font-medium leading-relaxed tracking-normal text-[var(--color-text-secondary)]">
-            Deploy a sentinel, survive the attacks, earn 40% of every fee. The
-            next unbreakable agent could be yours.
+            Deploy a sentinel, survive the attacks, earn 40% of every failed fee — or launch with a
+            Syndicate and share it by contribution.
           </p>
         </div>
         <div className="mt-2 flex w-full flex-col items-stretch gap-3 sm:max-w-[16rem]">
@@ -167,9 +168,9 @@ function DeploySlotCard({
   )
 }
 
-/** Landing-page defender pitch — the supply side. Shows the arena's top two
- *  earners still standing, then hands the third slot to the visitor. */
-export function BecomeTheHouse({
+/** Landing-page supply-side pitch — "Launch a Sentinel" with two paths
+ *  (partner Campaign / builder Security), then defender earnings proof. */
+export function LaunchASentinel({
   sentinels,
   isFetching,
 }: {
@@ -183,17 +184,59 @@ export function BecomeTheHouse({
       <section className="mb-10 md:mb-20">
         <div className="mb-5 md:mb-8">
           <h2 className="font-display text-xl font-extrabold uppercase tracking-[0.04em] text-white sm:text-2xl">
-            Become the House
+            Launch a Sentinel
           </h2>
-          <p className="font-body mt-1.5 max-w-2xl text-[11px] font-medium leading-relaxed tracking-normal text-[var(--color-text-secondary)] sm:mt-2 sm:text-xs">
-            <span className="font-semibold text-white">
-              Think your agent survives? Deploy it.
-            </span>{' '}
-            Seed a pool, set the rules, and earn 40% of every attack your sentinel
-            withstands. Unbreakable agents print.
-          </p>
         </div>
 
+        {/* Two paths — partners and builders. */}
+        <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-2 md:mb-10">
+          <div className="flex flex-col border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-6">
+            <span className="flex size-11 items-center justify-center border border-[var(--color-gold-primary)]/40 bg-[var(--color-gold-muted)] text-[var(--color-gold-primary)]">
+              <Handshake className="size-5" />
+            </span>
+            <h3 className="font-display mt-4 text-base font-bold uppercase tracking-[0.04em] text-white md:text-lg">
+              Run a Campaign Sentinel
+            </h3>
+            <p className="font-body mt-2 flex-1 text-xs font-normal leading-[1.7] tracking-[0.01em] text-[var(--color-text-secondary)] sm:text-sm">
+              For partner teams. Public project knowledge, harmless Challenge Phrase, fixed
+              campaign scope.
+            </p>
+            <div className="mt-5">
+              <a
+                href={PARTNER_CONTACT_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-body inline-flex items-center gap-2 border border-white bg-white px-6 py-3 text-xs font-bold uppercase tracking-[0.08em] text-black transition-colors hover:bg-transparent hover:text-white"
+              >
+                Talk to the team
+              </a>
+            </div>
+          </div>
+
+          <div className="flex flex-col border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-6">
+            <span className="flex size-11 items-center justify-center border border-[var(--color-border-strong)] text-white">
+              <Shield className="size-5" />
+            </span>
+            <h3 className="font-display mt-4 text-base font-bold uppercase tracking-[0.04em] text-white md:text-lg">
+              Deploy a Security Sentinel
+            </h3>
+            <p className="font-body mt-2 flex-1 text-xs font-normal leading-[1.7] tracking-[0.01em] text-[var(--color-text-secondary)] sm:text-sm">
+              For AI builders. Define meaningful boundaries, configure a bounty and attack fee, and
+              test agent behavior.
+            </p>
+            <div className="mt-5">
+              <Link
+                href="/defend"
+                className="font-body inline-flex items-center gap-2 border border-[var(--color-border-default)] px-6 py-3 text-xs font-bold uppercase tracking-[0.08em] text-[var(--color-text-secondary)] transition-colors hover:border-white hover:text-white"
+              >
+                <PlusSquare className="size-3.5" />
+                Deploy a Security Sentinel
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Defender earnings proof — the top earners still standing. */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {isFetching
             ? Array.from({ length: 2 }).map((_, i) => (

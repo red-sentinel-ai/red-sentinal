@@ -124,8 +124,8 @@ function ForgeSlotCard({
             Pool together, win bigger
           </h3>
           <p className="font-body mx-auto mt-2 max-w-[16rem] text-xs font-medium leading-relaxed tracking-normal text-[var(--color-text-secondary)]">
-            Bigger pools attract better attackers — better attackers mean fatter
-            fees, split by contribution.
+            Bigger pools attract better attackers — better attackers mean more
+            failed-fee proceeds, shared in proportion to each member&apos;s contribution.
           </p>
         </div>
         <div className="mt-2 flex w-full flex-col items-stretch gap-3 sm:max-w-[16rem]">
@@ -181,11 +181,10 @@ export function FormSyndicate() {
             </h2>
             <p className="font-body mt-1.5 max-w-2xl text-[11px] font-medium leading-relaxed tracking-normal text-[var(--color-text-secondary)] sm:mt-2 sm:text-xs">
               <span className="font-semibold text-white">
-                Don&apos;t want to defend alone? Form a syndicate.
+                Pool capital with other supporters to launch a Sentinel and share eligible
+                defender-side attack-fee proceeds by contribution.
               </span>{' '}
-              Pool capital with other operators, launch sentinels with serious
-              bounties, and split the rake by contribution. Bigger pools attract
-              better attackers — better attackers mean fatter fees.
+              Bigger pools attract better attackers — better attackers mean more fees to share.
             </p>
           </div>
           <Link

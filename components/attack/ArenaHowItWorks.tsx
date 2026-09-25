@@ -15,21 +15,21 @@ export const ARENA_PURPLE = '#A06BFF'
 const STEPS = [
   {
     numeral: '01',
-    title: 'Pick a target',
-    description: 'Every sentinel has public rules, a hidden weakness, and a bounty pool.',
+    title: 'Pick a challenge',
+    description: 'Read the public mission, bounty, fee, and Sentinel type.',
     color: ARENA_CYAN,
   },
   {
     numeral: '02',
-    title: 'Take your shot',
-    description: 'Pay the fee, submit one prompt. One conversation, one chance to break it.',
+    title: 'Try an attack',
+    description: 'Pay the fee and submit a prompt-injection or jailbreak attempt.',
     color: ARENA_PINK,
   },
   {
     numeral: '03',
-    title: 'Win the whole pool',
+    title: 'Claim or grow the pool',
     description:
-      'Break it and the entire pool is yours. Lose — feed it: every failed fee grows the bounty.',
+      'A verified breach claims the pool. A failed attack adds 50% of its fee to the next bounty.',
     color: ARENA_PURPLE,
   },
 ]
@@ -55,14 +55,14 @@ const FEE_SPLIT = [
   {
     pct: '40%',
     width: '40%',
-    label: 'pays the defender',
+    label: 'pays the defender or Syndicate',
     color: ARENA_PINK,
     textOnColor: 'text-black',
   },
     {
       pct: '10%',
       width: '10%',
-      label: 'keeps the arena running',
+      label: 'supports the protocol',
       color: ARENA_PURPLE,
       textOnColor: 'text-white',
       // 10% of a phone-width bar is too narrow for its own label.

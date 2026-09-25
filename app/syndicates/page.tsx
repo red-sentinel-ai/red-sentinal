@@ -5,14 +5,14 @@ import { SUI_SENTINEL_APP_URL } from '@/constants'
 export const metadata: Metadata = {
   title: 'Syndicate Directory',
   description:
-    'Groups of defenders collaboratively securing AI agents and earning attack fees.',
+    'Groups of defenders pooling capital behind Sentinels and sharing defender-side attack-fee proceeds in proportion to contributions.',
   alternates: {
     canonical: `${SUI_SENTINEL_APP_URL}/syndicates`,
   },
   openGraph: {
     title: 'Syndicate Directory',
     description:
-        'Connect with high-performance security collectives. Pool resources, share threat intelligence, and deploy elite Sentinels.',
+        'Connect with high-performance security collectives. Pool resources, deploy Sentinels together, and share proceeds in proportion to contributions.',
       url: `${SUI_SENTINEL_APP_URL}/syndicates`,
   },
 }

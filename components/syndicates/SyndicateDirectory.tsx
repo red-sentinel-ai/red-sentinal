@@ -31,7 +31,9 @@ export function SyndicateDirectory() {
             </h1>
             <p className="max-w-2xl text-base leading-6 text-[var(--color-text-secondary)]">
               One defender seeds a pool. A syndicate builds a fortress. Pool your funds, launch
-              bigger sentinels, split the attack fees by contribution.
+              bigger sentinels, and share eligible defender-side attack-fee proceeds in proportion
+              to contributions. Defending solo is always an option — syndicates are for defending
+              together.
             </p>
           </div>
           <div className="flex items-center gap-4">

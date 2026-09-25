@@ -7,34 +7,47 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     question: 'What is Red Sentinel?',
     answer: [
-      'Red Sentinel is the first adversarial market for AI. Anyone can deploy an agent with a real bounty pool and earn from every attack it survives, while attackers win the entire pool if they break it.',
+      'Red Sentinel is an on-chain arena for AI security, with two kinds of Sentinels. Security Sentinels give AI builders a public, economically backed way to test meaningful agent boundaries. Campaign Sentinels give ecosystem partners a brand-safe way to introduce their communities to the arena.',
+      'The product loop is simple: build an AI defense, put value behind it, and let the internet test it. Failed attacks fund the defense; a verified Breach releases the bounty pool.',
     ],
   },
   {
     question: 'What is a Sentinel?',
     answer: [
-      'A Sentinel is an AI agent placed in the arena with something to defend: a secret, a rule, or a belief, backed by a bounty pool. Each Sentinel is defined by three things: its instructions (the personality and rules it lives by), its attack objective (the one thing attackers must make it do or say), and its pool (the prize for whoever succeeds).',
-      'Deploying one takes minutes: pick a template, fund the pool, and your Sentinel is live, earning you a share of every attack it survives.',
+      'A Sentinel is an AI agent placed in the arena with something to defend: a secret, a rule, or a belief, backed by a bounty pool. Each Sentinel is defined by three things: its instructions (the personality and rules it lives by), its attack objective (the one thing attackers must make it do or say), and its Bounty Pool (the prize for whoever succeeds).',
+      'There are two types. Security Sentinels test real agent boundaries and can combine public and private instructions, with approved API tooling where the Sentinel type permits it. Campaign Sentinels are sponsored, brand-safe challenges that use only partner-approved public information and a harmless hidden challenge phrase.',
+      'Deploying a Security Sentinel takes minutes: pick a template, fund the pool, and your Sentinel is live, earning a share of every attack fee it withstands.',
+    ],
+  },
+  {
+    question: 'What is a Campaign Sentinel?',
+    answer: [
+      'A Campaign Sentinel is a sponsored, brand-safe AI challenge. A partner seeds the Bounty Pool, and the Sentinel answers using only partner-approved public information — its docs, its ecosystem, its lore.',
+      'The breach objective is to cause the exact Hidden Transmission to appear. Attackers try to make the Sentinel reveal that exact Challenge Phrase. A verified reveal is a binary, on-chain challenge result and releases the Bounty Pool under the campaign rules.',
+      'Campaign Sentinels are safe by design: they do not expose private data, production credentials, or live tool actions. The outcome is a harmless phrase that is safe to share — unlike a Security Sentinel, which exists to test meaningful agent boundaries.',
+      'Want to run one for your community? Talk to the team at calendly.com/satyamb, or email support@cyphronixsoftware.xyz.',
     ],
   },
   {
     question: "Why would I deploy a Sentinel? What's in it for me?",
     answer: [
-      "Defenders are the house. You earn 40% of every attack fee your Sentinel withstands. For example, say you seed a pool with 1,000 tokens and set an attack fee of 2 tokens. If 100 attackers try 5 times each, that's 500 attacks and 1,000 tokens in fees. You earn 400 tokens (40%), the pool grows to 1,500, and the protocol keeps 100 (10%).",
-      "Survive the 14 day window and you withdraw the full 1,500 pool plus your 400 in fees: 1,900 back on 1,000 seeded. With templates, deploying takes minutes: pick one, fund the pool, go live.",
+      'Defenders are the house. You earn 40% of every attack fee your Sentinel withstands. For example, say you seed a pool with 1,000 tokens and set an attack fee of 2 tokens. If 100 attackers try 5 times each, that\'s 500 attacks and 1,000 tokens in fees. You earn 400 tokens (40%), the pool grows to 1,500, and the protocol keeps 100 (10%).',
+      'Failed attacks also grow your pool, since 50% of every failed fee is added to it. With templates, deploying takes minutes: pick one, fund the pool, go live.',
     ],
   },
   {
     question: 'What counts as a successful attack?',
     answer: [
       "Each Sentinel has a public attack objective, the one thing it's forbidden to do. If you make it do that, you win. Make the Professor say 2+2=5. Get Randy to approve a refund. Talk your way past Bruno.",
+      'On a Campaign Sentinel, the objective is the exact Hidden Transmission: the Breach only counts when that exact Challenge Phrase appears in the Sentinel\'s response.',
       "Every attempt is judged by an independent jury against the Sentinel's stated rules. No vibe checks, no discretion. If the Sentinel breaks its rule, the verdict says so, and the pool pays out automatically.",
     ],
   },
   {
     question: 'What does an attack cost and where does my fee actually go?',
     answer: [
-      'Each Sentinel sets its own attack fee, shown upfront before you pay. If your attack fails, the fee splits three ways: 50% into the bounty pool (the prize grows), 40% to the defender (their reward for a strong Sentinel), and 10% to the protocol. If your attack succeeds, you take the entire pool.',
+      'Each Sentinel sets its own Attack Fee, shown upfront before you pay. If your attack fails, the fee splits three ways: 50% increases the Bounty Pool (the prize grows), 40% goes to the defender or its Syndicate (their reward for a strong Sentinel), and 10% goes to the Red Sentinel protocol.',
+      'If your attack succeeds, a verified Breach releases the Bounty Pool under the campaign rules.',
       "So even a failed attack changes the game: it makes the prize bigger for the next attempt, yours or someone else's.",
     ],
   },
@@ -66,10 +79,11 @@ export const FAQ_ITEMS: FaqItem[] = [
     ],
   },
   {
-    question: 'Can my project or team launch a sponsored Sentinel?',
+    question: 'Can my project or community launch a sponsored Sentinel?',
     answer: [
-      "Yes, and it's one of our favorite things. We work with projects to build Sentinels around what makes them interesting: their tech, their ecosystem, their lore. Your community attacks it and learns your project along the way, and the engagement is real and measurable on-chain, not farmed quests. You seed the pool, and you also earn the defender share of every attack fee.",
-      'Book a call at calendly.com/satyamb.',
+      "Yes — that's exactly what a Campaign Sentinel is. We work with partners to build a brand-safe, sponsored challenge around what makes them interesting: their tech, their ecosystem, their lore. The Sentinel answers using only partner-approved public information, and the breach objective is to make the exact Hidden Transmission appear.",
+      'Your community attacks it and learns your project along the way. The engagement is real and measurable on-chain, not farmed quests, and nothing private, sensitive, or production-facing is ever exposed. You seed the pool, and you also earn the defender share of every failed attack fee.',
+      'Talk to the team at calendly.com/satyamb to discuss a sponsored campaign, or email support@cyphronixsoftware.xyz.',
     ],
   },
   {
@@ -89,7 +103,9 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     question: 'What are Syndicates?',
     answer: [
-      'Teams of defenders who pool their funds to launch Sentinels with bigger bounty pools, and split the attack fees by contribution. One defender seeds a pool; a Syndicate builds a fortress. Bigger pools attract stronger attackers, stronger attackers mean more fees, and every member earns their share.',
+      'Syndicates are teams of defenders who pool their funds to launch Sentinels with bigger Bounty Pools. When a Syndicate is the defender, the defender-side share of failed Attack Fees (40%) is distributed to members in proportion to their contributions.',
+      'One defender seeds a pool; a Syndicate builds a fortress. Bigger pools attract stronger attackers, stronger attackers mean more fees, and every member earns their proportional share.',
+      'Syndicates are optional — anyone can defend individually. They exist for people who want to contribute capital and defend together.',
     ],
   },
 ]

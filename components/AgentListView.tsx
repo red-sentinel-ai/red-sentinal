@@ -10,7 +10,7 @@ import { useTrendingAgents, MAX_TRENDING_SENTINELS } from '@/hooks/agents/useTre
 import { useDefeatedAgents } from '@/hooks/agents/useDefeatedAgents'
 import { usePlatformStats } from '@/hooks/stats/usePlatformStats'
 import { cn } from '@/lib/utils'
-import { PREMIUM_SENTINEL } from '@/constants'
+import { PREMIUM_SENTINEL, PARTNER_CONTACT_URL } from '@/constants'
 import { CHAINS, SUPPORTED_CHAINS } from '@/constants/chains'
 import { isSentinelAttackable } from '@/lib/sentinel-status'
 import { AttackStats } from '@/components/attack/AttackStats'
@@ -20,8 +20,9 @@ import { SentinelMarquee } from '@/components/attack/SentinelMarquee'
 import { SentinelRowSkeleton } from '@/components/attack/SentinelRowSkeleton'
 import { BrokenSentinelCard } from '@/components/attack/BrokenSentinelCard'
 import { ArenaHowItWorks } from '@/components/attack/ArenaHowItWorks'
-import { BecomeTheHouse } from '@/components/attack/BecomeTheHouse'
+import { LaunchASentinel } from '@/components/attack/LaunchASentinel'
 import { FormSyndicate } from '@/components/attack/FormSyndicate'
+import { SentinelTypesSplit } from '@/components/attack/SentinelTypesSplit'
 import { FaqSection } from '@/components/faq/FaqSection'
 import { FAQ_ITEMS, LANDING_FAQ_COUNT } from '@/constants/faq'
 
@@ -41,7 +42,7 @@ export const AgentListView = () => {
     .filter(a => !featuredIds.has(a.agent_id))
     .slice(0, MAX_TRENDING_SENTINELS)
 
-  // Defender proof for "Become the House": the top two earners still standing
+  // Defender proof for "Launch a Sentinel": the top two earners still standing
   // among the agents this page already fetches — surviving attacks is the
   // earning mechanic. Attacks survived breaks ties when fees aren't populated.
   const defenderPicks = useMemo(
@@ -73,14 +74,14 @@ export const AgentListView = () => {
           }}
         />
         <h1 className="font-display relative text-3xl font-extrabold leading-[1.08] tracking-[0.04em] text-white sm:text-4xl md:text-7xl">
-          Break AI Agents. Take the Pool.
+          Put AI agents to the test
         </h1>
         {/* New landing hero type scale: no extrabold below heading sizes, min 11px for
             readable copy, tracking tightened on small text, sentence case for anything
             with a verb. Old sections still use the legacy 9–10px extrabold/0.1em style. */}
         <p className="font-body relative mx-auto mt-4 max-w-2xl text-sm font-normal leading-[1.7] tracking-[0.01em] text-[var(--color-text-secondary)] sm:mt-6 sm:text-base">
-          Attackers pay to break sentinels and win the entire on-chain bounty. Defenders deploy
-          agents and earn from every attack they survive. Skill-gated PvP, no luck, no lottery.
+          Attack live Sentinels for on-chain bounties. Launch a Campaign Sentinel to engage your
+          community, or a Security Sentinel to test a real AI-agent boundary
         </p>
         <div className="mt-6 sm:mt-8">
           <AttackStats variant="strip" />
@@ -99,6 +100,18 @@ export const AgentListView = () => {
             Try free in Practice Arena
           </Link>
         </div>
+        <p className="font-body relative mt-4 text-[11px] font-medium tracking-normal text-[var(--color-text-secondary)] sm:mt-5 sm:text-xs">
+          Partner or project?{' '}
+          <a
+            href={PARTNER_CONTACT_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-white underline underline-offset-2 transition-colors hover:text-[var(--color-text-secondary)]"
+          >
+            Talk to the team
+          </a>{' '}
+          about a sponsored Campaign Sentinel.
+        </p>
         <div className="relative mt-8 flex flex-col justify-center gap-3 sm:mt-12 sm:flex-row sm:items-center sm:gap-4">
           <span className="font-body text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--color-text-secondary)]">
             LIVE ON:
@@ -129,6 +142,9 @@ export const AgentListView = () => {
           Every attack, verdict, and payout is a real on-chain transaction
         </p>
       </section>
+
+      {/* Two entry points — partners and builders — before the Sentinel lists. */}
+      <SentinelTypesSplit />
 
       {/* Live Activity — the arena is alive, proven within five seconds. */}
       {/* <LiveActivityFeed /> */}
@@ -195,7 +211,7 @@ export const AgentListView = () => {
                 Featured Sentinels
               </h2>
               <p className="font-body mt-1.5 text-[11px] font-medium tracking-normal text-[var(--color-text-secondary)] sm:mt-2">
-                The biggest pools on the arena. Broken ones paid out. These haven&apos;t. Yet.
+                Featured pools from across the arena — Security and Campaign Sentinels alike.
               </p>
             </div>
             <Link
@@ -249,8 +265,8 @@ export const AgentListView = () => {
         <ArenaHowItWorks />
       </section>
 
-      {/* Become the House — the supply side. No defenders, no arena. */}
-      <BecomeTheHouse
+      {/* Launch a Sentinel — the supply side, two paths. No defenders, no arena. */}
+      <LaunchASentinel
         sentinels={defenderPicks}
         isFetching={isFetchingFeatured || isFetchingTrending}
       />

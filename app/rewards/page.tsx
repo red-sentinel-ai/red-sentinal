@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     'SENTINEL token',
     'crypto rewards',
     'booster rewards',
-    'SUI ecosystem',
+    'Sentinel rewards',
     'blockchain gaming rewards',
     'AI security incentives',
     'slot machine rewards',
