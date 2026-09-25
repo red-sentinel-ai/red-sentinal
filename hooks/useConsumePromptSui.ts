@@ -165,10 +165,17 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
     }
 
     let paymentCoin
-    if (costInBaseUnits === BigInt(0)) {
-      // Zero-cost attack: build a zero-balance Coin<CoinType> on-chain instead
-      // of splitting from the user's wallet, which may not hold the token at
-      // all (an empty selection would crash on selectedCoins[0] below).
+    if (costInBaseUnits === BigInt(0) && sortedCoins.length > 0) {
+      // Zero-cost attack with tokens in the wallet: split a zero coin from the
+      // user's own coin so the tx only contains app-package Move calls (the
+      // sponsor only allowlists those).
+      ;[paymentCoin] = tx.splitCoins(tx.object(sortedCoins[0].coinObjectId), [
+        tx.pure.u64(0),
+      ])
+    } else if (costInBaseUnits === BigInt(0)) {
+      // Zero-cost attack with no token coins: build a zero-balance Coin on-chain
+      // (0x2::coin::zero, allowlisted by the sponsor) rather than crashing on
+      // an empty selection below.
       ;[paymentCoin] = tx.moveCall({
         target: '0x2::coin::zero',
         typeArguments: [token.coinType],
