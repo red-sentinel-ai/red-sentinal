@@ -14,7 +14,8 @@ import { PREMIUM_SENTINEL } from '@/constants'
 import { CHAINS, SUPPORTED_CHAINS } from '@/constants/chains'
 import { isSentinelAttackable } from '@/lib/sentinel-status'
 import { AttackStats } from '@/components/attack/AttackStats'
-import { LiveActivityFeed } from '@/components/attack/LiveActivityFeed'
+// Will be enabled once we have real data from backend.
+// import { LiveActivityFeed } from '@/components/attack/LiveActivityFeed'
 import { SentinelMarquee } from '@/components/attack/SentinelMarquee'
 import { SentinelRowSkeleton } from '@/components/attack/SentinelRowSkeleton'
 import { BrokenSentinelCard } from '@/components/attack/BrokenSentinelCard'
@@ -130,7 +131,7 @@ export const AgentListView = () => {
       </section>
 
       {/* Live Activity — the arena is alive, proven within five seconds. */}
-      <LiveActivityFeed />
+      {/* <LiveActivityFeed /> */}
 
       {/* Recently Broken — proof the game is winnable. Renders nothing until the
           first public win exists, so the page never shows an empty shelf. */}
