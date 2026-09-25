@@ -110,11 +110,11 @@ export function PartnerApplicationForm() {
         return
       }
 
-      if (!data.success && data.fields) {
+      if ('fields' in data && data.fields) {
         setErrors(data.fields)
       }
       setSubmitError(
-        (!data.success && data.error) || 'Could not submit your application. Please try again.'
+        ('error' in data && data.error) || 'Could not submit your application. Please try again.'
       )
     } catch {
       setSubmitError('Network error — please try again, or email us instead.')
