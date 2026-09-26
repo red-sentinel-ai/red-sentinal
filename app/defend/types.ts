@@ -9,7 +9,8 @@ export interface DeployTransactionResult {
 // Interface that each chain-specific deploy hook must implement
 export interface ChainDeployHook {
   walletAddress: string | null
-  executeTransaction: (teeResponse: any) => Promise<DeployTransactionResult>
+  /** Extra per-deploy options (e.g. Sui's fund-bounty-from-wallet flag). */
+  executeTransaction: (teeResponse: any, options?: any) => Promise<DeployTransactionResult>
 }
 
 // Sui TEE response shape

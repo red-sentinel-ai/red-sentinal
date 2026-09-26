@@ -3,10 +3,12 @@ import { parseUnits } from 'viem'
 import { toast } from 'sonner'
 import posthog from 'posthog-js'
 import { useActiveChain } from '@/context/ActiveChainContext'
+import { useAuth } from '@/context/AuthContext'
+import { useSuiClient } from '@mysten/dapp-kit'
 import { isEvmChain } from '@/constants/chains'
 import { useEvmChain } from '@/hooks/evm/useEvmChain'
 import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
-import { type SupportedToken } from '@/constants'
+import { SPONSORED_GAS_ENABLED, type SupportedToken } from '@/constants'
 import { registerAgentUtil, resolveProviderCredentials } from '../utils'
 import type { AgenticConfig } from '../agentic-types'
 import { useDeploySuiAgent } from './useDeploySuiAgent'
@@ -37,10 +39,20 @@ export function useDeployAgent({
 }: UseDeployAgentOptions) {
   const { activeChain } = useActiveChain()
   const { intendedChainId, ensureWalletOnActiveChain } = useEvmChain()
+  const { user } = useAuth()
   const { mutate: createAgent } = useCreateAgent()
 
   // All chain-specific deploy hooks must be called unconditionally (hook rules)
-  const suiDeploy = useDeploySuiAgent({ formData, selectedToken })
+  // Sui registration always rides on gas sponsorship when the user is signed
+  // in. If the user configures a bounty/fee their wallet can't cover, the
+  // deploy falls back to the free sponsored tier (bounty 0, attack fee 0).
+  const willSponsorSui = SPONSORED_GAS_ENABLED && !!user?.id
+  const suiClient = useSuiClient()
+  const suiDeploy = useDeploySuiAgent({
+    formData,
+    selectedToken,
+    sponsored: willSponsorSui,
+  })
   const solanaDeploy = useDeploySolanaAgent({ formData, selectedSolanaToken })
   const evmDeploy = useDeployEvmAgent({ formData, selectedEvmToken })
 
@@ -137,9 +149,39 @@ export function useDeployAgent({
 
       // 2. Register with TEE (chain-aware)
       const decimals = getActiveTokenDecimals()
-      const feePerMessage = isEvmChain(activeChain)
-        ? Number(parseUnits(formData.feePerMessage, decimals))
-        : parseFloat(formData.feePerMessage) * Math.pow(10, decimals)
+      let feePerMessage: number
+      let suiFundBountyFromWallet = false
+      if (isEvmChain(activeChain)) {
+        feePerMessage = Number(parseUnits(formData.feePerMessage, decimals))
+      } else if (activeChain === 'sui' && willSponsorSui) {
+        // Gas sponsorship is always on for signed-in users. A bounty the
+        // wallet can't afford downgrades the deploy to the free sponsored
+        // tier (bounty 0, attack fee 0); a fundable bounty (or fee alone,
+        // which costs nothing at registration) keeps the user's config.
+        const typedFee = parseFloat(formData.feePerMessage || '0') * Math.pow(10, decimals)
+        const typedBounty = Math.floor(
+          parseFloat(formData.initialBalance || '0') * Math.pow(10, decimals)
+        )
+        if (typedBounty > 0) {
+          const { totalBalance } = await suiClient.getBalance({
+            owner: walletAddress,
+            coinType: selectedToken.coinType,
+          })
+          if (BigInt(totalBalance) >= BigInt(typedBounty)) {
+            suiFundBountyFromWallet = true
+            feePerMessage = typedFee
+          } else {
+            toast.info(
+              'Gas sponsorship is enabled: your wallet cannot fund the bounty, so the agent will be registered with bounty = 0 and attack fee = 0.'
+            )
+            feePerMessage = 0
+          }
+        } else {
+          feePerMessage = typedFee
+        }
+      } else {
+        feePerMessage = parseFloat(formData.feePerMessage) * Math.pow(10, decimals)
+      }
       const isCustom = formData.llmProvider === 'custom'
       const credentials = resolveProviderCredentials(formData)
 
@@ -165,7 +207,7 @@ export function useDeployAgent({
       } else if (isEvmChain(activeChain)) {
         result = await evmDeploy.executeTransaction(teeResponse)
       } else {
-        result = await suiDeploy.executeTransaction(teeResponse)
+        result = await suiDeploy.executeTransaction(teeResponse, suiFundBountyFromWallet)
       }
 
       // 4. Handle off-chain success (Supabase storage)
