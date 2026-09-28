@@ -28,7 +28,6 @@ import { AttackWorkspace, type ViewMode } from '@/components/agents/AttackWorksp
 import { AgentSidebar } from '@/components/agents/AgentSidebar'
 import { AgentReadMoreModal } from '@/components/agents/AgentReadMoreModal'
 import { VoiceRoomModal } from '@/components/voice/VoiceRoomModal'
-import type { ChallengeMode } from '@/components/agents/ChallengeModeToggle'
 import { AttackTopbarSlot } from './AttackTopbarSlot'
 import { MobileAgentHeader } from './MobileAgentHeader'
 
@@ -51,7 +50,6 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('attack')
-  const [challengeMode, setChallengeMode] = useState<ChallengeMode>('attack')
   const isMobile = useMediaQuery('(max-width: 768px)')
 
   const { data: agent, isLoading, error, refetch } = useAgent(slug)
@@ -65,19 +63,12 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   const [isReadMoreOpen, setIsReadMoreOpen] = useState(false)
   const [isVoiceRoomOpen, setIsVoiceRoomOpen] = useState(false)
 
-  // On mobile the sentinel name and the attack/casual toggle share the topbar row
-  // with the wallet button instead of each taking a bar of their own.
-  const isModeToggleInTopbar = isMobile && !isFocusMode && viewMode !== 'chat'
+  // On mobile the sentinel name shares the topbar row with the wallet button
+  // instead of taking a bar of its own.
+  const isAgentNameInTopbar = isMobile && !isFocusMode && viewMode !== 'chat'
   const topbarContent = useMemo(
-    () =>
-      isModeToggleInTopbar && agent ? (
-        <AttackTopbarSlot
-          agentName={agent.agent_name}
-          challengeMode={challengeMode}
-          onChangeChallengeMode={setChallengeMode}
-        />
-      ) : null,
-    [isModeToggleInTopbar, agent, challengeMode]
+    () => (isAgentNameInTopbar && agent ? <AttackTopbarSlot agentName={agent.agent_name} /> : null),
+    [isAgentNameInTopbar, agent]
   )
   useRenderInTopbar(topbarContent)
 
@@ -270,9 +261,6 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
       agent={agent}
       viewMode={viewMode}
       onBackToAttack={handleBackToAttack}
-      challengeMode={challengeMode}
-      onChangeChallengeMode={setChallengeMode}
-      showModeToggle={!isModeToggleInTopbar}
       chatEvents={chat?.messages ?? []}
       eventsLoading={chatLoading}
       apiResponse={apiResponse}

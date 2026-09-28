@@ -47,7 +47,6 @@ export interface Agent {
   deployment_tx_hash?: string | null
   participants_count?: number
   attack_goal?: string | null
-  casual_network?: string
   defender_profile?: { username: string | null; avatar_url: string | null } | null
   syndicate?: {
     contract_address: string
