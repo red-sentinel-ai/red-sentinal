@@ -52,6 +52,8 @@ interface UseConsumePromptOptions {
   onComplete?: (args: {
     apiResponse: ConsumePromptApiResponse
     transactionResult: SuiTransactionBlockResponse
+    /** Nonce minted into the Attack ticket — identifies the backend attack doc. */
+    attackNonce?: string
   }) => void
   showToasts?: boolean
 }
@@ -438,7 +440,7 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
           }
         }
 
-        onComplete?.({ apiResponse, transactionResult: result })
+        onComplete?.({ apiResponse, transactionResult: result, attackNonce })
 
         setCurrentStep('')
         return result

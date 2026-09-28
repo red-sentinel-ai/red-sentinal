@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useQueryClient } from '@tanstack/react-query'
 import posthog from 'posthog-js'
 import { Info, X } from 'lucide-react'
+import { toast } from 'sonner'
 
 import { APP_NETWORK } from '@/constants'
 import { getTokenForCoinType } from '@/constants/tokens'
@@ -11,6 +12,7 @@ import type { ConsumePromptApiResponse } from '@/types'
 import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from '@/components/ui'
 import { AgentChallengePageSkeleton } from '@/components/ui/skeletons/AgentChallengePageSkeleton'
 import { useConsumePromptSui } from '@/hooks/useConsumePromptSui'
+import { useWalrusRecord } from '@/hooks/walrus/useWalrusRecord'
 import { useConsumePromptSolana } from '@/hooks/useConsumePromptSolana'
 import { useConsumePromptEVM } from '@/hooks/useConsumePromptEVM'
 import { useAgent, AGENT_QUERY_KEY } from '@/hooks/agents/useAgentDetails'
@@ -128,13 +130,45 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
     [connectedAddress, agent, slug, refetch, refetchChat, queryClient, activeChain]
   )
 
+  const { storeRecord } = useWalrusRecord()
+
+  const resolveAndStoreRecord = useCallback(
+    async (attackNonce: string) => {
+      try {
+        const response = await fetch(
+          `/api/sentinels/attack-by-nonce?network=sui-${APP_NETWORK}&nonce=${encodeURIComponent(
+            attackNonce
+          )}&attacker_address=${encodeURIComponent(connectedAddress)}`
+        )
+        if (!response.ok) throw new Error(`Attack lookup failed (${response.status})`)
+        const { attack_id: attackId } = (await response.json()) as { attack_id: string }
+
+        const result = await storeRecord(attackId)
+        if (result) toast.success('Attack record stored on Walrus')
+      } catch (err) {
+        toast.warning(
+          `Walrus storage skipped: ${err instanceof Error ? err.message : 'unknown error'}`
+        )
+      }
+    },
+    [connectedAddress, storeRecord]
+  )
+
   const { consumePrompt: suiConsumePrompt } = useConsumePromptSui({
     showToasts: true,
     onError: err => {
       setSubmitError(err.message || 'Something went wrong')
     },
-    onComplete: ({ apiResponse, transactionResult }) => {
+    onComplete: ({ apiResponse, transactionResult, attackNonce }) => {
       handleAttackComplete(apiResponse, transactionResult.digest)
+
+      // Store the attack record on Walrus with the user's wallet as the blob
+      // owner (backend sponsors gas + WAL). The attack doc is resolved by the
+      // nonce minted into the Attack ticket, since the TEE consumed the
+      // backend attack route internally and the id never reached the client.
+      if (attackNonce && connectedAddress) {
+        resolveAndStoreRecord(attackNonce)
+      }
     },
   })
 

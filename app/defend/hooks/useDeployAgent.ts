@@ -78,7 +78,8 @@ export function useDeployAgent({
     digest: string,
     agentName: string,
     agentId: string,
-    ownerAddress: string
+    ownerAddress: string,
+    effectiveFeePerMessage: number
   ) => {
     setTransactionDigest(digest)
     setShowSuccessModal(true)
@@ -89,7 +90,9 @@ export function useDeployAgent({
       agent_id: agentId,
       agent_object_id: objectId,
       owner_address: ownerAddress,
-      cost_per_message: formData.feePerMessage,
+      // Effective fee the TEE signed — 0 on the sponsored free tier, not the
+      // raw form value.
+      cost_per_message: effectiveFeePerMessage / Math.pow(10, getActiveTokenDecimals()),
       system_prompt_length: formData.systemPrompt.length,
       system_prompt_tokens: tokenCount,
       tx_digest: digest,
@@ -217,7 +220,8 @@ export function useDeployAgent({
         result.digest,
         formData.agentName,
         agentId,
-        walletAddress
+        walletAddress,
+        feePerMessage
       )
     } catch (error) {
       console.error('Deployment error:', error)
