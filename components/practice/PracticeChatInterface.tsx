@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
 
 import { generateAvatarUrl } from '@/lib/utils'
+import { useAuth } from '@/context/AuthContext'
 import type { Agent } from '@/types/agents'
 import type { ChatMessage as ChatMessageType } from '@/components/agents/ChatInterface'
 import { ChatMessage } from '@/components/agents/ChatMessage'
@@ -66,6 +67,7 @@ export function PracticeChatInterface({
 
   const attackMutation = useAttackPracticeSentinel()
   const isSubmitting = attackMutation.isPending
+  const { user } = useAuth()
   const { storeRecord } = useWalrusRecord()
 
   // ChatMessage is built for on-chain agents; practice only needs name/avatar/chain.
@@ -204,9 +206,10 @@ export function PracticeChatInterface({
         attackerAddress,
         userPrompt: prompt,
         sessionId,
-        // The frontend drives the Walrus record flow (user owns the blob,
-        // backend sponsors gas) — skip backend-key storage on the server.
-        walrusRecordMode: 'user_signed',
+        // Signed-in users get the user-signed Walrus flow (user owns the
+        // blob, backend sponsors gas + WAL). Signed-out users fall back to
+        // the backend-key storage — the user-signed routes need auth.
+        walrusRecordMode: user?.id ? 'user_signed' : 'backend',
       })
       setSessionId(data.session_id)
       const newAgentMessage: ChatMessageType = {

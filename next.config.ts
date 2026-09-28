@@ -43,8 +43,8 @@ const cspDirectives = [
   "form-action 'self'",
   "frame-ancestors 'none'",
   // Privy iframe + WalletConnect verification iframes + Turnstile
-  "child-src https://auth.privy.io https://verify.walletconnect.com https://verify.walletconnect.org https://challenges.cloudflare.com",
-  "frame-src https://auth.privy.io https://verify.walletconnect.com https://verify.walletconnect.org https://challenges.cloudflare.com",
+  'child-src https://auth.privy.io https://verify.walletconnect.com https://verify.walletconnect.org https://challenges.cloudflare.com',
+  'frame-src https://auth.privy.io https://verify.walletconnect.com https://verify.walletconnect.org https://challenges.cloudflare.com',
   [
     'connect-src',
     "'self'",
@@ -137,9 +137,7 @@ const nextConfig: NextConfig = {
       layers: true,
     }
 
-    config.ignoreWarnings = [
-      { module: /node_modules[\\/]ox[\\/]_esm[\\/]tempo/ },
-    ]
+    config.ignoreWarnings = [{ module: /node_modules[\\/]ox[\\/]_esm[\\/]tempo/ }]
 
     return config
   },

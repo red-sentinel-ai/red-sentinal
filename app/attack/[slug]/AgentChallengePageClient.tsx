@@ -144,7 +144,12 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
         const { attack_id: attackId } = (await response.json()) as { attack_id: string }
 
         const result = await storeRecord(attackId)
-        if (result) toast.success('Attack record stored on Walrus')
+        if (result) {
+          toast.success('Attack record stored on Walrus')
+          // Surface SEE_ON_WALRUS immediately instead of waiting for the
+          // 20s chat-history poll.
+          refetchChat()
+        }
       } catch (err) {
         toast.warning(
           `Walrus storage skipped: ${err instanceof Error ? err.message : 'unknown error'}`
