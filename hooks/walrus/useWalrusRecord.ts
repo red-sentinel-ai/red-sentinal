@@ -23,7 +23,18 @@ interface PrepareResponse {
 interface ConfirmResponse {
   record_id: string
   register_digest: string
-  certify_tx_bytes: string
+  /** Present in older responses; the async confirm returns status: 'processing'. */
+  certify_tx_bytes?: string | null
+  status?: string
+}
+
+interface StatusResponse {
+  record_id: string
+  status: string
+  blob_id: string | null
+  register_digest: string | null
+  certify_tx_bytes: string | null
+  error: string | null
 }
 
 interface CertifyResponse {
@@ -89,7 +100,8 @@ export function useWalrusRecord() {
       const prepared = (await prepareResponse.json()) as PrepareResponse
 
       // 2. Sign the register transaction and confirm — the sponsor co-signs,
-      //    executes it, uploads slivers, and returns the certify transaction.
+      //    executes it, and responds immediately; the slivers upload + certify
+      //    build run in the background.
       const { signature: registerSignature } = await signTransaction({
         transaction: prepared.tx_bytes,
         account,
@@ -106,9 +118,32 @@ export function useWalrusRecord() {
       if (!confirmResponse.ok) throw new Error(await readErrorMessage(confirmResponse))
       const confirmed = (await confirmResponse.json()) as ConfirmResponse
 
-      // 3. Sign the certify transaction and finalize.
+      // 3. Wait for the background finalize (slivers → storage nodes, certify
+      //    build), polling the status endpoint for the certify transaction.
+      let certifyTxBytes = confirmed.certify_tx_bytes ?? null
+      if (!certifyTxBytes) {
+        const deadline = Date.now() + 120_000
+        while (!certifyTxBytes && Date.now() < deadline) {
+          await new Promise(resolve => setTimeout(resolve, 4_000))
+          const statusResponse = await fetch(`${base}/${prepared.record_id}`, {
+            credentials: 'include',
+            headers,
+          })
+          if (!statusResponse.ok) throw new Error(await readErrorMessage(statusResponse))
+          const status = (await statusResponse.json()) as StatusResponse
+          if (status.status === 'failed') {
+            throw new Error(status.error || 'Walrus record failed to finalize')
+          }
+          certifyTxBytes = status.certify_tx_bytes
+        }
+        if (!certifyTxBytes) {
+          throw new Error('Walrus record finalize timed out — try again shortly')
+        }
+      }
+
+      // 4. Sign the certify transaction and finalize.
       const { signature: certifySignature } = await signTransaction({
-        transaction: confirmed.certify_tx_bytes,
+        transaction: certifyTxBytes,
         account,
       })
       const certifyResponse = await fetch(`${base}/${prepared.record_id}/certify`, {
