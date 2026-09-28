@@ -123,18 +123,29 @@ export function useWalrusRecord() {
       let certifyTxBytes = confirmed.certify_tx_bytes ?? null
       if (!certifyTxBytes) {
         const deadline = Date.now() + 120_000
+        let consecutivePollErrors = 0
         while (!certifyTxBytes && Date.now() < deadline) {
           await new Promise(resolve => setTimeout(resolve, 4_000))
-          const statusResponse = await fetch(`${base}/${prepared.record_id}`, {
-            credentials: 'include',
-            headers,
-          })
-          if (!statusResponse.ok) throw new Error(await readErrorMessage(statusResponse))
-          const status = (await statusResponse.json()) as StatusResponse
-          if (status.status === 'failed') {
-            throw new Error(status.error || 'Walrus record failed to finalize')
+          try {
+            const statusResponse = await fetch(`${base}/${prepared.record_id}`, {
+              credentials: 'include',
+              headers,
+            })
+            if (!statusResponse.ok) throw new Error(await readErrorMessage(statusResponse))
+            const status = (await statusResponse.json()) as StatusResponse
+            if (status.status === 'failed') {
+              throw new Error(status.error || 'Walrus record failed to finalize')
+            }
+            certifyTxBytes = status.certify_tx_bytes
+            consecutivePollErrors = 0
+          } catch (err) {
+            // A single 'failed' status must propagate; transient network /
+            // 5xx hiccups are tolerated — the backend self-heals and the
+            // record will reach awaiting_certify_signature anyway.
+            if (err instanceof Error && err.message.includes('failed to finalize')) throw err
+            consecutivePollErrors += 1
+            if (consecutivePollErrors >= 5) throw err
           }
-          certifyTxBytes = status.certify_tx_bytes
         }
         if (!certifyTxBytes) {
           throw new Error('Walrus record finalize timed out — try again shortly')

@@ -6,8 +6,8 @@ export const SUI_RPC_URLS = {
 export const SUI_EVENTS_RPC_URLS = {
   mainnet:
     process.env.NEXT_PUBLIC_SUI_EVENTS_RPC_URL_MAINNET ||
-    'https://sui-mainnet-endpoint.blockvision.org',
+    'https://rpc-mainnet.suiscan.xyz',
   testnet:
     process.env.NEXT_PUBLIC_SUI_EVENTS_RPC_URL_TESTNET ||
-    'https://sui-testnet-endpoint.blockvision.org',
+    'https://rpc-testnet.suiscan.xyz',
 } as const
