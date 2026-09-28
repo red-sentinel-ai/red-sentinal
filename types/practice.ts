@@ -43,6 +43,8 @@ export interface PracticeAttackResponse {
   success?: boolean
   score?: number
   confidence?: number
+  /** Mongo id of the attack doc — used to store the record on Walrus. */
+  attack_id?: string
 }
 
 /** One turn in the public feed (GET /practice/{network}/{id}/attacks). */

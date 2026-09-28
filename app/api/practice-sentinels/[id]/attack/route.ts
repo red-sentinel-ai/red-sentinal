@@ -7,7 +7,14 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   try {
     const { id } = await params
     const body = await req.json()
-    const { attacker_address, user_prompt, session_id, network, mode } = body
+    const {
+      attacker_address,
+      user_prompt,
+      session_id,
+      network,
+      mode,
+      walrus_record_mode,
+    } = body
 
     if (!attacker_address || !user_prompt) {
       return NextResponse.json(
@@ -30,6 +37,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
           user_prompt,
           ...(session_id ? { session_id } : {}),
           ...(mode ? { mode } : {}),
+          ...(walrus_record_mode ? { walrus_record_mode } : {}),
         }),
       }
     )

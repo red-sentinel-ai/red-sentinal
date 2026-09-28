@@ -17,6 +17,7 @@ import { VoiceChatSurface } from '@/components/voice/VoiceChatSurface'
 import { usePracticeAttacksFeed } from '@/hooks/practice/usePracticeAttacksFeed'
 import { useAttackPracticeSentinel } from '@/hooks/practice/useAttackPracticeSentinel'
 import { useAttackFeedMessages } from '@/hooks/practice/useAttackFeedMessages'
+import { useWalrusRecord } from '@/hooks/walrus/useWalrusRecord'
 import { useAutoResizingTextarea } from '@/hooks/useAutoResizingTextarea'
 import { useSentinelVoice } from '@/hooks/voice'
 import { PRACTICE_NETWORK } from '@/lib/practice'
@@ -65,6 +66,7 @@ export function PracticeChatInterface({
 
   const attackMutation = useAttackPracticeSentinel()
   const isSubmitting = attackMutation.isPending
+  const { storeRecord } = useWalrusRecord()
 
   // ChatMessage is built for on-chain agents; practice only needs name/avatar/chain.
   const agentForMessage = useMemo(
@@ -202,6 +204,9 @@ export function PracticeChatInterface({
         attackerAddress,
         userPrompt: prompt,
         sessionId,
+        // The frontend drives the Walrus record flow (user owns the blob,
+        // backend sponsors gas) — skip backend-key storage on the server.
+        walrusRecordMode: 'user_signed',
       })
       setSessionId(data.session_id)
       const newAgentMessage: ChatMessageType = {
@@ -217,6 +222,21 @@ export function PracticeChatInterface({
       if (data.success) toast.success('Sentinel breached — attack succeeded!')
       // Pull the feed forward so the optimistic round resolves to server truth.
       refetchFeed()
+
+      // Store the attack record on Walrus (user-signed, sponsor-gassed). Runs
+      // after the attack UI resolves and never blocks or breaks the chat.
+      storeRecord(data.attack_id)
+        .then(result => {
+          if (result) {
+            toast.success('Attack record stored on Walrus')
+            refetchFeed()
+          }
+        })
+        .catch((err: unknown) => {
+          toast.warning(
+            `Walrus storage skipped: ${err instanceof Error ? err.message : 'unknown error'}`
+          )
+        })
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Attack failed'
       setSubmitError(message)

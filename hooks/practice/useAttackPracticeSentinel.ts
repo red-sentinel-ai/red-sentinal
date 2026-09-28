@@ -9,11 +9,21 @@ interface AttackArgs {
   sessionId?: string | null
   network?: string
   mode?: SentinelInteractionMode
+  /** 'user_signed' → the frontend drives the Walrus record flow after the attack. */
+  walrusRecordMode?: 'backend' | 'user_signed'
 }
 
 export function useAttackPracticeSentinel() {
   return useMutation<PracticeAttackResponse, Error, AttackArgs>({
-    mutationFn: async ({ sentinelId, attackerAddress, userPrompt, sessionId, network, mode }) => {
+    mutationFn: async ({
+      sentinelId,
+      attackerAddress,
+      userPrompt,
+      sessionId,
+      network,
+      mode,
+      walrusRecordMode,
+    }) => {
       const res = await fetch(`/api/practice-sentinels/${sentinelId}/attack`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -23,6 +33,7 @@ export function useAttackPracticeSentinel() {
           session_id: sessionId ?? undefined,
           network,
           mode,
+          walrus_record_mode: walrusRecordMode,
         }),
       })
 
