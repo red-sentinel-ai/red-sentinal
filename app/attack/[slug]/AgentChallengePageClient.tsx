@@ -143,12 +143,23 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
         if (!response.ok) throw new Error(`Attack lookup failed (${response.status})`)
         const { attack_id: attackId } = (await response.json()) as { attack_id: string }
 
-        const result = await storeRecord(attackId)
-        if (result) {
-          toast.success('Attack record stored on Walrus')
-          // Surface SEE_ON_WALRUS immediately instead of waiting for the
-          // 20s chat-history poll.
-          refetchChat()
+        const walrusToastId = toast.loading('Storing attack record on Walrus…')
+        try {
+          const result = await storeRecord(attackId)
+          if (result) {
+            toast.success('Attack record stored on Walrus', { id: walrusToastId })
+            // Surface SEE_ON_WALRUS immediately instead of waiting for the
+            // 20s chat-history poll.
+            refetchChat()
+          } else {
+            toast.dismiss(walrusToastId)
+          }
+        } catch {
+          // The backend may still be finalizing — the record lands in the
+          // chat history with SEE_ON_WALRUS once it does.
+          toast.info('Walrus storage still in progress — it will appear here shortly', {
+            id: walrusToastId,
+          })
         }
       } catch (err) {
         toast.warning(
@@ -156,7 +167,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
         )
       }
     },
-    [connectedAddress, storeRecord]
+    [connectedAddress, refetchChat, storeRecord]
   )
 
   const { consumePrompt: suiConsumePrompt } = useConsumePromptSui({

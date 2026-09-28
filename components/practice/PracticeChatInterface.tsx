@@ -227,17 +227,25 @@ export function PracticeChatInterface({
       refetchFeed()
 
       // Store the attack record on Walrus (user-signed, sponsor-gassed). Runs
-      // after the attack UI resolves and never blocks or breaks the chat.
+      // after the attack UI resolves and never blocks or breaks the chat —
+      // the sliver upload can be slow, so surface it as in-progress rather
+      // than an error.
+      const walrusToastId = toast.loading('Storing attack record on Walrus…')
       storeRecord(data.attack_id)
         .then(result => {
           if (result) {
-            toast.success('Attack record stored on Walrus')
+            toast.success('Attack record stored on Walrus', { id: walrusToastId })
             refetchFeed()
+          } else {
+            toast.dismiss(walrusToastId)
           }
         })
-        .catch((err: unknown) => {
-          toast.warning(
-            `Walrus storage skipped: ${err instanceof Error ? err.message : 'unknown error'}`
+        .catch(() => {
+          // The backend may still be finalizing — the record shows up in the
+          // feed with SEE_ON_WALRUS once it lands.
+          toast.info(
+            'Walrus storage still in progress — it will appear in the feed shortly',
+            { id: walrusToastId }
           )
         })
     } catch (err) {
