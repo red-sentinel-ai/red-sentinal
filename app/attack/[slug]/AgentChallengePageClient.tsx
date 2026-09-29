@@ -12,7 +12,7 @@ import type { ConsumePromptApiResponse } from '@/types'
 import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from '@/components/ui'
 import { AgentChallengePageSkeleton } from '@/components/ui/skeletons/AgentChallengePageSkeleton'
 import { useConsumePromptSui } from '@/hooks/useConsumePromptSui'
-import { useWalrusRecord } from '@/hooks/walrus/useWalrusRecord'
+import { useWalrusRecord, WalrusRecordTransientError } from '@/hooks/walrus/useWalrusRecord'
 import { useConsumePromptSolana } from '@/hooks/useConsumePromptSolana'
 import { useConsumePromptEVM } from '@/hooks/useConsumePromptEVM'
 import { useAgent, AGENT_QUERY_KEY } from '@/hooks/agents/useAgentDetails'
@@ -171,12 +171,22 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
           } else {
             toast.dismiss(walrusToastId)
           }
-        } catch {
-          // The backend may still be finalizing — the record lands in the
-          // chat history with SEE_ON_WALRUS once it does.
-          toast.info('Walrus storage still in progress — it will appear here shortly', {
-            id: walrusToastId,
-          })
+        } catch (err) {
+          if (err instanceof WalrusRecordTransientError) {
+            // The backend self-heals the finalize — the record lands in the
+            // chat history with SEE_ON_WALRUS once it does.
+            toast.info('Walrus storage still in progress — it will appear here shortly', {
+              id: walrusToastId,
+            })
+          } else {
+            // Terminal (e.g. the wallet lacks WAL for storage or SUI for gas):
+            // surface the backend's actionable message instead of pretending
+            // the flow is still running.
+            toast.error(
+              `Walrus storage failed: ${err instanceof Error ? err.message : 'unknown error'}`,
+              { id: walrusToastId }
+            )
+          }
         }
       } catch (err) {
         toast.warning(

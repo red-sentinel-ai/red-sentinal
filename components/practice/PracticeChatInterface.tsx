@@ -18,7 +18,7 @@ import { VoiceChatSurface } from '@/components/voice/VoiceChatSurface'
 import { usePracticeAttacksFeed } from '@/hooks/practice/usePracticeAttacksFeed'
 import { useAttackPracticeSentinel } from '@/hooks/practice/useAttackPracticeSentinel'
 import { useAttackFeedMessages } from '@/hooks/practice/useAttackFeedMessages'
-import { useWalrusRecord } from '@/hooks/walrus/useWalrusRecord'
+import { useWalrusRecord, WalrusRecordTransientError } from '@/hooks/walrus/useWalrusRecord'
 import { useAutoResizingTextarea } from '@/hooks/useAutoResizingTextarea'
 import { useSentinelVoice } from '@/hooks/voice'
 import { PRACTICE_NETWORK } from '@/lib/practice'
@@ -256,13 +256,22 @@ export function PracticeChatInterface({
             toast.dismiss(walrusToastId)
           }
         })
-        .catch(() => {
-          // The backend may still be finalizing — the record shows up in the
-          // feed with SEE_ON_WALRUS once it lands.
-          toast.info(
-            'Walrus storage still in progress — it will appear in the feed shortly',
-            { id: walrusToastId }
-          )
+        .catch(err => {
+          if (err instanceof WalrusRecordTransientError) {
+            // The backend self-heals the finalize — the record shows up in
+            // the feed with SEE_ON_WALRUS once it lands.
+            toast.info(
+              'Walrus storage still in progress — it will appear in the feed shortly',
+              { id: walrusToastId }
+            )
+          } else {
+            // Terminal (e.g. the wallet lacks WAL for storage): surface the
+            // backend's actionable message instead of hiding it.
+            toast.error(
+              `Walrus storage failed: ${err instanceof Error ? err.message : 'unknown error'}`,
+              { id: walrusToastId }
+            )
+          }
         })
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Attack failed'

@@ -54,6 +54,14 @@ async function readErrorMessage(response: Response): Promise<string> {
 }
 
 /**
+ * A failure that leaves the record resumable — the backend self-heals the
+ * finalize, so the record still lands with SEE_ON_WALRUS later. Callers can
+ * present these as "still in progress"; anything else is terminal (e.g. the
+ * wallet lacks WAL for storage) and must be surfaced to the user.
+ */
+export class WalrusRecordTransientError extends Error {}
+
+/**
  * Stores an attack record on Walrus with the user's wallet as the blob owner,
  * using the backend's user-signed flow:
  *
@@ -134,6 +142,7 @@ export function useWalrusRecord() {
             if (!statusResponse.ok) throw new Error(await readErrorMessage(statusResponse))
             const status = (await statusResponse.json()) as StatusResponse
             if (status.status === 'failed') {
+              // Terminal — the backend has given up on this record.
               throw new Error(status.error || 'Walrus record failed to finalize')
             }
             certifyTxBytes = status.certify_tx_bytes
@@ -144,11 +153,17 @@ export function useWalrusRecord() {
             // record will reach awaiting_certify_signature anyway.
             if (err instanceof Error && err.message.includes('failed to finalize')) throw err
             consecutivePollErrors += 1
-            if (consecutivePollErrors >= 5) throw err
+            if (consecutivePollErrors >= 5) {
+              throw new WalrusRecordTransientError(
+                err instanceof Error ? err.message : 'Walrus status polling failed'
+              )
+            }
           }
         }
         if (!certifyTxBytes) {
-          throw new Error('Walrus record finalize timed out — try again shortly')
+          throw new WalrusRecordTransientError(
+            'Walrus record finalize timed out — the backend keeps retrying and the certify transaction can be signed later'
+          )
         }
       }
 
