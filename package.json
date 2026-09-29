@@ -23,9 +23,10 @@
     "@coral-xyz/anchor": "^0.32.1",
     "@ducanh2912/next-pwa": "^10.2.9",
     "@mysten/bcs": "^1.6.1",
-    "@mysten/dapp-kit": "^0.16.4",
-    "@mysten/sui": "^1.30.0",
+    "@mysten/dapp-kit": "1.1.17",
+    "@mysten/sui": "2.33.1",
     "@mysten/wallet-standard": "^0.15.1",
+    "@mysten/walrus": "1.1.7",
     "@novu/nextjs": "^3.18.2",
     "@privy-io/react-auth": "^3.42.0",
     "@privy-io/wagmi": "^4.0.17",
@@ -76,7 +77,7 @@
     "wagmi": "2"
   },
   "overrides": {
-    "@mysten/sui": "^1.30.0"
+    "@mysten/sui": "2.33.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

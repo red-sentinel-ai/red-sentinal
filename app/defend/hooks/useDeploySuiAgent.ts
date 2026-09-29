@@ -1,5 +1,5 @@
 import { Transaction } from '@mysten/sui/transactions'
-import { SuiTransactionBlockResponse } from '@mysten/sui/client'
+import { SuiTransactionBlockResponse } from '@mysten/sui/jsonRpc'
 import { useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 import { SUI_CONFIG } from '@/constants'

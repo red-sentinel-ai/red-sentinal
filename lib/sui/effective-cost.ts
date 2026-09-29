@@ -1,8 +1,8 @@
 import { Transaction } from '@mysten/sui/transactions'
-import type { SuiClient } from '@mysten/sui/client'
+import type { SuiJsonRpcClient } from '@mysten/sui/jsonRpc'
 
 export async function fetchEffectiveCost(
-  client: SuiClient,
+  client: SuiJsonRpcClient,
   {
     packageId,
     moduleName,

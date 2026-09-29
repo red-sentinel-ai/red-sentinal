@@ -20,13 +20,14 @@ import { AuthProvider } from '@/context/AuthContext'
 import { InstallPromptProvider } from '@/context/InstallPromptContext'
 
 const suiNetworks = {
-  testnet: { url: SUI_RPC_URLS.testnet },
-  mainnet: { url: SUI_RPC_URLS.mainnet },
+  testnet: { url: SUI_RPC_URLS.testnet, network: 'testnet' as const },
+  mainnet: { url: SUI_RPC_URLS.mainnet, network: 'mainnet' as const },
 }
 
 // Build every dapp-kit client through createSuiClient so all Sui RPC traffic —
 // hooks, wallet queries, the attack flow — goes through the retrying transport.
-const createClient = (_name: string, { url }: { url: string }) => createSuiClient(url)
+const createClient = (_name: string, config: { url: string }) =>
+  createSuiClient(config.url, APP_NETWORK)
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(

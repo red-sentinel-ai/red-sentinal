@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { SuiClient } from '@mysten/sui/client'
+import { SuiJsonRpcClient } from '@mysten/sui/jsonRpc'
 import { useQuery } from '@tanstack/react-query'
 import { APP_NETWORK, SUI_CONFIG } from '@/constants'
 import { SUI_EVENTS_RPC_URLS } from '@/constants/sui-rpc'
@@ -12,7 +12,7 @@ export interface AgentEvents {
 
 export const AGENT_EVENTS_QUERY_KEY = 'agentEvents'
 
-const eventsClient = createSuiClient(SUI_EVENTS_RPC_URLS[APP_NETWORK])
+const eventsClient = createSuiClient(SUI_EVENTS_RPC_URLS[APP_NETWORK], APP_NETWORK)
 
 export function useAgentEvents() {
 
@@ -35,7 +35,7 @@ export function useAgentEvents() {
     refetch,
   }
 }
-async function getAgentEvents(client: SuiClient) {
+async function getAgentEvents(client: SuiJsonRpcClient) {
   const packageId = SUI_CONFIG.APP_PACKAGE_ID
   const moduleName = SUI_CONFIG.MODULE_NAME
   try {

@@ -2,7 +2,7 @@
 
 import { useCallback } from 'react'
 import type { Transaction } from '@mysten/sui/transactions'
-import type { SuiTransactionBlockResponse } from '@mysten/sui/client'
+import type { SuiTransactionBlockResponse } from '@mysten/sui/jsonRpc'
 import { useCurrentAccount, useSignTransaction, useSuiClient } from '@mysten/dapp-kit'
 import { toBase64 } from '@mysten/sui/utils'
 import { APP_NETWORK } from '@/constants'

@@ -1,45 +1,43 @@
 'use client'
 
 import { useCallback } from 'react'
-import { useCurrentAccount, useSignTransaction } from '@mysten/dapp-kit'
+import { useCurrentAccount, useSignTransaction, useSuiClient } from '@mysten/dapp-kit'
+import { WalrusClient } from '@mysten/walrus'
+import { Transaction } from '@mysten/sui/transactions'
+import { toBase64 } from '@mysten/sui/utils'
+import type { SuiTransactionBlockResponse } from '@mysten/sui/jsonRpc'
 import { APP_NETWORK, SUI_SENTINEL_API_URL } from '@/constants'
+import { SUI_COIN_TYPE } from '@/constants/tokens'
 import { useAuth } from '@/context/AuthContext'
 
 export interface WalrusRecordResult {
-  recordId: string
   blobId: string
   registerDigest: string
   certifyDigest: string
 }
 
-interface PrepareResponse {
-  record_id: string
-  blob_id: string
-  tx_bytes: string
-  gas_budget: number
+export type WalrusStorageStep =
+  | 'fetching'
+  | 'encoding'
+  | 'registering'
+  | 'uploading'
+  | 'certifying'
+  | 'finalizing'
+
+export const WALRUS_STEP_LABELS: Record<WalrusStorageStep, string> = {
+  fetching: 'Fetching attack record…',
+  encoding: 'Encoding blob…',
+  registering: 'Sign the register transaction in your wallet…',
+  uploading: 'Uploading to Walrus storage nodes…',
+  certifying: 'Sign the certify transaction in your wallet…',
+  finalizing: 'Verifying and linking the record…',
 }
 
-interface ConfirmResponse {
-  record_id: string
-  register_digest: string
-  /** Present in older responses; the async confirm returns status: 'processing'. */
-  certify_tx_bytes?: string | null
-  status?: string
-}
-
-interface StatusResponse {
-  record_id: string
-  status: string
-  blob_id: string | null
-  register_digest: string | null
-  certify_tx_bytes: string | null
-  error: string | null
-}
-
-interface CertifyResponse {
-  record_id: string
-  blob_id: string
-  digest: string
+interface RecordPayloadResponse {
+  attack_id: string
+  sentinel_id: number
+  epochs: number
+  blob_bytes: string
 }
 
 async function readErrorMessage(response: Response): Promise<string> {
@@ -53,38 +51,90 @@ async function readErrorMessage(response: Response): Promise<string> {
   return `Walrus record request failed (${response.status})`
 }
 
-/**
- * A failure that leaves the record resumable — the backend self-heals the
- * finalize, so the record still lands with SEE_ON_WALRUS later. Callers can
- * present these as "still in progress"; anything else is terminal (e.g. the
- * wallet lacks WAL for storage) and must be surfaced to the user.
- */
-export class WalrusRecordTransientError extends Error {}
+function base64ToBytes(base64: string): Uint8Array {
+  const binary = atob(base64)
+  const bytes = new Uint8Array(binary.length)
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i)
+  return bytes
+}
 
 /**
- * Stores an attack record on Walrus with the user's wallet as the blob owner,
- * using the backend's user-signed flow:
+ * Per-network Walrus clients, each bound to the dapp-kit Sui client so all
+ * RPC traffic goes through the app's retrying transport.
+ */
+const walrusClients: Partial<Record<string, WalrusClient>> = {}
+
+function getWalrusClient(suiClient: ReturnType<typeof useSuiClient>): WalrusClient {
+  const cached = walrusClients[APP_NETWORK]
+  if (cached) return cached
+  const client = new WalrusClient({ network: APP_NETWORK, suiClient })
+  walrusClients[APP_NETWORK] = client
+  return client
+}
+
+/**
+ * Sign a transaction with the connected wallet and execute it (the wallet is
+ * sender and gas payer — gas comes from its own coins at build time).
+ */
+async function signAndExecute(options: {
+  transaction: Transaction
+  suiClient: ReturnType<typeof useSuiClient>
+  account: { address: string }
+  signTransaction: (args: { transaction: string; account: { address: string } }) => Promise<{ signature: string }>
+}): Promise<SuiTransactionBlockResponse> {
+  const { transaction, suiClient, account, signTransaction } = options
+
+  transaction.setSender(account.address)
+  let bytes: Uint8Array
+  try {
+    bytes = await transaction.build({ client: suiClient })
+  } catch (error) {
+    if (error instanceof Error && error.message.includes('No valid gas coins found')) {
+      throw new Error(
+        `No SUI gas coins found for ${account.address} on ${APP_NETWORK}. Claim SUI gas credit from your profile or fund your wallet with SUI, and check your wallet is connected to ${APP_NETWORK}.`
+      )
+    }
+    throw error
+  }
+  const txBytes = toBase64(bytes)
+  const { signature } = await signTransaction({ transaction: txBytes, account })
+
+  return suiClient.executeTransactionBlock({
+    transactionBlock: txBytes,
+    signature,
+    options: { showEffects: true, showObjectChanges: true },
+  })
+}
+
+/**
+ * Stores an attack record on Walrus entirely from the browser:
  *
- *   1. prepare  — backend builds the register transaction (sender and gas
- *                 payer = the user's connected wallet) and returns it for signing
- *   2. confirm  — the user-signed register tx executes (the wallet's signature
- *                 pays the gas) and slivers are uploaded to the storage nodes;
- *                 returns processing status while the certify tx is built
- *   3. certify  — the user signs the certificate, the tx executes and the blob
- *                 is permanently stored and owned by the user's address
+ *   1. fetch    — backend returns the exact canonical record bytes for the
+ *                 attack (server-authoritative content)
+ *   2. encode   — blob encoding happens locally
+ *   3. register — the wallet signs and pays the register transaction
+ *                 (reserve_space + register_blob, WAL storage fee)
+ *   4. upload   — slivers go to the Walrus storage nodes from this connection
+ *   5. certify  — the wallet signs and pays the certify transaction
+ *   6. finalize — the backend reads the blob back, verifies its content
+ *                 against the canonical record, and links it to the attack
  *
- * The user's wallet pays both the Sui gas and the WAL storage + write fees
- * from its own balance — Walrus or SUI credit claimed on the profile is the
- * expected source. Prepare rejects with actionable guidance when the balance
- * is short.
+ * The wallet pays the SUI gas and the WAL storage + write fees from its own
+ * balance; Walrus or SUI credit claimed on the profile is the expected source.
+ * There is no server-side resume — an interrupted flow is simply re-run
+ * (encoding is deterministic).
  */
 export function useWalrusRecord() {
   const account = useCurrentAccount()
+  const suiClient = useSuiClient()
   const { user } = useAuth()
   const { mutateAsync: signTransaction } = useSignTransaction()
 
   const storeRecord = useCallback(
-    async (attackId: string | null | undefined): Promise<WalrusRecordResult | null> => {
+    async (
+      attackId: string | null | undefined,
+      onStep?: (step: WalrusStorageStep) => void
+    ): Promise<WalrusRecordResult | null> => {
       if (!attackId || !account?.address || !user?.id) return null
 
       const base = `${SUI_SENTINEL_API_URL}/walrus/${APP_NETWORK}/records`
@@ -92,155 +142,132 @@ export function useWalrusRecord() {
         'Content-Type': 'application/json',
         'x-user-id': user.id,
       }
+      const walrus = getWalrusClient(suiClient)
 
-      // 1. Prepare — get the register transaction built for this wallet.
-      const prepareResponse = await fetch(`${base}/prepare`, {
-        method: 'POST',
-        credentials: 'include',
-        headers,
-        body: JSON.stringify({
-          attack_id: attackId,
-          attacker_address: account.address,
-        }),
-      })
-      if (!prepareResponse.ok) throw new Error(await readErrorMessage(prepareResponse))
-      const prepared = (await prepareResponse.json()) as PrepareResponse
+      // 1. Fetch the canonical record bytes for this attack.
+      onStep?.('fetching')
+      const payloadResponse = await fetch(
+        `${base}/${attackId}/payload?attacker_address=${encodeURIComponent(account.address)}`,
+        { credentials: 'include', headers }
+      )
+      if (!payloadResponse.ok) throw new Error(await readErrorMessage(payloadResponse))
+      const payload = (await payloadResponse.json()) as RecordPayloadResponse
+      const blob = base64ToBytes(payload.blob_bytes)
 
-      // 2. Sign the register transaction and confirm — the backend executes
-      //    the wallet-signed tx (the wallet pays the gas) and responds
-      //    immediately; the slivers upload + certify build run in the
-      //    background.
-      const { signature: registerSignature } = await signTransaction({
-        transaction: prepared.tx_bytes,
-        account,
-      })
-      const confirmResponse = await fetch(`${base}/${prepared.record_id}/confirm`, {
-        method: 'POST',
-        credentials: 'include',
-        headers,
-        body: JSON.stringify({
-          sender: account.address,
-          user_signature: registerSignature,
-        }),
-      })
-      if (!confirmResponse.ok) throw new Error(await readErrorMessage(confirmResponse))
-      const confirmed = (await confirmResponse.json()) as ConfirmResponse
+      // 2. Encode the blob locally.
+      onStep?.('encoding')
+      const encoded = await walrus.encodeBlob(blob)
 
-      // 3. Wait for the background finalize (slivers → storage nodes, certify
-      //    build), polling the status endpoint for the certify transaction.
-      let certifyTxBytes = confirmed.certify_tx_bytes ?? null
-      if (!certifyTxBytes) {
-        const deadline = Date.now() + 120_000
-        let consecutivePollErrors = 0
-        while (!certifyTxBytes && Date.now() < deadline) {
-          await new Promise(resolve => setTimeout(resolve, 4_000))
-          try {
-            const statusResponse = await fetch(`${base}/${prepared.record_id}`, {
-              credentials: 'include',
-              headers,
-            })
-            if (!statusResponse.ok) throw new Error(await readErrorMessage(statusResponse))
-            const status = (await statusResponse.json()) as StatusResponse
-            if (status.status === 'failed') {
-              // Terminal — the backend has given up on this record.
-              throw new Error(status.error || 'Walrus record failed to finalize')
-            }
-            certifyTxBytes = status.certify_tx_bytes
-            consecutivePollErrors = 0
-          } catch (err) {
-            // A single 'failed' status must propagate; transient network /
-            // 5xx hiccups are tolerated — the backend self-heals and the
-            // record will reach awaiting_certify_signature anyway.
-            if (err instanceof Error && err.message.includes('failed to finalize')) throw err
-            consecutivePollErrors += 1
-            if (consecutivePollErrors >= 5) {
-              throw new WalrusRecordTransientError(
-                err instanceof Error ? err.message : 'Walrus status polling failed'
-              )
-            }
-          }
-        }
-        if (!certifyTxBytes) {
-          throw new WalrusRecordTransientError(
-            'Walrus record finalize timed out — the backend keeps retrying and the certify transaction can be signed later'
-          )
-        }
+      // Storage fees are paid from the wallet's own WAL. Check up front so a
+      // missing balance surfaces as guidance instead of a raw build failure.
+      const storageCost = await walrus.storageCost(blob.length, payload.epochs)
+      const balances = await suiClient.getAllBalances({ owner: account.address })
+      const walBalance = balances.find(balance =>
+        balance.coinType.toLowerCase().endsWith('::wal::wal')
+      )
+      const walAvailable = BigInt(walBalance?.totalBalance ?? 0)
+      const formatWal = (base: bigint) => `${Number(base) / 1e9} WAL`
+      if (walAvailable < storageCost.totalCost) {
+        throw new Error(
+          `Your wallet holds ${formatWal(walAvailable)} WAL but the record needs ${formatWal(storageCost.totalCost)} for Walrus storage fees. Claim the Walrus usage credit on your profile or fund your wallet with WAL and try again.`
+        )
       }
 
-      // 4. Sign the certify transaction and finalize.
-      const { signature: certifySignature } = await signTransaction({
-        transaction: certifyTxBytes,
+      // 3. Sign and pay the register transaction (reserve_space +
+      //    register_blob in one transaction; the blob is owned by the wallet).
+      onStep?.('registering')
+      const registerTx = walrus.registerBlobTransaction({
+        size: blob.length,
+        epochs: payload.epochs,
+        blobId: encoded.blobId,
+        rootHash: encoded.rootHash,
+        deletable: false,
+        owner: account.address,
+      })
+      const registerResult = await signAndExecute({
+        transaction: registerTx,
+        suiClient,
         account,
+        signTransaction: args => signTransaction(args),
       })
-      const certifyResponse = await fetch(`${base}/${prepared.record_id}/certify`, {
-        method: 'POST',
-        credentials: 'include',
-        headers,
-        body: JSON.stringify({ user_signature: certifySignature }),
+      if (registerResult.effects?.status?.status !== 'success') {
+        throw new Error(
+          `Walrus register transaction failed: ${registerResult.effects?.status?.error ?? 'unknown error'}`
+        )
+      }
+      const blobType = await walrus.getBlobType()
+      const blobObject = registerResult.objectChanges?.find(
+        (obj: any) =>
+          obj.type === 'created' &&
+          typeof obj.objectType === 'string' &&
+          obj.objectType.toLowerCase() === blobType.toLowerCase()
+      ) as { objectId?: string } | undefined
+      if (!blobObject?.objectId) {
+        throw new Error('Blob object not found in register transaction effects')
+      }
+
+      // 4. Upload the slivers to the Walrus storage nodes.
+      onStep?.('uploading')
+      const confirmations = await walrus.writeEncodedBlobToNodes({
+        blobId: encoded.blobId,
+        objectId: blobObject.objectId,
+        metadata: encoded.metadata,
+        sliversByNode: encoded.sliversByNode,
+        deletable: false,
       })
-      if (!certifyResponse.ok) throw new Error(await readErrorMessage(certifyResponse))
-      const certified = (await certifyResponse.json()) as CertifyResponse
+      const certificate = await walrus.certificateFromConfirmations({
+        confirmations,
+        blobId: encoded.blobId,
+        blobObjectId: blobObject.objectId,
+        deletable: false,
+      })
+
+      // 5. Sign and pay the certify transaction — the blob is then permanent.
+      onStep?.('certifying')
+      const certifyTx = walrus.certifyBlobTransaction({
+        certificate,
+        blobId: encoded.blobId,
+        blobObjectId: blobObject.objectId,
+        deletable: false,
+      })
+      const certifyResult = await signAndExecute({
+        transaction: certifyTx,
+        suiClient,
+        account,
+        signTransaction: args => signTransaction(args),
+      })
+      if (certifyResult.effects?.status?.status !== 'success') {
+        throw new Error(
+          `Walrus certify transaction failed: ${certifyResult.effects?.status?.error ?? 'unknown error'}`
+        )
+      }
+
+      // 6. The backend verifies the stored blob against the canonical record
+      //    and links it to the attack doc.
+      onStep?.('finalizing')
+      const finalizeResponse = await fetch(
+        `${base}/${attackId}/finalize?attacker_address=${encodeURIComponent(account.address)}`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers,
+          body: JSON.stringify({
+            blob_id: encoded.blobId,
+            register_digest: registerResult.digest,
+            certify_digest: certifyResult.digest,
+          }),
+        }
+      )
+      if (!finalizeResponse.ok) throw new Error(await readErrorMessage(finalizeResponse))
 
       return {
-        recordId: certified.record_id,
-        blobId: certified.blob_id,
-        registerDigest: confirmed.register_digest,
-        certifyDigest: certified.digest,
+        blobId: encoded.blobId,
+        registerDigest: registerResult.digest,
+        certifyDigest: certifyResult.digest,
       }
     },
-    [account, signTransaction, user?.id]
+    [account, signTransaction, suiClient, user?.id]
   )
 
-  /**
-   * Finishes a record left in `awaiting_certify_signature` by a previous
-   * session — the certify tx can only be signed by the blob owner (the
-   * user's wallet), so it may outlive the tab that started the flow.
-   * Returns null when there is nothing to resume.
-   */
-  const resumePendingSignature = useCallback(async (): Promise<WalrusRecordResult | null> => {
-    if (!account?.address || !user?.id) return null
-
-    const base = `${SUI_SENTINEL_API_URL}/walrus/${APP_NETWORK}/records`
-    const headers = {
-      'Content-Type': 'application/json',
-      'x-user-id': user.id,
-    }
-
-    const pendingResponse = await fetch(`${base}/pending-signature`, {
-      credentials: 'include',
-      headers,
-    })
-    if (!pendingResponse.ok) throw new Error(await readErrorMessage(pendingResponse))
-    const { record } = (await pendingResponse.json()) as {
-      record: {
-        record_id: string
-        status: string
-        blob_id: string
-        certify_tx_bytes: string | null
-      } | null
-    }
-    if (!record?.certify_tx_bytes) return null
-
-    const { signature: certifySignature } = await signTransaction({
-      transaction: record.certify_tx_bytes,
-      account,
-    })
-    const certifyResponse = await fetch(`${base}/${record.record_id}/certify`, {
-      method: 'POST',
-      credentials: 'include',
-      headers,
-      body: JSON.stringify({ user_signature: certifySignature }),
-    })
-    if (!certifyResponse.ok) throw new Error(await readErrorMessage(certifyResponse))
-    const certified = (await certifyResponse.json()) as CertifyResponse
-
-    return {
-      recordId: certified.record_id,
-      blobId: certified.blob_id,
-      registerDigest: '',
-      certifyDigest: certified.digest,
-    }
-  }, [account, signTransaction, user?.id])
-
-  return { storeRecord, resumePendingSignature }
+  return { storeRecord }
 }

@@ -1,4 +1,4 @@
-import { SuiClient, SuiHTTPTransport } from '@mysten/sui/client'
+import { JsonRpcHTTPTransport, SuiJsonRpcClient } from '@mysten/sui/jsonRpc'
 
 // Public Sui RPCs throttle on a per-second sliding window, and a single attack
 // fires a burst of ~10 calls (build → execute → wait). The SDK's transport has
@@ -56,5 +56,8 @@ const retryingFetch = (async (input, init) => {
   return lastResponse!
 }) as typeof fetch
 
-export const createSuiClient = (url: string) =>
-  new SuiClient({ transport: new SuiHTTPTransport({ url, fetch: retryingFetch }) })
+export const createSuiClient = (url: string, network: 'mainnet' | 'testnet') =>
+  new SuiJsonRpcClient({
+    transport: new JsonRpcHTTPTransport({ url, fetch: retryingFetch }),
+    network,
+  })

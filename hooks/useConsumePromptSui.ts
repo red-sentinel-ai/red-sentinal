@@ -9,7 +9,7 @@ import { ConsumePromptApiResponse } from '@/types'
 import { hexToVector } from '@/lib/utils'
 import { fetchEffectiveCost } from '@/lib/sui/effective-cost'
 import { type Agent } from '@/types/agents'
-import { SuiTransactionBlockResponse, SuiObjectResponse } from '@mysten/sui/client'
+import { SuiObjectResponse, SuiTransactionBlockResponse } from '@mysten/sui/jsonRpc'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 
 // Raw shape returned by the TEE's /consume-prompt for Sui. The contract signs

@@ -12,7 +12,10 @@ import type { ConsumePromptApiResponse } from '@/types'
 import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from '@/components/ui'
 import { AgentChallengePageSkeleton } from '@/components/ui/skeletons/AgentChallengePageSkeleton'
 import { useConsumePromptSui } from '@/hooks/useConsumePromptSui'
-import { useWalrusRecord, WalrusRecordTransientError } from '@/hooks/walrus/useWalrusRecord'
+import {
+  useWalrusRecord,
+  WALRUS_STEP_LABELS,
+} from '@/hooks/walrus/useWalrusRecord'
 import { useConsumePromptSolana } from '@/hooks/useConsumePromptSolana'
 import { useConsumePromptEVM } from '@/hooks/useConsumePromptEVM'
 import { useAgent, AGENT_QUERY_KEY } from '@/hooks/agents/useAgentDetails'
@@ -130,24 +133,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
     [connectedAddress, agent, slug, refetch, refetchChat, queryClient, activeChain]
   )
 
-  const { storeRecord, resumePendingSignature } = useWalrusRecord()
-
-  // A record left awaiting the certify signature by an earlier session can
-  // only be finished by the blob owner (this wallet) — offer to sign on load.
-  useEffect(() => {
-    resumePendingSignature()
-      .then(result => {
-        if (result) {
-          toast.success('Attack record stored on Walrus')
-          refetchChat()
-        }
-      })
-      .catch(() => {
-        // User dismissed the wallet popup or the backend hiccuped — the
-        // pending signature stays resumable on the next visit.
-      })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const { storeRecord } = useWalrusRecord()
 
   const resolveAndStoreRecord = useCallback(
     async (attackNonce: string) => {
@@ -160,9 +146,14 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
         if (!response.ok) throw new Error(`Attack lookup failed (${response.status})`)
         const { attack_id: attackId } = (await response.json()) as { attack_id: string }
 
+        // The browser drives the whole Walrus flow: canonical bytes from the
+        // backend, wallet-signed register + certify transactions, sliver
+        // upload, and a verified finalize. Surface each step on the toast.
         const walrusToastId = toast.loading('Storing attack record on Walrus…')
         try {
-          const result = await storeRecord(attackId)
+          const result = await storeRecord(attackId, step => {
+            toast.loading(WALRUS_STEP_LABELS[step], { id: walrusToastId })
+          })
           if (result) {
             toast.success('Attack record stored on Walrus', { id: walrusToastId })
             // Surface SEE_ON_WALRUS immediately instead of waiting for the
@@ -172,21 +163,12 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
             toast.dismiss(walrusToastId)
           }
         } catch (err) {
-          if (err instanceof WalrusRecordTransientError) {
-            // The backend self-heals the finalize — the record lands in the
-            // chat history with SEE_ON_WALRUS once it does.
-            toast.info('Walrus storage still in progress — it will appear here shortly', {
-              id: walrusToastId,
-            })
-          } else {
-            // Terminal (e.g. the wallet lacks WAL for storage or SUI for gas):
-            // surface the backend's actionable message instead of pretending
-            // the flow is still running.
-            toast.error(
-              `Walrus storage failed: ${err instanceof Error ? err.message : 'unknown error'}`,
-              { id: walrusToastId }
-            )
-          }
+          // Terminal (insufficient WAL/SUI, rejected signature, verification
+          // failure) — surface the actionable message instead of hiding it.
+          toast.error(
+            `Walrus storage failed: ${err instanceof Error ? err.message : 'unknown error'}`,
+            { id: walrusToastId }
+          )
         }
       } catch (err) {
         toast.warning(

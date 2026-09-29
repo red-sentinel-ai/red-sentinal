@@ -18,7 +18,7 @@ import { VoiceChatSurface } from '@/components/voice/VoiceChatSurface'
 import { usePracticeAttacksFeed } from '@/hooks/practice/usePracticeAttacksFeed'
 import { useAttackPracticeSentinel } from '@/hooks/practice/useAttackPracticeSentinel'
 import { useAttackFeedMessages } from '@/hooks/practice/useAttackFeedMessages'
-import { useWalrusRecord, WalrusRecordTransientError } from '@/hooks/walrus/useWalrusRecord'
+import { useWalrusRecord, WALRUS_STEP_LABELS } from '@/hooks/walrus/useWalrusRecord'
 import { useAutoResizingTextarea } from '@/hooks/useAutoResizingTextarea'
 import { useSentinelVoice } from '@/hooks/voice'
 import { PRACTICE_NETWORK } from '@/lib/practice'
@@ -242,12 +242,13 @@ export function PracticeChatInterface({
       // Pull the feed forward so the optimistic round resolves to server truth.
       refetchFeed()
 
-      // Store the attack record on Walrus (user-signed, wallet-paid). Runs
-      // after the attack UI resolves and never blocks or breaks the chat —
-      // the sliver upload can be slow, so surface it as in-progress rather
-      // than an error.
+      // Store the attack record on Walrus from the browser (wallet-paid).
+      // Runs after the attack UI resolves and never blocks or breaks the
+      // chat — surface each step on the toast.
       const walrusToastId = toast.loading('Storing attack record on Walrus…')
-      storeRecord(data.attack_id)
+      storeRecord(data.attack_id, step => {
+        toast.loading(WALRUS_STEP_LABELS[step], { id: walrusToastId })
+      })
         .then(result => {
           if (result) {
             toast.success('Attack record stored on Walrus', { id: walrusToastId })
@@ -257,21 +258,12 @@ export function PracticeChatInterface({
           }
         })
         .catch(err => {
-          if (err instanceof WalrusRecordTransientError) {
-            // The backend self-heals the finalize — the record shows up in
-            // the feed with SEE_ON_WALRUS once it lands.
-            toast.info(
-              'Walrus storage still in progress — it will appear in the feed shortly',
-              { id: walrusToastId }
-            )
-          } else {
-            // Terminal (e.g. the wallet lacks WAL for storage): surface the
-            // backend's actionable message instead of hiding it.
-            toast.error(
-              `Walrus storage failed: ${err instanceof Error ? err.message : 'unknown error'}`,
-              { id: walrusToastId }
-            )
-          }
+          // Terminal (insufficient WAL/SUI, rejected signature, verification
+          // failure) — surface the actionable message instead of hiding it.
+          toast.error(
+            `Walrus storage failed: ${err instanceof Error ? err.message : 'unknown error'}`,
+            { id: walrusToastId }
+          )
         })
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Attack failed'
