@@ -10,6 +10,7 @@ import { CHAINS } from '@/constants/chains'
 import { TokenAmount } from './ui/common/TokenAmount'
 import { cn, formatSentinelId, truncateText } from '@/lib/utils'
 import { getSentinelStatus, SENTINEL_STATUS_META } from '@/lib/sentinel-status'
+import type { TagsByAgentId } from '@/hooks/agents/useAgentTags'
 import Image from 'next/image'
 
 export enum TabType {
@@ -20,12 +21,30 @@ export enum TabType {
 
 const MOBILE_NAME_MAX_CHARS = 13
 
+const TagChips = ({ agentId, tagsByAgentId }: { agentId: string; tagsByAgentId?: TagsByAgentId }) => {
+  const tags = tagsByAgentId?.[agentId]
+  if (!tags || tags.length === 0) return null
+  return (
+    <span className="flex flex-wrap items-center gap-1">
+      {tags.map(tag => (
+        <span
+          key={tag.tag_id}
+          className="border border-[var(--color-border-default)] bg-[var(--color-bg-elevated)] px-1.5 py-px text-[9px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-secondary)]"
+        >
+          {tag.name}
+        </span>
+      ))}
+    </span>
+  )
+}
+
 interface AgentsListProps {
   agents: Agent[]
   isFetchingAgents: boolean
   sortField: SortField
   sortDirection: SortDirection
   onSort: (field: SortField) => void
+  tagsByAgentId?: TagsByAgentId
 }
 
 export const AgentsList = ({
@@ -34,6 +53,7 @@ export const AgentsList = ({
   sortField,
   sortDirection,
   onSort,
+  tagsByAgentId,
 }: AgentsListProps) => {
   const router = useRouter()
 
@@ -176,6 +196,7 @@ export const AgentsList = ({
                       <p className="font-body text-[10px] uppercase tracking-[0.06em] text-[var(--color-text-faint)]">
                         ID: {formatSentinelId(agent.agent_id)}
                       </p>
+                      <TagChips agentId={agent.agent_id} tagsByAgentId={tagsByAgentId} />
                       <div className="grid grid-cols-2 gap-2 text-sm">
                         <div>
                           <p className="text-xs uppercase text-[var(--color-text-muted)]">
@@ -272,6 +293,7 @@ export const AgentsList = ({
                           <span className="font-body text-[10px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-faint)]">
                             ID: {formatSentinelId(agent.agent_id)}
                           </span>
+                          <TagChips agentId={agent.agent_id} tagsByAgentId={tagsByAgentId} />
                         </div>
                       </div>
                       <div

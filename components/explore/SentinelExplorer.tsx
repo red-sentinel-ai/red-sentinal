@@ -9,12 +9,15 @@ import {
   Search,
   Shield,
   SlidersHorizontal,
+  Tag,
   X,
 } from 'lucide-react'
 
 import { AgentsList } from '@/components/AgentsList'
 import { FilterSelect, type FilterSelectOption } from '@/components/attack/FilterSelect'
 import { useAllAgents } from '@/hooks/agents/useAllAgents'
+import { useAgentTags } from '@/hooks/agents/useAgentTags'
+import { useTags } from '@/hooks/tags/useTags'
 import type { SortField, SortDirection } from '@/types/agents'
 import { useAgentCoinTypes } from '@/hooks/agents/useAgentCoinTypes'
 import { Button } from '@/components/ui/button'
@@ -58,6 +61,7 @@ export function SentinelExplorer({ initialChain }: { initialChain?: string }) {
   const [selectedSymbol, setSelectedSymbol] = useState<string | undefined>(undefined)
   const [selectedChain, setSelectedChain] = useState<SupportedChain | undefined>(initial)
   const [selectedStatus, setSelectedStatus] = useState<SentinelStatusFilter>('all')
+  const [selectedTag, setSelectedTag] = useState<string | undefined>(undefined)
   const [searchQuery, setSearchQuery] = useState('')
 
   const {
@@ -77,6 +81,10 @@ export function SentinelExplorer({ initialChain }: { initialChain?: string }) {
   )
   const totalAgents = allAgentsData?.pages[0]?.total ?? 0
 
+  const { data: allTags = [] } = useTags()
+  const agentIds = useMemo(() => allAgents.map(agent => agent.agent_id), [allAgents])
+  const { data: tagsByAgentId } = useAgentTags(agentIds)
+
   const filteredAgents = useMemo(() => {
     let base =
       activeTab === 'big_bounties'
@@ -91,6 +99,11 @@ export function SentinelExplorer({ initialChain }: { initialChain?: string }) {
     if (selectedSymbol) {
       base = base.filter(
         agent => getTokenForCoinType(agent.coin_type, agent.chain).symbol === selectedSymbol
+      )
+    }
+    if (selectedTag) {
+      base = base.filter(agent =>
+        (tagsByAgentId?.[agent.agent_id] ?? []).some(tag => tag.slug === selectedTag)
       )
     }
     const normalizedSearch = searchQuery.trim().toLowerCase()
@@ -111,7 +124,7 @@ export function SentinelExplorer({ initialChain }: { initialChain?: string }) {
       })
     }
     return base
-  }, [activeTab, allAgents, selectedSymbol, searchQuery])
+  }, [activeTab, allAgents, selectedSymbol, selectedTag, tagsByAgentId, searchQuery])
 
   const bigBountiesCount = allAgents.filter(agent => {
     try {
@@ -151,6 +164,16 @@ export function SentinelExplorer({ initialChain }: { initialChain?: string }) {
     ],
     [bigBountiesCount]
   )
+
+  const tagOptions = useMemo<FilterSelectOption[]>(
+    () => [
+      { value: ALL_FILTER_VALUE, label: 'All Tags' },
+      ...allTags.map(tag => ({ value: tag.slug, label: tag.name })),
+    ],
+    [allTags]
+  )
+
+  const selectedTagName = allTags.find(tag => tag.slug === selectedTag)?.name
 
   return (
     <div id="active-sentinels" className="scroll-mt-20">
@@ -216,6 +239,17 @@ export function SentinelExplorer({ initialChain }: { initialChain?: string }) {
           />
 
           <FilterSelect
+            icon={Tag}
+            label="Tag"
+            options={tagOptions}
+            value={selectedTag ?? ALL_FILTER_VALUE}
+            onValueChange={value =>
+              setSelectedTag(value === ALL_FILTER_VALUE ? undefined : value)
+            }
+            className="border-b border-r border-[var(--color-border-default)] md:min-w-[150px] md:border-b-0"
+          />
+
+          <FilterSelect
             icon={SlidersHorizontal}
             label="Pool filter"
             options={poolOptions}
@@ -226,7 +260,7 @@ export function SentinelExplorer({ initialChain }: { initialChain?: string }) {
         </div>
       </div>
 
-      {(selectedSymbol || selectedChain || selectedStatus !== 'all' || searchQuery.trim()) && (
+      {(selectedSymbol || selectedChain || selectedStatus !== 'all' || selectedTag || searchQuery.trim()) && (
         <div className="mb-3 flex flex-wrap items-center gap-2">
           <span className="font-body text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-muted)]">
             Filtered by:
@@ -289,6 +323,17 @@ export function SentinelExplorer({ initialChain }: { initialChain?: string }) {
               </button>
             </span>
           )}
+          {selectedTag && (
+            <span className="font-body flex items-center gap-1.5 border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.06em] text-white">
+              Tag: {selectedTagName ?? selectedTag}
+              <button
+                onClick={() => setSelectedTag(undefined)}
+                className="ml-0.5 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </span>
+          )}
         </div>
       )}
 
@@ -298,6 +343,7 @@ export function SentinelExplorer({ initialChain }: { initialChain?: string }) {
         sortField={sortField}
         sortDirection={sortDirection}
         onSort={handleSort}
+        tagsByAgentId={tagsByAgentId}
       />
 
       {/* Load More Button */}
