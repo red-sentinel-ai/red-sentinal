@@ -26,6 +26,7 @@ import { useSolanaWallet } from '@/hooks/useSolanaWallet'
 import { useSolanaTokenBalance } from '@/hooks/useSolanaTokenBalance'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
 import { TokenSelectDropdown } from '@/components/defend/TokenSelectDropdown'
+import { TagSelectDropdown } from '@/components/defend/TagSelectDropdown'
 import { RewardsConditions } from '@/components/defend/RewardsConditions'
 import { SuccessModal } from '@/components/DefenderSuccessModal'
 import { TokenAmount } from '@/components/ui/common/TokenAmount'
@@ -72,6 +73,7 @@ export default function DefendPageClient() {
   const { openConnectModal: openEvmConnectModal } = usePrivyConnect()
 
   const [sentinelType, setSentinelType] = useState<SentinelType>('basic')
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
   const [selectedTemplateIds, setSelectedTemplateIds] = useState<string[]>([])
   const [agenticEnvironment, setAgenticEnvironment] = useState<Record<string, unknown>>({})
   const [enabledToolIds, setEnabledToolIds] = useState<string[]>([])
@@ -246,6 +248,7 @@ export default function DefendPageClient() {
     agentImage,
     selectedImage,
     agenticConfig,
+    selectedTagIds,
   })
 
   const [isGeneratingConfig, setIsGeneratingConfig] = useState(false)
@@ -337,6 +340,7 @@ export default function DefendPageClient() {
     setShowSuccessModal(false)
     resetForm()
     resetDeployState()
+    setSelectedTagIds([])
     setAgentImage(null)
     setSelectedImage({ url: SENTINEL_IMAGES[0], isCustom: false })
     customProvider.resetValidation()
@@ -456,6 +460,8 @@ export default function DefendPageClient() {
             />
 
             <SentinelTypeToggle value={sentinelType} onChange={setSentinelType} />
+
+            <TagSelectDropdown selectedTagIds={selectedTagIds} onChange={setSelectedTagIds} />
 
             {sentinelType === 'agentic' && (
               <div className="flex flex-col gap-6">

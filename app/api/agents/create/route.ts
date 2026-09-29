@@ -17,6 +17,19 @@ export async function POST(req: NextRequest) {
   const imageFile = formData.get('image') as File | null
   const imageUrlString = formData.get('image_url') as string | null
 
+  const tagIdsRaw = formData.get('tag_ids') as string | null
+  let tagIds: string[] = []
+  if (tagIdsRaw) {
+    try {
+      const parsed = JSON.parse(tagIdsRaw)
+      if (Array.isArray(parsed)) {
+        tagIds = parsed.filter((id): id is string => typeof id === 'string')
+      }
+    } catch {
+      console.warn('[Create Agent] Ignoring malformed tag_ids payload')
+    }
+  }
+
   if (!agent_id || !agent_name || !object_id || !owner) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
   }
@@ -77,6 +90,18 @@ export async function POST(req: NextRequest) {
   if (error) {
     console.error('[Insert Agent Error]', error)
     return NextResponse.json({ error: error.message }, { status: 500 })
+  }
+
+  if (tagIds.length > 0) {
+    const { error: tagError } = await supabaseServiceClient
+      .from('ss_sentinel_tags')
+      .insert(tagIds.map(tag_id => ({ sentinel_id: agent_id_number, tag_id })))
+
+    // The agent is already created — a tag-assignment failure must not fail
+    // the launch, so it is only logged for observability.
+    if (tagError) {
+      console.error('[Assign Tags Error]', tagError)
+    }
   }
 
   return NextResponse.json(

@@ -589,6 +589,39 @@ export type Database = {
           },
         ]
       }
+      ss_sentinel_tags: {
+        Row: {
+          assigned_at: string
+          sentinel_id: number
+          tag_id: string
+        }
+        Insert: {
+          assigned_at?: string
+          sentinel_id: number
+          tag_id: string
+        }
+        Update: {
+          assigned_at?: string
+          sentinel_id?: number
+          tag_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ss_sentinel_tags_sentinel_id_fkey"
+            columns: ["sentinel_id"]
+            isOneToOne: false
+            referencedRelation: "ss_agents"
+            referencedColumns: ["agent_id"]
+          },
+          {
+            foreignKeyName: "ss_sentinel_tags_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "ss_tags"
+            referencedColumns: ["tag_id"]
+          },
+        ]
+      }
       ss_social_connections: {
         Row: {
           connected_at: string | null
@@ -633,6 +666,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      ss_tags: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          is_active: boolean
+          name: string
+          slug: string
+          tag_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          is_active?: boolean
+          name: string
+          slug: string
+          tag_id?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          is_active?: boolean
+          name?: string
+          slug?: string
+          tag_id?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       ss_user_follows: {
         Row: {

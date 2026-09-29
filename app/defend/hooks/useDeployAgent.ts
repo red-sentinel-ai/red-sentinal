@@ -24,6 +24,7 @@ interface UseDeployAgentOptions {
   agentImage: File | null
   selectedImage: { url: string; isCustom: boolean; file?: File | null } | null
   agenticConfig: AgenticConfig | null
+  selectedTagIds: string[]
 }
 
 export function useDeployAgent({
@@ -35,6 +36,7 @@ export function useDeployAgent({
   agentImage,
   selectedImage,
   agenticConfig,
+  selectedTagIds,
 }: UseDeployAgentOptions) {
   const { activeChain } = useActiveChain()
   const { intendedChainId, ensureWalletOnActiveChain } = useEvmChain()
@@ -107,6 +109,10 @@ export function useDeployAgent({
       payload.append('image', agentImage)
     } else if (selectedImage?.url && !selectedImage.isCustom) {
       payload.append('image_url', selectedImage.url)
+    }
+
+    if (selectedTagIds.length > 0) {
+      payload.append('tag_ids', JSON.stringify(selectedTagIds))
     }
 
     createAgent(payload, {
