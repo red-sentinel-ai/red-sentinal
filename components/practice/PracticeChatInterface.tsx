@@ -68,23 +68,7 @@ export function PracticeChatInterface({
   const attackMutation = useAttackPracticeSentinel()
   const isSubmitting = attackMutation.isPending
   const { user } = useAuth()
-  const { storeRecord, resumePendingSignature } = useWalrusRecord()
-
-  // Finish a record left awaiting the certify signature by an earlier session.
-  useEffect(() => {
-    resumePendingSignature()
-      .then(result => {
-        if (result) {
-          toast.success('Attack record stored on Walrus')
-          refetchFeed()
-        }
-      })
-      .catch(() => {
-        // Dismissed wallet popup or transient backend error — the pending
-        // signature stays resumable on the next visit.
-      })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const { storeRecord } = useWalrusRecord()
 
   // ChatMessage is built for on-chain agents; practice only needs name/avatar/chain.
   const agentForMessage = useMemo(

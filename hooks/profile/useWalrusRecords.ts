@@ -4,14 +4,13 @@ import { APP_NETWORK, SUI_SENTINEL_API_URL } from '@/constants'
 import { useAuth } from '@/context/AuthContext'
 
 export interface WalrusRecordItem {
-  record_id: string
-  status: 'awaiting_register_signature' | 'finalizing' | 'awaiting_certify_signature' | 'certified' | 'failed'
-  blob_id: string
-  blob_object_id: string | null
+  attack_id: string
   sentinel_id: number
+  blob_id: string
   register_digest: string | null
+  certify_digest: string | null
   created_at: string
-  error: string | null
+  success: boolean | null
 }
 
 async function fetchWalrusRecords(userId: string): Promise<WalrusRecordItem[]> {

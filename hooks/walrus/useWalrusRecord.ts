@@ -79,8 +79,8 @@ function getWalrusClient(suiClient: ReturnType<typeof useSuiClient>): WalrusClie
 async function signAndExecute(options: {
   transaction: Transaction
   suiClient: ReturnType<typeof useSuiClient>
-  account: { address: string }
-  signTransaction: (args: { transaction: string; account: { address: string } }) => Promise<{ signature: string }>
+  account: NonNullable<ReturnType<typeof useCurrentAccount>>
+  signTransaction: ReturnType<typeof useSignTransaction>['mutateAsync']
 }): Promise<SuiTransactionBlockResponse> {
   const { transaction, suiClient, account, signTransaction } = options
 
@@ -188,7 +188,7 @@ export function useWalrusRecord() {
         transaction: registerTx,
         suiClient,
         account,
-        signTransaction: args => signTransaction(args),
+        signTransaction,
       })
       if (registerResult.effects?.status?.status !== 'success') {
         throw new Error(
@@ -234,7 +234,7 @@ export function useWalrusRecord() {
         transaction: certifyTx,
         suiClient,
         account,
-        signTransaction: args => signTransaction(args),
+        signTransaction,
       })
       if (certifyResult.effects?.status?.status !== 'success') {
         throw new Error(
