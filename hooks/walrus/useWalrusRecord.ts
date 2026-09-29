@@ -176,5 +176,56 @@ export function useWalrusRecord() {
     [account, signTransaction, user?.id]
   )
 
-  return { storeRecord }
+  /**
+   * Finishes a record left in `awaiting_certify_signature` by a previous
+   * session — the certify tx can only be signed by the blob owner (the
+   * user's wallet), so it may outlive the tab that started the flow.
+   * Returns null when there is nothing to resume.
+   */
+  const resumePendingSignature = useCallback(async (): Promise<WalrusRecordResult | null> => {
+    if (!account?.address || !user?.id) return null
+
+    const base = `${SUI_SENTINEL_API_URL}/walrus/${APP_NETWORK}/records`
+    const headers = {
+      'Content-Type': 'application/json',
+      'x-user-id': user.id,
+    }
+
+    const pendingResponse = await fetch(`${base}/pending-signature`, {
+      credentials: 'include',
+      headers,
+    })
+    if (!pendingResponse.ok) throw new Error(await readErrorMessage(pendingResponse))
+    const { record } = (await pendingResponse.json()) as {
+      record: {
+        record_id: string
+        status: string
+        blob_id: string
+        certify_tx_bytes: string | null
+      } | null
+    }
+    if (!record?.certify_tx_bytes) return null
+
+    const { signature: certifySignature } = await signTransaction({
+      transaction: record.certify_tx_bytes,
+      account,
+    })
+    const certifyResponse = await fetch(`${base}/${record.record_id}/certify`, {
+      method: 'POST',
+      credentials: 'include',
+      headers,
+      body: JSON.stringify({ user_signature: certifySignature }),
+    })
+    if (!certifyResponse.ok) throw new Error(await readErrorMessage(certifyResponse))
+    const certified = (await certifyResponse.json()) as CertifyResponse
+
+    return {
+      recordId: certified.record_id,
+      blobId: certified.blob_id,
+      registerDigest: '',
+      certifyDigest: certified.digest,
+    }
+  }, [account, signTransaction, user?.id])
+
+  return { storeRecord, resumePendingSignature }
 }

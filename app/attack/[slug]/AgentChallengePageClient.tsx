@@ -1,5 +1,5 @@
 'use client'
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useQueryClient } from '@tanstack/react-query'
 import posthog from 'posthog-js'
@@ -130,7 +130,24 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
     [connectedAddress, agent, slug, refetch, refetchChat, queryClient, activeChain]
   )
 
-  const { storeRecord } = useWalrusRecord()
+  const { storeRecord, resumePendingSignature } = useWalrusRecord()
+
+  // A record left awaiting the certify signature by an earlier session can
+  // only be finished by the blob owner (this wallet) — offer to sign on load.
+  useEffect(() => {
+    resumePendingSignature()
+      .then(result => {
+        if (result) {
+          toast.success('Attack record stored on Walrus')
+          refetchChat()
+        }
+      })
+      .catch(() => {
+        // User dismissed the wallet popup or the backend hiccuped — the
+        // pending signature stays resumable on the next visit.
+      })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const resolveAndStoreRecord = useCallback(
     async (attackNonce: string) => {

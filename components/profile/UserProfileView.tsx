@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'
-import { Folder, Activity, Gift } from 'lucide-react'
+import { Folder, Activity, Gift, Database, Coins } from 'lucide-react'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
@@ -10,6 +10,8 @@ import { useActiveChain } from '@/context/ActiveChainContext'
 import { BoosterRewards } from '@/components/rewards/BoosterRewards'
 import { UserAgents } from './UserAgents'
 import { UserActivity } from './UserActivity'
+import { UserWalrusRecords } from './UserWalrusRecords'
+import { UserCredits } from './UserCredits'
 import { ProfileSocialConnections } from './ProfileSocialConnections'
 import { ProfileHeader } from './ProfileHeader'
 import { ProfileStatsBar } from './ProfileStatsBar'
@@ -19,7 +21,9 @@ import type { ProfileViewData } from '@/types/Profile'
 const PROFILE_TABS = {
   AGENTS: 'agents',
   ACTIVITY: 'activity',
+  WALRUS: 'walrus',
   REWARDS: 'rewards',
+  CREDITS: 'credits',
 } as const
 
 type ProfileTabValue = (typeof PROFILE_TABS)[keyof typeof PROFILE_TABS]
@@ -84,9 +88,21 @@ export function UserProfileView({ profile }: UserProfileViewProps) {
                 Activity
               </TabsTrigger>
               {isOwner && (
+                <TabsTrigger value={PROFILE_TABS.WALRUS} className="profile-tab-trigger">
+                  <Database className="h-4 w-4" />
+                  Walrus
+                </TabsTrigger>
+              )}
+              {isOwner && (
                 <TabsTrigger value={PROFILE_TABS.REWARDS} className="profile-tab-trigger">
                   <Gift className="h-4 w-4" />
                   My Rewards
+                </TabsTrigger>
+              )}
+              {isOwner && (
+                <TabsTrigger value={PROFILE_TABS.CREDITS} className="profile-tab-trigger">
+                  <Coins className="h-4 w-4" />
+                  Credits
                 </TabsTrigger>
               )}
             </TabsList>
@@ -100,8 +116,18 @@ export function UserProfileView({ profile }: UserProfileViewProps) {
               <UserActivity address={activeChainWallet} isOwner={isOwner} />
             </TabsContent>
             {isOwner && (
+              <TabsContent value={PROFILE_TABS.WALRUS}>
+                <UserWalrusRecords />
+              </TabsContent>
+            )}
+            {isOwner && (
               <TabsContent value={PROFILE_TABS.REWARDS}>
                 <BoosterRewards />
+              </TabsContent>
+            )}
+            {isOwner && (
+              <TabsContent value={PROFILE_TABS.CREDITS}>
+                <UserCredits />
               </TabsContent>
             )}
           </div>
