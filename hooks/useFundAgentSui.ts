@@ -3,6 +3,7 @@ import { Transaction } from '@mysten/sui/transactions'
 import { useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 import { SUI_CONFIG, SUI_LEGACY_CONFIG } from '@/constants'
+import { SUI_COIN_TYPE } from '@/constants/tokens'
 import { useSuiSignAndExecute } from '@/hooks/useSuiSignAndExecute'
 import { toast } from 'sonner'
 
@@ -163,61 +164,84 @@ export const useFundAgentSui = (options: UseFundAgentOptions = {}) => {
       try {
         const amountInBaseUnits = BigInt(Math.floor(amount * Math.pow(10, decimals)))
 
-        // Create transaction. The funding amount is paid from the user's own
-        // coin objects — never tx.gas, which is reserved for gas.
+        // Create transaction.
         const tx = new Transaction()
 
-        const coins = await client.getCoins({
-          owner: account.address,
-          coinType,
-          limit: 100,
-        })
-
-        if (!coins.data.length) {
-          throw new Error(`No ${symbol} coins found in wallet`)
-        }
-
-        const sortedCoins = coins.data.sort((a, b) => Number(b.balance) - Number(a.balance))
-        const totalAvailable = sortedCoins.reduce(
-          (sum, coin) => sum + BigInt(coin.balance),
-          BigInt(0)
-        )
-        console.log(`Amount needed (${symbol}):`, amount)
-        console.log(
-          `Total available (${symbol}):`,
-          Number(totalAvailable) / Math.pow(10, decimals)
-        )
-
-        if (totalAvailable < amountInBaseUnits) {
-          throw new Error(
-            `Insufficient ${symbol} balance. Need ${amount} ${symbol}, have ${
-              Number(totalAvailable) / Math.pow(10, decimals)
-            } ${symbol}`
-          )
-        }
-
-        // Select minimum coins needed to cover the amount
-        const selectedCoins: typeof sortedCoins = []
-        let runningTotal = BigInt(0)
-        for (const coin of sortedCoins) {
-          selectedCoins.push(coin)
-          runningTotal += BigInt(coin.balance)
-          if (runningTotal >= amountInBaseUnits) break
-        }
+        const isSuiPayment = coinType.toLowerCase() === SUI_COIN_TYPE.toLowerCase()
 
         let paymentCoin
-        if (selectedCoins.length === 1) {
-          ;[paymentCoin] = tx.splitCoins(tx.object(selectedCoins[0].coinObjectId), [
-            tx.pure.u64(amountInBaseUnits),
-          ])
+        if (isSuiPayment) {
+          // SUI funding is split from tx.gas: the SDK excludes owned coins
+          // that are used as transaction inputs from gas-coin selection, so a
+          // single-coin wallet paying from an owned coin would be left with no
+          // valid gas coins. Splitting from the gas coin covers the funding
+          // and gas from one coin, exactly like a wallet-built transfer.
+          const { totalBalance } = await client.getBalance({
+            owner: account.address,
+            coinType: SUI_COIN_TYPE,
+          })
+          if (BigInt(totalBalance) < amountInBaseUnits) {
+            throw new Error(
+              `Insufficient ${symbol} balance. Need ${amount} ${symbol}, have ${
+                Number(totalBalance) / Math.pow(10, decimals)
+              } ${symbol}. Claim SUI gas credit from your profile or fund your wallet and try again.`
+            )
+          }
+          ;[paymentCoin] = tx.splitCoins(tx.gas, [tx.pure.u64(amountInBaseUnits)])
         } else {
-          console.log(`📋 Merging ${selectedCoins.length} ${symbol} coins`)
-          const primaryCoinRef = tx.object(selectedCoins[0].coinObjectId)
-          tx.mergeCoins(
-            primaryCoinRef,
-            selectedCoins.slice(1).map(c => tx.object(c.coinObjectId))
+          // Non-SUI funding is paid from the user's own coin objects of that
+          // token — never from tx.gas, which is reserved for gas.
+          const coins = await client.getCoins({
+            owner: account.address,
+            coinType,
+            limit: 100,
+          })
+
+          if (!coins.data.length) {
+            throw new Error(`No ${symbol} coins found in wallet`)
+          }
+
+          const sortedCoins = coins.data.sort((a, b) => Number(b.balance) - Number(a.balance))
+          const totalAvailable = sortedCoins.reduce(
+            (sum, coin) => sum + BigInt(coin.balance),
+            BigInt(0)
           )
-          ;[paymentCoin] = tx.splitCoins(primaryCoinRef, [tx.pure.u64(amountInBaseUnits)])
+          console.log(`Amount needed (${symbol}):`, amount)
+          console.log(
+            `Total available (${symbol}):`,
+            Number(totalAvailable) / Math.pow(10, decimals)
+          )
+
+          if (totalAvailable < amountInBaseUnits) {
+            throw new Error(
+              `Insufficient ${symbol} balance. Need ${amount} ${symbol}, have ${
+                Number(totalAvailable) / Math.pow(10, decimals)
+              } ${symbol}`
+            )
+          }
+
+          // Select minimum coins needed to cover the amount
+          const selectedCoins: typeof sortedCoins = []
+          let runningTotal = BigInt(0)
+          for (const coin of sortedCoins) {
+            selectedCoins.push(coin)
+            runningTotal += BigInt(coin.balance)
+            if (runningTotal >= amountInBaseUnits) break
+          }
+
+          if (selectedCoins.length === 1) {
+            ;[paymentCoin] = tx.splitCoins(tx.object(selectedCoins[0].coinObjectId), [
+              tx.pure.u64(amountInBaseUnits),
+            ])
+          } else {
+            console.log(`📋 Merging ${selectedCoins.length} ${symbol} coins`)
+            const primaryCoinRef = tx.object(selectedCoins[0].coinObjectId)
+            tx.mergeCoins(
+              primaryCoinRef,
+              selectedCoins.slice(1).map(c => tx.object(c.coinObjectId))
+            )
+            ;[paymentCoin] = tx.splitCoins(primaryCoinRef, [tx.pure.u64(amountInBaseUnits)])
+          }
         }
 
         const packageId = agentCap.isLegacy

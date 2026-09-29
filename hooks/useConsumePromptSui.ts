@@ -3,7 +3,7 @@ import { Transaction } from '@mysten/sui/transactions'
 import { useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
 import { useSuiSignAndExecute } from '@/hooks/useSuiSignAndExecute'
 import { SUI_CONFIG, SUI_LEGACY_CONFIG } from '@/constants'
-import { getTokenForCoinType } from '@/constants/tokens'
+import { getTokenForCoinType, SUI_COIN_TYPE } from '@/constants/tokens'
 import { toast } from 'sonner'
 import { ConsumePromptApiResponse } from '@/types'
 import { hexToVector } from '@/lib/utils'
@@ -136,62 +136,82 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
 
     const tx = new Transaction()
 
-    // The attack cost is always paid from the user's own coin objects — never
-    // from tx.gas, which is reserved for gas. Even for SUI, the payment is
-    // split from an owned SUI coin rather than the gas coin.
-    const coins = await client.getCoins({
-      owner: account.address,
-      coinType: token.coinType,
-      limit: 100,
-    })
-
-    const sortedCoins = coins.data.sort((a, b) => Number(b.balance) - Number(a.balance))
-    const totalAvailable = sortedCoins.reduce(
-      (sum, coin) => sum + BigInt(coin.balance),
-      BigInt(0)
-    )
-
-    if (totalAvailable < costInBaseUnits) {
-      throw new Error(
-        `Insufficient ${token.symbol} balance. Need ${Number(costInBaseUnits) / tokenDivisor} ${token.symbol}, have ${Number(totalAvailable) / tokenDivisor} ${token.symbol}`
-      )
-    }
-
-    // Select minimum coins needed, merge if necessary, then split exact amount
-    const selectedCoins: typeof sortedCoins = []
-    let runningTotal = BigInt(0)
-    for (const coin of sortedCoins) {
-      selectedCoins.push(coin)
-      runningTotal += BigInt(coin.balance)
-      if (runningTotal >= costInBaseUnits) break
-    }
+    // SUI fees are split from tx.gas: the SDK excludes owned coins that are
+    // used as transaction inputs from gas-coin selection, so a single-coin
+    // wallet (e.g. a fresh credit payout) paying the fee from an owned coin
+    // would be left with no valid gas coins. Splitting from the gas coin
+    // covers the fee and gas from one coin, exactly like a wallet-built
+    // transfer; a zero-amount split is valid.
+    const isSuiPayment = token.coinType.toLowerCase() === SUI_COIN_TYPE.toLowerCase()
 
     let paymentCoin
-    if (costInBaseUnits === BigInt(0) && sortedCoins.length > 0) {
-      // Zero-cost attack with tokens in the wallet: split a zero coin from the
-      // user's own coin so the tx stays minimal.
-      ;[paymentCoin] = tx.splitCoins(tx.object(sortedCoins[0].coinObjectId), [
-        tx.pure.u64(0),
-      ])
-    } else if (costInBaseUnits === BigInt(0)) {
-      // Zero-cost attack with no token coins: build a zero-balance Coin
-      // on-chain (0x2::coin::zero) rather than crashing on an empty selection
-      // below.
-      ;[paymentCoin] = tx.moveCall({
-        target: '0x2::coin::zero',
-        typeArguments: [token.coinType],
+    if (isSuiPayment) {
+      const { totalBalance } = await client.getBalance({
+        owner: account.address,
+        coinType: SUI_COIN_TYPE,
       })
-    } else if (selectedCoins.length === 1) {
-      ;[paymentCoin] = tx.splitCoins(tx.object(selectedCoins[0].coinObjectId), [
-        tx.pure.u64(costInBaseUnits),
-      ])
+      if (BigInt(totalBalance) < costInBaseUnits) {
+        throw new Error(
+          `Insufficient ${token.symbol} balance. Need ${Number(costInBaseUnits) / tokenDivisor} ${token.symbol}, have ${Number(totalBalance) / tokenDivisor} ${token.symbol}. Claim SUI gas credit from your profile or fund your wallet and try again.`
+        )
+      }
+      ;[paymentCoin] = tx.splitCoins(tx.gas, [tx.pure.u64(costInBaseUnits)])
     } else {
-      const primaryCoinRef = tx.object(selectedCoins[0].coinObjectId)
-      tx.mergeCoins(
-        primaryCoinRef,
-        selectedCoins.slice(1).map(c => tx.object(c.coinObjectId))
+      // Non-SUI attack cost: paid from the user's own coin objects of that
+      // token — never from tx.gas, which is reserved for gas.
+      const coins = await client.getCoins({
+        owner: account.address,
+        coinType: token.coinType,
+        limit: 100,
+      })
+
+      const sortedCoins = coins.data.sort((a, b) => Number(b.balance) - Number(a.balance))
+      const totalAvailable = sortedCoins.reduce(
+        (sum, coin) => sum + BigInt(coin.balance),
+        BigInt(0)
       )
-      ;[paymentCoin] = tx.splitCoins(primaryCoinRef, [tx.pure.u64(costInBaseUnits)])
+
+      if (totalAvailable < costInBaseUnits) {
+        throw new Error(
+          `Insufficient ${token.symbol} balance. Need ${Number(costInBaseUnits) / tokenDivisor} ${token.symbol}, have ${Number(totalAvailable) / tokenDivisor} ${token.symbol}`
+        )
+      }
+
+      // Select minimum coins needed, merge if necessary, then split exact amount
+      const selectedCoins: typeof sortedCoins = []
+      let runningTotal = BigInt(0)
+      for (const coin of sortedCoins) {
+        selectedCoins.push(coin)
+        runningTotal += BigInt(coin.balance)
+        if (runningTotal >= costInBaseUnits) break
+      }
+
+      if (costInBaseUnits === BigInt(0) && sortedCoins.length > 0) {
+        // Zero-cost attack with tokens in the wallet: split a zero coin from
+        // the user's own coin so the tx stays minimal.
+        ;[paymentCoin] = tx.splitCoins(tx.object(sortedCoins[0].coinObjectId), [
+          tx.pure.u64(0),
+        ])
+      } else if (costInBaseUnits === BigInt(0)) {
+        // Zero-cost attack with no token coins: build a zero-balance Coin
+        // on-chain (0x2::coin::zero) rather than crashing on an empty
+        // selection below.
+        ;[paymentCoin] = tx.moveCall({
+          target: '0x2::coin::zero',
+          typeArguments: [token.coinType],
+        })
+      } else if (selectedCoins.length === 1) {
+        ;[paymentCoin] = tx.splitCoins(tx.object(selectedCoins[0].coinObjectId), [
+          tx.pure.u64(costInBaseUnits),
+        ])
+      } else {
+        const primaryCoinRef = tx.object(selectedCoins[0].coinObjectId)
+        tx.mergeCoins(
+          primaryCoinRef,
+          selectedCoins.slice(1).map(c => tx.object(c.coinObjectId))
+        )
+        ;[paymentCoin] = tx.splitCoins(primaryCoinRef, [tx.pure.u64(costInBaseUnits)])
+      }
     }
 
     const [attackTicket] = tx.moveCall({
