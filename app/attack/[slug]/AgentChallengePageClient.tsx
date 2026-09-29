@@ -196,7 +196,8 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
       handleAttackComplete(apiResponse, transactionResult.digest)
 
       // Store the attack record on Walrus with the user's wallet as the blob
-      // owner (backend sponsors gas + WAL). The attack doc is resolved by the
+      // owner (wallet pays the gas and WAL storage fees). The attack doc is
+      // resolved by the
       // nonce minted into the Attack ticket, since the TEE consumed the
       // backend attack route internally and the id never reached the client.
       if (attackNonce && connectedAddress) {

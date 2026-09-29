@@ -9,7 +9,7 @@ import { PartnerApplicationForm } from '@/components/partners/PartnerApplication
 export const metadata: Metadata = {
   title: 'Launch a Campaign Sentinel | Red Sentinel',
   description:
-    'Launch a brand-safe Campaign Sentinel for your project: your community attacks for a bounty you seed, free of attack fees, with sponsored transactions and Campaign Console reporting. Apply to launch with the Red Sentinel team.',
+    'Launch a brand-safe Campaign Sentinel for your project: your community attacks for a bounty you seed, free of attack fees, with Campaign Console reporting. Apply to launch with the Red Sentinel team.',
   alternates: {
     canonical: `${SUI_SENTINEL_APP_URL}/partners`,
   },
@@ -29,7 +29,7 @@ const LAUNCH_STEPS = [
   {
     icon: Rocket,
     title: '3. Launch and watch',
-    body: 'Your community attacks for free, we sponsor the transactions, and you follow the campaign in the Campaign Console.',
+    body: 'Your community attacks for free, participant wallets cover the on-chain transaction costs, and you follow the campaign in the Campaign Console.',
   },
 ]
 
@@ -46,8 +46,7 @@ export default function PartnerApplicationPage() {
           </h1>
           <p className="font-body mx-auto mt-5 max-w-2xl text-sm font-medium leading-relaxed text-[var(--color-text-secondary)] md:text-base">
             A brand-safe community challenge built around your project. Your community attacks it
-            for a bounty you seed — free of attack fees, with transactions sponsored by us — and
-            learns your project along the way.
+            for a bounty you seed — free of attack fees — and learns your project along the way.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link

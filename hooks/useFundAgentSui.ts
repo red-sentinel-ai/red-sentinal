@@ -38,7 +38,7 @@ export const useFundAgentSui = (options: UseFundAgentOptions = {}) => {
   const [lastResult, setLastResult] = useState<any>(null)
   const [agentCaps, setAgentCaps] = useState<AgentCap[]>([])
   const account = useCurrentAccount()
-  // Gas is sponsored by the backend; falls back to user-paid gas automatically.
+  // Gas is paid from the connected wallet.
   const { mutate: signAndExecuteTransaction } = useSuiSignAndExecute()
 
   // Fetch user's AgentCaps
@@ -164,7 +164,7 @@ export const useFundAgentSui = (options: UseFundAgentOptions = {}) => {
         const amountInBaseUnits = BigInt(Math.floor(amount * Math.pow(10, decimals)))
 
         // Create transaction. The funding amount is paid from the user's own
-        // coin objects — never tx.gas, which belongs to the gas sponsor.
+        // coin objects — never tx.gas, which is reserved for gas.
         const tx = new Transaction()
 
         const coins = await client.getCoins({

@@ -13,31 +13,41 @@ import type { DefendFormData } from './useDefendForm'
 interface UseDeploySuiAgentOptions {
   formData: DefendFormData
   selectedToken: SupportedToken
-  /** Gas is sponsored by the backend whenever this is set. */
-  sponsored: boolean
 }
 
 export function useDeploySuiAgent({
   formData,
   selectedToken,
-  sponsored,
 }: UseDeploySuiAgentOptions): ChainDeployHook {
   const client = useSuiClient()
   const account = useCurrentAccount()
 
-  const { mutate: signAndExecuteTransaction } = useSuiSignAndExecute({
-    sponsored,
-  })
+  const { mutate: signAndExecuteTransaction } = useSuiSignAndExecute()
 
-  const buildInitialFundCoin = async (
-    tx: Transaction,
-    amountRaw: bigint,
-    fundBountyFromWallet: boolean
-  ) => {
-    // Sponsored free tier: a zero-balance Coin built on-chain — no value
-    // leaves the user's wallet, and the sponsor's gas coin is never touched
-    // (splitting from tx.gas would take the sponsor's SUI).
-    if (sponsored && !fundBountyFromWallet) {
+  const buildInitialFundCoin = async (tx: Transaction, amountRaw: bigint) => {
+    // SUI registration: split the fund from tx.gas itself — gas and the fund
+    // coin share the same coin, exactly like a wallet-built transaction.
+    // Building the fund from the user's coin objects instead would consume
+    // them as inputs, and the SDK's gas selection filters out coins used as
+    // inputs, so a wallet with a single SUI coin would end up with no valid
+    // gas coins. Splitting zero is valid for a bounty of 0.
+    if (selectedToken.coinType === SUI_COIN_TYPE) {
+      const { totalBalance } = await client.getBalance({
+        owner: account!.address,
+        coinType: SUI_COIN_TYPE,
+      })
+      if (BigInt(totalBalance) < amountRaw) {
+        throw new Error(
+          `Insufficient ${selectedToken.symbol} balance. Need ${formData.initialBalance} ${selectedToken.symbol}, have ${Number(totalBalance) / Math.pow(10, selectedToken.decimals)} ${selectedToken.symbol}. Claim a ${selectedToken.symbol} credit from your profile or fund your wallet and try again.`
+        )
+      }
+      const [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(amountRaw)])
+      return coin
+    }
+
+    // Zero-bounty registration for a non-SUI token: build a zero-balance Coin
+    // on-chain (0x2::coin::zero) so the wallet needs no coins of that type.
+    if (amountRaw === BigInt(0)) {
       const [coin] = tx.moveCall({
         target: '0x2::coin::zero',
         typeArguments: [selectedToken.coinType],
@@ -45,29 +55,8 @@ export function useDeploySuiAgent({
       return coin
     }
 
-    // Own-gas SUI registration: split the fund from tx.gas itself — gas and
-    // the fund coin share the same coin, exactly like a wallet-built
-    // transaction. Building the fund from the user's coin objects instead
-    // would consume them as inputs, and the SDK's gas selection filters out
-    // coins used as inputs, so a wallet with a single SUI coin would end up
-    // with no valid gas coins.
-    if (!sponsored && selectedToken.coinType === SUI_COIN_TYPE) {
-      const { totalBalance } = await client.getBalance({
-        owner: account!.address,
-        coinType: SUI_COIN_TYPE,
-      })
-      if (BigInt(totalBalance) < amountRaw) {
-        throw new Error(
-          `Insufficient ${selectedToken.symbol} balance. Need ${formData.initialBalance} ${selectedToken.symbol}, have ${Number(totalBalance) / Math.pow(10, selectedToken.decimals)} ${selectedToken.symbol}`
-        )
-      }
-      const [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(amountRaw)])
-      return coin
-    }
-
-    // Every other case: the fund is split from the user's own coin objects —
-    // required under sponsorship (the gas coin belongs to the sponsor, never
-    // touch tx.gas), and used for non-SUI tokens without sponsorship.
+    // Every other case: the fund is split from the user's own coin objects of
+    // the selected token.
     const coins = await client.getCoins({
       owner: account!.address,
       coinType: selectedToken.coinType,
@@ -79,7 +68,7 @@ export function useDeploySuiAgent({
 
     if (totalAvailable < amountRaw) {
       throw new Error(
-        `Insufficient ${selectedToken.symbol} balance. Need ${formData.initialBalance} ${selectedToken.symbol}, have ${Number(totalAvailable) / Math.pow(10, selectedToken.decimals)} ${selectedToken.symbol}`
+        `Insufficient ${selectedToken.symbol} balance. Need ${formData.initialBalance} ${selectedToken.symbol}, have ${Number(totalAvailable) / Math.pow(10, selectedToken.decimals)} ${selectedToken.symbol}. Claim a ${selectedToken.symbol} credit from your profile or fund your wallet and try again.`
       )
     }
 
@@ -103,19 +92,15 @@ export function useDeploySuiAgent({
   }
 
   const executeTransaction = async (
-    teeResponse: SuiTeeResponse,
-    fundBountyFromWallet: boolean
+    teeResponse: SuiTeeResponse
   ): Promise<{ objectId: string; digest: string }> => {
     const tx = new Transaction()
     const sigVector = hexToVector(teeResponse.signature)
-    const initialAmountRaw =
-      sponsored && !fundBountyFromWallet
-        ? BigInt(0)
-        : BigInt(
-            Math.floor(parseFloat(formData.initialBalance) * Math.pow(10, selectedToken.decimals))
-          )
+    const initialAmountRaw = BigInt(
+      Math.floor(parseFloat(formData.initialBalance || '0') * Math.pow(10, selectedToken.decimals))
+    )
 
-    const initialFundCoin = await buildInitialFundCoin(tx, initialAmountRaw, fundBountyFromWallet)
+    const initialFundCoin = await buildInitialFundCoin(tx, initialAmountRaw)
 
     tx.moveCall({
       target: `${SUI_CONFIG.APP_PACKAGE_ID}::${SUI_CONFIG.MODULE_NAME}::register_agent`,

@@ -3,12 +3,11 @@ import { parseUnits } from 'viem'
 import { toast } from 'sonner'
 import posthog from 'posthog-js'
 import { useActiveChain } from '@/context/ActiveChainContext'
-import { useAuth } from '@/context/AuthContext'
 import { useSuiClient } from '@mysten/dapp-kit'
 import { isEvmChain } from '@/constants/chains'
 import { useEvmChain } from '@/hooks/evm/useEvmChain'
 import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
-import { SPONSORED_GAS_ENABLED, type SupportedToken } from '@/constants'
+import { type SupportedToken } from '@/constants'
 import { registerAgentUtil, resolveProviderCredentials } from '../utils'
 import type { AgenticConfig } from '../agentic-types'
 import { useDeploySuiAgent } from './useDeploySuiAgent'
@@ -39,19 +38,13 @@ export function useDeployAgent({
 }: UseDeployAgentOptions) {
   const { activeChain } = useActiveChain()
   const { intendedChainId, ensureWalletOnActiveChain } = useEvmChain()
-  const { user } = useAuth()
   const { mutate: createAgent } = useCreateAgent()
 
   // All chain-specific deploy hooks must be called unconditionally (hook rules)
-  // Sui registration always rides on gas sponsorship when the user is signed
-  // in. If the user configures a bounty/fee their wallet can't cover, the
-  // deploy falls back to the free sponsored tier (bounty 0, attack fee 0).
-  const willSponsorSui = SPONSORED_GAS_ENABLED && !!user?.id
   const suiClient = useSuiClient()
   const suiDeploy = useDeploySuiAgent({
     formData,
     selectedToken,
-    sponsored: willSponsorSui,
   })
   const solanaDeploy = useDeploySolanaAgent({ formData, selectedSolanaToken })
   const evmDeploy = useDeployEvmAgent({ formData, selectedEvmToken })
@@ -90,8 +83,7 @@ export function useDeployAgent({
       agent_id: agentId,
       agent_object_id: objectId,
       owner_address: ownerAddress,
-      // Effective fee the TEE signed — 0 on the sponsored free tier, not the
-      // raw form value.
+      // Effective fee the TEE signed, not the raw form value.
       cost_per_message: effectiveFeePerMessage / Math.pow(10, getActiveTokenDecimals()),
       system_prompt_length: formData.systemPrompt.length,
       system_prompt_tokens: tokenCount,
@@ -153,15 +145,14 @@ export function useDeployAgent({
       // 2. Register with TEE (chain-aware)
       const decimals = getActiveTokenDecimals()
       let feePerMessage: number
-      let suiFundBountyFromWallet = false
       if (isEvmChain(activeChain)) {
         feePerMessage = Number(parseUnits(formData.feePerMessage, decimals))
-      } else if (activeChain === 'sui' && willSponsorSui) {
-        // Gas sponsorship is always on for signed-in users. A bounty the
-        // wallet can't afford downgrades the deploy to the free sponsored
-        // tier (bounty 0, attack fee 0); a fundable bounty (or fee alone,
-        // which costs nothing at registration) keeps the user's config.
-        const typedFee = parseFloat(formData.feePerMessage || '0') * Math.pow(10, decimals)
+      } else if (activeChain === 'sui') {
+        feePerMessage = parseFloat(formData.feePerMessage || '0') * Math.pow(10, decimals)
+        // The bounty is funded from the connected wallet. Reject a config the
+        // wallet can't cover up front — the participant needs sufficient
+        // wallet funds (or a claimed credit), not a silently downgraded
+        // deployment.
         const typedBounty = Math.floor(
           parseFloat(formData.initialBalance || '0') * Math.pow(10, decimals)
         )
@@ -170,17 +161,11 @@ export function useDeployAgent({
             owner: walletAddress,
             coinType: selectedToken.coinType,
           })
-          if (BigInt(totalBalance) >= BigInt(typedBounty)) {
-            suiFundBountyFromWallet = true
-            feePerMessage = typedFee
-          } else {
-            toast.info(
-              'Gas sponsorship is enabled: your wallet cannot fund the bounty, so the agent will be registered with bounty = 0 and attack fee = 0.'
+          if (BigInt(totalBalance) < BigInt(typedBounty)) {
+            throw new Error(
+              `Your wallet cannot fund the ${formData.initialBalance} ${selectedToken.symbol} bounty for this Sentinel. Claim a ${selectedToken.symbol} credit from your profile or fund your wallet, then deploy again.`
             )
-            feePerMessage = 0
           }
-        } else {
-          feePerMessage = typedFee
         }
       } else {
         feePerMessage = parseFloat(formData.feePerMessage) * Math.pow(10, decimals)
@@ -210,7 +195,7 @@ export function useDeployAgent({
       } else if (isEvmChain(activeChain)) {
         result = await evmDeploy.executeTransaction(teeResponse)
       } else {
-        result = await suiDeploy.executeTransaction(teeResponse, suiFundBountyFromWallet)
+        result = await suiDeploy.executeTransaction(teeResponse)
       }
 
       // 4. Handle off-chain success (Supabase storage)

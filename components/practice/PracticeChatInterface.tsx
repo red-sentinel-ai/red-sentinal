@@ -223,8 +223,8 @@ export function PracticeChatInterface({
         userPrompt: prompt,
         sessionId,
         // Signed-in users get the user-signed Walrus flow (user owns the
-        // blob, backend sponsors gas + WAL). Signed-out users fall back to
-        // the backend-key storage — the user-signed routes need auth.
+        // blob and pays the gas + storage fees). Signed-out users fall back
+        // to the backend-key storage — the user-signed routes need auth.
         walrusRecordMode: user?.id ? 'user_signed' : 'backend',
       })
       setSessionId(data.session_id)
@@ -242,7 +242,7 @@ export function PracticeChatInterface({
       // Pull the feed forward so the optimistic round resolves to server truth.
       refetchFeed()
 
-      // Store the attack record on Walrus (user-signed, sponsor-gassed). Runs
+      // Store the attack record on Walrus (user-signed, wallet-paid). Runs
       // after the attack UI resolves and never blocks or breaks the chat —
       // the sliver upload can be slow, so surface it as in-progress rather
       // than an error.

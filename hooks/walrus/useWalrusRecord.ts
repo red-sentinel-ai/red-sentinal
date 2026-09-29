@@ -16,7 +16,6 @@ interface PrepareResponse {
   record_id: string
   blob_id: string
   tx_bytes: string
-  sponsor_address: string
   gas_budget: number
 }
 
@@ -56,20 +55,20 @@ async function readErrorMessage(response: Response): Promise<string> {
 
 /**
  * Stores an attack record on Walrus with the user's wallet as the blob owner,
- * using the backend's user-signed sponsored flow:
+ * using the backend's user-signed flow:
  *
- *   1. prepare  — backend builds the register transaction (sender = user,
- *                 gas owner = sponsor) and returns it for signing
- *   2. confirm  — user's signature is attached, the sponsor co-signs, the
- *                 register tx executes and slivers are uploaded to the
- *                 storage nodes; returns the certify transaction
- *   3. certify  — user signs the certificate, sponsor pays gas; the blob is
- *                 permanently stored and owned by the user's address
+ *   1. prepare  — backend builds the register transaction (sender and gas
+ *                 payer = the user's connected wallet) and returns it for signing
+ *   2. confirm  — the user-signed register tx executes (the wallet's signature
+ *                 pays the gas) and slivers are uploaded to the storage nodes;
+ *                 returns processing status while the certify tx is built
+ *   3. certify  — the user signs the certificate, the tx executes and the blob
+ *                 is permanently stored and owned by the user's address
  *
- * Storage (WAL) is also sponsored: prepare tops the user's wallet up with
- * the storage + write cost from a sponsor-owned WAL coin, and the register
- * transaction pays Walrus from those coins. The user's wallet only needs to
- * be connected — no SUI or WAL required.
+ * The user's wallet pays both the Sui gas and the WAL storage + write fees
+ * from its own balance — Walrus or SUI credit claimed on the profile is the
+ * expected source. Prepare rejects with actionable guidance when the balance
+ * is short.
  */
 export function useWalrusRecord() {
   const account = useCurrentAccount()
@@ -99,9 +98,10 @@ export function useWalrusRecord() {
       if (!prepareResponse.ok) throw new Error(await readErrorMessage(prepareResponse))
       const prepared = (await prepareResponse.json()) as PrepareResponse
 
-      // 2. Sign the register transaction and confirm — the sponsor co-signs,
-      //    executes it, and responds immediately; the slivers upload + certify
-      //    build run in the background.
+      // 2. Sign the register transaction and confirm — the backend executes
+      //    the wallet-signed tx (the wallet pays the gas) and responds
+      //    immediately; the slivers upload + certify build run in the
+      //    background.
       const { signature: registerSignature } = await signTransaction({
         transaction: prepared.tx_bytes,
         account,

@@ -2,7 +2,7 @@ import { BarChart3, Fuel, Handshake, ReceiptText, ShieldCheck, Ticket, Trophy } 
 
 /** Static value-proposition section for the public partner path. Presents the
  *  Campaign Sentinel offer: brand-safe challenge, free eligible attacks,
- *  sponsored transactions, partner-funded Bounty Pool with a separate
+ *  wallet-paid transaction costs, partner-funded Bounty Pool with a separate
  *  Campaign Service Fee, and Campaign Console reporting — plus the safety
  *  boundary around the Challenge Phrase. Deliberately omits paid-attack
  *  economics; Campaign Service Fee amounts are agreed during the assisted
@@ -20,8 +20,8 @@ const OFFER_POINTS = [
   },
   {
     icon: Fuel,
-    title: 'We sponsor the attacks',
-    body: 'Red Sentinel sponsors eligible attack transactions within campaign limits, so your community never worries about gas while playing.',
+    title: 'No gas worries for your community',
+    body: 'Eligible participants never pay an Attack Fee, and can claim network and storage credits for their connected wallet on their profile — their wallet covers the on-chain costs.',
   },
   {
     icon: Trophy,
@@ -31,7 +31,7 @@ const OFFER_POINTS = [
   {
     icon: ReceiptText,
     title: 'A separate Campaign Service Fee',
-    body: 'A Campaign Service Fee, separate from the Bounty Pool, covers setup, hosting, sponsored attacks, analytics, and support. It is agreed with our team before launch and never taken out of the bounty.',
+    body: 'A Campaign Service Fee, separate from the Bounty Pool, covers setup, hosting, analytics, and support. It is agreed with our team before launch and never taken out of the bounty.',
   },
   {
     icon: BarChart3,

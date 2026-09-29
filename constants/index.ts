@@ -66,10 +66,6 @@ export const TEXT_COPIES = {
 export const SUI_SENTINEL_API_URL =
   process.env.NEXT_PUBLIC_SUI_SENTINEL_API_URL || 'https://api.redsentinel.xyz'
 
-// When enabled, Sui transactions are submitted through the backend gas sponsor
-// (the user still signs). Falls back to user-paid gas when signed out or when
-// this is explicitly disabled.
-export const SPONSORED_GAS_ENABLED = process.env.NEXT_PUBLIC_SPONSORED_GAS !== 'false'
 export const SPEECH_TO_SPEECH_URL = process.env.NEXT_PUBLIC_SPEECH_TO_SPEECH_URL || ''
 export const BACKEND_API_ADMIN_TOKEN = process.env.BACKEND_API_ADMIN_TOKEN
 

@@ -100,7 +100,7 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
   const [lastResult, setLastResult] = useState<any>(null)
 
   const account = useCurrentAccount()
-  // Gas is sponsored by the backend; falls back to user-paid gas automatically.
+  // Gas is paid from the connected wallet.
   const { mutate: signAndExecuteTransaction } = useSuiSignAndExecute()
 
   // Step 2: Request an Attack Ticket
@@ -137,8 +137,8 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
     const tx = new Transaction()
 
     // The attack cost is always paid from the user's own coin objects — never
-    // from tx.gas, which belongs to the gas sponsor. Even for SUI, the payment
-    // is split from an owned SUI coin rather than the gas coin.
+    // from tx.gas, which is reserved for gas. Even for SUI, the payment is
+    // split from an owned SUI coin rather than the gas coin.
     const coins = await client.getCoins({
       owner: account.address,
       coinType: token.coinType,
@@ -169,15 +169,14 @@ export const useConsumePromptSui = (options: UseConsumePromptOptions = {}) => {
     let paymentCoin
     if (costInBaseUnits === BigInt(0) && sortedCoins.length > 0) {
       // Zero-cost attack with tokens in the wallet: split a zero coin from the
-      // user's own coin so the tx only contains app-package Move calls (the
-      // sponsor only allowlists those).
+      // user's own coin so the tx stays minimal.
       ;[paymentCoin] = tx.splitCoins(tx.object(sortedCoins[0].coinObjectId), [
         tx.pure.u64(0),
       ])
     } else if (costInBaseUnits === BigInt(0)) {
-      // Zero-cost attack with no token coins: build a zero-balance Coin on-chain
-      // (0x2::coin::zero, allowlisted by the sponsor) rather than crashing on
-      // an empty selection below.
+      // Zero-cost attack with no token coins: build a zero-balance Coin
+      // on-chain (0x2::coin::zero) rather than crashing on an empty selection
+      // below.
       ;[paymentCoin] = tx.moveCall({
         target: '0x2::coin::zero',
         typeArguments: [token.coinType],
