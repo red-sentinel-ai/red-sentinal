@@ -69,7 +69,15 @@ export function SentinelExplorer({ initialChain }: { initialChain?: string }) {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useAllAgents({ sortField, sortDirection, chain: selectedChain, status: selectedStatus })
+  } = useAllAgents({
+    sortField,
+    sortDirection,
+    chain: selectedChain,
+    status: selectedStatus,
+    // Server-side: the list is paginated, so a client-side tag filter would
+    // only ever match sentinels on already-loaded pages.
+    tag: selectedTag,
+  })
 
   const { data: availableTokens = [] } = useAgentCoinTypes()
 
@@ -100,11 +108,6 @@ export function SentinelExplorer({ initialChain }: { initialChain?: string }) {
         agent => getTokenForCoinType(agent.coin_type, agent.chain).symbol === selectedSymbol
       )
     }
-    if (selectedTag) {
-      base = base.filter(agent =>
-        (tagsByAgentId?.[agent.agent_id] ?? []).some(tag => tag.slug === selectedTag)
-      )
-    }
     const normalizedSearch = searchQuery.trim().toLowerCase()
     if (normalizedSearch) {
       base = base.filter(agent => {
@@ -123,7 +126,7 @@ export function SentinelExplorer({ initialChain }: { initialChain?: string }) {
       })
     }
     return base
-  }, [activeTab, allAgents, selectedSymbol, selectedTag, tagsByAgentId, searchQuery])
+  }, [activeTab, allAgents, selectedSymbol, searchQuery])
 
   const bigBountiesCount = allAgents.filter(agent => {
     try {

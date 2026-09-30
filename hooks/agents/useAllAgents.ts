@@ -19,6 +19,8 @@ export interface UseAllAgentsOptions {
   coinTypeFilter?: string
   chain?: SupportedChain
   status?: SentinelStatusFilter
+  /** Tag slug — filtered server-side so results span all pages, not just loaded ones. */
+  tag?: string
 }
 
 export const useAllAgents = ({
@@ -27,6 +29,7 @@ export const useAllAgents = ({
   coinTypeFilter,
   chain,
   status = 'all',
+  tag,
 }: UseAllAgentsOptions = {}) => {
   return useInfiniteQuery<AgentsPage, Error>({
     queryKey: [
@@ -36,6 +39,7 @@ export const useAllAgents = ({
       coinTypeFilter,
       chain ?? 'all',
       status,
+      tag ?? 'all',
     ],
     queryFn: async ({ pageParam }) => {
       const offset = pageParam as number
@@ -52,6 +56,7 @@ export const useAllAgents = ({
       }
       if (coinTypeFilter) params.append('coin_type', coinTypeFilter)
       if (status !== 'all') params.append('status', status)
+      if (tag) params.append('tag', tag)
 
       const res = await fetch(
         `${SUI_SENTINEL_API_URL}/agents/${APP_NETWORK}?${params.toString()}`,
