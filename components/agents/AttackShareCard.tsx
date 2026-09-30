@@ -61,7 +61,11 @@ export function AttackShareCard({ agent, success, score, prompt, reply }: Attack
 
   // One fact is drawn at random per render of the composed post; re-picking on
   // every keystroke is avoided by memoizing on the facts list itself.
-  const { text: shareText, fact } = useMemo(
+  const {
+    text: shareText,
+    url: shareUrl,
+    fact,
+  } = useMemo(
     () =>
       buildSharePost({
         sentinelName,
@@ -69,15 +73,17 @@ export function AttackShareCard({ agent, success, score, prompt, reply }: Attack
         score,
         chainName,
         challengeUrl,
+        userPrompt: prompt,
+        sentinelReply: reply,
         facts,
         attribution,
       }),
-    [sentinelName, success, score, chainName, challengeUrl, facts, attribution]
+    [sentinelName, success, score, chainName, challengeUrl, prompt, reply, facts, attribution]
   )
 
   const shareOnX = () => {
     window.open(
-      `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`,
+      `https://x.com/intent/post?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`,
       '_blank',
       'noopener,noreferrer,width=600,height=700'
     )
