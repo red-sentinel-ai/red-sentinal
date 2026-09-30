@@ -52,6 +52,8 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   const [apiResponse, setApiResponse] = useState<ConsumePromptApiResponse | null>(null)
   const [txnHash, setTxnHash] = useState<string | null>(null)
   const [showResultModal, setShowResultModal] = useState(false)
+  // Kept for the attack share card: the prompt that produced apiResponse.
+  const [submittedPrompt, setSubmittedPrompt] = useState<string | null>(null)
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('attack')
@@ -273,6 +275,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
     try {
       setIsSubmitting(true)
       setSubmitError(null)
+      setSubmittedPrompt(prompt)
       await consumePrompt({ agentDetails: agent, message: prompt })
     } catch (err) {
       setSubmitError('Failed to submit prompt')
@@ -408,6 +411,8 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
             showResultModal={showResultModal}
             setShowResultModal={setShowResultModal}
             txnHash={txnHash}
+            agent={agent}
+            submittedPrompt={submittedPrompt}
           />
         )}
 
@@ -449,6 +454,8 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
             showResultModal={showResultModal}
             setShowResultModal={setShowResultModal}
             txnHash={txnHash}
+            agent={agent}
+            submittedPrompt={submittedPrompt}
           />
         )}
 
@@ -508,6 +515,8 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
           showResultModal={showResultModal}
           setShowResultModal={setShowResultModal}
           txnHash={txnHash}
+          agent={agent}
+          submittedPrompt={submittedPrompt}
         />
       )}
 

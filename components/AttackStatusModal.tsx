@@ -6,17 +6,23 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Dialog } from '@/components/Dialog'
 import { TruncatedText } from '@/components/TruncatedText'
 import { ConsumePromptApiResponse } from '@/types'
+import type { Agent } from '@/types/agents'
 import { useActiveChain } from '@/context/ActiveChainContext'
 import { getExplorerTxUrl } from '@/lib/explorer'
 import { cn } from '@/lib/utils'
 import { SentinelSpeechButton } from '@/components/agents/SentinelSpeechButton'
 import { useSpeechPlayback } from '@/hooks/useSpeechPlayback'
+import { AttackShareCard } from '@/components/agents/AttackShareCard'
 
 type AttackStatusModalProps = {
   apiResponse: ConsumePromptApiResponse
   showResultModal: boolean
   setShowResultModal: (show: boolean) => void
   txnHash: string
+  /** The attacked sentinel — drives the share card's story and challenge link. */
+  agent: Agent
+  /** The prompt submitted for this attack, if it completed successfully. */
+  submittedPrompt?: string | null
 }
 
 export const AttackStatusModal = ({
@@ -24,6 +30,8 @@ export const AttackStatusModal = ({
   showResultModal,
   setShowResultModal,
   txnHash,
+  agent,
+  submittedPrompt,
 }: AttackStatusModalProps) => {
   const [isExplanationOpen, setIsExplanationOpen] = useState(true)
   const { activeChain } = useActiveChain()
@@ -146,6 +154,16 @@ export const AttackStatusModal = ({
                   text={juryResponse || 'No jury response provided by the Sentinel.'}
                 />
               </div>
+            </div>
+
+            <div className="mt-6">
+              <AttackShareCard
+                agent={agent}
+                success={success}
+                score={score}
+                prompt={submittedPrompt || ''}
+                reply={explanation || ''}
+              />
             </div>
           </div>
         </div>

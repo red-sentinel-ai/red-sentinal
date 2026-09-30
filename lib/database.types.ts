@@ -667,6 +667,62 @@ export type Database = {
           },
         ]
       }
+      ss_sentinel_attribution: {
+        Row: {
+          agent_id: number
+          created_at: string
+          org_description: string | null
+          org_x_handle: string | null
+          updated_at: string
+        }
+        Insert: {
+          agent_id: number
+          created_at?: string
+          org_description?: string | null
+          org_x_handle?: string | null
+          updated_at?: string
+        }
+        Update: {
+          agent_id?: number
+          created_at?: string
+          org_description?: string | null
+          org_x_handle?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ss_sentinel_attribution_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: true
+            referencedRelation: "ss_agents"
+            referencedColumns: ["agent_id"]
+          },
+        ]
+      }
+      ss_share_facts: {
+        Row: {
+          created_at: string
+          fact: string
+          fact_id: string
+          is_active: boolean
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          fact: string
+          fact_id?: string
+          is_active?: boolean
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          fact?: string
+          fact_id?: string
+          is_active?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       ss_tags: {
         Row: {
           created_at: string
