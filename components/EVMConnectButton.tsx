@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, type RefObject } from 'react'
 import posthog from 'posthog-js'
 import { usePrivyConnect } from '@/hooks/usePrivyConnect'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
@@ -12,7 +12,13 @@ import { cn, truncateAddress } from '@/lib/utils'
 import { getNativeToken } from '@/constants/tokens'
 import { useActiveChain } from '@/context/ActiveChainContext'
 
-export function EVMConnectButton({ compact }: { compact?: boolean }) {
+export function EVMConnectButton({
+  compact,
+  anchorRef,
+}: {
+  compact?: boolean
+  anchorRef?: RefObject<HTMLElement | null>
+}) {
   const { address, isConnected, disconnect } = useEVMWallet()
   const { openConnectModal } = usePrivyConnect()
   const { balance, isLoading: isLoadingBalance } = useEVMBalance()
@@ -57,6 +63,7 @@ export function EVMConnectButton({ compact }: { compact?: boolean }) {
       isLoadingBalance={isLoadingBalance}
       onDisconnect={disconnect}
       compact={compact}
+      anchorRef={anchorRef}
     />
   )
 }

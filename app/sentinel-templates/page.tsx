@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   AlertTriangle,
   Plus,
@@ -220,10 +221,12 @@ export default function InstructionTemplatesPage() {
                 {/* Portrait */}
                 <div className="relative aspect-square w-full overflow-hidden bg-[var(--color-bg-subtle)]">
                   {template.avatar_url ? (
-                    <img
+                    <Image
                       src={template.avatar_url}
                       alt={template.name}
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center text-6xl font-bold text-[var(--color-text-muted)]">

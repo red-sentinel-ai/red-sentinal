@@ -73,6 +73,7 @@
   --background: var(--color-bg-base);
   --foreground: var(--color-text-primary);
   --text: var(--color-text-primary);
+  --sentinel_pink: #F445AB;
   --primary_pink: rgb(255, 255, 255);
   --primary_pink_20: rgba(255, 255, 255, 0.2);
   --primary_pink_light: rgba(255, 255, 255, 0.9);
@@ -184,6 +185,24 @@
   .button-ghost-terminal:hover {
     background: var(--color-text-primary);
     color: var(--color-bg-deepest);
+  }
+
+  /* Filled counterpart of button-ghost-terminal for primary CTAs */
+  .button-solid-terminal {
+    border: 1px solid var(--color-text-primary);
+    background: var(--color-text-primary);
+    color: var(--color-bg-deepest);
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    font-family: var(--font-mono);
+    transition: all 0.2s ease;
+  }
+
+  .button-solid-terminal:hover {
+    background: transparent;
+    color: var(--color-text-primary);
   }
 
   .profile-tab-trigger {

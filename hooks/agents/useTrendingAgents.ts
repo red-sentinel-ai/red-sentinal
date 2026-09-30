@@ -19,7 +19,6 @@ export const useTrendingAgents = (showAllChains?: boolean) => {
       const params = new URLSearchParams({
         trending: 'true',
         status: 'active',
-        min_balance: '1',
         limit: String(MAX_TRENDING_SENTINELS),
       })
       if (chainFilter) params.append('chain', chainFilter)

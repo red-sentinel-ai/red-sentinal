@@ -22,7 +22,6 @@ import type { SortField, SortDirection } from '@/types/agents'
 import { useAgentCoinTypes } from '@/hooks/agents/useAgentCoinTypes'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { TEXT_COPIES } from '@/constants/text_copies'
 import { type SupportedChain, CHAINS, SUPPORTED_CHAINS } from '@/constants/chains'
 import { getTokenForCoinType } from '@/constants/tokens'
 import {
@@ -366,10 +365,6 @@ export function SentinelExplorer({ initialChain }: { initialChain?: string }) {
           </Button>
         </div>
       )}
-
-      <p className="font-body mt-4 text-[11px] font-medium tracking-normal text-[var(--color-text-muted)]">
-        {TEXT_COPIES.LOW_POOL_BALANCE_HIDDEN_MESSAGE}
-      </p>
     </div>
   )
 }

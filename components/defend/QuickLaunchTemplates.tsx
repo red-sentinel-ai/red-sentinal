@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowRight, Heart, ShieldCheck, Zap } from 'lucide-react'
 import { SentinelTemplate } from '@/types'
 
@@ -95,9 +96,11 @@ export function QuickLaunchTemplates({ onSelect, onBrowse }: QuickLaunchTemplate
                 >
                   <div className="mb-3 flex items-center gap-3">
                     {template.avatar_url ? (
-                      <img
+                      <Image
                         src={template.avatar_url}
                         alt={template.name}
+                        width={44}
+                        height={44}
                         className="h-11 w-11 shrink-0 rounded-xl border border-[var(--color-border-subtle)] object-cover"
                       />
                     ) : (

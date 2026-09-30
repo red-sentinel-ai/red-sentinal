@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, type RefObject } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Copy, CheckCircle, LogOut, ChevronDown, User, ArrowLeftRight } from 'lucide-react'
@@ -24,6 +24,9 @@ type Props = {
   onDisconnect: () => void
   /** Shrink to just the wallet icon below `md` — for the app topbar. */
   compact?: boolean
+  /** When set, the menu aligns to this element instead of the trigger button
+   *  (e.g. the topbar's right cluster, so the menu lines up with the screen-edge padding). */
+  anchorRef?: RefObject<HTMLElement | null>
 }
 
 export function WalletDropdown({
@@ -33,8 +36,23 @@ export function WalletDropdown({
   isLoadingBalance,
   onDisconnect,
   compact,
+  anchorRef,
 }: Props) {
   const [copied, setCopied] = useState(false)
+  const triggerRef = useRef<HTMLButtonElement>(null)
+  // How far the trigger's right edge sits short of `anchorRef`'s right edge.
+  const [rightAlignOffset, setRightAlignOffset] = useState(0)
+
+  // Right-align the menu to `anchorRef` (e.g. the topbar's right cluster) instead of
+  // the trigger button, so it lines up with the screen-edge padding. Radix moves the
+  // menu LEFT for positive alignOffset on `align="end"`, hence the negation.
+  const handleOpenChange = (open: boolean) => {
+    if (open && anchorRef?.current && triggerRef.current) {
+      const anchorRight = anchorRef.current.getBoundingClientRect().right
+      const triggerRight = triggerRef.current.getBoundingClientRect().right
+      setRightAlignOffset(anchorRight - triggerRight)
+    }
+  }
 
   const handleCopy = () => {
     navigator.clipboard.writeText(rawAddress)
@@ -43,9 +61,10 @@ export function WalletDropdown({
   }
 
   return (
-    <DropdownMenu modal={false}>
+    <DropdownMenu modal={false} onOpenChange={handleOpenChange}>
       <DropdownMenuTrigger asChild>
         <button
+          ref={triggerRef}
           aria-label="Wallet menu"
           className={cn(
             'group flex min-h-[34px] items-center gap-2 rounded-full border border-white bg-[var(--color-bg-deepest)] py-1.5 text-white transition-colors hover:bg-white hover:text-black',
@@ -78,6 +97,7 @@ export function WalletDropdown({
       <DropdownMenuContent
         className="z-[110] w-60 rounded-none border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-1.5 text-[var(--color-text-secondary)] shadow-[var(--shadow-elevated)]"
         align="end"
+        alignOffset={-rightAlignOffset}
       >
         <DropdownMenuLabel className="px-2 py-1.5 text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-secondary)]">
           My Wallet

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { Loader2, MessageCircle, SendHorizontal } from 'lucide-react'
 import { toast } from 'sonner'
@@ -149,9 +150,11 @@ function CommentRow({ comment }: { comment: TemplateComment }) {
 
   return (
     <div className="flex gap-3">
-      <img
+      <Image
         src={comment.avatar_url || generateAvatarUrl(comment.user_address)}
         alt={displayName}
+        width={32}
+        height={32}
         className="h-8 w-8 shrink-0 rounded-full border border-[var(--color-border-subtle)] object-cover"
       />
       <div className="min-w-0 flex-1">

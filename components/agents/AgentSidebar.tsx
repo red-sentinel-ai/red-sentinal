@@ -35,7 +35,6 @@ import { TokenAmount } from '../ui/common/TokenAmount'
 import { SocialMissionModal } from '@/components/rewards/SocialMissionModal'
 import { REWARDS_CONSTANTS } from '@/constants/rewards'
 import { SentinelFollowButton } from '@/components/agents/SentinelFollowButton'
-import { SentinelMissionBrief } from '@/components/agents/SentinelMissionBrief'
 import { APP_NETWORK } from '@/constants'
 
 const SHARE_MISSION = REWARDS_CONSTANTS.DEFAULT_MISSIONS.find(m => m.type === 'share_with_hashtag')!
@@ -48,8 +47,6 @@ interface AgentSidebarProps {
   /** Called after a confirmed bounty donation so the page can refetch the agent. */
   onDonated?: () => void
 }
-
-const DUMMY_CREATOR_REWARD = 0.05
 
 interface SentinelReference {
   label: string
@@ -132,7 +129,8 @@ export const AgentSidebar = ({
   }, [])
 
   const agentToken = getTokenForCoinType(agent.coin_type, agent.chain)
-  const creatorRewardLabel = `${DUMMY_CREATOR_REWARD.toFixed(2)} ${agentToken.symbol}`
+  const creatorReward = (agent.accumulated_fees ?? 0) / Math.pow(10, agentToken.decimals)
+  const creatorRewardLabel = `${creatorReward.toFixed(2)} ${agentToken.symbol}`
 
   const isSyndicate = !!agent.syndicate
   const ownerLink = getSentinelOwnerLink(agent)
@@ -290,10 +288,6 @@ export const AgentSidebar = ({
               </div>
             </div>
           )}
-
-          {/* Mission Brief — Sentinel types, breach rule, failed-fee allocation */}
-          <SentinelMissionBrief />
-
           {/* Active Bounty / Prize Pool */}
           <div className="space-y-2">
             <div className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
@@ -362,7 +356,7 @@ export const AgentSidebar = ({
                 onClick={() => setIsChartModalOpen(true)}
                 className="industrial-header w-full border border-[var(--color-border-strong)] bg-transparent py-2 text-[10px] tracking-[0.06em] text-[var(--color-text-muted)] transition-all hover:border-white hover:text-white"
               >
-                VIEW_GROWTH_CHART
+                VIEW GROWTH CHART
               </button>
             )}
           </div>
@@ -370,26 +364,32 @@ export const AgentSidebar = ({
           {/* Technical Parameters Grid */}
           <div className="grid grid-cols-2 gap-px bg-[var(--color-border-strong)]">
             {agent.model_name && (
-              <div className="bg-[var(--color-bg-base)] p-4">
+              <div className="min-w-0 bg-[var(--color-bg-base)] p-4">
                 <span className="industrial-header mb-1 block text-[10px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
                   MODEL
                 </span>
-                <span className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-white">
+                <span
+                  title={agent.model_name}
+                  className="industrial-header text-sentinel_pink block truncate text-[11px] font-bold tracking-[0.06em]"
+                >
                   {agent.model_name.toUpperCase()}
                 </span>
               </div>
             )}
             {agent.model_provider && (
-              <div className="bg-[var(--color-bg-base)] p-4">
+              <div className="min-w-0 bg-[var(--color-bg-base)] p-4">
                 <span className="industrial-header mb-1 block text-[10px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
                   PROVIDER
                 </span>
-                <span className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-white">
+                <span
+                  title={agent.model_provider}
+                  className="industrial-header block truncate text-[11px] font-semibold tracking-[0.06em] text-white"
+                >
                   {agent.model_provider.toUpperCase()}
                 </span>
               </div>
             )}
-            <div className="bg-[var(--color-bg-base)] p-4">
+            <div className="min-w-0 bg-[var(--color-bg-base)] p-4">
               <span className="industrial-header mb-1 block text-[10px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
                 OWNER
               </span>
@@ -408,7 +408,7 @@ export const AgentSidebar = ({
                 )}
               </div>
             </div>
-            <div className="bg-[var(--color-bg-base)] p-4">
+            <div className="min-w-0 bg-[var(--color-bg-base)] p-4">
               <span className="industrial-header mb-1 block text-[10px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
                 OWNER REWARD
               </span>
@@ -562,7 +562,7 @@ export const AgentSidebar = ({
               <button
                 type="button"
                 onClick={onTextChat}
-                className="button-ghost-terminal flex items-center justify-center gap-2 py-3"
+                className="button-solid-terminal flex items-center justify-center gap-2 py-3"
               >
                 <MessageSquare className="h-4 w-4" />
                 <span>TEXT</span>
@@ -570,7 +570,7 @@ export const AgentSidebar = ({
               <button
                 type="button"
                 onClick={onVoiceChat}
-                className="button-ghost-terminal flex items-center justify-center gap-2 py-3"
+                className="button-solid-terminal flex items-center justify-center gap-2 py-3"
               >
                 <Mic className="h-4 w-4" />
                 <span>VOICE</span>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, type RefObject } from 'react'
 import posthog from 'posthog-js'
 import {
   useCurrentAccount,
@@ -15,7 +15,13 @@ import { useSuiTokenBalance } from '@/hooks/useSuiTokenBalance'
 import { ConnectWalletLabel } from '@/components/ConnectWalletLabel'
 import { WalletDropdown } from '@/components/WalletDropdown'
 
-export function SuiConnectButton({ compact }: { compact?: boolean }) {
+export function SuiConnectButton({
+  compact,
+  anchorRef,
+}: {
+  compact?: boolean
+  anchorRef?: RefObject<HTMLElement | null>
+}) {
   const account = useCurrentAccount()
   const { mutate: disconnect } = useDisconnectWallet()
   const { balance, isLoading: isLoadingBalance } = useSuiTokenBalance(
@@ -53,6 +59,7 @@ export function SuiConnectButton({ compact }: { compact?: boolean }) {
       isLoadingBalance={isLoadingBalance}
       onDisconnect={disconnect}
       compact={compact}
+      anchorRef={anchorRef}
     />
   )
 }

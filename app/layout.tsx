@@ -283,7 +283,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <FloatingHelpButton />
           <Toaster
             position="top-right"
+            closeButton
             toastOptions={{
+              classNames: {
+                closeButton:
+                  '!rounded-none !bg-[var(--color-bg-surface)] !border-[var(--color-border-default)] !text-[var(--color-text-primary)]',
+              },
               style: {
                 background: 'var(--color-bg-surface)',
                 border: '1px solid var(--color-border-default)',

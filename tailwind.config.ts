@@ -24,6 +24,7 @@ export default {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
         text: 'var(--text)',
+        sentinel_pink: 'var(--sentinel_pink)',
         primary_pink: 'var(--primary_pink)',
         primary_pink_20: 'var(--primary_pink_20)',
         primary_pink_light: 'var(--primary_pink_light)',

@@ -1,5 +1,6 @@
 'use client'
 
+import type { RefObject } from 'react'
 import { useActiveChain } from '@/context/ActiveChainContext'
 import { isEvmChain } from '@/constants/chains'
 import { cn } from '@/lib/utils'
@@ -11,9 +12,11 @@ import { EVMConnectButton } from '@/components/EVMConnectButton'
 interface ConnectButtonProps {
   /** Shrink to a wallet icon below `md` — for the app topbar. */
   compact?: boolean
+  /** Optional element the connected-wallet menu aligns to instead of the button itself. */
+  anchorRef?: RefObject<HTMLElement | null>
 }
 
-export const ConnectButton = ({ compact }: ConnectButtonProps) => {
+export const ConnectButton = ({ compact, anchorRef }: ConnectButtonProps) => {
   const { activeChain, isHydrated } = useActiveChain()
 
   // Wait for hydration to prevent showing wrong wallet button
@@ -31,7 +34,7 @@ export const ConnectButton = ({ compact }: ConnectButtonProps) => {
     )
   }
 
-  if (activeChain === 'solana') return <SolanaConnectButton compact={compact} />
-  if (isEvmChain(activeChain)) return <EVMConnectButton compact={compact} />
-  return <SuiConnectButton compact={compact} />
+  if (activeChain === 'solana') return <SolanaConnectButton compact={compact} anchorRef={anchorRef} />
+  if (isEvmChain(activeChain)) return <EVMConnectButton compact={compact} anchorRef={anchorRef} />
+  return <SuiConnectButton compact={compact} anchorRef={anchorRef} />
 }

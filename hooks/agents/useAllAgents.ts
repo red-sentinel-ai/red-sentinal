@@ -43,7 +43,6 @@ export const useAllAgents = ({
       const params = new URLSearchParams({
         limit: String(AGENTS_LIMIT),
         offset: String(offset),
-        min_balance: '1',
       })
 
       if (chain) params.append('chain', chain)

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, type RefObject } from 'react'
 import posthog from 'posthog-js'
 import { SOLANA_CLUSTER } from '@/constants/solana'
 import { cn, truncateAddress } from '@/lib/utils'
@@ -10,7 +10,13 @@ import { useSolanaBalance } from '@/hooks/useSolanaBalance'
 import { ConnectWalletLabel } from '@/components/ConnectWalletLabel'
 import { WalletDropdown } from '@/components/WalletDropdown'
 
-export function SolanaConnectButton({ compact }: { compact?: boolean }) {
+export function SolanaConnectButton({
+  compact,
+  anchorRef,
+}: {
+  compact?: boolean
+  anchorRef?: RefObject<HTMLElement | null>
+}) {
   const { publicKey, disconnect } = useSolanaWallet()
   const { openConnectModal: setVisible } = usePrivyConnect()
   const { balance, isLoading: isLoadingBalance } = useSolanaBalance()
@@ -52,6 +58,7 @@ export function SolanaConnectButton({ compact }: { compact?: boolean }) {
       isLoadingBalance={isLoadingBalance}
       onDisconnect={disconnect}
       compact={compact}
+      anchorRef={anchorRef}
     />
   )
 }

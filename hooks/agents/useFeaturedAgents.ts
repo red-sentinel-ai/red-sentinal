@@ -15,7 +15,6 @@ export const useFeaturedAgents = (showAllChains?: boolean) => {
       const params = new URLSearchParams({
         is_featured: 'true',
         limit: '50',
-        min_balance: '1',
         status: 'active',
       })
       if (chainFilter) params.append('chain', chainFilter)

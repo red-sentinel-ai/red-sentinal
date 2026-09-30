@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { Eye, EyeOff, Crosshair, Heart, MessageCircle, ShieldCheck, X, Zap } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
@@ -50,9 +51,11 @@ export function TemplateDetailModal({
               <div className="flex items-start justify-between gap-4">
                 <div className="flex min-w-0 items-center gap-4">
                   {template.avatar_url ? (
-                    <img
+                    <Image
                       src={template.avatar_url}
                       alt={template.name}
+                      width={64}
+                      height={64}
                       className="h-14 w-14 shrink-0 rounded-2xl border border-[var(--color-border-subtle)] object-cover sm:h-16 sm:w-16"
                     />
                   ) : (
