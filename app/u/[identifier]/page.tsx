@@ -7,7 +7,8 @@ import { UserProfileView } from '@/components/profile/UserProfileView'
 import type { ConnectedWallet, ProfileViewData } from '@/types/Profile'
 
 async function resolveProfile(identifier: string): Promise<ProfileViewData | null> {
-  const isWalletAddress = identifier.startsWith('0x') && identifier.length > 60
+  // EVM addresses are 0x + 40 hex chars; Sui addresses are 0x + 64 hex chars
+  const isWalletAddress = /^0x([0-9a-fA-F]{40}|[0-9a-fA-F]{64})$/.test(identifier)
 
   let userId: string | null = null
 
@@ -20,12 +21,16 @@ async function resolveProfile(identifier: string): Promise<ProfileViewData | nul
       .limit(1)
       .maybeSingle()
 
-    if (walletError || !walletConnection) {
-      console.error('Wallet lookup error:', walletError?.message)
+    if (walletError) {
+      console.error('Wallet lookup error:', walletError.message)
       return null
     }
-    userId = walletConnection.user_id
-  } else {
+    if (walletConnection) {
+      userId = walletConnection.user_id
+    }
+  }
+
+  if (!userId) {
     const { data: userByUsername, error: usernameError } = await supabaseServiceClient
       .from('ss_users')
       .select('id')

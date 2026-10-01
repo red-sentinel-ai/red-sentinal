@@ -176,6 +176,7 @@ const TX_EXPLORER_BY_NETWORK: Record<string, string> = {
   'sui-testnet': 'https://suiscan.xyz/testnet/tx/',
   'walrus-testnet': 'https://suiscan.xyz/testnet/tx/',
   'monad-testnet': 'https://testnet.monadexplorer.com/tx/',
+  'monad-mainnet': 'https://monadscan.com/tx/',
 }
 
 /** Explorer URL for a payout transaction reference, when the network is known. */

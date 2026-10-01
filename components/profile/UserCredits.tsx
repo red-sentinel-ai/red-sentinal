@@ -41,7 +41,11 @@ const NETWORK_LABELS: Record<string, string> = {
   'sui-testnet': 'Sui Testnet',
   'walrus-testnet': 'Walrus Testnet',
   'monad-testnet': 'Monad Testnet',
+  'monad-mainnet': 'Monad Mainnet',
 }
+
+/** Credit networks whose payouts run on an EVM chain (adapter: 'evm'). */
+const EVM_NETWORKS = new Set(['monad-testnet', 'monad-mainnet'])
 
 const INELIGIBILITY_GUIDANCE: Record<
   string,
@@ -142,11 +146,15 @@ function EntitlementAction({
       : undefined
     if (!guidance) return null
     const GuidanceIcon = guidance.icon
+    const message =
+      entitlement.reason === 'WALLET_REQUIRED' && EVM_NETWORKS.has(asset.network)
+        ? 'Connect an EVM wallet (e.g. MetaMask) to claim this credit.'
+        : guidance.message
     return (
       <div className="flex items-start gap-2 rounded-md border border-[var(--color-border-subtle)] p-2 text-xs text-[var(--color-text-secondary)]">
         <GuidanceIcon className="mt-0.5 h-3.5 w-3.5 shrink-0" />
         <span>
-          {guidance.message} {guidance.guidance}
+          {message} {guidance.guidance}
         </span>
       </div>
     )

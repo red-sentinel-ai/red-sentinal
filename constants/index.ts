@@ -17,7 +17,7 @@ export const SUI_SENTINEL_DOCS_URL = 'https://docs.redsentinel.xyz/'
 export const SUI_SENTINEL_X_URL = 'https://twitter.com/intent/follow?screen_name=redsentinel_ai'
 export const SUI_SENTINEL_X_USERNAME = 'redsentinel_ai'
 export const SUI_SENTINEL_GITHUB_URL = 'https://github.com/sui-sentinel/contracts'
-export const SUI_SENTINEL_TELEGRAM_URL = 'https://t.me/suisentinel'
+export const SUI_SENTINEL_TELEGRAM_URL = 'https://t.me/redsentinel_ai'
 export const SUI_SENTINEL_AUDIT_REPORT_URL = '/pdfs/audit_final.pdf'
 export const SUI_SENTINEL_SUPPORT_EMAIL = 'support@cyphronixsoftware.xyz'
 export const SUI_SENTINEL_AMBASSADOR_URL = 'https://www.redsentinel.xyz/ambassador'
@@ -247,7 +247,7 @@ export const SOCIAL_MEDIA_URLS = {
   TWITTER_TWEET:
     'https://twitter.com/intent/tweet?text=Challenge%20AI%20agents%20and%20earn%20rewards%20%40redsentinel_ai%20on%20https%3A%2F%2Fapp.redsentinel.xyz%2F%20%23REDSENTINEL%20%23AGENTS%20%23AI',
   TELEGRAM_JOIN: SUI_SENTINEL_TELEGRAM_URL,
-  TELEGRAM_GENERAL_CHAT_URL: 'https://t.me/suisentinel/1',
+  TELEGRAM_GENERAL_CHAT_URL: 'https://t.me/redsentinel_ai/1',
 } as const
 
 //TODO: Add the correct docs url

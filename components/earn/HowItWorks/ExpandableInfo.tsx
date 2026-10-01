@@ -107,7 +107,7 @@ export function ExpandableInfo() {
                         <p>
                           Lucky Hours are announced in our{' '}
                           <a
-                            href="https://t.me/suisentinel"
+                            href="https://t.me/redsentinel_ai"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-[var(--color-gold-primary)] underline hover:text-[var(--color-gold-light)]"

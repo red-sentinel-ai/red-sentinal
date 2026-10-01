@@ -37,9 +37,7 @@ export function SyndicateMemberRow({ member, tokenSymbol, tokenDecimals }: Props
     ? member.username.toUpperCase()
     : truncateAddress(member.address)
   const avatar = member.avatar_url ?? member.twitter_avatar ?? null
-  // /u/[identifier] resolves usernames; EVM addresses (40-char) don't resolve
-  // there, so we only link rows that actually have a username.
-  const profileHref = member.username ? `/u/${member.username}` : null
+  const profileHref = `/u/${member.username ?? member.address}`
 
   return (
     <tr className="group transition-colors hover:bg-white/[0.02]">
