@@ -6,6 +6,7 @@ import { getTokenForCoinType } from '@/constants/tokens'
 import { useWithdrawAgentSui } from '@/hooks/agents/useWithdrawAgentSui'
 import { useWithdrawAgentSolana } from '@/hooks/agents/useWithdrawAgentSolana'
 import { useWithdrawAgentEVM } from '@/hooks/agents/useWithdrawAgentEVM'
+import { useEvmWithdrawReadiness } from '@/hooks/agents/useEvmWithdrawReadiness'
 import { isEvmChain, type SupportedChain } from '@/constants/chains'
 
 export interface WithdrawAgentModalProps {
@@ -42,6 +43,16 @@ export const WithdrawAgentModal = ({
   const { withdrawAgent: withdrawAgentSolana, isLoading: isSolanaLoading } = useWithdrawAgentSolana()
   const { withdrawAgent: withdrawAgentEvm, isLoading: isEvmLoading } = useWithdrawAgentEVM()
   const isLoading = isEvm ? isEvmLoading : isSolana ? isSolanaLoading : isSuiLoading
+
+  // EVM withdrawals revert on-chain unless the sentinel is paused and its
+  // 3-hour cooldown has elapsed — check before letting the user sign anything.
+  const readiness = useEvmWithdrawReadiness(isEvm ? agentId : undefined, chain)
+  const isEvmWithdrawReady = !isEvm || (readiness.canWithdraw && !readiness.isLoading)
+  const readinessMessage = !readiness.isLoading
+    ? readiness.isPaused
+      ? 'Withdrawal unlocks 3 hours after pausing — try again later'
+      : 'Pause the sentinel first — withdrawals unlock 3 hours after pausing'
+    : 'Checking withdrawal availability…'
 
   useEffect(() => {
     if (open) {
@@ -80,6 +91,10 @@ export const WithdrawAgentModal = ({
 
   const handleWithdraw = async () => {
     if (!validateAmount()) return
+    if (isEvm && !isEvmWithdrawReady) {
+      setError(readinessMessage)
+      return
+    }
 
     try {
       if (isEvm) {
@@ -150,11 +165,14 @@ export const WithdrawAgentModal = ({
             </button>
           </div>
           {error && <p className="mt-1 text-sm text-[var(--color-danger)]">{error}</p>}
+          {isEvm && !isEvmWithdrawReady && !error && (
+            <p className="mt-1 text-sm text-[var(--color-warning)]">{readinessMessage}</p>
+          )}
         </div>
 
         <button
           onClick={handleWithdraw}
-          disabled={isLoading || !amount.trim()}
+          disabled={isLoading || !amount.trim() || (isEvm && !isEvmWithdrawReady)}
           className="btn btn-black flex w-full items-center justify-center disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isLoading ? (

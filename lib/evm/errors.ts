@@ -50,9 +50,44 @@ export function isUnrecognizedChainError(error: unknown): boolean {
   )
 }
 
+// Sentinel.sol custom errors, matched against the raw error message (viem
+// renders reverts as "Reverted with custom error: 'AgentNotPaused()'").
+// Checked before viem's generic shortMessage, which is often just
+// "Execution Reverted" and hides the actual reason.
+const SENTINEL_REVERT_MESSAGES: ReadonlyArray<[RegExp, string]> = [
+  [/AgentNotPaused\(\)/, 'Pause the sentinel and wait 3 hours before withdrawing'],
+  [/WithdrawalCooldownActive\(\)/, 'Withdrawal unlocks 3 hours after pausing — try again later'],
+  [/InsufficientBalance\(\)/, 'The sentinel balance is lower than the requested amount'],
+  [/AgentNotFound\(\)/, 'Sentinel not found'],
+  [/AgentInactive\(\)/, 'This sentinel was defeated and can no longer be funded'],
+  [/AgentNotActive\(\)/, 'This sentinel is not active'],
+]
+
+function collectErrorMessages(error: unknown, depth = 0): string[] {
+  if (!error || depth > 5) return []
+  const messages: string[] = []
+  if (error instanceof Error) {
+    messages.push(error.message)
+    const cause = (error as { cause?: unknown }).cause
+    if (cause) messages.push(...collectErrorMessages(cause, depth + 1))
+  }
+  return messages
+}
+
+function getSentinelRevertMessage(error: unknown): string | undefined {
+  const messages = collectErrorMessages(error)
+  for (const [pattern, readable] of SENTINEL_REVERT_MESSAGES) {
+    if (messages.some(message => pattern.test(message))) return readable
+  }
+  return undefined
+}
+
 export function toReadableEvmError(error: unknown, fallbackMessage: string): string {
   if (isUserRejectedRequestError(error)) return 'Transaction rejected'
   if (error instanceof WrongChainError) return error.message
+
+  const sentinelRevert = getSentinelRevertMessage(error)
+  if (sentinelRevert) return sentinelRevert
 
   const shortMessage = (error as { shortMessage?: unknown } | null)?.shortMessage
   if (typeof shortMessage === 'string' && shortMessage.length > 0) return shortMessage

@@ -9,9 +9,11 @@ import { type Agent } from '@/types/agents'
 import { useFundAgentModal } from '@/hooks/useFundAgentModal'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { getTokenForCoinType } from '@/constants/tokens'
-import { CHAINS, type SupportedChain } from '@/constants/chains'
+import { CHAINS, isEvmChain, type SupportedChain } from '@/constants/chains'
 import { AgentDropdown } from '../agents/AgentCardDropdown'
 import { useWithdrawAgentModal } from '@/hooks/agents/useWithdrawAgentModal'
+import { usePauseAgentEVM } from '@/hooks/agents/usePauseAgentEVM'
+import { useEvmWithdrawReadiness } from '@/hooks/agents/useEvmWithdrawReadiness'
 import { cn, formatDuration, truncateAddress } from '@/lib/utils'
 import { getSentinelStatus } from '@/lib/sentinel-status'
 import { PrizePoolChangeDisplay } from '../agents/PrizePoolChangeDisplay'
@@ -69,6 +71,41 @@ export const ProfileSentinelCard = ({
   // so we suppress every owner action and surface who claimed the bounty instead.
   const isDefeated = agent.state === 'defeated'
   const defeaterAddress = agent.winner?.address || null
+
+  // EVM sentinels accept withdrawals only while paused, with a 3-hour cooldown
+  // that starts at pause time — enforced on-chain by the Sentinel contract.
+  const isEvm = isEvmChain(agent.chain)
+  const showEvmOwnerControls = isEvm && fromProfile && isOwner && !isDefeated
+  const readiness = useEvmWithdrawReadiness(agent.agent_id, agent.chain)
+  const { pauseAgent, unpauseAgent, isLoading: isPauseLoading } = usePauseAgentEVM({
+    onSuccess: () => readiness.refetch(),
+  })
+
+  const formatCooldownRemaining = (ms: number) => {
+    const { days, hours, minutes } = formatDuration(ms)
+    return `${days > 0 ? `${days}d ` : ''}${hours > 0 || days > 0 ? `${hours}h ` : ''}${minutes}m`
+  }
+
+  const evmWithdrawBlocked =
+    showEvmOwnerControls &&
+    (readiness.isLoading ||
+      (readiness.onChainState !== undefined && !readiness.canWithdraw))
+
+  const evmWithdrawTitle = !readiness.isLoading
+    ? readiness.isPaused
+      ? readiness.cooldownRemainingMs && readiness.cooldownRemainingMs > 0
+        ? `Withdrawable in ${formatCooldownRemaining(readiness.cooldownRemainingMs)}`
+        : 'Ready to withdraw'
+      : 'Pause the sentinel to enable withdrawals — a 3-hour cooldown starts when you pause'
+    : 'Checking withdrawal availability…'
+
+  const handlePauseToggle = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    const action = readiness.isPaused ? unpauseAgent : pauseAgent
+    action(agent.agent_id).catch(() => {
+      // Error already surfaced via toast + hook state
+    })
+  }
 
   useEffect(() => {
     if (hasNoBalance) {
@@ -268,6 +305,19 @@ export const ProfileSentinelCard = ({
             )}
           </div>
         )}
+        {showEvmOwnerControls && !readiness.isLoading && readiness.onChainState === 'paused' && (
+          <div className="mb-2 text-center text-[11px]">
+            {readiness.cooldownRemainingMs && readiness.cooldownRemainingMs > 0 ? (
+              <span className="font-medium text-[var(--color-warning)]">
+                Withdrawable in {formatCooldownRemaining(readiness.cooldownRemainingMs)}
+              </span>
+            ) : (
+              <span className="font-medium text-[var(--color-success)]">
+                Paused — ready to withdraw
+              </span>
+            )}
+          </div>
+        )}
         {!isDefeated && fromProfile && isOwner && isAttackPaused && (
           <div className="mb-2 rounded-md border border-yellow-500/20 bg-yellow-500/10 px-2 py-1 text-center text-[11px] text-yellow-400">
             Attacks are paused, add funds to resume
@@ -338,18 +388,44 @@ export const ProfileSentinelCard = ({
                         })
                       }
                       className="btn btn-outline w-1/2 px-2 py-1.5 text-[11px]"
-                      disabled={isWithdrawalLocked || Number(agent.total_balance) === 0}
+                      disabled={
+                        isWithdrawalLocked ||
+                        Number(agent.total_balance) === 0 ||
+                        evmWithdrawBlocked
+                      }
                       title={
                         isWithdrawalLocked
                           ? timeRemaining
                           : Number(agent.total_balance) === 0
                             ? 'No funds available'
-                            : 'Withdraw your funds'
+                            : evmWithdrawBlocked
+                              ? evmWithdrawTitle
+                              : 'Withdraw your funds'
                       }
                     >
                       Withdraw
                     </button>
                   </div>
+                  {showEvmOwnerControls && (
+                    <button
+                      onClick={handlePauseToggle}
+                      disabled={isPauseLoading}
+                      className="btn btn-outline w-full px-2 py-1.5 text-[11px] disabled:cursor-not-allowed disabled:opacity-50"
+                      title={
+                        readiness.isPaused
+                          ? 'Resume accepting attacks (withdrawals require the sentinel to stay paused)'
+                          : 'Pause accepting attacks — withdrawals unlock after a 3-hour cooldown'
+                      }
+                    >
+                      {isPauseLoading
+                        ? readiness.isPaused
+                          ? 'Resuming…'
+                          : 'Pausing…'
+                        : readiness.isPaused
+                          ? 'Resume Sentinel'
+                          : 'Pause Sentinel'}
+                    </button>
+                  )}
                   <button
                     onClick={e => {
                       e.stopPropagation()

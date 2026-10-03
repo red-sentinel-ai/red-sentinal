@@ -68,7 +68,11 @@ export const SENTINEL_ABI = [
           { name: 'attackCount', type: 'uint256' },
           { name: 'token', type: 'address' },
           { name: 'owner', type: 'address' },
+          { name: 'isDefeated', type: 'bool' },
           { name: 'exists', type: 'bool' },
+          // AgentState enum: 0 = Active, 1 = Paused
+          { name: 'state', type: 'uint8' },
+          { name: 'pausedAt', type: 'uint256' },
         ],
       },
     ],
@@ -103,6 +107,22 @@ export const SENTINEL_ABI = [
       { name: 'agentId', type: 'string' },
       { name: 'amount', type: 'uint256' },
     ],
+    outputs: [],
+  },
+  {
+    // Withdrawals only go through while a sentinel is paused; the contract
+    // then enforces a 3-hour cooldown counted from the pause transaction.
+    type: 'function',
+    name: 'pauseAgent',
+    stateMutability: 'nonpayable',
+    inputs: [{ name: 'agentId', type: 'string' }],
+    outputs: [],
+  },
+  {
+    type: 'function',
+    name: 'unpauseAgent',
+    stateMutability: 'nonpayable',
+    inputs: [{ name: 'agentId', type: 'string' }],
     outputs: [],
   },
   {

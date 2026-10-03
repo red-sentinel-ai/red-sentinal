@@ -74,14 +74,13 @@ export const AgentListView = () => {
           }}
         />
         <h1 className="font-display relative text-3xl font-extrabold leading-[1.08] tracking-[0.04em] text-white sm:text-4xl md:text-7xl">
-          Put AI agents to the test
+          Find prompt-injection paths before they reach production
         </h1>
         {/* New landing hero type scale: no extrabold below heading sizes, min 11px for
             readable copy, tracking tightened on small text, sentence case for anything
             with a verb. Old sections still use the legacy 9–10px extrabold/0.1em style. */}
         <p className="font-body relative mx-auto mt-4 max-w-2xl text-sm font-normal leading-[1.7] tracking-[0.01em] text-[var(--color-text-secondary)] sm:mt-6 sm:text-base">
-          Attack live Sentinels for on-chain bounties. Launch a Campaign Sentinel to engage your
-          community, or a Security Sentinel to test a real AI-agent boundary
+          Browse public security challenges, or launch a controlled test for your own AI workflow.
         </p>
         <div className="mt-6 sm:mt-8">
           <AttackStats variant="strip" />
@@ -114,14 +113,13 @@ export const AgentListView = () => {
           <span className="font-body text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--color-text-secondary)]">
             LIVE ON:
           </span>
-          <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 sm:gap-x-6">
             {SUPPORTED_CHAINS.map(chainId => {
               const chain = CHAINS[chainId]
               return (
-                <Link
+                <span
                   key={chainId}
-                  href={`/attacks?chain=${chainId}`}
-                  className="font-body inline-flex items-center gap-2 border border-[var(--color-border-default)] px-3.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-secondary)] transition-colors hover:border-white hover:text-white sm:px-5 sm:text-[11px]"
+                  className="font-body inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-secondary)] sm:text-[11px]"
                 >
                   <Image
                     src={chain.icon}
@@ -131,7 +129,7 @@ export const AgentListView = () => {
                     className={cn('rounded-full', chain.iconFilterClass)}
                   />
                   {chain.name}
-                </Link>
+                </span>
               )
             })}
           </div>
