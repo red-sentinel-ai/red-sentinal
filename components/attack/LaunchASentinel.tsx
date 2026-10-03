@@ -110,7 +110,7 @@ function DefenderCard({
   )
 }
 
-/** The third cell — the open slot. The arena's supply side pitched as an
+/** The third cell — the open slot. The platform's supply side pitched as an
  *  invitation: this spot pays its defender, the next one could be yours. */
 function DeploySlotCard({
   index,
@@ -168,7 +168,7 @@ function DeploySlotCard({
   )
 }
 
-/** Landing-page supply-side pitch — "Launch a Sentinel" with two paths
+/** Landing-page supply-side pitch — "Launch a Security Sentinel" with two paths
  *  (partner Campaign / builder Security), then defender earnings proof. */
 export function LaunchASentinel({
   sentinels,
@@ -184,7 +184,7 @@ export function LaunchASentinel({
       <section className="mb-10 md:mb-20">
         <div className="mb-5 md:mb-8">
           <h2 className="font-display text-xl font-extrabold uppercase tracking-[0.04em] text-white sm:text-2xl">
-            Launch a Sentinel
+            Launch a Security Sentinel
           </h2>
         </div>
 

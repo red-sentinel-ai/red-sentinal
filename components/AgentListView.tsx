@@ -10,7 +10,7 @@ import { useTrendingAgents, MAX_TRENDING_SENTINELS } from '@/hooks/agents/useTre
 import { useDefeatedAgents } from '@/hooks/agents/useDefeatedAgents'
 import { usePlatformStats } from '@/hooks/stats/usePlatformStats'
 import { cn } from '@/lib/utils'
-import { PREMIUM_SENTINEL, PARTNER_CONTACT_URL } from '@/constants'
+import { PARTNER_CONTACT_URL } from '@/constants'
 import { CHAINS, SUPPORTED_CHAINS } from '@/constants/chains'
 import { isSentinelAttackable } from '@/lib/sentinel-status'
 import { AttackStats } from '@/components/attack/AttackStats'
@@ -21,8 +21,6 @@ import { SentinelRowSkeleton } from '@/components/attack/SentinelRowSkeleton'
 import { BrokenSentinelCard } from '@/components/attack/BrokenSentinelCard'
 import { ArenaHowItWorks } from '@/components/attack/ArenaHowItWorks'
 import { LaunchASentinel } from '@/components/attack/LaunchASentinel'
-import { FormSyndicate } from '@/components/attack/FormSyndicate'
-import { SentinelTypesSplit } from '@/components/attack/SentinelTypesSplit'
 import { FaqSection } from '@/components/faq/FaqSection'
 import { FAQ_ITEMS, LANDING_FAQ_COUNT } from '@/constants/faq'
 
@@ -42,7 +40,7 @@ export const AgentListView = () => {
     .filter(a => !featuredIds.has(a.agent_id))
     .slice(0, MAX_TRENDING_SENTINELS)
 
-  // Defender proof for "Launch a Sentinel": the top two earners still standing
+  // Defender proof for "Launch a Security Sentinel": the top two earners still standing
   // among the agents this page already fetches — surviving attacks is the
   // earning mechanic. Attacks survived breaks ties when fees aren't populated.
   const defenderPicks = useMemo(
@@ -74,40 +72,48 @@ export const AgentListView = () => {
           }}
         />
         <h1 className="font-display relative text-3xl font-extrabold leading-[1.08] tracking-[0.04em] text-white sm:text-4xl md:text-7xl">
-          Find prompt-injection paths before they reach production
+          Put AI security objectives to the test
         </h1>
         {/* New landing hero type scale: no extrabold below heading sizes, min 11px for
             readable copy, tracking tightened on small text, sentence case for anything
             with a verb. Old sections still use the legacy 9–10px extrabold/0.1em style. */}
         <p className="font-body relative mx-auto mt-4 max-w-2xl text-sm font-normal leading-[1.7] tracking-[0.01em] text-[var(--color-text-secondary)] sm:mt-6 sm:text-base">
-          Browse public security challenges, or launch a controlled test for your own AI workflow.
+          Explore public Security Sentinels with defined objectives and bounties. Attempt an
+          authorized breach, or launch a Sentinel to test the AI workflow you need to protect.
         </p>
         <div className="mt-6 sm:mt-8">
           <AttackStats variant="strip" />
         </div>
         <div className="relative mt-6 flex flex-col items-center justify-center gap-3 sm:mt-8 sm:flex-row sm:gap-4">
           <Link
-            href={`/attack/${PREMIUM_SENTINEL.agentPath}`}
+            href="/attacks"
             className="font-body inline-flex items-center gap-2 border border-white bg-white px-6 py-3 text-xs font-bold uppercase tracking-[0.08em] text-black transition-colors hover:bg-transparent hover:text-white sm:px-8"
           >
-            Attack {PREMIUM_SENTINEL.name} <ArrowRight className="size-3.5" />
+            Explore Sentinels <ArrowRight className="size-3.5" />
           </Link>
           <Link
-            href="/practice"
+            href="/defend"
             className="font-body inline-flex items-center gap-2 border border-[var(--color-border-default)] px-6 py-3 text-xs font-bold uppercase tracking-[0.08em] text-[var(--color-text-secondary)] transition-colors hover:border-white hover:text-white sm:px-8"
           >
-            Try free in Practice Arena
+            Launch a Security Sentinel
           </Link>
         </div>
         <p className="font-body relative mt-4 text-[11px] font-medium tracking-normal text-[var(--color-text-secondary)] sm:mt-5 sm:text-xs">
-          Partner or project?{' '}
+          Practice first in the free{' '}
+          <Link
+            href="/practice"
+            className="font-semibold text-white underline underline-offset-2 transition-colors hover:text-[var(--color-text-secondary)]"
+          >
+            Practice Lab
+          </Link>
+          . Community challenge partner?{' '}
           <Link
             href={PARTNER_CONTACT_URL}
             className="font-semibold text-white underline underline-offset-2 transition-colors hover:text-[var(--color-text-secondary)]"
           >
             Talk to the team
-          </Link>{' '}
-          about a sponsored Campaign Sentinel.
+          </Link>
+          .
         </p>
         <div className="relative mt-8 flex flex-col justify-center gap-3 sm:mt-12 sm:flex-row sm:items-center sm:gap-4">
           <span className="font-body text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--color-text-secondary)]">
@@ -139,20 +145,17 @@ export const AgentListView = () => {
         </p>
       </section>
 
-      {/* Two entry points — partners and builders — before the Sentinel lists. */}
-      <SentinelTypesSplit />
-
-      {/* Live Activity — the arena is alive, proven within five seconds. */}
+      {/* Live Activity — proof the platform is alive, within five seconds. */}
       {/* <LiveActivityFeed /> */}
 
-      {/* Recently Broken — proof the game is winnable. Renders nothing until the
+      {/* Recent Valid Findings — proof the game is winnable. Renders nothing until the
           first public win exists, so the page never shows an empty shelf. */}
       {(isFetchingDefeated || (defeatedAgents || []).length > 0) && (
         <section className="mb-10 md:mb-20">
           <div className="mb-5 flex items-end justify-between gap-4 md:mb-8">
             <div>
               <h2 className="font-display text-xl font-extrabold uppercase tracking-[0.04em] text-white sm:text-2xl">
-                Recently Broken
+                Recent Valid Findings
               </h2>
               <p className="font-body mt-1.5 text-[11px] font-medium tracking-normal text-[var(--color-text-secondary)] sm:mt-2">
                 Pools get claimed here. Every break is public. Every winner is paid on-chain. This
@@ -172,13 +175,13 @@ export const AgentListView = () => {
         </section>
       )}
 
-      {/* Trending Sentinels — auto-scrolling row (deduped against Featured) */}
+      {/* Most Active Sentinels — auto-scrolling row (deduped against Featured) */}
       {(isFetchingTrending || trendingForRow.length > 0) && (
         <section className="mb-10 md:mb-20">
           <div className="mb-5 flex items-end justify-between gap-4 md:mb-8">
             <div>
               <h2 className="font-display text-xl font-extrabold uppercase tracking-[0.04em] text-white sm:text-2xl">
-                Trending Sentinels
+                Most Active Sentinels
               </h2>
               <p className="font-body mt-1.5 text-[11px] font-medium tracking-normal text-[var(--color-text-secondary)] sm:mt-2">
                 The most-attacked sentinels right now. Where the action is.
@@ -204,10 +207,10 @@ export const AgentListView = () => {
           <div className="mb-5 flex items-end justify-between gap-4 md:mb-8">
             <div>
               <h2 className="font-display text-xl font-extrabold uppercase tracking-[0.04em] text-white sm:text-2xl">
-                Featured Sentinels
+                Featured Security Sentinels
               </h2>
               <p className="font-body mt-1.5 text-[11px] font-medium tracking-normal text-[var(--color-text-secondary)] sm:mt-2">
-                Featured pools from across the arena — Security and Campaign Sentinels alike.
+                Featured pools from across the platform — Security and Campaign Sentinels alike.
               </p>
             </div>
             <Link
@@ -225,7 +228,7 @@ export const AgentListView = () => {
         </section>
       )}
 
-      {/* Explore all — slim hand-off row from story to workbench. Kept compact
+      {/* Browse all — slim hand-off row from story to workbench. Kept compact
           on purpose: it's a pointer to the directory, not a section. */}
       <section className="mb-10 md:mb-20">
         <Link
@@ -234,9 +237,9 @@ export const AgentListView = () => {
         >
           <div className="min-w-0">
             <p className="font-display text-base font-extrabold uppercase tracking-[0.04em] text-white sm:text-lg">
-              Explore all
+              Browse all
               {typeof sentinelsLive === 'number' ? ` ${sentinelsLive.toLocaleString()}` : ''}{' '}
-              sentinels
+              active Sentinels
             </p>
             <p className="font-body mt-1 hidden text-[11px] font-medium tracking-normal text-[var(--color-text-secondary)] sm:block">
               Filter by network, status, token, and pool size. Find your edge.
@@ -252,23 +255,20 @@ export const AgentListView = () => {
       <section className="mb-10 md:mb-20">
         <div className="mb-5 md:mb-8">
           <h2 className="font-display text-xl font-extrabold uppercase tracking-[0.04em] text-white sm:text-2xl">
-            How the Arena Works
+            How Public Sentinel Testing Works
           </h2>
           <p className="font-body mt-1.5 text-[11px] font-medium tracking-normal text-[var(--color-text-secondary)] sm:mt-2">
-            Three moves. Five seconds. That&apos;s the whole game.
+            Three steps. Read the mission, attempt an authorized breach, get paid on-chain.
           </p>
         </div>
         <ArenaHowItWorks />
       </section>
 
-      {/* Launch a Sentinel — the supply side, two paths. No defenders, no arena. */}
+      {/* Launch a Security Sentinel — the supply side, two paths. */}
       <LaunchASentinel
         sentinels={defenderPicks}
         isFetching={isFetchingFeatured || isFetchingTrending}
       />
-
-      {/* Syndicates — the collective supply side. No pools alone, fortresses together. */}
-      <FormSyndicate />
 
       {/* FAQ — close the open loops before the visitor bounces. Full list on /faq. */}
       <section className="mb-10 md:mb-20">

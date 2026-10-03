@@ -3,7 +3,7 @@ import { RewardsMission } from '@/types/Rewards'
 const DEFAULT_MISSIONS = [
   {
     id: 'launch_sentinel',
-    name: 'Launch a Sentinel',
+    name: 'Launch a Security Sentinel',
     type: 'launch_sentinel',
     points: 200,
     enabled: true,

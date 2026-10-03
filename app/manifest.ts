@@ -37,7 +37,7 @@ export default function manifest(): MetadataRoute.Manifest {
         icons: [{ src: '/icons/pwa-96x96.png', sizes: '96x96' }],
       },
       {
-        name: 'Practice Arena',
+        name: 'Practice Lab',
         short_name: 'Practice',
         description: 'Practice prompt injection and jailbreak techniques',
         url: '/practice',

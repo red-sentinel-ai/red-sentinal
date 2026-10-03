@@ -30,7 +30,7 @@ export default async function AttacksPage({
             Explore Sentinels
           </h1>
           <p className="font-body mt-2 text-xs font-medium tracking-normal text-[var(--color-text-secondary)] md:text-sm">
-            Every active target in the arena — Security and Campaign Sentinels — ranked and
+            Every active target on the platform — Security and Campaign Sentinels — ranked and
             sortable.
           </p>
           <div className="mt-6 md:mt-8">

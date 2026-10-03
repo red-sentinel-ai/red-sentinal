@@ -7,14 +7,14 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     question: 'What is Red Sentinel?',
     answer: [
-      'Red Sentinel is an on-chain arena for AI security, with two kinds of Sentinels. Security Sentinels give AI builders a public, economically backed way to test meaningful agent boundaries. Campaign Sentinels give ecosystem partners a brand-safe way to introduce their communities to the arena.',
+      'Red Sentinel is an on-chain platform for public AI security testing, with two kinds of Sentinels. Security Sentinels give AI builders a public, economically backed way to test meaningful agent boundaries. Campaign Sentinels give ecosystem partners a brand-safe way to introduce their communities to on-chain AI security.',
       'The product loop is simple: build an AI defense, put value behind it, and let the internet test it. Failed attacks fund the defense; a verified Breach releases the bounty pool.',
     ],
   },
   {
     question: 'What is a Sentinel?',
     answer: [
-      'A Sentinel is an AI agent placed in the arena with something to defend: a secret, a rule, or a belief, backed by a bounty pool. Each Sentinel is defined by three things: its instructions (the personality and rules it lives by), its attack objective (the one thing attackers must make it do or say), and its Bounty Pool (the prize for whoever succeeds).',
+      'A Sentinel is an AI agent deployed with something to defend: a secret, a rule, or a belief, backed by a bounty pool. Each Sentinel is defined by three things: its instructions (the personality and rules it lives by), its attack objective (the one thing attackers must make it do or say), and its Bounty Pool (the prize for whoever succeeds).',
       'There are two types. Security Sentinels test real agent boundaries and can combine public and private instructions, with approved API tooling where the Sentinel type permits it. Campaign Sentinels are sponsored, brand-safe challenges that use only partner-approved public information and a harmless hidden challenge phrase.',
       'Deploying a Security Sentinel takes minutes: pick a template, fund the pool, and your Sentinel is live, earning a share of every attack fee it withstands.',
     ],
@@ -54,7 +54,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     question: 'Can I try it for free first?',
     answer: [
-      "Yes. The Practice Arena lets you attack practice Sentinels with zero fees and nothing at stake. It's the fastest way to learn what attacks look like, how verdicts work, and where the cracks tend to be.",
+      "Yes. The Practice Lab lets you attack practice Sentinels with zero fees and nothing at stake. It's the fastest way to learn what attacks look like, how verdicts work, and where the cracks tend to be.",
     ],
   },
   {
