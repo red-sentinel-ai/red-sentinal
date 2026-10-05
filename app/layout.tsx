@@ -154,7 +154,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     name: 'Red Sentinel',
     url: SUI_SENTINEL_APP_URL,
     logo: `${SUI_SENTINEL_APP_URL}/icons/logo-sm.svg`,
-    sameAs: [`https://twitter.com/${SUI_SENTINEL_X_USERNAME}`, SUI_SENTINEL_GITHUB_URL],
+    sameAs: [`https://x.com/${SUI_SENTINEL_X_USERNAME}`, SUI_SENTINEL_GITHUB_URL],
     description:
       'AI security arena for the age of agents. Attack Sentinels, learn how AI systems fail, earn bounties for verified breaches, and build reputation on-chain. Campaign Sentinels give partners a brand-safe way to run sponsored challenges.',
     foundingDate: '2025',
