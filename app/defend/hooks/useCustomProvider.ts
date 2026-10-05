@@ -3,7 +3,6 @@ import { toast } from 'sonner'
 import { PROVIDER_MODELS } from '@/constants'
 import { DEFAULT_MODEL } from './useDefendForm'
 import type { DefendFormData } from './useDefendForm'
-
 export function useCustomProvider(
   setFormData: React.Dispatch<React.SetStateAction<DefendFormData>>
 ) {
@@ -17,9 +16,12 @@ export function useCustomProvider(
     setValidationError(null)
   }
 
-  const handleProviderChange = (provider: string) => {
+  const handleProviderChange = (
+    provider: string,
+    providerModels: Record<string, string[]> = PROVIDER_MODELS
+  ) => {
     const isCustom = provider === 'custom'
-    const defaultModel = isCustom ? '' : PROVIDER_MODELS[provider]?.[0] || DEFAULT_MODEL
+    const defaultModel = isCustom ? '' : providerModels[provider]?.[0] || DEFAULT_MODEL
 
     setFormData(prev => ({
       ...prev,

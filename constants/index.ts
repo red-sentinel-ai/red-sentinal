@@ -543,17 +543,27 @@ export const ADMIN_API_TOKEN = process.env.ADMIN_API_TOKEN
 
 export const WITHDRAWAL_LOCK_MS = 1_209_600_000 // 14 days in milliseconds
 
+// Static fallback for the deploy modal while the admin-managed catalogue
+// (backend GET /sentinels/provider-models, proxied at /api/provider-models)
+// is loading or unreachable. Keep in sync with the backend's
+// DEFAULT_PROVIDER_MODELS seed in handlers/sentinels/provider-models.ts.
 export const PROVIDER_MODELS: Record<string, string[]> = {
-  openai: ['gpt-4o', 'gpt-4.1', 'gpt-4o-mini', 'gpt-3.5-turbo'],
-  anthropic: ['claude-opus-4-6', 'claude-sonnet-4-6', 'claude-haiku-4-5'],
-  deepseek: ['deepseek-chat', 'deepseek-reasoner'],
   'amazon bedrock': [
+    'nvidia.nemotron-nano-3-30b',
+    'nvidia.nemotron-super-3-120b',
+    'qwen.qwen3-coder-480b-a35b-instruct',
+    'zai.glm-5',
+    'deepseek.v3.2',
     'mistral.mistral-large-3-675b-instruct',
     'openai.gpt-oss-120b-1:0',
     'us.meta.llama4-maverick-17b-instruct-v1:0',
     'us.meta.llama3-2-90b-instruct-v1:0',
     'us.meta.llama3-3-70b-instruct-v1:0',
   ],
+  openai: ['gpt-4o', 'gpt-4.1', 'gpt-4o-mini', 'gpt-3.5-turbo'],
+  anthropic: ['claude-opus-4-6', 'claude-sonnet-4-6', 'claude-haiku-4-5'],
+  deepseek: ['deepseek-chat', 'deepseek-reasoner'],
+  z_ai: [],
   custom: [],
 }
 

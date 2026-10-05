@@ -49,6 +49,7 @@ import { FormInput } from './components/FormInput'
 import { LLMProviderSection } from './components/LLMProviderSection'
 import { useDefendForm } from './hooks/useDefendForm'
 import { useCustomProvider } from './hooks/useCustomProvider'
+import { useProviderModels } from './hooks/useProviderModels'
 import { useDeployAgent } from './hooks/useDeployAgent'
 import { useTemplateLoader } from './hooks/useTemplateLoader'
 import { SyndicateLaunchFlow } from '@/components/syndicate/SyndicateLaunchFlow'
@@ -202,6 +203,18 @@ export default function DefendPageClient() {
     })
 
   const customProvider = useCustomProvider(setFormData)
+
+  // Admin-managed provider/model catalogue with a static fallback; re-point
+  // the selected model once it arrives if the fallback default is not in it.
+  const { providerModels } = useProviderModels()
+  useEffect(() => {
+    setFormData(prev => {
+      if (prev.llmProvider === 'custom') return prev
+      const models = providerModels[prev.llmProvider]
+      if (!models?.length || models.includes(prev.llmModel)) return prev
+      return { ...prev, llmModel: models[0] }
+    })
+  }, [providerModels, setFormData])
 
   const handleChangeWithProviderReset = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -525,8 +538,11 @@ export default function DefendPageClient() {
             <LLMProviderSection
               formData={formData}
               errors={errors}
+              providerModels={providerModels}
               onChange={handleChangeWithProviderReset}
-              onProviderChange={customProvider.handleProviderChange}
+              onProviderChange={provider =>
+                customProvider.handleProviderChange(provider, providerModels)
+              }
               onModelChange={val => setFormData(prev => ({ ...prev, llmModel: val }))}
               isValidating={customProvider.isValidating}
               isValidated={customProvider.isValidated}

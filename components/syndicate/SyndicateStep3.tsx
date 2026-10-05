@@ -12,6 +12,7 @@ import { LLMProviderSection } from '@/app/defend/components/LLMProviderSection'
 import { RewardsConditions } from '@/components/defend/RewardsConditions'
 import { useDefendForm } from '@/app/defend/hooks/useDefendForm'
 import { useCustomProvider } from '@/app/defend/hooks/useCustomProvider'
+import { useProviderModels } from '@/app/defend/hooks/useProviderModels'
 import { useTokenCount } from '@/hooks/useTokenCount'
 import { useDeploySyndicateAgent } from '@/hooks/syndicate/useDeploySyndicateAgent'
 import { ImagePickerSheet } from '@/components/agents/ImagePickerSheet'
@@ -56,6 +57,7 @@ export function SyndicateStep3({
   })
 
   const customProvider = useCustomProvider(setFormData)
+  const { providerModels } = useProviderModels()
 
   const handleChangeWithProviderReset = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -200,8 +202,11 @@ export function SyndicateStep3({
       <LLMProviderSection
         formData={formData}
         errors={errors}
+        providerModels={providerModels}
         onChange={handleChangeWithProviderReset}
-        onProviderChange={customProvider.handleProviderChange}
+        onProviderChange={provider =>
+          customProvider.handleProviderChange(provider, providerModels)
+        }
         onModelChange={model => setFormData(prev => ({ ...prev, llmModel: model }))}
         isValidating={customProvider.isValidating}
         isValidated={customProvider.isValidated}

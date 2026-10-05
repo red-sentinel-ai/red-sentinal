@@ -1,13 +1,14 @@
 'use client'
 
 import { CheckCircle, Eye, EyeOff, Loader2, XCircle } from 'lucide-react'
-import { PROVIDER_MODELS } from '@/constants'
 import { CustomDropdown } from '@/components/ui/common/CustomDropdown'
 import { providerNeedsApiKey, type DefendFormData } from '../hooks/useDefendForm'
 
 interface LLMProviderSectionProps {
   formData: DefendFormData
   errors: Partial<DefendFormData>
+  /** Admin-managed provider→models catalogue (static fallback included). */
+  providerModels: Record<string, string[]>
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   onProviderChange: (provider: string) => void
   onModelChange: (model: string) => void
@@ -23,6 +24,7 @@ interface LLMProviderSectionProps {
 export function LLMProviderSection({
   formData,
   errors,
+  providerModels,
   onChange,
   onProviderChange,
   onModelChange,
@@ -43,7 +45,7 @@ export function LLMProviderSection({
         <CustomDropdown
           label="Select service"
           subLabel="Select the service that hosts and serves the LLM."
-          options={Object.keys(PROVIDER_MODELS)}
+          options={Object.keys(providerModels)}
           selected={formData.llmProvider}
           onSelect={onProviderChange}
         />
@@ -53,7 +55,7 @@ export function LLMProviderSection({
             <CustomDropdown
               label="Select Model"
               subLabel="Select the model version for the chosen LLM."
-              options={PROVIDER_MODELS[formData.llmProvider] || []}
+              options={providerModels[formData.llmProvider] || []}
               selected={formData.llmModel}
               onSelect={onModelChange}
             />
