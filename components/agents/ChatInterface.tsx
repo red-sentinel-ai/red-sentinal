@@ -101,6 +101,9 @@ export default function ChatInterface({
         timestamp: event.timestamp,
         isSuccess: event.success,
         score: event.score,
+        // PromptConsumed.amount is what the contract paid out on this round —
+        // 0 when a breach lands on an empty pool.
+        amountWon: event.amount_sent ?? undefined,
         txDigest: event.tx_digest,
         walrusBlobId: event.walrus_blob_id ?? undefined,
         juryResponse: event.jury_response ?? undefined,

@@ -29,6 +29,10 @@ const CONTENT_OVERFLOW_TOLERANCE_PX = 2
 
 const ONCHAIN_BREACH_BANNER_LABEL = 'SENTINEL_BREACHED // FUNDS_EXTRACTED'
 
+/** A breach with nothing to pay out still defeats the sentinel — the banner
+ * just shouldn't claim funds moved. */
+const ONCHAIN_OBJECTIVE_BANNER_LABEL = 'SENTINEL_BREACHED // OBJECTIVE_COMPLETE'
+
 type ChatMessageProps = {
   message: ChatMessageType
   agent: Agent
@@ -46,7 +50,7 @@ export const ChatMessage = ({
   isWinningPrompt,
   onShowJury,
   hideSuccessBanner,
-  successBannerLabel = ONCHAIN_BREACH_BANNER_LABEL,
+  successBannerLabel,
 }: ChatMessageProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const [isContentClamped, setIsContentClamped] = useState(false)
@@ -250,7 +254,10 @@ export const ChatMessage = ({
       {message.isSuccess && !hideSuccessBanner && (
         <div className="border-[var(--color-success)]/30 border bg-[var(--color-success-muted)] p-4">
           <div className="industrial-header text-center text-sm font-semibold tracking-[0.08em] text-[var(--color-success)]">
-            {successBannerLabel}
+            {successBannerLabel ??
+              (Number(message.amountWon) > 0
+                ? ONCHAIN_BREACH_BANNER_LABEL
+                : ONCHAIN_OBJECTIVE_BANNER_LABEL)}
           </div>
         </div>
       )}
