@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -21,8 +22,9 @@ import {
 } from 'lucide-react'
 import { InstallButton } from '@/components/pwa/InstallButton'
 import { useInstallPrompt } from '@/context/InstallPromptContext'
+import { SupportSheet } from '@/components/support/SupportSheet'
 
-import { APP_NETWORK, SUI_SENTINEL_DOCS_URL, SUI_SENTINEL_SUPPORT_EMAIL } from '@/constants'
+import { APP_NETWORK, SUI_SENTINEL_DOCS_URL } from '@/constants'
 import { cn } from '@/lib/utils'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import {
@@ -124,6 +126,7 @@ export function AppSidebar() {
   const pathname = usePathname()
   const { isMobile, setOpenMobile } = useSidebar()
   const { isInstalled } = useInstallPrompt()
+  const [isSupportOpen, setIsSupportOpen] = useState(false)
 
   const renderItem = (item: NavItem) => {
     const Icon = item.icon
@@ -160,71 +163,78 @@ export function AppSidebar() {
   }
 
   return (
-    <Sidebar
-      collapsible="offcanvas"
-      className="z-50 border-[var(--color-border-default)] bg-[var(--sidebar)]"
-    >
-      <SidebarHeader className="p-8 pt-[calc(2rem+var(--sat))]">
-        <div className="flex min-h-12 items-start">
-          <Link href="/" aria-label="Red Sentinel home" className="flex min-w-0 flex-col gap-1">
-            <Image
-              src={LOGO_SRC}
-              alt="Red Sentinel"
-              width={268}
-              height={42}
-              quality={100}
-              className={cn('h-8 w-auto object-contain', APP_NETWORK !== 'testnet')}
-            />
-          </Link>
-        </div>
-      </SidebarHeader>
+    <>
+      <Sidebar
+        collapsible="offcanvas"
+        className="z-50 border-[var(--color-border-default)] bg-[var(--sidebar)]"
+      >
+        <SidebarHeader className="p-8 pt-[calc(2rem+var(--sat))]">
+          <div className="flex min-h-12 items-start">
+            <Link href="/" aria-label="Red Sentinel home" className="flex min-w-0 flex-col gap-1">
+              <Image
+                src={LOGO_SRC}
+                alt="Red Sentinel"
+                width={268}
+                height={42}
+                quality={100}
+                className={cn('h-8 w-auto object-contain', APP_NETWORK !== 'testnet')}
+              />
+            </Link>
+          </div>
+        </SidebarHeader>
 
-      <SidebarContent className="px-4 py-0">
-        <SidebarGroup className="p-0">
-          <SidebarGroupContent>
-            <SidebarMenu>{NAV_ITEMS.map(renderItem)}</SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
+        <SidebarContent className="px-4 py-0">
+          <SidebarGroup className="p-0">
+            <SidebarGroupContent>
+              <SidebarMenu>{NAV_ITEMS.map(renderItem)}</SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
 
-      <SidebarFooter className="mt-auto border-t border-[var(--color-border-default)] p-8">
-        <div className="space-y-4">
-          {!isInstalled && (
-            <InstallButton variant="sidebar" onClick={() => isMobile && setOpenMobile(false)} />
-          )}
-          <Link
-            href={SUI_SENTINEL_DOCS_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="font-body flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-secondary)] transition-colors hover:text-white"
-          >
-            <BookOpen className="size-3.5" />
-            Docs
-          </Link>
-          <Link
-            href="/faq"
-            onClick={() => isMobile && setOpenMobile(false)}
-            className="font-body flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-secondary)] transition-colors hover:text-white"
-          >
-            <MessageCircleQuestion className="size-3.5" />
-            FAQ
-          </Link>
-          <Link
-            href={`mailto:${SUI_SENTINEL_SUPPORT_EMAIL}`}
-            className="font-body flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-secondary)] transition-colors hover:text-white"
-          >
-            <HelpCircle className="size-3.5" />
-            Support
-          </Link>
-          {/* <Link
+        <SidebarFooter className="mt-auto border-t border-[var(--color-border-default)] p-8">
+          <div className="space-y-4">
+            {!isInstalled && (
+              <InstallButton variant="sidebar" onClick={() => isMobile && setOpenMobile(false)} />
+            )}
+            <Link
+              href={SUI_SENTINEL_DOCS_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="font-body flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-secondary)] transition-colors hover:text-white"
+            >
+              <BookOpen className="size-3.5" />
+              Docs
+            </Link>
+            <Link
+              href="/faq"
+              onClick={() => isMobile && setOpenMobile(false)}
+              className="font-body flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-secondary)] transition-colors hover:text-white"
+            >
+              <MessageCircleQuestion className="size-3.5" />
+              FAQ
+            </Link>
+            <button
+              type="button"
+              onClick={() => {
+                setIsSupportOpen(true)
+                if (isMobile) setOpenMobile(false)
+              }}
+              className="font-body flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-secondary)] transition-colors hover:text-white"
+            >
+              <HelpCircle className="size-3.5" />
+              Support
+            </button>
+            {/* <Link
             href="#"
             className="font-body flex items-center gap-3 text-[10px] font-extrabold uppercase tracking-[0.1em] text-[var(--color-text-secondary)] transition-colors hover:text-white"
           >
             <FileText className="size-3.5" />
             Logs
           </Link> */}
-        </div>
-      </SidebarFooter>
-    </Sidebar>
+          </div>
+        </SidebarFooter>
+      </Sidebar>
+      <SupportSheet open={isSupportOpen} onOpenChange={setIsSupportOpen} />
+    </>
   )
 }

@@ -806,6 +806,56 @@ export type Database = {
           },
         ]
       }
+      ss_support_requests: {
+        Row: {
+          chain: string | null
+          created_at: string
+          description: string
+          email: string | null
+          id: string
+          screenshot_url: string | null
+          status: string
+          subject: string
+          user_agent: string | null
+          user_id: string | null
+          wallet_address: string | null
+        }
+        Insert: {
+          chain?: string | null
+          created_at?: string
+          description: string
+          email?: string | null
+          id?: string
+          screenshot_url?: string | null
+          status?: string
+          subject: string
+          user_agent?: string | null
+          user_id?: string | null
+          wallet_address?: string | null
+        }
+        Update: {
+          chain?: string | null
+          created_at?: string
+          description?: string
+          email?: string | null
+          id?: string
+          screenshot_url?: string | null
+          status?: string
+          subject?: string
+          user_agent?: string | null
+          user_id?: string | null
+          wallet_address?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ss_support_requests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "ss_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ss_users: {
         Row: {
           avatar_url: string | null
