@@ -45,10 +45,19 @@ export function UserProfileView({ profile }: UserProfileViewProps) {
     return profile.wallets.some(wallet => wallet.address.toLowerCase() === connected)
   }, [connectedAddress, profile.wallets])
 
-  const primaryWallet = profile.wallets[0]?.address
+  // The wallet whose data this profile surfaces. For the owner this is the
+  // wallet they are connected with (so a newly linked wallet isn't shadowed by
+  // the account's older wallet); public viewers see the account's primary.
+  const connectedLinkedWallet = useMemo(() => {
+    if (!isOwner || !connectedAddress) return undefined
+    const connected = connectedAddress.toLowerCase()
+    return profile.wallets.find(wallet => wallet.address.toLowerCase() === connected)?.address
+  }, [isOwner, connectedAddress, profile.wallets])
+  const displayWallet = connectedLinkedWallet ?? profile.wallets[0]?.address
+
   const activeChainWallet = useMemo(
-    () => resolveWalletForChain(profile.wallets, activeChain),
-    [profile.wallets, activeChain]
+    () => resolveWalletForChain(profile.wallets, activeChain, connectedAddress),
+    [profile.wallets, activeChain, connectedAddress]
   )
 
   const [activeTab, setActiveTab] = useState<ProfileTabValue>(PROFILE_TABS.AGENTS)
@@ -70,7 +79,7 @@ export function UserProfileView({ profile }: UserProfileViewProps) {
   return (
     <div className="relative bg-[var(--color-bg-base)]">
       <div className="relative mx-auto min-h-screen max-w-[1400px] px-4 pb-12 pt-24 md:px-12">
-        <ProfileHeader profile={profile} isOwner={isOwner} primaryWallet={primaryWallet} />
+        <ProfileHeader profile={profile} isOwner={isOwner} primaryWallet={displayWallet} />
 
         <ProfileStatsBar walletAddress={activeChainWallet} />
 
