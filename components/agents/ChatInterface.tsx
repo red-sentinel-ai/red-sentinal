@@ -42,6 +42,10 @@ export interface ChatMessage {
   sender?: string
   amountSent?: string
   juryResponse?: string
+  /** Mongo id of the attack — builds the share URL's per-attack OG image param. */
+  attackId?: string
+  /** The paired attacker prompt, for composing the share text on agent messages. */
+  sharePrompt?: string
 }
 
 interface ChatInterfaceProps {
@@ -72,6 +76,9 @@ export default function ChatInterface({
   const [activeTab, setActiveTab] = useState<'global' | 'mine'>('global')
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const textareaRef = useAutoResizingTextarea(promptInput)
+  // Prompt of the round in flight — pairs the optimistic agent message with
+  // its attacker prompt for the share link once the response lands.
+  const submittedPromptRef = useRef('')
   const { address: connectedAddress } = useConnectedAddress()
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
   const { isFocusMode, enableFocusMode } = useFocusMode()
@@ -107,6 +114,8 @@ export default function ChatInterface({
         txDigest: event.tx_digest,
         walrusBlobId: event.walrus_blob_id ?? undefined,
         juryResponse: event.jury_response ?? undefined,
+        attackId: event.attack_id ?? undefined,
+        sharePrompt: event.content || undefined,
       })
     }
     return msgs
@@ -205,6 +214,7 @@ export default function ChatInterface({
         isSuccess: apiResponse.response.data.success,
         score: apiResponse.response.data.score,
         juryResponse: apiResponse.response.data.jury_response,
+        sharePrompt: submittedPromptRef.current || undefined,
       }
       setPendingRound(prev => (prev ? [...prev, newAgentMessage] : [newAgentMessage]))
       refetchAgent()
@@ -239,6 +249,7 @@ export default function ChatInterface({
       sender: connectedAddress,
     }
 
+    submittedPromptRef.current = promptInput
     setPendingRound([newUserMessage])
     await onSendMessage(promptInput)
     setPromptInput('')

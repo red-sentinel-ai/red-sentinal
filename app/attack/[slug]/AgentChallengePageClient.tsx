@@ -54,6 +54,9 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   const [showResultModal, setShowResultModal] = useState(false)
   // Kept for the attack share card: the prompt that produced apiResponse.
   const [submittedPrompt, setSubmittedPrompt] = useState<string | null>(null)
+  // Nonce minted into the on-chain Attack ticket (Sui flow). Resolving it via
+  // the backend gives the share card's URL its per-attack OG image.
+  const [attackNonce, setAttackNonce] = useState<string | null>(null)
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('attack')
@@ -88,9 +91,10 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
   )
 
   const handleAttackComplete = useCallback(
-    (apiResponse: ConsumePromptApiResponse, txDigest: string) => {
+    (apiResponse: ConsumePromptApiResponse, txDigest: string, attackNonce?: string | null) => {
       setApiResponse(apiResponse)
       setTxnHash(txDigest)
+      setAttackNonce(attackNonce ?? null)
       setShowResultModal(true)
 
       setTimeout(() => {
@@ -187,7 +191,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
       setSubmitError(err.message || 'Something went wrong')
     },
     onComplete: ({ apiResponse, transactionResult, attackNonce }) => {
-      handleAttackComplete(apiResponse, transactionResult.digest)
+      handleAttackComplete(apiResponse, transactionResult.digest, attackNonce)
 
       // Store the attack record on Walrus with the user's wallet as the blob
       // owner (wallet pays the gas and WAL storage fees). The attack doc is
@@ -413,6 +417,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
             txnHash={txnHash}
             agent={agent}
             submittedPrompt={submittedPrompt}
+            attackNonce={attackNonce}
           />
         )}
 
@@ -456,6 +461,7 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
             txnHash={txnHash}
             agent={agent}
             submittedPrompt={submittedPrompt}
+            attackNonce={attackNonce}
           />
         )}
 

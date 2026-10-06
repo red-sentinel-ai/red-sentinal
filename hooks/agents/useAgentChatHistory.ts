@@ -13,6 +13,8 @@ export interface PromptChatEvent {
   amount_sent: string
   jury_response: string | null
   walrus_blob_id?: string | null
+  /** Mongo id of the sentinel_attacks row — enables the per-attack OG share. */
+  attack_id?: string | null
   timestamp: string
 }
 

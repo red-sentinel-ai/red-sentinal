@@ -23,6 +23,8 @@ type AttackStatusModalProps = {
   agent: Agent
   /** The prompt submitted for this attack, if it completed successfully. */
   submittedPrompt?: string | null
+  /** On-chain Attack nonce (Sui) — resolves the attack id for the share card's OG image. */
+  attackNonce?: string | null
 }
 
 export const AttackStatusModal = ({
@@ -32,6 +34,7 @@ export const AttackStatusModal = ({
   txnHash,
   agent,
   submittedPrompt,
+  attackNonce,
 }: AttackStatusModalProps) => {
   const [isExplanationOpen, setIsExplanationOpen] = useState(true)
   const { activeChain } = useActiveChain()
@@ -163,6 +166,7 @@ export const AttackStatusModal = ({
                 score={score}
                 prompt={submittedPrompt || ''}
                 reply={explanation || ''}
+                attackNonce={attackNonce}
               />
             </div>
           </div>

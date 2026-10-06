@@ -12,6 +12,9 @@ import ReactMarkdown from 'react-markdown'
 import { generateAvatarUrl } from '@/lib/utils'
 import { getExplorerTxUrl, getWalrusBlobUrl } from '@/lib/explorer'
 import { truncateAddress } from '@/lib/utils'
+import { buildSharePost } from '@/lib/share'
+import { SUI_SENTINEL_APP_URL } from '@/constants'
+import { CHAINS } from '@/constants/chains'
 import type { Agent } from '@/types/agents'
 import { type ChatMessage as ChatMessageType } from './ChatInterface'
 import { SentinelSpeechButton } from './SentinelSpeechButton'
@@ -76,6 +79,28 @@ export const ChatMessage = ({
   const displayName = username || (message.sender ? truncateAddress(message.sender) : 'OPERATOR')
 
   const timestamp = formatDistanceToNow(new Date(Number.parseInt(message.timestamp)))
+
+  const shareRoundOnX = () => {
+    if (message.score === undefined) return
+    const chainName = CHAINS[agent.chain]?.name ?? 'on-chain'
+    const challengeUrl = `${SUI_SENTINEL_APP_URL}/attack/${agent.agent_path}${
+      message.attackId ? `?a=${message.attackId}` : ''
+    }`
+    const { text } = buildSharePost({
+      sentinelName: agent.agent_name,
+      success: !!message.isSuccess,
+      score: message.score,
+      chainName,
+      challengeUrl,
+      userPrompt: message.sharePrompt || '',
+      sentinelReply: message.content,
+    })
+    window.open(
+      `https://x.com/intent/post?text=${encodeURIComponent(text)}&url=${encodeURIComponent(challengeUrl)}`,
+      '_blank',
+      'noopener,noreferrer,width=600,height=700'
+    )
+  }
 
   // User Message (right-aligned)
   if (message.type === 'user') {
@@ -219,13 +244,27 @@ export const ChatMessage = ({
               </div>
             )}
 
+            {/* Share on X — ?a= attack id makes X render the per-attack jury card */}
+            {message.score !== undefined && (
+              <button
+                onClick={shareRoundOnX}
+                className="industrial-header ml-auto flex items-center gap-1 text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)] transition-colors hover:text-white"
+              >
+                SHARE_ON_X
+                <Image src="/icons/x.svg" width={12} height={12} alt="" />
+              </button>
+            )}
+
             {/* Transaction Link */}
             {message.txDigest && (
               <a
                 href={getExplorerTxUrl(message.txDigest, agent.chain)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="industrial-header ml-auto flex items-center gap-1 text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)] transition-colors hover:text-white"
+                className={clsx(
+                  'industrial-header flex items-center gap-1 text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)] transition-colors hover:text-white',
+                  message.score === undefined && 'ml-auto'
+                )}
               >
                 VIEW_ONCHAIN
                 <ExternalLink className="h-3 w-3" />
@@ -239,7 +278,7 @@ export const ChatMessage = ({
                 rel="noopener noreferrer"
                 className={clsx(
                   'industrial-header flex items-center gap-1 text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)] transition-colors hover:text-white',
-                  !message.txDigest && 'ml-auto'
+                  !message.txDigest && message.score === undefined && 'ml-auto'
                 )}
               >
                 SEE_ON_WALRUS
