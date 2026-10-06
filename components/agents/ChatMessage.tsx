@@ -12,9 +12,8 @@ import ReactMarkdown from 'react-markdown'
 import { generateAvatarUrl } from '@/lib/utils'
 import { getExplorerTxUrl, getWalrusBlobUrl } from '@/lib/explorer'
 import { truncateAddress } from '@/lib/utils'
-import { buildSharePost } from '@/lib/share'
-import { SUI_SENTINEL_APP_URL } from '@/constants'
-import { CHAINS } from '@/constants/chains'
+import { Dialog } from '@/components/Dialog'
+import { AttackShareCard } from '@/components/agents/AttackShareCard'
 import type { Agent } from '@/types/agents'
 import { type ChatMessage as ChatMessageType } from './ChatInterface'
 import { SentinelSpeechButton } from './SentinelSpeechButton'
@@ -57,6 +56,7 @@ export const ChatMessage = ({
 }: ChatMessageProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const [isContentClamped, setIsContentClamped] = useState(false)
+  const [isShareOpen, setIsShareOpen] = useState(false)
   const contentRef = useRef<HTMLDivElement>(null)
   const speech = useSpeechPlayback(message.content)
 
@@ -79,28 +79,6 @@ export const ChatMessage = ({
   const displayName = username || (message.sender ? truncateAddress(message.sender) : 'OPERATOR')
 
   const timestamp = formatDistanceToNow(new Date(Number.parseInt(message.timestamp)))
-
-  const shareRoundOnX = () => {
-    if (message.score === undefined) return
-    const chainName = CHAINS[agent.chain]?.name ?? 'on-chain'
-    const challengeUrl = `${SUI_SENTINEL_APP_URL}/attack/${agent.agent_path}${
-      message.attackId ? `?a=${message.attackId}` : ''
-    }`
-    const { text } = buildSharePost({
-      sentinelName: agent.agent_name,
-      success: !!message.isSuccess,
-      score: message.score,
-      chainName,
-      challengeUrl,
-      userPrompt: message.sharePrompt || '',
-      sentinelReply: message.content,
-    })
-    window.open(
-      `https://x.com/intent/post?text=${encodeURIComponent(text)}&url=${encodeURIComponent(challengeUrl)}`,
-      '_blank',
-      'noopener,noreferrer,width=600,height=700'
-    )
-  }
 
   // User Message (right-aligned)
   if (message.type === 'user') {
@@ -244,10 +222,10 @@ export const ChatMessage = ({
               </div>
             )}
 
-            {/* Share on X — ?a= attack id makes X render the per-attack jury card */}
+            {/* Share on X — opens the full share card with copy/instructions */}
             {message.score !== undefined && (
               <button
-                onClick={shareRoundOnX}
+                onClick={() => setIsShareOpen(true)}
                 className="industrial-header ml-auto flex items-center gap-1 text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)] transition-colors hover:text-white"
               >
                 SHARE_ON_X
@@ -299,6 +277,38 @@ export const ChatMessage = ({
                 : ONCHAIN_OBJECTIVE_BANNER_LABEL)}
           </div>
         </div>
+      )}
+
+      {/* Share dialog — the full jury card plus copy/paste instructions */}
+      {message.score !== undefined && (
+        <Dialog
+          open={isShareOpen}
+          onClose={() => setIsShareOpen(false)}
+          className="flex max-h-[90dvh] w-[92vw] max-w-[560px] flex-col overflow-hidden rounded-xl border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-0"
+        >
+          <div className="flex items-center justify-between border-b border-white/10 px-5 py-3">
+            <h2 className="industrial-header text-sm font-semibold tracking-[0.08em] text-white">
+              SHARE THIS RUN
+            </h2>
+            <button
+              onClick={() => setIsShareOpen(false)}
+              aria-label="Close share dialog"
+              className="flex h-7 w-7 items-center justify-center rounded-full text-xl leading-none text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+            >
+              ×
+            </button>
+          </div>
+          <div className="ios-scroll min-h-0 flex-1 overflow-y-auto p-5">
+            <AttackShareCard
+              agent={agent}
+              success={!!message.isSuccess}
+              score={message.score}
+              prompt={message.sharePrompt || ''}
+              reply={message.content}
+              attackId={message.attackId}
+            />
+          </div>
+        </Dialog>
       )}
     </motion.div>
   )
