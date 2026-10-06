@@ -5,7 +5,12 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useQuery } from '@tanstack/react-query'
 
-import { APP_NETWORK, SUI_SENTINEL_API_URL, SUI_SENTINEL_APP_URL } from '@/constants'
+import {
+  APP_NETWORK,
+  SUI_SENTINEL_API_URL,
+  SUI_SENTINEL_APP_URL,
+  SUI_SENTINEL_X_USERNAME,
+} from '@/constants'
 import { CHAINS } from '@/constants/chains'
 import type { Agent } from '@/types/agents'
 import type { SentinelAttribution } from '@/types/share'
@@ -98,8 +103,8 @@ export function AttackShareCard({
   const cardUrl = attackId ? `${SUI_SENTINEL_API_URL}/sentinels/attack/image/${attackId}` : null
 
   const suggestedPost = success
-    ? `I broke ${sentinelName} on ${chainName}. I  ${score}/100, verified. Your move: ${shareUrl}`
-    : `Tried to jailbreak ${sentinelName} on ${chainName}. it held (${score}/100). Find the crack: ${shareUrl}`
+    ? `I broke ${sentinelName} on ${chainName}. I  ${score}/100, verified. Your move: ${shareUrl}  @${SUI_SENTINEL_X_USERNAME}`
+    : `Tried to jailbreak ${sentinelName} on ${chainName}. it held (${score}/100). Find the crack: ${shareUrl}  @${SUI_SENTINEL_X_USERNAME}`
 
   /**
    * One click: card image to the clipboard, then the X composer opens with
@@ -189,7 +194,7 @@ export function AttackShareCard({
                 'HIT POST — THE CARD SHIPS NATIVE IN YOUR TWEET',
               ].map((label, i) => (
                 <li key={label} className="flex items-center gap-2.5">
-                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-[var(--color-gold-primary)]/50 text-[10px] font-bold text-[var(--color-gold-primary)]">
+                  <span className="border-[var(--color-gold-primary)]/50 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border text-[10px] font-bold text-[var(--color-gold-primary)]">
                     {i + 1}
                   </span>
                   <span className="industrial-header text-[10px] font-medium leading-snug tracking-[0.06em] text-white/75">
