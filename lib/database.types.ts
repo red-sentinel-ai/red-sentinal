@@ -395,6 +395,159 @@ export type Database = {
         }
         Relationships: []
       }
+      ss_email_campaigns: {
+        Row: {
+          audience: string
+          body_markdown: string
+          created_at: string
+          created_by: string | null
+          id: string
+          name: string
+          preheader: string | null
+          scheduled_at: string | null
+          sent_at: string | null
+          status: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          audience?: string
+          body_markdown?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name: string
+          preheader?: string | null
+          scheduled_at?: string | null
+          sent_at?: string | null
+          status?: string
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          audience?: string
+          body_markdown?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name?: string
+          preheader?: string | null
+          scheduled_at?: string | null
+          sent_at?: string | null
+          status?: string
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ss_email_events: {
+        Row: {
+          campaign_id: string | null
+          created_at: string
+          id: string
+          payload: Json
+          ses_message_id: string | null
+          subscriber_id: string | null
+          type: string
+        }
+        Insert: {
+          campaign_id?: string | null
+          created_at?: string
+          id?: string
+          payload?: Json
+          ses_message_id?: string | null
+          subscriber_id?: string | null
+          type: string
+        }
+        Update: {
+          campaign_id?: string | null
+          created_at?: string
+          id?: string
+          payload?: Json
+          ses_message_id?: string | null
+          subscriber_id?: string | null
+          type?: string
+        }
+        Relationships: []
+      }
+      ss_email_sends: {
+        Row: {
+          campaign_id: string
+          clicked_at: string | null
+          created_at: string
+          error: string | null
+          id: string
+          opened_at: string | null
+          ses_message_id: string | null
+          sent_at: string | null
+          status: string
+          subscriber_id: string
+        }
+        Insert: {
+          campaign_id: string
+          clicked_at?: string | null
+          created_at?: string
+          error?: string | null
+          id?: string
+          opened_at?: string | null
+          ses_message_id?: string | null
+          sent_at?: string | null
+          status?: string
+          subscriber_id: string
+        }
+        Update: {
+          campaign_id?: string
+          clicked_at?: string | null
+          created_at?: string
+          error?: string | null
+          id?: string
+          opened_at?: string | null
+          ses_message_id?: string | null
+          sent_at?: string | null
+          status?: string
+          subscriber_id?: string
+        }
+        Relationships: []
+      }
+      ss_email_subscribers: {
+        Row: {
+          confirmed_at: string | null
+          created_at: string
+          email: string
+          id: string
+          source: string
+          status: string
+          unsubscribe_token: string
+          unsubscribed_at: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          confirmed_at?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          source?: string
+          status?: string
+          unsubscribe_token?: string
+          unsubscribed_at?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          confirmed_at?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          source?: string
+          status?: string
+          unsubscribe_token?: string
+          unsubscribed_at?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       ss_feature_requests: {
         Row: {
           agent_id: number
