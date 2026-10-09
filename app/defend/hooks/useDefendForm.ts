@@ -9,6 +9,13 @@ export const BEDROCK_PROVIDER = 'amazon bedrock'
 export const DEFAULT_PROVIDER = BEDROCK_PROVIDER
 export const DEFAULT_MODEL = PROVIDER_MODELS[DEFAULT_PROVIDER][0]
 
+// The register API rejects oversized bodies with a 413 before validation ever
+// runs, and the judge/LLM prompt embeds these fields verbatim — keep them well
+// under any body limit. Public instructions are already bounded by the
+// SYSTEM_PROMPT_MAX_TOKENS gate.
+export const PRIVATE_PROMPT_MAX_LENGTH = 8000
+export const ATTACK_GOAL_MAX_LENGTH = 1000
+
 export const providerNeedsApiKey = (provider: string) =>
   provider !== 'custom' && provider !== BEDROCK_PROVIDER
 
@@ -125,6 +132,13 @@ export function useDefendForm({
     }
 
     if (!formData.attackGoal.trim()) newErrors.attackGoal = 'Attack goal is required'
+    else if (formData.attackGoal.length > ATTACK_GOAL_MAX_LENGTH) {
+      newErrors.attackGoal = `Attack objective must be ${ATTACK_GOAL_MAX_LENGTH} characters or less`
+    }
+
+    if (formData.privatePrompt.length > PRIVATE_PROMPT_MAX_LENGTH) {
+      newErrors.privatePrompt = `Private instructions must be ${PRIVATE_PROMPT_MAX_LENGTH} characters or less`
+    }
 
     if (formData.llmProvider === 'custom') {
       if (!formData.customEndpointUrl.trim()) newErrors.customEndpointUrl = 'Endpoint URL is required'

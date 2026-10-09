@@ -637,9 +637,14 @@ export default function DefendPageClient() {
                 autoComplete="off"
                 spellCheck="false"
               />
-              <div className="mt-1 flex items-center justify-end">
+              <div className="mt-1 flex items-center justify-between">
+                {errors.privatePrompt && (
+                  <p className="font-body text-sm text-[var(--color-danger)]">
+                    {errors.privatePrompt}
+                  </p>
+                )}
                 <p
-                  className={`font-body text-xs text-[var(--color-text-muted)] ${isPrivateTokenCountDebouncing ? 'animate-pulse' : ''}`}
+                  className={`font-body ml-auto text-xs text-[var(--color-text-muted)] ${isPrivateTokenCountDebouncing ? 'animate-pulse' : ''}`}
                 >
                   Tokens: {privateTokenCount}
                 </p>

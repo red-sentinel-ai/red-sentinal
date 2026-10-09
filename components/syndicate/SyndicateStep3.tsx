@@ -257,9 +257,12 @@ export function SyndicateStep3({
           name="privatePrompt"
           value={formData.privatePrompt}
           onChange={handleChangeWithProviderReset}
-          className="font-body min-h-[80px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
+          className="font-body min-h-[80px] w-full resize-y rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-3 text-sm text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-faint)] focus:border-[var(--color-gold-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-gold-primary)]"
           placeholder="Secret context..."
         />
+        {errors.privatePrompt && (
+          <p className="text-sm text-[var(--color-danger)]">{errors.privatePrompt}</p>
+        )}
       </div>
 
       {/* Attack Goal */}
