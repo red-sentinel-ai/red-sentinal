@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { PublicKey } from '@solana/web3.js'
 import { parseUnits } from 'viem'
 import { toast } from 'sonner'
 import posthog from 'posthog-js'
@@ -7,6 +8,8 @@ import { useSuiClient } from '@mysten/dapp-kit'
 import { isEvmChain } from '@/constants/chains'
 import { useEvmChain } from '@/hooks/evm/useEvmChain'
 import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
+import { useSolanaConnection } from '@/hooks/useSolanaWallet'
+import { assertSolanaDeployFeasible } from '@/lib/solana/preflight'
 import { type SupportedToken } from '@/constants'
 import { registerAgentUtil, resolveProviderCredentials } from '../utils'
 import type { AgenticConfig } from '../agentic-types'
@@ -41,6 +44,7 @@ export function useDeployAgent({
   const { activeChain } = useActiveChain()
   const { intendedChainId, ensureWalletOnActiveChain } = useEvmChain()
   const { mutate: createAgent } = useCreateAgent()
+  const { connection: solanaConnection } = useSolanaConnection()
 
   // All chain-specific deploy hooks must be called unconditionally (hook rules)
   const suiClient = useSuiClient()
@@ -175,6 +179,17 @@ export function useDeployAgent({
         }
       } else {
         feePerMessage = parseFloat(formData.feePerMessage) * Math.pow(10, decimals)
+        // Solana: the wallet pays account rent and fees up front. Reject the
+        // deployment before the TEE call if the wallet can't cover it.
+        await assertSolanaDeployFeasible({
+          connection: solanaConnection,
+          wallet: new PublicKey(walletAddress),
+          fundAmountLamports: BigInt(
+            Math.floor(parseFloat(formData.initialBalance || '0') * Math.pow(10, decimals))
+          ),
+          tokenMint: selectedSolanaToken.coinType,
+          tokenSymbol: selectedSolanaToken.symbol,
+        })
       }
       const isCustom = formData.llmProvider === 'custom'
       const credentials = resolveProviderCredentials(formData)

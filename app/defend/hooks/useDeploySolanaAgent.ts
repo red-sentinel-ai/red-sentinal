@@ -20,6 +20,7 @@ import {
   fetchEnclavePubkey,
   deriveAgentPda,
 } from '@/lib/solana/program'
+import { assertSolanaDeployFeasible } from '@/lib/solana/preflight'
 import type { DefendFormData } from './useDefendForm'
 import type { ChainDeployHook, SolanaTeeResponse, DeployTransactionResult } from '../types'
 
@@ -39,6 +40,19 @@ export function useDeploySolanaAgent({
     teeResponse: SolanaTeeResponse
   ): Promise<DeployTransactionResult> => {
     if (!publicKey) throw new Error('Solana wallet not connected')
+
+    // Defense-in-depth: never build or send unless the wallet can cover rent,
+    // fees, and the funding amount. (The shared deploy flow checks this before
+    // calling the TEE; this guards direct callers.)
+    await assertSolanaDeployFeasible({
+      connection,
+      wallet: publicKey,
+      fundAmountLamports: BigInt(
+        Math.floor(parseFloat(formData.initialBalance || '0') * Math.pow(10, selectedSolanaToken.decimals))
+      ),
+      tokenMint: selectedSolanaToken.coinType,
+      tokenSymbol: selectedSolanaToken.symbol,
+    })
 
     const { response: teeData, signature: teeSignature } = teeResponse
     const { data } = teeData
