@@ -13,8 +13,8 @@ export type ChainFamily = 'sui' | 'solana' | 'evm'
 export const SUPPORTED_CHAINS: readonly SupportedChain[] = [
   'sui',
   'solana',
+  'arb',
   // 'bnb',
-  // 'arb',
   'monad',
 ]
 
