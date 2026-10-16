@@ -7,7 +7,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { SlotMachine } from '@/components/slot-machine/SlotMachine'
 import { SpinHistory } from './SpinHistory'
 import { SpinFeed } from './SpinFeed'
-import { useUserBoosters, useSpinHistory } from '@/hooks/rewards/useBoosters'
+import { useUserPasses, useSpinHistory, useLoyaltyBalance } from '@/hooks/rewards/useBoosters'
 import { useClaimReward } from '@/hooks/rewards/useClaimReward'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import type { Booster, SpinResponse } from '@/types'
@@ -29,10 +29,11 @@ export const BoosterRewards = () => {
   const [isRefreshing, setIsRefreshing] = useState(false)
 
   const {
-    data: boostersData,
-    isLoading: isLoadingBoosters,
-    refetch: refetchBoosters,
-  } = useUserBoosters(connectedAddress)
+    data: passesData,
+    isLoading: isLoadingPasses,
+    refetch: refetchPasses,
+  } = useUserPasses(connectedAddress)
+  const { data: balanceData } = useLoyaltyBalance(connectedAddress)
   const { data: spinHistoryData, isLoading: isLoadingHistory } = useSpinHistory(connectedAddress)
   const { mutateAsync: claimReward } = useClaimReward()
 
@@ -42,12 +43,19 @@ export const BoosterRewards = () => {
 
       try {
         const result = await claimReward({ recipient: connectedAddress })
-        if (result.claimed && result.boosterAwarded) {
+        if (result.claimed && result.passAwarded) {
           toast.success(
-            `🎉 ${result.boosterAwarded.tier} Spin Pass Claimed! ${result.boosterAwarded.multiplier}x Multiplier`,
+            <div className="flex flex-col gap-1">
+              <p className="font-bold">
+                🎉 {result.passAwarded.tier} Spin Pass Claimed! {result.passAwarded.multiplier}x Multiplier
+              </p>
+              {result.pointsAwarded > 0 && (
+                <p className="text-sm">+{result.pointsAwarded.toLocaleString()} Sentinel Points</p>
+              )}
+            </div>,
             { duration: 5000 }
           )
-          refetchBoosters()
+          refetchPasses()
         }
       } catch {
         console.log('No pending rewards to claim')
@@ -55,11 +63,11 @@ export const BoosterRewards = () => {
     }
 
     claimPendingRewards()
-  }, [connectedAddress, claimReward, refetchBoosters])
+  }, [connectedAddress, claimReward, refetchPasses])
 
-  const activeBoosters = boostersData?.boosters.filter(b => b.status === 'active') || []
-  const expiredBoosters = boostersData?.boosters.filter(b => b.status === 'expired') || []
-  const displayedBoosters = passFilter === 'active' ? activeBoosters : expiredBoosters
+  const activePasses = passesData?.passes.filter(b => b.status === 'active') || []
+  const expiredPasses = passesData?.passes.filter(b => b.status === 'expired') || []
+  const displayedPasses = passFilter === 'active' ? activePasses : expiredPasses
 
   const handleSelectBooster = (booster: Booster) => {
     setSelectedBooster(booster)
@@ -73,7 +81,7 @@ export const BoosterRewards = () => {
     toast.success(
       <div className="flex flex-col gap-2">
         <p className="font-bold">Spin Successful! 🎉</p>
-        <p>You won {spinResponse.spin.finalAmount.toLocaleString()} SENTINEL tokens!</p>
+        <p>You won {spinResponse.spin.finalAmount.toLocaleString()} Sentinel Points!</p>
       </div>,
       { duration: 5000 }
     )
@@ -88,7 +96,7 @@ export const BoosterRewards = () => {
 
     const tierInfo = BOOSTER_TIERS[selectedBooster.tier]
     const tweetText = encodeURIComponent(
-      `🎰 Just spun ${spinResponse.spin.finalAmount.toLocaleString()} SENTINEL on my ${tierInfo.name} booster (${selectedBooster.multiplier}x) on @${SUI_SENTINEL_X_USERNAME}! 🔥 #RedSentinel #AI #Web3`
+      `🎰 Just won ${spinResponse.spin.finalAmount.toLocaleString()} Sentinel Points on my ${tierInfo.name} Spin Pass (${selectedBooster.multiplier}x) on @${SUI_SENTINEL_X_USERNAME}! 🔥 #RedSentinel #AI #Web3`
     )
     const twitterUrl = `https://twitter.com/intent/tweet?text=${tweetText}`
 
@@ -101,12 +109,19 @@ export const BoosterRewards = () => {
     setIsRefreshing(true)
     try {
       const result = await claimReward({ recipient: connectedAddress })
-      if (result.claimed && result.boosterAwarded) {
+      if (result.claimed && result.passAwarded) {
         toast.success(
-          `🎉 ${result.boosterAwarded.tier} Spin Pass Claimed! ${result.boosterAwarded.multiplier}x Multiplier`,
+          <div className="flex flex-col gap-1">
+            <p className="font-bold">
+              🎉 {result.passAwarded.tier} Spin Pass Claimed! {result.passAwarded.multiplier}x Multiplier
+            </p>
+            {result.pointsAwarded > 0 && (
+              <p className="text-sm">+{result.pointsAwarded.toLocaleString()} Sentinel Points</p>
+            )}
+          </div>,
           { duration: 5000 }
         )
-        await refetchBoosters()
+        await refetchPasses()
       } else {
         toast.info('No pending rewards to claim at this time')
       }
@@ -118,7 +133,7 @@ export const BoosterRewards = () => {
     }
   }
 
-  if (isLoadingBoosters) {
+  if (isLoadingPasses) {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
         <Loader2 className="h-10 w-10 animate-spin text-[var(--color-gold-primary)]" />
@@ -128,6 +143,33 @@ export const BoosterRewards = () => {
 
   return (
     <div className="space-y-6">
+      {/* Sentinel Points balance — aggregated across all wallets linked to this user */}
+      {balanceData && (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--color-gold-primary)]/10 text-xl">
+              🎯
+            </div>
+            <div>
+              <p className="text-xs uppercase tracking-wide text-[var(--color-text-muted)]">
+                Sentinel Points
+              </p>
+              <p className="text-2xl font-bold text-[var(--color-text-primary)]">
+                {balanceData.balance.toLocaleString()}
+              </p>
+            </div>
+          </div>
+          <div className="text-right">
+            <p className="text-xs uppercase tracking-wide text-[var(--color-text-muted)]">
+              Lifetime earned
+            </p>
+            <p className="text-sm font-semibold text-[var(--color-text-secondary)]">
+              {balanceData.lifetimePoints.toLocaleString()} pts
+            </p>
+          </div>
+        </div>
+      )}
+
       <div className="grid gap-6 lg:grid-cols-[1fr_400px] xl:grid-cols-[1fr_450px]">
         {/* Left: Slot Machine Section */}
         <div className="overflow-hidden rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)]">
@@ -187,7 +229,7 @@ export const BoosterRewards = () => {
                   htmlFor="shareTwitter"
                   className="flex items-center gap-1 text-sm text-[var(--color-text-secondary)]"
                 >
-                  Share to Twitter/X for +100 SENTINEL bonus
+                  Share to Twitter/X for +100 Sentinel Points bonus
                 </label>
               </div>
 
@@ -197,7 +239,7 @@ export const BoosterRewards = () => {
                     <div className="flex items-center gap-2 text-[var(--color-success)]">
                       <TrendingUp className="h-4 w-4" />
                       <span className="text-sm font-semibold">
-                        Won {lastSpinResult.spin.finalAmount.toLocaleString()} SENTINEL
+                        Won {lastSpinResult.spin.finalAmount.toLocaleString()} Sentinel Points
                       </span>
                     </div>
                     <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-[var(--color-text-muted)]">
@@ -263,7 +305,7 @@ export const BoosterRewards = () => {
                     : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]'
                 }`}
               >
-                Active ({activeBoosters.length})
+                Active ({activePasses.length})
               </button>
               <button
                 onClick={() => setPassFilter('expired')}
@@ -273,13 +315,13 @@ export const BoosterRewards = () => {
                     : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]'
                 }`}
               >
-                Expired ({expiredBoosters.length})
+                Expired ({expiredPasses.length})
               </button>
             </div>
           </div>
 
           <div className="flex-1 overflow-y-auto p-4">
-            {displayedBoosters.length === 0 ? (
+            {displayedPasses.length === 0 ? (
               <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-[var(--color-border-default)] p-8 text-center">
                 <Sparkles className="mb-4 h-12 w-12 text-[var(--color-text-muted)]" />
                 <h4 className="mb-2 text-lg font-semibold text-[var(--color-text-primary)]">
@@ -293,7 +335,7 @@ export const BoosterRewards = () => {
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-3">
-                {displayedBoosters.map(booster => {
+                {displayedPasses.map(booster => {
                   const tierInfo = BOOSTER_TIERS[booster.tier]
                   const isExpiringSoon =
                     new Date(booster.expiresAt).getTime() - Date.now() < 24 * 60 * 60 * 1000
@@ -348,7 +390,7 @@ export const BoosterRewards = () => {
                               : 'text-[var(--color-text-muted)]'
                           }
                         >
-                          Sentinels:{' '}
+                          Points:{' '}
                         </span>
                         <span
                           className={

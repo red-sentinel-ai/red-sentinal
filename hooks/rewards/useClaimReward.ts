@@ -1,37 +1,23 @@
-import { useMutation } from '@tanstack/react-query'
-import { APP_NETWORK, SUI_SENTINEL_API_URL } from '@/constants'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { SUI_SENTINEL_API_URL } from '@/constants'
+import type { ClaimLoyaltyResponse } from '@/types'
 
-interface BoosterAwarded {
-  tier: string
-  multiplier: number
-  expiresAt: string
-  boosterId: string
-}
-
-interface ClaimTokensResponse {
-  claimed: boolean
-  boosterAwarded?: BoosterAwarded
-  sentinelOwnerReward?: number
-  message?: string
-  // Legacy fields (kept for backward compatibility)
-  rewardAmount?: number
-  transferDigest?: string | null
-  transferError?: string | null
-  transferSuccess?: boolean
-}
-
+/**
+ * Claims pending attack rewards for a wallet (any chain): awards a Spin Pass
+ * plus direct Sentinel Points. 404 simply means nothing is pending.
+ */
 export const useClaimReward = () => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: async ({
       recipient,
-      network = APP_NETWORK,
     }: {
       recipient: string
-      network?: string
-    }): Promise<ClaimTokensResponse> => {
+    }): Promise<ClaimLoyaltyResponse> => {
       if (!recipient) throw new Error('Recipient address is required')
 
-      const url = `${SUI_SENTINEL_API_URL}/claim-tokens/${network}/${recipient}`
+      const url = `${SUI_SENTINEL_API_URL}/loyalty/claim/${recipient}`
 
       const response = await fetch(url, {
         method: 'GET',
@@ -43,10 +29,16 @@ export const useClaimReward = () => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.message || 'Failed to claim tokens')
+        throw new Error(errorData.message || 'Failed to claim rewards')
       }
 
       return response.json()
+    },
+    onSuccess: (data, variables) => {
+      if (data.claimed) {
+        queryClient.invalidateQueries({ queryKey: ['passes', variables.recipient] })
+        queryClient.invalidateQueries({ queryKey: ['loyalty-balance', variables.recipient] })
+      }
     },
   })
 }

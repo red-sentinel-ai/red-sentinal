@@ -1,9 +1,7 @@
 'use client'
 
-import { ExternalLink, Zap } from 'lucide-react'
-import Link from 'next/link'
+import { Zap } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
-import { SUIVISION_TXBLOCK_URL } from '@/constants'
 import type { SpinHistoryItem } from '@/types'
 
 interface SpinHistoryProps {
@@ -43,7 +41,7 @@ export const SpinHistory = ({ spins, isLoading }: SpinHistoryProps) => {
           >
             <div className="flex flex-1 items-center gap-2">
               <span className="font-bold text-[var(--color-text-primary)]">{spin.finalAmount.toLocaleString()}</span>
-              <span className="font-bold text-[var(--color-gold-primary)]">SENTINEL</span>
+              <span className="font-bold text-[var(--color-gold-primary)]">pts</span>
               <span className="text-[var(--color-text-faint)]">•</span>
               <span className="text-[var(--color-text-secondary)]">{spin.multiplier}x</span>
               {spin.streakBonus > 0 && (
@@ -63,16 +61,6 @@ export const SpinHistory = ({ spins, isLoading }: SpinHistoryProps) => {
                 {formatDistanceToNow(new Date(spin.spunAt), { addSuffix: true })}
               </span>
             </div>
-
-            <Link
-              href={`${SUIVISION_TXBLOCK_URL}${spin.transferDigest}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="ml-2 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded bg-[var(--color-bg-subtle)] transition-colors hover:bg-[var(--color-border-subtle)]"
-              title="View transaction"
-            >
-              <ExternalLink className="h-3 w-3 text-[var(--color-text-secondary)]" />
-            </Link>
           </div>
         ))}
       </div>

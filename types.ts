@@ -33,15 +33,6 @@ export type AgentStatus = 'active' | 'defeated'
 // Booster Types
 export type BoosterTier = 'COMMON' | 'UNCOMMON' | 'RARE' | 'EPIC' | 'LEGENDARY' | 'MYTHIC' | 'DIVINE' | 'CELESTIAL' | 'ETERNAL' | 'TRANSCENDENT'
 export type BoosterStatus = 'active' | 'redeemed' | 'expired'
-export type BoosterSource =
-  | 'ATTACK_SCORE_0_69'
-  | 'ATTACK_SCORE_70_89'
-  | 'ATTACK_SCORE_90_99'
-  | 'ATTACK_SCORE_100'
-  | 'SOCIAL_MISSION'
-  | 'QUEST'
-  | 'REFERRAL'
-  | 'OTHER'
 
 export interface TierInfo {
   name: string
@@ -49,15 +40,20 @@ export interface TierInfo {
   maxReward: number
 }
 
+/**
+ * A Spin Pass. Earned from attacks, sentinel launches, funding, and missions;
+ * redeemed on the slot machine for Sentinel Points. Chain-agnostic — passes
+ * live in one backend collection and work from any connected wallet.
+ */
 export interface Booster {
   _id: string
   tier: BoosterTier
   multiplier: number
-  source: BoosterSource
+  source: string
   status: BoosterStatus
   earnedAt: string
   expiresAt: string
-  tierInfo: TierInfo
+  tierInfo?: TierInfo
   redeemedAt?: string
 }
 
@@ -68,14 +64,31 @@ export interface BoosterStats {
   totalEarned: number
 }
 
-export interface BoostersResponse {
-  boosters: Booster[]
+export interface PassesResponse {
+  passes: Booster[]
   stats: BoosterStats
 }
 
 export interface SpinStreak {
   currentStreak: number
   streakBonus: number
+}
+
+export interface LoyaltyBalanceSummary {
+  balance: number
+  lifetimePoints: number
+}
+
+export interface WalletBalanceEntry {
+  walletAddress: string
+  chainType: string | null
+  balance: number
+  lifetimePoints: number
+}
+
+export interface LoyaltyBalanceResponse extends LoyaltyBalanceSummary {
+  userId: string | null
+  walletsByChain: WalletBalanceEntry[]
 }
 
 export interface SpinResult {
@@ -88,26 +101,28 @@ export interface SpinResult {
   shareBonus: number
   firstSpinBonus: boolean
   finalAmount: number
-  transferDigest: string
 }
 
 export interface SpinResponse {
   success: boolean
   spin: SpinResult
+  balance: LoyaltyBalanceSummary
   streak: SpinStreak
   luckyHour: boolean
 }
 
 export interface SpinRequest {
   walletAddress: string
-  boosterId: string
+  passId: string
   shareToTwitter: boolean
+  chain?: string
 }
 
 export interface SpinHistoryItem {
   _id: string
   walletAddress: string
-  boosterId: string
+  chain?: string | null
+  passId: string
   baseAmount: number
   multiplier: number
   finalAmount: number
@@ -115,8 +130,22 @@ export interface SpinHistoryItem {
   luckyHourBonus: number
   shareBonus: number
   firstSpinBonus: boolean
-  transferDigest: string
   spunAt: string
+}
+
+export interface PassAwarded {
+  tier: string
+  multiplier: number
+  expiresAt: string
+  passId: string
+}
+
+export interface ClaimLoyaltyResponse {
+  claimed: boolean
+  passAwarded?: PassAwarded
+  pointsAwarded: number
+  balance: LoyaltyBalanceSummary
+  message?: string
 }
 
 export type TemplateOrigin = 'team' | 'community'

@@ -59,26 +59,3 @@ export interface RewardEventMetadata {
   initial_balance?: string
   prompt?: string
 }
-
-export interface RewardActivity {
-  recipient: string
-  description: string
-  eventSeq: string
-  txDigest: string
-  createdAt: string
-  eventType: string
-  metadata: {
-    event: RewardEventMetadata
-  }
-  rewardAmount: number
-  timestampMs: string
-  transferDigest?: string
-  transferError?: string | null
-  transferSuccess?: boolean
-  transferUpdatedAt?: string
-}
-
-export interface RewardsHistoryResponse {
-  result: RewardActivity[]
-  total: number
-}

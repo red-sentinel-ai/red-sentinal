@@ -105,7 +105,8 @@ export function ProfileSocialConnections() {
   }
 
   // The backend OAuth callback lands back on /profile with x_connected=1 or
-  // x_error=<reason>; surface the result and clear the params.
+  // x_error=<reason> (plus an optional x_error_detail excerpt from the X API);
+  // surface the result and clear the params.
   useEffect(() => {
     const xConnected = searchParams.get('x_connected')
     const xError = searchParams.get('x_error')
@@ -115,12 +116,16 @@ export function ProfileSocialConnections() {
       toast.success('X account connected')
       void refreshProfile()
     } else if (xError) {
-      toast.error(X_CONNECT_ERRORS[xError] ?? 'Failed to connect X')
+      const detail = searchParams.get('x_error_detail')
+      toast.error(X_CONNECT_ERRORS[xError] ?? 'Failed to connect X', {
+        description: detail || undefined,
+      })
     }
 
     const params = new URLSearchParams(searchParams.toString())
     params.delete('x_connected')
     params.delete('x_error')
+    params.delete('x_error_detail')
     const queryString = params.toString()
     router.replace(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false })
   }, [searchParams, router, pathname, refreshProfile])
