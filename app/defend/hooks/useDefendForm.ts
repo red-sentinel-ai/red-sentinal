@@ -1,9 +1,5 @@
 import { useState } from 'react'
-import {
-  PROVIDER_MODELS,
-  SYSTEM_PROMPT_MAX_TOKENS,
-  type SupportedToken,
-} from '@/constants'
+import { PROVIDER_MODELS, SYSTEM_PROMPT_MAX_TOKENS, type SupportedToken } from '@/constants'
 
 export const BEDROCK_PROVIDER = 'amazon bedrock'
 export const DEFAULT_PROVIDER = BEDROCK_PROVIDER
@@ -42,6 +38,24 @@ export const INITIAL_FORM_DATA: DefendFormData = {
   customEndpointUrl: '',
   customApiKey: '',
   customModelName: '',
+}
+
+/** Credential fields that must never leave component state (AC-TUSD-002.5). */
+export const CREDENTIAL_FORM_FIELDS: Array<keyof DefendFormData> = [
+  'providerApiKey',
+  'customApiKey',
+]
+
+/**
+ * Copy of the form safe to hand to browser storage or a URL: entered
+ * credentials are blanked, not merely hidden.
+ */
+export const toPersistableFormData = (formData: DefendFormData): DefendFormData => {
+  const persistable = { ...formData }
+  for (const field of CREDENTIAL_FORM_FIELDS) {
+    persistable[field] = ''
+  }
+  return persistable
 }
 
 interface UseDefendFormOptions {
@@ -97,7 +111,10 @@ export function useDefendForm({
     }
   }
 
-  const validateForm = (customProviderValidated: boolean): boolean => {
+  const validateForm = (
+    customProviderValidated: boolean,
+    options?: { skipModelSettings?: boolean }
+  ): boolean => {
     const newErrors: Partial<DefendFormData> = {}
 
     if (!formData.agentName.trim()) {
@@ -126,23 +143,30 @@ export function useDefendForm({
 
     if (!formData.attackGoal.trim()) newErrors.attackGoal = 'Attack goal is required'
 
-    if (formData.llmProvider === 'custom') {
-      if (!formData.customEndpointUrl.trim()) newErrors.customEndpointUrl = 'Endpoint URL is required'
-      if (!formData.customApiKey.trim()) newErrors.customApiKey = 'API Key is required'
-      if (!formData.customModelName.trim()) newErrors.customModelName = 'Model name is required'
-      if (!customProviderValidated) {
-        // toast is called at the call-site to avoid importing toast here
-        return false
+    // An Existing Agent Connection keeps model settings on the defender's side —
+    // the provider section is hidden, so its fields are not required (AC-TUSD-001.5).
+    if (!options?.skipModelSettings) {
+      if (formData.llmProvider === 'custom') {
+        if (!formData.customEndpointUrl.trim())
+          newErrors.customEndpointUrl = 'Endpoint URL is required'
+        if (!formData.customApiKey.trim()) newErrors.customApiKey = 'API Key is required'
+        if (!formData.customModelName.trim()) newErrors.customModelName = 'Model name is required'
+        if (!customProviderValidated) {
+          // toast is called at the call-site to avoid importing toast here
+          return false
+        }
+      } else if (providerNeedsApiKey(formData.llmProvider) && !formData.providerApiKey.trim()) {
+        newErrors.providerApiKey = 'API Key is required'
       }
-    } else if (providerNeedsApiKey(formData.llmProvider) && !formData.providerApiKey.trim()) {
-      newErrors.providerApiKey = 'API Key is required'
     }
 
     setErrors(newErrors)
 
     const firstErrorField = Object.keys(newErrors)[0]
     if (firstErrorField) {
-      document.querySelector(`[name="${firstErrorField}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      document
+        .querySelector(`[name="${firstErrorField}"]`)
+        ?.scrollIntoView({ behavior: 'smooth', block: 'center' })
     }
 
     return Object.keys(newErrors).length === 0

@@ -9,7 +9,7 @@ import { useEvmChain } from '@/hooks/evm/useEvmChain'
 import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
 import { type SupportedToken } from '@/constants'
 import { registerAgentUtil, resolveProviderCredentials } from '../utils'
-import type { AgenticConfig } from '../agentic-types'
+import type { AgenticConfig, ConnectedDeploymentPayload } from '../agentic-types'
 import { useDeploySuiAgent } from './useDeploySuiAgent'
 import { useDeploySolanaAgent } from './useDeploySolanaAgent'
 import { useDeployEvmAgent } from './useDeployEvmAgent'
@@ -24,6 +24,8 @@ interface UseDeployAgentOptions {
   agentImage: File | null
   selectedImage: { url: string; isCustom: boolean; file?: File | null } | null
   agenticConfig: AgenticConfig | null
+  /** Connected method payload (hosted MCP agent / existing agent); null for the template path. */
+  connectedDeployment: ConnectedDeploymentPayload | null
   selectedTagIds: string[]
 }
 
@@ -36,6 +38,7 @@ export function useDeployAgent({
   agentImage,
   selectedImage,
   agenticConfig,
+  connectedDeployment,
   selectedTagIds,
 }: UseDeployAgentOptions) {
   const { activeChain } = useActiveChain()
@@ -85,6 +88,7 @@ export function useDeployAgent({
       agent_id: agentId,
       agent_object_id: objectId,
       owner_address: ownerAddress,
+      deployment_method: connectedDeployment?.deployment_config.method ?? 'template',
       // Effective fee the TEE signed, not the raw form value.
       cost_per_message: effectiveFeePerMessage / Math.pow(10, getActiveTokenDecimals()),
       system_prompt_length: formData.systemPrompt.length,
@@ -190,7 +194,8 @@ export function useDeployAgent({
         activeChain,
         credentials,
         intendedChainId ?? undefined,
-        agenticConfig
+        agenticConfig,
+        connectedDeployment
       )
 
       // 3. Execute chain-specific transaction

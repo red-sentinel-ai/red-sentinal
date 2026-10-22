@@ -1,5 +1,5 @@
 import type { SupportedChain } from '@/constants/chains'
-import type { AgenticConfig } from './agentic-types'
+import type { AgenticConfig, ConnectedDeploymentPayload } from './agentic-types'
 import { providerNeedsApiKey, type DefendFormData } from './hooks/useDefendForm'
 
 export interface ProviderCredentials {
@@ -30,7 +30,8 @@ export const registerAgentUtil = async (
   chain: SupportedChain = 'sui',
   credentials?: ProviderCredentials,
   chainId?: number,
-  agenticConfig?: AgenticConfig | null
+  agenticConfig?: AgenticConfig | null,
+  connectedDeployment?: ConnectedDeploymentPayload | null
 ) => {
   const body: Record<string, any> = {
     chain,
@@ -56,6 +57,19 @@ export const registerAgentUtil = async (
     body.attack_success_checks = agenticConfig.attackSuccessChecks
     body.utility_checks = agenticConfig.utilityChecks
     body.evaluation_mode = agenticConfig.evaluationMode
+  }
+
+  if (connectedDeployment) {
+    // Connected methods: the Deployment Configuration carries only the active
+    // method's settings, plus the conditions, fixtures, and validated config
+    // hash. Connection credentials ride in `deployment_config` for the backend
+    // to protect — never in query strings or storage.
+    body.sentinel_type = 'agentic'
+    body.deployment_method = connectedDeployment.deployment_config.method
+    body.deployment_config = connectedDeployment.deployment_config
+    body.breach_conditions = connectedDeployment.breach_conditions
+    body.preflight_fixtures = connectedDeployment.preflight_fixtures
+    body.config_hash = connectedDeployment.config_hash
   }
 
   const response = await fetch('/api/register-agent', {
