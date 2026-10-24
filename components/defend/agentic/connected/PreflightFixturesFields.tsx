@@ -20,8 +20,9 @@ export function PreflightFixturesFields({ value, onChange }: PreflightFixturesFi
         <label className={fieldLabelClassName}>Preflight Fixtures</label>
         <span className={fieldSubLabelClassName}>
           Preflight Validation runs both fixtures in the test environment: the legitimate task must
-          still be allowed, and the violation must trigger a Breach Condition. A missing fixture
-          blocks launch.
+          still be allowed, and the violation is re-run by a canary agent without your guardrail
+          instructions — if a Breach Condition fires, your conditions verifiably detect the
+          violation. A guardrail that holds never blocks launch. A missing fixture blocks launch.
         </span>
       </div>
 
@@ -53,7 +54,7 @@ export function PreflightFixturesFields({ value, onChange }: PreflightFixturesFi
 
       <div className="flex flex-col gap-2">
         <span className="text-xs font-medium text-[var(--color-text-secondary)]">
-          Violation — a prompt that must trigger a Breach Condition
+          Violation — a prompt an unguarded agent would fall for
         </span>
         <textarea
           value={value.violationPrompt}
