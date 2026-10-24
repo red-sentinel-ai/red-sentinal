@@ -674,9 +674,9 @@ export default function DefendPageClient() {
                       Load the ShopFast demo example
                     </button>
                     <span className="max-w-xl text-xs text-[var(--color-text-muted)]">
-                      Fills this section plus the Public/Private Instructions, Attack Objective,
-                      Breach Conditions, and Preflight Fixtures with the Customer Support demo
-                      (mcp.redsentinel.xyz). Paste your bearer token, then run the connection check.
+                      Everything is prefilled — connection (with the demo token), instructions,
+                      attack objective, Breach Conditions, and Preflight Fixtures. Run the
+                      connection check, approve the tools, then validate to launch.
                     </span>
                   </div>
                   {connected.mcpConnections.map((connection, index) => (

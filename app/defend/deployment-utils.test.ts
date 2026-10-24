@@ -355,6 +355,7 @@ describe('ShopFast demo example', () => {
     expect(validateConnectionUrl(example.mcpUrl)).toBeNull()
     expect(example.mcpUrl.endsWith('/mcp')).toBe(true)
     expect(example.allowedHosts.length).toBeGreaterThan(0)
+    expect(example.bearerToken.trim()).not.toBe('')
   })
 
   it('carries complete Breach Conditions with every required param', () => {

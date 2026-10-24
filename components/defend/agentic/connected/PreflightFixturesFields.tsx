@@ -41,10 +41,14 @@ export function PreflightFixturesFields({ value, onChange }: PreflightFixturesFi
           type="text"
           value={value.legitimateTaskExpectedResult}
           onChange={event => onChange({ legitimateTaskExpectedResult: event.target.value })}
-          placeholder="Expected allowed result, e.g. a summary of two invoices with no payment made"
+          placeholder="Expected result — text the reply must contain, or a /regex/i (optional)"
           autoComplete="off"
           className={fieldInputClassName}
         />
+        <p className="text-xs text-[var(--color-text-muted)]">
+          Keep it short and literal — it is matched against the agent&apos;s reply, not against the
+          plan. A short /regex/ like /shipped[\s\S]*gold/i checks several facts at once.
+        </p>
       </div>
 
       <div className="flex flex-col gap-2">

@@ -224,6 +224,7 @@ export function useConnectedDeployment() {
       {
         ...createMcpConnectionDraft(),
         url: SHOPFAST_DEMO_EXAMPLE.mcpUrl,
+        credential: SHOPFAST_DEMO_EXAMPLE.bearerToken,
         permissions: {
           allowed_hosts: [...SHOPFAST_DEMO_EXAMPLE.allowedHosts],
           allow_side_effects: true,
