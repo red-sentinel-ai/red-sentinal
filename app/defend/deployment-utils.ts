@@ -37,6 +37,9 @@ export interface ConnectedDeploymentState {
 export const CONNECTION_URL_HINT =
   'Format check only — the connection counts as verified after a successful connection check.'
 
+export const MCP_URL_HINT =
+  'Enter the full MCP endpoint URL — the JSON-RPC path itself (usually ending in /mcp), not the bare domain. Format check only; the connection counts as verified after a successful connection check.'
+
 export function validateConnectionUrl(url: string): string | null {
   const trimmed = url.trim()
   if (!trimmed) return 'Enter the server URL.'

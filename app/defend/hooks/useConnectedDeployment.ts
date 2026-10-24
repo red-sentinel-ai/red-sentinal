@@ -30,6 +30,7 @@ import {
   validateConnectionUrl,
   type ConnectedDeploymentState,
 } from '../deployment-utils'
+import { SHOPFAST_DEMO_EXAMPLE } from '../shopfast-demo-example'
 import { discoverMcpTools, requestPreflightChecks } from '../deployment-api'
 
 /**
@@ -214,6 +215,26 @@ export function useConnectedDeployment() {
     [clearPreflight]
   )
 
+  // --- ShopFast demo example --------------------------------------------------
+
+  /** Replace the whole connected configuration with the ShopFast demo example. */
+  const loadShopfastExample = useCallback(() => {
+    setMethodState('hosted_agent')
+    setMcpConnections([
+      {
+        ...createMcpConnectionDraft(),
+        url: SHOPFAST_DEMO_EXAMPLE.mcpUrl,
+        permissions: {
+          allowed_hosts: [...SHOPFAST_DEMO_EXAMPLE.allowedHosts],
+          allow_side_effects: true,
+        },
+      },
+    ])
+    setBreachConditions(SHOPFAST_DEMO_EXAMPLE.breachConditions.map(condition => ({ ...condition })))
+    setFixtures({ ...SHOPFAST_DEMO_EXAMPLE.fixtures })
+    clearPreflight()
+  }, [clearPreflight])
+
   // --- Derived state ----------------------------------------------------------
 
   const state = useMemo<ConnectedDeploymentState | null>(
@@ -297,6 +318,7 @@ export function useConnectedDeployment() {
     updateExecutionLimits,
     fixtures,
     updateFixtures,
+    loadShopfastExample,
     // preflight
     preflightReport: isPreflightCurrent ? preflightReport : null,
     isPreflightCurrent,

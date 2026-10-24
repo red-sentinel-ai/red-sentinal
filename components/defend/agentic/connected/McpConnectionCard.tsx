@@ -9,8 +9,8 @@ import type {
 } from '@/app/defend/agentic-types'
 import {
   approvedToolKey,
-  CONNECTION_URL_HINT,
   findChangedToolDefinitions,
+  MCP_URL_HINT,
   validateConnectionUrl,
 } from '@/app/defend/deployment-utils'
 import { MaskedCredentialInput } from './MaskedCredentialInput'
@@ -76,7 +76,7 @@ export function McpConnectionCard({
       <div className="flex flex-col gap-2">
         <div>
           <label className={fieldLabelClassName}>Server URL</label>
-          <span className={fieldSubLabelClassName}>{CONNECTION_URL_HINT}</span>
+          <span className={fieldSubLabelClassName}>{MCP_URL_HINT}</span>
         </div>
         <input
           type="url"
@@ -92,7 +92,7 @@ export function McpConnectionCard({
 
       <MaskedCredentialInput
         label="Bearer token"
-        subLabel="Optional. Sent only to Red Sentinel's connector — never stored in your browser."
+        subLabel="Optional. The token your server checks, sent as “Authorization: Bearer …”. It is stored server-side and never exposed to attackers or your browser."
         value={connection.credential}
         onChange={credential => onEndpointChange({ credential })}
       />
@@ -160,9 +160,11 @@ export function McpConnectionCard({
         <div>
           <label className={fieldLabelClassName}>Connection permissions</label>
           <span className={fieldSubLabelClassName}>
-            Optionally pin this connection to specific hosts — when set, the server URL must match
-            one of them and any other destination is rejected. Private and local addresses are
-            always rejected. Side-effecting tools run only if you allow them below.
+            Nothing needed here for a normal deployment — leave the hosts empty. Private and local
+            addresses are always rejected, whatever you set. Fill this in only if you want an extra
+            lock: the connection may then talk to the listed hosts only (e.g. mcp.shopfast.example,
+            *.shopfast.example), so a redirected or lookalike URL is refused even if someone edits
+            the server URL later.
           </span>
         </div>
         <input
@@ -177,7 +179,7 @@ export function McpConnectionCard({
                 .filter(Boolean),
             })
           }
-          placeholder="Allowed hosts, comma-separated (e.g. mcp.staging.example, *.staging.example)"
+          placeholder="Allowed hosts, comma-separated — or leave empty (e.g. mcp.staging.example, *.staging.example)"
           autoComplete="off"
           spellCheck="false"
           className={fieldInputClassName}
@@ -194,8 +196,13 @@ export function McpConnectionCard({
             }
             className="h-4 w-4 accent-[var(--color-gold-primary)]"
           />
-          Allow side-effecting tools to execute
+          Allow side-effecting tools to run (payments, cancellations, address changes…)
         </label>
+        <p className="text-xs text-[var(--color-text-muted)]">
+          Read-only tools always run. Tools that change state are registered only when this is
+          checked — if approved tools are missing at attack time, check this first. Turn it on for
+          demo or sandbox servers; keep it off when your tools act on production data.
+        </p>
       </div>
     </div>
   )
