@@ -134,7 +134,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     hasRefreshedRef.current = true
 
     // Background refresh - fetch fresh data from server
-    getProfile(state.user.id)
+    getProfile()
       .then(({ user }) => {
         setState({
           user,
@@ -234,7 +234,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const signature = await signMessage(message)
 
       // Step 3: Add wallet to user
-      const response = await addWalletApi(state.user.id, {
+      const response = await addWalletApi({
         chain_type: chainType,
         chain_id: chainId ?? null,
         wallet_address: walletAddress,
@@ -256,7 +256,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw new Error('Not authenticated')
       }
 
-      await removeWalletApi(state.user.id, walletId)
+      await removeWalletApi(walletId)
 
       // Refresh profile to get updated wallet list
       await refreshProfile()
@@ -268,7 +268,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!state.user) return
 
     try {
-      const { user } = await getProfile(state.user.id)
+      const { user } = await getProfile()
       setUser(user)
     } catch (error) {
       // If profile fetch fails with 404, user was deleted

@@ -65,11 +65,6 @@ export type AddWalletResponse = {
   wallet: WalletConnection
 }
 
-export type LookupResponse = {
-  exists: boolean
-  user_id: string | null
-}
-
 // Email verification types
 export type SendEmailCodeRequest = {
   email: string
@@ -189,19 +184,13 @@ export async function walletConnect(request: WalletConnectRequest): Promise<Wall
 }
 
 /**
- * Add a new wallet to the logged-in user
+ * Add a new wallet to the logged-in user (identity from the session cookie)
  */
-export async function addWallet(
-  userId: string,
-  request: WalletConnectRequest
-): Promise<AddWalletResponse> {
+export async function addWallet(request: WalletConnectRequest): Promise<AddWalletResponse> {
   const response = await fetch(`${AUTH_BASE_URL}/wallet`, {
     method: 'POST',
     credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-user-id': userId,
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(request),
   })
 
@@ -211,13 +200,10 @@ export async function addWallet(
 /**
  * Remove a wallet from the user's account
  */
-export async function removeWallet(userId: string, walletId: string): Promise<RemoveWalletResponse> {
+export async function removeWallet(walletId: string): Promise<RemoveWalletResponse> {
   const response = await fetch(`${AUTH_BASE_URL}/wallet/${walletId}`, {
     method: 'DELETE',
     credentials: 'include',
-    headers: {
-      'x-user-id': userId,
-    },
   })
 
   return handleResponse<RemoveWalletResponse>(response)
@@ -226,57 +212,23 @@ export async function removeWallet(userId: string, walletId: string): Promise<Re
 /**
  * Get user profile with all wallets and social connections
  */
-export async function getProfile(userId: string): Promise<{ user: UserProfile }> {
+export async function getProfile(): Promise<{ user: UserProfile }> {
   const response = await fetch(`${AUTH_BASE_URL}/profile`, {
     method: 'GET',
     credentials: 'include',
-    headers: {
-      'x-user-id': userId,
-    },
   })
 
   return handleResponse<{ user: UserProfile }>(response)
 }
 
 /**
- * Check if a wallet is already registered
- */
-export async function lookupWallet(
-  chainType: ChainType,
-  walletAddress: string,
-  chainId?: string
-): Promise<LookupResponse> {
-  const params = new URLSearchParams({
-    chain_type: chainType,
-    wallet_address: walletAddress,
-  })
-
-  if (chainId) {
-    params.set('chain_id', chainId)
-  }
-
-  const response = await fetch(`${AUTH_BASE_URL}/lookup?${params}`, {
-    method: 'GET',
-    credentials: 'include',
-  })
-
-  return handleResponse<LookupResponse>(response)
-}
-
-/**
  * Send a 4-digit verification code to email
  */
-export async function sendEmailCode(
-  userId: string,
-  request: SendEmailCodeRequest
-): Promise<SendEmailCodeResponse> {
+export async function sendEmailCode(request: SendEmailCodeRequest): Promise<SendEmailCodeResponse> {
   const response = await fetch(`${AUTH_BASE_URL}/email/send-code`, {
     method: 'POST',
     credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-user-id': userId,
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(request),
   })
 
@@ -286,17 +238,11 @@ export async function sendEmailCode(
 /**
  * Verify email code and connect email to user account
  */
-export async function verifyEmail(
-  userId: string,
-  request: EmailVerifyRequest
-): Promise<EmailVerifyResponse> {
+export async function verifyEmail(request: EmailVerifyRequest): Promise<EmailVerifyResponse> {
   const response = await fetch(`${AUTH_BASE_URL}/email/verify`, {
     method: 'POST',
     credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-user-id': userId,
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(request),
   })
 
@@ -306,17 +252,11 @@ export async function verifyEmail(
 /**
  * Verify telegram code and connect telegram to user account
  */
-export async function verifyTelegram(
-  userId: string,
-  request: TelegramVerifyRequest
-): Promise<TelegramVerifyResponse> {
+export async function verifyTelegram(request: TelegramVerifyRequest): Promise<TelegramVerifyResponse> {
   const response = await fetch(`${AUTH_BASE_URL}/telegram/verify`, {
     method: 'POST',
     credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-user-id': userId,
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(request),
   })
 
@@ -326,16 +266,10 @@ export async function verifyTelegram(
 /**
  * Remove a social connection from user account
  */
-export async function removeSocial(
-  userId: string,
-  connectionId: string
-): Promise<RemoveSocialResponse> {
+export async function removeSocial(connectionId: string): Promise<RemoveSocialResponse> {
   const response = await fetch(`${AUTH_BASE_URL}/social/${connectionId}`, {
     method: 'DELETE',
     credentials: 'include',
-    headers: {
-      'x-user-id': userId,
-    },
   })
 
   return handleResponse<RemoveSocialResponse>(response)
@@ -369,16 +303,13 @@ export async function logout(): Promise<void> {
 }
 
 /**
- * Follow another user. `userId` is the authenticated actor (sent as x-user-id).
+ * Follow another user (identity from the session cookie).
  */
-export async function followUser(userId: string, followingId: string): Promise<void> {
+export async function followUser(followingId: string): Promise<void> {
   const response = await fetch(`${SOCIAL_BASE_URL}/follow`, {
     method: 'POST',
     credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-user-id': userId,
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ following_id: followingId }),
   })
 
@@ -388,13 +319,10 @@ export async function followUser(userId: string, followingId: string): Promise<v
 /**
  * Unfollow a user.
  */
-export async function unfollowUser(userId: string, followingId: string): Promise<void> {
+export async function unfollowUser(followingId: string): Promise<void> {
   const response = await fetch(`${SOCIAL_BASE_URL}/follow/${followingId}`, {
     method: 'DELETE',
     credentials: 'include',
-    headers: {
-      'x-user-id': userId,
-    },
   })
 
   await handleResponse<{ status: string }>(response)
@@ -457,7 +385,7 @@ export async function getFollowing(
 
 // ── Sentinel follow (subscribe to a sentinel's notifications) ─────────────────
 // Following a sentinel subscribes the logged-in profile to its Novu topic. chain +
-// network identify which chain's topic. `userId` is the actor (sent as x-user-id).
+// network identify which chain's topic. Identity comes from the session cookie.
 
 function sentinelFollowUrl(agentId: string, chain: string, network: string): string {
   const url = new URL(`${AGENTS_BASE_URL}/${agentId}/follow`)
@@ -467,21 +395,18 @@ function sentinelFollowUrl(agentId: string, chain: string, network: string): str
 }
 
 export async function getSentinelFollowState(
-  userId: string,
   agentId: string,
   chain: string,
   network: string
 ): Promise<boolean> {
   const response = await fetch(sentinelFollowUrl(agentId, chain, network), {
     credentials: 'include',
-    headers: { 'x-user-id': userId },
   })
   const data = await handleResponse<{ following: boolean }>(response)
   return Boolean(data?.following)
 }
 
 export async function followSentinel(
-  userId: string,
   agentId: string,
   chain: string,
   network: string
@@ -489,14 +414,13 @@ export async function followSentinel(
   const response = await fetch(`${AGENTS_BASE_URL}/${agentId}/follow`, {
     method: 'POST',
     credentials: 'include',
-    headers: { 'Content-Type': 'application/json', 'x-user-id': userId },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ chain, network }),
   })
   await handleResponse<{ following: boolean }>(response)
 }
 
 export async function unfollowSentinel(
-  userId: string,
   agentId: string,
   chain: string,
   network: string
@@ -504,7 +428,6 @@ export async function unfollowSentinel(
   const response = await fetch(sentinelFollowUrl(agentId, chain, network), {
     method: 'DELETE',
     credentials: 'include',
-    headers: { 'x-user-id': userId },
   })
   await handleResponse<{ following: boolean }>(response)
 }

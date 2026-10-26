@@ -47,7 +47,7 @@ export function useEmailOtpVerification(userId: string | undefined) {
     setErrorMessage('')
 
     try {
-      await sendEmailCodeApi(userId, { email: trimmed })
+      await sendEmailCodeApi({ email: trimmed })
       setEmail(trimmed)
       setCode('')
       setState('code_input')
@@ -80,7 +80,7 @@ export function useEmailOtpVerification(userId: string | undefined) {
     setErrorMessage('')
 
     try {
-      await verifyEmailApi(userId, { email: email.trim(), code: code.trim() })
+      await verifyEmailApi({ email: email.trim(), code: code.trim() })
       setState('success')
       toast.success('Email connected successfully!')
       return true

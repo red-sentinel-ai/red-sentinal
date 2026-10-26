@@ -9,15 +9,15 @@ import {
 } from '@/lib/credits-api'
 
 /**
- * Profile Credits data hooks (WO-8). Identity comes from the authenticated
- * `ss_users` id (`useAuth().user.id`); every call carries the session cookie
- * plus the `x-user-id` header expected by the backend.
+ * Profile Credits data hooks (WO-8). Identity comes from the session cookie;
+ * the `userId` argument only scopes the react-query cache and gates the calls
+ * on being logged in.
  */
 
 export const useCreditAssets = (userId: string | undefined) => {
   return useQuery({
     queryKey: ['credits', 'assets', userId],
-    queryFn: () => getCreditAssets(userId as string),
+    queryFn: () => getCreditAssets(),
     enabled: !!userId,
     staleTime: 60 * 1000,
     retry: false,
@@ -27,7 +27,7 @@ export const useCreditAssets = (userId: string | undefined) => {
 export const useUserCreditClaims = (userId: string | undefined) => {
   return useQuery({
     queryKey: ['credits', 'claims', userId],
-    queryFn: () => getUserClaims(userId as string),
+    queryFn: () => getUserClaims(),
     enabled: !!userId,
     staleTime: 60 * 1000,
     retry: false,
@@ -38,7 +38,7 @@ export const useClaimCredit = (userId: string | undefined) => {
   const queryClient = useQueryClient()
 
   return useMutation<ClaimCreditResponse, Error, ClaimCreditRequest>({
-    mutationFn: request => submitCreditClaim(userId as string, request),
+    mutationFn: request => submitCreditClaim(request),
     onSuccess: () => {
       // Refresh both the entitlement statuses and the claim/payout history.
       void queryClient.invalidateQueries({ queryKey: ['credits', 'assets', userId] })

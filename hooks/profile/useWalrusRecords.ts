@@ -13,10 +13,9 @@ export interface WalrusRecordItem {
   success: boolean | null
 }
 
-async function fetchWalrusRecords(userId: string): Promise<WalrusRecordItem[]> {
+async function fetchWalrusRecords(): Promise<WalrusRecordItem[]> {
   const res = await fetch(`${SUI_SENTINEL_API_URL}/walrus/${APP_NETWORK}/records`, {
     credentials: 'include',
-    headers: { 'x-user-id': userId },
   })
   if (!res.ok) throw new Error(`Failed to fetch Walrus records: ${res.status}`)
   const data = (await res.json()) as { records: WalrusRecordItem[] }
@@ -27,7 +26,7 @@ export function useWalrusRecords() {
   const { user } = useAuth()
   return useQuery<WalrusRecordItem[]>({
     queryKey: ['walrus-records', user?.id, APP_NETWORK],
-    queryFn: () => fetchWalrusRecords(user!.id),
+    queryFn: () => fetchWalrusRecords(),
     enabled: !!user?.id,
     staleTime: 30_000,
   })

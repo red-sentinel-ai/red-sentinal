@@ -148,7 +148,7 @@ export function ProfileSocialConnections() {
     if (!user?.id || !connectionId) return
     setDisconnectingPlatform(platform)
     disconnect(
-      { userId: user.id, connectionId, platform },
+      { connectionId, platform },
       {
         onSettled: async () => {
           setDisconnectingPlatform(null)

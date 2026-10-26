@@ -24,7 +24,7 @@ export function useFollowMutation() {
   return useMutation({
     mutationFn: (targetUserId: string) => {
       if (!user) throw new Error('Connect your wallet to follow users')
-      return followUser(user.id, targetUserId)
+      return followUser(targetUserId)
     },
     onSuccess: invalidate,
     onError: (error: Error) => toast.error(error.message),
@@ -41,7 +41,7 @@ export function useUnfollowMutation() {
   return useMutation({
     mutationFn: (targetUserId: string) => {
       if (!user) throw new Error('Connect your wallet to manage follows')
-      return unfollowUser(user.id, targetUserId)
+      return unfollowUser(targetUserId)
     },
     onSuccess: invalidate,
     onError: (error: Error) => toast.error(error.message),

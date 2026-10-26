@@ -19,7 +19,7 @@ export function useSentinelFollow({ agentId, chain, network }: SentinelRef) {
 
   const { data: isFollowing = false, isLoading } = useQuery({
     queryKey,
-    queryFn: () => getSentinelFollowState(userId as string, agentId, chain, network),
+    queryFn: () => getSentinelFollowState(agentId, chain, network),
     enabled: Boolean(userId && agentId && chain && network),
     staleTime: 60_000,
   })
@@ -27,7 +27,7 @@ export function useSentinelFollow({ agentId, chain, network }: SentinelRef) {
   const follow = useMutation({
     mutationFn: () => {
       if (!userId) throw new Error('Connect your wallet to follow sentinels')
-      return followSentinel(userId, agentId, chain, network)
+      return followSentinel(agentId, chain, network)
     },
     onSuccess: () => {
       queryClient.setQueryData(queryKey, true)
@@ -39,7 +39,7 @@ export function useSentinelFollow({ agentId, chain, network }: SentinelRef) {
   const unfollow = useMutation({
     mutationFn: () => {
       if (!userId) throw new Error('Connect your wallet to manage follows')
-      return unfollowSentinel(userId, agentId, chain, network)
+      return unfollowSentinel(agentId, chain, network)
     },
     onSuccess: () => {
       queryClient.setQueryData(queryKey, false)

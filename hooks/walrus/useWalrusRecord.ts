@@ -138,17 +138,13 @@ export function useWalrusRecord() {
       if (!attackId || !account?.address || !user?.id) return null
 
       const base = `${SUI_SENTINEL_API_URL}/walrus/${APP_NETWORK}/records`
-      const headers = {
-        'Content-Type': 'application/json',
-        'x-user-id': user.id,
-      }
       const walrus = getWalrusClient(suiClient)
 
       // 1. Fetch the canonical record bytes for this attack.
       onStep?.('fetching')
       const payloadResponse = await fetch(
         `${base}/${attackId}/payload?attacker_address=${encodeURIComponent(account.address)}`,
-        { credentials: 'include', headers }
+        { credentials: 'include' }
       )
       if (!payloadResponse.ok) throw new Error(await readErrorMessage(payloadResponse))
       const payload = (await payloadResponse.json()) as RecordPayloadResponse
@@ -250,7 +246,7 @@ export function useWalrusRecord() {
         {
           method: 'POST',
           credentials: 'include',
-          headers,
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             blob_id: encoded.blobId,
             register_digest: registerResult.digest,

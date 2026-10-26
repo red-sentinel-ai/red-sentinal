@@ -3,15 +3,13 @@ import { toast } from '@/lib/toast'
 import { removeSocial } from '@/lib/auth-api'
 
 type RemoveSocialArgs = {
-  userId: string
   connectionId: string
   platform: string
 }
 
 export const useRemoveSocialConnection = () => {
   return useMutation({
-    mutationFn: ({ userId, connectionId }: RemoveSocialArgs) =>
-      removeSocial(userId, connectionId),
+    mutationFn: ({ connectionId }: RemoveSocialArgs) => removeSocial(connectionId),
     onSuccess: (_, { platform }) => {
       toast.success(`${platform} disconnected`)
     },

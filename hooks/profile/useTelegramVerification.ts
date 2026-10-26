@@ -32,7 +32,7 @@ export function useTelegramVerification(userId: string | undefined) {
     setErrorMessage('')
 
     try {
-      await verifyTelegramApi(userId, { code: code.trim() })
+      await verifyTelegramApi({ code: code.trim() })
       setState('success')
       toast.success('Telegram connected successfully!')
       return true

@@ -2,8 +2,8 @@ import { SUI_SENTINEL_API_URL } from '@/constants'
 
 /**
  * Profile Credits API client (WO-8). Talks to the backend credit-claim API
- * (`/credit/*`) with the session cookie plus the `x-user-id` header, the same
- * identity contract as `lib/auth-api.ts`.
+ * (`/credit/*`) with the session cookie, the same identity contract as
+ * `lib/auth-api.ts`.
  */
 
 const CREDITS_BASE_URL = `${SUI_SENTINEL_API_URL}/credit`
@@ -112,21 +112,19 @@ async function handleCreditsResponse<T>(response: Response): Promise<T> {
 }
 
 /** Enabled Credit Assets with the user's entitlement outcome. */
-export async function getCreditAssets(userId: string): Promise<CreditAssetsResponse> {
+export async function getCreditAssets(): Promise<CreditAssetsResponse> {
   const response = await fetch(`${CREDITS_BASE_URL}/assets`, {
     method: 'GET',
     credentials: 'include',
-    headers: { 'x-user-id': userId },
   })
   return handleCreditsResponse<CreditAssetsResponse>(response)
 }
 
 /** The user's own claim history with the latest payout outcome. */
-export async function getUserClaims(userId: string): Promise<UserClaimsResponse> {
+export async function getUserClaims(): Promise<UserClaimsResponse> {
   const response = await fetch(`${CREDITS_BASE_URL}/claims`, {
     method: 'GET',
     credentials: 'include',
-    headers: { 'x-user-id': userId },
   })
   return handleCreditsResponse<UserClaimsResponse>(response)
 }
@@ -136,17 +134,11 @@ export async function getUserClaims(userId: string): Promise<UserClaimsResponse>
  * is processing returns the same claim. Rejections carry a machine-readable
  * `reasonCode` (see `CreditsApiError`).
  */
-export async function submitCreditClaim(
-  userId: string,
-  request: ClaimCreditRequest
-): Promise<ClaimCreditResponse> {
+export async function submitCreditClaim(request: ClaimCreditRequest): Promise<ClaimCreditResponse> {
   const response = await fetch(`${CREDITS_BASE_URL}/claims`, {
     method: 'POST',
     credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-user-id': userId,
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(request),
   })
   return handleCreditsResponse<ClaimCreditResponse>(response)
