@@ -1,4 +1,4 @@
-import { contract, nativeToScVal, rpc, xdr } from '@stellar/stellar-sdk'
+import { contract, nativeToScVal, xdr } from '@stellar/stellar-sdk'
 import { STELLAR_CONFIG } from '@/constants/stellar'
 
 /**

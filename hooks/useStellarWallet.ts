@@ -6,6 +6,7 @@ import {
   getNetwork,
   isConnected as freighterIsConnected,
   setAllowed,
+  signMessage as freighterSignMessage,
   signTransaction as freighterSignTransaction,
 } from '@stellar/freighter-api'
 import { APP_NETWORK } from '@/constants/shared'
@@ -78,6 +79,23 @@ export function useStellarWallet() {
     [address]
   )
 
+  /** Signs a UTF-8 message; resolves to the base64 detached signature. */
+  const signMessage = useCallback(
+    async (message: string): Promise<{ signedMessage: string }> => {
+      if (!address) throw new Error('Stellar wallet not connected')
+      const res = await freighterSignMessage(message, {
+        address,
+        networkPassphrase: STELLAR_CONFIG.NETWORK_PASSPHRASE,
+      })
+      if (res.error) throw new Error(res.error.message ?? 'Freighter failed to sign the message')
+      const signed = typeof res.signedMessage === 'string'
+        ? res.signedMessage
+        : Buffer.from(res.signedMessage as unknown as Uint8Array).toString('base64')
+      return { signedMessage: signed }
+    },
+    [address]
+  )
+
   return {
     address,
     isConnected: !!address,
@@ -85,5 +103,6 @@ export function useStellarWallet() {
     connect,
     disconnect,
     signTransaction,
+    signMessage,
   }
 }

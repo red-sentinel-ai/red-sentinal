@@ -128,7 +128,7 @@ export function PracticeChatInterface({
     if (isVoiceActive) {
       voice.start()
     }
-  }, [isVoiceActive, voice.start])
+  }, [isVoiceActive, voice])
 
   const handleSetMode = useCallback(
     async (mode: 'voice' | 'text') => {
@@ -139,7 +139,7 @@ export function PracticeChatInterface({
       }
       setInteractionMode(mode)
     },
-    [isBreached, isVoiceActive, voice.stop]
+    [isBreached, isVoiceActive, voice]
   )
 
   const handleStartVoice = useCallback(() => {
@@ -154,7 +154,7 @@ export function PracticeChatInterface({
     setIsVoiceActive(false)
     await voice.stop()
     refetchFeed()
-  }, [voice.stop, refetchFeed])
+  }, [voice, refetchFeed])
 
   const [isJuryModalOpen, setIsJuryModalOpen] = useState(false)
   const [selectedJuryResponse, setSelectedJuryResponse] = useState('')
