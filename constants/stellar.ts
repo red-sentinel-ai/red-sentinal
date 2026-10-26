@@ -47,11 +47,25 @@ export const STELLAR_MAINNET_CONFIG: StellarChainConfig = {
   NATIVE_XLM_SAC: NATIVE_XLM_SAC_MAINNET,
 }
 
-export const STELLAR_CONFIG =
-  APP_NETWORK === 'mainnet' ? STELLAR_MAINNET_CONFIG : STELLAR_TESTNET_CONFIG
+/**
+ * Stellar network selection, decoupled from APP_NETWORK. NEXT_PUBLIC_STELLAR_NETWORK
+ * overrides explicitly; otherwise it follows APP_NETWORK, except that mainnet falls
+ * back to testnet while the mainnet CONTRACT_ID is unset — the Sentinel contract
+ * only exists on Stellar testnet, so production builds connect to testnet until a
+ * mainnet deployment is configured.
+ */
+export const STELLAR_NETWORK: 'mainnet' | 'testnet' = (() => {
+  const override = process.env.NEXT_PUBLIC_STELLAR_NETWORK
+  if (override === 'testnet' || override === 'mainnet') return override
+  return APP_NETWORK === 'mainnet' && STELLAR_MAINNET_CONFIG.CONTRACT_ID ? 'mainnet' : 'testnet'
+})()
 
-/** Network slug the TEE service routes by (mirrors sui-testnet / solana-testnet). */
-export const STELLAR_TEE_NETWORK = APP_NETWORK === 'mainnet' ? 'stellar-mainnet' : 'stellar-testnet'
+export const STELLAR_CONFIG =
+  STELLAR_NETWORK === 'mainnet' ? STELLAR_MAINNET_CONFIG : STELLAR_TESTNET_CONFIG
+
+/** Network slug the TEE service routes by (mirrors sui-testnet / solana-devnet). */
+export const STELLAR_TEE_NETWORK =
+  STELLAR_NETWORK === 'mainnet' ? 'stellar-mainnet' : 'stellar-testnet'
 
 /** Sentinel agents on Stellar are paid in XLM (the only wired token for now). */
 export const XLM_COIN_TYPE = 'XLM'

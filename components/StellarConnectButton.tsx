@@ -3,7 +3,7 @@
 import { useEffect, useState, type RefObject } from 'react'
 import posthog from 'posthog-js'
 import { toast } from 'sonner'
-import { APP_NETWORK } from '@/constants'
+import { STELLAR_NETWORK } from '@/constants/stellar'
 import { cn, truncateAddress } from '@/lib/utils'
 import { useStellarWallet } from '@/hooks/useStellarWallet'
 import { useStellarBalance } from '@/hooks/useStellarBalance'
@@ -30,7 +30,7 @@ export function StellarConnectButton({
       posthog.identify(address)
       posthog.capture('wallet_connected', {
         address,
-        chain: `stellar:${APP_NETWORK}`,
+        chain: `stellar:${STELLAR_NETWORK}`,
       })
     } else {
       posthog.reset()

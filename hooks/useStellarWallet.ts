@@ -9,8 +9,7 @@ import {
   signMessage as freighterSignMessage,
   signTransaction as freighterSignTransaction,
 } from '@stellar/freighter-api'
-import { APP_NETWORK } from '@/constants/shared'
-import { STELLAR_CONFIG } from '@/constants/stellar'
+import { STELLAR_CONFIG, STELLAR_NETWORK } from '@/constants/stellar'
 
 /**
  * Stellar wallet access via the Freighter browser extension — the counterpart
@@ -87,7 +86,7 @@ export function useStellarWallet() {
       throw new Error('Freighter wallet not found. Install the extension from freighter.app.')
     }
 
-    const expectedNetwork = APP_NETWORK === 'mainnet' ? 'PUBLIC' : 'TESTNET'
+    const expectedNetwork = STELLAR_NETWORK === 'mainnet' ? 'PUBLIC' : 'TESTNET'
     const { network } = await getNetwork()
     if (network !== expectedNetwork) {
       throw new Error(
