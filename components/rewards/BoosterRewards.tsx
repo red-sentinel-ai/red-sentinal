@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Loader2, TrendingUp, Sparkles, Clock, RefreshCw } from 'lucide-react'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import { formatDistanceToNow } from 'date-fns'
 import { SlotMachine } from '@/components/slot-machine/SlotMachine'
 import { SpinHistory } from './SpinHistory'

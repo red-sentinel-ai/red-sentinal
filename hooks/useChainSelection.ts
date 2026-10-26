@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useState } from 'react'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import { useAccount } from 'wagmi'
 import { CHAINS, toEvmChainKey, type SupportedChain } from '@/constants/chains'
 import { useActiveChain } from '@/context/ActiveChainContext'

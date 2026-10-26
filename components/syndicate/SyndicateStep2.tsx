@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Loader2, Info } from 'lucide-react'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import { useEVMBalance } from '@/hooks/useEVMBalance'
 import { useDepositToSyndicate } from '@/hooks/syndicate/useDepositToSyndicate'
 import { Skeleton } from '@/components/ui/skeleton'

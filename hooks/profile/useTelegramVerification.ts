@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import { verifyTelegram as verifyTelegramApi, AuthApiError } from '@/lib/auth-api'
 
 type TelegramVerificationState = 'idle' | 'input' | 'verifying' | 'success' | 'error'

@@ -10,7 +10,7 @@ import { isEvmChain } from '@/constants/chains'
 import { useEvmChain } from '@/hooks/evm/useEvmChain'
 import { useAuth } from '@/context/AuthContext'
 import type { ChainType, UserProfile, WalletConnection } from '@/lib/auth-api'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 
 type UseWalletAuthReturn = {
   /**

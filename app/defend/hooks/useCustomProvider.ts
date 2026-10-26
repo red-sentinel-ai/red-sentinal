@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import { PROVIDER_MODELS } from '@/constants'
 import { DEFAULT_MODEL } from './useDefendForm'
 import type { DefendFormData } from './useDefendForm'

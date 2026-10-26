@@ -5,7 +5,7 @@ import { useState, useRef, useEffect, useMemo } from 'react'
 import clsx from 'clsx'
 import { Loader2, Send, ArrowLeft, MessageSquare } from 'lucide-react'
 import { AnimatePresence } from 'framer-motion'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 
 import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
 import { useMentionAutocomplete } from '@/hooks/chat'

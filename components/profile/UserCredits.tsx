@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react'
 import { Coins, Droplets, ExternalLink, Fuel, Loader2, MailWarning, Wallet } from 'lucide-react'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'

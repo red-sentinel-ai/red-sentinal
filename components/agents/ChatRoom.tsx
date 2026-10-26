@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Users, Crown, Swords } from 'lucide-react'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import { ConnectModal } from '@mysten/dapp-kit'
 
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'

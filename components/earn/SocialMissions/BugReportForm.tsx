@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { X, CheckCircle, Loader2, AlertTriangle } from 'lucide-react'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { Dialog } from '@/components/Dialog'
 

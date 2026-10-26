@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import {
   sendEmailCode as sendEmailCodeApi,
   verifyEmail as verifyEmailApi,

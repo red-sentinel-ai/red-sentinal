@@ -6,7 +6,7 @@ import Image from 'next/image'
 import clsx from 'clsx'
 import { Loader2, Zap, Info, Mic, MessageSquare } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 
 import { generateAvatarUrl } from '@/lib/utils'
 import { useAuth } from '@/context/AuthContext'

@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import type { Tables } from '@/lib/database.types'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { useAuth } from '@/context/AuthContext'

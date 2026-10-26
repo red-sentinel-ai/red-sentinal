@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import { Wallet } from 'lucide-react'
 import { formatTokenAmount } from '@/lib/utils'
 import { useSyndicateData } from '@/hooks/syndicate/useSyndicateData'

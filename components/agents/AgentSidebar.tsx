@@ -11,7 +11,7 @@ import {
   Link as LinkIcon,
   ExternalLink,
 } from 'lucide-react'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import { WITHDRAWAL_LOCK_MS, SUI_SENTINEL_X_USERNAME } from '@/constants'
 import { getTokenForCoinType } from '@/constants/tokens'
 import { CHAINS, isEvmChain } from '@/constants/chains'

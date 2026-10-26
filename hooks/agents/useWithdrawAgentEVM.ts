@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { parseUnits } from 'viem'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import { useQueryClient } from '@tanstack/react-query'
 import { SENTINEL_ABI } from '@/lib/evm/abi'
 import { toReadableEvmError } from '@/lib/evm/errors'

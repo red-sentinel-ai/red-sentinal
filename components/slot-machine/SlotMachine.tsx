@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import { SlotReel } from './SlotReel'
 import { useSpinPass } from '@/hooks/rewards/useBoosters'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useCurrentAccount } from '@mysten/dapp-kit'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import { SentinelTemplate, TemplateOrigin } from '@/types'
 
 export type TemplateSort = 'newest' | 'popular'

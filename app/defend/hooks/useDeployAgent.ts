@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { parseUnits } from 'viem'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import posthog from 'posthog-js'
 import { useActiveChain } from '@/context/ActiveChainContext'
 import { useSuiClient } from '@mysten/dapp-kit'

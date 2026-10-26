@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type RefObject } from 'react'
 import posthog from 'posthog-js'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import { STELLAR_NETWORK } from '@/constants/stellar'
 import { cn, truncateAddress } from '@/lib/utils'
 import { useStellarWallet } from '@/hooks/useStellarWallet'

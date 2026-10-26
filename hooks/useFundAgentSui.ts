@@ -5,7 +5,7 @@ import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 import { SUI_CONFIG, SUI_LEGACY_CONFIG } from '@/constants'
 import { SUI_COIN_TYPE } from '@/constants/tokens'
 import { useSuiSignAndExecute } from '@/hooks/useSuiSignAndExecute'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 
 
 interface UseFundAgentOptions {
