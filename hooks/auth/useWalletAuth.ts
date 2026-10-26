@@ -4,12 +4,13 @@ import { useCallback, useState } from 'react'
 import { useSignPersonalMessage, useCurrentAccount } from '@mysten/dapp-kit'
 import { useSignMessage as useWagmiSignMessage, useAccount as useWagmiAccount } from 'wagmi'
 import { useSolanaWallet } from '@/hooks/useSolanaWallet'
+import { useStellarWallet } from '@/hooks/useStellarWallet'
 import { useActiveChain } from '@/context/ActiveChainContext'
 import { isEvmChain } from '@/constants/chains'
 import { useEvmChain } from '@/hooks/evm/useEvmChain'
 import { useAuth } from '@/context/AuthContext'
 import type { ChainType, UserProfile, WalletConnection } from '@/lib/auth-api'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 
 type UseWalletAuthReturn = {
   /**
@@ -55,6 +56,9 @@ export function useWalletAuth(): UseWalletAuthReturn {
 
   // Solana wallet
   const { publicKey: solanaPublicKey, signMessage: signSolanaMessage } = useSolanaWallet()
+
+  // Stellar wallet (Freighter)
+  const { address: stellarAddress, signMessage: signStellarMessage } = useStellarWallet()
 
   // Get current wallet info based on active chain
   const getWalletInfo = useCallback((): {
@@ -105,6 +109,19 @@ export function useWalletAuth(): UseWalletAuthReturn {
       }
     }
 
+    if (activeChain === 'stellar') {
+      if (!stellarAddress || !signStellarMessage) return null
+      return {
+        chainType: 'stellar',
+        walletAddress: stellarAddress,
+        chainId: undefined,
+        signMessage: async (message: string) => {
+          const result = await signStellarMessage(message)
+          return result.signedMessage as string
+        },
+      }
+    }
+
     return null
   }, [
     activeChain,
@@ -112,9 +129,11 @@ export function useWalletAuth(): UseWalletAuthReturn {
     evmAddress,
     evmChainId,
     solanaPublicKey,
+    stellarAddress,
     signSuiMessage,
     signEvmMessage,
     signSolanaMessage,
+    signStellarMessage,
   ])
 
   const authenticate = useCallback(async (): Promise<UserProfile | null> => {

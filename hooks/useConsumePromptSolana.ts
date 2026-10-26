@@ -9,7 +9,7 @@ import {
 import { useSolanaWallet, useSolanaConnection } from '@/hooks/useSolanaWallet'
 import { NATIVE_SOL_MINT } from '@/constants/solana'
 import { getTokenForCoinType } from '@/constants/tokens'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import { type ConsumePromptApiResponse } from '@/types'
 import { type Agent } from '@/types/agents'
 import {

@@ -8,7 +8,7 @@ import {
   NATIVE_MINT,
   createSyncNativeInstruction,
 } from '@solana/spl-token'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import { useSolanaWallet, useSolanaConnection } from '@/hooks/useSolanaWallet'
 import { NATIVE_SOL_MINT } from '@/constants/solana'
 import { buildFundAgentInstruction } from '@/lib/solana/program'

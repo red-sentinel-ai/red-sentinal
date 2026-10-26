@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { AlertTriangle, Loader2 } from 'lucide-react'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import { CHAINS } from '@/constants/chains'
 import { useEvmChain } from '@/hooks/evm/useEvmChain'
 import { useChainSelection } from '@/hooks/useChainSelection'

@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { X, CheckCircle, Loader2, Upload, ExternalLink, Link as LinkIcon } from 'lucide-react'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { Dialog } from '@/components/Dialog'
 import type { EarnMission } from '@/types/Earn'

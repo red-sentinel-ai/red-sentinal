@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { decodeEventLog, type PublicClient } from 'viem'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import { SENTINEL_ABI, ERC20_ABI } from '@/lib/evm/abi'
 import { toReadableEvmError } from '@/lib/evm/errors'
 import { buildEvmSignature, bytesToHex32 } from '@/lib/evm/signature'

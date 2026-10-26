@@ -7,7 +7,7 @@ import {
   createAssociatedTokenAccountInstruction,
   NATIVE_MINT,
 } from '@solana/spl-token'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import { useQueryClient } from '@tanstack/react-query'
 import { useSolanaWallet, useSolanaConnection } from '@/hooks/useSolanaWallet'
 import { buildClaimFeesInstruction } from '@/lib/solana/program'

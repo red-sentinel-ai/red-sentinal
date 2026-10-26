@@ -4,7 +4,7 @@ import { useSignAndExecuteTransaction, useCurrentAccount, useSuiClient } from '@
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils'
 import { SUI_CONFIG, SUI_LEGACY_CONFIG } from '@/constants'
 import { SUI_COIN_TYPE, getTokenForCoinType } from '@/constants/tokens'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import { useQueryClient } from '@tanstack/react-query'
 import { AGENT_QUERY_KEY } from './useAgentDetails'
 

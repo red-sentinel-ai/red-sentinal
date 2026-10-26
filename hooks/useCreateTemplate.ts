@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useCurrentAccount } from '@mysten/dapp-kit'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 
 interface TemplateFormData {
   name: string

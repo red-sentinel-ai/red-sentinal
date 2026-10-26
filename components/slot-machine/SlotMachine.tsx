@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import { SlotReel } from './SlotReel'
-import { useSpinBooster } from '@/hooks/rewards/useBoosters'
+import { useSpinPass } from '@/hooks/rewards/useBoosters'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
+import { useActiveChain } from '@/context/ActiveChainContext'
 import type { Booster, SpinResponse } from '@/types'
 
 interface SlotMachineProps {
@@ -25,7 +26,8 @@ export const SlotMachine = ({
   const [result, setResult] = useState<number[]>([4, 5, 4])
   const [showTooltip, setShowTooltip] = useState(false)
 
-  const { mutateAsync: spinBooster, isPending } = useSpinBooster()
+  const { mutateAsync: spinPass, isPending } = useSpinPass()
+  const { activeChain } = useActiveChain()
 
   const spinAudioRef = useRef<HTMLAudioElement | null>(null)
   const clickAudioRef = useRef<HTMLAudioElement | null>(null)
@@ -73,10 +75,11 @@ export const SlotMachine = ({
     setIsSpinning(true)
 
     try {
-      const data = await spinBooster({
+      const data = await spinPass({
         walletAddress: connectedAddress,
-        boosterId: booster._id,
+        passId: booster._id,
         shareToTwitter,
+        chain: activeChain,
       })
 
       if (data.success && data.spin.baseAmount) {

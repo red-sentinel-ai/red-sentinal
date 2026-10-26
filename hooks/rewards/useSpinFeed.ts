@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import { SUI_SENTINEL_API_URL, APP_NETWORK } from '@/constants'
+import { SUI_SENTINEL_API_URL } from '@/constants'
 
 interface SpinFeedItem {
   walletAddress: string
+  chain: string | null
   tier: string
   multiplier: number
   finalAmount: number
@@ -19,7 +20,7 @@ export const useSpinFeed = (limit: number = 50) => {
     queryKey: ['spin-feed', limit],
     queryFn: async () => {
       const response = await fetch(
-        `${SUI_SENTINEL_API_URL}/boosters/${APP_NETWORK}/feed?limit=${limit}`,
+        `${SUI_SENTINEL_API_URL}/loyalty/feed?limit=${limit}`,
         { credentials: 'include' }
       )
 

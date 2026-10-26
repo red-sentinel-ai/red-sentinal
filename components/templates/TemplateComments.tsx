@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { Loader2, MessageCircle, SendHorizontal } from 'lucide-react'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import { TemplateComment } from '@/types'
 import { generateAvatarUrl } from '@/lib/utils'
 

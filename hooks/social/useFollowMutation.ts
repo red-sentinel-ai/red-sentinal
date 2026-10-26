@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import { followUser, unfollowUser } from '@/lib/auth-api'
 import { useAuth } from '@/context/AuthContext'
 import { FOLLOW_COUNTS_QUERY_KEY } from './useFollowCounts'

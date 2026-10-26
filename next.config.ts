@@ -139,6 +139,11 @@ const nextConfig: NextConfig = {
 
     config.ignoreWarnings = [{ module: /node_modules[\\/]ox[\\/]_esm[\\/]tempo/ }]
 
+    // Privy dynamically imports @farcaster/mini-app-solana for Farcaster
+    // mini-app support (an optional peer dep bun doesn't install). This is a
+    // regular web app, so stub it to an empty module to unbreak the build.
+    config.resolve.alias['@farcaster/mini-app-solana'] = false
+
     return config
   },
   async rewrites() {

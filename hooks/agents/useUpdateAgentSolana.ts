@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { Transaction } from '@solana/web3.js'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import { useQueryClient } from '@tanstack/react-query'
 import { useSolanaWallet, useSolanaConnection } from '@/hooks/useSolanaWallet'
 import {

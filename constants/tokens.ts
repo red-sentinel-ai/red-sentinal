@@ -1,5 +1,6 @@
 import { APP_NETWORK, type SupportedToken } from './shared'
 import { NATIVE_SOL_MINT } from './solana'
+import { XLM_COIN_TYPE } from './stellar'
 import { NATIVE_TOKEN_ADDRESS, isNativeToken } from '@/lib/evm/native-token'
 
 export const SUI_COIN_TYPE = '0x2::sui::SUI'
@@ -183,6 +184,19 @@ export const SOLANA_MAINNET_SUPPORTED_TOKENS: SupportedToken[] = [
 export const SOLANA_SUPPORTED_TOKENS: SupportedToken[] =
   APP_NETWORK === 'mainnet' ? SOLANA_MAINNET_SUPPORTED_TOKENS : SOLANA_DEVNET_SUPPORTED_TOKENS
 
+// ─── Stellar tokens ──────────────────────────────────────────────────────────
+
+export const XLM_TOKEN: SupportedToken = {
+  symbol: 'XLM',
+  name: 'Stellar Lumens',
+  coinType: XLM_COIN_TYPE,
+  decimals: 7,
+  icon: '/chain-logos/stellar.svg',
+  minimumAmount: 0.01,
+}
+
+export const STELLAR_SUPPORTED_TOKENS: SupportedToken[] = [XLM_TOKEN]
+
 // ─── EVM tokens ──────────────────────────────────────────────────────────────
 
 const WBNB_TESTNET_ADDRESS = '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd' as `0x${string}`
@@ -298,6 +312,8 @@ export function getSupportedTokens(chain: SupportedChain): SupportedToken[] {
       return SUPPORTED_TOKENS
     case 'solana':
       return SOLANA_SUPPORTED_TOKENS
+    case 'stellar':
+      return STELLAR_SUPPORTED_TOKENS
     case 'bnb':
       return EVM_SUPPORTED_TOKENS
     case 'bot':
@@ -317,6 +333,8 @@ export function getNativeToken(chain: SupportedChain): SupportedToken {
       return SUI_TOKEN
     case 'solana':
       return SOL_TOKEN
+    case 'stellar':
+      return XLM_TOKEN
     case 'bnb':
       return BNB_TOKEN
     case 'bot':

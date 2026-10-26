@@ -27,3 +27,8 @@ plan.md
 skills-lock.json
 .claude
 sol-contracts
+.http
+MyEC2KeyPair.pem
+*.pem
+*.tsbuildinfo
+.DS_Store

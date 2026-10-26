@@ -15,10 +15,10 @@ export const UserActivity = ({ address, isOwner }: UserActivityProps) => {
   const isSui = !!address && detectChainFromAddress(address) === 'sui'
 
   const userEvents = useMemo(() => {
-    if (!isSui || !address || !events.promptConsumed || !events.agentDefeated) {
+    if (!isSui || !address || !events.promptConsumed) {
       return {
         promptConsumed: [],
-        agentDefeated: [],
+        victories: [],
       }
     }
 
@@ -26,15 +26,18 @@ export const UserActivity = ({ address, isOwner }: UserActivityProps) => {
       event => event.parsedJson.sender === address
     )
 
-    const filteredDefeated = events.agentDefeated.filter(
-      event => event.parsedJson.winner === address
+    // Victories are successful attacks. They come from PromptConsumed because
+    // the legacy Sui package skipped AgentDefeated for empty prize pools,
+    // which silently dropped those wins from this list.
+    const victories = filteredPrompts.filter(
+      event => event.parsedJson.success === true
     )
 
     return {
       promptConsumed: filteredPrompts,
-      agentDefeated: filteredDefeated,
+      victories,
     }
-  }, [events.promptConsumed, events.agentDefeated, address, isSui])
+  }, [events.promptConsumed, address, isSui])
 
   const formatTimestamp = (ms: string) =>
     new Date(parseInt(ms)).toLocaleString(undefined, {
@@ -42,7 +45,7 @@ export const UserActivity = ({ address, isOwner }: UserActivityProps) => {
       timeStyle: 'short',
     })
 
-  const { promptConsumed, agentDefeated } = userEvents
+  const { promptConsumed, victories } = userEvents
 
   return (
     <>
@@ -59,7 +62,7 @@ export const UserActivity = ({ address, isOwner }: UserActivityProps) => {
               Agent Victories
             </h2>
 
-            {agentDefeated.length === 0 ? (
+            {victories.length === 0 ? (
               <div className="py-8 text-center text-[var(--color-text-muted)]">
                 <AlertCircle className="mx-auto mb-4 h-12 w-12 opacity-50" />
                 {isOwner
@@ -68,7 +71,7 @@ export const UserActivity = ({ address, isOwner }: UserActivityProps) => {
               </div>
             ) : (
               <div className="space-y-4">
-                {agentDefeated.map((event, i) => (
+                {victories.map((event, i) => (
                   <div
                     key={`${event.id.txDigest}-${event.id.eventSeq}`}
                     className="rounded-lg border-l-4 border-[var(--color-gold-primary)] bg-[var(--color-bg-elevated)] p-4 shadow-[var(--shadow-card)]"
@@ -88,7 +91,7 @@ export const UserActivity = ({ address, isOwner }: UserActivityProps) => {
                       <div>
                         <span className="text-[var(--color-text-muted)]">Amount Won:</span>{' '}
                         <span className="font-medium text-[var(--color-success)]">
-                          {(parseInt(event.parsedJson.amount_won || '0') / 1e9).toFixed(2)} SUI
+                          {(parseInt(event.parsedJson.amount || '0') / 1e9).toFixed(2)} SUI
                         </span>
                       </div>
                       <div>

@@ -1,12 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
+import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import { Mail, Check, Loader2 } from 'lucide-react'
+import { toast } from '@/lib/toast'
 import { useEmailOtpVerification } from '@/hooks/profile/useEmailOtpVerification'
 import { useTelegramVerification } from '@/hooks/profile/useTelegramVerification'
 import { useRemoveSocialConnection } from '@/hooks/profile/useRemoveSocialConnection'
 import { useAuth } from '@/context/AuthContext'
+import { SUI_SENTINEL_API_URL } from '@/constants'
 
 // Telegram icon component
 function TelegramIcon({ className }: { className?: string }) {
@@ -17,13 +20,38 @@ function TelegramIcon({ className }: { className?: string }) {
   )
 }
 
+// X (Twitter) icon component
+function XIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="currentColor">
+      <path d="M12.6.75h2.454l-5.36 6.142L16 15.25H11.05L7.063 9.965l-4.574 5.285H0L5.695 8.748.04.75h5.1l3.628 4.78L12.601.75Zm-.86 13.045h1.358L4.192 2.9H2.74l9 10.895Z" />
+    </svg>
+  )
+}
+
 const TELEGRAM_BOT_USERNAME = 'suisentinel_bot'
+
+const X_CONNECT_ERRORS: Record<string, string> = {
+  denied: 'X connection was cancelled',
+  expired: 'X connection expired — please try again',
+  state_mismatch: 'Invalid X connection state — please try again',
+  token_exchange: 'Could not verify your X account — please try again',
+  users_me: 'Could not load your X profile — please try again',
+  already_linked: 'This X account is already linked to another user',
+  auth_required: 'Sign in with your wallet first',
+  not_configured: 'X connection is not available yet',
+  failed: 'Failed to connect X — please try again',
+}
 
 export function ProfileSocialConnections() {
   const { user, refreshProfile } = useAuth()
   const { mutate: disconnect } = useRemoveSocialConnection()
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
 
   const [disconnectingPlatform, setDisconnectingPlatform] = useState<string | null>(null)
+  const [isConnectingX, setIsConnectingX] = useState(false)
   const {
     email: emailValue,
     setEmail: setEmailValue,
@@ -60,6 +88,47 @@ export function ProfileSocialConnections() {
   )
   const hasTelegram = !!telegramConnection
   const telegramUsername = telegramConnection?.platform_username
+
+  // Get the connected X handle ('x' for new rows, 'twitter' is the legacy
+  // platform value still read across the backend)
+  const xConnection = user?.social_connections?.find(
+    conn => ['x', 'twitter'].includes(conn.platform.toLowerCase())
+  )
+  const hasX = !!xConnection
+  const xUsername = xConnection?.platform_username
+
+  const handleConnectX = () => {
+    // Full-page navigation to the backend so the session cookie rides along
+    // with the OAuth start request; X sends the user back to /profile.
+    setIsConnectingX(true)
+    window.location.href = `${SUI_SENTINEL_API_URL}/auth/x/start`
+  }
+
+  // The backend OAuth callback lands back on /profile with x_connected=1 or
+  // x_error=<reason> (plus an optional x_error_detail excerpt from the X API);
+  // surface the result and clear the params.
+  useEffect(() => {
+    const xConnected = searchParams.get('x_connected')
+    const xError = searchParams.get('x_error')
+    if (!xConnected && !xError) return
+
+    if (xConnected) {
+      toast.success('X account connected')
+      void refreshProfile()
+    } else if (xError) {
+      const detail = searchParams.get('x_error_detail')
+      toast.error(X_CONNECT_ERRORS[xError] ?? 'Failed to connect X', {
+        description: detail || undefined,
+      })
+    }
+
+    const params = new URLSearchParams(searchParams.toString())
+    params.delete('x_connected')
+    params.delete('x_error')
+    params.delete('x_error_detail')
+    const queryString = params.toString()
+    router.replace(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false })
+  }, [searchParams, router, pathname, refreshProfile])
 
   const handleTelegramVerify = async () => {
     const success = await verifyTelegramCode()
@@ -100,7 +169,7 @@ export function ProfileSocialConnections() {
         </span>
       </div>
 
-      <div className="grid grid-cols-1 gap-0 divide-y divide-[var(--color-border-strong)] border border-[var(--color-border-strong)] md:grid-cols-3 md:divide-x md:divide-y-0">
+      <div className="grid grid-cols-1 gap-0 divide-y divide-[var(--color-border-strong)] border border-[var(--color-border-strong)] md:grid-cols-4 md:divide-x md:divide-y-0">
         {/* Email */}
         <div className="flex flex-col gap-3 p-5">
           <div className="flex items-center justify-between">
@@ -316,6 +385,57 @@ export function ProfileSocialConnections() {
 
           <p className="text-[11px] text-[var(--color-text-muted)]">
             Get notified when someone attacks your Sentinel
+          </p>
+        </div>
+
+        {/* X (Twitter) */}
+        <div className="flex flex-col gap-3 p-5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <XIcon className="h-4 w-4 text-[var(--color-text-muted)]" />
+              <span className="industrial-label">X (Twitter)</span>
+            </div>
+            {hasX && (
+              <span className="flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider text-[var(--color-success)]">
+                <Check className="h-3 w-3" />
+                Connected
+              </span>
+            )}
+          </div>
+
+          {hasX ? (
+            <div className="flex items-center justify-between gap-2">
+              <span className="truncate text-sm font-medium text-[var(--color-text-primary)]">
+                {xUsername ? `@${xUsername}` : 'X Connected'}
+              </span>
+              <button
+                onClick={() => handleDisconnect('X', xConnection?.id)}
+                disabled={disconnectingPlatform === 'X'}
+                className="text-[11px] font-bold uppercase tracking-wider text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-danger)] disabled:opacity-50"
+              >
+                {disconnectingPlatform === 'X' ? (
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                ) : (
+                  'Disconnect'
+                )}
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={handleConnectX}
+              disabled={isConnectingX}
+              className="button-ghost-terminal w-full py-2 text-[11px] disabled:opacity-50"
+            >
+              {isConnectingX ? (
+                <Loader2 className="mx-auto h-3 w-3 animate-spin" />
+              ) : (
+                'Connect X'
+              )}
+            </button>
+          )}
+
+          <p className="text-[11px] text-[var(--color-text-muted)]">
+            Link your X handle to your profile
           </p>
         </div>
 

@@ -48,7 +48,7 @@ export const SpinFeed = () => {
             </span>
             <span className="text-[var(--color-text-muted)]">and won</span>
             <span className="font-bold text-[var(--color-success)]">
-              {currentSpin.finalAmount.toLocaleString()} SENTINEL
+              {currentSpin.finalAmount.toLocaleString()} pts
             </span>
             <span className="text-[var(--color-text-faint)]">•</span>
             <span className="text-[10px] text-[var(--color-text-muted)]">

@@ -6,7 +6,7 @@ import Image from 'next/image'
 import clsx from 'clsx'
 import { Loader2, Zap, Info, Mic, MessageSquare } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 
 import { generateAvatarUrl } from '@/lib/utils'
 import { useAuth } from '@/context/AuthContext'
@@ -128,7 +128,7 @@ export function PracticeChatInterface({
     if (isVoiceActive) {
       voice.start()
     }
-  }, [isVoiceActive, voice.start])
+  }, [isVoiceActive, voice])
 
   const handleSetMode = useCallback(
     async (mode: 'voice' | 'text') => {
@@ -139,7 +139,7 @@ export function PracticeChatInterface({
       }
       setInteractionMode(mode)
     },
-    [isBreached, isVoiceActive, voice.stop]
+    [isBreached, isVoiceActive, voice]
   )
 
   const handleStartVoice = useCallback(() => {
@@ -154,7 +154,7 @@ export function PracticeChatInterface({
     setIsVoiceActive(false)
     await voice.stop()
     refetchFeed()
-  }, [voice.stop, refetchFeed])
+  }, [voice, refetchFeed])
 
   const [isJuryModalOpen, setIsJuryModalOpen] = useState(false)
   const [selectedJuryResponse, setSelectedJuryResponse] = useState('')

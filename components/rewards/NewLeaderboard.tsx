@@ -18,6 +18,7 @@ import {
   ChevronsUpDown,
   ChevronDown,
   ChevronUp,
+  Clock,
   Info,
   Check,
   Loader2,
@@ -1005,6 +1006,10 @@ export function NewLeaderboard() {
                   <h1 className="page-heading">Leaderboard</h1>
                   <p className="page-subheading mt-1">
                     Track top defenders &amp; attackers in the Red Sentinel ecosystem
+                  </p>
+                  <p className="mt-1.5 flex items-center gap-1.5 text-xs text-[var(--color-text-muted)]">
+                    <Clock className="h-3 w-3" />
+                    Computed every 5 minutes
                   </p>
                 </div>
               </div>

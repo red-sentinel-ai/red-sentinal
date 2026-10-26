@@ -58,3 +58,20 @@ export interface EvmTeeResponse {
   signature: string // hex-encoded secp256k1 r+s (64 bytes, without 0x prefix)
   recovery_id: number // 0 or 1 — append as v = 27 + recovery_id for EVM ECDSA.recover()
 }
+
+// Stellar TEE response shape (from the stellar TEE service). Same Ed25519
+// scheme as Solana; the contract verifies natively via env.crypto().
+export interface StellarTeeResponse {
+  response: {
+    intent: number
+    timestamp: number // Unix seconds
+    data: {
+      agent_id: string
+      cost_per_message: number
+      prompt_hash: number[] // 32 bytes
+      is_defeated: boolean
+      creator: number[] // 32 bytes (Stellar account key)
+    }
+  }
+  signature: string // hex-encoded Ed25519 signature (64 bytes)
+}

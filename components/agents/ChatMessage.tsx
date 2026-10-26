@@ -10,7 +10,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { Trophy, ExternalLink, Scale } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import { generateAvatarUrl } from '@/lib/utils'
-import { getExplorerTxUrl, getWalrusBlobUrl } from '@/lib/explorer'
+import { getExplorerTxUrl } from '@/lib/explorer'
 import { truncateAddress } from '@/lib/utils'
 import { Dialog } from '@/components/Dialog'
 import { AttackShareCard } from '@/components/agents/AttackShareCard'
@@ -251,7 +251,7 @@ export const ChatMessage = ({
 
             {message.walrusBlobId && (
               <a
-                href={getWalrusBlobUrl(message.walrusBlobId)}
+                href={`/evidence/${message.walrusBlobId}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={clsx(

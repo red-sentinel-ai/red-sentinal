@@ -6,7 +6,6 @@ import { SUI_EVENTS_RPC_URLS } from '@/constants/sui-rpc'
 import { createSuiClient } from '@/lib/sui/rpc-client'
 
 export interface AgentEvents {
-  agentDefeated: any[]
   promptConsumed: any[]
 }
 
@@ -29,7 +28,7 @@ export function useAgentEvents() {
   })
 
   return {
-    events: events || { agentDefeated: [], promptConsumed: [] },
+    events: events || { promptConsumed: [] },
     loading: isLoading,
     error: isError ? error.message : null,
     refetch,
@@ -39,16 +38,9 @@ async function getAgentEvents(client: SuiJsonRpcClient) {
   const packageId = SUI_CONFIG.APP_PACKAGE_ID
   const moduleName = SUI_CONFIG.MODULE_NAME
   try {
-    // Fetch AgentDefeated events
-    const agentDefeatedEvents = await client.queryEvents({
-      query: {
-        MoveEventType: `${packageId}::${moduleName}::AgentDefeated`,
-      },
-      limit: 50,
-      order: 'descending',
-    })
-
-    // Fetch PromptConsumed events
+    // PromptConsumed is the only stream we need: a success=true event marks a
+    // defeat, so victories are derived from it. The legacy Sui package skipped
+    // AgentDefeated for empty prize pools, which silently dropped those wins.
     const promptConsumedEvents = await client.queryEvents({
       query: {
         MoveEventType: `${packageId}::${moduleName}::PromptConsumed`,
@@ -58,7 +50,6 @@ async function getAgentEvents(client: SuiJsonRpcClient) {
     })
 
     return {
-      agentDefeated: agentDefeatedEvents.data,
       promptConsumed: promptConsumedEvents.data,
     }
   } catch (error) {

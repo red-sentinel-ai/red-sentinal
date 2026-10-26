@@ -1,7 +1,8 @@
 import { APP_ENVIRONMENT, APP_NETWORK } from './shared'
-import { isEvmChain, isSolanaChain, toEvmChainKey, type SupportedChain } from './chains'
+import { isEvmChain, isSolanaChain, isStellarChain, toEvmChainKey, type SupportedChain } from './chains'
 import { EVM_TEE_NETWORK, getEvmConfigForChainKey, resolveEvmTeeNetwork } from './evm'
 import { SOLANA_TEE_NETWORK } from './solana'
+import { STELLAR_TEE_NETWORK } from './stellar'
 
 export const UNIFIED_TEE_API_PATH = 'https://tee-evm.redsentinel.xyz'
 
@@ -22,6 +23,9 @@ export function resolveTeeEndpoint(
   }
   if (isSolanaChain(chain)) {
     return { baseUrl: UNIFIED_TEE_API_PATH, network: SOLANA_TEE_NETWORK }
+  }
+  if (isStellarChain(chain)) {
+    return { baseUrl: UNIFIED_TEE_API_PATH, network: STELLAR_TEE_NETWORK }
   }
   return { baseUrl: UNIFIED_TEE_API_PATH, network: SUI_TEE_NETWORK }
 }

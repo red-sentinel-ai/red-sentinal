@@ -6,7 +6,6 @@ import { ACTIVE_MISSIONS_COUNT } from '@/lib/earn-utils'
 export function usePublicStats(): { data: PublicStats | undefined; isLoading: boolean } {
   const { data: platformData, isLoading: platformLoading } = usePlatformStats()
   const { data: spinData, isLoading: spinLoading } = useSpinFeed()
-  console.log({spinData})
 
   const isLoading = platformLoading || spinLoading
 

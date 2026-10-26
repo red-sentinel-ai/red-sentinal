@@ -1,37 +1,29 @@
 import type { Metadata } from 'next'
-import { EarnHero } from '@/components/earn/EarnHero'
-import { StickyTabNav } from '@/components/earn/StickyTabNav'
-import { HowItWorksSection } from '@/components/earn/HowItWorks/HowItWorksSection'
-import { SocialMissionsSection } from '@/components/earn/SocialMissions/SocialMissionsSection'
 import { SUI_SENTINEL_APP_URL } from '@/constants'
 
 export const metadata: Metadata = {
-  title: 'Earn SENTINEL Tokens | Complete Missions & Spin Rewards',
+  title: 'Sentinel Points | Red Sentinel Rewards',
   description:
-    'Complete social missions, attack Sentinels, create content, and spin the slot machine to earn SENTINEL tokens. Comprehensive guide to the Red Sentinel reward system.',
+    'Earn Sentinel Points by attacking Sentinels, launching Sentinels, funding defenses, and completing missions. Spin the slot machine to multiply your points — on every chain.',
   keywords: [
-    'SENTINEL token',
+    'Sentinel Points',
+    'loyalty rewards',
     'crypto rewards',
-    'booster rewards',
     'Sentinel rewards',
     'blockchain gaming rewards',
     'AI security incentives',
     'slot machine rewards',
   ],
   alternates: {
-    canonical: `${SUI_SENTINEL_APP_URL}/earn`,
+    canonical: `${SUI_SENTINEL_APP_URL}/rewards`,
   },
   openGraph: {
-    title: 'Earn SENTINEL Tokens | Complete Missions & Spin Rewards',
+    title: 'Sentinel Points | Red Sentinel Rewards',
     description:
-      'Every action earns SENTINEL. Complete missions, attack Sentinels, and spin the slot machine for instant rewards.',
-    url: `${SUI_SENTINEL_APP_URL}/earn`,
+      'Every action earns Sentinel Points. Attack, defend, launch, and spin — on every chain.',
+    url: `${SUI_SENTINEL_APP_URL}/rewards`,
   },
 }
-
-// Components
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _hidden = { EarnHero, StickyTabNav, HowItWorksSection, SocialMissionsSection }
 
 export default function RewardsPage() {
   return (
@@ -43,7 +35,8 @@ export default function RewardsPage() {
         Rewards
       </h1>
       <p className="mt-2 text-sm text-[var(--color-text-muted)]">
-        The rewards system is being upgraded. Check back soon.
+        The rewards system is being upgraded. Check your profile&apos;s My Rewards
+        tab for Sentinel Points and Spin Passes.
       </p>
     </div>
   )

@@ -1,21 +1,21 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { APP_NETWORK, SUI_SENTINEL_API_URL } from '@/constants'
+import { SUI_SENTINEL_API_URL } from '@/constants'
 import type {
-  BoostersResponse,
+  PassesResponse,
   SpinRequest,
   SpinResponse,
-  SpinHistoryItem,
+  LoyaltyBalanceResponse,
 } from '@/types'
 
-export const useUserBoosters = (walletAddress: string | undefined) => {
-  return useQuery<BoostersResponse>({
-    queryKey: ['boosters', walletAddress],
-    queryFn: async (): Promise<BoostersResponse> => {
+export const useUserPasses = (walletAddress: string | undefined) => {
+  return useQuery<PassesResponse>({
+    queryKey: ['passes', walletAddress],
+    queryFn: async (): Promise<PassesResponse> => {
       if (!walletAddress) {
         throw new Error('Wallet address is required')
       }
 
-      const url = `${SUI_SENTINEL_API_URL}/boosters/${APP_NETWORK}/boosters/${walletAddress}`
+      const url = `${SUI_SENTINEL_API_URL}/loyalty/passes/${walletAddress}`
 
       const response = await fetch(url, {
         method: 'GET',
@@ -27,7 +27,7 @@ export const useUserBoosters = (walletAddress: string | undefined) => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.message || 'Failed to fetch boosters')
+        throw new Error(errorData.message || 'Failed to fetch spin passes')
       }
 
       return response.json()
@@ -37,12 +37,42 @@ export const useUserBoosters = (walletAddress: string | undefined) => {
   })
 }
 
-export const useSpinBooster = () => {
+export const useLoyaltyBalance = (walletAddress: string | undefined) => {
+  return useQuery<LoyaltyBalanceResponse>({
+    queryKey: ['loyalty-balance', walletAddress],
+    queryFn: async (): Promise<LoyaltyBalanceResponse> => {
+      if (!walletAddress) {
+        throw new Error('Wallet address is required')
+      }
+
+      const url = `${SUI_SENTINEL_API_URL}/loyalty/balance/${walletAddress}`
+
+      const response = await fetch(url, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.message || 'Failed to fetch points balance')
+      }
+
+      return response.json()
+    },
+    enabled: !!walletAddress,
+    staleTime: 30 * 1000,
+  })
+}
+
+export const useSpinPass = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (spinRequest: SpinRequest): Promise<SpinResponse> => {
-      const url = `${SUI_SENTINEL_API_URL}/boosters/${APP_NETWORK}/spin`
+      const url = `${SUI_SENTINEL_API_URL}/loyalty/spin`
 
       const response = await fetch(url, {
         method: 'POST',
@@ -55,14 +85,15 @@ export const useSpinBooster = () => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.message || 'Failed to spin booster')
+        throw new Error(errorData.message || 'Failed to spin pass')
       }
 
       return response.json()
     },
     onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['boosters', variables.walletAddress] })
+      queryClient.invalidateQueries({ queryKey: ['passes', variables.walletAddress] })
       queryClient.invalidateQueries({ queryKey: ['spin-history', variables.walletAddress] })
+      queryClient.invalidateQueries({ queryKey: ['loyalty-balance', variables.walletAddress] })
     },
   })
 }
@@ -72,14 +103,14 @@ export const useSpinHistory = (
   limit: number = 20,
   offset: number = 0
 ) => {
-  return useQuery<{ spins: SpinHistoryItem[]; total: number }>({
+  return useQuery<{ spins: import('@/types').SpinHistoryItem[]; total: number }>({
     queryKey: ['spin-history', walletAddress, limit, offset],
     queryFn: async () => {
       if (!walletAddress) {
         throw new Error('Wallet address is required')
       }
 
-      const url = `${SUI_SENTINEL_API_URL}/boosters/${APP_NETWORK}/spins/${walletAddress}?limit=${limit}&offset=${offset}`
+      const url = `${SUI_SENTINEL_API_URL}/loyalty/spins/${walletAddress}?limit=${limit}&offset=${offset}`
 
       const response = await fetch(url, {
         method: 'GET',

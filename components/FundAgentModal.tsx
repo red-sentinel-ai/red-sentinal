@@ -8,10 +8,11 @@ import { Dialog } from '@/components/Dialog'
 import { useFundAgentSui } from '@/hooks/useFundAgentSui'
 import { useFundAgentSolana } from '@/hooks/useFundAgentSolana'
 import { useFundAgentEVM } from '@/hooks/useFundAgentEVM'
+import { useFundAgentStellar } from '@/hooks/useFundAgentStellar'
 import { useSolanaWallet } from '@/hooks/useSolanaWallet'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
 import { getTokenForCoinType } from '@/constants/tokens'
-import { isEvmChain, type SupportedChain } from '@/constants/chains'
+import { isEvmChain, isStellarChain, type SupportedChain } from '@/constants/chains'
 
 export interface FundAgentModalProps {
   open: boolean
@@ -45,6 +46,7 @@ export const FundAgentModal = ({
   const { address: evmAddress } = useEVMWallet()
   const token = getTokenForCoinType(coinType, chain)
   const isSolana = chain === 'solana'
+  const isStellar = isStellarChain(chain)
   const isEvm = isEvmChain(chain)
 
   const { fundAgent: fundAgentSui, isLoading: isSuiLoading } = useFundAgentSui({
@@ -52,7 +54,8 @@ export const FundAgentModal = ({
   })
   const { fundAgent: fundAgentSolana, isLoading: isSolanaLoading } = useFundAgentSolana()
   const { fundAgent: fundAgentEvm, isLoading: isEvmLoading } = useFundAgentEVM()
-  const isLoading = isEvm ? isEvmLoading : isSolana ? isSolanaLoading : isSuiLoading
+  const { fundAgent: fundAgentStellar, isLoading: isStellarLoading } = useFundAgentStellar()
+  const isLoading = isEvm ? isEvmLoading : isStellar ? isStellarLoading : isSolana ? isSolanaLoading : isSuiLoading
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAmount(e.target.value)
@@ -88,6 +91,13 @@ export const FundAgentModal = ({
           tokenMint: coinType,
           amount: +amount,
           decimals: tokenDecimals,
+          symbol: tokenSymbol,
+        })
+      } else if (isStellar) {
+        if (!agentId) throw new Error('Missing agent id')
+        await fundAgentStellar({
+          agentId,
+          amount: +amount,
           symbol: tokenSymbol,
         })
       } else {

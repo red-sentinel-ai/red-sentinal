@@ -3,7 +3,6 @@
 import { AlertCircle, CheckCircle, Database, ExternalLink, XCircle } from 'lucide-react'
 
 import { useWalrusRecords } from '@/hooks/profile/useWalrusRecords'
-import { getWalrusBlobUrl } from '@/lib/explorer'
 import { truncateAddress } from '@/lib/utils'
 
 export const UserWalrusRecords = () => {
@@ -78,7 +77,7 @@ export const UserWalrusRecords = () => {
                 </p>
               </div>
               <a
-                href={getWalrusBlobUrl(record.blob_id)}
+                href={`/evidence/${record.blob_id}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="industrial-header flex shrink-0 items-center gap-1 text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)] hover:text-white"

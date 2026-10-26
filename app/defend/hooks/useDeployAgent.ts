@@ -1,21 +1,23 @@
 import { useState } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { parseUnits } from 'viem'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import posthog from 'posthog-js'
 import { useActiveChain } from '@/context/ActiveChainContext'
 import { useSuiClient } from '@mysten/dapp-kit'
 import { isEvmChain } from '@/constants/chains'
+const XLM_DECIMALS = 7
 import { useEvmChain } from '@/hooks/evm/useEvmChain'
 import { useCreateAgent } from '@/hooks/agents/useCreateAgent'
 import { useSolanaConnection } from '@/hooks/useSolanaWallet'
 import { assertSolanaDeployFeasible } from '@/lib/solana/preflight'
 import { type SupportedToken } from '@/constants'
 import { registerAgentUtil, resolveProviderCredentials } from '../utils'
-import type { AgenticConfig } from '../agentic-types'
+import type { AgenticConfig, ConnectedDeploymentPayload } from '../agentic-types'
 import { useDeploySuiAgent } from './useDeploySuiAgent'
 import { useDeploySolanaAgent } from './useDeploySolanaAgent'
 import { useDeployEvmAgent } from './useDeployEvmAgent'
+import { useDeployStellarAgent } from './useDeployStellarAgent'
 import type { DefendFormData } from './useDefendForm'
 
 interface UseDeployAgentOptions {
@@ -27,6 +29,8 @@ interface UseDeployAgentOptions {
   agentImage: File | null
   selectedImage: { url: string; isCustom: boolean; file?: File | null } | null
   agenticConfig: AgenticConfig | null
+  /** Connected method payload (hosted MCP agent / existing agent); null for the template path. */
+  connectedDeployment: ConnectedDeploymentPayload | null
   selectedTagIds: string[]
 }
 
@@ -39,6 +43,7 @@ export function useDeployAgent({
   agentImage,
   selectedImage,
   agenticConfig,
+  connectedDeployment,
   selectedTagIds,
 }: UseDeployAgentOptions) {
   const { activeChain } = useActiveChain()
@@ -54,6 +59,7 @@ export function useDeployAgent({
   })
   const solanaDeploy = useDeploySolanaAgent({ formData, selectedSolanaToken })
   const evmDeploy = useDeployEvmAgent({ formData, selectedEvmToken })
+  const stellarDeploy = useDeployStellarAgent({ formData })
 
   const [isLoading, setIsLoading] = useState(false)
   const [deployedAgentPath, setDeployedAgentPath] = useState<string | null>(null)
@@ -62,12 +68,14 @@ export function useDeployAgent({
 
   const getWalletAddress = (): string | null => {
     if (activeChain === 'solana') return solanaDeploy.walletAddress
+    if (activeChain === 'stellar') return stellarDeploy.walletAddress
     if (isEvmChain(activeChain)) return evmDeploy.walletAddress
     return suiDeploy.walletAddress
   }
 
   const getActiveTokenDecimals = (): number => {
     if (activeChain === 'solana') return selectedSolanaToken.decimals
+    if (activeChain === 'stellar') return XLM_DECIMALS
     if (isEvmChain(activeChain)) return selectedEvmToken.decimals
     return selectedToken.decimals
   }
@@ -89,6 +97,7 @@ export function useDeployAgent({
       agent_id: agentId,
       agent_object_id: objectId,
       owner_address: ownerAddress,
+      deployment_method: connectedDeployment?.deployment_config.method ?? 'template',
       // Effective fee the TEE signed, not the raw form value.
       cost_per_message: effectiveFeePerMessage / Math.pow(10, getActiveTokenDecimals()),
       system_prompt_length: formData.systemPrompt.length,
@@ -205,7 +214,8 @@ export function useDeployAgent({
         activeChain,
         credentials,
         intendedChainId ?? undefined,
-        agenticConfig
+        agenticConfig,
+        connectedDeployment
       )
 
       // 3. Execute chain-specific transaction
@@ -213,6 +223,8 @@ export function useDeployAgent({
 
       if (activeChain === 'solana') {
         result = await solanaDeploy.executeTransaction(teeResponse)
+      } else if (activeChain === 'stellar') {
+        result = await stellarDeploy.executeTransaction(teeResponse)
       } else if (isEvmChain(activeChain)) {
         result = await evmDeploy.executeTransaction(teeResponse)
       } else {

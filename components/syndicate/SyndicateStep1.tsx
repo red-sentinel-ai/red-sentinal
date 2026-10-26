@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react'
 import { Loader2, Users } from 'lucide-react'
-import { toast } from 'sonner'
+import { toast } from '@/lib/toast'
 import { useAccount } from 'wagmi'
 import { usePrivyConnect } from '@/hooks/usePrivyConnect'
 import { getEvmSupportedTokens } from '@/constants/evm'
