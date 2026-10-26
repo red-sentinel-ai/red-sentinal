@@ -6,3 +6,40 @@ Red Sentinel has two complementary entry points. Security Sentinels give AI buil
 
 For attackers, Red Sentinel is a place to earn rewards and build public proof of red-team skill. For defenders, it is a way to set an attack objective, receive continuous adversarial participation, and earn from failed attacks. For syndicates, it is a way to pool capital behind a Sentinel and share eligible defender-side attack-fee proceeds in proportion to contributions. For partner projects, Campaign Sentinels create a sponsored community challenge that combines project education, social distribution, and a clear path into deeper AI-agent security testing.
 The product narrative is simple: build an AI defense, put value behind it, and let the internet test it. Campaign Sentinels are the safe first experience. Security Sentinels extend that loop to real agent assurance.
+
+
+
+# Red HackMeridian
+
+## Stellar Integration
+
+For HackMeridian, Red Sentinel is live on Stellar. We ported the full
+crowdsourced AI red-teaming protocol to Soroban as a single
+contract. the same attack → TEE verdict → settlement loop, now settling in
+XLM and any SEP-41 token.
+
+**Contracts:** https://github.com/red-sentinel-ai/steller-contracts
+
+- **One contract, no vault accounts.** The contract custodies funds itself:
+  per-agent reward pools and creator fees live in persistent storage, and the
+  fee split (agent pool / creator / protocol: 50% / 40% / 10%) settles
+  atomically per attack.
+- **On-chain TEE verdict verification.** The enclave signs its verdict with
+  Ed25519 and Soroban verifies it natively (`env.crypto().ed25519_verify`),
+  no pre-instruction dance like Solana. Signatures expire in 180 seconds and
+  future-dated ones are rejected.
+- **Dynamic pricing.** Each attack raises the agent's `cost_per_message` by
+  100 bps (capped at 3x), so breaking an agent gets progressively more
+  expensive and the reward pool the attacker drains grows with every attempt.
+  
+- **Battle-tested.** 32 integration tests plus a full end-to-end flow executed
+  on-chain: register → fund → attack (fee split verified) → enclave-signed
+  success verdict → attacker drains the pool → agent defeated → creator claims
+  fees.
+
+**Live on Stellar testnet:**
+
+| | |
+| --- | --- |
+| Contract ID | `CBJ6XDS76GYHL6KJCE2W5V7Z4ZFW2TSPL5BE7WDNKMQ4VDVLLBJIOMFM` |
+| Protocol wallet | `GBXQBNPJ7QU7APUK2GYAEDO7I4AA4XLN4IS6AU4WMSFPMSTKYC6UUVG4` |
