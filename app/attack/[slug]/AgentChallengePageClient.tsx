@@ -18,6 +18,7 @@ import {
 } from '@/hooks/walrus/useWalrusRecord'
 import { useConsumePromptSolana } from '@/hooks/useConsumePromptSolana'
 import { useConsumePromptEVM } from '@/hooks/useConsumePromptEVM'
+import { useConsumePromptStellar } from '@/hooks/useConsumePromptStellar'
 import { useAgent, AGENT_QUERY_KEY } from '@/hooks/agents/useAgentDetails'
 import { useAgentChatHistory, AGENT_CHAT_QUERY_KEY } from '@/hooks/agents/useAgentChatHistory'
 import { useCanSendMessage } from '@/hooks/chat'
@@ -26,7 +27,7 @@ import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useActiveChain } from '@/context/ActiveChainContext'
 import { useFocusMode } from '@/context/FocusModeContext'
 import { useRenderInTopbar } from '@/context/TopbarSlotContext'
-import { CHAINS, isEvmChain, type SupportedChain } from '@/constants/chains'
+import { CHAINS, isEvmChain, isStellarChain, type SupportedChain } from '@/constants/chains'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
 import { AttackWorkspace, type ViewMode } from '@/components/agents/AttackWorkspace'
@@ -224,12 +225,24 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
     },
   })
 
+  const { consumePrompt: stellarConsumePrompt } = useConsumePromptStellar({
+    showToasts: true,
+    onError: err => {
+      setSubmitError(err.message || 'Something went wrong')
+    },
+    onComplete: ({ apiResponse, transactionDigest }) => {
+      handleAttackComplete(apiResponse, transactionDigest)
+    },
+  })
+
   const agentChain: SupportedChain = agent?.chain
   const chainToSwitch: SupportedChain | null =
     agent && agentChain !== activeChain ? agentChain : null
   let consumePrompt = suiConsumePrompt
   if (agentChain === 'solana') {
     consumePrompt = solanaConsumePrompt
+  } else if (isStellarChain(agentChain)) {
+    consumePrompt = stellarConsumePrompt as typeof suiConsumePrompt // we should fix this
   } else if (isEvmChain(agentChain)) {
     consumePrompt = evmConsumePrompt as typeof suiConsumePrompt // we should fix this
   }

@@ -3,6 +3,7 @@
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { useActiveChain } from '@/context/ActiveChainContext'
 import { useSolanaWallet } from '@/hooks/useSolanaWallet'
+import { useStellarWallet } from '@/hooks/useStellarWallet'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
 import { isEvmChain, type SupportedChain } from '@/constants/chains'
 
@@ -22,11 +23,14 @@ export function useConnectedAddress(): ConnectedAddress {
   const { activeChain, isHydrated } = useActiveChain()
   const suiAccount = useCurrentAccount()
   const { publicKey } = useSolanaWallet()
+  const { address: stellarAddress } = useStellarWallet()
   const { address: evmAddress } = useEVMWallet()
 
   let address: string | undefined
   if (activeChain === 'solana') {
     address = publicKey?.toBase58() ?? undefined
+  } else if (activeChain === 'stellar') {
+    address = stellarAddress ?? undefined
   } else if (isEvmChain(activeChain)) {
     address = evmAddress
   } else {

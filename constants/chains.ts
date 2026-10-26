@@ -1,9 +1,9 @@
 import { APP_NETWORK } from './shared'
 
-export const ALL_CHAINS = ['sui', 'solana', 'bnb', 'bot', 'arb', 'monad'] as const
+export const ALL_CHAINS = ['sui', 'solana', 'stellar', 'bnb', 'bot', 'arb', 'monad'] as const
 export type SupportedChain = (typeof ALL_CHAINS)[number]
 
-export type ChainFamily = 'sui' | 'solana' | 'evm'
+export type ChainFamily = 'sui' | 'solana' | 'stellar' | 'evm'
 
 // Chains actually shown/selectable in the UI — ChainSwitcher, ChainFilterDropdown,
 // ChainLogos, AgentListView and the active-chain default all iterate this list,
@@ -13,6 +13,7 @@ export type ChainFamily = 'sui' | 'solana' | 'evm'
 export const SUPPORTED_CHAINS: readonly SupportedChain[] = [
   'sui',
   'solana',
+  'stellar',
   'arb',
   // 'bnb',
   'monad',
@@ -52,6 +53,17 @@ export const CHAINS = {
     nativeToken: 'SOL',
     rounded: false,
     iconFilterClass: 'brightness-200',
+  },
+  stellar: {
+    id: 'stellar' as const,
+    family: 'stellar' as const,
+    name: 'Stellar',
+    icon: '/chain-logos/stellar.svg',
+    logo: '/chain-logos/stellar.svg',
+    active: true,
+    nativeToken: 'XLM',
+    rounded: true,
+    iconFilterClass: '',
   },
   bnb: {
     id: 'bnb' as const,
@@ -115,6 +127,10 @@ export function isSolanaChain(chain: SupportedChain | undefined): boolean {
   return getChainFamily(chain) === 'solana'
 }
 
+export function isStellarChain(chain: SupportedChain | undefined): boolean {
+  return getChainFamily(chain) === 'stellar'
+}
+
 export const ACTIVE_CHAIN_STORAGE_KEY = 'ss-active-chain'
 
 export type EvmChainKey = 'bnb' | 'bot' | 'arb' | 'monad'
@@ -171,6 +187,7 @@ export function resolveWalletChain(
 ): WalletChainDisplay {
   if (chainType === 'sui') return toChainDisplay(CHAINS.sui)
   if (chainType === 'solana') return toChainDisplay(CHAINS.solana)
+  if (chainType === 'stellar') return toChainDisplay(CHAINS.stellar)
 
   const evmKey = chainId ? EVM_CHAIN_ID_TO_KEY[chainId] : undefined
   return evmKey ? toChainDisplay(CHAINS[evmKey]) : GENERIC_EVM_CHAIN
