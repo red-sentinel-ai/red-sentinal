@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useSyncExternalStore } from 'react'
 import {
   getAddress,
   getNetwork,
@@ -16,30 +16,69 @@ import { STELLAR_CONFIG } from '@/constants/stellar'
  * Stellar wallet access via the Freighter browser extension — the counterpart
  * of useSolanaWallet. Exposes the connected G... address and a signTransaction
  * callback compatible with lib/stellar's StellarSigner.
+ *
+ * Freighter has no React context like Privy or dapp-kit, so the connection is
+ * kept in a module-level store: every useStellarWallet() instance (connect
+ * button, auth, balance, deploy flows) shares one address.
  */
-export function useStellarWallet() {
-  const [address, setAddress] = useState<string | null>(null)
-  const [ready, setReady] = useState(false)
 
-  // Pick up an already-granted connection on mount (no popup).
-  useEffect(() => {
-    let cancelled = false
-    ;(async () => {
+interface StellarWalletState {
+  address: string | null
+  /** True once the mount-time "already connected?" probe has settled. */
+  ready: boolean
+}
+
+let state: StellarWalletState = { address: null, ready: false }
+const listeners = new Set<() => void>()
+
+function setState(patch: Partial<StellarWalletState>) {
+  state = { ...state, ...patch }
+  listeners.forEach(listener => listener())
+}
+
+function subscribe(listener: () => void) {
+  listeners.add(listener)
+  return () => {
+    listeners.delete(listener)
+  }
+}
+
+function getSnapshot() {
+  return state
+}
+
+function getServerSnapshot(): StellarWalletState {
+  return { address: null, ready: false }
+}
+
+// One probe per page load, however many components use the hook — Freighter
+// calls are async extension round-trips.
+let probePromise: Promise<void> | null = null
+
+function probeConnection(): Promise<void> {
+  if (!probePromise) {
+    probePromise = (async () => {
       try {
-        const connected = await freighterIsConnected()
-        if (connected) {
+        // Pick up an already-granted connection on mount (no popup).
+        if (await freighterIsConnected()) {
           const { address: addr, error } = await getAddress()
-          if (!cancelled && addr && !error) setAddress(addr)
+          if (addr && !error) setState({ address: addr })
         }
       } catch {
         // Freighter not installed — stay disconnected.
       } finally {
-        if (!cancelled) setReady(true)
+        setState({ ready: true })
       }
     })()
-    return () => {
-      cancelled = true
-    }
+  }
+  return probePromise
+}
+
+export function useStellarWallet() {
+  const { address, ready } = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
+
+  useEffect(() => {
+    probeConnection()
   }, [])
 
   const connect = useCallback(async (): Promise<string> => {
@@ -60,11 +99,11 @@ export function useStellarWallet() {
     await setAllowed()
     const { address: addr, error } = await getAddress()
     if (error || !addr) throw new Error(error ?? 'Failed to get Freighter address')
-    setAddress(addr)
+    setState({ address: addr })
     return addr
   }, [])
 
-  const disconnect = useCallback(() => setAddress(null), [])
+  const disconnect = useCallback(() => setState({ address: null }), [])
 
   const signTransaction = useCallback(
     async (txXdr: string): Promise<{ signedTxXdr: string }> => {

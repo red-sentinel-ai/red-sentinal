@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 import { ConnectWalletLabel } from '@/components/ConnectWalletLabel'
 import { SuiConnectButton } from '@/components/SuiConnectButton'
 import { SolanaConnectButton } from '@/components/SolanaConnectButton'
+import { StellarConnectButton } from '@/components/StellarConnectButton'
 import { EVMConnectButton } from '@/components/EVMConnectButton'
 
 interface ConnectButtonProps {
@@ -35,6 +36,7 @@ export const ConnectButton = ({ compact, anchorRef }: ConnectButtonProps) => {
   }
 
   if (activeChain === 'solana') return <SolanaConnectButton compact={compact} anchorRef={anchorRef} />
+  if (activeChain === 'stellar') return <StellarConnectButton compact={compact} anchorRef={anchorRef} />
   if (isEvmChain(activeChain)) return <EVMConnectButton compact={compact} anchorRef={anchorRef} />
   return <SuiConnectButton compact={compact} anchorRef={anchorRef} />
 }
