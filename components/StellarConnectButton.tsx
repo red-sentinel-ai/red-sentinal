@@ -17,9 +17,11 @@ import { WalletDropdown } from '@/components/WalletDropdown'
 export function StellarConnectButton({
   compact,
   anchorRef,
+  className,
 }: {
   compact?: boolean
   anchorRef?: RefObject<HTMLElement | null>
+  className?: string
 }) {
   const { address, connect, disconnect } = useStellarWallet()
   const { balance, isLoading: isLoadingBalance } = useStellarBalance()
@@ -57,7 +59,8 @@ export function StellarConnectButton({
         className={cn(
           'rs-connect-button group py-2',
           compact ? 'px-3 md:min-w-[180px] md:px-6' : 'min-w-[180px] px-6',
-          isConnecting && 'opacity-50'
+          isConnecting && 'opacity-50',
+          className
         )}
       >
         <ConnectWalletLabel compact={compact} />

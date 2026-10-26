@@ -11,10 +11,18 @@ import { SESSION_KEYS, SUI_SENTINEL_DOCS_URL, SYSTEM_PROMPT_MAX_TOKENS } from '@
 import type { SupportedToken } from '@/constants/shared'
 import type { SentinelTemplate } from '@/types'
 import { isEvmChain } from '@/constants/chains'
-import { SUPPORTED_TOKENS, SOLANA_SUPPORTED_TOKENS, getSupportedTokens } from '@/constants/tokens'
+import {
+  SUPPORTED_TOKENS,
+  SOLANA_SUPPORTED_TOKENS,
+  STELLAR_SUPPORTED_TOKENS,
+  getSupportedTokens,
+} from '@/constants/tokens'
 import { useEVMWallet } from '@/hooks/useEVMWallet'
 import { useEVMBalance } from '@/hooks/useEVMBalance'
 import { usePrivyConnect } from '@/hooks/usePrivyConnect'
+import { useStellarWallet } from '@/hooks/useStellarWallet'
+import { useStellarBalance } from '@/hooks/useStellarBalance'
+import { StellarConnectButton } from '@/components/StellarConnectButton'
 import { SENTINEL_GIFS, SENTINEL_IMAGES } from '@/constants/asset_paths'
 import { useActiveChain } from '@/context/ActiveChainContext'
 import { useTokenCount } from '@/hooks/useTokenCount'
@@ -78,6 +86,7 @@ export default function DefendPageClient() {
 
   const { activeChain } = useActiveChain()
   const isSolana = activeChain === 'solana'
+  const isStellar = activeChain === 'stellar'
   const isEvm = isEvmChain(activeChain)
 
   // Sui wallet
@@ -86,6 +95,7 @@ export default function DefendPageClient() {
   const { openConnectModal: openSolanaConnectModal } = usePrivyConnect()
   const { address: evmAddress } = useEVMWallet()
   const { openConnectModal: openEvmConnectModal } = usePrivyConnect()
+  const { address: stellarAddress } = useStellarWallet()
 
   const [sentinelType, setSentinelType] = useState<SentinelType>('basic')
   const connected = useConnectedDeployment()
@@ -173,6 +183,12 @@ export default function DefendPageClient() {
   const { rawBalance: solanaTokenRawBalance, isLoading: isSolanaTokenBalanceLoading } =
     useSolanaTokenBalance(selectedSolanaToken.coinType, selectedSolanaToken.decimals)
 
+  // Stellar token selection — Sentinels on Stellar are paid in native XLM
+  const [selectedStellarToken, setSelectedStellarToken] = useState<SupportedToken>(
+    STELLAR_SUPPORTED_TOKENS[0]
+  )
+  const { balance: stellarBalance, isLoading: isStellarBalanceLoading } = useStellarBalance()
+
   // EVM token selection — choose the right token list for the active EVM chain
   const evmTokenList = getSupportedTokens(activeChain)
   const [selectedEvmToken, setSelectedEvmToken] = useState<SupportedToken>(evmTokenList[0])
@@ -189,14 +205,22 @@ export default function DefendPageClient() {
   )
 
   // Determine if a wallet is connected based on active chain
-  const isWalletConnected = isEvm ? !!evmAddress : isSolana ? !!solanaPublicKey : !!account
+  const isWalletConnected = isEvm
+    ? !!evmAddress
+    : isSolana
+      ? !!solanaPublicKey
+      : isStellar
+        ? !!stellarAddress
+        : !!account
 
   // Active chain's token info for display
   const activeTokenSymbol = isEvm
     ? selectedEvmToken.symbol
     : isSolana
       ? selectedSolanaToken.symbol
-      : selectedToken.symbol
+      : isStellar
+        ? selectedStellarToken.symbol
+        : selectedToken.symbol
 
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
   const {
@@ -221,7 +245,9 @@ export default function DefendPageClient() {
         ? selectedEvmToken.symbol
         : isSolana
           ? selectedSolanaToken.symbol
-          : undefined,
+          : isStellar
+            ? selectedStellarToken.symbol
+            : undefined,
     })
 
   const customProvider = useCustomProvider(setFormData)
@@ -978,16 +1004,24 @@ export default function DefendPageClient() {
                     </label>
                     {isWalletConnected && (
                       <span className="font-body mt-0.5 flex items-center gap-1 text-sm text-[var(--color-text-muted)]">
-                        Balance:{' '}
-                        {isEvm ? (
-                          isEvmBalanceLoading ? (
-                            <Skeleton className="inline-block h-4 w-20 align-middle" />
-                          ) : (
-                            <span className="font-medium text-[var(--color-text-primary)]">
-                              {evmBalance?.toFixed(4) ?? '0.0000'} {selectedEvmToken.symbol}
-                            </span>
-                          )
-                        ) : (isSolana ? isSolanaTokenBalanceLoading : isTokenBalanceLoading) ? (
+                    Balance:{' '}
+                    {isEvm ? (
+                      isEvmBalanceLoading ? (
+                        <Skeleton className="inline-block h-4 w-20 align-middle" />
+                      ) : (
+                        <span className="font-medium text-[var(--color-text-primary)]">
+                          {evmBalance?.toFixed(4) ?? '0.0000'} {selectedEvmToken.symbol}
+                        </span>
+                      )
+                    ) : isStellar ? (
+                      isStellarBalanceLoading ? (
+                        <Skeleton className="inline-block h-4 w-20 align-middle" />
+                      ) : (
+                        <span className="font-medium text-[var(--color-text-primary)]">
+                          {stellarBalance?.toFixed(4) ?? '0.0000'} {selectedStellarToken.symbol}
+                        </span>
+                      )
+                    ) : (isSolana ? isSolanaTokenBalanceLoading : isTokenBalanceLoading) ? (
                           <Skeleton className="inline-block h-4 w-20 align-middle" />
                         ) : (
                           <TokenAmount
@@ -1017,17 +1051,27 @@ export default function DefendPageClient() {
                             ? evmTokenList
                             : isSolana
                               ? SOLANA_SUPPORTED_TOKENS
-                              : SUPPORTED_TOKENS
+                              : isStellar
+                                ? STELLAR_SUPPORTED_TOKENS
+                                : SUPPORTED_TOKENS
                         }
                         selected={
-                          isEvm ? selectedEvmToken : isSolana ? selectedSolanaToken : selectedToken
+                          isEvm
+                            ? selectedEvmToken
+                            : isSolana
+                              ? selectedSolanaToken
+                              : isStellar
+                                ? selectedStellarToken
+                                : selectedToken
                         }
                         onSelect={
                           isEvm
                             ? setSelectedEvmToken
                             : isSolana
                               ? setSelectedSolanaToken
-                              : setSelectedToken
+                              : isStellar
+                                ? setSelectedStellarToken
+                                : setSelectedToken
                         }
                       />
                     </div>
@@ -1097,6 +1141,8 @@ export default function DefendPageClient() {
                         <Wallet className="h-5 w-5" />
                         Connect BNB Wallet
                       </button>
+                    ) : isStellar ? (
+                      <StellarConnectButton className="h-full w-full !rounded-lg" />
                     ) : (
                       <ConnectButton className="h-full w-full !rounded-lg !text-sm" />
                     )}
