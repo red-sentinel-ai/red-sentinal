@@ -92,10 +92,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             isLoading: false,
             isAuthenticated: true,
           })
-          return
         }
 
-        // If no localStorage, check if user has active session via cookie
+        // The session cookie is authoritative. localStorage can hold a stale
+        // profile when a wallet is linked to more than one profile, while
+        // server-side flows (e.g. the X OAuth callback) always target the
+        // session's profile — trusting the cache alone would never surface
+        // those changes.
         try {
           const sessionData = await checkSession()
           if (sessionData.authenticated && sessionData.user) {
@@ -107,10 +110,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             return
           }
         } catch {
-          // Session check failed, continue as unauthenticated
+          // Session check failed — keep whatever we hydrated above
         }
 
-        setState(prev => ({ ...prev, isLoading: false }))
+        if (!stored) {
+          setState(prev => ({ ...prev, isLoading: false }))
+        }
       } catch {
         setState(prev => ({ ...prev, isLoading: false }))
       }
