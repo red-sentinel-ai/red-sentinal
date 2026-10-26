@@ -9,7 +9,7 @@ The product narrative is simple: build an AI defense, put value behind it, and l
 
 
 
-# Red HackMeridian
+# HackMeridian
 
 ## Stellar Integration
 
@@ -31,7 +31,7 @@ XLM and any SEP-41 token.
 - **Dynamic pricing.** Each attack raises the agent's `cost_per_message` by
   100 bps (capped at 3x), so breaking an agent gets progressively more
   expensive and the reward pool the attacker drains grows with every attempt.
-  
+
 - **Battle-tested.** 32 integration tests plus a full end-to-end flow executed
   on-chain: register → fund → attack (fee split verified) → enclave-signed
   success verdict → attacker drains the pool → agent defeated → creator claims
