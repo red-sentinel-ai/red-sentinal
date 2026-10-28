@@ -6,6 +6,7 @@ import {
   useState,
   useEffect,
   useCallback,
+  useMemo,
   useRef,
   type ReactNode,
 } from 'react'
@@ -283,14 +284,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null)
   }, [setUser])
 
-  const value: AuthContextValue = {
-    ...state,
-    authenticateWallet,
-    addWallet,
-    removeWallet,
-    refreshProfile,
-    logout,
-  }
+  // Memoized so unrelated re-renders of AuthProvider don't hand every
+  // useAuth() consumer in the app a fresh value object. The callbacks below
+  // already change identity with state.user, so the memo key matches.
+  const value = useMemo<AuthContextValue>(
+    () => ({
+      ...state,
+      authenticateWallet,
+      addWallet,
+      removeWallet,
+      refreshProfile,
+      logout,
+    }),
+    [state, authenticateWallet, addWallet, removeWallet, refreshProfile, logout]
+  )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

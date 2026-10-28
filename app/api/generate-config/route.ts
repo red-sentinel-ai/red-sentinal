@@ -1,8 +1,13 @@
 import { NextResponse } from 'next/server'
 
-import { BACKEND_API_ADMIN_TOKEN, SUI_SENTINEL_API_URL } from '@/constants'
+import { SUI_SENTINEL_API_URL } from '@/constants'
+import { BACKEND_API_ADMIN_TOKEN } from '@/lib/server/credentials'
+import { rateLimit } from '@/lib/server/rate-limit'
 
 export async function POST(req: Request) {
+  const denied = rateLimit(req, { name: 'generate-config', limit: 10, windowMs: 60_000 })
+  if (denied) return denied
+
   try {
     const body = await req.json()
     const { public_instructions } = body

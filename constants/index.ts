@@ -1,8 +1,9 @@
 import { FileText, Github, Globe, Handshake, Shield, Calculator } from 'lucide-react'
 
+// supabaseServiceRoleKey and the admin tokens moved to lib/server/credentials
+// (server-only) — they must never be importable from client components.
 export const supabaseUrl = process.env.SUPABASE_URL || ''
 export const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || ''
-export const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 
 export const NOVU_APP_IDENTIFIER = process.env.NEXT_PUBLIC_NOVU_APPLICATION_IDENTIFIER || ''
 export const NOVU_BACKEND_URL = 'https://notifications-api.redsentinel.xyz'
@@ -67,7 +68,6 @@ export const SUI_SENTINEL_API_URL =
   process.env.NEXT_PUBLIC_SUI_SENTINEL_API_URL || 'https://api.redsentinel.xyz'
 
 export const SPEECH_TO_SPEECH_URL = process.env.NEXT_PUBLIC_SPEECH_TO_SPEECH_URL || ''
-export const BACKEND_API_ADMIN_TOKEN = process.env.BACKEND_API_ADMIN_TOKEN
 
 // Re-export shared types and constants (extracted to break circular dependency with solana.ts)
 export { APP_NETWORK, APP_ENVIRONMENT, type SupportedToken } from './shared'
@@ -539,7 +539,6 @@ export const TELEGRAM_NOTIFICATION_API =
 
 export const SUI_SENTINEL_ALERTS_TELEGRAM_GROUP_ID =
   process.env.SUI_SENTINEL_ALERTS_TELEGRAM_GROUP_ID
-export const ADMIN_API_TOKEN = process.env.ADMIN_API_TOKEN
 
 export const WITHDRAWAL_LOCK_MS = 1_209_600_000 // 14 days in milliseconds
 

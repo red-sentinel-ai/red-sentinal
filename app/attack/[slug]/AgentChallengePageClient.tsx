@@ -1,5 +1,6 @@
 'use client'
 import { useState, useCallback, useMemo } from 'react'
+import dynamic from 'next/dynamic'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useQueryClient } from '@tanstack/react-query'
 import posthog from 'posthog-js'
@@ -33,7 +34,11 @@ import { AttackStatusModal } from '@/components/AttackStatusModal'
 import { AttackWorkspace, type ViewMode } from '@/components/agents/AttackWorkspace'
 import { AgentSidebar } from '@/components/agents/AgentSidebar'
 import { AgentReadMoreModal } from '@/components/agents/AgentReadMoreModal'
-import { VoiceRoomModal } from '@/components/voice/VoiceRoomModal'
+// @100mslive SDK is opt-in (VOICE button) — keep it out of the initial bundle.
+const VoiceRoomModal = dynamic(
+  () => import('@/components/voice/VoiceRoomModal').then(m => m.VoiceRoomModal),
+  { ssr: false }
+)
 import { AttackTopbarSlot } from './AttackTopbarSlot'
 import { MobileAgentHeader } from './MobileAgentHeader'
 

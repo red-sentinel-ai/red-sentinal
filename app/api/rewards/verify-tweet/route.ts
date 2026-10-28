@@ -1,12 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseServiceClient } from '@/db/config/server'
 import {
-  TELEGRAM_NOTIFICATION_API,
-  SUI_SENTINEL_ALERTS_TELEGRAM_GROUP_ID,
-  ADMIN_API_TOKEN,
-} from '@/constants'
+  TELEGRAM_NOTIFICATION_API, SUI_SENTINEL_ALERTS_TELEGRAM_GROUP_ID } from '@/constants'
+import { ADMIN_API_TOKEN } from '@/lib/server/credentials'
+import { rateLimit } from '@/lib/server/rate-limit'
+import { requireSession } from '@/lib/server/session'
 
 export async function POST(req: NextRequest) {
+  const denied = rateLimit(req, { name: 'verify-tweet', limit: 10, windowMs: 60_000 })
+  if (denied) return denied
+
+  // Rewards submissions credit whoever owns wallet_address — require a
+  // verifiable session once cookies reach this app (ENFORCE_SERVER_SESSION).
+  const { denied: sessionDenied } = requireSession(req)
+  if (sessionDenied) return sessionDenied
+
   try {
     const { wallet_address: raw_wallet_address, tweet_url, agent_name, agent_id } = await req.json()
     const wallet_address = raw_wallet_address?.toLowerCase()

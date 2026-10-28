@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-comment-textnodes */
 'use client'
 import type React from 'react'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, memo } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -45,7 +45,7 @@ type ChatMessageProps = {
   successBannerLabel?: string
 }
 
-export const ChatMessage = ({
+function ChatMessageBase({
   message,
   agent,
   senderProfile,
@@ -53,7 +53,7 @@ export const ChatMessage = ({
   onShowJury,
   hideSuccessBanner,
   successBannerLabel,
-}: ChatMessageProps) => {
+}: ChatMessageProps) {
   const [isExpanded, setIsExpanded] = useState(false)
   const [isContentClamped, setIsContentClamped] = useState(false)
   const [isShareOpen, setIsShareOpen] = useState(false)
@@ -313,3 +313,19 @@ export const ChatMessage = ({
     </motion.div>
   )
 }
+
+export const ChatMessage = memo(ChatMessageBase, (prev, next) => {
+  // Data props are immutable per message (they come from react-query
+  // history) — only re-render when one of them actually changes. Callback
+  // identity is deliberately ignored: onShowJury is behaviorally identical
+  // across renders, and every keystroke in the composer used to re-run
+  // ReactMarkdown for every historical message.
+  return (
+    prev.message === next.message &&
+    prev.agent === next.agent &&
+    prev.senderProfile === next.senderProfile &&
+    prev.isWinningPrompt === next.isWinningPrompt &&
+    prev.hideSuccessBanner === next.hideSuccessBanner &&
+    prev.successBannerLabel === next.successBannerLabel
+  )
+})

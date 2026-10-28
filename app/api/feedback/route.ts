@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import {
-  TELEGRAM_NOTIFICATION_API,
-  SUI_SENTINEL_ALERTS_TELEGRAM_GROUP_ID,
-  ADMIN_API_TOKEN,
-} from '@/constants'
+  TELEGRAM_NOTIFICATION_API, SUI_SENTINEL_ALERTS_TELEGRAM_GROUP_ID } from '@/constants'
+import { ADMIN_API_TOKEN } from '@/lib/server/credentials'
+import { rateLimit } from '@/lib/server/rate-limit'
 
 interface FeedbackRequest {
   name?: string
@@ -14,12 +13,21 @@ interface FeedbackRequest {
 }
 
 export async function POST(req: NextRequest) {
+  // Anonymous endpoint that forwards into a Telegram alert channel — a spam
+  // magnet. Keep the window tight.
+  const denied = rateLimit(req, { name: 'feedback', limit: 5, windowMs: 600_000 })
+  if (denied) return denied
+
   try {
     const { name, email, wallet_address, feedback_type, message } =
       (await req.json()) as FeedbackRequest
 
     if (!message) {
       return NextResponse.json({ error: 'Message content is required' }, { status: 400 })
+    }
+
+    if (message.length > 5_000) {
+      return NextResponse.json({ error: 'Message is too long (max 5000 characters)' }, { status: 400 })
     }
 
     if (!ADMIN_API_TOKEN) {

@@ -1,9 +1,14 @@
 import { NextResponse } from 'next/server'
 
-import { BACKEND_API_ADMIN_TOKEN, SUI_SENTINEL_API_URL } from '@/constants'
+import { SUI_SENTINEL_API_URL } from '@/constants'
+import { BACKEND_API_ADMIN_TOKEN } from '@/lib/server/credentials'
 import { PRACTICE_NETWORK } from '@/lib/practice'
+import { rateLimit } from '@/lib/server/rate-limit'
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const denied = rateLimit(req, { name: 'practice-attack', limit: 10, windowMs: 60_000 })
+  if (denied) return denied
+
   try {
     const { id } = await params
     const body = await req.json()

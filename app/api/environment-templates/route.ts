@@ -1,9 +1,14 @@
 import { NextResponse } from 'next/server'
 
-import { BACKEND_API_ADMIN_TOKEN, SUI_SENTINEL_API_URL } from '@/constants'
+import { SUI_SENTINEL_API_URL } from '@/constants'
+import { BACKEND_API_ADMIN_TOKEN } from '@/lib/server/credentials'
 import { PRACTICE_NETWORK } from '@/lib/practice'
+import { rateLimit } from '@/lib/server/rate-limit'
 
-export async function GET() {
+export async function GET(req: Request) {
+  const denied = rateLimit(req, { name: 'env-templates', limit: 60, windowMs: 60_000 })
+  if (denied) return denied
+
   try {
     const response = await fetch(
       `${SUI_SENTINEL_API_URL}/sentinels/${PRACTICE_NETWORK}/environment-templates`,

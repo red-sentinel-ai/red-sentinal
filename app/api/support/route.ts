@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseServiceClient } from '@/db/config/server'
 import {
-  TELEGRAM_NOTIFICATION_API,
-  SUI_SENTINEL_ALERTS_TELEGRAM_GROUP_ID,
-  ADMIN_API_TOKEN,
-} from '@/constants'
+  TELEGRAM_NOTIFICATION_API, SUI_SENTINEL_ALERTS_TELEGRAM_GROUP_ID } from '@/constants'
+import { ADMIN_API_TOKEN } from '@/lib/server/credentials'
 
 const SUPPORT_BUCKET_NAME = 'ss-support'
 const MAX_SCREENSHOT_BYTES = 5 * 1024 * 1024

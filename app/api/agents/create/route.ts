@@ -1,9 +1,19 @@
 import { supabaseServiceClient } from '@/db/config/server'
 import { NextRequest, NextResponse } from 'next/server'
+import { rateLimit } from '@/lib/server/rate-limit'
+import { requireSession } from '@/lib/server/session'
 
 const AGENTS_BUCKET_NAME = 'ss-agents'
 
 export async function POST(req: NextRequest) {
+  const denied = rateLimit(req, { name: 'agents-create', limit: 10, windowMs: 60_000 })
+  if (denied) return denied
+
+  // Writes to ss_agents must eventually be provable on-chain (signer owns
+  // object_id) — the verified session is the interim identity check.
+  const { denied: sessionDenied } = requireSession(req)
+  if (sessionDenied) return sessionDenied
+
   const formData = await req.formData()
 
   const agent_id = formData.get('agent_id') as string

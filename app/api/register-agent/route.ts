@@ -1,8 +1,12 @@
 import { buildTeeUrl } from '@/constants/tee'
 import type { SupportedChain } from '@/constants/chains'
 import { NextRequest, NextResponse } from 'next/server'
+import { rateLimit } from '@/lib/server/rate-limit'
 
 export async function POST(request: NextRequest) {
+  const denied = rateLimit(request, { name: 'register-agent', limit: 10, windowMs: 60_000 })
+  if (denied) return denied
+
   try {
     const body = await request.json()
     const { chain, chainId, ...payload } = body as {

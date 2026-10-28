@@ -1,8 +1,14 @@
 import { buildTeeUrl } from '@/constants/tee'
 import type { SupportedChain } from '@/constants/chains'
 import { NextRequest, NextResponse } from 'next/server'
+import { rateLimit } from '@/lib/server/rate-limit'
 
 export async function POST(request: NextRequest) {
+  // Open forward to the TEE — throttle so it can't be used as a free compute
+  // proxy. On-chain payment is enforced downstream, not here.
+  const denied = rateLimit(request, { name: 'consume-prompt', limit: 10, windowMs: 60_000 })
+  if (denied) return denied
+
   try {
     const body = await request.json()
     const { chain = 'sui', chainId, ...payload } = body as {

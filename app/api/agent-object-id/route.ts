@@ -6,8 +6,26 @@ import type {
   DeleteAgentObjectIdRequest,
   UpdateArrayRequest,
 } from './types'
+import { ADMIN_API_TOKEN } from '@/lib/server/credentials'
+import { requireSession } from '@/lib/server/session'
+import { rateLimit } from '@/lib/server/rate-limit'
 
 const ARRAY_KEY = 'AGENET_OBJECT_IDS'
+
+// Sui object ids are 0x-prefixed hex; reject anything else so the shared KV
+// list can't be poisoned with arbitrary strings.
+const AGENT_OBJECT_ID_RE = /^0x[0-9a-fA-F]{1,64}$/
+
+// GET stays public (read-only list). Every mutation requires a verified
+// session or the ops admin token — these endpoints overwrite shared state.
+function guardMutation(request: NextRequest) {
+  const rateLimited = rateLimit(request, { name: 'agent-object-id', limit: 30, windowMs: 60_000 })
+  if (rateLimited) return rateLimited
+
+  const { denied } = requireSession(request, { adminToken: ADMIN_API_TOKEN })
+  if (denied) return denied
+  return null
+}
 
 // Get the array
 export async function GET(): Promise<NextResponse<ApiResponse>> {
@@ -22,12 +40,18 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
 
 // Update the entire array
 export async function POST(request: NextRequest): Promise<NextResponse<ApiResponse>> {
+  const denied = guardMutation(request)
+  if (denied) return denied as NextResponse<ApiResponse>
+
   try {
     const body: UpdateArrayRequest = await request.json()
 
-    if (!Array.isArray(body.agentObjectIds)) {
+    if (
+      !Array.isArray(body.agentObjectIds) ||
+      !body.agentObjectIds.every(id => typeof id === 'string' && AGENT_OBJECT_ID_RE.test(id))
+    ) {
       return NextResponse.json(
-        { error: 'Invalid data: agentObjectIds must be an array' },
+        { error: 'Invalid data: agentObjectIds must be an array of Sui object ids' },
         { status: 400 }
       )
     }
@@ -42,12 +66,15 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
 
 // Add a string to the array
 export async function PUT(request: NextRequest): Promise<NextResponse<ApiResponse>> {
+  const denied = guardMutation(request)
+  if (denied) return denied as NextResponse<ApiResponse>
+
   try {
     const body: AddAgentObjectIdRequest = await request.json()
     const agentObjectId = body.agentObjectId
-    if (!agentObjectId || typeof agentObjectId !== 'string') {
+    if (!agentObjectId || typeof agentObjectId !== 'string' || !AGENT_OBJECT_ID_RE.test(agentObjectId)) {
       return NextResponse.json(
-        { error: 'Invalid data: agentObjectId is required' },
+        { error: 'Invalid data: agentObjectId must be a Sui object id' },
         { status: 400 }
       )
     }
@@ -73,6 +100,9 @@ export async function PUT(request: NextRequest): Promise<NextResponse<ApiRespons
 
 // Delete a string from the array
 export async function DELETE(request: NextRequest): Promise<NextResponse<ApiResponse>> {
+  const denied = guardMutation(request)
+  if (denied) return denied as NextResponse<ApiResponse>
+
   try {
     const body: DeleteAgentObjectIdRequest = await request.json()
 

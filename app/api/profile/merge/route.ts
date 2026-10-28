@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 import { supabaseServiceClient } from '@/db/config/server'
+import { ADMIN_API_TOKEN } from '@/lib/server/credentials'
+import { requireSession } from '@/lib/server/session'
 
 // Merges mergingUserId INTO survivorUserId.
 // survivorUserId keeps its username/avatar/display_name.
@@ -7,6 +9,15 @@ import { supabaseServiceClient } from '@/db/config/server'
 // are moved to the survivor. Points are summed. The merging account is deleted.
 export async function POST(request: Request) {
   try {
+    // Destructive account operation — the request must carry a verifiable
+    // credential: a backend session cookie (user id is verified against the
+    // two accounts below) or the ops admin token. Body-supplied ids are never
+    // sufficient authorization on their own.
+    const { denied, userId: sessionUserId } = requireSession(request, {
+      adminToken: ADMIN_API_TOKEN,
+    })
+    if (denied) return denied
+
     const { survivorUserId, mergingUserId, email } = await request.json()
 
     if (!survivorUserId || !mergingUserId || !email) {
@@ -15,6 +26,12 @@ export async function POST(request: Request) {
 
     if (survivorUserId === mergingUserId) {
       return NextResponse.json({ error: 'Cannot merge an account with itself' }, { status: 400 })
+    }
+
+    // When authenticated via session cookie, the caller may only act on their
+    // own accounts — the session user must be one side of the merge.
+    if (sessionUserId && sessionUserId !== survivorUserId && sessionUserId !== mergingUserId) {
+      return NextResponse.json({ error: 'Session user is not part of this merge' }, { status: 403 })
     }
 
     // Verify that the email belongs to the merging account (prevent spoofed merges)

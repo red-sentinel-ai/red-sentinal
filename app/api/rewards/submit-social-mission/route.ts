@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseServiceClient } from '@/db/config/server'
-import { BACKEND_API_ADMIN_TOKEN, SUI_SENTINEL_API_URL } from '@/constants'
+import { SUI_SENTINEL_API_URL } from '@/constants'
+import { BACKEND_API_ADMIN_TOKEN } from '@/lib/server/credentials'
+import { rateLimit } from '@/lib/server/rate-limit'
+import { requireSession } from '@/lib/server/session'
 
 const VALID_MISSION_TYPES = [
   'follow_x',
@@ -50,6 +53,14 @@ const ADMIN_API_TOKEN = BACKEND_API_ADMIN_TOKEN || ""
 
 
 export async function POST(req: NextRequest) {
+  const denied = rateLimit(req, { name: 'submit-social-mission', limit: 10, windowMs: 60_000 })
+  if (denied) return denied
+
+  // Rewards submissions credit whoever owns wallet_address — require a
+  // verifiable session once cookies reach this app (ENFORCE_SERVER_SESSION).
+  const { denied: sessionDenied } = requireSession(req)
+  if (sessionDenied) return sessionDenied
+
   try {
     const {
       wallet_address: raw_wallet_address,

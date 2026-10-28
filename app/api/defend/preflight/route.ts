@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server'
 
-import { BACKEND_API_ADMIN_TOKEN, SUI_SENTINEL_API_URL } from '@/constants'
+import { SUI_SENTINEL_API_URL } from '@/constants'
+import { BACKEND_API_ADMIN_TOKEN } from '@/lib/server/credentials'
 import { PRACTICE_NETWORK } from '@/lib/practice'
+import { rateLimit } from '@/lib/server/rate-limit'
 
 /**
  * Preflight Validation for a connected Deployment Configuration: connectivity,
@@ -10,6 +12,9 @@ import { PRACTICE_NETWORK } from '@/lib/practice'
  * actual checks; this proxy forwards the Deployment Configuration verbatim.
  */
 export async function POST(request: Request) {
+  const denied = rateLimit(request, { name: 'defend-preflight', limit: 10, windowMs: 60_000 })
+  if (denied) return denied
+
   try {
     const response = await fetch(
       `${SUI_SENTINEL_API_URL}/sentinels/${PRACTICE_NETWORK}/connectors/preflight`,

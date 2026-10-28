@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 
-import { BACKEND_API_ADMIN_TOKEN, SUI_SENTINEL_API_URL } from '@/constants'
+import { SUI_SENTINEL_API_URL } from '@/constants'
+import { BACKEND_API_ADMIN_TOKEN } from '@/lib/server/credentials'
+import { rateLimit } from '@/lib/server/rate-limit'
 
 /**
  * Resolves the backend attack doc created for an on-chain attack, using the
@@ -9,6 +11,9 @@ import { BACKEND_API_ADMIN_TOKEN, SUI_SENTINEL_API_URL } from '@/constants'
  * the backend attack route internally, so the id never reaches the client).
  */
 export async function GET(req: Request) {
+  const denied = rateLimit(req, { name: 'attack-by-nonce', limit: 30, windowMs: 60_000 })
+  if (denied) return denied
+
   try {
     const { searchParams } = new URL(req.url)
     const network = searchParams.get('network')

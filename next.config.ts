@@ -99,18 +99,35 @@ const cspHeader = {
   value: cspDirectives,
 }
 
+// Baseline hardening headers applied to every route alongside the CSP.
+const securityHeaders = [
+  cspHeader,
+  { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
+  { key: 'X-Content-Type-Options', value: 'nosniff' },
+  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+  { key: 'X-Frame-Options', value: 'DENY' },
+  {
+    key: 'Permissions-Policy',
+    value: 'camera=(), geolocation=(), microphone=(self), payment=()',
+  },
+]
+
 const nextConfig: NextConfig = {
   async headers() {
     return [
       {
         source: '/:path*',
-        headers: [cspHeader],
+        headers: securityHeaders,
       },
     ]
   },
   images: {
+    // SVG optimization is kept because dicebear avatars are SVG, but the
+    // optimizer is sandboxed so an SVG payload can never execute script.
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {
         protocol: 'https',

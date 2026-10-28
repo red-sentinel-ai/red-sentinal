@@ -1,9 +1,14 @@
 import { NextResponse } from 'next/server'
 
-import { BACKEND_API_ADMIN_TOKEN, SUI_SENTINEL_API_URL } from '@/constants'
+import { SUI_SENTINEL_API_URL } from '@/constants'
+import { BACKEND_API_ADMIN_TOKEN } from '@/lib/server/credentials'
 import { PRACTICE_NETWORK } from '@/lib/practice'
+import { rateLimit } from '@/lib/server/rate-limit'
 
 export async function GET(req: Request) {
+  const denied = rateLimit(req, { name: 'practice-sentinels', limit: 60, windowMs: 60_000 })
+  if (denied) return denied
+
   try {
     const { searchParams } = new URL(req.url)
     const page = searchParams.get('page') || '1'

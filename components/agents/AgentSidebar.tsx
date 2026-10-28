@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import dynamic from 'next/dynamic'
 import {
   TrendingUp,
   TrendingDown,
@@ -29,7 +30,11 @@ import {
   formatSentinelId,
 } from '@/lib/utils'
 import { Skeleton } from '@/components/ui'
-import { PrizePoolChartModal } from '@/components/charts/PrizePoolChartModal'
+// recharts (~100KB gz) loads only when the growth chart is opened.
+const PrizePoolChartModal = dynamic(
+  () => import('@/components/charts/PrizePoolChartModal').then(m => m.PrizePoolChartModal),
+  { ssr: false }
+)
 import { DonateFundsModal } from '@/components/agents/DonateFundsModal'
 import { TokenAmount } from '../ui/common/TokenAmount'
 import { SocialMissionModal } from '@/components/rewards/SocialMissionModal'
@@ -38,6 +43,66 @@ import { SentinelFollowButton } from '@/components/agents/SentinelFollowButton'
 import { APP_NETWORK } from '@/constants'
 
 const SHARE_MISSION = REWARDS_CONSTANTS.DEFAULT_MISSIONS.find(m => m.type === 'share_with_hashtag')!
+
+// Ticking clocks live in leaf components on purpose: a 1s setState in the
+// parent would re-render this whole sidebar (and its modals) every second.
+function ActiveSinceTimer({ createdAtMs }: { createdAtMs: number }) {
+  const [duration, setDuration] = useState(() => formatDuration(Date.now() - createdAtMs))
+
+  useEffect(() => {
+    const updateTimer = () => setDuration(formatDuration(Date.now() - createdAtMs))
+    updateTimer()
+    const interval = setInterval(updateTimer, 1000)
+    return () => clearInterval(interval)
+  }, [createdAtMs])
+
+  return (
+    <span className="industrial-header text-[11px] font-semibold tabular-nums tracking-[0.06em] text-white">
+      {duration.days}D {String(duration.hours).padStart(2, '0')}H{' '}
+      {String(duration.minutes).padStart(2, '0')}M {String(duration.seconds).padStart(2, '0')}S
+    </span>
+  )
+}
+
+function WithdrawalLockTimer({ lastFundedMs }: { lastFundedMs: number }) {
+  const unlockTimestamp = lastFundedMs + WITHDRAWAL_LOCK_MS
+  const [remaining, setRemaining] = useState<string | null>(null)
+
+  useEffect(() => {
+    const updateTimer = () => {
+      const diff = unlockTimestamp - Date.now()
+      if (diff <= 0) {
+        setRemaining('Withdrawal Unlocked')
+        return false
+      }
+      const formatted = formatDuration(diff)
+      setRemaining(
+        `${formatted.days}d ${formatted.hours}h ${formatted.minutes}m ${formatted.seconds}s`
+      )
+      return true
+    }
+
+    if (!updateTimer()) return
+
+    const interval = setInterval(() => {
+      if (!updateTimer()) clearInterval(interval)
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [unlockTimestamp])
+
+  if (remaining === null) return <Skeleton className="h-5 w-32" />
+
+  return (
+    <p
+      className={cn(
+        'industrial-header text-sm font-semibold tracking-[0.08em]',
+        remaining === 'Withdrawal Unlocked' ? 'text-[var(--color-success)]' : 'text-accent'
+      )}
+    >
+      {remaining.toUpperCase()}
+    </p>
+  )
+}
 
 interface AgentSidebarProps {
   agent: Agent
@@ -101,17 +166,9 @@ export const AgentSidebar = ({
   onVoiceChat,
   onDonated,
 }: AgentSidebarProps) => {
-  const [activeSince, setActiveSince] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  })
-
   const [shouldTruncate, setShouldTruncate] = useState(false)
   const instructionsRef = useRef<HTMLParagraphElement>(null)
   const [pageUrl, setPageUrl] = useState('')
-  const [timeRemaining, setTimeRemaining] = useState<string | null>(null)
   const [isChartModalOpen, setIsChartModalOpen] = useState(false)
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
   const [isDonateModalOpen, setIsDonateModalOpen] = useState(false)
@@ -141,70 +198,6 @@ export const AgentSidebar = ({
   const winnerAddress = agent.winner?.address ?? null
 
   const canDonate = supportsDonations(agent.chain) && isSentinelAttackable(agent)
-
-  useEffect(() => {
-    if (!agent.timestampMs || isDrained) return
-
-    const createdTime = Number(agent.timestampMs)
-
-    const updateTimer = () => {
-      const now = Date.now()
-      const diff = now - createdTime
-      setActiveSince(formatDuration(diff))
-    }
-
-    updateTimer()
-    const interval = setInterval(updateTimer, 1000)
-
-    return () => clearInterval(interval)
-  }, [agent.timestampMs, isDrained])
-
-  useEffect(() => {
-    if (isDrained) {
-      setTimeRemaining('Funds Withdrawn')
-      return
-    }
-    if (!isOwner) {
-      setTimeRemaining(null)
-      return
-    }
-
-    const lastFunded = Number(agent.last_funded_timestamp)
-    if (lastFunded === 0) {
-      setTimeRemaining('Withdrawal Unlocked')
-      return
-    }
-
-    const unlockTimestamp = lastFunded + WITHDRAWAL_LOCK_MS
-
-    const updateTimer = () => {
-      const now = Date.now()
-      const diff = unlockTimestamp - now
-
-      if (diff <= 0) {
-        setTimeRemaining('Withdrawal Unlocked')
-        return null
-      }
-
-      const formatted = formatDuration(diff)
-      setTimeRemaining(
-        `${formatted.days}d ${formatted.hours}h ${formatted.minutes}m ${formatted.seconds}s`
-      )
-      return true
-    }
-
-    if (!updateTimer()) {
-      return
-    }
-
-    const interval = setInterval(() => {
-      if (!updateTimer()) {
-        clearInterval(interval)
-      }
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [agent.last_funded_timestamp, isDrained, isOwner])
 
   useEffect(() => {
     if (instructionsRef.current) {
@@ -449,16 +442,12 @@ export const AgentSidebar = ({
               SYSTEM_TELEMETRY
             </div>
             <div className="grid grid-cols-2 gap-4">
-              {!isDrained && (
+              {!isDrained && agent.timestampMs && (
                 <div>
                   <span className="industrial-header mb-1 block text-[10px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
                     ACTIVE_SINCE
                   </span>
-                  <span className="industrial-header text-[11px] font-semibold tabular-nums tracking-[0.06em] text-white">
-                    {activeSince.days}D {String(activeSince.hours).padStart(2, '0')}H{' '}
-                    {String(activeSince.minutes).padStart(2, '0')}M{' '}
-                    {String(activeSince.seconds).padStart(2, '0')}S
-                  </span>
+                  <ActiveSinceTimer createdAtMs={Number(agent.timestampMs)} />
                 </div>
               )}
               <div>
@@ -518,20 +507,7 @@ export const AgentSidebar = ({
               <div className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
                 WITHDRAWAL_LOCK
               </div>
-              {timeRemaining ? (
-                <p
-                  className={cn(
-                    'industrial-header text-sm font-semibold tracking-[0.08em]',
-                    timeRemaining === 'Withdrawal Unlocked'
-                      ? 'text-[var(--color-success)]'
-                      : 'text-accent'
-                  )}
-                >
-                  {timeRemaining.toUpperCase()}
-                </p>
-              ) : (
-                <Skeleton className="h-5 w-32" />
-              )}
+              <WithdrawalLockTimer lastFundedMs={Number(agent.last_funded_timestamp)} />
             </div>
           )}
 
@@ -634,13 +610,15 @@ export const AgentSidebar = ({
         </div>
       </div>
 
-      <PrizePoolChartModal
-        open={isChartModalOpen}
-        onClose={() => setIsChartModalOpen(false)}
-        data={prizePoolData?.history.map(p => ({ time: new Date(p.time), value: p.value })) || []}
-        agentName={agent.agent_name}
-        tokenSymbol={agentToken.symbol}
-      />
+      {isChartModalOpen && (
+        <PrizePoolChartModal
+          open
+          onClose={() => setIsChartModalOpen(false)}
+          data={prizePoolData?.history.map(p => ({ time: new Date(p.time), value: p.value })) || []}
+          agentName={agent.agent_name}
+          tokenSymbol={agentToken.symbol}
+        />
+      )}
 
       {canDonate && (
         <DonateFundsModal

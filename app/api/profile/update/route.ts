@@ -1,12 +1,22 @@
 import { NextResponse, NextRequest } from 'next/server'
 import { supabaseServiceClient } from '@/db/config/server'
 import type { Database } from '@/lib/database.types'
+import { rateLimit } from '@/lib/server/rate-limit'
+import { requireSession } from '@/lib/server/session'
 
 type SsUsersUpdate = Database['sentinel']['Tables']['ss_users']['Update']
 
 const AVATARS_BUCKET_NAME = 'ss-avatars'
 
 export async function PUT(request: NextRequest) {
+  const denied = rateLimit(request, { name: 'profile-update', limit: 10, windowMs: 60_000 })
+  if (denied) return denied
+
+  // Profile mutations authorize via the verified session user, not the
+  // client-supplied wallet address (wallet addresses are public).
+  const { denied: sessionDenied, userId: sessionUserId } = requireSession(request)
+  if (sessionDenied) return sessionDenied
+
   try {
     const formData = await request.formData()
     const walletAddress = (formData.get('walletAddress') as string)?.toLowerCase()
@@ -18,18 +28,25 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required text fields' }, { status: 400 })
     }
 
-    // Find user by wallet address via ss_wallet_connections
-    const { data: walletConnection, error: findError } = await supabaseServiceClient
-      .from('ss_wallet_connections')
-      .select('user_id')
-      .eq('wallet_address', walletAddress)
-      .single()
+    // Prefer the verified session user; fall back to the wallet lookup only
+    // while the session cookie can't reach this app (see requireSession).
+    let userId: string | undefined
+    if (sessionUserId) {
+      userId = sessionUserId
+    } else {
+      const { data: walletConnection, error: findError } = await supabaseServiceClient
+        .from('ss_wallet_connections')
+        .select('user_id')
+        .eq('wallet_address', walletAddress)
+        .single()
 
-    if (findError || !walletConnection) {
-      return NextResponse.json({ error: 'User not found or unauthorized' }, { status: 404 })
+      if (findError || !walletConnection) {
+        return NextResponse.json({ error: 'User not found or unauthorized' }, { status: 404 })
+      }
+      userId = walletConnection.user_id
     }
 
-    const user = { id: walletConnection.user_id }
+    const user = { id: userId }
 
     let newAvatarUrl: string | undefined = undefined
 

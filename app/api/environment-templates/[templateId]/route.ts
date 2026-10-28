@@ -1,12 +1,17 @@
 import { NextResponse } from 'next/server'
 
-import { BACKEND_API_ADMIN_TOKEN, SUI_SENTINEL_API_URL } from '@/constants'
+import { SUI_SENTINEL_API_URL } from '@/constants'
+import { BACKEND_API_ADMIN_TOKEN } from '@/lib/server/credentials'
 import { PRACTICE_NETWORK } from '@/lib/practice'
+import { rateLimit } from '@/lib/server/rate-limit'
 
 export async function GET(
-  _req: Request,
+  req: Request,
   { params }: { params: Promise<{ templateId: string }> }
 ) {
+  const denied = rateLimit(req, { name: 'env-template-detail', limit: 60, windowMs: 60_000 })
+  if (denied) return denied
+
   try {
     const { templateId } = await params
 

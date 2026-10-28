@@ -1,4 +1,5 @@
-import { supabaseServiceRoleKey, supabaseUrl } from '@/constants'
+import { supabaseUrl } from '@/constants'
+import { supabaseServiceRoleKey } from '@/lib/server/credentials'
 import { Database } from '@/lib/database.types'
 import { createClient } from '@supabase/supabase-js'
 
