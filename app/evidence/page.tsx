@@ -24,7 +24,13 @@ export default function EvidencePage() {
           <p className="font-body mt-2 text-xs font-medium tracking-normal text-[var(--color-text-secondary)] md:text-sm">
             Every attack verdict on Red Sentinel is stored as a permanent, immutable record on
             Walrus — the attack prompt, the Sentinel agent&apos;s response, and the jury score.
-            Read the raw blob, verify it independently, share it with anyone.
+            Read the raw blob, verify it independently, share it with anyone.{' '}
+            <Link
+              href="/reports"
+              className="industrial-header text-[var(--color-gold-primary)] hover:text-white"
+            >
+              SECURITY_REPORTS
+            </Link>
           </p>
         </section>
 
