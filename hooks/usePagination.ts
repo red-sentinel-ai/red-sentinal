@@ -14,8 +14,8 @@ export const usePagination = ({
   pageSize,
   siblingCount = 1,
   currentPage,
-}: UsePaginationProps) => {
-  const paginationRange = useMemo(() => {
+}: UsePaginationProps): (number | typeof DOTS)[] => {
+  const paginationRange = useMemo<(number | typeof DOTS)[]>(() => {
     // Convert currentPage to zero-based for internal calculations
     const totalPageCount = Math.ceil(totalCount / pageSize)
     const totalPageNumbers = siblingCount + 5

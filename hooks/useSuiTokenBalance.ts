@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useCurrentAccount, useSuiClient } from '@mysten/dapp-kit'
+import { useCurrentAccount } from '@mysten/dapp-kit'
+import { fetchSuiBalance } from '@/lib/sui/graphql-client'
 
 interface TokenBalanceResult {
   /** Raw balance as returned by the chain (before decimal division) */
@@ -14,7 +15,6 @@ interface TokenBalanceResult {
 
 export function useSuiTokenBalance(coinType: string, decimals: number = 9): TokenBalanceResult {
   const account = useCurrentAccount()
-  const client = useSuiClient()
   const [rawBalance, setRawBalance] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -28,11 +28,10 @@ export function useSuiTokenBalance(coinType: string, decimals: number = 9): Toke
 
       setIsLoading(true)
       try {
-        const result = await client.getBalance({
-          owner: account.address,
-          coinType,
-        })
-        setRawBalance(Number(result.totalBalance))
+        // Via GraphQL — every public JSON-RPC gateway now rejects suix_getBalance
+        // (see constants/sui-rpc), so the dapp-kit client can't serve reads.
+        const totalBalance = await fetchSuiBalance(account.address, coinType)
+        setRawBalance(Number(totalBalance))
       } catch (error) {
         console.error(`Failed to fetch balance for ${coinType}:`, error)
         setRawBalance(0)
@@ -42,7 +41,7 @@ export function useSuiTokenBalance(coinType: string, decimals: number = 9): Toke
     }
 
     fetchBalance()
-  }, [account?.address, client, coinType])
+  }, [account?.address, coinType])
 
   const divisor = decimals > 0 ? Math.pow(10, decimals) : 1
   const balance = rawBalance / divisor

@@ -25,7 +25,9 @@ const backoffDelay = (attempt: number, retryAfterHeader: string | null) => {
   return Math.random() * ceiling
 }
 
-const retryingFetch = (async (input, init) => {
+// Shared with the GraphQL client (lib/sui/graphql-client) so balance reads get
+// the same throttling protection as JSON-RPC traffic.
+export const retryingFetch = (async (input, init) => {
   let lastResponse: Response | null = null
 
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {

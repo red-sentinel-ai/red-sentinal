@@ -1,10 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   AlertCircle,
   CheckCircle,
+  ChevronLeft,
+  ChevronRight,
   Database,
   ExternalLink,
   Loader2,
@@ -14,14 +16,44 @@ import {
 } from 'lucide-react'
 
 import { useRecentEvidence } from '@/hooks/evidence/useRecentEvidence'
+import { DOTS, usePagination } from '@/hooks/usePagination'
 import { isValidBlobId, normalizeBlobId } from '@/lib/evidence'
 import { truncateAddress } from '@/lib/utils'
+
+const PAGE_SIZE = 25
 
 export function EvidenceExplorer() {
   const router = useRouter()
   const [query, setQuery] = useState('')
   const [error, setError] = useState<string | null>(null)
-  const { data, isLoading, isError } = useRecentEvidence()
+  const [page, setPage] = useState(0) // zero-based
+  const feedRef = useRef<HTMLDivElement>(null)
+
+  const { data, isLoading, isError, isPlaceholderData } = useRecentEvidence(
+    PAGE_SIZE,
+    page * PAGE_SIZE
+  )
+
+  const total = data?.total ?? 0
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE))
+  const paginationRange = usePagination({
+    totalCount: total,
+    pageSize: PAGE_SIZE,
+    currentPage: page,
+  })
+
+  // If the total shrinks below the current page (records removed on the
+  // backend), pull the view back onto the last existing page.
+  useEffect(() => {
+    if (!isLoading && total > 0 && page >= totalPages) {
+      setPage(totalPages - 1)
+    }
+  }, [isLoading, page, total, totalPages])
+
+  const goToPage = (nextPage: number) => {
+    setPage(Math.max(0, Math.min(nextPage, totalPages - 1)))
+    feedRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   const submit = (event: React.FormEvent) => {
     event.preventDefault()
@@ -102,14 +134,14 @@ export function EvidenceExplorer() {
         </div>
       </section>
 
-      {/* Recent evidence feed */}
-      <section className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] p-5 md:p-6">
+      {/* Evidence feed */}
+      <section ref={feedRef} className="scroll-mt-6 rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] p-5 md:p-6">
         <h2 className="industrial-header flex items-center gap-2 text-sm text-white">
           <Database className="h-4 w-4 text-[var(--color-gold-primary)]" />
-          RECENT_EVIDENCE
+          ALL_EVIDENCE
         </h2>
         <p className="mt-2 text-xs text-[var(--color-text-muted)]">
-          The latest certified attack records stored permanently on Walrus.
+          Every certified attack record stored permanently on Walrus, newest first.
         </p>
 
         {isLoading ? (
@@ -132,7 +164,9 @@ export function EvidenceExplorer() {
             No evidence blobs certified yet. Breach a Sentinel to mint the first permanent record.
           </div>
         ) : (
-          <div className="mt-5 space-y-3">
+          <div
+            className={`mt-5 space-y-3 transition-opacity ${isPlaceholderData ? 'opacity-50' : ''}`}
+          >
             {data.records.map(record => (
               <a
                 key={record.blob_id}
@@ -180,6 +214,59 @@ export function EvidenceExplorer() {
                 </div>
               </a>
             ))}
+          </div>
+        )}
+
+        {data && data.records.length > 0 && totalPages > 1 && (
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-[var(--color-border-subtle)] pt-5">
+            <span className="text-xs text-[var(--color-text-muted)]">
+              Showing {page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, total)} of{' '}
+              {total.toLocaleString()}
+            </span>
+            <nav className="flex items-center gap-1.5" aria-label="Evidence pages">
+              <button
+                type="button"
+                onClick={() => goToPage(page - 1)}
+                disabled={page === 0}
+                aria-label="Previous page"
+                className="inline-flex h-9 w-9 items-center justify-center border border-[var(--color-border-default)] text-[var(--color-text-muted)] transition-colors hover:border-[var(--color-gold-primary)] hover:text-white disabled:pointer-events-none disabled:opacity-40"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              {paginationRange.map((pageNumber, index) =>
+                pageNumber === DOTS ? (
+                  <span
+                    key={`dots-${index}`}
+                    className="px-1 text-xs text-[var(--color-text-muted)]"
+                  >
+                    …
+                  </span>
+                ) : (
+                  <button
+                    key={pageNumber}
+                    type="button"
+                    onClick={() => goToPage(pageNumber)}
+                    aria-current={pageNumber === page ? 'page' : undefined}
+                    className={`inline-flex h-9 min-w-9 items-center justify-center border px-2 text-xs font-semibold transition-colors ${
+                      pageNumber === page
+                        ? 'border-[var(--color-gold-primary)] bg-[var(--color-gold-primary)] text-black'
+                        : 'border-[var(--color-border-default)] text-[var(--color-text-muted)] hover:border-[var(--color-gold-primary)] hover:text-white'
+                    }`}
+                  >
+                    {pageNumber + 1}
+                  </button>
+                )
+              )}
+              <button
+                type="button"
+                onClick={() => goToPage(page + 1)}
+                disabled={page >= totalPages - 1}
+                aria-label="Next page"
+                className="inline-flex h-9 w-9 items-center justify-center border border-[var(--color-border-default)] text-[var(--color-text-muted)] transition-colors hover:border-[var(--color-gold-primary)] hover:text-white disabled:pointer-events-none disabled:opacity-40"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </nav>
           </div>
         )}
       </section>
