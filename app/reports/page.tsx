@@ -22,9 +22,9 @@ export default function ReportsPage() {
             Security Reports
           </h1>
           <p className="font-body mt-2 text-xs font-medium tracking-normal text-[var(--color-text-secondary)] md:text-sm">
-            Each Sentinel&apos;s security track record in one shareable report — every attack
-            attempted, how it was classified, how the Sentinel held up, and the immutable Walrus
-            evidence behind each number.{' '}
+            Each Sentinel&apos;s security track record in one shareable report. It shows every
+            attack attempted, how it was classified, how the Sentinel held up, and the Walrus
+            evidence behind the numbers.{' '}
             <Link
               href="/evidence"
               className="industrial-header text-[var(--color-gold-primary)] hover:text-white"

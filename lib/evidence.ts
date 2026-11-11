@@ -103,6 +103,7 @@ export async function fetchEvidenceBlob(blobId: string): Promise<EvidenceFetchRe
 }
 
 /** Third-party verification surfaces for a blob, used by the evidence pages. */
-export function getWalrusScanUrl(blobId: string): string {
-  return `https://walruscan.com/mainnet/blob/${blobId}`
+export function getWalrusScanUrl(blobId: string, network: string = 'mainnet'): string {
+  const walrusNetwork = network.toLowerCase().includes('mainnet') ? 'mainnet' : 'testnet'
+  return `https://walruscan.com/${walrusNetwork}/blob/${blobId}`
 }

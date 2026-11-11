@@ -37,6 +37,21 @@ export interface SentinelSecurityReport {
   shareableUrl: string
 }
 
+/** Where a report is stored on Walrus. Null on the response when not stored yet. */
+export interface ReportWalrusReceipt {
+  blobId: string
+  blobObjectId: string
+  network: string
+  endEpoch: number
+  storedAt: string
+}
+
+/** GET /reports/:network/sentinel/:sentinelId */
+export interface SentinelReportResponse {
+  report: SentinelSecurityReport
+  walrus: ReportWalrusReceipt | null
+}
+
 /** One row of the reports directory (GET /reports/:network). */
 export interface SecurityReportListItem {
   sentinel_id: number
@@ -46,6 +61,7 @@ export interface SecurityReportListItem {
   breaches: number
   evidence_blob_count: number
   shareable_url: string
+  walrus_blob_id: string | null
   generated_at: string
 }
 
@@ -83,6 +99,21 @@ export function isSentinelReport(value: unknown): value is SentinelSecurityRepor
     !!score &&
     (score.value === null || typeof score.value === 'number') &&
     typeof score.method === 'string'
+  )
+}
+
+function isWalrusReceipt(value: unknown): value is ReportWalrusReceipt {
+  if (typeof value !== 'object' || value === null) return false
+  const receipt = value as Record<string, unknown>
+  return typeof receipt.blobId === 'string' && receipt.blobId.length > 0
+}
+
+export function isSentinelReportResponse(value: unknown): value is SentinelReportResponse {
+  if (typeof value !== 'object' || value === null) return false
+  const response = value as Record<string, unknown>
+  return (
+    isSentinelReport(response.report) &&
+    (response.walrus === null || response.walrus === undefined || isWalrusReceipt(response.walrus))
   )
 }
 

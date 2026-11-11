@@ -15,6 +15,7 @@ import {
 
 import { useSentinelReport } from '@/hooks/reports/useSecurityReports'
 import { getWalrusScanUrl } from '@/lib/evidence'
+import { getWalrusBlobUrl } from '@/lib/explorer'
 import { formatClassificationLabel } from '@/lib/reports'
 
 const EVIDENCE_PREVIEW_COUNT = 50
@@ -30,7 +31,9 @@ function StatCard({ label, value, hint }: { label: string; value: string; hint?:
 }
 
 export function SentinelReportView({ sentinelId }: { sentinelId: number }) {
-  const { data: report, isLoading, isError, error } = useSentinelReport(sentinelId)
+  const { data, isLoading, isError, error } = useSentinelReport(sentinelId)
+  const report = data?.report
+  const walrus = data?.walrus ?? null
   const [copied, setCopied] = useState(false)
   const [showAllEvidence, setShowAllEvidence] = useState(false)
 
@@ -54,7 +57,7 @@ export function SentinelReportView({ sentinelId }: { sentinelId: number }) {
 
   const { attackSummary, securityScore, evidenceBlobIds } = report
   const scoreDisplay =
-    securityScore.value === null ? '—' : `${Math.round(securityScore.value * 100)}/100`
+    securityScore.value === null ? 'N/A' : `${Math.round(securityScore.value * 100)}/100`
   const classifications = Object.entries(attackSummary.classifications).sort(
     ([, a], [, b]) => b.total - a.total
   )
@@ -120,6 +123,48 @@ export function SentinelReportView({ sentinelId }: { sentinelId: number }) {
         />
       </section>
 
+      {/* Report on Walrus */}
+      <section className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] p-5 md:p-6">
+        <h2 className="industrial-header flex items-center gap-2 text-sm text-white">
+          <Database className="h-4 w-4 text-[var(--color-gold-primary)]" />
+          REPORT_ON_WALRUS
+        </h2>
+        {walrus ? (
+          <>
+            <p className="mt-2 text-xs text-[var(--color-text-muted)]">
+              This exact report is saved on Walrus. It cannot be changed after it is stored, and
+              storage is paid through Walrus epoch {walrus.endEpoch}.
+            </p>
+            <div className="mt-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <span className="break-all font-mono text-xs text-white">{walrus.blobId}</span>
+              <div className="flex shrink-0 items-center gap-4">
+                <a
+                  href={getWalrusScanUrl(walrus.blobId, walrus.network)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="industrial-header inline-flex items-center gap-1 text-xs text-[var(--color-gold-primary)] hover:text-white"
+                >
+                  VIEW_ON_WALRUSCAN <ExternalLink className="h-3 w-3" />
+                </a>
+                <a
+                  href={getWalrusBlobUrl(walrus.blobId)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="industrial-header inline-flex items-center gap-1 text-xs text-[var(--color-text-muted)] hover:text-white"
+                >
+                  RAW_REPORT <ExternalLink className="h-3 w-3" />
+                </a>
+              </div>
+            </div>
+          </>
+        ) : (
+          <p className="mt-2 text-xs text-[var(--color-text-muted)]">
+            This report has not been saved to Walrus yet. The evidence records below are already
+            on Walrus and can be checked today.
+          </p>
+        )}
+      </section>
+
       {/* Classifications */}
       <section className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] p-5 md:p-6">
         <h2 className="industrial-header flex items-center gap-2 text-sm text-white">
@@ -162,8 +207,10 @@ export function SentinelReportView({ sentinelId }: { sentinelId: number }) {
           EVIDENCE_INDEX ({evidenceBlobIds.length.toLocaleString()} BLOBS)
         </h2>
         <p className="mt-2 text-xs text-[var(--color-text-muted)]">
-          Every attack behind this report is a certified, immutable evidence blob on Walrus. Open
-          any blob to read the raw record straight from Walrus storage.
+          {evidenceBlobIds.length.toLocaleString()} of{' '}
+          {attackSummary.totalAttacks.toLocaleString()} attacks have their own evidence record on
+          Walrus. Open any of them to read the attack prompt, the Sentinel&apos;s reply and the
+          jury&apos;s verdict.
         </p>
         {evidenceBlobIds.length === 0 ? (
           <p className="mt-3 text-xs text-[var(--color-text-muted)]">
@@ -180,7 +227,7 @@ export function SentinelReportView({ sentinelId }: { sentinelId: number }) {
                   {blobId}
                 </Link>
                 <a
-                  href={getWalrusScanUrl(blobId)}
+                  href={getWalrusScanUrl(blobId, report.network)}
                   target="_blank"
                   rel="noreferrer"
                   className="industrial-header inline-flex shrink-0 items-center gap-1 text-[10px] text-[var(--color-text-muted)] hover:text-white"
@@ -211,12 +258,31 @@ export function SentinelReportView({ sentinelId }: { sentinelId: number }) {
           HOW_TO_VERIFY
         </h2>
         <p className="mt-2">
-          This report is a view over primary records anyone can check — no wallet, no Sui node.
-          Each blob id above resolves on the public Walrus aggregator and on Walruscan; recount
-          outcomes and classifications from those records to reproduce the summary. The security
-          score uses <span className="font-mono text-white">{securityScore.method}</span>: 70%
-          breach resistance (1 − breach rate) plus 30% graded jury pressure (1 − average jury
-          progress score).
+          You do not need a wallet or any Sui setup to check this report.
+        </p>
+        <ol className="mt-3 list-decimal space-y-2 pl-5">
+          {walrus && (
+            <li>
+              Open the report on Walruscan using the link above. That is the same report you see on
+              this page, stored where nobody can edit it.
+            </li>
+          )}
+          <li>
+            Open a few evidence records from the list. Each one shows what the attacker sent, how
+            the Sentinel answered and what the jury decided.
+          </li>
+          <li>
+            Count the breaches in those records and compare them with the numbers on this page.
+          </li>
+        </ol>
+        <p className="mt-3">
+          Attack categories are added by Red Sentinel when the report is created. They are not
+          part of the evidence records yet, so they cannot be recounted from Walrus.
+        </p>
+        <p className="mt-3">
+          The score runs from 0 to 100. Most of it (70%) comes from how often attacks failed to
+          breach the Sentinel. The rest (30%) comes from how little progress attackers made,
+          according to the jury. A score of 100 means no breaches and no progress at all.
         </p>
       </section>
     </div>

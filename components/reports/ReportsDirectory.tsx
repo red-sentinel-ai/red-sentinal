@@ -6,7 +6,7 @@ import { FileText, Loader2, ShieldCheck } from 'lucide-react'
 import { useSecurityReports } from '@/hooks/reports/useSecurityReports'
 
 function formatScore(score: number | null): string {
-  if (score === null) return '—'
+  if (score === null) return 'N/A'
   return `${Math.round(score * 100)}`
 }
 
@@ -23,13 +23,13 @@ export function ReportsDirectory() {
             {isLoading ? (
               <Loader2 className="h-6 w-6 animate-spin text-[var(--color-gold-primary)]" />
             ) : isError ? (
-              '—'
+              'N/A'
             ) : (
               (data?.total ?? 0).toLocaleString()
             )}
           </div>
           <p className="mt-1 text-xs text-[var(--color-text-muted)]">
-            Aggregate reports stored on the platform, one per active Sentinel
+            One report per Sentinel, saved to Walrus when it is generated
           </p>
         </div>
         <div className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] p-5">
@@ -38,7 +38,7 @@ export function ReportsDirectory() {
             resistance-v1
           </div>
           <p className="mt-1 text-xs text-[var(--color-text-muted)]">
-            70% breach resistance + 30% graded jury pressure, 0–100
+            70% from attacks that failed to breach, 30% from how little progress attackers made
           </p>
         </div>
       </section>
@@ -52,7 +52,7 @@ export function ReportsDirectory() {
           </div>
         ) : isError ? (
           <div className="p-10 text-center text-sm text-[var(--color-text-muted)]">
-            Reports are temporarily unavailable — try again shortly.
+            Reports are temporarily unavailable. Please try again shortly.
           </div>
         ) : (data?.reports.length ?? 0) === 0 ? (
           <div className="p-10 text-center text-sm text-[var(--color-text-muted)]">
@@ -78,6 +78,7 @@ export function ReportsDirectory() {
                       {report.total_attacks.toLocaleString()} attacks ·{' '}
                       {report.evidence_blob_count.toLocaleString()} evidence blobs · generated{' '}
                       {new Date(report.generated_at).toLocaleDateString()}
+                      {report.walrus_blob_id ? ' · stored on Walrus' : ''}
                     </p>
                   </div>
                   <div className="flex shrink-0 items-center gap-3">
@@ -100,11 +101,11 @@ export function ReportsDirectory() {
       </section>
 
       <p className="text-xs text-[var(--color-text-muted)]">
-        Every report aggregates only certified evidence records — each claim links back to the raw{' '}
+        Each report covers every attack recorded against a Sentinel and links to the{' '}
         <Link href="/evidence" className="text-[var(--color-gold-primary)] hover:text-white">
-          evidence blob on Walrus
-        </Link>
-        , verifiable by anyone without a wallet.
+          evidence records on Walrus
+        </Link>{' '}
+        behind it. Anyone can check them without a wallet.
       </p>
     </div>
   )

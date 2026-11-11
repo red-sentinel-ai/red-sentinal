@@ -2,9 +2,9 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query'
 
 import { APP_NETWORK, SUI_SENTINEL_API_URL } from '@/constants'
 import {
-  isSentinelReport,
+  isSentinelReportResponse,
   type ReportsListResponse,
-  type SentinelSecurityReport,
+  type SentinelReportResponse,
 } from '@/lib/reports'
 
 async function fetchReportsList(limit: number, offset: number): Promise<ReportsListResponse> {
@@ -28,15 +28,15 @@ export function useSecurityReports(limit = 50, offset = 0) {
   })
 }
 
-async function fetchSentinelReport(sentinelId: number): Promise<SentinelSecurityReport> {
+async function fetchSentinelReport(sentinelId: number): Promise<SentinelReportResponse> {
   const res = await fetch(
     `${SUI_SENTINEL_API_URL}/reports/${APP_NETWORK}/sentinel/${sentinelId}`
   )
   if (res.status === 404) throw new Error('No report available for this Sentinel')
   if (!res.ok) throw new Error(`Failed to fetch security report: ${res.status}`)
   const parsed: unknown = await res.json()
-  if (!isSentinelReport(parsed)) throw new Error('Report payload failed validation')
-  return parsed
+  if (!isSentinelReportResponse(parsed)) throw new Error('Report payload failed validation')
+  return { report: parsed.report, walrus: parsed.walrus ?? null }
 }
 
 /**
@@ -44,7 +44,7 @@ async function fetchSentinelReport(sentinelId: number): Promise<SentinelSecurity
  * server-side, which can take a few seconds on first view.
  */
 export function useSentinelReport(sentinelId: number) {
-  return useQuery<SentinelSecurityReport>({
+  return useQuery<SentinelReportResponse>({
     queryKey: ['security-report', APP_NETWORK, sentinelId],
     queryFn: () => fetchSentinelReport(sentinelId),
     staleTime: 5 * 60_000,
