@@ -57,6 +57,7 @@ describe('preflight client', () => {
         model_provider: 'openai',
         model_name: 'gpt',
       },
+      null,
       fetchImpl
     )
 
@@ -74,17 +75,49 @@ describe('preflight client', () => {
     await requestPreflightChecks(
       payload,
       null,
+      null,
       mockFetch((_url, init) => {
         received = JSON.parse(String(init.body))
         return jsonResponse({ checks: [{ id: 'x', label: 'X', status: 'passed' }] })
       })
     )
     expect(received.sentinel).toBeUndefined()
+    expect(received.chain).toBeUndefined()
+    expect(received.chainId).toBeUndefined()
+  })
+
+  it('sends the launch chain so the run is recorded on the registration network', async () => {
+    let received: any = null
+    await requestPreflightChecks(
+      payload,
+      null,
+      { chain: 'solana' },
+      mockFetch((_url, init) => {
+        received = JSON.parse(String(init.body))
+        return jsonResponse({ checks: [{ id: 'x', label: 'X', status: 'passed' }] })
+      })
+    )
+    expect(received.chain).toBe('solana')
+    expect(received).not.toHaveProperty('chainId')
+
+    let evmReceived: any = null
+    await requestPreflightChecks(
+      payload,
+      null,
+      { chain: 'arb', chainId: 42161 },
+      mockFetch((_url, init) => {
+        evmReceived = JSON.parse(String(init.body))
+        return jsonResponse({ checks: [{ id: 'x', label: 'X', status: 'passed' }] })
+      })
+    )
+    expect(evmReceived.chain).toBe('arb')
+    expect(evmReceived.chainId).toBe(42161)
   })
 
   it('turns a service error into a failed check instead of a launch path', async () => {
     const checks = await requestPreflightChecks(
       payload,
+      null,
       null,
       mockFetch(() => jsonResponse({ error: 'backend down' }, 503))
     )
@@ -97,11 +130,12 @@ describe('preflight client', () => {
     const empty = await requestPreflightChecks(
       payload,
       null,
+      null,
       mockFetch(() => jsonResponse({ checks: [] }))
     )
     expect(empty[0].status).toBe('failed')
 
-    const unreachable = await requestPreflightChecks(payload, null, (async () => {
+    const unreachable = await requestPreflightChecks(payload, null, null, (async () => {
       throw new Error('socket hang up')
     }) as unknown as typeof fetch)
     expect(unreachable[0].status).toBe('failed')

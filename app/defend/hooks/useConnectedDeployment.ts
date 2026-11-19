@@ -31,7 +31,7 @@ import {
   type ConnectedDeploymentState,
 } from '../deployment-utils'
 import { SHOPFAST_DEMO_EXAMPLE } from '../shopfast-demo-example'
-import { discoverMcpTools, requestPreflightChecks } from '../deployment-api'
+import { discoverMcpTools, requestPreflightChecks, type PreflightLaunchContext } from '../deployment-api'
 
 /**
  * Owns every connected-deployment setting of the Launch Form and the
@@ -256,11 +256,14 @@ export function useConnectedDeployment() {
   const payload = useMemo(() => (state ? buildConnectedDeploymentPayload(state) : null), [state])
 
   const runPreflight = useCallback(
-    async (sentinelContext?: PreflightSentinelContext | null) => {
+    async (
+      sentinelContext?: PreflightSentinelContext | null,
+      launchChain?: PreflightLaunchContext | null
+    ) => {
       if (!state || !payload || isPreflightRunning) return
       setIsPreflightRunning(true)
       try {
-        const remoteChecks = await requestPreflightChecks(payload, sentinelContext)
+        const remoteChecks = await requestPreflightChecks(payload, sentinelContext, launchChain)
         setPreflightReport({
           checks: mergePreflightChecks(buildLocalPreflightChecks(state), remoteChecks),
           configHash: payload.config_hash,

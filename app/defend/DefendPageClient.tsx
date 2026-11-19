@@ -10,7 +10,7 @@ import { ConnectButton, useCurrentAccount } from '@mysten/dapp-kit'
 import { SESSION_KEYS, SUI_SENTINEL_DOCS_URL, SYSTEM_PROMPT_MAX_TOKENS } from '@/constants'
 import type { SupportedToken } from '@/constants/shared'
 import type { SentinelTemplate } from '@/types'
-import { isEvmChain } from '@/constants/chains'
+import { getEvmChainId, isEvmChain } from '@/constants/chains'
 import {
   SUPPORTED_TOKENS,
   SOLANA_SUPPORTED_TOKENS,
@@ -415,6 +415,17 @@ export default function DefendPageClient() {
       formData.customApiKey,
       formData.providerApiKey,
     ]
+  )
+
+  // Preflight must be recorded under the network the launch registers on
+  // (chain, plus chainId for EVM) — the same resolution /api/register-agent
+  // performs, or launch admission will not find the passing run.
+  const preflightLaunchChain = useMemo(
+    () => ({
+      chain: activeChain,
+      chainId: getEvmChainId(activeChain) ?? undefined,
+    }),
+    [activeChain]
   )
 
   const scrollToPreflight = () =>
@@ -978,7 +989,9 @@ export default function DefendPageClient() {
                     isRunning={connected.isPreflightRunning}
                     launchAllowed={connected.launchAllowed}
                     validationError={connectedValidationError}
-                    onRun={() => connected.runPreflight(preflightSentinelContext)}
+                    onRun={() =>
+                      connected.runPreflight(preflightSentinelContext, preflightLaunchChain)
+                    }
                   />
                   <DeploymentReviewCard
                     method={connected.method}

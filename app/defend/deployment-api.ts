@@ -1,3 +1,4 @@
+import type { SupportedChain } from '@/constants/chains'
 import type {
   ConnectedDeploymentPayload,
   DiscoveredMcpTool,
@@ -144,16 +145,26 @@ function normalizeCheck(raw: unknown): PreflightCheckResult {
   }
 }
 
+/** The chain whose registration network a preflight run must be recorded under. */
+export interface PreflightLaunchContext {
+  chain?: SupportedChain | 'evm'
+  chainId?: number
+}
+
 /**
  * Run Preflight Validation server-side. The defender's model settings and
  * instructions ride along so a hosted agent's fixtures can run; the backend
- * uses them for those runs only and never stores them. Never throws: if the
- * service is unreachable the defender sees a failed check instead of a launch
- * path.
+ * uses them for those runs only and never stores them. The launch context
+ * (chain, and chainId for EVM) selects the registration network the backend
+ * keys the run to — the launch proxy resolves it exactly like
+ * /api/register-agent, so a passing run admits the launch. Never throws: if
+ * the service is unreachable the defender sees a failed check instead of a
+ * launch path.
  */
 export async function requestPreflightChecks(
   payload: ConnectedDeploymentPayload,
   sentinelContext?: PreflightSentinelContext | null,
+  launchChain?: PreflightLaunchContext | null,
   fetchImpl: FetchLike = fetch
 ): Promise<PreflightCheckResult[]> {
   try {
@@ -162,6 +173,8 @@ export async function requestPreflightChecks(
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         ...payload,
+        ...(launchChain?.chain ? { chain: launchChain.chain } : {}),
+        ...(launchChain?.chainId != null ? { chainId: launchChain.chainId } : {}),
         ...(sentinelContext ? { sentinel: sentinelContext } : {}),
       }),
     })
