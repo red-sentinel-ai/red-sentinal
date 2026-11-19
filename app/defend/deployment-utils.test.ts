@@ -365,6 +365,8 @@ describe('ShopFast demo example', () => {
       const meta = BREACH_CONDITION_TYPES.find(entry => entry.type === condition.type)
       expect(meta).toBeDefined()
       for (const param of meta!.params) {
+        // Params must exist, not merely be non-empty when present.
+        expect(condition.params[param.key]).toBeDefined()
         expect(condition.params[param.key]?.trim()).not.toBe('')
       }
     }
