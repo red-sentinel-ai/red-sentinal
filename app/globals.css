@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  font-family: var(--font-inter, 'Inter'), Arial, sans-serif;
+  font-family: var(--font-onest, 'Onest'), Arial, sans-serif;
 
   /* iOS PWA: top safe-area inset (status bar) and topbar height including it */
   --sat: env(safe-area-inset-top, 0px);
@@ -65,9 +65,9 @@
   --radius: 0px;
 
   /* Fonts */
-  --font-display: var(--font-inter, 'Inter'), Arial, sans-serif;
-  --font-body: var(--font-inter, 'Inter'), Arial, sans-serif;
-  --font-mono: var(--font-jetbrains, 'JetBrains Mono'), ui-monospace, monospace;
+  --font-display: var(--font-onest, 'Onest'), Arial, sans-serif;
+  --font-body: var(--font-onest, 'Onest'), Arial, sans-serif;
+  --font-mono: var(--font-geist-mono, 'Geist Mono'), ui-monospace, monospace;
 
   /* Legacy compatibility */
   --background: var(--color-bg-base);
@@ -290,6 +290,10 @@
 
   .chat-feed {
     @apply min-h-0 flex-1 space-y-6 overflow-y-auto p-3 sm:space-y-10 sm:p-6 lg:p-8;
+    /* GraySwan-style dot grid behind the conversation: 3px dots on a 24px
+       pitch, fixed to the pane while messages scroll over it. */
+    background-image: conic-gradient(at 3px 3px, transparent 75%, rgba(255, 255, 255, 0.18) 0deg);
+    background-size: 24px 24px;
   }
 
   .chat-feed-stack {

@@ -1,19 +1,11 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
-import {
-  TrendingUp,
-  TrendingDown,
-  MessageSquare,
-  Mic,
-  Link as LinkIcon,
-  ExternalLink,
-} from 'lucide-react'
-import { toast } from '@/lib/toast'
-import { WITHDRAWAL_LOCK_MS, SUI_SENTINEL_X_USERNAME } from '@/constants'
+import { TrendingUp, TrendingDown, MessageSquare, Mic, ExternalLink } from 'lucide-react'
+import { WITHDRAWAL_LOCK_MS } from '@/constants'
 import { getTokenForCoinType } from '@/constants/tokens'
 import { CHAINS, isEvmChain } from '@/constants/chains'
 import { supportsDonations } from '@/constants/evm'
@@ -21,14 +13,7 @@ import { isSentinelAttackable } from '@/lib/sentinel-status'
 import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { getExplorerObjectUrl, getExplorerTxUrl } from '@/lib/explorer'
 import type { Agent } from '@/types/agents'
-import {
-  formatDuration,
-  cn,
-  buildAgentShareTweetUrl,
-  truncateAddress,
-  generateAvatarUrl,
-  formatSentinelId,
-} from '@/lib/utils'
+import { formatDuration, cn, truncateAddress, generateAvatarUrl, formatSentinelId } from '@/lib/utils'
 import { Skeleton } from '@/components/ui'
 // recharts (~100KB gz) loads only when the growth chart is opened.
 const PrizePoolChartModal = dynamic(
@@ -37,33 +22,11 @@ const PrizePoolChartModal = dynamic(
 )
 import { DonateFundsModal } from '@/components/agents/DonateFundsModal'
 import { TokenAmount } from '../ui/common/TokenAmount'
-import { SocialMissionModal } from '@/components/rewards/SocialMissionModal'
-import { REWARDS_CONSTANTS } from '@/constants/rewards'
 import { SentinelFollowButton } from '@/components/agents/SentinelFollowButton'
 import { APP_NETWORK } from '@/constants'
 
-const SHARE_MISSION = REWARDS_CONSTANTS.DEFAULT_MISSIONS.find(m => m.type === 'share_with_hashtag')!
-
 // Ticking clocks live in leaf components on purpose: a 1s setState in the
 // parent would re-render this whole sidebar (and its modals) every second.
-function ActiveSinceTimer({ createdAtMs }: { createdAtMs: number }) {
-  const [duration, setDuration] = useState(() => formatDuration(Date.now() - createdAtMs))
-
-  useEffect(() => {
-    const updateTimer = () => setDuration(formatDuration(Date.now() - createdAtMs))
-    updateTimer()
-    const interval = setInterval(updateTimer, 1000)
-    return () => clearInterval(interval)
-  }, [createdAtMs])
-
-  return (
-    <span className="industrial-header text-[11px] font-semibold tabular-nums tracking-[0.06em] text-white">
-      {duration.days}D {String(duration.hours).padStart(2, '0')}H{' '}
-      {String(duration.minutes).padStart(2, '0')}M {String(duration.seconds).padStart(2, '0')}S
-    </span>
-  )
-}
-
 function WithdrawalLockTimer({ lastFundedMs }: { lastFundedMs: number }) {
   const unlockTimestamp = lastFundedMs + WITHDRAWAL_LOCK_MS
   const [remaining, setRemaining] = useState<string | null>(null)
@@ -106,7 +69,6 @@ function WithdrawalLockTimer({ lastFundedMs }: { lastFundedMs: number }) {
 
 interface AgentSidebarProps {
   agent: Agent
-  onReadMore?: () => void
   onTextChat?: () => void
   onVoiceChat?: () => void
   /** Called after a confirmed bounty donation so the page can refetch the agent. */
@@ -159,18 +121,8 @@ function getSentinelOwnerLink(agent: Agent): SentinelOwnerLink {
   return { label: truncateAddress(agent.creator), href: `/u/${agent.creator}` }
 }
 
-export const AgentSidebar = ({
-  agent,
-  onReadMore,
-  onTextChat,
-  onVoiceChat,
-  onDonated,
-}: AgentSidebarProps) => {
-  const [shouldTruncate, setShouldTruncate] = useState(false)
-  const instructionsRef = useRef<HTMLParagraphElement>(null)
-  const [pageUrl, setPageUrl] = useState('')
+export const AgentSidebar = ({ agent, onTextChat, onVoiceChat, onDonated }: AgentSidebarProps) => {
   const [isChartModalOpen, setIsChartModalOpen] = useState(false)
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false)
   const [isDonateModalOpen, setIsDonateModalOpen] = useState(false)
 
   const { address: connectedAddress, chain: connectedChain } = useConnectedAddress()
@@ -179,11 +131,6 @@ export const AgentSidebar = ({
     connectedAddress?.toLowerCase() === agent.creator?.toLowerCase()
 
   const prizePoolData = agent.prizePoolHistory ?? null
-
-  useEffect(() => {
-    const currentUrl = window.location.href
-    setPageUrl(currentUrl)
-  }, [])
 
   const agentToken = getTokenForCoinType(agent.coin_type, agent.chain)
   const creatorReward = (agent.accumulated_fees ?? 0) / Math.pow(10, agentToken.decimals)
@@ -195,28 +142,8 @@ export const AgentSidebar = ({
   const sentinelReference = getSentinelReference(agent)
 
   const isDrained = agent.state === 'defeated'
-  const winnerAddress = agent.winner?.address ?? null
 
   const canDonate = supportsDonations(agent.chain) && isSentinelAttackable(agent)
-
-  useEffect(() => {
-    if (instructionsRef.current) {
-      const lineHeight = parseFloat(getComputedStyle(instructionsRef.current).lineHeight)
-      const maxHeightForFourLines = lineHeight * 4
-      if (instructionsRef.current.scrollHeight > maxHeightForFourLines) {
-        setShouldTruncate(true)
-      } else {
-        setShouldTruncate(false)
-      }
-    }
-  }, [agent.prompt])
-
-  const handleCopyLink = () => {
-    if (pageUrl) {
-      navigator.clipboard.writeText(pageUrl)
-      toast.success('Link copied to clipboard!')
-    }
-  }
 
   return (
     <>
@@ -268,19 +195,6 @@ export const AgentSidebar = ({
             />
           </div>
 
-          {/* Attack Objective */}
-          {agent.attack_goal && (
-            <div className="space-y-2">
-              <div className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
-                ATTACK_OBJECTIVE
-              </div>
-              <div className="border-hairline bg-[var(--color-bg-base)] p-4">
-                <p className="font-mono text-[14px] leading-relaxed text-white">
-                  {agent.attack_goal}
-                </p>
-              </div>
-            </div>
-          )}
           {/* Active Bounty / Prize Pool */}
           <div className="space-y-2">
             <div className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
@@ -354,34 +268,8 @@ export const AgentSidebar = ({
             )}
           </div>
 
-          {/* Technical Parameters Grid */}
+          {/* Owner + Reward */}
           <div className="grid grid-cols-2 gap-px bg-[var(--color-border-strong)]">
-            {agent.model_name && (
-              <div className="min-w-0 bg-[var(--color-bg-base)] p-4">
-                <span className="industrial-header mb-1 block text-[10px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
-                  MODEL
-                </span>
-                <span
-                  title={agent.model_name}
-                  className="industrial-header text-sentinel_pink block truncate text-[11px] font-bold tracking-[0.06em]"
-                >
-                  {agent.model_name.toUpperCase()}
-                </span>
-              </div>
-            )}
-            {agent.model_provider && (
-              <div className="min-w-0 bg-[var(--color-bg-base)] p-4">
-                <span className="industrial-header mb-1 block text-[10px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
-                  PROVIDER
-                </span>
-                <span
-                  title={agent.model_provider}
-                  className="industrial-header block truncate text-[11px] font-semibold tracking-[0.06em] text-white"
-                >
-                  {agent.model_provider.toUpperCase()}
-                </span>
-              </div>
-            )}
             <div className="min-w-0 bg-[var(--color-bg-base)] p-4">
               <span className="industrial-header mb-1 block text-[10px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
                 OWNER
@@ -411,95 +299,25 @@ export const AgentSidebar = ({
             </div>
           </div>
 
-          {/* Sentinel Instructions */}
-          <div className="space-y-2 border-t border-[var(--color-border-strong)] pt-6">
-            <div className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
-              SENTINEL_INSTRUCTIONS
-            </div>
-            <div className="border-hairline bg-[var(--color-bg-base)] p-4">
-              <p
-                ref={instructionsRef}
-                className="line-clamp-4 whitespace-pre-wrap font-mono text-[11px] leading-relaxed text-[var(--color-text-muted)]"
-              >
-                {agent.prompt}
-              </p>
-              {shouldTruncate && onReadMore && (
-                <div className="mt-3">
-                  <button
-                    onClick={onReadMore}
-                    className="industrial-header border-b border-white text-[10px] tracking-[0.06em] text-white transition-opacity hover:opacity-70"
-                  >
-                    READ_ALL
-                  </button>
-                </div>
-              )}
-            </div>
+          {/* Action Buttons */}
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={onTextChat}
+              className="button-solid-terminal flex items-center justify-center gap-2 py-3"
+            >
+              <MessageSquare className="h-4 w-4" />
+              <span>TEXT</span>
+            </button>
+            <button
+              type="button"
+              onClick={onVoiceChat}
+              className="button-solid-terminal flex items-center justify-center gap-2 py-3"
+            >
+              <Mic className="h-4 w-4" />
+              <span>VOICE</span>
+            </button>
           </div>
-
-          {/* System Telemetry */}
-          <div className="space-y-3 border-t border-[var(--color-border-strong)] pt-6">
-            <div className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
-              SYSTEM_TELEMETRY
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              {!isDrained && agent.timestampMs && (
-                <div>
-                  <span className="industrial-header mb-1 block text-[10px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
-                    ACTIVE_SINCE
-                  </span>
-                  <ActiveSinceTimer createdAtMs={Number(agent.timestampMs)} />
-                </div>
-              )}
-              <div>
-                <span className="industrial-header mb-1 block text-[10px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
-                  BREAK_ATTEMPTS
-                </span>
-                <span className="industrial-header text-[11px] font-semibold tabular-nums tracking-[0.06em] text-white">
-                  {agent.total_attacks.toLocaleString()}
-                </span>
-              </div>
-              {isDrained && winnerAddress && (
-                <div>
-                  <span className="industrial-header mb-1 block text-[10px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
-                    WINNER
-                  </span>
-                  <Link
-                    href={`/u/${winnerAddress}`}
-                    className="industrial-header text-accent text-[11px] font-semibold tracking-[0.06em] transition-opacity hover:opacity-70"
-                  >
-                    {truncateAddress(winnerAddress)}
-                  </Link>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Message Price */}
-          {/* <div className="space-y-2 border-t border-[var(--color-border-strong)] pt-6">
-            <div className="industrial-header text-[10px] text-[var(--color-text-muted)]">
-              ATTACK_FEE
-            </div>
-            <div className="industrial-header text-lg tabular-nums text-white">
-              <TokenAmount
-                rawAmount={agent.current_cost_per_message ?? agent.cost_per_message}
-                token={agentToken}
-                precision={4}
-                iconSize={20}
-              />
-            </div>
-            {agent.current_cost_per_message &&
-              agent.current_cost_per_message !== agent.cost_per_message && (
-                <p className="flex items-center gap-1 font-mono text-[10px] text-[var(--color-text-muted)]">
-                  <span>BASE:</span>{' '}
-                  <TokenAmount
-                    rawAmount={agent.cost_per_message}
-                    token={agentToken}
-                    precision={4}
-                    iconSize={10}
-                  />
-                </p>
-              )}
-          </div> */}
 
           {/* Withdrawal Lock (Owner Only) */}
           {isOwner && !isDrained && (
@@ -531,82 +349,6 @@ export const AgentSidebar = ({
               </Link>
             </div>
           )}
-
-          {/* Action Buttons */}
-          <div className="space-y-3 pt-4">
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={onTextChat}
-                className="button-solid-terminal flex items-center justify-center gap-2 py-3"
-              >
-                <MessageSquare className="h-4 w-4" />
-                <span>TEXT</span>
-              </button>
-              <button
-                type="button"
-                onClick={onVoiceChat}
-                className="button-solid-terminal flex items-center justify-center gap-2 py-3"
-              >
-                <Mic className="h-4 w-4" />
-                <span>VOICE</span>
-              </button>
-            </div>
-            <button
-              onClick={handleCopyLink}
-              className="industrial-header flex w-full items-center justify-center gap-2 border border-[var(--color-border-strong)] py-3 text-[11px] tracking-[0.06em] text-[var(--color-text-muted)] transition-all hover:border-white hover:text-white"
-            >
-              <LinkIcon className="h-3 w-3" />
-              SHARE_LINK
-            </button>
-          </div>
-
-          {/* Earn Sentinel Tokens */}
-          <div className="space-y-3 border-t border-[var(--color-border-strong)] pt-6">
-            <div className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
-              EARN_REWARDS
-            </div>
-            <p className="font-mono text-[11px] leading-relaxed text-[var(--color-text-muted)]">
-              Share about Red Sentinel on X and earn Sentinel tokens.
-            </p>
-            <button
-              onClick={() => setIsShareModalOpen(true)}
-              className="button-ghost-terminal w-full py-3"
-            >
-              SHARE_ON_X
-            </button>
-          </div>
-
-          {/* Defender Profile */}
-          {/* <DefenderProfile
-            ownerAddress={agent.creator}
-            profile={defenderProfile}
-            isLoading={isLoadingProfile}
-          /> */}
-
-          {/* QR Code */}
-          {/* <div className="space-y-3 border-t border-[var(--color-border-strong)] pt-6">
-            <div className="industrial-header text-center text-[9px] leading-relaxed text-[var(--color-text-muted)]">
-              SCAN_QR_FOR_MOBILE_WALLET_ATTACK
-            </div>
-            <div className="flex justify-center border border-[var(--color-border-strong)] p-4">
-              {deepLinkUrl ? (
-                <QRCodeSVG
-                  value={deepLinkUrl}
-                  size={96}
-                  bgColor="#00000000"
-                  fgColor="#ffffff"
-                  level="L"
-                  includeMargin={true}
-                  className="h-24 w-24"
-                />
-              ) : (
-                <div className="flex h-24 w-24 animate-pulse items-center justify-center bg-[var(--color-bg-subtle)]">
-                  <div className="h-6 w-6 animate-spin rounded-full border-2 border-[var(--color-border-strong)] border-t-transparent" />
-                </div>
-              )}
-            </div>
-          </div> */}
         </div>
       </div>
 
@@ -628,19 +370,6 @@ export const AgentSidebar = ({
           onDonated={onDonated}
         />
       )}
-
-      <SocialMissionModal
-        mission={SHARE_MISSION}
-        isOpen={isShareModalOpen}
-        onClose={() => setIsShareModalOpen(false)}
-        actionUrlOverride={
-          pageUrl
-            ? buildAgentShareTweetUrl(agent.agent_name, pageUrl, SUI_SENTINEL_X_USERNAME)
-            : undefined
-        }
-        actionLabelOverride={`Share ${agent.agent_name} on X`}
-        submissionContext={{ agent_path: `/attack/${agent.agent_path}` }}
-      />
     </>
   )
 }

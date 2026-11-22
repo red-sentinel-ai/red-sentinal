@@ -26,7 +26,9 @@ export function PrivyWalletProvider({ children }: { children: React.ReactNode })
     },
     externalWallets: {
       solana: {
-        connectors: toSolanaWalletConnectors({ shouldAutoConnect: true }),
+        // Auto-connect off: it fired the wallet popup on every page load. Users
+// connect manually via the connect buttons.
+connectors: toSolanaWalletConnectors({ shouldAutoConnect: false }),
       },
     },
   }

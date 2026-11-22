@@ -62,7 +62,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
               defaultNetwork={APP_NETWORK}
               createClient={createClient}
             >
-              <SuiWalletProvider autoConnect theme={lightTheme}>
+              <SuiWalletProvider theme={lightTheme}>
                 <ActiveChainProvider>
                   <AuthProvider>
                     <ProfileInitializer />

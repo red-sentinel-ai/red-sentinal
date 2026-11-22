@@ -14,7 +14,6 @@ interface AttackWorkspaceProps {
   viewMode: ViewMode
   onBackToAttack: () => void
   chatEvents: ChatEvent[]
-  eventsLoading?: boolean
   apiResponse: ConsumePromptApiResponse | null
   onSendMessage: (prompt: string) => Promise<void>
   isSubmitting: boolean
@@ -28,7 +27,6 @@ export function AttackWorkspace({
   viewMode,
   onBackToAttack,
   chatEvents,
-  eventsLoading,
   apiResponse,
   onSendMessage,
   isSubmitting,
@@ -46,7 +44,6 @@ export function AttackWorkspace({
         <ChatInterface
           agent={agent}
           chatEvents={chatEvents}
-          eventsLoading={eventsLoading}
           apiResponse={apiResponse}
           onSendMessage={onSendMessage}
           isSubmitting={isSubmitting}

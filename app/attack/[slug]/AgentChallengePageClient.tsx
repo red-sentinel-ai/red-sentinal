@@ -33,7 +33,6 @@ import { useConnectedAddress } from '@/hooks/useConnectedAddress'
 import { AttackStatusModal } from '@/components/AttackStatusModal'
 import { AttackWorkspace, type ViewMode } from '@/components/agents/AttackWorkspace'
 import { AgentSidebar } from '@/components/agents/AgentSidebar'
-import { AgentReadMoreModal } from '@/components/agents/AgentReadMoreModal'
 // @100mslive SDK is opt-in (VOICE button) — keep it out of the initial bundle.
 const VoiceRoomModal = dynamic(
   () => import('@/components/voice/VoiceRoomModal').then(m => m.VoiceRoomModal),
@@ -70,17 +69,13 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
 
   const { data: agent, isLoading, error, refetch } = useAgent(slug)
 
-  const {
-    data: chat,
-    isLoading: chatLoading,
-    refetch: refetchChat,
-  } = useAgentChatHistory(agent?.agent_id)
+  const { data: chat, refetch: refetchChat } = useAgentChatHistory(agent?.agent_id)
 
-  const [isReadMoreOpen, setIsReadMoreOpen] = useState(false)
   const [isVoiceRoomOpen, setIsVoiceRoomOpen] = useState(false)
 
   // On mobile the sentinel name shares the topbar row with the wallet button
-  // instead of taking a bar of its own.
+  // instead of taking a bar of its own; on desktop the always-visible sentinel
+  // sidebar carries the name.
   const isAgentNameInTopbar = isMobile && !isFocusMode && viewMode !== 'chat'
   const topbarContent = useMemo(
     () => (isAgentNameInTopbar && agent ? <AttackTopbarSlot agentName={agent.agent_name} /> : null),
@@ -347,7 +342,6 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
       viewMode={viewMode}
       onBackToAttack={handleBackToAttack}
       chatEvents={chat?.messages ?? []}
-      eventsLoading={chatLoading}
       apiResponse={apiResponse}
       onSendMessage={handleSendMessage}
       isSubmitting={isSubmitting}
@@ -407,10 +401,6 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
               >
                 <AgentSidebar
                   agent={agent}
-                  onReadMore={() => {
-                    setIsSidebarOpen(false)
-                    setIsReadMoreOpen(true)
-                  }}
                   onTextChat={handleTextChatClick}
                   onVoiceChat={handleVoiceChatClick}
                   onDonated={handleBountyDonated}
@@ -419,12 +409,6 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
             </>
           )}
         </AnimatePresence>
-
-        <AgentReadMoreModal
-          isOpen={isReadMoreOpen}
-          prompt={agent.prompt}
-          onClose={() => setIsReadMoreOpen(false)}
-        />
 
         {apiResponse && txnHash && (
           <AttackStatusModal
@@ -451,7 +435,6 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
           <ResizablePanel defaultSize={28} minSize={22} maxSize={40}>
             <AgentSidebar
               agent={agent}
-              onReadMore={() => setIsReadMoreOpen(true)}
               onTextChat={handleTextChatClick}
               onVoiceChat={handleVoiceChatClick}
               onDonated={handleBountyDonated}
@@ -461,11 +444,6 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
           <ResizablePanel defaultSize={72}>
             <div className="relative h-full w-full">
               {attackWorkspace}
-              <AgentReadMoreModal
-                isOpen={isReadMoreOpen}
-                prompt={agent.prompt}
-                onClose={() => setIsReadMoreOpen(false)}
-              />
             </div>
           </ResizablePanel>
         </ResizablePanelGroup>
@@ -513,10 +491,6 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
             >
               <AgentSidebar
                 agent={agent}
-                onReadMore={() => {
-                  setIsSidebarOpen(false)
-                  setIsReadMoreOpen(true)
-                }}
                 onTextChat={handleTextChatClick}
                 onVoiceChat={handleVoiceChatClick}
                 onDonated={handleBountyDonated}
@@ -525,12 +499,6 @@ export default function AgentChallengePage({ slug }: { slug: string }) {
           </>
         )}
       </AnimatePresence>
-
-      <AgentReadMoreModal
-        isOpen={isReadMoreOpen}
-        prompt={agent.prompt}
-        onClose={() => setIsReadMoreOpen(false)}
-      />
 
       {apiResponse && txnHash && (
         <AttackStatusModal

@@ -2,31 +2,23 @@ import type { Metadata, Viewport } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import NextTopLoader from 'nextjs-toploader'
 import { Toaster } from 'sonner'
-import localFont from 'next/font/local'
-import { JetBrains_Mono, Space_Grotesk } from 'next/font/google'
+import { Geist_Mono, Onest } from 'next/font/google'
 
 import './globals.css'
 import { Providers } from './providers'
 import { FloatingHelpButton } from '@/components/FloatingHelpButton'
 import { SUI_SENTINEL_APP_URL, SUI_SENTINEL_X_USERNAME, SUI_SENTINEL_GITHUB_URL } from '@/constants'
 
-const inter = localFont({
-  src: '../public/fonts/InterVariable.woff2',
-  variable: '--font-inter',
+const onest = Onest({
+  subsets: ['latin'],
+  variable: '--font-onest',
   display: 'swap',
 })
 
-const jetbrainsMono = JetBrains_Mono({
+const geistMono = Geist_Mono({
   subsets: ['latin'],
-  variable: '--font-jetbrains',
+  variable: '--font-geist-mono',
   display: 'swap',
-})
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ['latin'],
-  variable: '--font-space-grotesk',
-  display: 'swap',
-  weight: ['600', '700'],
 })
 
 export const viewport: Viewport = {
@@ -274,7 +266,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="apple-touch-icon" href="/icons/pwa-192x192.png" />
       </head>
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable} flex min-h-screen flex-col bg-[var(--color-bg-base)] text-[var(--color-text-primary)]`}
+        className={`${onest.variable} ${geistMono.variable} flex min-h-screen flex-col bg-[var(--color-bg-base)] text-[var(--color-text-primary)]`}
       >
         <Providers>
           <NextTopLoader color="#ffffff" showSpinner={false} />

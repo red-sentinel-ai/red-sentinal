@@ -15,8 +15,10 @@ import { OfflineBanner } from '@/components/OfflineBanner'
 function AppShellContent({ children }: { children: ReactNode }) {
   const { isFocusMode } = useFocusMode()
 
+  // App-level navigation stays collapsed behind the topbar hamburger on every
+  // page; focus mode removes the sidebar chrome entirely.
   return (
-    <SidebarProvider defaultOpen={!isFocusMode}>
+    <SidebarProvider defaultOpen={false}>
       <div className="scanline-overlay pointer-events-none fixed inset-0 z-[100] opacity-[0.035]" />
       {!isFocusMode && <AppSidebar />}
       <SidebarInset className={isFocusMode ? 'ml-0' : undefined}>

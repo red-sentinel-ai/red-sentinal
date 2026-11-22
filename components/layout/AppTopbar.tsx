@@ -16,7 +16,7 @@ export function AppTopbar() {
   return (
     <header className="pt-safe sticky top-0 z-40 flex h-[var(--topbar-h)] items-center gap-2 border-b border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-3 md:px-12">
       <SidebarTrigger
-        className="flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-none border border-[var(--color-border-default)] bg-[var(--color-bg-base)] text-white hover:bg-white hover:text-black md:hidden"
+        className="flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-none border border-[var(--color-border-default)] bg-[var(--color-bg-base)] text-white hover:bg-white hover:text-black"
         aria-label="Open navigation"
       />
 

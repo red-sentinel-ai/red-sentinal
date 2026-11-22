@@ -5,7 +5,7 @@ import { useState, useRef, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import clsx from 'clsx'
-import { Loader2, Zap, Maximize2 } from 'lucide-react'
+import { Loader2, Zap, Maximize2, ListChecks } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ConnectModal } from '@mysten/dapp-kit'
 
@@ -22,10 +22,13 @@ import { useTokenCount } from '@/hooks/useTokenCount'
 import { useAutoResizingTextarea } from '@/hooks/useAutoResizingTextarea'
 import type { Agent } from '@/types/agents'
 import { useUserProfiles } from '@/hooks/profile/useUserProfiles'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from '@/components/ui'
 import { ChainMismatchBanner } from '@/components/ui/common/ChainMismatchBanner'
 import { useFocusMode } from '@/context/FocusModeContext'
 import { ChatMessage } from './ChatMessage'
 import { JuryResponseModal } from './JuryResponseModal'
+import { SuccessCriteriaPanel } from './SuccessCriteriaPanel'
 import { TokenAmount } from '@/components/ui/common/TokenAmount'
 
 export interface ChatMessage {
@@ -51,7 +54,6 @@ export interface ChatMessage {
 interface ChatInterfaceProps {
   agent: Agent
   chatEvents: ChatEvent[]
-  eventsLoading?: boolean
   apiResponse: ConsumePromptApiResponse | null
   onSendMessage: (prompt: string) => Promise<void>
   isSubmitting: boolean
@@ -60,10 +62,67 @@ interface ChatInterfaceProps {
   chainMismatch?: SupportedChain | null
 }
 
+/**
+ * GraySwan-style brief: the first thing an attacker sees. Centered on an
+ * empty feed, then pinned above the attack history once rounds come in.
+ * Carries the bounty/fee because the info sidebar starts closed.
+ */
+function AttackObjectiveBrief({
+  agent,
+  onOpenCriteria,
+}: {
+  agent: Agent
+  onOpenCriteria: () => void
+}) {
+  const agentToken = getTokenForCoinType(agent.coin_type, agent.chain)
+  const objective = agent.attack_goal?.trim()
+
+  return (
+    <div className="mx-auto w-full max-w-2xl border border-[var(--color-border-strong)] bg-[var(--color-bg-elevated)] p-6 sm:p-8">
+      <span className="industrial-header text-[11px] font-semibold tracking-[0.08em] text-[var(--color-text-muted)]">
+        ATTACK_OBJECTIVE
+      </span>
+      <p className="mt-3 font-mono text-[14px] leading-relaxed text-white sm:text-base">
+        {objective ||
+          `Make ${agent.agent_name ?? 'this sentinel'} violate its standing instructions.`}
+      </p>
+      <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1">
+        <span className="industrial-header flex items-center gap-1.5 text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
+          BOUNTY:
+          <TokenAmount
+            rawAmount={agent.total_balance}
+            token={agentToken}
+            precision={2}
+            iconSize={12}
+            className="text-white"
+          />
+        </span>
+        <span className="industrial-header flex items-center gap-1.5 text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
+          FEE:
+          <TokenAmount
+            rawAmount={agent.current_cost_per_message ?? agent.cost_per_message}
+            token={agentToken}
+            precision={4}
+            iconSize={12}
+            className="text-white"
+          />
+          /ATTEMPT
+        </span>
+      </div>
+      <button
+        onClick={onOpenCriteria}
+        className="industrial-header text-accent mt-5 inline-flex items-center gap-2 border border-[var(--color-accent)] bg-[var(--color-accent-muted)] px-4 py-2.5 text-[11px] font-semibold tracking-[0.08em] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-accent-fg)]"
+      >
+        <ListChecks className="h-3.5 w-3.5" />
+        SEE SUCCESS CRITERIA
+      </button>
+    </div>
+  )
+}
+
 export default function ChatInterface({
   agent,
   chatEvents,
-  eventsLoading,
   apiResponse,
   onSendMessage,
   isSubmitting,
@@ -74,6 +133,7 @@ export default function ChatInterface({
   const [promptInput, setPromptInput] = useState('')
   const [pendingRound, setPendingRound] = useState<ChatMessage[] | null>(null)
   const [activeTab, setActiveTab] = useState<'global' | 'mine'>('global')
+  const [isCriteriaOpen, setIsCriteriaOpen] = useState(false)
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const textareaRef = useAutoResizingTextarea(promptInput)
   // Prompt of the round in flight — pairs the optimistic agent message with
@@ -82,6 +142,9 @@ export default function ChatInterface({
   const { address: connectedAddress } = useConnectedAddress()
   const { tokenCount, countTokens, isDebouncing: isTokenCountDebouncing } = useTokenCount()
   const { isFocusMode, enableFocusMode } = useFocusMode()
+  // Desktop shows the criteria panel as an inline page section beside the chat;
+  // on phones it falls back to an overlay drawer.
+  const isDesktopLayout = useMediaQuery('(min-width: 768px)')
 
   const isAttackPaused = getSentinelStatus(agent) === 'paused'
 
@@ -255,8 +318,8 @@ export default function ChatInterface({
     setPromptInput('')
   }
 
-  return (
-    <div className="flex h-full flex-1 flex-col bg-[var(--color-bg-base)]">
+  const chatColumn = (
+    <div className="flex h-full min-w-0 flex-1 flex-col">
       <JuryResponseModal
         isOpen={isJuryModalOpen}
         onClose={() => setIsJuryModalOpen(false)}
@@ -301,11 +364,19 @@ export default function ChatInterface({
 
       {/* Chat Feed */}
       <div ref={chatContainerRef} className="chat-feed terminal-scrollbar">
-        {displayedMessages.length === 0 && !eventsLoading && (
-          <div className="py-12 text-center">
-            <span className="chat-feed-notice industrial-header">AWAITING_INITIAL_PAYLOADS</span>
-          </div>
-        )}
+        {/* Attack brief: centered on an empty feed, pinned above the history
+            once rounds exist; the winner announcement takes over when drained. */}
+        {!isAgentDrained &&
+          (displayedMessages.length === 0 ? (
+            <div className="flex min-h-full items-center justify-center">
+              <AttackObjectiveBrief
+                agent={agent}
+                onOpenCriteria={() => setIsCriteriaOpen(v => !v)}
+              />
+            </div>
+          ) : (
+            <AttackObjectiveBrief agent={agent} onOpenCriteria={() => setIsCriteriaOpen(v => !v)} />
+          ))}
 
         <div className="chat-feed-stack">
           <AnimatePresence>
@@ -504,6 +575,48 @@ export default function ChatInterface({
         open={isWalletModalOpen}
         onOpenChange={setIsWalletModalOpen}
         trigger={<span className="hidden" />}
+      />
+    </div>
+  )
+
+  // Desktop: chat + criteria section in a resizable split — the divider is
+  // draggable like the sentinel sidebar's. Mobile: plain column, the criteria
+  // panel overlays as a drawer instead.
+  if (isDesktopLayout) {
+    return (
+      <ResizablePanelGroup
+        direction="horizontal"
+        className="h-full flex-1 bg-[var(--color-bg-base)]"
+      >
+        <ResizablePanel id="chat-column" minSize={40}>
+          {chatColumn}
+        </ResizablePanel>
+
+        {isCriteriaOpen && (
+          <>
+            <ResizableHandle withHandle={true} className="bg-[var(--color-border-strong)]" />
+            <ResizablePanel id="criteria-panel" defaultSize={32} minSize={20} maxSize={50}>
+              <SuccessCriteriaPanel
+                agent={agent}
+                isOpen={true}
+                onClose={() => setIsCriteriaOpen(false)}
+                inline={true}
+              />
+            </ResizablePanel>
+          </>
+        )}
+      </ResizablePanelGroup>
+    )
+  }
+
+  return (
+    <div className="flex h-full flex-1 bg-[var(--color-bg-base)]">
+      {chatColumn}
+      <SuccessCriteriaPanel
+        agent={agent}
+        isOpen={isCriteriaOpen}
+        onClose={() => setIsCriteriaOpen(false)}
+        inline={false}
       />
     </div>
   )
