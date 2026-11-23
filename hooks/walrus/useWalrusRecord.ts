@@ -2,7 +2,7 @@
 
 import { useCallback } from 'react'
 import { useCurrentAccount, useSignTransaction, useSuiClient } from '@mysten/dapp-kit'
-import { WalrusClient } from '@mysten/walrus'
+import type { WalrusClient } from '@mysten/walrus'
 import { Transaction } from '@mysten/sui/transactions'
 import { toBase64 } from '@mysten/sui/utils'
 import type { SuiTransactionBlockResponse } from '@mysten/sui/jsonRpc'
@@ -64,9 +64,14 @@ function base64ToBytes(base64: string): Uint8Array {
  */
 const walrusClients: Partial<Record<string, WalrusClient>> = {}
 
-function getWalrusClient(suiClient: ReturnType<typeof useSuiClient>): WalrusClient {
+async function getWalrusClient(suiClient: ReturnType<typeof useSuiClient>): Promise<WalrusClient> {
   const cached = walrusClients[APP_NETWORK]
   if (cached) return cached
+  // Imported lazily: @mysten/walrus pulls in walrus-wasm, whose node entry
+  // reads its .wasm file at module evaluation — webpack doesn't emit that
+  // asset into the SSR vendor chunks, so a static import 500s the whole
+  // route during server render (it's also dead weight on non-Sui chains).
+  const { WalrusClient } = await import('@mysten/walrus')
   const client = new WalrusClient({ network: APP_NETWORK, suiClient })
   walrusClients[APP_NETWORK] = client
   return client
@@ -138,7 +143,7 @@ export function useWalrusRecord() {
       if (!attackId || !account?.address || !user?.id) return null
 
       const base = `${SUI_SENTINEL_API_URL}/walrus/${APP_NETWORK}/records`
-      const walrus = getWalrusClient(suiClient)
+      const walrus = await getWalrusClient(suiClient)
 
       // 1. Fetch the canonical record bytes for this attack.
       onStep?.('fetching')
