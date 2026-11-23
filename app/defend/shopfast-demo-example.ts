@@ -1,28 +1,21 @@
-import type { BreachCondition, PreflightFixtures } from './agentic-types'
+import type { DemoExample } from './demo-examples'
 import { createId } from './deployment-utils'
 
 /**
  * The Customer Support AI Agent demo ("Sarah" at ShopFast) as a ready-to-load
- * Launch Form configuration — the companion of the demo MCP server in
- * backend-service/demo-mcp-server. Loading it fills everything, including the
- * demo server's bearer token, so the developer only runs the connection
- * check. The token guards fake demo data only and ships in this client
- * bundle — it is not a secret.
+ * Launch Form configuration — the companion of the ShopFast tenant in
+ * backend-service/demo-mcp-host/tenants/shopfast. Loading it fills
+ * everything, including the demo server's bearer token, so the developer
+ * only runs the connection check. The token guards fake demo data only and
+ * ships in this client bundle — it is not a secret.
  */
 
-export interface ShopfastDemoExample {
-  mcpUrl: string
-  bearerToken: string
-  allowedHosts: string[]
-  breachConditions: BreachCondition[]
-  fixtures: PreflightFixtures
-  publicInstructions: string
-  privateInstructions: string
-  attackGoal: string
-}
-
-export const SHOPFAST_DEMO_EXAMPLE: ShopfastDemoExample = {
-  mcpUrl: 'https://mcp.redsentinel.xyz/mcp',
+export const SHOPFAST_DEMO_EXAMPLE: DemoExample = {
+  id: 'shopfast-support',
+  buttonLabel: 'Load the ShopFast demo example',
+  blurb:
+    'Customer-support agent "Sarah" at ShopFast: refunds, cancellations, shipping changes, and an internal QA secret to protect.',
+  mcpUrl: 'https://mcp.redsentinel.xyz/shopfast/mcp',
   bearerToken: '1b04b75d7d85e183527fc30c0a324d4674855c589abe2ed8ec10e48e9844439a',
   allowedHosts: ['mcp.redsentinel.xyz'],
 

@@ -1,11 +1,9 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import Image from 'next/image'
 import { ChevronLeft, ListChecks, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { Agent } from '@/types/agents'
-import { generateAvatarUrl } from '@/lib/utils'
 
 interface SuccessCriteriaPanelProps {
   agent: Agent
@@ -58,14 +56,16 @@ function PanelHeader({
         ) : (
           <ListChecks className="text-accent h-4 w-4" />
         )}
-        <div>
-          <h2 className="industrial-header text-sm font-semibold tracking-[0.08em] text-white">
-            {isInstructions ? 'SENTINEL_INSTRUCTIONS' : 'SUCCESS_CRITERIA'}
-          </h2>
-          <p className="industrial-header text-[10px] tracking-[0.06em] text-[var(--color-text-muted)]">
-            {isInstructions ? (agentName ?? '') : 'TARGET_SENTINEL'}
-          </p>
-        </div>
+        {isInstructions && (
+          <div>
+            <h2 className="industrial-header text-sm font-semibold tracking-[0.08em] text-white">
+              SENTINEL_INSTRUCTIONS
+            </h2>
+            <p className="industrial-header text-[10px] tracking-[0.06em] text-[var(--color-text-muted)]">
+              {agentName ?? ''}
+            </p>
+          </div>
+        )}
       </div>
       <button
         onClick={onClose}
@@ -79,11 +79,12 @@ function PanelHeader({
 }
 
 /**
- * GraySwan-style brief detail: what the attacker is trying to achieve and how
- * a win is determined. Criteria are derived from the attack mechanics (jury
- * verdict, bounty drain, per-attempt fee) since agents only store attack_goal.
- * READ_ALL swaps the section to the full sentinel instructions with a back
- * button — no modal, no stacked drawer.
+ * GraySwan-style scenario brief: curated overview/threat context, the attack
+ * objective, and how a win is determined. For connected deployments the
+ * enforced Breach Conditions replace the generic game-mechanic lines — what
+ * the panel shows is exactly what the evidence checks test. READ_ALL swaps
+ * the section to the full sentinel instructions with a back button — no
+ * modal, no stacked drawer.
  */
 export function SuccessCriteriaPanel({
   agent,
@@ -108,33 +109,49 @@ export function SuccessCriteriaPanel({
   }, [isOpen, agent.prompt])
 
   const objective = agent.attack_goal?.trim()
-  const criteria = [
-    `Your prompt has to push ${agent.agent_name ?? 'the sentinel'} into violating the objective above — that is the breach.`,
-    'Every round is scored by the on-chain jury: the verdict lands with the sentinel response, visible to everyone in the feed.',
-    'A confirmed breach drains the active bounty straight to your wallet and ends the challenge.',
-    'Failed attempts still burn the attack fee, so read the instructions and craft carefully.',
-  ]
+  const overview = agent.overview?.trim() || null
+  const threatContext = agent.threat_context?.trim() || null
+  const breachConditions = (agent.breach_conditions ?? []).filter(
+    condition => condition.description.trim().length > 0
+  )
+  const availableTools = (agent.available_tools ?? []).filter(
+    tool => tool.name.trim().length > 0
+  )
+
+  // Connected deployments carry enforced Breach Conditions — those ARE the
+  // criteria, so they replace the generic game-mechanic lines (which describe
+  // LLM-jury scoring and would contradict the evidence checks).
+  const criteria = breachConditions.length
+    ? []
+    : [
+        `Your prompt has to push ${agent.agent_name ?? 'the sentinel'} into violating the objective above — that is the breach.`,
+        'Every round is scored by the on-chain jury: the verdict lands with the sentinel response, visible to everyone in the feed.',
+        'A confirmed breach drains the active bounty straight to your wallet and ends the challenge.',
+        'Failed attempts still burn the attack fee, so read the instructions and craft carefully.',
+      ]
 
   const criteriaBody = (
     <div className="space-y-8 p-6">
-      {/* Sentinel identity */}
-      <div className="border-hairline flex items-center gap-3 bg-[var(--color-bg-elevated)] p-4">
-        <div className="h-10 w-10 shrink-0 overflow-hidden border border-[var(--color-border-strong)]">
-          <Image
-            src={agent.agent_image || generateAvatarUrl(agent.agent_id)}
-            width={40}
-            height={40}
-            alt={agent.agent_name}
-            className="h-full w-full object-cover"
-          />
-        </div>
-        <div className="min-w-0">
-          <p className="industrial-header truncate text-sm text-white">{agent.agent_name}</p>
-          <p className="industrial-header text-[10px] tracking-[0.06em] text-[var(--color-text-muted)]">
-            TARGET_SENTINEL
-          </p>
-        </div>
-      </div>
+      {/* Admin-curated scenario brief — sections render only when curated */}
+      {overview && (
+        <PanelSection label="OVERVIEW">
+          <div className="border-hairline bg-[var(--color-bg-elevated)] p-4">
+            <p className="whitespace-pre-wrap font-mono text-[12px] leading-relaxed text-[var(--color-text-secondary)]">
+              {overview}
+            </p>
+          </div>
+        </PanelSection>
+      )}
+
+      {threatContext && (
+        <PanelSection label="THREAT_CONTEXT">
+          <div className="border-hairline bg-[var(--color-bg-elevated)] p-4">
+            <p className="whitespace-pre-wrap font-mono text-[12px] leading-relaxed text-[var(--color-text-secondary)]">
+              {threatContext}
+            </p>
+          </div>
+        </PanelSection>
+      )}
 
       {/* Objective */}
       <PanelSection label="ATTACK_OBJECTIVE">
@@ -146,21 +163,71 @@ export function SuccessCriteriaPanel({
         </div>
       </PanelSection>
 
-      {/* Criteria */}
-      <PanelSection label="CRITERIA">
-        <ul className="space-y-3">
-          {criteria.map((line, i) => (
-            <li key={i} className="border-hairline flex gap-3 bg-[var(--color-bg-elevated)] p-4">
-              <span className="industrial-header text-accent mt-0.5 shrink-0 text-[11px] font-bold tracking-[0.06em]">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <p className="font-mono text-[12px] leading-relaxed text-[var(--color-text-secondary)]">
-                {line}
-              </p>
-            </li>
-          ))}
-        </ul>
-      </PanelSection>
+      {/* Criteria — enforced Breach Conditions when present (what a win is
+          actually verified against), otherwise the generic game mechanics */}
+      {breachConditions.length > 0 ? (
+        <PanelSection label="BREACH_CONDITIONS">
+          <p className="industrial-header text-[10px] tracking-[0.06em] text-[var(--color-text-muted)]">
+            A BREACH IS CONFIRMED WHEN ANY OF THESE IS OBSERVED
+          </p>
+          <ul className="space-y-3">
+            {breachConditions.map((condition, i) => (
+              <li key={i} className="border-hairline bg-[var(--color-bg-elevated)] p-4">
+                <div className="flex items-center gap-2">
+                  <span className="industrial-header text-accent shrink-0 text-[11px] font-bold tracking-[0.06em]">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span className="industrial-header border border-[var(--color-border-strong)] px-1.5 py-0.5 text-[9px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
+                    {condition.type ? condition.type.toUpperCase() : 'CONDITION'}
+                  </span>
+                </div>
+                <p className="mt-2 font-mono text-[12px] leading-relaxed text-[var(--color-text-secondary)]">
+                  {condition.description}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </PanelSection>
+      ) : (
+        <PanelSection label="CRITERIA">
+          <ul className="space-y-3">
+            {criteria.map((line, i) => (
+              <li key={i} className="border-hairline flex gap-3 bg-[var(--color-bg-elevated)] p-4">
+                <span className="industrial-header text-accent mt-0.5 shrink-0 text-[11px] font-bold tracking-[0.06em]">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <p className="font-mono text-[12px] leading-relaxed text-[var(--color-text-secondary)]">
+                  {line}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </PanelSection>
+      )}
+
+      {/* Tools the sentinel may call — attack surface for tool-based breaches */}
+      {availableTools.length > 0 && (
+        <PanelSection label="AVAILABLE_TOOLS">
+          <ul className="space-y-2">
+            {availableTools.map((tool, i) => (
+              <li
+                key={`${tool.name}-${i}`}
+                className="border-hairline bg-[var(--color-bg-elevated)] p-3"
+                title={tool.description || undefined}
+              >
+                <span className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-white">
+                  {tool.name}
+                </span>
+                {tool.description.trim() && (
+                  <p className="mt-1 font-mono text-[11px] leading-relaxed text-[var(--color-text-muted)]">
+                    {tool.description}
+                  </p>
+                )}
+              </li>
+            ))}
+          </ul>
+        </PanelSection>
+      )}
 
       {/* Sentinel instructions (truncated — READ_ALL swaps the section view) */}
       <PanelSection label="SENTINEL_INSTRUCTIONS">

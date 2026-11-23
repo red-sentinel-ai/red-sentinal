@@ -132,7 +132,7 @@ export default function ChatInterface({
 }: ChatInterfaceProps) {
   const [promptInput, setPromptInput] = useState('')
   const [pendingRound, setPendingRound] = useState<ChatMessage[] | null>(null)
-  const [activeTab, setActiveTab] = useState<'global' | 'mine'>('global')
+  const [activeTab, setActiveTab] = useState<'global' | 'mine'>('mine')
   const [isCriteriaOpen, setIsCriteriaOpen] = useState(false)
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const textareaRef = useAutoResizingTextarea(promptInput)
@@ -329,6 +329,17 @@ export default function ChatInterface({
       {/* Terminal-style Tabs */}
       <div className="chat-toolbar">
         <button
+          onClick={() => setActiveTab('mine')}
+          className={clsx(
+            'chat-toolbar-tab industrial-header',
+            activeTab === 'mine'
+              ? 'border-white text-white'
+              : 'border-transparent text-[var(--color-text-muted)] hover:text-white'
+          )}
+        >
+          MY_ATTACKS
+        </button>
+        <button
           onClick={() => setActiveTab('global')}
           className={clsx(
             'chat-toolbar-tab industrial-header',
@@ -340,20 +351,19 @@ export default function ChatInterface({
           GLOBAL_ATTACKS
         </button>
         <button
-          onClick={() => setActiveTab('mine')}
-          className={clsx(
-            'chat-toolbar-tab industrial-header',
-            activeTab === 'mine'
-              ? 'border-white text-white'
-              : 'border-transparent text-[var(--color-text-muted)] hover:text-white'
-          )}
+          onClick={() => setIsCriteriaOpen(true)}
+          className="chat-toolbar-action ml-auto text-accent"
+          title="See success criteria"
         >
-          MY_ATTACKS
+          <ListChecks className="h-3 w-3" />
+          <span className="industrial-header text-[10px] tracking-[0.06em]">
+            SEE SUCCESS CRITERIA
+          </span>
         </button>
         {!isFocusMode && (
           <button
             onClick={enableFocusMode}
-            className="chat-toolbar-action ml-auto"
+            className="chat-toolbar-action ml-3"
             title="Enter focus mode"
           >
             <Maximize2 className="h-3 w-3" />

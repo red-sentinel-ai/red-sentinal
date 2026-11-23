@@ -47,6 +47,14 @@ export interface Agent {
   deployment_tx_hash?: string | null
   participants_count?: number
   attack_goal?: string | null
+  // Admin-curated scenario brief (GraySwan-style attack page copy). Null =
+  // not curated; the success-criteria panel falls back to its generic view.
+  overview?: string | null
+  threat_context?: string | null
+  // Connected deployments only: the enforced Breach Conditions (no params)
+  // and the tools the sentinel may call, sanitized server-side.
+  breach_conditions?: { type: string; description: string }[] | null
+  available_tools?: { name: string; description: string }[] | null
   defender_profile?: { username: string | null; avatar_url: string | null } | null
   syndicate?: {
     contract_address: string

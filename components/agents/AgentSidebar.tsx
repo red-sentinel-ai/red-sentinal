@@ -158,6 +158,10 @@ export const AgentSidebar = ({ agent, onTextChat, onVoiceChat, onDonated }: Agen
 
   const canDonate = supportsDonations(agent.chain) && isSentinelAttackable(agent)
 
+  // Connected deployments only — the tools this sentinel may call, sanitized
+  // server-side (names + descriptions, no endpoints or credentials).
+  const availableTools = (agent.available_tools ?? []).filter(t => t.name.trim())
+
   return (
     <>
       <div className="terminal-scrollbar flex h-[calc(100dvh-var(--topbar-h))] w-full flex-col overflow-y-auto bg-[var(--color-bg-base)]">
@@ -333,6 +337,27 @@ export const AgentSidebar = ({ agent, onTextChat, onVoiceChat, onDonated }: Agen
                   </span>
                 </div>
               ))}
+            </div>
+          )}
+
+          {/* Available Tools — connected deployments expose their approved
+              tool set; attackers use it to plan tool-based breaches. */}
+          {availableTools.length > 0 && (
+            <div className="space-y-2">
+              <div className="industrial-header text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
+                AVAILABLE_TOOLS
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {availableTools.map((tool, i) => (
+                  <span
+                    key={`${tool.name}-${i}`}
+                    title={tool.description || undefined}
+                    className="industrial-header border border-[var(--color-border-strong)] px-1.5 py-0.5 text-[10px] font-medium tracking-[0.06em] text-[var(--color-text-secondary)]"
+                  >
+                    {tool.name}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
 

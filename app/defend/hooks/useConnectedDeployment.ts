@@ -30,7 +30,7 @@ import {
   validateConnectionUrl,
   type ConnectedDeploymentState,
 } from '../deployment-utils'
-import { SHOPFAST_DEMO_EXAMPLE } from '../shopfast-demo-example'
+import type { DemoExample } from '../demo-examples'
 import { discoverMcpTools, requestPreflightChecks, type PreflightLaunchContext } from '../deployment-api'
 
 /**
@@ -215,26 +215,29 @@ export function useConnectedDeployment() {
     [clearPreflight]
   )
 
-  // --- ShopFast demo example --------------------------------------------------
+  // --- Demo examples ---------------------------------------------------------
 
-  /** Replace the whole connected configuration with the ShopFast demo example. */
-  const loadShopfastExample = useCallback(() => {
-    setMethodState('hosted_agent')
-    setMcpConnections([
-      {
-        ...createMcpConnectionDraft(),
-        url: SHOPFAST_DEMO_EXAMPLE.mcpUrl,
-        credential: SHOPFAST_DEMO_EXAMPLE.bearerToken,
-        permissions: {
-          allowed_hosts: [...SHOPFAST_DEMO_EXAMPLE.allowedHosts],
-          allow_side_effects: true,
+  /** Replace the whole connected configuration with a demo example (see demo-examples.ts). */
+  const loadDemoExample = useCallback(
+    (example: DemoExample) => {
+      setMethodState('hosted_agent')
+      setMcpConnections([
+        {
+          ...createMcpConnectionDraft(),
+          url: example.mcpUrl,
+          credential: example.bearerToken,
+          permissions: {
+            allowed_hosts: [...example.allowedHosts],
+            allow_side_effects: true,
+          },
         },
-      },
-    ])
-    setBreachConditions(SHOPFAST_DEMO_EXAMPLE.breachConditions.map(condition => ({ ...condition })))
-    setFixtures({ ...SHOPFAST_DEMO_EXAMPLE.fixtures })
-    clearPreflight()
-  }, [clearPreflight])
+      ])
+      setBreachConditions(example.breachConditions.map(condition => ({ ...condition })))
+      setFixtures({ ...example.fixtures })
+      clearPreflight()
+    },
+    [clearPreflight]
+  )
 
   // --- Derived state ----------------------------------------------------------
 
@@ -322,7 +325,7 @@ export function useConnectedDeployment() {
     updateExecutionLimits,
     fixtures,
     updateFixtures,
-    loadShopfastExample,
+    loadDemoExample,
     // preflight
     preflightReport: isPreflightCurrent ? preflightReport : null,
     isPreflightCurrent,

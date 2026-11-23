@@ -64,7 +64,7 @@ import {
   getEvidenceSource,
   validateConnectedDeployment,
 } from './deployment-utils'
-import { SHOPFAST_DEMO_EXAMPLE } from './shopfast-demo-example'
+import { DEMO_EXAMPLES } from './demo-examples'
 import { FormInput } from './components/FormInput'
 import { LLMProviderSection } from './components/LLMProviderSection'
 import { useDefendForm } from './hooks/useDefendForm'
@@ -689,27 +689,31 @@ export default function DefendPageClient() {
                     </span>
                   </div>
                   <div className="flex flex-wrap items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        connected.loadShopfastExample()
-                        setFormData(prev => ({
-                          ...prev,
-                          systemPrompt: SHOPFAST_DEMO_EXAMPLE.publicInstructions,
-                          privatePrompt: SHOPFAST_DEMO_EXAMPLE.privateInstructions,
-                          attackGoal: SHOPFAST_DEMO_EXAMPLE.attackGoal,
-                        }))
-                        setErrors(prev => ({
-                          ...prev,
-                          systemPrompt: '',
-                          privatePrompt: '',
-                          attackGoal: '',
-                        }))
-                      }}
-                      className="font-body hover:bg-[var(--color-gold-primary)]/10 inline-flex items-center gap-2 rounded-lg border border-[var(--color-gold-primary)] px-3 py-2 text-xs font-medium text-[var(--color-gold-primary)] transition-all hover:text-[var(--color-gold-light)]"
-                    >
-                      Load the ShopFast demo example
-                    </button>
+                    {DEMO_EXAMPLES.map(example => (
+                      <button
+                        key={example.id}
+                        type="button"
+                        title={example.blurb}
+                        onClick={() => {
+                          connected.loadDemoExample(example)
+                          setFormData(prev => ({
+                            ...prev,
+                            systemPrompt: example.publicInstructions,
+                            privatePrompt: example.privateInstructions,
+                            attackGoal: example.attackGoal,
+                          }))
+                          setErrors(prev => ({
+                            ...prev,
+                            systemPrompt: '',
+                            privatePrompt: '',
+                            attackGoal: '',
+                          }))
+                        }}
+                        className="font-body hover:bg-[var(--color-gold-primary)]/10 inline-flex items-center gap-2 rounded-lg border border-[var(--color-gold-primary)] px-3 py-2 text-xs font-medium text-[var(--color-gold-primary)] transition-all hover:text-[var(--color-gold-light)]"
+                      >
+                        {example.buttonLabel}
+                      </button>
+                    ))}
                     <span className="max-w-xl text-xs text-[var(--color-text-muted)]">
                       Everything is prefilled — connection (with the demo token), instructions,
                       attack objective, Breach Conditions, and Preflight Fixtures. Run the

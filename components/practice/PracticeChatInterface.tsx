@@ -50,7 +50,7 @@ export function PracticeChatInterface({
 }: PracticeChatInterfaceProps) {
   const [promptInput, setPromptInput] = useState('')
   const [pendingRound, setPendingRound] = useState<ChatMessageType[] | null>(null)
-  const [activeTab, setActiveTab] = useState<'global' | 'mine'>('global')
+  const [activeTab, setActiveTab] = useState<'global' | 'mine'>('mine')
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [interactionMode, setInteractionMode] = useState<'voice' | 'text'>('voice')
@@ -295,18 +295,6 @@ export function PracticeChatInterface({
         {interactionMode === 'text' && !isBreached && (
           <>
             <button
-              onClick={() => setActiveTab('global')}
-              className={clsx(
-                'chat-toolbar-tab industrial-header',
-                activeTab === 'global'
-                  ? 'border-white text-white'
-                  : 'border-transparent text-[var(--color-text-muted)] hover:text-white'
-              )}
-            >
-              <span className="sm:hidden">GLOBAL</span>
-              <span className="hidden sm:inline">GLOBAL_ATTACKS</span>
-            </button>
-            <button
               onClick={() => setActiveTab('mine')}
               className={clsx(
                 'chat-toolbar-tab industrial-header',
@@ -317,6 +305,18 @@ export function PracticeChatInterface({
             >
               <span className="sm:hidden">MINE</span>
               <span className="hidden sm:inline">MY_ATTACKS</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('global')}
+              className={clsx(
+                'chat-toolbar-tab industrial-header',
+                activeTab === 'global'
+                  ? 'border-white text-white'
+                  : 'border-transparent text-[var(--color-text-muted)] hover:text-white'
+              )}
+            >
+              <span className="sm:hidden">GLOBAL</span>
+              <span className="hidden sm:inline">GLOBAL_ATTACKS</span>
             </button>
           </>
         )}
