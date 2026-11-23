@@ -98,6 +98,18 @@ function getSentinelReference(agent: Agent): SentinelReference | null {
   }
 }
 
+interface SentinelModelSpec {
+  label: string
+  value: string
+}
+
+function getModelSpecs(agent: Agent): SentinelModelSpec[] {
+  return [
+    { label: 'PROVIDER', value: agent.model_provider },
+    { label: 'MODEL', value: agent.model_name },
+  ].filter(spec => Boolean(spec.value))
+}
+
 interface SentinelOwnerLink {
   label: string
   href: string
@@ -140,6 +152,7 @@ export const AgentSidebar = ({ agent, onTextChat, onVoiceChat, onDonated }: Agen
   const ownerLink = getSentinelOwnerLink(agent)
 
   const sentinelReference = getSentinelReference(agent)
+  const modelSpecs = getModelSpecs(agent)
 
   const isDrained = agent.state === 'defeated'
 
@@ -298,6 +311,30 @@ export const AgentSidebar = ({ agent, onTextChat, onVoiceChat, onDonated }: Agen
               </span>
             </div>
           </div>
+
+          {/* Model + Provider */}
+          {modelSpecs.length > 0 && (
+            <div
+              className={cn(
+                'grid gap-px bg-[var(--color-border-strong)]',
+                modelSpecs.length > 1 ? 'grid-cols-2' : 'grid-cols-1'
+              )}
+            >
+              {modelSpecs.map(spec => (
+                <div key={spec.label} className="min-w-0 bg-[var(--color-bg-base)] p-4">
+                  <span className="industrial-header mb-1 block text-[10px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]">
+                    {spec.label}
+                  </span>
+                  <span
+                    className="industrial-header break-all text-[11px] font-semibold tracking-[0.06em] text-white"
+                    title={spec.value}
+                  >
+                    {spec.value}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Action Buttons */}
           <div className="grid grid-cols-2 gap-2">
