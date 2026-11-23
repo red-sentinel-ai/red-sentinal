@@ -4,11 +4,11 @@ import { useEffect, type RefObject } from 'react'
 import posthog from 'posthog-js'
 import { SOLANA_CLUSTER } from '@/constants/solana'
 import { cn, truncateAddress } from '@/lib/utils'
-import { usePrivyConnect } from '@/hooks/usePrivyConnect'
 import { useSolanaWallet } from '@/hooks/useSolanaWallet'
 import { useSolanaBalance } from '@/hooks/useSolanaBalance'
 import { ConnectWalletLabel } from '@/components/ConnectWalletLabel'
 import { WalletDropdown } from '@/components/WalletDropdown'
+import { SolanaWalletMenu } from '@/components/SolanaWalletMenu'
 
 export function SolanaConnectButton({
   compact,
@@ -18,7 +18,6 @@ export function SolanaConnectButton({
   anchorRef?: RefObject<HTMLElement | null>
 }) {
   const { publicKey, disconnect } = useSolanaWallet()
-  const { openConnectModal: setVisible } = usePrivyConnect()
   const { balance, isLoading: isLoadingBalance } = useSolanaBalance()
 
   const address = publicKey?.toBase58() ?? null
@@ -37,16 +36,19 @@ export function SolanaConnectButton({
 
   if (!publicKey) {
     return (
-      <button
-        onClick={setVisible}
-        aria-label="Connect Wallet"
-        className={cn(
-          'rs-connect-button group py-2',
-          compact ? 'px-3 md:min-w-[180px] md:px-6' : 'min-w-[180px] px-6'
-        )}
-      >
-        <ConnectWalletLabel compact={compact} />
-      </button>
+      <SolanaWalletMenu
+        trigger={
+          <button
+            aria-label="Connect Wallet"
+            className={cn(
+              'rs-connect-button group py-2',
+              compact ? 'px-3 md:min-w-[180px] md:px-6' : 'min-w-[180px] px-6'
+            )}
+          >
+            <ConnectWalletLabel compact={compact} />
+          </button>
+        }
+      />
     )
   }
 

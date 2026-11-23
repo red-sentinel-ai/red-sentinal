@@ -23,6 +23,7 @@ import { usePrivyConnect } from '@/hooks/usePrivyConnect'
 import { useStellarWallet } from '@/hooks/useStellarWallet'
 import { useStellarBalance } from '@/hooks/useStellarBalance'
 import { StellarConnectButton } from '@/components/StellarConnectButton'
+import { SolanaWalletMenu } from '@/components/SolanaWalletMenu'
 import { SENTINEL_GIFS, SENTINEL_IMAGES } from '@/constants/asset_paths'
 import { useActiveChain } from '@/context/ActiveChainContext'
 import { useTokenCount } from '@/hooks/useTokenCount'
@@ -92,7 +93,6 @@ export default function DefendPageClient() {
   // Sui wallet
   const account = useCurrentAccount()
   const { publicKey: solanaPublicKey } = useSolanaWallet()
-  const { openConnectModal: openSolanaConnectModal } = usePrivyConnect()
   const { address: evmAddress } = useEVMWallet()
   const { openConnectModal: openEvmConnectModal } = usePrivyConnect()
   const { address: stellarAddress } = useStellarWallet()
@@ -1141,14 +1141,18 @@ export default function DefendPageClient() {
                 ) : (
                   <div className="h-12">
                     {isSolana ? (
-                      <button
-                        type="button"
-                        onClick={() => openSolanaConnectModal()}
-                        className="flex h-full w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-gold-primary)] text-sm font-medium text-[var(--color-text-on-gold)] shadow-[var(--shadow-card)] transition-all hover:bg-[var(--color-gold-light)]"
-                      >
-                        <Wallet className="h-5 w-5" />
-                        Connect Wallet
-                      </button>
+                      <SolanaWalletMenu
+                        align="center"
+                        trigger={
+                          <button
+                            type="button"
+                            className="flex h-full w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-gold-primary)] text-sm font-medium text-[var(--color-text-on-gold)] shadow-[var(--shadow-card)] transition-all hover:bg-[var(--color-gold-light)]"
+                          >
+                            <Wallet className="h-5 w-5" />
+                            Connect Wallet
+                          </button>
+                        }
+                      />
                     ) : isEvm ? (
                       <button
                         type="button"

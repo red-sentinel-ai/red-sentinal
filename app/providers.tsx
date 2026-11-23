@@ -4,7 +4,11 @@ import '@mysten/dapp-kit/dist/index.css'
 import React, { useState, useEffect } from 'react'
 import posthog from 'posthog-js'
 import { PostHogProvider as PHProvider } from 'posthog-js/react'
-import { SuiClientProvider, WalletProvider as SuiWalletProvider, lightTheme } from '@mysten/dapp-kit'
+import {
+  SuiClientProvider,
+  WalletProvider as SuiWalletProvider,
+  lightTheme,
+} from '@mysten/dapp-kit'
 import { WagmiProvider } from '@privy-io/wagmi'
 import { AppShell } from '@/components/layout/AppShell'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -15,6 +19,7 @@ import { APP_NETWORK } from '@/constants'
 import { SUI_RPC_URLS } from '@/constants/sui-rpc'
 import { createSuiClient } from '@/lib/sui/rpc-client'
 import { PrivyWalletProvider } from '@/app/PrivyWalletProvider'
+import { SolanaWalletProvider } from '@/app/SolanaWalletProvider'
 import { ActiveChainProvider } from '@/context/ActiveChainContext'
 import { AuthProvider } from '@/context/AuthContext'
 import { InstallPromptProvider } from '@/context/InstallPromptContext'
@@ -56,25 +61,27 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <PHProvider client={posthog}>
       <PrivyWalletProvider>
         <QueryClientProvider client={queryClient}>
-          <WagmiProvider config={wagmiConfig}>
-            <SuiClientProvider
-              networks={suiNetworks}
-              defaultNetwork={APP_NETWORK}
-              createClient={createClient}
-            >
-              <SuiWalletProvider theme={lightTheme}>
-                <ActiveChainProvider>
-                  <AuthProvider>
-                    <ProfileInitializer />
-                    <InstallPromptProvider>
-                      <AppShell>{children}</AppShell>
-                    </InstallPromptProvider>
-                    <ConnectSocialPrompt />
-                  </AuthProvider>
-                </ActiveChainProvider>
-              </SuiWalletProvider>
-            </SuiClientProvider>
-          </WagmiProvider>
+          <SolanaWalletProvider>
+            <WagmiProvider config={wagmiConfig}>
+              <SuiClientProvider
+                networks={suiNetworks}
+                defaultNetwork={APP_NETWORK}
+                createClient={createClient}
+              >
+                <SuiWalletProvider theme={lightTheme}>
+                  <ActiveChainProvider>
+                    <AuthProvider>
+                      <ProfileInitializer />
+                      <InstallPromptProvider>
+                        <AppShell>{children}</AppShell>
+                      </InstallPromptProvider>
+                      <ConnectSocialPrompt />
+                    </AuthProvider>
+                  </ActiveChainProvider>
+                </SuiWalletProvider>
+              </SuiClientProvider>
+            </WagmiProvider>
+          </SolanaWalletProvider>
         </QueryClientProvider>
       </PrivyWalletProvider>
     </PHProvider>

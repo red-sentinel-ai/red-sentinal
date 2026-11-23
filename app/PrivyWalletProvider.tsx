@@ -1,14 +1,13 @@
 'use client'
 
 import { PrivyProvider } from '@privy-io/react-auth'
-import { toSolanaWalletConnectors } from '@privy-io/react-auth/solana'
 import type { PrivyClientConfig } from '@privy-io/react-auth'
 
 const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID || ''
 
-// Privy now owns wallet connection for EVM (embedded + external, via wagmi
-// bindings) and Solana (embedded + external). Sui stays on @mysten/dapp-kit —
-// Privy has no browser-side Sui connectors.
+// Privy owns EVM wallet connection (embedded + external, via wagmi bindings)
+// and email login. Solana connects directly to browser wallets through
+// SolanaWalletProvider (wallet-adapter); Sui stays on @mysten/dapp-kit.
 //
 // NOTE: the wagmi `WagmiProvider` is rendered by app/providers.tsx, below the
 // TanStack QueryClientProvider (wagmi requires Query above it).
@@ -16,20 +15,12 @@ export function PrivyWalletProvider({ children }: { children: React.ReactNode })
   const privyConfig: PrivyClientConfig = {
     appearance: {
       theme: 'dark',
-      walletChainType: 'ethereum-and-solana',
+      walletChainType: 'ethereum-only',
       showWalletLoginFirst: true,
     },
     loginMethods: ['wallet', 'email'],
     embeddedWallets: {
       ethereum: { createOnLogin: 'users-without-wallets' },
-      solana: { createOnLogin: 'users-without-wallets' },
-    },
-    externalWallets: {
-      solana: {
-        // Auto-connect off: it fired the wallet popup on every page load. Users
-// connect manually via the connect buttons.
-connectors: toSolanaWalletConnectors({ shouldAutoConnect: false }),
-      },
     },
   }
 

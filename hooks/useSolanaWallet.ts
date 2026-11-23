@@ -1,8 +1,12 @@
 'use client'
 
 import { useCallback, useMemo } from 'react'
-import bs58 from 'bs58'
-import { useWallets } from '@privy-io/react-auth/solana'
+import {
+  WalletReadyState,
+  type SendTransactionOptions,
+  type WalletName,
+} from '@solana/wallet-adapter-base'
+import { useWallet } from '@solana/wallet-adapter-react'
 import {
   Connection,
   PublicKey,
@@ -10,13 +14,10 @@ import {
   type SendOptions,
   type Transaction,
 } from '@solana/web3.js'
-import { SOLANA_CLUSTER, SOLANA_RPC_URL } from '@/constants/solana'
-
-// CAIP-2 chain id used by wallet-standard signAndSendTransaction.
-const SOLANA_CHAIN = SOLANA_CLUSTER === 'mainnet-beta' ? 'solana:mainnet' : 'solana:devnet'
+import { SOLANA_RPC_URL } from '@/constants/solana'
 
 // Single import point for Solana wallet state across the app.
-// Components should import from here, not directly from @privy-io/react-auth/solana,
+// Components should import from here, not directly from @solana/wallet-adapter-react,
 // so swapping the underlying library only requires changes in one place.
 
 export function useSolanaConnection() {
@@ -24,65 +25,77 @@ export function useSolanaConnection() {
   return { connection }
 }
 
-/**
- * Drop-in replacement for the old @solana/wallet-adapter interface, backed by
- * the connected Privy Solana wallet (external via wallet-standard, or embedded).
- */
 export function useSolanaWallet() {
-  const { wallets, ready } = useWallets()
+  const {
+    publicKey,
+    connected,
+    connecting,
+    wallets,
+    sendTransaction: adapterSendTransaction,
+    signMessage: adapterSignMessage,
+    disconnect,
+  } = useWallet()
   const { connection } = useSolanaConnection()
-
-  // Privy has no explicit "active" Solana wallet — use the first connected one.
-  const wallet = wallets[0] ?? null
-
-  const publicKey = useMemo(
-    () => (wallet ? new PublicKey(wallet.address) : null),
-    [wallet]
-  )
 
   const sendTransaction = useCallback(
     async (
       transaction: Transaction | VersionedTransaction,
-      _connection?: Connection,
-      _options?: SendOptions
-    ): Promise<string> => {
-      if (!wallet) throw new Error('Solana wallet not connected')
-
-      // The wallet signs and submits; consumers confirm on their own connection.
-      const serialized =
-        transaction instanceof VersionedTransaction
-          ? transaction.serialize()
-          : transaction.serialize({ requireAllSignatures: false, verifySignatures: false })
-
-      const { signature } = await wallet.signAndSendTransaction({
-        chain: SOLANA_CHAIN,
-        transaction: new Uint8Array(serialized),
-      })
-      return bs58.encode(signature)
-    },
-    [wallet]
+      providedConnection?: Connection,
+      options?: SendOptions
+    ): Promise<string> =>
+      adapterSendTransaction(
+        transaction,
+        providedConnection ?? connection,
+        options as SendTransactionOptions
+      ),
+    [adapterSendTransaction, connection]
   )
 
   const signMessage = useCallback(
     async (message: Uint8Array): Promise<Uint8Array> => {
-      if (!wallet) throw new Error('Solana wallet not connected')
-      const { signature } = await wallet.signMessage({ message })
-      return signature
+      if (!adapterSignMessage) throw new Error('Solana wallet does not support signMessage')
+      return adapterSignMessage(message)
     },
-    [wallet]
+    [adapterSignMessage]
   )
-
-  const disconnect = useCallback(async () => {
-    if (wallet) await wallet.disconnect()
-  }, [wallet])
 
   return {
     publicKey,
-    connected: !!wallet,
-    ready,
+    connected: connected && !!publicKey,
+    connecting,
+    ready: wallets.length > 0,
     connection,
     sendTransaction,
     signMessage,
     disconnect,
   }
+}
+
+export type SolanaWalletOption = {
+  name: string
+  icon: string
+  url: string
+  /** Installed (or loadable) in this browser — otherwise selection opens the install page. */
+  installed: boolean
+}
+
+/** Detected browser wallets + connect, for wallet-picker UIs. */
+export function useSolanaWalletList() {
+  const { wallets, select, connecting } = useWallet()
+
+  const options = useMemo<SolanaWalletOption[]>(
+    () =>
+      wallets
+        .map(({ adapter, readyState }) => ({
+          name: adapter.name,
+          icon: adapter.icon,
+          url: adapter.url,
+          installed:
+            readyState === WalletReadyState.Installed || readyState === WalletReadyState.Loadable,
+        }))
+        .sort((a, b) => Number(b.installed) - Number(a.installed)),
+    [wallets]
+  )
+
+  return { wallets: options, select: (name: string) => select(name as WalletName), connecting }
 }
